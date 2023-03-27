@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct OWCommentPresentationData {
+struct OWCommentPresentationData { // TODO: Should be class and implement equtable
     let id: String
-    let shouldShowReplies: Bool
+    let shouldShowReplies: Bool // open / showingFirst(replies)
     let repliesIds: [String]
-    let repliesCount: Int
+    let totalRepliesCount: Int
     let repliesOffset: Int
     let repliesPresentation: [OWCommentPresentationData]
 }

@@ -36,14 +36,44 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
 
-    var _cellsViewModels = OWObservableArray<OWCommentThreadCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWCommentThreadCellOption]> {
-        return _cellsViewModels
+    fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
+        return _commentsPresentationData
             .rx_elements()
-            .asObservable()
-    }
+            .flatMapLatest({ commentsPresentationData -> Observable<[OWCommentCellViewModel]> in
+                var viewModels = [OWCommentCellViewModel]()
 
-    fileprivate var _commentsPresentationData = BehaviorSubject<[OWCommentPresentationData]?>(value: nil)
+                for commentPresentationData in commentsPresentationData {
+                    if let commentCellVM = self._commentIdToCommentCellVM[commentPresentationData.id] {
+                        viewModels.append(commentCellVM)
+                    }
+
+                    if commentPresentationData.shouldShowReplies {
+                        for replyPresentationData in commentPresentationData.repliesPresentation {
+                            if let replyCellVM = self._commentIdToCommentCellVM[replyPresentationData.id] {
+                                viewModels.append(replyCellVM)
+                            }
+                        }
+                    }
+                }
+                return Observable.just(viewModels)
+            })
+            .flatMapLatest({ commentCellsVms -> Observable<[OWCommentThreadCellOption]> in
+                var cellOptions = [OWCommentThreadCellOption]()
+                for (idx, commentCellVM) in commentCellsVms.enumerated() {
+                    let isReply = commentCellVM.outputs.commentVM.outputs.comment.isReply
+
+                    if (idx > 0 && !isReply) {
+                        cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                    }
+
+                    cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
+                }
+                return Observable.just(cellOptions)
+            })
+            .asObservable()
+    }()
+
+    fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
     fileprivate var _commentIdToCommentCellVM: [String: OWCommentCellViewModel] = [:]
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
@@ -87,6 +117,8 @@ fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Observable for the conversation network API
+
+        // TODO - split to - initial fetch / pull to refresh + pagination + replies
         let conversationThreadReadObservable = Observable.merge([_commentThreadData.unwrap().flatMap { _ in
             return Observable.just(0)
         }, _loadMoreComments.distinctUntilChanged()]).flatMap { [weak self] offset -> Observable<SPConversationReadRM> in
@@ -117,12 +149,17 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 for comment in comments {
                     guard let commentId = comment.id else { return }
+
+                    guard self._commentIdToCommentCellVM[commentId] == nil else { return }
+
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
 
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 4))
                     self._commentIdToCommentCellVM[commentId] = vm
 
                     if let replies = comment.replies {
+
+                        repliesPresentationData = []
 
                         for reply in replies {
                             guard let replyId = reply.id else { return }
@@ -135,7 +172,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                                     id: replyId,
                                     shouldShowReplies: false,
                                     repliesIds: reply.replies?.map { $0.id! } ?? [],
-                                    repliesCount: reply.repliesCount ?? 0,
+                                    totalRepliesCount: reply.repliesCount ?? 0,
                                     repliesOffset: reply.offset ?? 0, repliesPresentation: []
                                 )
                             )
@@ -147,49 +184,14 @@ fileprivate extension OWCommentThreadViewViewModel {
                             id: commentId,
                             shouldShowReplies: true,
                             repliesIds: comment.replies?.map { $0.id! } ?? [],
-                            repliesCount: comment.repliesCount ?? 0,
+                            totalRepliesCount: comment.repliesCount ?? 0,
                             repliesOffset: comment.offset ?? 0,
                             repliesPresentation: repliesPresentationData
                         )
                     )
                 }
 
-                self._commentsPresentationData.onNext(commentsPresentationData)
-            })
-            .disposed(by: disposeBag)
-
-        // prepare cells view models
-        _commentsPresentationData
-            .unwrap()
-            .subscribe(onNext: { commentsPresentationData in
-                var viewModels = [OWCommentThreadCellOption]()
-
-                for commentPresentationData in commentsPresentationData {
-                    if let commentCellVM = self._commentIdToCommentCellVM[commentPresentationData.id] {
-                        viewModels.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
-
-                        if commentPresentationData.repliesCount > 0 {
-                            if commentPresentationData.shouldShowReplies {
-                                viewModels.append(OWCommentThreadCellOption.commentThreadAction(viewModel: OWCommentThreadActionsCellViewModel()))
-                                for replyId in commentPresentationData.repliesIds {
-
-                                    if let replyCellVM = self._commentIdToCommentCellVM[replyId] {
-                                        viewModels.append(OWCommentThreadCellOption.comment(viewModel: replyCellVM))
-                                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                                    }
-                                }
-                            }
-                        }
-                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                    }
-                }
-
-                // TODO - Check why using replaceAll causing issues when click on "reply" - upen comment creation screen twice
-//                self._cellsViewModels.replaceAll(with: viewModels)
-
-                // TODO - We should update and not remove it. how can we know what items were updated in _commentsPresentationData?
-                self._cellsViewModels.removeAll()
-                self._cellsViewModels.append(contentsOf: viewModels)
+                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
@@ -219,8 +221,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             .map { willDisplayCellEvent -> Int in
                 return willDisplayCellEvent.indexPath.row
             }
-            .withLatestFrom(_commentsPresentationData) { rowIndex, presentationData -> Int? in
-                guard presentationData != nil else { return nil }
+            .withLatestFrom(_commentsPresentationData.rx_elements()) { rowIndex, presentationData -> Int? in
+                guard !presentationData.isEmpty else { return nil }
                 return rowIndex
             }
             .unwrap()
@@ -236,19 +238,19 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Observable of the comment cell VMs
         let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
-                    .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
-                        let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
-                            if case.comment(let commentCellViewModel) = vm {
-                                return commentCellViewModel
-                            } else {
-                                return nil
-                            }
-                        }
-                        .unwrap()
-
-                         return Observable.just(commentCellsVms)
+            .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
+                let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        return commentCellViewModel
+                    } else {
+                        return nil
                     }
-                    .share()
+                }
+                .unwrap()
+
+                 return Observable.just(commentCellsVms)
+            }
+            .share()
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
@@ -273,6 +275,6 @@ fileprivate extension OWCommentThreadViewViewModel {
             OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
         }
         let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
-        _cellsViewModels.append(contentsOf: skeletonCells)
+//        _cellsViewModels.append(contentsOf: skeletonCells)
     }
 }
