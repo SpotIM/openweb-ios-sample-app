@@ -1,8 +1,8 @@
 //
-//  OWCommentThreadActionsCell.swift
+//  OWCommentThreadActionsView.swift
 //  SpotImCore
 //
-//  Created by Alon Shprung on 22/03/2023.
+//  Created by Alon Shprung on 27/03/2023.
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWCommentThreadActionsCell: UITableViewCell {
+class OWCommentThreadActionsView: UIView {
     fileprivate struct Metrics {
         static let topOffset: CGFloat = 4.0
         static let horizontalOffset: CGFloat = 16
@@ -20,11 +20,11 @@ class OWCommentThreadActionsCell: UITableViewCell {
         static let textToImageSpacing: CGFloat = 6.5
     }
 
-    fileprivate var viewModel: OWCommentThreadActionsCellViewModeling!
+    fileprivate var viewModel: OWCommentThreadActionsViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    init() {
+        super.init(frame: .zero)
         self.setupUI()
     }
 
@@ -32,8 +32,8 @@ class OWCommentThreadActionsCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func configure(with viewModel: OWCellViewModel) {
-        guard let vm = viewModel as? OWCommentThreadActionsCellViewModeling else { return }
+    func configure(with viewModel: OWCellViewModel) {
+        guard let vm = viewModel as? OWCommentThreadActionsViewModeling else { return }
 
         self.viewModel = vm
         self.disposeBag = DisposeBag()
@@ -74,7 +74,7 @@ class OWCommentThreadActionsCell: UITableViewCell {
     }()
 }
 
-fileprivate extension OWCommentThreadActionsCell {
+fileprivate extension OWCommentThreadActionsView {
     func setupUI() {
         self.backgroundColor = .clear
 
