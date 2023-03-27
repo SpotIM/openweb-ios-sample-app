@@ -21,6 +21,7 @@ protocol MockArticleIndependentViewsViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
     var showComponent: Observable<ComponentAndType> { get }
+    var independentViewHorizontalMargin: CGFloat { get }
 }
 
 protocol MockArticleIndependentViewsViewModeling {
@@ -32,13 +33,41 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     var inputs: MockArticleIndependentViewsViewModelingInputs { return self }
     var outputs: MockArticleIndependentViewsViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let preConversationCompactHorizontalMargin: CGFloat = 16.0
+    }
+
     fileprivate let disposeBag = DisposeBag()
+
+    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
     fileprivate let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
+    }
+
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         actionSettings: SDKUIIndependentViewsActionSettings) {
+        self.userDefaultsProvider = userDefaultsProvider
+        _actionSettings.onNext(actionSettings)
+
+        switch actionSettings.viewType {
+        case .preConversation:
+            loggerViewTitle = "Pre conversation logger"
+        case .conversation:
+            loggerViewTitle = "Conversation logger"
+        case .commentCreation:
+            loggerViewTitle = "Comment creation logger"
+        case .commentThread:
+            loggerViewTitle = "Comment thread logger"
+        case .independentAdUnit:
+            loggerViewTitle = "Independed ad unit logger"
+        }
+
+        setupObservers()
+        testLogger()
     }
 
     fileprivate let loggerViewTitle: String
@@ -52,6 +81,15 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     lazy var showComponent: Observable<ComponentAndType> = {
+        return self.viewTypeUpdaters
+            .flatMap { [weak self] viewType -> Observable<ComponentAndType> in
+                guard let self = self else { return .empty() }
+                return self.retrieveComponent(for: viewType)
+                    .map { ($0, viewType) }
+            }
+    }()
+
+    fileprivate lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewType> = {
         return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater)
             .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewType> in
                 guard let self = self else { return .empty() }
@@ -59,12 +97,12 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
                     .take(1)
                     .map { $0.viewType }
             }
-            .flatMap { [weak self] viewType -> Observable<ComponentAndType> in
-                guard let self = self else { return .empty() }
-                return self.retrieveComponent(for: viewType)
-                    .map { ($0, viewType) }
-            }
     }()
+
+    fileprivate var _horizontalMargin: CGFloat = 0.0
+    var independentViewHorizontalMargin: CGFloat {
+        return _horizontalMargin
+    }
 
     // All the stuff which should trigger new pre conversation component
     fileprivate lazy var preConversationStyleChanged: Observable<Void> = {
@@ -118,29 +156,6 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     fileprivate lazy var independentAdUnitUpdater: Observable<Void> = {
         return Observable.merge(self.independentAdUnitStyleChanged)
     }()
-
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
-
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
-         actionSettings: SDKUIIndependentViewsActionSettings) {
-        self.userDefaultsProvider = userDefaultsProvider
-        _actionSettings.onNext(actionSettings)
-
-        switch actionSettings.viewType {
-        case .preConversation:
-            loggerViewTitle = "Pre conversation logger"
-        case .conversation:
-            loggerViewTitle = "Conversation logger"
-        case .commentCreation:
-            loggerViewTitle = "Comment creation logger"
-        case .commentThread:
-            loggerViewTitle = "Comment thread logger"
-        case .independentAdUnit:
-            loggerViewTitle = "Independed ad unit logger"
-        }
-
-        testLogger()
-    }
 }
 
 fileprivate extension MockArticleIndependentViewsViewModel {
@@ -150,6 +165,22 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.testLogger()
         }
+    }
+
+    func setupObservers() {
+        // Addressing horizontal margin
+        viewTypeUpdaters
+            .subscribe(onNext: { [weak self] type in
+                guard let self = self else { return }
+                switch type {
+                case .preConversation:
+                    let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: self.userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data()))
+                    self._horizontalMargin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
+                default:
+                    self._horizontalMargin = 0.0
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     func retrieveComponent(for viewType: SDKUIIndependentViewType) -> Observable<UIView> {
