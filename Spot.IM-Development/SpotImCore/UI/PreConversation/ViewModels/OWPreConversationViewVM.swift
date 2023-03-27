@@ -114,34 +114,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .share(replay: 1)
     }()
 
-    fileprivate lazy var _isRegularStyle: BehaviorSubject<Bool> = {
-        var isRegular = false
-        if case .regular = preConversationStyle {
-            isRegular = true
-        }
-        return BehaviorSubject<Bool>(value: isRegular)
-    }()
-
-    fileprivate lazy var isRegularStyle: Observable<Bool> = {
-        return _isRegularStyle
-            .share(replay: 1)
-    }()
-
-    fileprivate lazy var _isCompactStyle: BehaviorSubject<Bool> = {
-        var isCompact = false
-        if case .compact = preConversationStyle {
-            isCompact = true
-        }
-        return BehaviorSubject<Bool>(value: isCompact)
-    }()
-
-    fileprivate lazy var isCompactStyle: Observable<Bool> = {
-        return _isCompactStyle
-            .share(replay: 1)
-    }()
-
     // TODO: support read only in pre conversation
-    fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
+    fileprivate lazy var isReadOnly: Observable<Bool> = {
+        return _isReadOnly
+            .share(replay: 1)
+    }()
 
     lazy var compactCommentVM: OWPreConversationCompactContentViewModeling = {
         return OWPreConversationCompactContentViewModel(imageProvider: self.imageProvider)
@@ -201,7 +179,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var viewInitialized = PublishSubject<Void>()
-    
+
     var summaryTopPadding: Observable<CGFloat> {
        preConversationStyleObservable
             .map { style in
@@ -217,7 +195,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowCommentCreationEntryView: Observable<Bool> {
-        isRegularStyle
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly) { style, isReadOnly in
+            switch (style) {
+            case .regular(_):
+                return !isReadOnly
+            case .ctaButtonOnly, .ctaWithSummary, .compact:
+                return false
+            }
+        }
     }
 
     var shouldShowComments: Observable<Bool> {
@@ -237,13 +222,30 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowCTA: Observable<Bool> {
-        isCompactStyle
-            .map { !$0 }
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly, commentsCountObservable) { style, isReadOnly, commentsCount in
+            var isVisible = true
+            switch (style) {
+            case .regular(_):
+                isVisible = !commentsCount.isEmpty
+            case .ctaButtonOnly, .ctaWithSummary:
+                isVisible = !commentsCount.isEmpty || !isReadOnly
+            case .compact:
+                isVisible = false
+            }
+            return isVisible
+        }
     }
 
     var shouldShowFooter: Observable<Bool> { // TODO: will get from config
-        isCompactStyle
-            .map { !$0 }
+        preConversationStyleObservable
+            .map { style in
+                switch(style) {
+                case .compact:
+                    return false
+                default:
+                    return true
+                }
+            }
     }
 
     lazy var shouldAddContentTapRecognizer: Bool = {
@@ -355,7 +357,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .default:
                     break
                 }
-                self.isReadOnly.onNext(isReadOnly)
+                self._isReadOnly.onNext(isReadOnly)
             })
             .disposed(by: disposeBag)
 
