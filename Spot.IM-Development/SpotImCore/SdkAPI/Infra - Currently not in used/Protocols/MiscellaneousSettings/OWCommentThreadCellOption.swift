@@ -13,13 +13,11 @@ enum OWCommentThreadCellOption: CaseIterable {
     static var allCases: [OWCommentThreadCellOption] {
         return [.comment(viewModel: OWCommentCellViewModel.stub()),
                 .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
-                .commentThreadAction(viewModel: OWCommentThreadActionsCellViewModel.stub()),
                 .spacer(viewModel: OWSpacerCellViewModel.stub())]
     }
 
     case comment(viewModel: OWCommentCellViewModeling)
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
-    case commentThreadAction(viewModel: OWCommentThreadActionsCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
 }
 
@@ -29,8 +27,6 @@ extension OWCommentThreadCellOption {
         case .comment(let viewModel):
             return viewModel
         case .commentSkeletonShimmering(let viewModel):
-            return viewModel
-        case .commentThreadAction(let viewModel):
             return viewModel
         case .spacer(let viewModel):
             return viewModel
@@ -43,8 +39,6 @@ extension OWCommentThreadCellOption {
             return OWCommentCell.self
         case .commentSkeletonShimmering:
             return OWCommentSkeletonShimmeringCell.self
-        case .commentThreadAction:
-            return OWCommentThreadActionsCell.self
         case .spacer:
             return OWSpacerCell.self
         }
@@ -58,8 +52,6 @@ extension OWCommentThreadCellOption: Equatable {
             return viewModel.outputs.id
         case .commentSkeletonShimmering(let viewModel):
             return viewModel.outputs.id
-        case .commentThreadAction(let viewModel):
-            return viewModel.outputs.id
         case .spacer(let viewModel):
             return viewModel.outputs.id
         }
@@ -70,8 +62,6 @@ extension OWCommentThreadCellOption: Equatable {
         case (.comment(_), .comment(_)):
             return lhs.identifier == rhs.identifier
         case (.commentSkeletonShimmering(_), .commentSkeletonShimmering(_)):
-            return lhs.identifier == rhs.identifier
-        case (.commentThreadAction(_), .commentThreadAction(_)):
             return lhs.identifier == rhs.identifier
         case (.spacer(_), .spacer(_)):
             return lhs.identifier == rhs.identifier
