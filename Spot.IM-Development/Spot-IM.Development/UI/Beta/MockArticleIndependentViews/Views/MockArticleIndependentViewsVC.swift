@@ -125,7 +125,7 @@ fileprivate extension MockArticleIndependentViewsVC {
 
         scrollView.addSubview(preConversation)
         preConversation.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(scrollView.contentLayoutGuide)
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(viewModel.outputs.independentViewHorizontalMargin)
             make.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(Metrics.verticalMargin)
             make.bottom.lessThanOrEqualTo(scrollView.contentLayoutGuide.snp.bottom)
         }
