@@ -16,13 +16,12 @@ protocol OWPreConversationViewViewModelingInputs {
     // TODO: Testing - remove later and connect the actual views/actions
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
-    var preConversationChangedSize: PublishSubject<CGSize> { get }
 
     var viewInitialized: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
-    var preConversationHeaderVM: OWPreConversationHeaderViewModeling { get }
+    var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
@@ -30,12 +29,18 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
-    var preConversationPreferredSize: Observable<CGSize> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
-    var shouldShowComments: Bool { get }
+    var shouldShowSeparatorView: Observable<Bool> { get }
+    var shouldShowCommentCreationEntryView: Observable<Bool> { get }
+    var shouldShowComments: Observable<Bool> { get }
+    var shouldShowCTA: Observable<Bool> { get }
+    var shouldShowFooter: Observable<Bool> { get }
+    var shouldShowComapactView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
+    var shouldAddContentTapRecognizer: Bool { get }
+    var isCompactBackground: Bool { get }
+    var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -70,16 +75,16 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
     }
 
-    lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
-        return OWPreConversationHeaderViewModel()
+    lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
+        return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel()
+        return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle)
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel()
+        return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
     }()
 
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
@@ -92,6 +97,46 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
+    }()
+
+    fileprivate lazy var isCompactMode: Bool = {
+        if case .compact = preConversationStyle {
+            return true
+        }
+        return false
+    }()
+
+    fileprivate lazy var _isRegularStyle: BehaviorSubject<Bool> = {
+        var isRegular = false
+        if case .regular = preConversationStyle {
+            isRegular = true
+        }
+        return BehaviorSubject<Bool>(value: isRegular)
+    }()
+
+    fileprivate lazy var isRegularStyle: Observable<Bool> = {
+        return _isRegularStyle
+            .share(replay: 1)
+    }()
+
+    fileprivate lazy var _isCompactStyle: BehaviorSubject<Bool> = {
+        var isCompact = false
+        if case .compact = preConversationStyle {
+            isCompact = true
+        }
+        return BehaviorSubject<Bool>(value: isCompact)
+    }()
+
+    fileprivate lazy var isCompactStyle: Observable<Bool> = {
+        return _isCompactStyle
+            .share(replay: 1)
+    }()
+
+    // TODO: support read only in pre conversation
+    fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
+
+    lazy var compactCommentVM: OWPreConversationCompactContentViewModeling = {
+        return OWPreConversationCompactContentViewModel(imageProvider: self.imageProvider)
     }()
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
@@ -135,15 +180,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
 
-    var preConversationChangedSize = PublishSubject<CGSize>()
-    // BehaviorSubject required since the size set immediately before subscribers establish
-    fileprivate var _preConversationChangedSize = BehaviorSubject<CGSize?>(value: nil)
-    var preConversationPreferredSize: Observable<CGSize> {
-        return _preConversationChangedSize
-            .unwrap()
-            .asObservable()
-    }
-
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var updateCellSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
@@ -158,25 +194,40 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     var viewInitialized = PublishSubject<Void>()
 
-    var shouldShowCommunityGuidelinesAndQuestion: Bool {
-        switch self.preConversationStyle {
-        case .regular(_):
-            return true
-        default:
-            return false
-        }
+    var shouldShowSeparatorView: Observable<Bool> {
+        isRegularStyle
     }
 
-    var shouldShowComments: Bool {
-        switch self.preConversationStyle {
-        case .regular(_):
-            return true
-        case .compact:
-            return true
-        default:
-            return false
-        }
+    var shouldShowCommentCreationEntryView: Observable<Bool> {
+        isRegularStyle
     }
+
+    var shouldShowComments: Observable<Bool> {
+        isCompactStyle
+            .map { !$0 }
+    }
+
+    var shouldShowComapactView: Bool {
+        return isCompactMode
+    }
+
+    var shouldShowCTA: Observable<Bool> {
+        isCompactStyle
+            .map { !$0 }
+    }
+
+    var shouldShowFooter: Observable<Bool> { // TODO: will get from config
+        isCompactStyle
+            .map { !$0 }
+    }
+
+    lazy var shouldAddContentTapRecognizer: Bool = {
+        return isCompactMode
+    }()
+
+    lazy var isCompactBackground: Bool = {
+        return isCompactMode
+    }()
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -197,9 +248,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-        preConversationChangedSize
-            .bind(to: _preConversationChangedSize)
-            .disposed(by: disposeBag)
 
         // Subscribing to start realtime service
         viewInitialized
@@ -260,24 +308,36 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        conversationFetchedObservable
+            .bind(to: compactCommentVM.inputs.conversationFetched)
+            .disposed(by: disposeBag)
+
         // Binding to community question component
         conversationFetchedObservable
-            .map { conversationRead -> SPConversationReadRM? in
-                return conversationRead
-            }
-            .asDriver(onErrorJustReturn: nil)
-            .asObservable()
-            .unwrap()
-            .map { conversation in
-                conversation.conversation?.communityQuestion
-            }
-            .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
+            .bind(to: communityQuestionViewModel.inputs.conversationFetched)
+            .disposed(by: disposeBag)
+
+        // Set read only mode
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+                switch self.preConversationData.article.additionalSettings.readOnlyMode {
+                case .disable:
+                    isReadOnly = false
+                case .enable:
+                    isReadOnly = true
+                case .default:
+                    break
+                }
+                self.isReadOnly.onNext(isReadOnly)
+            })
             .disposed(by: disposeBag)
 
         // Subscribing to customize UI related stuff
         Observable.merge(
-            preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
-            preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
+            preConversationSummaryVM.inputs.customizeCounterLabelUI.asObservable(),
+            preConversationSummaryVM.inputs.customizeTitleLabelUI.asObservable()
             )
             .subscribe(onNext: { _ in
 //            TODO: custom UI
@@ -363,7 +423,7 @@ fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:enable function_body_length
 
     func populateInitialUI() {
-        if self.shouldShowComments {
+        if !self.isCompactMode {
             let numberOfComments = self.preConversationStyle.numberOfComments
             let skeletonCellVMs = (0 ..< numberOfComments).map { _ in OWCommentSkeletonShimmeringCellViewModel() }
             let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }

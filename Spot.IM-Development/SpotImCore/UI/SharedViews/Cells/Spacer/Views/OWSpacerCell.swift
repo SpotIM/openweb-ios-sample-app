@@ -14,10 +14,11 @@ class OWSpacerCell: UITableViewCell {
 
     fileprivate struct Metrics {
         static let height: CGFloat = 1.0
+        static let verticalPadding: CGFloat = 16
     }
     fileprivate lazy var seperatorView: UIView = {
        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor, themeStyle: .light))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
     fileprivate var viewModel: OWSpacerCellViewModeling!
     fileprivate var disposeBag = DisposeBag()
@@ -46,7 +47,9 @@ fileprivate extension OWSpacerCell {
         self.addSubviews(seperatorView)
 
         seperatorView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.verticalPadding)
+            make.bottom.equalToSuperview().offset(-Metrics.verticalPadding)
             make.height.equalTo(Metrics.height)
         }
     }
@@ -56,7 +59,7 @@ fileprivate extension OWSpacerCell {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor, themeStyle: currentStyle)
+                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
 }
