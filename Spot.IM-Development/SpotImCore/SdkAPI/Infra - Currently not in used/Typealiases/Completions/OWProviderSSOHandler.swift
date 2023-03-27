@@ -1,5 +1,5 @@
 //
-//  OWSSOJWTHandler.swift
+//  OWProviderSSOHandler.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 13/11/2022.
@@ -16,7 +16,7 @@ import Foundation
  */
 
 #if NEW_API
-public typealias OWSSOJWTHandler = (Result<Void, OWError>) -> Void
+public typealias OWProviderSSOHandler = (Result<OWSSOProviderModel, OWError>) -> Void
 #else
-typealias OWSSOJWTHandler = (Result<Void, OWError>) -> Void
+typealias OWProviderSSOHandler = (Result<OWSSOProviderModel, OWError>) -> Void
 #endif
