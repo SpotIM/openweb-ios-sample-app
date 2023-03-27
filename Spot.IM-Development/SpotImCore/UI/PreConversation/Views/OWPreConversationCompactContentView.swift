@@ -46,7 +46,7 @@ class OWPreConversationCompactContentView: UIView {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .numberOfLines(Metrics.numberOfLines)
-            .textColor(OWColorPalette.shared.color(type: .compactText,
+            .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
     fileprivate lazy var cameraIcon: UIImageView = {
@@ -204,7 +204,7 @@ fileprivate extension OWPreConversationCompactContentView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.textLabel.textColor = OWColorPalette.shared.color(type: .compactText, themeStyle: currentStyle)
+                self.textLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.emptyConversationImageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
                 self.closedImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
                 self.cameraIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
