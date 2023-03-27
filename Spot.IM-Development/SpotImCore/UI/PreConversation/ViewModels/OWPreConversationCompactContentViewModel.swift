@@ -13,6 +13,7 @@ import UIKit
 
 protocol OWPreConversationCompactContentViewModelingInputs {
     var conversationFetched: PublishSubject<SPConversationReadRM> { get }
+    var isReadOnly: PublishSubject<Bool> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
@@ -37,6 +38,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
     var conversationFetched = PublishSubject<SPConversationReadRM>()
+    var isReadOnly = PublishSubject<Bool>()
     fileprivate var emptyConversation = PublishSubject<Void>()
     fileprivate var comment = PublishSubject<SPComment>()
 
@@ -131,19 +133,21 @@ fileprivate extension OWPreConversationCompactContentViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Set empty if needed
-        // TODO: support empty + read only
-        conversationFetched
-            .subscribe(onNext: { [weak self] conversationResponse in
-                guard let self = self,
-                      conversationResponse.conversation?.messagesCount == 0 else { return }
-                if conversationResponse.conversation?.readOnly == true {
-                    self._contentType.onNext(.closedAndEmpty)
-                } else {
-                    self._contentType.onNext(.emptyConversation)
-                }
-            })
-            .disposed(by: disposeBag)
+        // Set empty & read only if needed
+        Observable.combineLatest(conversationFetched, isReadOnly) { conversationResponse, isReadOnly -> OWCompactContentType? in
+            guard conversationResponse.conversation?.messagesCount == 0 else { return nil }
+            if isReadOnly {
+                return .closedAndEmpty
+            } else {
+                return .emptyConversation
+            }
+        }
+        .unwrap()
+        .subscribe(onNext: { [weak self] contentType in
+            guard let self = self else { return }
+            self._contentType.onNext(contentType)
+        })
+        .disposed(by: disposeBag)
 
         // Set comment type
         comment
