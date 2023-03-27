@@ -45,4 +45,32 @@ extension OWPreConversationStyle {
             return InternalMetrics.collapsableTextLineLimit
         }
     }
+
+    var preConversationSummaryStyle: OWPreConversationSummaryStyle {
+        switch self {
+        case .compact:
+            return .compact
+        case .regular, .ctaButtonOnly, .ctaWithSummary:
+            return .regular
+        }
+    }
+
+    var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
+        switch self {
+        case .regular, .ctaWithSummary:
+            return .regular // TODO - support guidelines regular/compact modes configuration
+        case .compact, .ctaButtonOnly:
+            return .none
+        }
+    }
+
+    var communityQuestionStyle: OWCommunityQuestionsStyle {
+        switch self {
+        case .regular, .ctaWithSummary:
+            return .regular
+        case .compact, .ctaButtonOnly:
+            return .none
+        }
+    }
+
 }

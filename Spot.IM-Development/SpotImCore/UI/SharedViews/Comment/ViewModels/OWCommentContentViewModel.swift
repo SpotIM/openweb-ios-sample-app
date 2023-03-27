@@ -18,6 +18,7 @@ protocol OWCommentContentViewModelingOutputs {
     var gifUrl: Observable<String> { get }
     var image: Observable<OWImageType> { get }
     var mediaSize: Observable<CGSize> { get }
+    var isEdited: Observable<Bool> { get }
 
     var collapsableLabelViewModel: OWCommentTextViewModeling { get }
 }
@@ -88,6 +89,17 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             guard let self = self else { return .zero }
             return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
         }.asObservable()
+    }
+
+    var isEdited: Observable<Bool> {
+        _comment
+            .map { comment in
+                guard let comment = comment
+                else { return false }
+
+                return comment.edited
+            }
+            .asObservable()
     }
 
     fileprivate lazy var _commentMediaOriginalSize: Observable<CGSize> = {

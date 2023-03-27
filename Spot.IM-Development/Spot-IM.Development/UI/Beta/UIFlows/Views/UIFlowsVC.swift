@@ -235,9 +235,9 @@ fileprivate extension UIFlowsVC {
 
         viewModel.outputs.openMockArticleScreen
             .subscribe(onNext: { [weak self] settings in
-                let mockArticleVM = MockArticleViewModel(actionSettings: settings)
-                let mockArticleVC = MockArticleVC(viewModel: mockArticleVM)
-                self?.navigationController?.pushViewController(mockArticleVC, animated: true)
+                let mockArticleFlowsVM = MockArticleFlowsViewModel(actionSettings: settings)
+                let mockArticleFlowsVC = MockArticleFlowsVC(viewModel: mockArticleFlowsVM)
+                self?.navigationController?.pushViewController(mockArticleFlowsVC, animated: true)
             })
             .disposed(by: disposeBag)
     }

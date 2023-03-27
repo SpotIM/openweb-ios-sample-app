@@ -30,6 +30,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var inputs: OWCommentThreadViewViewModelingInputs { return self }
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let numberOfCommentsInSkeleton: Int = 4
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
@@ -82,7 +86,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             return self.servicesProvider
             .netwokAPI()
             .conversation
-            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
+            .conversationRead(mode: .best, page: OWPaginationPage.first)
+//            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
             .response
         }
 
@@ -181,7 +186,7 @@ fileprivate extension OWCommentThreadViewViewModel {
     }
 
     func populateInitialUI() {
-        let numberOfComments = 4
+        let numberOfComments = Metrics.numberOfCommentsInSkeleton
         let skeletonCellVMs = (0 ..< numberOfComments).map { index in
             OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
         }
