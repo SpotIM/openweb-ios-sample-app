@@ -13,7 +13,7 @@ import RxCocoa
 class OWCommentEngagementView: UIView {
 
     fileprivate struct Metrics {
-        static let fontSize: CGFloat = 16.0
+        static let fontSize: CGFloat = 13.0
         static let baseOffset: CGFloat = 14
         static let identifier = "comment_actions_view_id"
         static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
@@ -24,12 +24,20 @@ class OWCommentEngagementView: UIView {
 
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
-            .setTitleColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light), state: .normal)
+            .setTitle(LocalizationManager.localizedString(key: "Reply"), state: .normal)
+            .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
             .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
 
     fileprivate lazy var votingView: OWCommentRatingView = {
         return OWCommentRatingView()
+    }()
+
+    fileprivate lazy var shareButton: UIButton = {
+        return UIButton()
+            .setTitle(LocalizationManager.localizedString(key: "Share"), state: .normal)
+            .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
+            .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
 
     override init(frame: CGRect) {
@@ -70,15 +78,17 @@ fileprivate extension OWCommentEngagementView {
         votingView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalTo(replyButton.OWSnp.trailing).offset(Metrics.baseOffset)
+        }
+
+        self.addSubview(shareButton)
+        shareButton.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(votingView.OWSnp.trailing).offset(Metrics.baseOffset)
             make.trailing.lessThanOrEqualToSuperview()
         }
     }
 
     func setupObservers() {
-        viewModel.outputs.repliesText
-            .bind(to: replyButton.rx.title())
-            .disposed(by: disposeBag)
-
         replyButton.rx.tap
             .bind(to: viewModel.inputs.replyClicked)
             .disposed(by: disposeBag)
@@ -87,7 +97,8 @@ fileprivate extension OWCommentEngagementView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle), for: .normal)
+                self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
             }).disposed(by: disposeBag)
     }
 }

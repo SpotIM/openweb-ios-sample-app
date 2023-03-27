@@ -170,6 +170,14 @@ fileprivate extension UIViewsVC {
         btnIndependentAdUnit.rx.tap
             .bind(to: viewModel.inputs.independentAdUnitTapped)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.openMockArticleScreen
+            .subscribe(onNext: { [weak self] settings in
+                let mockArticleIndependentViewsVM = MockArticleIndependentViewsViewModel(actionSettings: settings)
+                let mockArticleIndependentViewsVC = MockArticleIndependentViewsVC(viewModel: mockArticleIndependentViewsVM)
+                self?.navigationController?.pushViewController(mockArticleIndependentViewsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
