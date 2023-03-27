@@ -56,7 +56,6 @@ fileprivate extension OWCommentCell {
         commentView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-//            make.trailing.equalToSuperview().inset(-Metrics.horizontalOffset)
         }
     }
 }
