@@ -13,15 +13,14 @@ import RxCocoa
 class OWCommentHeaderView: UIView {
 
     fileprivate struct Metrics {
-        static let avatarSideSize: CGFloat = 39.0
-        static let avatarImageViewTrailingOffset: CGFloat = 11.0
-        static let fontSize: CGFloat = 16.0
-        static let badgeLabelFontSize: CGFloat = 12.0
-        static let badgeLeadingPadding: CGFloat = 4
-        static let subtitleTopPadding: CGFloat = 6
-        static let optionButtonSize: CGFloat = 44
+        static let avatarSideSize: CGFloat = 36.0
+        static let avatarImageViewTrailingOffset: CGFloat = 8.0
+        static let subtitleFontSize: CGFloat = 12.0
+        static let usernameFontSize: CGFloat = 13.0
+        static let badgeLabelFontSize: CGFloat = 10.0
+        static let subscriberVerticalPadding: CGFloat = 7
+        static let optionButtonSize: CGFloat = 28
         static let badgeHorizontalInset: CGFloat = 4
-        static let badgeVerticalInset: CGFloat = 2
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -43,7 +42,8 @@ class OWCommentHeaderView: UIView {
     fileprivate lazy var userNameLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
-            .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
+            .font(OWFontBook.shared.font(style: .bold, size: Metrics.usernameFontSize))
     }()
 
     fileprivate lazy var badgeTagContainer: UIView = {
@@ -55,25 +55,25 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var badgeTagLabel: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.badgeLabelFontSize))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
-        return OWUserSubscriberBadgeView()
+    fileprivate lazy var subscriberBadgeView: OWSubscriberIconView = {
+        return OWSubscriberIconView()
     }()
 
     fileprivate lazy var subtitleLabel: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
     fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
@@ -87,7 +87,7 @@ class OWCommentHeaderView: UIView {
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
         return UILabel()
             .isHidden(true)
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.preferred(style: .italic, of: 17))
             .lineSpacing(3.5)
     }()
@@ -139,18 +139,10 @@ fileprivate extension OWCommentHeaderView {
             make.size.equalTo(Metrics.avatarSideSize)
         }
 
-        addSubview(badgeTagContainer)
-        badgeTagContainer.OWSnp.makeConstraints { make in
+        addSubview(subscriberBadgeView)
+        subscriberBadgeView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
-        }
-
-        badgeTagContainer.addSubview(badgeTagLabel)
-        badgeTagLabel.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.badgeVerticalInset)
-            make.bottom.equalToSuperview().offset(-Metrics.badgeVerticalInset)
-            make.left.equalToSuperview().offset(Metrics.badgeHorizontalInset)
-            make.right.equalToSuperview().offset(-Metrics.badgeHorizontalInset)
+            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
         }
 
         addSubview(optionButton)
@@ -160,16 +152,23 @@ fileprivate extension OWCommentHeaderView {
             make.trailing.equalToSuperview()
         }
 
-        addSubview(subscriberBadgeView)
-        subscriberBadgeView.OWSnp.makeConstraints { make in
+        addSubview(badgeTagContainer)
+        badgeTagContainer.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(badgeTagContainer.OWSnp.trailing).offset(5.0)
+            make.leading.equalTo(subscriberBadgeView.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
             make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+        }
+
+        badgeTagContainer.addSubview(badgeTagLabel)
+        badgeTagLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.left.equalToSuperview().offset(Metrics.badgeHorizontalInset)
+            make.right.equalToSuperview().offset(-Metrics.badgeHorizontalInset)
         }
 
         addSubview(subtitleLabel)
         subtitleLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
+            make.top.equalTo(userNameLabel.OWSnp.bottom)
             make.leading.equalTo(userNameLabel)
             make.bottom.equalToSuperview()
         }
@@ -193,14 +192,6 @@ fileprivate extension OWCommentHeaderView {
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
             .disposed(by: disposeBag)
-
-        viewModel.outputs.nameTextStyle
-            .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
-                self.userNameLabel.font(
-                    .preferred(style: style, of: Metrics.fontSize)
-                )
-            }).disposed(by: disposeBag)
 
         viewModel.outputs.badgeTitle
             .bind(to: badgeTagLabel.rx.text)
@@ -245,14 +236,25 @@ fileprivate extension OWCommentHeaderView {
                 self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
             }).disposed(by: disposeBag)
 
+        viewModel.outputs.subscriberBadgeVM
+            .outputs.isSubscriber
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.subscriberBadgeView.OWSnp.updateConstraints { make in
+                    make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.userNameLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color, themeStyle: currentStyle)
-                self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.dateLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
+                self.userNameLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.dateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
