@@ -9,8 +9,12 @@
 import Foundation
 import RxSwift
 
-class OWSDKCoordinator: OWBaseCoordinator<Void> {
+class OWSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     fileprivate var router: OWRoutering!
+
+    var routering: OWRoutering {
+        return router
+    }
 
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,

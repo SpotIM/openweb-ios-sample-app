@@ -24,8 +24,8 @@ class OWSession: OWSessionProtocol {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
         let retryableHttpMethods: Set<OWNetworkHTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post]
-        let retryPolicy = OWNetworkRetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
-        return OWSession(configuration: configuration, interceptor: retryPolicy)
+        let interceptor = OWNetworkAuthorizationRecoveryInterceptor()
+        return OWSession(configuration: configuration, interceptor: interceptor)
     }()
 
     init(configuration: URLSessionConfiguration, interceptor: OWNetworkRequestInterceptor) {
