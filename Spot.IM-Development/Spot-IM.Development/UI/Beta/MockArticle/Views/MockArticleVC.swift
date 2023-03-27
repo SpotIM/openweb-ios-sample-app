@@ -18,7 +18,7 @@ class MockArticleVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         // 1.5 * screen height, defualt to 1200
-        static let articleHeight: CGFloat = 1.5 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
+        static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2/3
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
@@ -260,36 +260,20 @@ fileprivate extension MockArticleVC {
 
         // Adding pre conversation
         viewModel.outputs.showPreConversation
-            .subscribe(onNext: { [weak self] tuple in
+            .subscribe(onNext: { [weak self] preConversationView in
                 guard let self = self else { return }
-
-                let preConversationView = tuple.0
-                let size = tuple.1
 
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
                 self.articleScrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
-                    make.height.equalTo(size.height)
                     make.leading.trailing.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
                 }
 
                 self.articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
-                }
-            })
-            .disposed(by: disposeBag)
-
-        // Updating pre conversation size
-        viewModel.outputs.updatePreConversationSize
-            .subscribe(onNext: { tuple in
-                let preConversationView = tuple.0
-                let size = tuple.1
-
-                preConversationView.snp.updateConstraints { make in
-                    make.height.equalTo(size.height)
                 }
             })
             .disposed(by: disposeBag)

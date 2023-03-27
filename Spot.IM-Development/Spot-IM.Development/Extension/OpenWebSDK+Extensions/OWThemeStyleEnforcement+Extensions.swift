@@ -12,7 +12,7 @@ import SpotImCore
 #if NEW_API
 
 extension OWThemeStyleEnforcement {
-    static func themeFromPersistence(index: Int) -> OWThemeStyleEnforcement {
+    static func themeStyle(fromIndex index: Int) -> OWThemeStyleEnforcement {
         switch index {
         case 0: return .none
         case 1: return .theme(.light)
