@@ -9,14 +9,13 @@
 import Foundation
 import RxSwift
 
-// TODO: complete
 protocol OWCommunityQuestionViewModelingInputs {
     var conversationFetched: PublishSubject<SPConversationReadRM> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
     var communityQuestionOutput: Observable<String?> { get }
-    var shouldShowView: Bool { get }
+    var shouldShowView: Observable<Bool> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -35,11 +34,15 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
             .map { $0.conversation?.communityQuestion }
     }
 
-    var shouldShowView: Bool {
-        if case .none = self.style {
-            return false
-        }
-        return true
+    var shouldShowView: Observable<Bool> {
+        communityQuestionOutput
+            .map { [weak self] question in
+                guard let self = self else { return false }
+                if let question = question, !question.isEmpty {
+                    return self.style != .none
+                }
+                return false
+            }
     }
 
     fileprivate let style: OWCommunityQuestionsStyle
