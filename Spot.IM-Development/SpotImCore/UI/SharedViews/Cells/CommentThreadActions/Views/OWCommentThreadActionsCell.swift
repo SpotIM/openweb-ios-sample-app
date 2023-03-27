@@ -83,7 +83,7 @@ fileprivate extension OWCommentThreadActionsCell {
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.bottom.equalToSuperview()
             make.height.equalTo(Metrics.cellHeight)
-        }        
+        }
     }
 
     func setupObservers() {
