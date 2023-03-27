@@ -81,7 +81,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 fileprivate extension OWCommentThreadViewViewModel {
     func setupObservers() {
         // Observable for the conversation network API
-        let conversationThreadReadObservable = _commentThreadData.unwrap().flatMap { [weak self] data -> Observable<SPConversationReadRM> in
+        let conversationThreadReadObservable = _commentThreadData.unwrap().flatMap { [weak self] _ -> Observable<SPConversationReadRM> in
             guard let self = self else { return .empty() }
             return self.servicesProvider
             .netwokAPI()
