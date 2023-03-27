@@ -11,6 +11,4 @@ import Foundation
 /*
  OWNetworkLogging - protocol for logging network related stuff
  */
-protocol OWNetworkLogging {
-    func log(output: String)
-}
+protocol OWNetworkLogging {}

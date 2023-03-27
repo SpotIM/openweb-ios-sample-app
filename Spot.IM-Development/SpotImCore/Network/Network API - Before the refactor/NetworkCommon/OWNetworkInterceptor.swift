@@ -56,7 +56,7 @@ class OWNetworkInterceptorLayer: OWNetworkRequestInterceptor {
 fileprivate extension OWNetworkInterceptorLayer {
     func recoverFromAuthorizationError(completion: @escaping (OWNetworkRetryResult) -> Void, requestURLPath: String) {
         let userId = SPUserSessionHolder.session.user?.userId ?? ""
-        let authorizationRecoveryService = servicesProvider.authorizationRecoveryService()
+        let authorizationRecoveryService = servicesProvider.authorizationRecoveryServiceOldAPI()
 
         _ = authorizationRecoveryService.recoverFromAuthorizationError(userId: userId)
             .take(1) // No need to dispose

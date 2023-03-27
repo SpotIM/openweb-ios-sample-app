@@ -1,0 +1,127 @@
+//
+//  OWPreConversationHeaderView.swift
+//  SpotImCore
+//
+//  Created by  Nogah Melamed on 24/10/2022.
+//  Copyright © 2022 Spot.IM. All rights reserved.
+//
+
+import UIKit
+import RxSwift
+import RxCocoa
+
+class OWPreConversationSummeryView: UIView {
+    fileprivate struct Metrics {
+        static let counterLeading: CGFloat = 8
+        static let nextArrowLeading: CGFloat = 10
+        static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
+        static let identifier = "pre_conversation_header_view_id"
+    }
+
+    private lazy var titleLabel: UILabel = {
+        let lbl = UILabel()
+            .enforceSemanticAttribute()
+            .font(OWFontBook.shared.font(style: .bold, size: viewModel.outputs.titleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor1,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
+        return lbl
+    }()
+
+    private lazy var counterLabel: UILabel = {
+        let lbl = UILabel()
+            .enforceSemanticAttribute()
+            .font(OWFontBook.shared.font(style: .regular, size: viewModel.outputs.counterFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+        return lbl
+    }()
+
+    private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
+        return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
+    }()
+
+    fileprivate lazy var nextArrow: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
+        return imageView
+    }()
+
+    fileprivate var viewModel: OWPreConversationSummaryViewModeling
+    fileprivate let disposeBag = DisposeBag()
+
+    init(viewModel: OWPreConversationSummaryViewModeling) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+        self.accessibilityIdentifier = Metrics.identifier
+        setupUI()
+        setupObservers()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func updateCustomUI() {
+        viewModel.inputs.customizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.customizeCounterLabelUI.onNext(counterLabel)
+    }
+}
+
+fileprivate extension OWPreConversationSummeryView {
+    func setupUI() {
+        self.enforceSemanticAttribute()
+
+        self.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(Metrics.margins.left)
+        }
+
+        self.addSubview(counterLabel)
+        counterLabel.OWSnp.makeConstraints { make in
+            make.firstBaseline.equalTo(titleLabel)
+            make.leading.equalTo(titleLabel.OWSnp.trailing).offset(Metrics.counterLeading)
+            make.trailing.lessThanOrEqualToSuperview()
+        }
+
+        self.addSubview(onlineViewingUsersView)
+        onlineViewingUsersView.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+        }
+
+        if viewModel.outputs.showNextArrow {
+            self.addSubview(nextArrow)
+            nextArrow.OWSnp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+                make.leading.equalTo(onlineViewingUsersView.OWSnp.trailing).offset(Metrics.nextArrowLeading)
+                make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+            }
+        } else {
+            onlineViewingUsersView.OWSnp.makeConstraints { make in
+                make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+            }
+        }
+    }
+
+    func setupObservers() {
+        viewModel.outputs.commentsCount
+            .startWith("")
+            .bind(to: counterLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1,
+                                                                        themeStyle: currentStyle)
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
+                                                                          themeStyle: currentStyle)
+                self.nextArrow.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
+                self.updateCustomUI()
+            }).disposed(by: disposeBag)
+    }
+}
+

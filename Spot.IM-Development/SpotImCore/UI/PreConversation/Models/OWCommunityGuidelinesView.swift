@@ -31,6 +31,7 @@ class OWCommunityGuidelinesView: UIView {
 
     fileprivate let viewModel: OWCommunityGuidelinesViewModeling
     fileprivate let disposeBag = DisposeBag()
+    fileprivate var heightConstraint: OWConstraint? = nil
 
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
@@ -60,10 +61,26 @@ extension OWCommunityGuidelinesView {
                 make.leading.equalToSuperview().offset(Metrics.titleHorizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.titleHorizontalOffset)
             }
+            heightConstraint = make.height.equalTo(0).constraint
         }
     }
 
     fileprivate func setupObservers() {
+        viewModel.outputs.shouldBeHidden
+            .bind(to: self.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldBeHidden
+            .subscribe(onNext: { [weak self] isHidden in
+                guard let self = self else { return }
+                if (isHidden) {
+                    self.heightConstraint?.activate()
+                } else {
+                    self.heightConstraint?.deactivate()
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.communityGuidelinesHtmlAttributedString
             .bind(to: titleTextView.rx.attributedText)
             .disposed(by: disposeBag)
