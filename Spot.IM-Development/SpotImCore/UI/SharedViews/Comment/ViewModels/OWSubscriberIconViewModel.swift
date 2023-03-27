@@ -35,7 +35,9 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
     fileprivate var subscriberBadgeService: OWSubscriberBadgeServicing!
     fileprivate var servicesProvider: OWSharedServicesProviding
 
-    init (user: SPUser, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, subscriberBadgeService: OWSubscriberBadgeServicing = OWSubscriberBadgeService()) {
+    init (user: SPUser,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          subscriberBadgeService: OWSubscriberBadgeServicing = OWSubscriberBadgeService()) {
         self.subscriberBadgeService = subscriberBadgeService
         self.servicesProvider = servicesProvider
 
