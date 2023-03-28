@@ -35,6 +35,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Observable<Bool> { get }
+    var shouldShowReadOnlyPlaceholder: Observable<Bool> { get }
     var shouldShowFooter: Observable<Bool> { get }
     var shouldShowComapactView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
@@ -242,6 +243,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 isVisible = false
             }
             return isVisible
+        }
+    }
+
+    var shouldShowReadOnlyPlaceholder: Observable<Bool> {
+        Observable.combineLatest(isReadOnly, commentsCountObservable) { isReadOnly, commentsCount in
+            return isReadOnly && commentsCount.isEmpty
         }
     }
 
