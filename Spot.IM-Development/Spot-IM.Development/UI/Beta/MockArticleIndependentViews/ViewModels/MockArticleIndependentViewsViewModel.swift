@@ -37,6 +37,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     fileprivate struct Metrics {
         static let preConversationCompactHorizontalMargin: CGFloat = 16.0
+        static let timeForPersistenceToUpdate: Int = 100 // In ms
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -109,6 +110,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
                 return self.actionSettings
                     .take(1)
             }
+            .delay(.milliseconds(Metrics.timeForPersistenceToUpdate), scheduler: MainScheduler.asyncInstance)
     }()
 
     fileprivate var _horizontalMargin: CGFloat = 0.0
