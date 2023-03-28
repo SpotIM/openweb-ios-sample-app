@@ -26,6 +26,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let summaryTopPadding: CGFloat = 24
         static let footerTopPadding: CGFloat = 24
         static let compactSummaryTopPadding: CGFloat = 16
+        static let compactCornerRadius: CGFloat = 8
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
     }
@@ -145,6 +146,8 @@ fileprivate extension OWPreConversationView {
                 make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
                 make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
             }
+
+            self.addCornerRadius(Metrics.compactCornerRadius)
             return
         }
 

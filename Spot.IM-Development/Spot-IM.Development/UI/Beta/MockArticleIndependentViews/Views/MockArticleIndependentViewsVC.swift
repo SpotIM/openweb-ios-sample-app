@@ -18,6 +18,8 @@ class MockArticleIndependentViewsVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
+        static let identifier = "mock_article_independent_views_vc_id"
+        static let settingsBarItemIdentifier = "settings_bar_item_id"
     }
 
     fileprivate let viewModel: MockArticleIndependentViewsViewModeling
@@ -49,6 +51,13 @@ class MockArticleIndependentViewsVC: UIViewController {
 
     fileprivate var independentView: UIView? = nil
 
+    fileprivate lazy var settingsBarItem: UIBarButtonItem = {
+        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
+                               style: .plain,
+                               target: nil,
+                               action: nil)
+    }()
+
     fileprivate lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
     }()
@@ -70,15 +79,22 @@ class MockArticleIndependentViewsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupObservers()
+        navigationItem.rightBarButtonItems = [settingsBarItem]
     }
 }
 
 fileprivate extension MockArticleIndependentViewsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
+    }
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
 
@@ -96,6 +112,19 @@ fileprivate extension MockArticleIndependentViewsVC {
 
     func setupObservers() {
         title = viewModel.outputs.title
+
+        settingsBarItem.rx.tap
+            .bind(to: viewModel.inputs.settingsTapped)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openSettings
+            .subscribe(onNext: { [weak self] settingsType in
+                guard let self = self else { return }
+                let settingsVM = SettingsViewModel(settingViewTypes: [settingsType])
+                let settingsVC = SettingsVC(viewModel: settingsVM)
+                self.navigationController?.pushViewController(settingsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.showComponent
             .subscribe(onNext: { [weak self] result in

@@ -15,11 +15,13 @@ import SpotImCore
 typealias ComponentAndType = (UIView, SDKUIIndependentViewType)
 
 protocol MockArticleIndependentViewsViewModelingInputs {
+    var settingsTapped: PublishSubject<Void> { get }
 }
 
 protocol MockArticleIndependentViewsViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
+    var openSettings: Observable<SettingsGroupType> { get }
     var showComponent: Observable<ComponentAndType> { get }
     var independentViewHorizontalMargin: CGFloat { get }
 }
@@ -38,6 +40,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }
 
     fileprivate let disposeBag = DisposeBag()
+    let settingsTapped = PublishSubject<Void>()
 
     fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate let commonCreatorService: CommonCreatorServicing
@@ -71,6 +74,13 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
         setupObservers()
         testLogger()
+    }
+
+    var openSettings: Observable<SettingsGroupType> {
+        return settingsTapped
+            .withLatestFrom(actionSettings)
+            .map { SettingsGroupType(independentViewType: $0.viewType) }
+            .asObservable()
     }
 
     fileprivate let loggerViewTitle: String
