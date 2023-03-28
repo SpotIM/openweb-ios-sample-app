@@ -28,6 +28,7 @@ protocol MockArticleFlowsViewModelingOutputs {
     var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
+    var preConversationHorizontalMargin: CGFloat { get }
 }
 
 protocol MockArticleFlowsViewModeling {
@@ -38,6 +39,10 @@ protocol MockArticleFlowsViewModeling {
 class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsViewModelingInputs, MockArticleFlowsViewModelingOutputs {
     var inputs: MockArticleFlowsViewModelingInputs { return self }
     var outputs: MockArticleFlowsViewModelingOutputs { return self }
+
+    fileprivate struct Metrics {
+        static let preConversationCompactHorizontalMargin: CGFloat = 16.0
+    }
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -53,11 +58,22 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .asObservable()
     }
 
+    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
+
     fileprivate let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIFlowActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
+    }
+
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         imageProviderAPI: ImageProviding = ImageProvider(),
+         actionSettings: SDKUIFlowActionSettings) {
+        self.imageProviderAPI = imageProviderAPI
+        self.userDefaultsProvider = userDefaultsProvider
+        _actionSettings.onNext(actionSettings)
+        setupObservers()
     }
 
     fileprivate let _showError = PublishSubject<String>()
@@ -116,16 +132,15 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .unwrap()
     }
 
+    var preConversationHorizontalMargin: CGFloat {
+        let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data()))
+        let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
+        return margin
+    }
+
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
     }()
-
-    init(imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowActionSettings) {
-        self.imageProviderAPI = imageProviderAPI
-        _actionSettings.onNext(actionSettings)
-        setupObservers()
-    }
 
     func setNavigationController(_ navController: UINavigationController?) {
         self.navController = navController
@@ -162,7 +177,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let preConversationStyle =  OWPreConversationStyle.preConversationStyle(fromData: UserDefaultsProvider.shared.get(key: .preConversationCustomStyle, defaultValue: Data()))
+                let preConversationStyle =  OWPreConversationStyle.preConversationStyle(fromData: self.userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data()))
                 let additionalSettings: OWPreConversationSettingsBuilder = .init(style: preConversationStyle)
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
@@ -202,7 +217,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let styleIndexFromPersistence = UserDefaultsProvider.shared.get(key: .conversationCustomStyleIndex, defaultValue: OWConversationStyle.defaultIndex)
+                let styleIndexFromPersistence = self.userDefaultsProvider.get(key: .conversationCustomStyleIndex, defaultValue: OWConversationStyle.defaultIndex)
                 let style = OWConversationStyle.conversationStyle(fromIndex: styleIndexFromPersistence)
                 let additionalSettings: OWConversationSettingsBuilder = .init(style: style)
 
@@ -305,13 +320,13 @@ fileprivate extension MockArticleFlowsViewModel {
         let articleStub = OWArticle.stub()
 
         // swiftlint:disable line_length
-        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: UserDefaultsProvider.shared.get(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex))
+        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex))
         // swiftlint:enable line_length
         let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
                                          readOnlyMode: persistenceReadOnlyMode)
 
         var url = articleStub.url
-        if let strURL =  UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
+        if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL) {
             url = persistenceURL
         }
