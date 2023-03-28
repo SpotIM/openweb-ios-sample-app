@@ -19,19 +19,22 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
         return sdkCoordinator.routering
     }
 
-    fileprivate let sdkCoordinator: OWSDKCoordinator
+    fileprivate let sdkCoordinator: OWFlowsSDKCoordinator
     fileprivate let _customizations: OWCustomizations
     fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
 
-    init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
+    init(sdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
          customizations: OWCustomizations = OWCustomizationsLayer(),
          authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
         self.sdkCoordinator = sdkCoordinator
         self._customizations = customizations
         self._authenticationUI = authenticationUI
     }
+}
 
+// UIFlows
+extension OWUILayer {
     func preConversation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol? = nil,
@@ -183,6 +186,50 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
+    }
+}
+
+// UIViews
+extension OWUILayer {
+    func preConversation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         additionalSettings: OWPreConversationSettingsProtocol?,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion) {
+
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let preConversationData = OWPreConversationRequiredData(article: article,
+                                                                settings: additionalSettings)
+
+//        _ = sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
+//                                                presentationalMode: presentationalMode,
+//                                                callbacks: callbacks)
+//        .observe(on: MainScheduler.asyncInstance)
+//        .take(1)
+//        .subscribe(onNext: { result in
+//            completion(.success(result.toShowable()))
+//        }, onError: { err in
+//            let error: OWError = err as? OWError ?? OWError.preConversationFlow
+//            completion(.failure(error))
+//        })
+    }
+
+    func conversation(postId: OWPostId,
+                      article: OWArticleProtocol,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion) {
+
+        completion(.failure(OWError.missingImplementation))
     }
 }
 

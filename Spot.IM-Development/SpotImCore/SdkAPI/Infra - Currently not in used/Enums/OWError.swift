@@ -21,6 +21,8 @@ public enum OWError: Error {
     case ssoStart
     case ssoComplete
     case alreadyLoggedIn
+    // TODO: Will be removed once the API is no longer beta and be official
+    case missingImplementation
 
     public var description: String {
         switch self {
@@ -46,6 +48,8 @@ public enum OWError: Error {
             return "Error in the process of SSO complete"
         case .alreadyLoggedIn:
             return "Error - a user is already logged in"
+        case .missingImplementation:
+            return "Error - Not implemented yet."
         }
     }
 }
