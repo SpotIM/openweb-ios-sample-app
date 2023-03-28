@@ -28,6 +28,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let compactSummaryTopPadding: CGFloat = 16
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
+        static let readOnlyTopPadding: CGFloat = 44
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -49,6 +50,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return view
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var readOnlyZeroHeightConstraint: OWConstraint? = nil
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -68,8 +70,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
     fileprivate lazy var btnCTAConversation: UIButton = {
-        return LocalizationManager.localizedString(key: "Show more comments")
-            .button
+        return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
@@ -184,9 +185,17 @@ fileprivate extension OWPreConversationView {
             commentCreationZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.addSubview(readOnlyPlaceholderView)
+        readOnlyPlaceholderView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.readOnlyTopPadding)
+            readOnlyZeroHeightConstraint = make.height.equalTo(0).constraint
+        }
+
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationBottomPadding)
+            make.top.equalTo(readOnlyPlaceholderView.OWSnp.bottom).offset(Metrics.commentCreationBottomPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(0)
@@ -201,13 +210,6 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(btnCTAConversation)
         btnCTAConversation.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
-        }
-
-        self.addSubview(readOnlyPlaceholderView)
-        readOnlyPlaceholderView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
@@ -356,7 +358,7 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
+                    make.top.equalTo(self.readOnlyPlaceholderView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
                 }
                 self.tableBottomDivider.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.tableDeviderTopPadding : 0)
@@ -382,6 +384,21 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.shouldShowReadOnlyPlaceholder
             .map { !$0 }
             .bind(to: readOnlyPlaceholderView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowReadOnlyPlaceholder
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                if (isVisible) {
+                    self.readOnlyZeroHeightConstraint?.deactivate()
+                } else {
+                    self.readOnlyZeroHeightConstraint?.activate()
+                }
+                self.readOnlyPlaceholderView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.readOnlyTopPadding : 0)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowFooter
