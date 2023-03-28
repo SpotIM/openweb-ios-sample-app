@@ -28,7 +28,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let compactSummaryTopPadding: CGFloat = 16
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
-        static let readOnlyTopPadding: CGFloat = 44
+        static let readOnlyTopPadding: CGFloat = 40
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -51,6 +51,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
     fileprivate var readOnlyZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var ctaZeroHeightConstraint: OWConstraint? = nil
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -213,6 +214,7 @@ fileprivate extension OWPreConversationView {
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            ctaZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
         self.addSubview(footerTopDevider)
@@ -373,6 +375,13 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.isHidden)
             .disposed(by: disposeBag)
 
+        if let ctaZeroHeightConstraint = ctaZeroHeightConstraint {
+            viewModel.outputs.shouldShowCTA
+                .map { !$0 }
+                .bind(to: ctaZeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         viewModel.outputs.shouldShowCTA
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
@@ -387,7 +396,7 @@ fileprivate extension OWPreConversationView {
             .map { !$0 }
             .bind(to: readOnlyPlaceholderView.rx.isHidden)
             .disposed(by: disposeBag)
-        
+
         if let readOnlyZeroHeightConstraint = readOnlyZeroHeightConstraint {
             viewModel.outputs.shouldShowReadOnlyPlaceholder
                 .map { !$0 }
@@ -395,7 +404,7 @@ fileprivate extension OWPreConversationView {
                 .disposed(by: disposeBag)
 
         }
-        
+
         viewModel.outputs.shouldShowReadOnlyPlaceholder
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
