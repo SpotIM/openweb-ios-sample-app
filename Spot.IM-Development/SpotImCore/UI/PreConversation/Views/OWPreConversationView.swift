@@ -63,7 +63,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
         return tableView
     }()
-    fileprivate lazy var tableBottomDevider: UIView = {
+    fileprivate lazy var tableBottomDivider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
@@ -189,8 +189,8 @@ fileprivate extension OWPreConversationView {
             make.height.equalTo(0)
         }
 
-        self.addSubview(tableBottomDevider)
-        tableBottomDevider.OWSnp.makeConstraints { make in
+        self.addSubview(tableBottomDivider)
+        tableBottomDivider.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.separatorHeight)
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.tableDeviderTopPadding)
@@ -200,7 +200,7 @@ fileprivate extension OWPreConversationView {
         btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(tableBottomDevider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
 
         self.addSubview(footerTopDevider)
@@ -232,7 +232,7 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
-                self.tableBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
+                self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
             })
@@ -338,7 +338,7 @@ fileprivate extension OWPreConversationView {
 
         viewModel.outputs.shouldShowComments
             .map { !$0 }
-            .bind(to: tableBottomDevider.rx.isHidden)
+            .bind(to: tableBottomDivider.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowComments
@@ -348,7 +348,7 @@ fileprivate extension OWPreConversationView {
                 self.tableView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
                 }
-                self.tableBottomDevider.OWSnp.updateConstraints { make in
+                self.tableBottomDivider.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.tableDeviderTopPadding : 0)
                 }
             })
@@ -364,7 +364,7 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.btnCTAConversation.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableBottomDevider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                    make.top.equalTo(self.tableBottomDivider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
@@ -398,10 +398,15 @@ fileprivate extension OWPreConversationView {
 
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
-            .subscribe(onNext: { [weak self] size in
+            .withLatestFrom(viewModel.outputs.shouldShowComments) { size, showComments -> CGFloat? in
+                guard showComments == true else { return 0 }
+                return size.height
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] height in
                 guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.height.equalTo(size.height)
+                    make.height.equalTo(height)
                 }
             })
             .disposed(by: disposeBag)
