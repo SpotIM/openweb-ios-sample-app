@@ -74,7 +74,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.btnFullConversationFontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.btnFullConversationFontSize))
+    }()
+    fileprivate lazy var readOnlyPlaceholderView: OWPreConversationClosedPlaceholderView = {
+       return OWPreConversationClosedPlaceholderView()
     }()
     fileprivate lazy var footerTopDevider: UIView = {
         return UIView()
@@ -202,6 +205,13 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
+        
+        self.addSubview(readOnlyPlaceholderView)
+        readOnlyPlaceholderView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+        }
 
         self.addSubview(footerTopDevider)
         footerTopDevider.OWSnp.makeConstraints { make in
@@ -237,7 +247,7 @@ fileprivate extension OWPreConversationView {
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs
             .summaryTopPadding
             .observe(on: MainScheduler.instance)
@@ -367,6 +377,11 @@ fileprivate extension OWPreConversationView {
                     make.top.equalTo(self.tableBottomDivider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
                 }
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowReadOnlyPlaceholder
+            .map { !$0 }
+            .bind(to: readOnlyPlaceholderView.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowFooter
