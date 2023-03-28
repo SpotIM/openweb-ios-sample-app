@@ -91,12 +91,7 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
             htmlMutableAttributedString.addAttribute(
                 .font,
-                value: UIFont.preferred(style: .medium, of: Metrics.communityGuidelinesFontSize),
-                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
-            )
-            htmlMutableAttributedString.addAttribute(
-                .underlineStyle,
-                value: NSNumber(value: false),
+                value: OWFontBook.shared.font(style: .regular, size: Metrics.communityGuidelinesFontSize),
                 range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(
