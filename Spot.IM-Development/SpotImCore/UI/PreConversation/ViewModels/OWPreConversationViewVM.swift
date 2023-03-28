@@ -217,13 +217,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     var shouldShowComments: Observable<Bool> {
         Observable.combineLatest(preConversationStyleObservable, isEmpty) { style, isEmpty in
-                switch(style) {
-                case .regular:
-                    return !isEmpty
-                case .compact, .ctaWithSummary, .ctaButtonOnly:
-                    return false
-                }
+            switch(style) {
+            case .regular:
+                return !isEmpty
+            case .compact, .ctaWithSummary, .ctaButtonOnly:
+                return false
             }
+        }
     }
 
     var shouldShowComapactView: Bool {
@@ -246,8 +246,15 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowReadOnlyPlaceholder: Observable<Bool> {
-        Observable.combineLatest(isReadOnly, isEmpty) { isReadOnly, isEmpty in
-            return isReadOnly && isEmpty
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly, isEmpty) { style, isReadOnly, isEmpty in
+            switch (style) {
+            case .regular:
+                return isReadOnly
+            case .compact:
+                return false
+            case .ctaWithSummary, .ctaButtonOnly:
+                return isReadOnly && isEmpty
+            }
         }
     }
 
