@@ -40,6 +40,18 @@ class OWBaseCoordinator<ResultType> {
         childCoordinators[coordinator.identifier] = nil
     }
 
+    func free<M: OWCoordinatorResultProtocol,
+              T: OWBaseCoordinator<M>>(allCoordinatorsFromType coordinatorType: T.Type) {
+        let childCoordinatorsIdsToRemove = childCoordinators.values.map { anyCoordinator -> UUID? in
+            guard let coordinator = anyCoordinator as? T else { return nil }
+
+            return coordinator.identifier
+        }
+        .unwrap()
+
+        childCoordinatorsIdsToRemove.forEach { childCoordinators[$0] = nil }
+    }
+
     // 1. Stores coordinator in a dictionary of child coordinators.
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.

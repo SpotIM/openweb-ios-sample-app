@@ -268,7 +268,8 @@ fileprivate extension MockArticleFlowsVC {
                 self.articleScrollView.addSubview(preConversationView)
 
                 preConversationView.snp.makeConstraints { make in
-                    make.leading.trailing.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.leading.trailing.equalTo(self.articleScrollView.contentLayoutGuide).inset(self.viewModel.outputs.preConversationHorizontalMargin)
                 }
 
                 self.articleView.snp.makeConstraints { make in
