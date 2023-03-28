@@ -82,6 +82,8 @@ enum OWError: Error {
     case ssoStart
     case ssoComplete
     case alreadyLoggedIn
+    // TODO: Will be removed once the API is no longer beta and be official
+    case missingImplementation
 
     var description: String {
         switch self {

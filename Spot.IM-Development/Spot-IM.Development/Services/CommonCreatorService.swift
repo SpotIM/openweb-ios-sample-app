@@ -9,6 +9,8 @@
 import Foundation
 import SpotImCore
 
+#if NEW_API
+
 protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func preConversationSettings() -> OWPreConversationSettingsProtocol
@@ -60,3 +62,5 @@ class CommonCreatorService: CommonCreatorServicing {
         return article
     }
 }
+
+#endif
