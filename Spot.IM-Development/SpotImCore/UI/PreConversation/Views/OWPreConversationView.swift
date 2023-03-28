@@ -374,7 +374,7 @@ fileprivate extension OWPreConversationView {
             .map { !$0 }
             .bind(to: btnCTAConversation.rx.isHidden)
             .disposed(by: disposeBag)
-        
+
         if let ctaZeroHeightConstraint = ctaZeroHeightConstraint {
             viewModel.outputs.shouldShowCTA
                 .map { !$0 }
