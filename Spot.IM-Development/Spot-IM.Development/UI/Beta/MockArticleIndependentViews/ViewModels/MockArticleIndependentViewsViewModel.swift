@@ -40,6 +40,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
+    fileprivate let commonCreatorService: CommonCreatorServicing
 
     fileprivate let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
@@ -49,8 +50,10 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
          actionSettings: SDKUIIndependentViewsActionSettings) {
         self.userDefaultsProvider = userDefaultsProvider
+        self.commonCreatorService = commonCreatorService
         _actionSettings.onNext(actionSettings)
 
         switch actionSettings.viewType {
@@ -82,20 +85,19 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     lazy var showComponent: Observable<ComponentAndType> = {
         return self.viewTypeUpdaters
-            .flatMap { [weak self] viewType -> Observable<ComponentAndType> in
+            .flatMap { [weak self] settings -> Observable<ComponentAndType> in
                 guard let self = self else { return .empty() }
-                return self.retrieveComponent(for: viewType)
-                    .map { ($0, viewType) }
+                return self.retrieveComponent(for: settings)
+                    .map { ($0, settings.viewType) }
             }
     }()
 
-    fileprivate lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewType> = {
+    fileprivate lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewsActionSettings> = {
         return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater)
-            .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewType> in
+            .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewsActionSettings> in
                 guard let self = self else { return .empty() }
                 return self.actionSettings
                     .take(1)
-                    .map { $0.viewType }
             }
     }()
 
@@ -170,9 +172,9 @@ fileprivate extension MockArticleIndependentViewsViewModel {
     func setupObservers() {
         // Addressing horizontal margin
         viewTypeUpdaters
-            .subscribe(onNext: { [weak self] type in
+            .subscribe(onNext: { [weak self] settings in
                 guard let self = self else { return }
-                switch type {
+                switch settings.viewType {
                 case .preConversation:
                     let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: self.userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data()))
                     self._horizontalMargin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
@@ -183,25 +185,40 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             .disposed(by: disposeBag)
     }
 
-    func retrieveComponent(for viewType: SDKUIIndependentViewType) -> Observable<UIView> {
-        switch viewType {
+    func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+        switch settings.viewType {
         case .preConversation:
-            return self.retrievePreConversation()
+            return self.retrievePreConversation(settings: settings)
         default:
             return Observable.error(GeneralErrors.missingImplementation)
         }
     }
 
-    func retrievePreConversation() -> Observable<UIView> {
+    func retrievePreConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create() }
 
-            let preConversationStyleData = self.userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data())
-            let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: preConversationStyleData)
+            let additionalSettings = self.commonCreatorService.preConversationSettings()
+            let article = self.commonCreatorService.mockArticle()
 
-            // TODO: Complete once API is ready
-            observer.onNext(UIView())
-            observer.onCompleted()
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            uiViews.preConversation(postId: settings.postId,
+                                    article: article,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: nil,
+                                    completion: { result in
+                switch result {
+                case .success(let preConversationView):
+                    observer.onNext(preConversationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrievePreConversation error: \(message)")
+                    observer.onError(error)
+                }
+            })
 
             return Disposables.create()
         }
