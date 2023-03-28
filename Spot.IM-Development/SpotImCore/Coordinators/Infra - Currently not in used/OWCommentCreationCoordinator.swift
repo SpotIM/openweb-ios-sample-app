@@ -32,10 +32,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
 
-    override var type: OWCoordinatorType {
-        return .commentCreation
-    }
-
     init(router: OWRoutering! = nil, commentCreationData: OWCommentCreationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.commentCreationData = commentCreationData

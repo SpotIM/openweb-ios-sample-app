@@ -31,10 +31,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
 
-    override var type: OWCoordinatorType {
-        return .conversation
-    }
-
     init(router: OWRoutering! = nil, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.conversationData = conversationData

@@ -31,10 +31,6 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
 
-    override var type: OWCoordinatorType {
-        return .commentThread
-    }
-
     init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.commentThreadData = commentThreadData
