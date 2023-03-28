@@ -38,11 +38,11 @@ extension SettingsGroupType {
         }
     }
 
-    init(independentViewActionType: SDKUIIndependentViewActionType) {
-        switch independentViewActionType {
+    init(independentViewType: SDKUIIndependentViewType) {
+        switch independentViewType {
         case .preConversation:
             self = .preConversation
-        case .fullConversation:
+        case .conversation:
             self = .conversation
         case .commentCreation:
             self = .commentCreation

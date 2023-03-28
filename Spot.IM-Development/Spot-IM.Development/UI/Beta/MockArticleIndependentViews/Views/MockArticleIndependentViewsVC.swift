@@ -39,6 +39,18 @@ class MockArticleIndependentViewsVC: UIViewController {
         return article
     }()
 
+    fileprivate lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+
+        scroll.contentLayoutGuide.snp.makeConstraints { make in
+            make.width.equalTo(scroll.snp.width)
+        }
+
+        return scroll
+    }()
+
+    fileprivate var independentView: UIView? = nil
+
     fileprivate lazy var settingsBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
@@ -90,6 +102,12 @@ fileprivate extension MockArticleIndependentViewsVC {
         articleView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
+
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(articleView.snp.bottom)
+        }
     }
 
     func setupObservers() {
@@ -107,6 +125,49 @@ fileprivate extension MockArticleIndependentViewsVC {
                 self.navigationController?.pushViewController(settingsVC, animated: true)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.showComponent
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
+                let view = result.0
+                let type = result.1
+
+                // Clean ups
+                self.independentView?.removeFromSuperview()
+                self.independentView = view
+
+                switch type {
+                case .preConversation:
+                    self.handlePreConversationPresentation()
+                case.conversation:
+                    self.handleConversation()
+                default:
+                    // TODO: Implement for supported types
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func handlePreConversationPresentation() {
+        guard let preConversation = self.independentView else { return }
+
+        scrollView.addSubview(preConversation)
+        preConversation.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(viewModel.outputs.independentViewHorizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(Metrics.verticalMargin)
+            make.bottom.lessThanOrEqualTo(scrollView.contentLayoutGuide.snp.bottom)
+        }
+    }
+
+    func handleConversation() {
+        guard let conversation = self.independentView else { return }
+
+        scrollView.addSubview(conversation)
+        conversation.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.height.equalTo(scrollView.snp.height)
+        }
     }
 }
 #endif
