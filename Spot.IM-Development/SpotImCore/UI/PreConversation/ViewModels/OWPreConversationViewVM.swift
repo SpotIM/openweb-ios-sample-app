@@ -133,25 +133,34 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
             .unwrap()
             .map { count in
-                return count > 0 ? "(\(count))" : ""
+                return count > 0 ? "(\(count.kmFormatted))" : ""
             }
             .asObservable()
     }()
 
     var conversationCTAButtonTitle: Observable<String> {
-        commentsCountObservable
-            .map { [weak self] count in
-                guard let self = self else { return nil }
-                switch(self.preConversationStyle) {
-                case .ctaButtonOnly:
-                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
-                case .ctaWithSummary:
+        Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnly) { count, style, isReadOnly in
+            switch(style) {
+            case .regular:
+                return LocalizationManager.localizedString(key: "Show more comments")
+            case .compact:
+                return nil
+            case .ctaButtonOnly:
+                if count.isEmpty {
                     return LocalizationManager.localizedString(key: "Post a Comment")
-                default:
-                    return LocalizationManager.localizedString(key: "Show more comments")
+                } else {
+                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
+                }
+            case .ctaWithSummary:
+                if !count.isEmpty {
+                    return LocalizationManager.localizedString(key: "Show Comments")
+                } else if !isReadOnly {
+                    return LocalizationManager.localizedString(key: "Post a Comment")
                 }
             }
-            .unwrap()
+            return nil
+        }
+        .unwrap()
     }
 
     var fullConversationTap = PublishSubject<Void>()
