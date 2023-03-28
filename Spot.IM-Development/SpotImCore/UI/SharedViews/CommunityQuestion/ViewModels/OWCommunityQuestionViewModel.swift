@@ -34,19 +34,30 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
             .map { $0.conversation?.communityQuestion }
     }
 
+    var _shouldShowView = BehaviorSubject(value: false)
     var shouldShowView: Observable<Bool> {
-        communityQuestionOutput
-            .map { [weak self] question in
-                guard let self = self else { return false }
-                if let question = question, !question.isEmpty {
-                    return self.style != .none
-                }
-                return false
-            }
+        _shouldShowView
+            .asObserver()
     }
 
     fileprivate let style: OWCommunityQuestionsStyle
+    fileprivate let disposeBag = DisposeBag()
     init(style: OWCommunityQuestionsStyle) {
         self.style = style
+        setupObservers()
+    }
+}
+
+fileprivate extension OWCommunityQuestionViewModel {
+    func setupObservers() {
+        communityQuestionOutput
+            .subscribe(onNext: { [weak self] question in
+                guard let self = self else { return }
+                if let question = question, !question.isEmpty {
+                    self._shouldShowView.onNext(self.style != .none)
+                }
+                return self._shouldShowView.onNext(false)
+            })
+            .disposed(by: disposeBag)
     }
 }
