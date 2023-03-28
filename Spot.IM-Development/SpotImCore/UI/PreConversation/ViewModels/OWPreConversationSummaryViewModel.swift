@@ -72,7 +72,7 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
     lazy var showNextArrow: Bool = {
         return style == .compact
     }()
-    
+
     lazy var isVisible: Bool = {
         return style != .none
     }()

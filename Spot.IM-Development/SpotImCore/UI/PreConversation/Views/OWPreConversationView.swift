@@ -205,7 +205,7 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
-        
+
         self.addSubview(readOnlyPlaceholderView)
         readOnlyPlaceholderView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
