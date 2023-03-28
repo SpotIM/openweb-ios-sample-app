@@ -17,6 +17,10 @@ class OWBaseCoordinator<ResultType> {
 
     var disposeBag = DisposeBag()
 
+    var type: OWCoordinatorType {
+        return .base
+    }
+
     // Unique identifier.
     private let identifier = UUID()
 
@@ -38,6 +42,20 @@ class OWBaseCoordinator<ResultType> {
     // Release coordinator from the `childCoordinators` dictionary.
     func free<T: OWCoordinatorResultProtocol>(coordinator: OWBaseCoordinator<T>) {
         childCoordinators[coordinator.identifier] = nil
+    }
+
+    func free(allCoordinatorsFromType coordinatorType: OWCoordinatorType) {
+        let childCoordinatorsIdsToRemove = childCoordinators.values.map { anyCoordinator -> UUID? in
+            guard let coordinator = anyCoordinator as? OWBaseCoordinator<OWCoordinatorResultProtocol> else { return nil }
+            if coordinator.type == coordinatorType {
+                return coordinator.identifier
+            } else {
+                return nil
+            }
+        }
+        .unwrap()
+
+        childCoordinatorsIdsToRemove.forEach { childCoordinators[$0] = nil }
     }
 
     // 1. Stores coordinator in a dictionary of child coordinators.
