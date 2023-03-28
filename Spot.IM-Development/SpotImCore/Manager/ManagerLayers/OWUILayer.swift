@@ -9,25 +9,32 @@
 import Foundation
 import RxSwift
 
-class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
+class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible, OWCompactRouteringCompatible {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
     var customizations: OWCustomizations { return self._customizations }
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
 
     var routering: OWRoutering {
-        return sdkCoordinator.routering
+        return flowsSdkCoordinator.routering
     }
 
-    fileprivate let sdkCoordinator: OWFlowsSDKCoordinator
+    var compactRoutering: OWCompactRoutering {
+        return viewsSdkCoordinator.compactRoutering
+    }
+
+    fileprivate let flowsSdkCoordinator: OWFlowsSDKCoordinator
+    fileprivate let viewsSdkCoordinator: OWViewsSDKCoordinator
     fileprivate let _customizations: OWCustomizations
     fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
 
-    init(sdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
+    init(flowsSdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
+         viewsSdkCoordinator: OWViewsSDKCoordinator = OWViewsSDKCoordinator(),
          customizations: OWCustomizations = OWCustomizationsLayer(),
          authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
-        self.sdkCoordinator = sdkCoordinator
+        self.flowsSdkCoordinator = flowsSdkCoordinator
+        self.viewsSdkCoordinator = viewsSdkCoordinator
         self._customizations = customizations
         self._authenticationUI = authenticationUI
     }
@@ -55,7 +62,7 @@ extension OWUILayer {
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings)
 
-        sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
+        flowsSdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
                                                 presentationalMode: presentationalMode,
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
@@ -88,7 +95,7 @@ extension OWUILayer {
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings)
 
-        _ = sdkCoordinator.startConversationFlow(conversationData: conversationData,
+        _ = flowsSdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
@@ -127,7 +134,7 @@ extension OWUILayer {
                                                           settings: additionalSettings?.conversationSettings)
         let commentCreationData = OWCommentCreationRequiredData(article: article, commentCreationType: .comment)
 
-        _ = sdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
+        _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
                                                     presentationalMode: presentationalMode,
                                                     callbacks: callbacks)
@@ -169,7 +176,7 @@ extension OWUILayer {
                                                           settings: additionalSettings?.conversationSettings)
         let commentThreadData = OWCommentThreadRequiredData(commentId: commentId)
 
-        _ = sdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
+        _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
                                                     presentationalMode: presentationalMode,
                                                     callbacks: callbacks)
@@ -210,17 +217,16 @@ extension OWUILayer {
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings)
 
-//        _ = sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
-//                                                presentationalMode: presentationalMode,
-//                                                callbacks: callbacks)
-//        .observe(on: MainScheduler.asyncInstance)
-//        .take(1)
-//        .subscribe(onNext: { result in
-//            completion(.success(result.toShowable()))
-//        }, onError: { err in
-//            let error: OWError = err as? OWError ?? OWError.preConversationFlow
-//            completion(.failure(error))
-//        })
+        _ = viewsSdkCoordinator.preConversationView(preConversationData: preConversationData,
+                                                callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.preConversationView
+            completion(.failure(error))
+        })
     }
 
     func conversation(postId: OWPostId,
