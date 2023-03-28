@@ -104,6 +104,11 @@ fileprivate extension OWPreConversationSummeryView {
         }
 
         self.isHidden = !viewModel.outputs.isVisible
+        if (!viewModel.outputs.isVisible) {
+            self.OWSnp.makeConstraints { make in
+                make.height.equalTo(0)
+            }
+        }
     }
 
     func setupObservers() {
