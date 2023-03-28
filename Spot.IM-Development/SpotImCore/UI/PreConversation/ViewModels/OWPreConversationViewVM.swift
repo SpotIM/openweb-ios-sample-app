@@ -140,20 +140,20 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     var conversationCTAButtonTitle: Observable<String> {
-        Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnly) { count, style, isReadOnly in
+        Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnly, isEmpty) { count, style, isReadOnly, isEmpty in
             switch(style) {
             case .regular:
                 return LocalizationManager.localizedString(key: "Show more comments")
             case .compact:
                 return nil
             case .ctaButtonOnly:
-                if count.isEmpty {
+                if isEmpty {
                     return LocalizationManager.localizedString(key: "Post a Comment")
                 } else {
                     return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
                 }
             case .ctaWithSummary:
-                if !count.isEmpty {
+                if !isEmpty {
                     return LocalizationManager.localizedString(key: "Show Comments")
                 } else if !isReadOnly {
                     return LocalizationManager.localizedString(key: "Post a Comment")
@@ -216,11 +216,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowComments: Observable<Bool> {
-        preConversationStyleObservable
-            .map { style in
+        Observable.combineLatest(preConversationStyleObservable, isEmpty) { style, isEmpty in
                 switch(style) {
                 case .regular:
-                    return true
+                    return !isEmpty
                 case .compact, .ctaWithSummary, .ctaButtonOnly:
                     return false
                 }
@@ -232,13 +231,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowCTA: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnly, commentsCountObservable) { style, isReadOnly, commentsCount in
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly, isEmpty) { style, isReadOnly, isEmpty in
             var isVisible = true
             switch (style) {
             case .regular(_):
-                isVisible = !commentsCount.isEmpty
+                isVisible = !isEmpty
             case .ctaButtonOnly, .ctaWithSummary:
-                isVisible = !commentsCount.isEmpty || !isReadOnly
+                isVisible = !isEmpty || !isReadOnly
             case .compact:
                 isVisible = false
             }
@@ -247,8 +246,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowReadOnlyPlaceholder: Observable<Bool> {
-        Observable.combineLatest(isReadOnly, commentsCountObservable) { isReadOnly, commentsCount in
-            return isReadOnly && commentsCount.isEmpty
+        Observable.combineLatest(isReadOnly, isEmpty) { isReadOnly, isEmpty in
+            return isReadOnly && isEmpty
         }
     }
 
@@ -271,6 +270,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     lazy var isCompactBackground: Bool = {
         return isCompactMode
     }()
+
+    fileprivate var isEmpty = BehaviorSubject<Bool>(value: false)
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -358,6 +359,18 @@ fileprivate extension OWPreConversationViewViewModel {
         // Binding to community question component
         conversationFetchedObservable
             .bind(to: communityQuestionViewModel.inputs.conversationFetched)
+            .disposed(by: disposeBag)
+
+        // Set isEmpty
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] conversation in
+                guard let self = self else { return }
+                if let messageCount = conversation.conversation?.messagesCount, messageCount > 0 {
+                    self.isEmpty.onNext(false)
+                } else {
+                    self.isEmpty.onNext(true)
+                }
+            })
             .disposed(by: disposeBag)
 
         // Set read only mode
