@@ -14,7 +14,7 @@ enum GeneralErrors: Error {
     var description: String {
         switch self {
         case .missingImplementation:
-            return "Error - Not implemented yet.`"
+            return "Error - Not implemented yet."
         }
     }
 }
