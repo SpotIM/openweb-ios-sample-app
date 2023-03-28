@@ -13,11 +13,13 @@ import SpotImCore
 #if NEW_API
 
 protocol MockArticleIndependentViewsViewModelingInputs {
+    var settingsTapped: PublishSubject<Void> { get }
 }
 
 protocol MockArticleIndependentViewsViewModelingOutputs {
     var title: String { get }
     var loggerViewModel: UILoggerViewModeling { get }
+    var openSettings: Observable<SettingsGroupType> { get }
 }
 
 protocol MockArticleIndependentViewsViewModeling {
@@ -29,7 +31,14 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     var inputs: MockArticleIndependentViewsViewModelingInputs { return self }
     var outputs: MockArticleIndependentViewsViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
+    let settingsTapped = PublishSubject<Void>()
+
+    var openSettings: Observable<SettingsGroupType> {
+        return settingsTapped
+            .withLatestFrom(actionSettings)
+            .map { SettingsGroupType(independentViewActionType: $0.actionType) }
+            .asObservable()
+    }
 
     fileprivate let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
@@ -37,6 +46,8 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             .unwrap()
             .asObservable()
     }
+
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate let loggerViewTitle: String
 
