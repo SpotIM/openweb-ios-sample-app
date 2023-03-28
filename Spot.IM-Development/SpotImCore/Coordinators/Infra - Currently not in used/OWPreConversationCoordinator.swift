@@ -19,12 +19,18 @@ enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
 
-    fileprivate let router: OWRoutering
+    // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
+    // Trying to use that in `Standalone Views` mode will cause a crash immediately.
+    fileprivate var router: OWRoutering!
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate let authenticationManager: OWAuthenticationManagerProtocol
 
-    init(router: OWRoutering,
+    override var type: OWCoordinatorType {
+        return .preConversation
+    }
+
+    init(router: OWRoutering! = nil,
          preConversationData: OWPreConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
          authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {

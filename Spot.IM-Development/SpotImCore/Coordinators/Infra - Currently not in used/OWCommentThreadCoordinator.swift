@@ -24,11 +24,18 @@ enum OWCommentThreadCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorResult> {
-    fileprivate let router: OWRoutering
+
+    // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
+    // Trying to use that in `Standalone Views` mode will cause a crash immediately.
+    fileprivate let router: OWRoutering!
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
 
-    init(router: OWRoutering, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    override var type: OWCoordinatorType {
+        return .commentThread
+    }
+
+    init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.commentThreadData = commentThreadData
         self.actionsCallbacks = actionsCallbacks
