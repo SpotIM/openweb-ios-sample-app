@@ -70,16 +70,11 @@ extension OWCommunityGuidelinesView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldBeHidden
-            .subscribe(onNext: { [weak self] isHidden in
-                guard let self = self else { return }
-                if (isHidden) {
-                    self.heightConstraint?.activate()
-                } else {
-                    self.heightConstraint?.deactivate()
-                }
-            })
-            .disposed(by: disposeBag)
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldBeHidden
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         viewModel.outputs.communityGuidelinesHtmlAttributedString
             .bind(to: titleTextView.rx.attributedText)

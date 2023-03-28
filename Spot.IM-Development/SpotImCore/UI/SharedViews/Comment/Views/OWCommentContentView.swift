@@ -129,16 +129,18 @@ fileprivate extension OWCommentContentView {
             .bind(to: editedLabel.rx.isHidden)
             .disposed(by: disposeBag)
 
+        if let editedLabelHeightConstraint = editedLabelHeightConstraint {
+            viewModel.outputs.isEdited
+                .map { !$0 }
+                .bind(to: editedLabelHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         viewModel.outputs.isEdited
             .subscribe(onNext: { [weak self] isEdited in
                 guard let self = self else { return }
                 self.editedLabel.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.mediaView.OWSnp.bottom).offset(isEdited ? Metrics.editedTopPadding : 0)
-                }
-                if isEdited {
-                    self.editedLabelHeightConstraint?.deactivate()
-                } else {
-                    self.editedLabelHeightConstraint?.activate()
                 }
             })
             .disposed(by: disposeBag)
