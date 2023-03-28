@@ -39,7 +39,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
 
     fileprivate let _actionSettings = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIIndependentViewsActionSettings> {
