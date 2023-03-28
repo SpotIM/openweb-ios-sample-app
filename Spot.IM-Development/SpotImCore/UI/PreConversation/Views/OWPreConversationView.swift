@@ -328,15 +328,17 @@ fileprivate extension OWPreConversationView {
             .bind(to: commentCreationEntryView.rx.isHidden)
             .disposed(by: disposeBag)
 
+        if let commentCreationZeroHeightConstraint = commentCreationZeroHeightConstraint {
+            viewModel.outputs.shouldShowCommentCreationEntryView
+                .map { !$0 }
+                .bind(to: commentCreationZeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         viewModel.outputs.shouldShowCommentCreationEntryView
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
-                if (shouldShow) {
-                    self.commentCreationZeroHeightConstraint?.deactivate()
-                } else {
-                    self.commentCreationZeroHeightConstraint?.activate()
-                }
                 self.commentCreationEntryView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityGuidelinesView.OWSnp.bottom).offset(shouldShow ? Metrics.commentCreationTopPadding : 0)
                 }
@@ -385,16 +387,19 @@ fileprivate extension OWPreConversationView {
             .map { !$0 }
             .bind(to: readOnlyPlaceholderView.rx.isHidden)
             .disposed(by: disposeBag)
+        
+        if let readOnlyZeroHeightConstraint = readOnlyZeroHeightConstraint {
+            viewModel.outputs.shouldShowReadOnlyPlaceholder
+                .map { !$0 }
+                .bind(to: readOnlyZeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
 
+        }
+        
         viewModel.outputs.shouldShowReadOnlyPlaceholder
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
-                if (isVisible) {
-                    self.readOnlyZeroHeightConstraint?.deactivate()
-                } else {
-                    self.readOnlyZeroHeightConstraint?.activate()
-                }
                 self.readOnlyPlaceholderView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.readOnlyTopPadding : 0)
                 }
