@@ -18,6 +18,8 @@ class MockArticleIndependentViewsVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
+        static let identifier = "mock_article_independent_views_vc_id"
+        static let settingsBarItemIdentifier = "settings_bar_item_id"
     }
 
     fileprivate let viewModel: MockArticleIndependentViewsViewModeling
@@ -35,6 +37,25 @@ class MockArticleIndependentViewsVC: UIViewController {
         }
 
         return article
+    }()
+
+    fileprivate lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+
+        scroll.contentLayoutGuide.snp.makeConstraints { make in
+            make.width.equalTo(scroll.snp.width)
+        }
+
+        return scroll
+    }()
+
+    fileprivate var independentView: UIView? = nil
+
+    fileprivate lazy var settingsBarItem: UIBarButtonItem = {
+        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
+                               style: .plain,
+                               target: nil,
+                               action: nil)
     }()
 
     fileprivate lazy var loggerView: UILoggerView = {
@@ -58,15 +79,22 @@ class MockArticleIndependentViewsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupObservers()
+        navigationItem.rightBarButtonItems = [settingsBarItem]
     }
 }
 
 fileprivate extension MockArticleIndependentViewsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
+    }
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
 
@@ -74,10 +102,72 @@ fileprivate extension MockArticleIndependentViewsVC {
         articleView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
+
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(articleView.snp.bottom)
+        }
     }
 
     func setupObservers() {
         title = viewModel.outputs.title
+
+        settingsBarItem.rx.tap
+            .bind(to: viewModel.inputs.settingsTapped)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openSettings
+            .subscribe(onNext: { [weak self] settingsType in
+                guard let self = self else { return }
+                let settingsVM = SettingsViewModel(settingViewTypes: [settingsType])
+                let settingsVC = SettingsVC(viewModel: settingsVM)
+                self.navigationController?.pushViewController(settingsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showComponent
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
+                let view = result.0
+                let type = result.1
+
+                // Clean ups
+                self.independentView?.removeFromSuperview()
+                self.independentView = view
+
+                switch type {
+                case .preConversation:
+                    self.handlePreConversationPresentation()
+                case.conversation:
+                    self.handleConversation()
+                default:
+                    // TODO: Implement for supported types
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func handlePreConversationPresentation() {
+        guard let preConversation = self.independentView else { return }
+
+        scrollView.addSubview(preConversation)
+        preConversation.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(viewModel.outputs.independentViewHorizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(Metrics.verticalMargin)
+            make.bottom.lessThanOrEqualTo(scrollView.contentLayoutGuide.snp.bottom)
+        }
+    }
+
+    func handleConversation() {
+        guard let conversation = self.independentView else { return }
+
+        scrollView.addSubview(conversation)
+        conversation.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.height.equalTo(scrollView.snp.height)
+        }
     }
 }
 #endif

@@ -19,16 +19,25 @@ enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
 
-    fileprivate let router: OWRoutering
+    // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
+    // Trying to use that in `Standalone Views` mode will cause a crash immediately.
+    fileprivate var router: OWRoutering!
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate let authenticationManager: OWAuthenticationManagerProtocol
 
-    init(router: OWRoutering,
+    // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
+    fileprivate var isStandaloneMode: Bool
+
+    init(router: OWRoutering! = nil,
          preConversationData: OWPreConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
          authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
         self.router = router
+
+        // TODO: An easy soultion just to prevent crashes in standalone mode until Revital will merge the `ViewableMode` enum in the branch she's working on
+        isStandaloneMode = router == nil
+
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
         self.authenticationManager = authenticationManager
@@ -45,7 +54,10 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
-        setupObservers(forViewModel: preConversationViewVM)
+        // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
+        if !isStandaloneMode {
+            setupObservers(forViewModel: preConversationViewVM)
+        }
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
         let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
