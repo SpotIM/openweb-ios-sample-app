@@ -86,17 +86,12 @@ fileprivate extension OWCommunityQuestionView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowView
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                if isVisible {
-                    self.heightConstraint?.deactivate()
-                } else {
-                    self.heightConstraint?.activate()
-                }
-            })
-            .disposed(by: disposeBag)
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         // TODO: colors
         OWSharedServicesProvider.shared.themeStyleService()

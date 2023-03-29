@@ -50,8 +50,10 @@ extension OWPreConversationStyle {
         switch self {
         case .compact:
             return .compact
-        case .regular, .ctaButtonOnly, .ctaWithSummary:
+        case .regular, .ctaWithSummary:
             return .regular
+        case .ctaButtonOnly:
+            return .none
         }
     }
 
