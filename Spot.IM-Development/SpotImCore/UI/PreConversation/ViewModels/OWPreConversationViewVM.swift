@@ -13,10 +13,8 @@ import RxSwift
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
-    // TODO: Testing - remove later and connect the actual views/actions
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
-
     var viewInitialized: PublishSubject<Void> { get }
 }
 
@@ -115,7 +113,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .share(replay: 1)
     }()
 
-    // TODO: support read only in pre conversation
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
         return _isReadOnly
@@ -342,7 +339,6 @@ fileprivate extension OWPreConversationViewViewModel {
                 let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
 
                 for (index, comment) in comments.enumerated() {
-                    // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
                         comment: comment,
