@@ -393,6 +393,10 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        isReadOnly
+            .bind(to: compactCommentVM.inputs.isReadOnly)
+            .disposed(by: disposeBag)
+
         // Subscribing to customize UI related stuff
         Observable.merge(
             preConversationSummaryVM.inputs.customizeCounterLabelUI.asObservable(),
