@@ -705,6 +705,9 @@
 		9EBE5C2C29AE16B1001150DA /* OWConversationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2B29AE16B0001150DA /* OWConversationStyle+Extensions.swift */; };
 		9EBE5C2E29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2D29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift */; };
 		9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2F29AE29B3001150DA /* OWFontGroupFamily+Extensions.swift */; };
+		9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */; };
+		9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */; };
+		9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -1478,6 +1481,9 @@
 		9EBE5C2B29AE16B0001150DA /* OWConversationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EBE5C2D29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommentCreationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EBE5C2F29AE29B3001150DA /* OWFontGroupFamily+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWFontGroupFamily+Extensions.swift"; sourceTree = "<group>"; };
+		9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityGuidelinesStyle+Extensions.swift"; sourceTree = "<group>"; };
+		9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityQuestionsStyle+Extensions.swift"; sourceTree = "<group>"; };
+		9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Extensions.swift"; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
 		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
@@ -4086,6 +4092,9 @@
 				9EBE5C2B29AE16B0001150DA /* OWConversationStyle+Extensions.swift */,
 				9EBE5C2D29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift */,
 				9EBE5C2F29AE29B3001150DA /* OWFontGroupFamily+Extensions.swift */,
+				9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */,
+				9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */,
+				9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */,
 			);
 			path = "OpenWebSDK+Extensions";
 			sourceTree = "<group>";
@@ -5079,6 +5088,8 @@
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
 				9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */,
+				9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */,
+				9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */,
 				3DB3D19B282AFEB4008654CF /* ColorPalette.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleFlowsVC.swift in Sources */,
 				9EBE5C2C29AE16B1001150DA /* OWConversationStyle+Extensions.swift in Sources */,
@@ -5115,6 +5126,7 @@
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
 				9EA0F83F29ACBA9C008FD7A6 /* PreConversationSettingsView.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
+				9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */,
 				3DCAE3F629D31042005B9189 /* CommonCreatorService.swift in Sources */,
 				9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,

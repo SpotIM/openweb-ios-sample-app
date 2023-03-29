@@ -120,7 +120,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new pre conversation component
     fileprivate lazy var preConversationStyleChanged: Observable<Void> = {
-        return self.userDefaultsProvider.values(key: .preConversationCustomStyle, defaultValue: Data())
+        return self.userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
                 guard let self = self else { return .empty() }
@@ -188,7 +188,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 guard let self = self else { return }
                 switch settings.viewType {
                 case .preConversation:
-                    let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: self.userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data()))
+                    let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
                     self._horizontalMargin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
                 default:
                     self._horizontalMargin = 0.0

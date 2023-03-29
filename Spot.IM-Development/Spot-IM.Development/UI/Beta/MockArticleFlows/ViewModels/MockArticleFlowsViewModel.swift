@@ -139,7 +139,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     }
 
     var preConversationHorizontalMargin: CGFloat {
-        let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data()))
+        let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
         return margin
     }

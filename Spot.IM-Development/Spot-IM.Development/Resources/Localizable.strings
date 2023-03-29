@@ -78,8 +78,8 @@
 "Compact" = "Compact";
 "CTAButtonOnly" = "Button Only";
 "CTAWithSummary" = "Summary";
-"CustomStyleModeTitle" = "Custom style mode";
-"CustomStyleLinesTitle" = "Number of lines";
+"StyleModeTitle" = "Style mode";
+"CustomStyleNumberOfCommentsTitle" = "Number of comments";
 "FloatingKeyboard" = "Floating";
 "FontGroupType" = "Font group type";
 "Custom" = "Custom";
@@ -88,4 +88,12 @@
 "SupportedLanguages" = "Supported languages";
 "Device" = "Device";
 "SetLanguage" = "Set Language";
+"CommunityGuidelinesStyleModeTitle" = "Community Guidelines Style";
+"QuestionsStyleModeTitle" = "Questions Style";
+"ConversationSpacingModeTitle" = "Conversation Spacing";
+"BetweenCommentsSpacingTitle" = "Between comments spacing";
+"BelowHeaderSpacingTitle" = "Below header spacing";
+"BelowCommunityGuidelinesSpacingTitle" = "Below guidelines spacing";
+"BelowCommunityQuestionsGuidelinesSpacingTitle" = "Below questions spacing";
+"None" = "None";
 "LoggerView" = "Logger View";
