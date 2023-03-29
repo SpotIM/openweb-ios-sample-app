@@ -22,7 +22,7 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
-    func shouldTapBeHandeled(at index: Int) -> Bool
+    func shouldTapBeHandeled(at index: Int) -> Bool // TODO: input
 }
 
 protocol OWCommentTextViewModeling {
@@ -132,7 +132,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         urlTap
             .asObservable()
     }
-    
+
     func shouldTapBeHandeled(at index: Int) -> Bool {
         if isReadMoreTap(at: index) || getActiveUrl(at: index) != nil {
             return true
