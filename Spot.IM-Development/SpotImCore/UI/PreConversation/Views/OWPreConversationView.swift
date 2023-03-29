@@ -69,7 +69,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
     fileprivate lazy var btnCTAConversation: UIButton = {
-        return LocalizationManager.localizedString(key: "Show more comments")
+        return OWLocalizationManager.shared.localizedString(key: "Show more comments")
             .button
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)

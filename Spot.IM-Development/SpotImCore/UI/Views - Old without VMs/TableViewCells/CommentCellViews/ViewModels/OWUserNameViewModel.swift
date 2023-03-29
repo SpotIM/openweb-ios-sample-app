@@ -68,7 +68,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
-                : LocalizationManager.localizedString(key: "To") + " \($0)"
+                : OWLocalizationManager.shared.localizedString(key: "To") + " \($0)"
             })
     }
 
@@ -123,7 +123,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                 } else {
                     localizationKey = "This message was deleted."
                 }
-                return LocalizationManager.localizedString(key: localizationKey)
+                return OWLocalizationManager.shared.localizedString(key: localizationKey)
             }
     }
 
