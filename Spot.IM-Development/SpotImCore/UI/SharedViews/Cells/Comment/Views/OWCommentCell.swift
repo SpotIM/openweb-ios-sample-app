@@ -41,7 +41,8 @@ fileprivate extension OWCommentCell {
     func setupUI() {
         self.backgroundColor = .clear
         self.contentView.addSubviews(commentView)
-
+        self.selectionStyle = .none
+        
         commentView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

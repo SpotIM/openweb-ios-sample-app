@@ -22,6 +22,7 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
+    func shouldTapBeHandeled(at index: Int) -> Bool
 }
 
 protocol OWCommentTextViewModeling {
@@ -131,6 +132,13 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         urlTap
             .asObservable()
     }
+    
+    func shouldTapBeHandeled(at index: Int) -> Bool {
+        if isReadMoreTap(at: index) || getActiveUrl(at: index) != nil {
+            return true
+        }
+        return false
+    }
 }
 
 fileprivate extension OWCommentTextViewModel {
@@ -139,13 +147,27 @@ fileprivate extension OWCommentTextViewModel {
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
 
-                if let range = self.readMoreRange, range.contains(index) {
+                if self.isReadMoreTap(at: index) {
                     self._textState.onNext(.expanded)
-                } else if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
+                } else if let activeUrl = self.getActiveUrl(at: index) {
                     self.urlTap.onNext(activeUrl)
                 }
             })
             .disposed(by: disposeBag)
+    }
+    
+    func isReadMoreTap(at index: Int) -> Bool {
+        if let range = self.readMoreRange, range.contains(index) {
+            return true
+        }
+        return false
+    }
+    
+    func getActiveUrl(at index: Int) -> URL? {
+        if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
+            return activeUrl
+        }
+        return nil
     }
 }
 
