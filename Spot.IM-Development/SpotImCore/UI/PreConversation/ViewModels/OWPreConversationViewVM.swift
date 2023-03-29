@@ -158,11 +158,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 guard let self = self else { return nil }
                 switch(self.preConversationStyle) {
                 case .ctaButtonOnly:
-                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
+                    return OWLocalizationManager.shared.localizedString(key: "Show Comments") + " \(count)"
                 case .ctaWithSummary:
-                    return LocalizationManager.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
                 default:
-                    return LocalizationManager.localizedString(key: "Show more comments")
+                    return OWLocalizationManager.shared.localizedString(key: "Show more comments")
                 }
             }
             .unwrap()
