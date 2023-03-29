@@ -97,7 +97,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
-                : OWLocalizationManager.shared.localizedString(key: "To") + " \($0)"
+                : LocalizationManager.localizedString(key: "To") + " \($0)"
             })
     }
 
@@ -157,7 +157,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             } else {
                 return ""
             }
-            return OWLocalizationManager.shared.localizedString(key: localizationKey)
+            return LocalizationManager.localizedString(key: localizationKey)
         }
     }
 
