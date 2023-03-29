@@ -17,8 +17,8 @@ class MockArticleFlowsVC: UIViewController {
     fileprivate struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
-        // 1.5 * screen height, defualt to 1200
-        static let articleHeight: CGFloat = 1.5 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
+        // 1.2 * screen height, defualt to 1200
+        static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2/3
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
