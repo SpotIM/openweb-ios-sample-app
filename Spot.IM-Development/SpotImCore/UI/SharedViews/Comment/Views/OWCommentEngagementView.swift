@@ -24,7 +24,7 @@ class OWCommentEngagementView: UIView {
 
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
-            .setTitle(LocalizationManager.localizedString(key: "Reply"), state: .normal)
+            .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
             .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
             .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
@@ -35,7 +35,7 @@ class OWCommentEngagementView: UIView {
 
     fileprivate lazy var shareButton: UIButton = {
         return UIButton()
-            .setTitle(LocalizationManager.localizedString(key: "Share"), state: .normal)
+            .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
             .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
             .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
