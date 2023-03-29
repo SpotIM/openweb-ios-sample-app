@@ -47,6 +47,7 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let imageProviderAPI: ImageProviding
+    fileprivate let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
     fileprivate weak var navController: UINavigationController?
     fileprivate weak var presentationalVC: UIViewController?
@@ -69,10 +70,12 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     }
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
          commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
          imageProviderAPI: ImageProviding = ImageProvider(),
          actionSettings: SDKUIFlowActionSettings) {
         self.imageProviderAPI = imageProviderAPI
+        self.silentSSOAuthentication = silentSSOAuthentication
         self.commonCreatorService = commonCreatorService
         self.userDefaultsProvider = userDefaultsProvider
         _actionSettings.onNext(actionSettings)
@@ -319,6 +322,55 @@ fileprivate extension MockArticleFlowsViewModel {
                 })
             })
             .disposed(by: disposeBag)
+
+        // Providing `displayAuthenticationFlow` callback
+        let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
+            guard let self = self else { return }
+            let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
+            let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
+
+            switch routeringMode {
+            case .flow(let navController):
+                navController.pushViewController(authenticationVC, animated: true)
+            case .none:
+                self.navController?.pushViewController(authenticationVC, animated: true)
+            default:
+                break
+            }
+
+            _ = authenticationVM.outputs.dismissed
+                .take(1)
+                .subscribe(onNext: { [completion] _ in
+                    completion()
+                })
+        }
+
+        var authenticationUI = OpenWeb.manager.ui.authenticationUI
+        authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
+
+        // Providing `renewSSO` callback
+        let renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+            guard let self = self else { return }
+            let demoSpotId = ConversationPreset.demoSpot().conversationDataModel.spotId
+            if OpenWeb.manager.spotId == demoSpotId,
+               let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
+                _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                    .take(1) // No need to disposed since we only take 1
+                    .subscribe(onNext: { userId in
+                        DLog("Silent SSO completed successfully with userId: \(userId)")
+                        completion()
+                    }, onError: { error in
+                        DLog("Silent SSO failed with error: \(error)")
+                        completion()
+                    })
+            } else {
+                DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
+                completion()
+            }
+        }
+
+        var authentication = OpenWeb.manager.authentication
+        authentication.renewSSO = renewSSOCallback
     }
     // swiftlint:enable function_body_length
 
