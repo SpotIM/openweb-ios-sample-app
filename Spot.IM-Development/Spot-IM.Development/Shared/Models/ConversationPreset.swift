@@ -42,6 +42,9 @@ extension ConversationPreset {
                                       ConversationPreset(displayName: "Ynet",
                                                                conversationDataModel: SDKConversationDataModel(spotId: "sp_AJXaDckj",
                                                                                                                postId: "S19Z20aTU")),
+                                     ConversationPreset(displayName: "DailyMotion",
+                                                              conversationDataModel: SDKConversationDataModel(spotId: "sp_ybZYQUfH",
+                                                                                                              postId: "x8imjpp")),
 
                                       ConversationPreset(displayName: "mobile SSO",
                                                          conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSSO",
