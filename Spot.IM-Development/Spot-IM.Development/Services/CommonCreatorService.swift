@@ -26,16 +26,14 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func preConversationSettings() -> OWPreConversationSettingsProtocol {
-        let preConversationStyleData = self.userDefaultsProvider.get(key: .preConversationCustomStyle, defaultValue: Data())
-        let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: preConversationStyleData)
+        let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let additionalSettings = OWPreConversationSettingsBuilder(style: preConversationStyle)
         return additionalSettings
     }
 
     func conversationSettings() -> OWConversationSettingsProtocol {
-        let styleIndexFromPersistence = self.userDefaultsProvider.get(key: .conversationCustomStyleIndex, defaultValue: OWConversationStyle.defaultIndex)
-        let style = OWConversationStyle.conversationStyle(fromIndex: styleIndexFromPersistence)
-        let additionalSettings = OWConversationSettingsBuilder(style: style)
+        let styleFromPersistence = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        let additionalSettings = OWConversationSettingsBuilder(style: styleFromPersistence)
         return additionalSettings
     }
 
