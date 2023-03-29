@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    internal struct Metrics {
         static let commentCreationTopPadding: CGFloat = 28
         static let commentCreationBottomPadding: CGFloat = 24
         static let horizontalOffset: CGFloat = 16.0
@@ -29,6 +29,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let compactCornerRadius: CGFloat = 8
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
+        static let readOnlyTopPadding: CGFloat = 40
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -50,6 +51,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return view
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var readOnlyZeroHeightConstraint: OWConstraint? = nil
+    fileprivate var ctaZeroHeightConstraint: OWConstraint? = nil
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -64,18 +67,20 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
         return tableView
     }()
-    fileprivate lazy var tableBottomDevider: UIView = {
+    fileprivate lazy var tableBottomDivider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
     fileprivate lazy var btnCTAConversation: UIButton = {
-        return OWLocalizationManager.shared.localizedString(key: "Show more comments")
-            .button
+        return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.btnFullConversationFontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.btnFullConversationFontSize))
+    }()
+    fileprivate lazy var readOnlyPlaceholderView: OWPreConversationClosedPlaceholderView = {
+       return OWPreConversationClosedPlaceholderView()
     }()
     fileprivate lazy var footerTopDevider: UIView = {
         return UIView()
@@ -134,7 +139,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubviews(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(viewModel.outputs.shouldShowComapactView ? Metrics.compactSummaryTopPadding : Metrics.summaryTopPadding)
+            make.top.equalToSuperview().offset(Metrics.compactSummaryTopPadding)
             make.leading.trailing.equalToSuperview()
         }
 
@@ -184,16 +189,24 @@ fileprivate extension OWPreConversationView {
             commentCreationZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.addSubview(readOnlyPlaceholderView)
+        readOnlyPlaceholderView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.readOnlyTopPadding)
+            readOnlyZeroHeightConstraint = make.height.equalTo(0).constraint
+        }
+
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationBottomPadding)
+            make.top.equalTo(readOnlyPlaceholderView.OWSnp.bottom).offset(Metrics.commentCreationBottomPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(0)
         }
 
-        self.addSubview(tableBottomDevider)
-        tableBottomDevider.OWSnp.makeConstraints { make in
+        self.addSubview(tableBottomDivider)
+        tableBottomDivider.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.separatorHeight)
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.tableDeviderTopPadding)
@@ -203,7 +216,8 @@ fileprivate extension OWPreConversationView {
         btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(tableBottomDevider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            ctaZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
         self.addSubview(footerTopDevider)
@@ -235,9 +249,20 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
-                self.tableBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
+                self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
+            .summaryTopPadding
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] padding in
+                guard let self = self else { return }
+                self.preConversationSummary.OWSnp.updateConstraints { make in
+                    make.top.equalToSuperview().offset(padding)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -255,6 +280,26 @@ fileprivate extension OWPreConversationView {
                 self.communityQuestionBottomDevider.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityQuestionView.OWSnp.bottom).offset(isVisible ? Metrics.communityQuestionDeviderPadding : 0)
                     make.height.equalTo(isVisible ? Metrics.separatorHeight : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
+            .communityQuestionViewModel.outputs
+            .shouldShowView
+            .map { !$0 }
+            .bind(to: communityQuestionBottomDevider.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
+            .communityGuidelinesViewModel
+            .outputs
+            .shouldBeHidden
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isHidden in
+                guard let self = self else { return }
+                self.communityGuidelinesView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(isHidden ? 0 : Metrics.communityQuestionDeviderPadding)
                 }
             })
             .disposed(by: disposeBag)
@@ -288,15 +333,17 @@ fileprivate extension OWPreConversationView {
             .bind(to: commentCreationEntryView.rx.isHidden)
             .disposed(by: disposeBag)
 
+        if let commentCreationZeroHeightConstraint = commentCreationZeroHeightConstraint {
+            viewModel.outputs.shouldShowCommentCreationEntryView
+                .map { !$0 }
+                .bind(to: commentCreationZeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         viewModel.outputs.shouldShowCommentCreationEntryView
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
-                if (shouldShow) {
-                    self.commentCreationZeroHeightConstraint?.deactivate()
-                } else {
-                    self.commentCreationZeroHeightConstraint?.activate()
-                }
                 self.commentCreationEntryView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityGuidelinesView.OWSnp.bottom).offset(shouldShow ? Metrics.commentCreationTopPadding : 0)
                 }
@@ -310,7 +357,7 @@ fileprivate extension OWPreConversationView {
 
         viewModel.outputs.shouldShowComments
             .map { !$0 }
-            .bind(to: tableBottomDevider.rx.isHidden)
+            .bind(to: tableBottomDivider.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowComments
@@ -318,9 +365,9 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
+                    make.top.equalTo(self.readOnlyPlaceholderView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
                 }
-                self.tableBottomDevider.OWSnp.updateConstraints { make in
+                self.tableBottomDivider.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.tableDeviderTopPadding : 0)
                 }
             })
@@ -331,12 +378,42 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.isHidden)
             .disposed(by: disposeBag)
 
+        if let ctaZeroHeightConstraint = ctaZeroHeightConstraint {
+            viewModel.outputs.shouldShowCTA
+                .map { !$0 }
+                .bind(to: ctaZeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         viewModel.outputs.shouldShowCTA
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.btnCTAConversation.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableBottomDevider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                    make.top.equalTo(self.tableBottomDivider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowReadOnlyPlaceholder
+            .map { !$0 }
+            .bind(to: readOnlyPlaceholderView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        if let readOnlyZeroHeightConstraint = readOnlyZeroHeightConstraint {
+            viewModel.outputs.shouldShowReadOnlyPlaceholder
+                .map { !$0 }
+                .bind(to: readOnlyZeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+
+        }
+
+        viewModel.outputs.shouldShowReadOnlyPlaceholder
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.readOnlyPlaceholderView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.readOnlyTopPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
@@ -370,10 +447,15 @@ fileprivate extension OWPreConversationView {
 
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
-            .subscribe(onNext: { [weak self] size in
+            .withLatestFrom(viewModel.outputs.shouldShowComments) { size, showComments -> CGFloat? in
+                guard showComments == true else { return 0 }
+                return size.height
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] height in
                 guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.height.equalTo(size.height)
+                    make.height.equalTo(height)
                 }
             })
             .disposed(by: disposeBag)

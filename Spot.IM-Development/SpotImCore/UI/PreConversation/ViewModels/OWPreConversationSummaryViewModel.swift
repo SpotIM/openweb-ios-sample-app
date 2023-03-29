@@ -20,6 +20,7 @@ protocol OWPreConversationSummaryViewModelingOutputs {
     var titleFontSize: CGFloat { get }
     var counterFontSize: CGFloat { get }
     var showNextArrow: Bool { get }
+    var isVisible: Bool { get }
 }
 
 protocol OWPreConversationSummaryViewModeling {
@@ -70,6 +71,10 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
 
     lazy var showNextArrow: Bool = {
         return style == .compact
+    }()
+
+    lazy var isVisible: Bool = {
+        return style != .none
     }()
 
     fileprivate let style: OWPreConversationSummaryStyle
