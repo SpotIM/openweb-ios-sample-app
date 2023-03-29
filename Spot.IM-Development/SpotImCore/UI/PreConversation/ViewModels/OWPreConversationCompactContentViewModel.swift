@@ -88,13 +88,13 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                 case .skelaton:
                     return ""
                 case .emptyConversation:
-                    return "Start the conversation and share your thoughts and ideas with the community." // TODO: String
+                    return LocalizationManager.localizedString(key: "Start the conversation and share your thoughts and ideas with the community.")
                 case .closedAndEmpty:
-                    return "This conversation has ended and comments are no longer being accepted." // TODO: String
+                    return LocalizationManager.localizedString(key: "This conversation has ended and comments are no longer being accepted.")
                 case .comment(let commentType):
                     switch commentType {
                     case .media:
-                        return "Image" // TODO: String
+                        return LocalizationManager.localizedString(key: "Image")
                     case .text(let string):
                         return string
                     }
