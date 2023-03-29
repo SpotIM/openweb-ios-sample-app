@@ -32,7 +32,7 @@ class OWCommentContentView: UIView {
     fileprivate lazy var editedLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
-            .text(LocalizationManager.localizedString(key: "Edited"))
+            .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
 

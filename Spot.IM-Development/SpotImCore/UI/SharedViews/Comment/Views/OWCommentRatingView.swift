@@ -235,9 +235,9 @@ fileprivate extension OWCommentRatingView {
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
 
         rankUpButton.accessibilityTraits = .button
-        rankUpButton.accessibilityLabel = LocalizationManager.localizedString(key: "Up vote button")
+        rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Up vote button")
 
         rankDownButton.accessibilityTraits = .button
-        rankDownButton.accessibilityLabel = LocalizationManager.localizedString(key: "Down vote button")
+        rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Down vote button")
     }
 }
