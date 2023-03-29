@@ -46,8 +46,8 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
             .unwrap()
             .map {
                 let commentsText: String = $0 > 1 ?
-                    LocalizationManager.localizedString(key: "Comments") :
-                    LocalizationManager.localizedString(key: "Comment")
+                OWLocalizationManager.shared.localizedString(key: "Comments") :
+                OWLocalizationManager.shared.localizedString(key: "Comment")
                 return "\($0.formatedCount()) " + commentsText
             }
     }
