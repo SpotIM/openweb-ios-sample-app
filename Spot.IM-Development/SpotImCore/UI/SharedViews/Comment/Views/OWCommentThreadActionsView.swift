@@ -32,10 +32,8 @@ class OWCommentThreadActionsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with viewModel: OWCellViewModel) {
-        guard let vm = viewModel as? OWCommentThreadActionsViewModeling else { return }
-
-        self.viewModel = vm
+    func configure(with viewModel: OWCommentThreadActionsViewModeling) {
+        self.viewModel = viewModel
         self.disposeBag = DisposeBag()
 
         self.setupObservers()
