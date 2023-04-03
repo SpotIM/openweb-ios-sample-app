@@ -120,7 +120,7 @@ class OWPreConversationCompactContentView: UIView {
 fileprivate extension OWPreConversationCompactContentView {
     func setupViews() {
         self.enforceSemanticAttribute()
-        
+
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()

@@ -161,7 +161,7 @@ fileprivate extension OWCommentTextViewModel {
         attributes = [
             .font: OWFontBook.shared.font(style: .regular, size: OWCommentContentView.Metrics.fontSize),
             .foregroundColor: OWColorPalette.shared.color(type: .textColor4, themeStyle: style),
-            .paragraphStyle: paragraphStyle,
+            .paragraphStyle: paragraphStyle
         ]
 
         return attributes
