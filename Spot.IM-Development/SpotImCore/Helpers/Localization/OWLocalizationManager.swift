@@ -14,6 +14,7 @@ protocol OWLocalizationManagerProtocol {
     func localizedString(key: String) -> String
     var locale: Locale { get }
     var semanticAttribute: UISemanticContentAttribute { get }
+    var textAlignment: NSTextAlignment { get }
 }
 
 protocol OWLocalizationManagerConfigurable {
@@ -107,6 +108,17 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
 
     var semanticAttribute: UISemanticContentAttribute {
         return _currentLanguageNonRx.semanticAttribute
+    }
+    
+    var textAlignment: NSTextAlignment {
+        switch semanticAttribute {
+        case .forceLeftToRight:
+            return .left
+        case .forceRightToLeft:
+            return .right
+        default:
+            return .natural
+        }
     }
 }
 

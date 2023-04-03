@@ -23,6 +23,7 @@ class OWCommentContentView: UIView {
     fileprivate lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var mediaView: CommentMediaView = {
@@ -34,6 +35,7 @@ class OWCommentContentView: UIView {
             .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
             .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate var viewModel: OWCommentContentViewModeling!
@@ -60,6 +62,7 @@ class OWCommentContentView: UIView {
 
 fileprivate extension OWCommentContentView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.addSubviews(textLabel, mediaView)
 
         textLabel.OWSnp.makeConstraints { make in
