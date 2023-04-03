@@ -15,11 +15,8 @@ class OWCommentTextLabel: UILabel {
     fileprivate var disposeBag: DisposeBag!
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        let tap = UITapGestureRecognizer()
         tap.delegate = self
-//        tap.cancelsTouchesInView = false
-//        tap.numberOfTapsRequired = 1
-        
         return tap
     }()
 
@@ -57,26 +54,21 @@ fileprivate extension OWCommentTextLabel {
             })
             .disposed(by: disposeBag)
 
-//        tapGesture.rx.event
-//            .subscribe(onNext: { [weak self] tap in
-//                guard let self = self else { return }
-//                let tapLocation = tap.location(in: self)
-//                let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
-//                self.viewModel.inputs.labelClickIndex.onNext(index)
-//            })
-//            .disposed(by: disposeBag)
-    }
-    
-    @objc
-    func handleTap(gesture: UITapGestureRecognizer) {
-        let tapLocation = gesture.location(in: self)
-        let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
-        self.viewModel.inputs.labelClickIndex.onNext(index)
+        tapGesture.rx.event
+            .subscribe(onNext: { [weak self] tap in
+                guard let self = self else { return }
+                let tapLocation = tap.location(in: self)
+                let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
+                self.viewModel.inputs.labelClickIndex.onNext(index)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
 extension OWCommentTextLabel: UIGestureRecognizerDelegate {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer is UITapGestureRecognizer else { return true }
+
         let tapLocation = gestureRecognizer.location(in: self)
         let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
         return viewModel.outputs.shouldTapBeHandeled(at: index)
