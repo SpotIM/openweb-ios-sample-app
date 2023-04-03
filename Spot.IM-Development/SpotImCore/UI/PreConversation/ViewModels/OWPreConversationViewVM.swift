@@ -463,6 +463,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
+            .delay(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] commentIndex in
                 self?._changeSizeAtIndex.onNext(commentIndex)
             })
