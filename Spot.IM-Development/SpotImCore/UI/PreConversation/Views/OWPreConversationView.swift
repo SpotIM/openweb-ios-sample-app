@@ -48,6 +48,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+        view.enforceSemanticAttribute()
         return view
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
@@ -135,6 +136,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWPreConversationView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
         self.addSubviews(preConversationSummary)
