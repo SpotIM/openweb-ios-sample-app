@@ -60,8 +60,7 @@ internal class OWPreConversationFooterView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        self.enforceSemanticAttribute()
-            .backgroundColor(.clear)
+        self.backgroundColor(.clear)
 
         setupUI()
         setupObservers()
