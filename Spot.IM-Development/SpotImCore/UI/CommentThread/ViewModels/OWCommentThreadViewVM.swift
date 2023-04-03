@@ -61,7 +61,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                 }
                 return Observable.just(viewModels)
             })
-            .flatMapLatest({ commentCellsVms -> Observable<[OWCommentThreadCellOption]> in
+            .flatMapLatest({ [weak self] commentCellsVms -> Observable<[OWCommentThreadCellOption]> in
+                guard let self = self else { return Observable.never() }
                 var cellOptions = [OWCommentThreadCellOption]()
 
                 // Skeleton
@@ -75,6 +76,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                 }
 
                 for (idx, commentCellVM) in commentCellsVms.enumerated() {
+                    guard let commentId = commentCellVM.outputs.commentVM.outputs.comment.id, let commentPresentationData = self._commentIdToCommentPresentationData[commentId] else {
+                        continue
+                    }
+
                     let isReply = commentCellVM.outputs.commentVM.outputs.comment.isReply
 
                     if (idx > 0 && !isReply) {
@@ -82,6 +87,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                     }
 
                     cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
+
+                    if (commentPresentationData.shouldShowReplies && commentPresentationData.totalRepliesCount > 0) {
+                        cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel()))
+                    }
                 }
                 return Observable.just(cellOptions)
             })
@@ -89,6 +98,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
+
+    fileprivate var _commentIdToCommentPresentationData: [String: OWCommentPresentationData] = [:]
+
     fileprivate var _commentIdToCommentCellVM: [String: OWCommentCellViewModel] = [:]
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
@@ -181,28 +193,30 @@ fileprivate extension OWCommentThreadViewViewModel {
                             let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: user, collapsableTextLineLimit: 4))
                             self._commentIdToCommentCellVM[replyId] = vm
 
-                            repliesPresentationData.append(
-                                OWCommentPresentationData(
-                                    id: replyId,
-                                    shouldShowReplies: false,
-                                    repliesIds: reply.replies?.map { $0.id! } ?? [],
-                                    totalRepliesCount: reply.repliesCount ?? 0,
-                                    repliesOffset: reply.offset ?? 0, repliesPresentation: []
-                                )
+                            let replyPresentationData = OWCommentPresentationData(
+                                id: replyId,
+                                shouldShowReplies: false,
+                                repliesIds: reply.replies?.map { $0.id! } ?? [],
+                                totalRepliesCount: reply.repliesCount ?? 0,
+                                repliesOffset: reply.offset ?? 0, repliesPresentation: []
                             )
+
+                            repliesPresentationData.append(replyPresentationData)
+                            self._commentIdToCommentPresentationData[replyId] = replyPresentationData
                         }
                     }
 
-                    commentsPresentationData.append(
-                        OWCommentPresentationData(
-                            id: commentId,
-                            shouldShowReplies: true,
-                            repliesIds: comment.replies?.map { $0.id! } ?? [],
-                            totalRepliesCount: comment.repliesCount ?? 0,
-                            repliesOffset: comment.offset ?? 0,
-                            repliesPresentation: repliesPresentationData
-                        )
+                    let commentPresentationData = OWCommentPresentationData(
+                        id: commentId,
+                        shouldShowReplies: true,
+                        repliesIds: comment.replies?.map { $0.id! } ?? [],
+                        totalRepliesCount: comment.repliesCount ?? 0,
+                        repliesOffset: comment.offset ?? 0,
+                        repliesPresentation: repliesPresentationData
                     )
+
+                    commentsPresentationData.append(commentPresentationData)
+                    self._commentIdToCommentPresentationData[commentId] = commentPresentationData
                 }
 
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
