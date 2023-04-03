@@ -231,9 +231,9 @@ fileprivate extension BetaNewAPIViewModel {
         // swiftlint:enable line_length
         var sorting = customizations.sorting
         sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: 0))
-        customizations.fontFamily = .fontGroupFamily(fromData: UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: Data()))
+        customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
         var helpers = OpenWeb.manager.helpers
-        helpers.languageStrategy = .languageStrategy(fromData: UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: Data()))
+        helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
     }
 }
 

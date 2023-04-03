@@ -166,6 +166,14 @@ extension Reactive where Base: TextFieldSetting {
         }
     }
 
+    var textFieldTextAfterEnded: ControlProperty<String?> {
+        return base.textFieldControl.rx.controlProperty(editingEvents: .editingDidEnd) { textField in
+            textField.text
+        } setter: { textField, value in
+            textField.text = value
+        }
+    }
+
     var isHidden: Binder<Bool> {
         return Binder(self.base) { _, value in
             base.isHidden = value

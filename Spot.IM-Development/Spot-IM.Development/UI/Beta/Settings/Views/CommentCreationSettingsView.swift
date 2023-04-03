@@ -15,7 +15,7 @@ class CommentCreationSettingsView: UIView {
 
     fileprivate struct Metrics {
         static let identifier = "comment_creation_settings_view_id"
-        static let segmentedCustomStyleModeIdentifier = "custom_style_mode"
+        static let segmentedStyleModeIdentifier = "custom_style_mode"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -27,12 +27,12 @@ class CommentCreationSettingsView: UIView {
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedCustomStyleMode: SegmentedControlSetting = {
-        let title = viewModel.outputs.customStyleModeTitle
-        let items = viewModel.outputs.customStyleModeSettings
+    fileprivate lazy var segmentedStyleMode: SegmentedControlSetting = {
+        let title = viewModel.outputs.styleModeTitle
+        let items = viewModel.outputs.styleModeSettings
 
         return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCustomStyleModeIdentifier,
+                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
                                        items: items)
     }()
 
@@ -66,8 +66,8 @@ fileprivate extension CommentCreationSettingsView {
             make.top.equalTo(self.snp.top)
         }
 
-        self.addSubview(segmentedCustomStyleMode)
-        segmentedCustomStyleMode.snp.makeConstraints { make in
+        self.addSubview(segmentedStyleMode)
+        segmentedStyleMode.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
             make.top.equalTo(titleLabel.snp.bottom).offset(Metrics.verticalOffset)
             make.bottom.equalTo(self.snp.bottom)
@@ -75,11 +75,11 @@ fileprivate extension CommentCreationSettingsView {
     }
 
     func setupObservers() {
-        viewModel.outputs.customStyleModeIndex
-            .bind(to: segmentedCustomStyleMode.rx.selectedSegmentIndex)
+        viewModel.outputs.styleModeIndex
+            .bind(to: segmentedStyleMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
-        segmentedCustomStyleMode.rx.selectedSegmentIndex
+        segmentedStyleMode.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
             .disposed(by: disposeBag)
     }

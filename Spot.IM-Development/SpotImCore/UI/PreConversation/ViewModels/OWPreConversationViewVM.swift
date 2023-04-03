@@ -140,20 +140,20 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnly, isEmpty) { count, style, isReadOnly, isEmpty in
             switch(style) {
             case .regular:
-                return LocalizationManager.localizedString(key: "Show more comments")
+                return OWLocalizationManager.shared.localizedString(key: "Show more comments")
             case .compact:
                 return nil
             case .ctaButtonOnly:
                 if isEmpty {
-                    return LocalizationManager.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
                 } else {
-                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
+                    return OWLocalizationManager.shared.localizedString(key: "Show Comments") + " \(count)"
                 }
             case .ctaWithSummary:
                 if !isEmpty {
-                    return LocalizationManager.localizedString(key: "Show Comments")
+                    return OWLocalizationManager.shared.localizedString(key: "Show Comments")
                 } else if !isReadOnly {
-                    return LocalizationManager.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
                 }
             }
             return nil
