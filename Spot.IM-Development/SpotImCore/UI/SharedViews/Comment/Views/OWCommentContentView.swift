@@ -18,6 +18,10 @@ class OWCommentContentView: UIView {
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
         static let editedTopPadding: CGFloat = 4.0
+        static let identifier = "comment_content_view_id"
+        static let textLabelIdentifier = "comment_content_text_label_id"
+        static let mediaViewIdentifier = "comment_media_view_id"
+        static let editedLabelIdentifier = "comment_edited_label_id"
     }
 
     fileprivate lazy var textLabel: OWCommentTextLabel = {
@@ -48,6 +52,7 @@ class OWCommentContentView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        applyAccessibility()
     }
 
     func configure(with viewModel: OWCommentContentViewModeling) {
@@ -151,5 +156,14 @@ fileprivate extension OWCommentContentView {
                 guard let self = self else { return }
                 self.editedLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
+    }
+}
+
+fileprivate extension OWCommentContentView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier
+        mediaView.accessibilityIdentifier = Metrics.mediaViewIdentifier
+        editedLabel.accessibilityIdentifier = Metrics.editedLabelIdentifier
     }
 }
