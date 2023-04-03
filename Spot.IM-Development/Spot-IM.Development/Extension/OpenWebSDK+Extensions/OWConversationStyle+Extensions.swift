@@ -12,16 +12,40 @@ import SpotImCore
 #if NEW_API
 
 extension OWConversationStyle {
-    static func conversationStyle(fromIndex index: Int) -> OWConversationStyle {
+    // swiftlint:disable function_parameter_count
+    static func conversationStyle(fromIndex index: Int,
+                                  communityGuidelinesStyleIndex: Int,
+                                  communityQuestionsStyleIndex: Int,
+                                  spacingIndex: Int,
+                                  betweenComments: CGFloat,
+                                  belowHeader: CGFloat,
+                                  belowCommunityGuidelines: CGFloat,
+                                  belowCommunityQuestions: CGFloat) -> OWConversationStyle {
         switch index {
         case 0: return .regular
         case 1: return .compact
-        default: return .regular
+        case 2: return .custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+                               communityQuestionsStyle: OWCommunityQuestionsStyle(index: communityQuestionsStyleIndex),
+                               spacing: OWConversationSpacing(index: spacingIndex,
+                                              betweenComments: betweenComments,
+                                              belowHeader: belowHeader,
+                                              belowCommunityGuidelines: belowCommunityGuidelines,
+                                              belowCommunityQuestions: belowCommunityQuestions))
+        default: return `default`
         }
     }
+    // swiftlint:enable function_parameter_count
 
     static var defaultIndex: Int {
-        return 1
+        return 0
+    }
+
+    static var `default`: OWConversationStyle {
+        return .regular
+    }
+
+    static var customIndex: Int {
+        return 2
     }
 }
 

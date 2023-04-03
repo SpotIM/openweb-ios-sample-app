@@ -44,7 +44,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let collapsableTextLineLimit: Int
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
+    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "Read More")
 
     var labelClickIndex = PublishSubject<Int>()
 
