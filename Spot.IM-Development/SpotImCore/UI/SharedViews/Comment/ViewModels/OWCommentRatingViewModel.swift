@@ -111,7 +111,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .withLatestFrom(_voteSymbolType) { voteTypes, availableTypes -> [VoteType] in
                 if([OWVotesType.heart, OWVotesType.recommend].contains(availableTypes)) {
-                    return voteTypes.filter { $0 == .voteDown }
+                    return voteTypes.filter { $0 == .voteUp }
                 }
                 return voteTypes
             }
