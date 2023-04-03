@@ -27,7 +27,7 @@ extension UILabel {
     @objc @discardableResult override func enforceSemanticAttribute() -> Self {
         super.enforceSemanticAttribute()
         self.textAlignment = OWLocalizationManager.shared.textAlignment
-        
+
         return self
     }
 }
