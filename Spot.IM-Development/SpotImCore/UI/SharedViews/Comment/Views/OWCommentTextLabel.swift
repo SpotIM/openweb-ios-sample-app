@@ -71,6 +71,6 @@ extension OWCommentTextLabel: UIGestureRecognizerDelegate {
 
         let tapLocation = gestureRecognizer.location(in: self)
         let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
-        return viewModel.outputs.shouldTapBeHandeled(at: index)
+        return viewModel.inputs.shouldTapBeHandeled(at: index)
     }
 }
