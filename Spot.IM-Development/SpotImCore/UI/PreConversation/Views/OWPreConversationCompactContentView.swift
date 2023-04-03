@@ -48,6 +48,7 @@ class OWPreConversationCompactContentView: UIView {
             .numberOfLines(Metrics.numberOfLines)
             .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .enforceSemanticAttribute()
     }()
     fileprivate lazy var cameraIcon: UIImageView = {
         let imageView = UIImageView()
@@ -118,6 +119,8 @@ class OWPreConversationCompactContentView: UIView {
 
 fileprivate extension OWPreConversationCompactContentView {
     func setupViews() {
+        self.enforceSemanticAttribute()
+        
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
