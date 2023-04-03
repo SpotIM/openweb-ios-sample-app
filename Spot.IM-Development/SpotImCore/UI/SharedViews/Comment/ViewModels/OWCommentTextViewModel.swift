@@ -155,14 +155,14 @@ fileprivate extension OWCommentTextViewModel {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func isReadMoreTap(at index: Int) -> Bool {
         if let range = self.readMoreRange, range.contains(index) {
             return true
         }
         return false
     }
-    
+
     func getActiveUrl(at index: Int) -> URL? {
         if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
             return activeUrl
