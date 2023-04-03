@@ -109,7 +109,7 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
     var semanticAttribute: UISemanticContentAttribute {
         return _currentLanguageNonRx.semanticAttribute
     }
-    
+
     var textAlignment: NSTextAlignment {
         switch semanticAttribute {
         case .forceLeftToRight:
