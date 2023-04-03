@@ -16,13 +16,13 @@ typealias OWRangeURLsMapper = [NSRange: URL]
 protocol OWCommentTextViewModelingInputs {
     var width: BehaviorSubject<CGFloat> { get }
     var labelClickIndex: PublishSubject<Int> { get }
+    func shouldTapBeHandeled(at index: Int) -> Bool
 }
 
 protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
-    func shouldTapBeHandeled(at index: Int) -> Bool // TODO: input
 }
 
 protocol OWCommentTextViewModeling {
