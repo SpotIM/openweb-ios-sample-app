@@ -48,6 +48,10 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 }
 
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let delayForUICellUpdate: Int = 100
+    }
+
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
 
@@ -463,6 +467,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
+            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] commentIndex in
                 self?._changeSizeAtIndex.onNext(commentIndex)
             })
