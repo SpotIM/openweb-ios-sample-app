@@ -51,7 +51,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate struct Metrics {
         static let delayForUICellUpdate: Int = 100
     }
-    
+
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
 
