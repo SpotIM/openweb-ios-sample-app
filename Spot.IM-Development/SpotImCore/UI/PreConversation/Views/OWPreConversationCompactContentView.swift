@@ -57,6 +57,7 @@ class OWPreConversationCompactContentView: UIView {
     }()
     fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
+        view.enforceSemanticAttribute()
 
         view.addSubview(avatarSkeleton)
         avatarSkeleton.OWSnp.makeConstraints { make in
