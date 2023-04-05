@@ -16,7 +16,6 @@ protocol OWCommentCreationEntryViewModelingInputs {
 
 protocol OWCommentCreationEntryViewModelingOutputs {
     var avatarViewVM: OWAvatarViewModeling { get }
-    var ctaText: Observable<String> { get }
     var tapped: Observable<Void> { get }
 }
 
@@ -40,8 +39,6 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
         setupObservers()
     }
 
-    fileprivate let _actionText = BehaviorSubject<String>(value: OWLocalizationManager.shared.localizedString(key: "What do you think?"))
-
     var tap = PublishSubject<Void>()
 
     var tapped: Observable<Void> {
@@ -52,10 +49,6 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
     lazy var avatarViewVM: OWAvatarViewModeling = {
         return OWAvatarViewModelV2(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
-
-    var ctaText: Observable<String> {
-        _actionText.asObserver()
-    }
 }
 
 fileprivate extension OWCommentCreationEntryViewModel {
