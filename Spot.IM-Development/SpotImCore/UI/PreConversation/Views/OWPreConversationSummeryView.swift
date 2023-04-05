@@ -39,6 +39,7 @@ class OWPreConversationSummeryView: UIView {
 
     private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var nextArrow: UIImageView = {
