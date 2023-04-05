@@ -46,8 +46,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
     }()
-    fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
-        let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+    fileprivate lazy var commentCreationEntryView: SPCommentCreationEntryView = {
+        let view = SPCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
         return view
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil

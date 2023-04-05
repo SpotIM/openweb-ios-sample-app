@@ -22,7 +22,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
-    var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
+    var commentCreationEntryViewModel: SPCommentCreationEntryViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
@@ -90,7 +90,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
     }()
 
-    lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
+    lazy var commentCreationEntryViewModel: SPCommentCreationEntryViewModeling = {
         return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
     }()
 
