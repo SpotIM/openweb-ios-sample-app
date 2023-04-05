@@ -104,7 +104,6 @@ fileprivate extension OWCommentCreationEntryView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                // TODO: colors
                 self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
                 self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
