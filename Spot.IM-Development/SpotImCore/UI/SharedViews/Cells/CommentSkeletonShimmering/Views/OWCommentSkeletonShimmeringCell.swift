@@ -29,7 +29,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
     fileprivate lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
-        
+
         view.addSubview(avatarSkeleton)
         avatarSkeleton.OWSnp.makeConstraints { make in
             make.top.leading.equalToSuperview()
