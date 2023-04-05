@@ -7,3 +7,65 @@
 //
 
 import Foundation
+import RxSwift
+
+protocol OWCommentCreationEntryViewModelingInputs {
+    // TODO: configure functions should be removed from protocol once refactor complete
+    var tap: PublishSubject<Void> { get }
+}
+
+protocol OWCommentCreationEntryViewModelingOutputs {
+    var avatarViewVM: OWAvatarViewModeling { get }
+    var ctaText: Observable<String> { get }
+    var tapped: Observable<Void> { get }
+}
+
+protocol OWCommentCreationEntryViewModeling {
+    var inputs: OWCommentCreationEntryViewModelingInputs { get }
+    var outputs: OWCommentCreationEntryViewModelingOutputs { get }
+}
+
+// TODO: View Model for new infra. Old one should be deleted
+class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
+
+    var inputs: OWCommentCreationEntryViewModelingInputs { return self }
+    var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
+
+    fileprivate let disposeBag = DisposeBag()
+
+    var imageURLProvider: OWImageProviding
+
+    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+        self.imageURLProvider = imageURLProvider
+        setupObservers()
+    }
+
+    fileprivate let _actionText = BehaviorSubject<String>(value: OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+
+    var tap = PublishSubject<Void>()
+
+    var tapped: Observable<Void> {
+        tap
+            .asObserver()
+    }
+
+    lazy var avatarViewVM: OWAvatarViewModeling = {
+        return OWAvatarViewModelV2(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
+    }()
+
+    var ctaText: Observable<String> {
+        _actionText.asObserver()
+    }
+}
+
+fileprivate extension OWCommentCreationEntryViewModel {
+    func setupObservers() {
+        // TODO: should set the avatar viewModel according to the current connected user (not in infra yet)
+        // TODO: open current user profile on click (once current user infra is ready)
+        outputs.avatarViewVM.outputs.avatarTapped
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+//            self.delegate?.userAvatarDidTap()
+        }).disposed(by: disposeBag)
+    }
+}
