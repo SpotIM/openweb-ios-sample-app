@@ -184,8 +184,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom).offset(Metrics.commentCreationTopPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             commentCreationZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 

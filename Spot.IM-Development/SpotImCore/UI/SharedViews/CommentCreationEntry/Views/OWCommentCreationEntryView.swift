@@ -13,11 +13,11 @@ import UIKit
 
 class OWCommentCreationEntryView: UIView {
     fileprivate struct Metrics {
-        static let separatorHeight: CGFloat = 1
         static let userAvatarSize: CGFloat = 40
-        static let callToActionLeading: CGFloat = 12
-        static let callToActionHeight: CGFloat = 48
-        static let fontSize: CGFloat = 16
+        static let containerLeadingOffset: CGFloat = 10
+        static let labelInsetVertical: CGFloat = 12
+        static let labelInsetHorizontal: CGFloat = 15
+        static let fontSize: CGFloat = 15
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
@@ -34,13 +34,14 @@ class OWCommentCreationEntryView: UIView {
                 width: 1.0,
                 color: OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
             .corner(radius: 6.0)
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light))
             .userInteractionEnabled(true)
     }()
 
     fileprivate lazy var label: UILabel = {
         return UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
-            .text(LocalizationManager.localizedString(key: "What do you think?"))
+            .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
 
@@ -83,25 +84,18 @@ fileprivate extension OWCommentCreationEntryView {
 
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-15)
-            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(12.0)
-            make.height.equalTo(48.0)
+            make.top.bottom.trailing.equalToSuperview()
+            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
 
         labelContainer.addSubview(label)
         label.OWSnp.makeConstraints { make in
-            make.centerY.trailing.equalToSuperview()
-            make.leading.equalToSuperview().offset(Metrics.callToActionLeading)
-            make.height.equalTo(Metrics.callToActionHeight)
+            make.top.bottom.equalToSuperview().inset(Metrics.labelInsetVertical)
+            make.leading.trailing.equalToSuperview().inset(Metrics.labelInsetHorizontal)
         }
     }
 
     func setupObservers() {
-        viewModel.outputs.ctaText
-            .bind(to: label.rx.text)
-            .disposed(by: disposeBag)
-
         tapGesture.rx.event.voidify()
         .bind(to: viewModel.inputs.tap)
         .disposed(by: disposeBag)
@@ -112,6 +106,7 @@ fileprivate extension OWCommentCreationEntryView {
                 guard let self = self else { return }
                 // TODO: colors
                 self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
+                self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 // TODO: custon UI
             }).disposed(by: disposeBag)
