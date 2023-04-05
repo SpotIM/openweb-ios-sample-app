@@ -96,8 +96,8 @@ final class SPMainConversationModel {
     // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
     let conversationSummaryVM: OWConversationSummaryViewModeling
-    let preConvCommetEntryVM: OWCommentCreationEntryViewModeling
-    let convCommetEntryVM: OWCommentCreationEntryViewModeling
+    let preConvCommetEntryVM: SPCommentCreationEntryViewModeling
+    let convCommetEntryVM: SPCommentCreationEntryViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
 
     private(set) var dataSource: SPMainConversationDataSource
@@ -134,8 +134,8 @@ final class SPMainConversationModel {
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
         self.servicesProvider = servicesProvider
-        preConvCommetEntryVM = OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
-        convCommetEntryVM = OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+        preConvCommetEntryVM = SPCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+        convCommetEntryVM = SPCommentCreationEntryViewModel(imageURLProvider: imageProvider)
         dataSource = conversationDataSource
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
         let conversationSortVM = OWConversationSortViewModel(sortOption: self.sortOption)
