@@ -10,7 +10,6 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationEntryViewModelingInputs {
-    // TODO: configure functions should be removed from protocol once refactor complete
     var tap: PublishSubject<Void> { get }
 }
 
@@ -24,7 +23,6 @@ protocol OWCommentCreationEntryViewModeling {
     var outputs: OWCommentCreationEntryViewModelingOutputs { get }
 }
 
-// TODO: View Model for new infra. Old one should be deleted
 class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
 
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
