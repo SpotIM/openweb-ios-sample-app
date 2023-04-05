@@ -95,7 +95,7 @@ fileprivate extension OWCommentEngagementView {
             make.top.bottom.equalToSuperview()
             make.leading.equalTo(replyDotDivider.OWSnp.trailing).offset(Metrics.baseOffset)
         }
-        
+
         self.addSubview(votingDotDivider)
         votingDotDivider.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.dotDividerSize)
