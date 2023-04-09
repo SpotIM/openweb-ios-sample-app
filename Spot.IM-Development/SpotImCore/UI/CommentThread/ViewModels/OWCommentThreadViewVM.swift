@@ -43,63 +43,19 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
-            .flatMapLatest({ commentsPresentationData -> Observable<[OWCommentCellViewModel]> in
-                var viewModels = [OWCommentCellViewModel]()
-
-                for commentPresentationData in commentsPresentationData {
-                    if let commentCellVM = self._commentIdToCommentCellVM[commentPresentationData.id] {
-                        viewModels.append(commentCellVM)
-                    }
-
-                    if commentPresentationData.shouldShowReplies {
-                        for replyPresentationData in commentPresentationData.repliesPresentation {
-                            if let replyCellVM = self._commentIdToCommentCellVM[replyPresentationData.id] {
-                                viewModels.append(replyCellVM)
-                            }
-                        }
-                    }
-                }
-                return Observable.just(viewModels)
-            })
-            .flatMapLatest({ [weak self] commentCellsVms -> Observable<[OWCommentThreadCellOption]> in
+            .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.never() }
-                var cellOptions = [OWCommentThreadCellOption]()
 
-                // Skeleton
-                if (commentCellsVms.isEmpty) {
-                    let numberOfComments = Metrics.numberOfCommentsInSkeleton
-                    let skeletonCellVMs = (0 ..< numberOfComments).map { index in
-                        OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
-                    }
-                    let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
-                    cellOptions.append(contentsOf: skeletonCells)
+                if (commentsPresentationData.isEmpty) {
+                    return Observable.just(self.getSkeletonCells())
                 }
 
-                for (idx, commentCellVM) in commentCellsVms.enumerated() {
-                    guard let commentId = commentCellVM.outputs.commentVM.outputs.comment.id, let commentPresentationData = self._commentIdToCommentPresentationData[commentId] else {
-                        continue
-                    }
-
-                    let isReply = commentCellVM.outputs.commentVM.outputs.comment.isReply
-
-                    if (idx > 0 && !isReply) {
-                        cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                    }
-
-                    cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
-
-                    if (commentPresentationData.shouldShowReplies && commentPresentationData.totalRepliesCount > 0) {
-                        cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel()))
-                    }
-                }
-                return Observable.just(cellOptions)
+                return Observable.just(self.getCells(for: commentsPresentationData))
             })
             .asObservable()
     }()
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
-
-    fileprivate var _commentIdToCommentPresentationData: [String: OWCommentPresentationData] = [:]
 
     fileprivate var _commentIdToCommentCellVM: [String: OWCommentCellViewModel] = [:]
 
@@ -136,6 +92,42 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         self.servicesProvider = servicesProvider
         self._commentThreadData.onNext(commentThreadData)
         self.setupObservers()
+    }
+}
+
+fileprivate extension OWCommentThreadViewViewModel {
+    private func getCells(for commentsPresentationData: [OWCommentPresentationData]) -> [OWCommentThreadCellOption] {
+        var cellOptions = [OWCommentThreadCellOption]()
+
+        for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
+            guard let commentCellVM = self._commentIdToCommentCellVM[commentPresentationData.id] else { continue }
+
+            if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
+                cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+            }
+
+            cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
+
+            if (commentPresentationData.shouldShowReplies && commentPresentationData.repliesPresentation.count > 0 ) {
+
+                cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel()))
+
+                cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
+            }
+        }
+        return cellOptions
+    }
+
+    private func getSkeletonCells() -> [OWCommentThreadCellOption] {
+        var cellOptions = [OWCommentThreadCellOption]()
+        let numberOfComments = Metrics.numberOfCommentsInSkeleton
+        let skeletonCellVMs = (0 ..< numberOfComments).map { index in
+            OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
+        }
+        let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
+        cellOptions.append(contentsOf: skeletonCells)
+
+        return cellOptions
     }
 }
 
@@ -202,7 +194,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                             )
 
                             repliesPresentationData.append(replyPresentationData)
-                            self._commentIdToCommentPresentationData[replyId] = replyPresentationData
                         }
                     }
 
@@ -216,7 +207,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                     )
 
                     commentsPresentationData.append(commentPresentationData)
-                    self._commentIdToCommentPresentationData[commentId] = commentPresentationData
                 }
 
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
