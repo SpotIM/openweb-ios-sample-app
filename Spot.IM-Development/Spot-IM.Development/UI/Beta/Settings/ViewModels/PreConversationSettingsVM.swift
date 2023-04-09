@@ -14,18 +14,18 @@ import SpotImCore
 
 protocol PreConversationSettingsViewModelingInputs {
     var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
-    var customStyleModeSelectedLines: BehaviorSubject<Int> { get }
+    var customStyleModeSelectedNumberOfComments: BehaviorSubject<Int> { get }
 }
 
 protocol PreConversationSettingsViewModelingOutputs {
     var title: String { get }
-    var customStyleModeTitle: String { get }
-    var customStyleLinesTitle: String { get }
-    var customStyleModeIndex: Observable<Int> { get }
-    var customStyleLines: Observable<Int> { get }
-    var customStyleModeSettings: [String] { get }
-    var showCustomStyleLines: Observable<Bool> { get }
-    var customStyleLinesSettings: [String] { get }
+    var styleModeTitle: String { get }
+    var customStyleNumberOfCommentsTitle: String { get }
+    var styleModeIndex: Observable<Int> { get }
+    var customStyleNumberOfComments: Observable<Int> { get }
+    var styleModeSettings: [String] { get }
+    var showCustomStyleNumberOfComments: Observable<Bool> { get }
+    var customStyleNumberOfCommentsSettings: [String] { get }
 }
 
 protocol PreConversationSettingsViewModeling {
@@ -38,27 +38,26 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling, PreConvers
     var outputs: PreConversationSettingsViewModelingOutputs { return self }
 
     var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
-    var customStyleModeSelectedLines = BehaviorSubject<Int>(value: 0)
+    var customStyleModeSelectedNumberOfComments = BehaviorSubject<Int>(value: 0)
 
     fileprivate lazy var customStyleModeObservable =
-    Observable.combineLatest(customStyleModeSelectedIndex, customStyleModeSelectedLines) { index, numberOfComments -> Data in
-        return OWPreConversationStyle.preConversationStyle(fromIndex: index, numberOfComments: numberOfComments).data
+    Observable.combineLatest(customStyleModeSelectedIndex, customStyleModeSelectedNumberOfComments) { index, numberOfComments -> OWPreConversationStyle in
+        return OWPreConversationStyle.preConversationStyle(fromIndex: index, numberOfComments: numberOfComments)
     }
     .skip(2)
     .asObservable()
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    var showCustomStyleLines: Observable<Bool> {
-        return customStyleModeIndex
+    var showCustomStyleNumberOfComments: Observable<Bool> {
+        return styleModeIndex
             .map { $0 == 0 }
             .asObservable()
     }
 
-    var customStyleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationCustomStyle, defaultValue: Data())
-            .map {
-                let preConversationStyle = OWPreConversationStyle.preConversationStyle(fromData: $0)
+    var styleModeIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+            .map { preConversationStyle in
                 switch preConversationStyle {
                 case .regular(numberOfComments: _):
                     return 0
@@ -75,11 +74,10 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling, PreConvers
             .asObservable()
     }
 
-    var customStyleLines: Observable<Int> {
-        return userDefaultsProvider.values(key: .preConversationCustomStyle, defaultValue: Data())
-            .map {
-                let customStyle = OWPreConversationStyle.preConversationStyle(fromData: $0)
-                switch customStyle {
+    var customStyleNumberOfComments: Observable<Int> {
+        return userDefaultsProvider.values(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+            .map { preConversationStyle in
+                switch preConversationStyle {
                 case .regular(numberOfComments: let numberOfComments):
                     return numberOfComments
                 default:
@@ -95,15 +93,15 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling, PreConvers
         return NSLocalizedString("PreConversationSettings", comment: "")
     }()
 
-    lazy var customStyleModeTitle: String = {
-        return NSLocalizedString("CustomStyleModeTitle", comment: "")
+    lazy var styleModeTitle: String = {
+        return NSLocalizedString("StyleModeTitle", comment: "")
     }()
 
-    lazy var customStyleLinesTitle: String = {
-        return NSLocalizedString("CustomStyleLinesTitle", comment: "")
+    lazy var customStyleNumberOfCommentsTitle: String = {
+        return NSLocalizedString("CustomStyleNumberOfCommentsTitle", comment: "")
     }()
 
-    lazy var customStyleModeSettings: [String] = {
+    lazy var styleModeSettings: [String] = {
         let _regular = NSLocalizedString("Regular", comment: "")
         let _compact = NSLocalizedString("Compact", comment: "")
         let _ctaButtonOnly = NSLocalizedString("CTAButtonOnly", comment: "")
@@ -114,7 +112,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling, PreConvers
 
     fileprivate let min = OWPreConversationStyle.Metrics.minNumberOfComments
     fileprivate let max = OWPreConversationStyle.Metrics.maxNumberOfComments
-    lazy var customStyleLinesSettings: [String] = {
+    lazy var customStyleNumberOfCommentsSettings: [String] = {
         Array(min...max).map { String($0) }
     }()
 
@@ -128,7 +126,7 @@ extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Data>.preConversationCustomStyle))
+            .setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
             .disposed(by: disposeBag)
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-class OWSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
+class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     fileprivate var router: OWRoutering!
 
     var routering: OWRoutering {
@@ -78,7 +78,7 @@ class OWSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
   }
 }
 
-fileprivate extension OWSDKCoordinator {
+fileprivate extension OWFlowsSDKCoordinator {
     func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
         invalidateExistingFlows()
 

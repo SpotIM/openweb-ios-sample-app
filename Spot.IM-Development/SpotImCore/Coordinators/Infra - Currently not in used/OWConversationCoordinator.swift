@@ -25,11 +25,13 @@ enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
 
-    fileprivate let router: OWRoutering
+    // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
+    // Trying to use that in `Standalone Views` mode will cause a crash immediately.
+    fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
 
-    init(router: OWRoutering, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.conversationData = conversationData
         self.actionsCallbacks = actionsCallbacks

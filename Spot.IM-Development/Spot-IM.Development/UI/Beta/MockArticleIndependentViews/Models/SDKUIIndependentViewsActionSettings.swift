@@ -10,5 +10,5 @@ import Foundation
 
 struct SDKUIIndependentViewsActionSettings {
     let postId: String
-    let actionType: SDKUIIndependentViewActionType
+    let viewType: SDKUIIndependentViewType
 }
