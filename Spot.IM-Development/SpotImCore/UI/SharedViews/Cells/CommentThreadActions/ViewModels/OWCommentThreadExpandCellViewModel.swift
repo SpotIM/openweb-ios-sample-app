@@ -16,6 +16,7 @@ protocol OWCommentThreadExpandCellViewModelingInputs {
 protocol OWCommentThreadExpandCellViewModelingOutputs {
     var id: String { get }
     var commentPresentationData: OWCommentPresentationData { get }
+    var commentActionsVM: OWCommentThreadActionsViewModel { get }
 }
 
 protocol OWCommentThreadExpandCellViewModeling: OWCellViewModel {
@@ -31,13 +32,20 @@ class OWCommentThreadExpandCellViewModel: OWCommentThreadExpandCellViewModeling,
 
     let commentPresentationData: OWCommentPresentationData
 
+    let commentActionsVM: OWCommentThreadActionsViewModel
+
     init(data: OWCommentPresentationData) {
         self.commentPresentationData = data
+
+        // TODO - Add data
+        commentActionsVM = OWCommentThreadActionsViewModel()
     }
 
     init() {
         // TODO - make OWCommentPresentationData a class
         self.commentPresentationData = OWCommentPresentationData(id: "", shouldShowReplies: false, repliesIds: [], totalRepliesCount: 0, repliesOffset: 0, repliesPresentation: [])
+
+        commentActionsVM = OWCommentThreadActionsViewModel()
     }
 }
 
