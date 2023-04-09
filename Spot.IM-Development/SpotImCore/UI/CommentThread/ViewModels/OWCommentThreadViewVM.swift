@@ -108,7 +108,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
             cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
 
-            if (commentPresentationData.shouldShowReplies && commentPresentationData.repliesPresentation.count > 0 ) {
+            if (commentPresentationData.repliesThreadState != .collapsed && commentPresentationData.repliesPresentation.count > 0 ) {
 
                 cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel()))
 
@@ -187,7 +187,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                             let replyPresentationData = OWCommentPresentationData(
                                 id: replyId,
-                                shouldShowReplies: false,
+                                repliesThreadState: .collapsed,
                                 repliesIds: reply.replies?.map { $0.id! } ?? [],
                                 totalRepliesCount: reply.repliesCount ?? 0,
                                 repliesOffset: reply.offset ?? 0, repliesPresentation: []
@@ -199,7 +199,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                     let commentPresentationData = OWCommentPresentationData(
                         id: commentId,
-                        shouldShowReplies: true,
+                        repliesThreadState: .showFirst(numberOfReplies: 2),
                         repliesIds: comment.replies?.map { $0.id! } ?? [],
                         totalRepliesCount: comment.repliesCount ?? 0,
                         repliesOffset: comment.offset ?? 0,
@@ -312,9 +312,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(collapseClickObservable)
             }
-            .subscribe(onNext: { [weak self] _ in
-                // TODO - handle collapse
-//                commentPresentationData.shouldShowReplies = false
+            .subscribe(onNext: { commentPresentationData in
+                commentPresentationData.repliesThreadState = .collapsed
             })
             .disposed(by: disposeBag)
     }
