@@ -18,7 +18,6 @@ protocol OWConversationViewModelingInputs {
 protocol OWConversationViewModelingOutputs {
     var conversationViewVM: OWConversationViewViewModeling { get }
     var ctaCommentCreationTapped: Observable<Void> { get }
-    var userInitiatedAuthenticationFlow: Observable<Void> { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
 }
@@ -41,11 +40,6 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     }()
 
     var ctaCommentCreationTapped: Observable<Void> {
-        // TODO: Complete
-        return .never()
-    }
-
-    var userInitiatedAuthenticationFlow: Observable<Void> {
         // TODO: Complete
         return .never()
     }
