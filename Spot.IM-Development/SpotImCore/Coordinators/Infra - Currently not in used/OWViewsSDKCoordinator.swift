@@ -39,6 +39,23 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 return preConversationCoordinator.showableComponent()
             }
     }
+
+    func conversationView(conversationData: OWConversationRequiredData,
+                          callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWConversationCoordinatorResult>.self)
+            })
+            .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                guard let self = self else { return .empty() }
+                let conversationCoordinator = OWConversationCoordinator(conversationData: conversationData,
+                                                                              actionsCallbacks: callbacks)
+                self.store(coordinator: conversationCoordinator)
+                return conversationCoordinator.showableComponent()
+            }
+    }
 }
 
 fileprivate extension OWViewsSDKCoordinator {
