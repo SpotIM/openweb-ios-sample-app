@@ -17,7 +17,7 @@ extension OWLanguageStrategy {
         case 0: return .useDevice
         case 1: return .useServerConfig
         case 2: return .use(language: language)
-        default: return defaultStrategy
+        default: return `default`
         }
     }
 
@@ -25,30 +25,8 @@ extension OWLanguageStrategy {
         return 0
     }
 
-    static var defaultStrategy: OWLanguageStrategy {
-        .useDevice
-    }
-
-    static func languageStrategy(fromData data: Data) -> OWLanguageStrategy {
-        do {
-            let decoded = try JSONDecoder().decode(OWLanguageStrategy.self, from: data)
-            return decoded
-        } catch {
-            DLog("Failed to decode languageStrategy \(error.localizedDescription)")
-        }
-        return defaultStrategy
-    }
-
-    var data: Data {
-        let encoder = JSONEncoder()
-
-        do {
-            let data = try encoder.encode(self)
-            return data
-        } catch {
-            DLog("Failed to encode languageStrategy \(error.localizedDescription)")
-        }
-        return Data()
+    static var `default`: OWLanguageStrategy {
+        return .useDevice
     }
 
     enum CodingKeys: String, CodingKey {

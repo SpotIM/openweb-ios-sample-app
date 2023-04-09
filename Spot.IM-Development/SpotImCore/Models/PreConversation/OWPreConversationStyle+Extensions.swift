@@ -50,8 +50,10 @@ extension OWPreConversationStyle {
         switch self {
         case .compact:
             return .compact
-        case .regular, .ctaButtonOnly, .ctaWithSummary:
+        case .regular, .ctaWithSummary:
             return .regular
+        case .ctaButtonOnly:
+            return .none
         }
     }
 
@@ -74,3 +76,39 @@ extension OWPreConversationStyle {
     }
 
 }
+
+#if NEW_API
+extension OWPreConversationStyle: Equatable {
+    public static func == (lhs: OWPreConversationStyle, rhs: OWPreConversationStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.compact, .compact):
+            return true
+        case (.ctaButtonOnly, .ctaButtonOnly):
+            return true
+        case (.ctaWithSummary, .ctaWithSummary):
+            return true
+        case (.regular(let lhsNumOfComments), .regular(let rhsNumOfComments)):
+            return lhsNumOfComments == rhsNumOfComments
+        default:
+            return false
+        }
+    }
+}
+#else
+extension OWPreConversationStyle: Equatable {
+    static func == (lhs: OWPreConversationStyle, rhs: OWPreConversationStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.compact, .compact):
+            return true
+        case (.ctaButtonOnly, .ctaButtonOnly):
+            return true
+        case (.ctaWithSummary, .ctaWithSummary):
+            return true
+        case (.regular(let lhsNumOfComments), .regular(let rhsNumOfComments)):
+            return lhsNumOfComments == rhsNumOfComments
+        default:
+            return false
+        }
+    }
+}
+#endif

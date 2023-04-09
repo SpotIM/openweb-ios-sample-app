@@ -13,10 +13,8 @@ import RxSwift
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
-    // TODO: Testing - remove later and connect the actual views/actions
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
-
     var viewInitialized: PublishSubject<Void> { get }
 }
 
@@ -31,10 +29,11 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowSeparatorView: Observable<Bool> { get }
+    var summaryTopPadding: Observable<CGFloat> { get }
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Observable<Bool> { get }
+    var shouldShowReadOnlyPlaceholder: Observable<Bool> { get }
     var shouldShowFooter: Observable<Bool> { get }
     var shouldShowComapactView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
@@ -49,6 +48,10 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 }
 
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let delayForUICellUpdate: Int = 100
+    }
+
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
 
@@ -106,34 +109,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return false
     }()
 
-    fileprivate lazy var _isRegularStyle: BehaviorSubject<Bool> = {
-        var isRegular = false
-        if case .regular = preConversationStyle {
-            isRegular = true
-        }
-        return BehaviorSubject<Bool>(value: isRegular)
+    fileprivate lazy var _preConversationStyle: BehaviorSubject<OWPreConversationStyle> = {
+        return BehaviorSubject<OWPreConversationStyle>(value: preConversationStyle)
     }()
-
-    fileprivate lazy var isRegularStyle: Observable<Bool> = {
-        return _isRegularStyle
+    fileprivate lazy var preConversationStyleObservable: Observable<OWPreConversationStyle> = {
+        return _preConversationStyle
             .share(replay: 1)
     }()
 
-    fileprivate lazy var _isCompactStyle: BehaviorSubject<Bool> = {
-        var isCompact = false
-        if case .compact = preConversationStyle {
-            isCompact = true
-        }
-        return BehaviorSubject<Bool>(value: isCompact)
-    }()
-
-    fileprivate lazy var isCompactStyle: Observable<Bool> = {
-        return _isCompactStyle
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
+    fileprivate lazy var isReadOnly: Observable<Bool> = {
+        return _isReadOnly
             .share(replay: 1)
     }()
-
-    // TODO: support read only in pre conversation
-    fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
 
     lazy var compactCommentVM: OWPreConversationCompactContentViewModeling = {
         return OWPreConversationCompactContentViewModel(imageProvider: self.imageProvider)
@@ -147,25 +135,34 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
             .unwrap()
             .map { count in
-                return count > 0 ? "(\(count))" : ""
+                return count > 0 ? "(\(count.kmFormatted))" : ""
             }
             .asObservable()
     }()
 
     var conversationCTAButtonTitle: Observable<String> {
-        commentsCountObservable
-            .map { [weak self] count in
-                guard let self = self else { return nil }
-                switch(self.preConversationStyle) {
-                case .ctaButtonOnly:
-                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
-                case .ctaWithSummary:
-                    return LocalizationManager.localizedString(key: "Post a Comment")
-                default:
-                    return LocalizationManager.localizedString(key: "Show more comments")
+        Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnly, isEmpty) { count, style, isReadOnly, isEmpty in
+            switch(style) {
+            case .regular:
+                return OWLocalizationManager.shared.localizedString(key: "Show more comments")
+            case .compact:
+                return nil
+            case .ctaButtonOnly:
+                if isEmpty {
+                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
+                } else {
+                    return OWLocalizationManager.shared.localizedString(key: "Show Comments") + " \(count)"
+                }
+            case .ctaWithSummary:
+                if !isEmpty {
+                    return OWLocalizationManager.shared.localizedString(key: "Show Comments")
+                } else if !isReadOnly {
+                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
                 }
             }
-            .unwrap()
+            return nil
+        }
+        .unwrap()
     }
 
     var fullConversationTap = PublishSubject<Void>()
@@ -194,17 +191,40 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     var viewInitialized = PublishSubject<Void>()
 
-    var shouldShowSeparatorView: Observable<Bool> {
-        isRegularStyle
+    var summaryTopPadding: Observable<CGFloat> {
+       preConversationStyleObservable
+            .map { style in
+                switch(style) {
+                case .ctaButtonOnly:
+                    return 0
+                case .compact:
+                    return OWPreConversationView.Metrics.compactSummaryTopPadding
+                case .ctaWithSummary, .regular:
+                    return OWPreConversationView.Metrics.summaryTopPadding
+                }
+            }
     }
 
     var shouldShowCommentCreationEntryView: Observable<Bool> {
-        isRegularStyle
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly) { style, isReadOnly in
+            switch (style) {
+            case .regular(_):
+                return !isReadOnly
+            case .ctaButtonOnly, .ctaWithSummary, .compact:
+                return false
+            }
+        }
     }
 
     var shouldShowComments: Observable<Bool> {
-        isCompactStyle
-            .map { !$0 }
+        Observable.combineLatest(preConversationStyleObservable, isEmpty) { style, isEmpty in
+            switch(style) {
+            case .regular:
+                return !isEmpty
+            case .compact, .ctaWithSummary, .ctaButtonOnly:
+                return false
+            }
+        }
     }
 
     var shouldShowComapactView: Bool {
@@ -212,13 +232,43 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowCTA: Observable<Bool> {
-        isCompactStyle
-            .map { !$0 }
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly, isEmpty) { style, isReadOnly, isEmpty in
+            var isVisible = true
+            switch (style) {
+            case .regular(_):
+                isVisible = !isEmpty
+            case .ctaButtonOnly, .ctaWithSummary:
+                isVisible = !isEmpty || !isReadOnly
+            case .compact:
+                isVisible = false
+            }
+            return isVisible
+        }
+    }
+
+    var shouldShowReadOnlyPlaceholder: Observable<Bool> {
+        Observable.combineLatest(preConversationStyleObservable, isReadOnly, isEmpty) { style, isReadOnly, isEmpty in
+            switch (style) {
+            case .regular:
+                return isReadOnly
+            case .compact:
+                return false
+            case .ctaWithSummary, .ctaButtonOnly:
+                return isReadOnly && isEmpty
+            }
+        }
     }
 
     var shouldShowFooter: Observable<Bool> { // TODO: will get from config
-        isCompactStyle
-            .map { !$0 }
+        preConversationStyleObservable
+            .map { style in
+                switch(style) {
+                case .compact:
+                    return false
+                default:
+                    return true
+                }
+            }
     }
 
     lazy var shouldAddContentTapRecognizer: Bool = {
@@ -228,6 +278,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     lazy var isCompactBackground: Bool = {
         return isCompactMode
     }()
+
+    fileprivate var isEmpty = BehaviorSubject<Bool>(value: false)
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -291,7 +343,6 @@ fileprivate extension OWPreConversationViewViewModel {
                 let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
 
                 for (index, comment) in comments.enumerated() {
-                    // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
                         comment: comment,
@@ -317,6 +368,18 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
+        // Set isEmpty
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] conversation in
+                guard let self = self else { return }
+                if let messageCount = conversation.conversation?.messagesCount, messageCount > 0 {
+                    self.isEmpty.onNext(false)
+                } else {
+                    self.isEmpty.onNext(true)
+                }
+            })
+            .disposed(by: disposeBag)
+
         // Set read only mode
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
@@ -330,8 +393,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .default:
                     break
                 }
-                self.isReadOnly.onNext(isReadOnly)
+                self._isReadOnly.onNext(isReadOnly)
             })
+            .disposed(by: disposeBag)
+
+        isReadOnly
+            .bind(to: compactCommentVM.inputs.isReadOnly)
             .disposed(by: disposeBag)
 
         // Subscribing to customize UI related stuff
@@ -400,6 +467,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
+            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] commentIndex in
                 self?._changeSizeAtIndex.onNext(commentIndex)
             })
