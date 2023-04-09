@@ -34,8 +34,7 @@ class OWCommentThreadCollapseCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentThreadCollapseCellViewModeling else { return }
         self.viewModel = vm
 
-        // TODO - Add data to comment thread vm
-        commentThreadActionsView.configure(with: OWCommentThreadActionsViewModel())
+        commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
     }
 
     override func prepareForReuse() {
