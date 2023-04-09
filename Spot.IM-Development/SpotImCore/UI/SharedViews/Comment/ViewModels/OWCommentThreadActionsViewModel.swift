@@ -15,11 +15,11 @@ enum OWCommentThreadActionType {
 }
 
 protocol OWCommentThreadActionsViewModelingInputs {
-
+    var tap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
-
+    var tapOutput: Observable<Void> { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -30,4 +30,10 @@ protocol OWCommentThreadActionsViewModeling {
 class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCommentThreadActionsViewModelingInputs, OWCommentThreadActionsViewModelingOutputs {
     var inputs: OWCommentThreadActionsViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsViewModelingOutputs { return self }
+
+    var tap = PublishSubject<Void>()
+    var tapOutput: Observable<Void> {
+        tap
+            .asObservable()
+    }
 }

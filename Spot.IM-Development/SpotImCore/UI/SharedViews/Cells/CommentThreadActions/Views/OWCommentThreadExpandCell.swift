@@ -34,8 +34,7 @@ class OWCommentThreadExpandCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentThreadExpandCellViewModeling else { return }
         self.viewModel = vm
 
-        // TODO - Add data to comment thread vm
-        commentThreadActionsView.configure(with: OWCommentThreadActionsViewModel())
+        commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
     }
 
     override func prepareForReuse() {

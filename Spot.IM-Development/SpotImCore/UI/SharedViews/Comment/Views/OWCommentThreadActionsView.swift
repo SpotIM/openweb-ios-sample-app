@@ -21,7 +21,7 @@ class OWCommentThreadActionsView: UIView {
     }
 
     fileprivate var viewModel: OWCommentThreadActionsViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    fileprivate var disposeBag: DisposeBag = DisposeBag()
 
     init() {
         super.init(frame: .zero)
@@ -38,6 +38,13 @@ class OWCommentThreadActionsView: UIView {
 
         self.setupObservers()
     }
+
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+        return tap
+    }()
 
     fileprivate lazy var actionView: UIView = {
         let view = UIView()
@@ -94,6 +101,10 @@ fileprivate extension OWCommentThreadActionsView {
                     self.disclosureImageView.tintColor = brandColor
                 }
             })
+            .disposed(by: disposeBag)
+
+        tapGesture.rx.event.voidify()
+            .bind(to: viewModel.inputs.tap)
             .disposed(by: disposeBag)
     }
 }
