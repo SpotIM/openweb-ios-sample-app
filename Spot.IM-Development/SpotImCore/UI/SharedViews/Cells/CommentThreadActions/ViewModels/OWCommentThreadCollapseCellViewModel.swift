@@ -43,7 +43,7 @@ class OWCommentThreadCollapseCellViewModel: OWCommentThreadCollapseCellViewModel
 
     init() {
         // TODO - make OWCommentPresentationData a class
-        self.commentPresentationData = OWCommentPresentationData(id: "", shouldShowReplies: false, repliesIds: [], totalRepliesCount: 0, repliesOffset: 0, repliesPresentation: [])
+        self.commentPresentationData = OWCommentPresentationData(id: "", totalRepliesCount: 0, repliesOffset: 0)
 
         commentActionsVM = OWCommentThreadActionsViewModel()
     }

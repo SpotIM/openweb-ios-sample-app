@@ -8,11 +8,42 @@
 
 import Foundation
 
-struct OWCommentPresentationData { // TODO: Should be class and implement equtable
+enum OWCommentPresentationRepliesThreadState: Equatable {
+    case collapsed
+    case showFirst(numberOfReplies: Int)
+}
+
+class OWCommentPresentationData {
     let id: String
-    let shouldShowReplies: Bool // open / showingFirst(replies)
-    let repliesIds: [String]
+    var repliesThreadState: OWCommentPresentationRepliesThreadState
+    var repliesIds: [String]
     let totalRepliesCount: Int
-    let repliesOffset: Int
-    let repliesPresentation: [OWCommentPresentationData]
+    var repliesOffset: Int
+    var repliesPresentation: [OWCommentPresentationData]
+
+    init(
+        id: String,
+        repliesThreadState: OWCommentPresentationRepliesThreadState = .showFirst(numberOfReplies: 2),
+        repliesIds: [String] = [],
+        totalRepliesCount: Int,
+        repliesOffset: Int,
+        repliesPresentation: [OWCommentPresentationData] = []) {
+
+        self.id = id
+        self.repliesThreadState = repliesThreadState
+        self.repliesIds = repliesIds
+        self.totalRepliesCount = totalRepliesCount
+        self.repliesOffset = repliesOffset
+        self.repliesPresentation = repliesPresentation
+    }
+}
+
+extension OWCommentPresentationData: Equatable {
+    static func == (lhs: OWCommentPresentationData, rhs: OWCommentPresentationData) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.repliesThreadState == rhs.repliesThreadState &&
+        lhs.repliesIds == rhs.repliesIds &&
+        lhs.repliesPresentation == rhs.repliesPresentation &&
+        lhs.repliesOffset == rhs.repliesOffset
+    }
 }
