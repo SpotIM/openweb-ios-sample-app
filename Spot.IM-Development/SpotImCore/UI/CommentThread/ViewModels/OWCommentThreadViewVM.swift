@@ -295,5 +295,37 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
+
+        // Observable of the comment collapse cell VMs
+        let commentCollapseCellsVmsObservable: Observable<[OWCommentThreadCollapseCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentThreadCollapseCellViewModeling]> in
+                let commentThreadCollapseCellsVms: [OWCommentThreadCollapseCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadCollapse(let commentThreadCollapseCellViewModel) = vm {
+                        return commentThreadCollapseCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                    .unwrap()
+
+                return Observable.just(commentThreadCollapseCellsVms)
+            }
+            .share()
+
+        // responding to collapse thread clicked
+        commentCollapseCellsVmsObservable
+            .flatMap { commentCollapseCellsVms -> Observable<OWCommentPresentationData> in
+                let collapseClickObservable: [Observable<OWCommentPresentationData>] = commentCollapseCellsVms.map { commentCollapseCellsVm in
+                    return commentCollapseCellsVm.outputs.commentActionsVM
+                        .outputs.tapOutput
+                        .map { commentCollapseCellsVm.outputs.commentPresentationData }
+                }
+                return Observable.merge(collapseClickObservable)
+            }
+            .subscribe(onNext: { [weak self] _ in
+                // TODO - handle collapse
+//                commentPresentationData.shouldShowReplies = false
+            })
+            .disposed(by: disposeBag)
     }
 }
