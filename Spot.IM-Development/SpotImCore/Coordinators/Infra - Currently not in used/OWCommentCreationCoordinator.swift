@@ -78,15 +78,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
-        // Setting up general observers which affect app flow however not entirely inside the SDK
-
-        viewModel.outputs.userInitiatedAuthenticationFlow
-            .subscribe(onNext: { _ in
-                // TODO: Complete a callback to trigger auth flow at publisher side
-                // Complete by implementing OWUIAuthentication layer
-                // `let authenticationUI: OWUIAuthentication = manager.ui.authentication` according to the new API
-            })
-            .disposed(by: disposeBag)
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewModeling) {
