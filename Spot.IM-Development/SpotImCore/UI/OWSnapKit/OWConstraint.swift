@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-class OWConstraint {
+class OWConstraint: ReactiveCompatible {
     struct Helpers {
         static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
         static let loggerPrefix = "OpenWebSDKSnapKitLogger"
@@ -273,3 +275,10 @@ class OWConstraint {
     }
 }
 
+extension Reactive where Base: OWConstraint {
+    var isActive: Binder<Bool> {
+        return Binder(self.base) { _, value in
+            base.isActive = value
+        }
+    }
+}

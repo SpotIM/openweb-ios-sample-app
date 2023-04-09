@@ -382,7 +382,7 @@ jobs:
   release_tag:
     <<: *ios_config_xcode
     steps:
-      - prepare_release_app
+      - release_tag
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod

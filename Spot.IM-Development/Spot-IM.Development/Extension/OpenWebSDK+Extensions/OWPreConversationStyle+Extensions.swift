@@ -18,30 +18,12 @@ extension OWPreConversationStyle {
         case 1: return .compact
         case 2: return .ctaButtonOnly
         case 3: return .ctaWithSummary
-        default: return .regular()
+        default: return `default`
         }
     }
 
-    static func preConversationStyle(fromData data: Data) -> OWPreConversationStyle {
-        do {
-            let decoded = try JSONDecoder().decode(OWPreConversationStyle.self, from: data)
-            return decoded
-        } catch {
-            DLog("Failed decoding preConversationStyle \(error.localizedDescription)")
-        }
+    static var `default`: OWPreConversationStyle {
         return .regular()
-    }
-
-    var data: Data {
-        let encoder = JSONEncoder()
-
-        do {
-            let data = try encoder.encode(self)
-            return data
-        } catch {
-            DLog("Failed encoading preConversationStyle \(error.localizedDescription)")
-        }
-        return Data()
     }
 
     enum CodingKeys: String, CodingKey {

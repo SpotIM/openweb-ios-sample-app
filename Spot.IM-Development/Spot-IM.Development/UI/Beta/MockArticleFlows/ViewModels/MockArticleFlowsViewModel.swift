@@ -28,6 +28,7 @@ protocol MockArticleFlowsViewModelingOutputs {
     var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
+    var preConversationHorizontalMargin: CGFloat { get }
 }
 
 protocol MockArticleFlowsViewModeling {
@@ -39,9 +40,14 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
     var inputs: MockArticleFlowsViewModelingInputs { return self }
     var outputs: MockArticleFlowsViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let preConversationCompactHorizontalMargin: CGFloat = 16.0
+    }
+
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let imageProviderAPI: ImageProviding
+    fileprivate let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
     fileprivate weak var navController: UINavigationController?
     fileprivate weak var presentationalVC: UIViewController?
@@ -53,11 +59,27 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .asObservable()
     }
 
+    fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
+    fileprivate let commonCreatorService: CommonCreatorServicing
+
     fileprivate let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIFlowActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
+    }
+
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI(),
+         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+         imageProviderAPI: ImageProviding = ImageProvider(),
+         actionSettings: SDKUIFlowActionSettings) {
+        self.imageProviderAPI = imageProviderAPI
+        self.silentSSOAuthentication = silentSSOAuthentication
+        self.commonCreatorService = commonCreatorService
+        self.userDefaultsProvider = userDefaultsProvider
+        _actionSettings.onNext(actionSettings)
+        setupObservers()
     }
 
     fileprivate let _showError = PublishSubject<String>()
@@ -116,16 +138,15 @@ class MockArticleFlowsViewModel: MockArticleFlowsViewModeling, MockArticleFlowsV
             .unwrap()
     }
 
+    var preConversationHorizontalMargin: CGFloat {
+        let preConversationStyle = userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
+        let margin = preConversationStyle == OWPreConversationStyle.compact ? Metrics.preConversationCompactHorizontalMargin : 0.0
+        return margin
+    }
+
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
     }()
-
-    init(imageProviderAPI: ImageProviding = ImageProvider(),
-         actionSettings: SDKUIFlowActionSettings) {
-        self.imageProviderAPI = imageProviderAPI
-        _actionSettings.onNext(actionSettings)
-        setupObservers()
-    }
 
     func setNavigationController(_ navController: UINavigationController?) {
         self.navController = navController
@@ -162,13 +183,13 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let preConversationStyle =  OWPreConversationStyle.preConversationStyle(fromData: UserDefaultsProvider.shared.get(key: .preConversationCustomStyle, defaultValue: Data()))
-                let additionalSettings: OWPreConversationSettingsBuilder = .init(style: preConversationStyle)
+                let additionalSettings = self.commonCreatorService.preConversationSettings()
+                let article = self.commonCreatorService.mockArticle()
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
                 flows.preConversation(postId: postId,
-                                   article: self.createMockArticle(),
+                                   article: article,
                                    presentationalMode: presentationalMode,
                                    additionalSettings: additionalSettings,
                                    callbacks: nil,
@@ -202,12 +223,11 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let styleIndexFromPersistence = UserDefaultsProvider.shared.get(key: .conversationCustomStyleIndex, defaultValue: OWConversationStyle.defaultIndex)
-                let style = OWConversationStyle.conversationStyle(fromIndex: styleIndexFromPersistence)
-                let additionalSettings: OWConversationSettingsBuilder = .init(style: style)
+                let additionalSettings = self.commonCreatorService.conversationSettings()
+                let article = self.commonCreatorService.mockArticle()
 
                 flows.conversation(postId: postId,
-                                   article: self.createMockArticle(),
+                                   article: article,
                                    presentationalMode: presentationalMode,
                                    additionalSettings: additionalSettings,
                                    callbacks: nil,
@@ -242,8 +262,10 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
+                let article = self.commonCreatorService.mockArticle()
+
                 flows.commentCreation(postId: postId,
-                                      article: self.createMockArticle(),
+                                      article: article,
                                       presentationalMode: presentationalMode,
                                       additionalSettings: nil,
                                       callbacks: nil,
@@ -278,8 +300,10 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
+                let article = self.commonCreatorService.mockArticle()
+
                 flows.commentThread(postId: postId,
-                                    article: self.createMockArticle(),
+                                    article: article,
                                     commentId: "TODO - Comment ID",
                                     presentationalMode: presentationalMode,
                                     additionalSettings: nil,
@@ -298,31 +322,57 @@ fileprivate extension MockArticleFlowsViewModel {
                 })
             })
             .disposed(by: disposeBag)
-    }
-    // swiftlint:enable function_body_length
 
-    func createMockArticle() -> OWArticle {
-        let articleStub = OWArticle.stub()
+        // Providing `displayAuthenticationFlow` callback
+        let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
+            guard let self = self else { return }
+            let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
+            let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
 
-        // swiftlint:disable line_length
-        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: UserDefaultsProvider.shared.get(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex))
-        // swiftlint:enable line_length
-        let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
-                                         readOnlyMode: persistenceReadOnlyMode)
+            switch routeringMode {
+            case .flow(let navController):
+                navController.pushViewController(authenticationVC, animated: true)
+            case .none:
+                self.navController?.pushViewController(authenticationVC, animated: true)
+            default:
+                break
+            }
 
-        var url = articleStub.url
-        if let strURL =  UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
-           let persistenceURL = URL(string: strURL) {
-            url = persistenceURL
+            _ = authenticationVM.outputs.dismissed
+                .take(1)
+                .subscribe(onNext: { [completion] _ in
+                    completion()
+                })
         }
 
-        let article = OWArticle(url: url,
-                                title: articleStub.title,
-                                subtitle: articleStub.subtitle,
-                                thumbnailUrl: articleStub.thumbnailUrl,
-                                additionalSettings: settings)
-        return article
+        var authenticationUI = OpenWeb.manager.ui.authenticationUI
+        authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
+
+        // Providing `renewSSO` callback
+        let renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+            guard let self = self else { return }
+            let demoSpotId = ConversationPreset.demoSpot().conversationDataModel.spotId
+            if OpenWeb.manager.spotId == demoSpotId,
+               let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
+                _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                    .take(1) // No need to disposed since we only take 1
+                    .subscribe(onNext: { userId in
+                        DLog("Silent SSO completed successfully with userId: \(userId)")
+                        completion()
+                    }, onError: { error in
+                        DLog("Silent SSO failed with error: \(error)")
+                        completion()
+                    })
+            } else {
+                DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
+                completion()
+            }
+        }
+
+        var authentication = OpenWeb.manager.authentication
+        authentication.renewSSO = renewSSOCallback
     }
+    // swiftlint:enable function_body_length
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,

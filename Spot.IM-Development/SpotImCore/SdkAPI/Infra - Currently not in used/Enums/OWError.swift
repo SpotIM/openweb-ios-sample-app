@@ -12,15 +12,21 @@ import Foundation
 public enum OWError: Error {
     case missingSpotId
     case castingError(description: String)
-    case conversationFlow
     case preConversationFlow
+    case conversationFlow
     case commentCreationFlow
     case commentThreadFlow
+    case preConversationView
+    case conversationView
+    case commentCreationView
+    case commentThreadView
     case logout
     case userStatus
     case ssoStart
     case ssoComplete
     case alreadyLoggedIn
+    // TODO: Will be removed once the API is no longer beta and be official
+    case missingImplementation
 
     public var description: String {
         switch self {
@@ -28,14 +34,22 @@ public enum OWError: Error {
             return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):
             return des
-        case .conversationFlow:
-            return "Error in the process of starting conversation flow"
         case .preConversationFlow:
             return "Error in the process of starting pre conversation flow"
+        case .conversationFlow:
+            return "Error in the process of starting conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
         case .commentThreadFlow:
             return "Error in the process of starting comment thread flow"
+        case .preConversationView:
+            return "Error in the process of starting pre conversation as a view"
+        case .conversationView:
+            return "Error in the process of starting conversation as a view"
+        case .commentCreationView:
+            return "Error in the process of starting comment creation as a view"
+        case .commentThreadView:
+            return "Error in the process of starting comment thread as a view"
         case .logout:
             return "Error in the process of logout"
         case .userStatus:
@@ -46,6 +60,8 @@ public enum OWError: Error {
             return "Error in the process of SSO complete"
         case .alreadyLoggedIn:
             return "Error - a user is already logged in"
+        case .missingImplementation:
+            return "Error - Not implemented yet."
         }
     }
 }
@@ -53,15 +69,21 @@ public enum OWError: Error {
 enum OWError: Error {
     case missingSpotId
     case castingError(description: String)
-    case conversationFlow
     case preConversationFlow
+    case conversationFlow
     case commentCreationFlow
     case commentThreadFlow
+    case preConversationView
+    case conversationView
+    case commentCreationView
+    case commentThreadView
     case logout
     case userStatus
     case ssoStart
     case ssoComplete
     case alreadyLoggedIn
+    // TODO: Will be removed once the API is no longer beta and be official
+    case missingImplementation
 
     var description: String {
         switch self {
@@ -69,14 +91,22 @@ enum OWError: Error {
             return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):
             return des
-        case .conversationFlow:
-            return "Error in the process of starting conversation flow"
         case .preConversationFlow:
             return "Error in the process of starting pre conversation flow"
+        case .conversationFlow:
+            return "Error in the process of starting conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
         case .commentThreadFlow:
             return "Error in the process of starting comment thread flow"
+        case .preConversationView:
+            return "Error in the process of starting pre conversation as a view"
+        case .conversationView:
+            return "Error in the process of starting conversation as a view"
+        case .commentCreationView:
+            return "Error in the process of starting comment creation as a view"
+        case .commentThreadView:
+            return "Error in the process of starting comment thread as a view"
         case .logout:
             return "Error in the process of logout"
         case .userStatus:
@@ -87,6 +117,8 @@ enum OWError: Error {
             return "Error in the process of SSO complete"
         case .alreadyLoggedIn:
             return "Error - a user is already logged in"
+        case .missingImplementation:
+            return "Error - Not implemented yet."
         }
     }
 }

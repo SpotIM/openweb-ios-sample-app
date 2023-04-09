@@ -20,7 +20,9 @@ enum SettingsGroupType {
     static var all: [SettingsGroupType] {
         return [.general, .preConversation, .conversation, .commentCreation, .iau]
     }
+}
 
+extension SettingsGroupType {
     func createAppropriateVM(userDefaultsProvider: UserDefaultsProviderProtocol, manager: OWManagerProtocol) -> SettingsGroupVMProtocol {
         switch self {
         case .general:
@@ -35,5 +37,21 @@ enum SettingsGroupType {
             return IAUSettingsVM(userDefaultsProvider: userDefaultsProvider)
         }
     }
+
+    init(independentViewType: SDKUIIndependentViewType) {
+        switch independentViewType {
+        case .preConversation:
+            self = .preConversation
+        case .conversation:
+            self = .conversation
+        case .commentCreation:
+            self = .commentCreation
+        case .commentThread:
+            self = .commentCreation
+        case .independentAdUnit:
+            self = .iau
+        }
+    }
 }
+
 #endif
