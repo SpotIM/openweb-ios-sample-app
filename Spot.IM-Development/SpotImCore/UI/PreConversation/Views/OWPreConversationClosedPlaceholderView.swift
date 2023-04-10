@@ -14,17 +14,20 @@ class OWPreConversationClosedPlaceholderView: UIView {
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 15
         static let labelLeadingOffset: CGFloat = 4
+        static let iconSize: CGFloat = 24
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
        return UIImageView(image: UIImage(spNamed: "time-icon", supportDarkMode: true))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var label: UILabel = {
        return UILabel()
-            .text(LocalizationManager.localizedString(key: "Commenting on this article has ended"))
+            .text(OWLocalizationManager.shared.localizedString(key: "Commenting on this article has ended"))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate let disposeBag = DisposeBag()
@@ -42,15 +45,17 @@ class OWPreConversationClosedPlaceholderView: UIView {
 
 fileprivate extension OWPreConversationClosedPlaceholderView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.leading.top.bottom.equalToSuperview()
+            make.size.equalTo(Metrics.iconSize)
         }
 
         self.addSubview(label)
         label.OWSnp.makeConstraints { make in
             make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.labelLeadingOffset)
+            make.leading.equalTo(iconImageView.OWSnp.trailing).inset(-Metrics.labelLeadingOffset)
         }
     }
 
