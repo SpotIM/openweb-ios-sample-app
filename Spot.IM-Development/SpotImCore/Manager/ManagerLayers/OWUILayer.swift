@@ -235,7 +235,29 @@ extension OWUILayer {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 
-        completion(.failure(OWError.missingImplementation))
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let conversationData = OWConversationRequiredData(article: article,
+                                                                settings: additionalSettings)
+
+        _ = viewsSdkCoordinator.conversationView(conversationData: conversationData,
+                                                callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.preConversationView
+            completion(.failure(error))
+        })
     }
 }
 

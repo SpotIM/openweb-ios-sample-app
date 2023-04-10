@@ -137,8 +137,16 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new conversation component
     fileprivate lazy var conversationStyleChanged: Observable<Void> = {
-        // TODO: Complete once developed
-        return Observable.never()
+        return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
+                guard let self = self else { return .empty() }
+                return self.actionSettings
+                    .take(1)
+                    .map { $0.viewType }
+            }
+            .filter { $0 == .conversation }
+            .voidify()
     }()
     fileprivate lazy var conversationUpdater: Observable<Void> = {
         return Observable.merge(self.conversationStyleChanged)
@@ -201,6 +209,8 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         switch settings.viewType {
         case .preConversation:
             return self.retrievePreConversation(settings: settings)
+        case .conversation:
+            return self.retrieveConversation(settings: settings)
         default:
             return Observable.error(GeneralErrors.missingImplementation)
         }
@@ -228,6 +238,36 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 case .failure(let error):
                     let message = error.description
                     DLog("Calling retrievePreConversation error: \(message)")
+                    observer.onError(error)
+                }
+            })
+
+            return Disposables.create()
+        }
+    }
+
+    func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else { return Disposables.create() }
+
+            let additionalSettings = self.commonCreatorService.conversationSettings()
+            let article = self.commonCreatorService.mockArticle()
+
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            uiViews.conversation(postId: settings.postId,
+                                    article: article,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: nil,
+                                    completion: { result in
+                switch result {
+                case .success(let conversationView):
+                    observer.onNext(conversationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveConversation error: \(message)")
                     observer.onError(error)
                 }
             })

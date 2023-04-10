@@ -49,6 +49,7 @@ internal class OWPreConversationFooterView: UIView {
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.openSans(style: .regular, of: Metrics.poweredByFontSize))
+            .enforceSemanticAttribute()
         return btn
     }()
 
@@ -60,8 +61,8 @@ internal class OWPreConversationFooterView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
+        self.backgroundColor(.clear)
         self.enforceSemanticAttribute()
-            .backgroundColor(.clear)
 
         setupUI()
         setupObservers()
