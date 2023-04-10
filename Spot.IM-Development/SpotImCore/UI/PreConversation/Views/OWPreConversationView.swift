@@ -59,7 +59,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -457,6 +457,13 @@ fileprivate extension OWPreConversationView {
                 self.tableView.OWSnp.updateConstraints { make in
                     make.height.equalTo(height)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.inputs.fullConversationTap.onNext()
             })
             .disposed(by: disposeBag)
     }
