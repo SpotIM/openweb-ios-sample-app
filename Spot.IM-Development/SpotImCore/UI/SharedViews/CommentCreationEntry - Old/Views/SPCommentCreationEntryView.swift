@@ -1,9 +1,9 @@
 //
-//  OWCommentCreationEntryView.swift
+//  OWCommentCreationView.swift
 //  SpotImCore
 //
-//  Created by  Nogah Melamed on 05/04/2023.
-//  Copyright © 2023 Spot.IM. All rights reserved.
+//  Created by Alon Shprung on 17/08/2022.
+//  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
 import Foundation
@@ -11,13 +11,18 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-class OWCommentCreationEntryView: UIView {
+internal protocol SPCommentCreationEntryViewDelegate: AnyObject {
+    func labelContainerDidTap()
+    func userAvatarDidTap()
+}
+
+class SPCommentCreationEntryView: UIView {
     fileprivate struct Metrics {
+        static let separatorHeight: CGFloat = 1
         static let userAvatarSize: CGFloat = 40
-        static let containerLeadingOffset: CGFloat = 10
-        static let labelInsetVertical: CGFloat = 12
-        static let labelInsetHorizontal: CGFloat = 15
-        static let fontSize: CGFloat = 15
+        static let callToActionLeading: CGFloat = 12
+        static let callToActionHeight: CGFloat = 48
+        static let fontSize: CGFloat = 16
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
@@ -34,17 +39,14 @@ class OWCommentCreationEntryView: UIView {
                 width: 1.0,
                 color: OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
             .corner(radius: 6.0)
-            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light))
             .userInteractionEnabled(true)
-            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var label: UILabel = {
         return UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
-            .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            .text(LocalizationManager.localizedString(key: "What do you think?"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
@@ -53,14 +55,14 @@ class OWCommentCreationEntryView: UIView {
         return tapGesture
     }()
 
-    fileprivate var viewModel: OWCommentCreationEntryViewModeling!
+    fileprivate var viewModel: SPCommentCreationEntryViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(with viewModel: OWCommentCreationEntryViewModeling) {
+    init(with viewModel: SPCommentCreationEntryViewModeling) {
         super.init(frame: .zero)
         disposeBag = DisposeBag()
         self.viewModel = viewModel
@@ -73,9 +75,38 @@ class OWCommentCreationEntryView: UIView {
         self.accessibilityIdentifier = Metrics.identifier
         label.accessibilityIdentifier = Metrics.labelIdentifier
     }
+
+    init() {
+        super.init(frame: .zero)
+        setupViews()
+    }
+
+    func configure(with viewModel: SPCommentCreationEntryViewModeling, delegate: SPCommentCreationEntryViewDelegate) {
+        disposeBag = DisposeBag()
+        self.viewModel = viewModel
+        self.viewModel.inputs.configure(delegate: delegate)
+        userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
+        setupObservers()
+    }
+
+    func updateColorsAccordingToStyle() {
+        labelContainer.backgroundColor = .spBackground1
+        labelContainer.layer.borderColor = UIColor.spBorder.cgColor
+        label.textColor = .spForeground2
+    }
+
+    func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
+        customUIDelegate.customizeView(
+            .sayControl(
+                labelContainer: labelContainer,
+                label: label
+            ),
+            source: isPreConversation ? .preConversation : .conversation
+        )
+    }
 }
 
-fileprivate extension OWCommentCreationEntryView {
+fileprivate extension SPCommentCreationEntryView {
     func setupViews() {
         applyAccessibility()
         addSubview(userAvatarView)
@@ -86,18 +117,25 @@ fileprivate extension OWCommentCreationEntryView {
 
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-15)
+            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(12.0)
+            make.height.equalTo(48.0)
         }
 
         labelContainer.addSubview(label)
         label.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(Metrics.labelInsetVertical)
-            make.leading.trailing.equalToSuperview().inset(Metrics.labelInsetHorizontal)
+            make.centerY.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(Metrics.callToActionLeading)
+            make.height.equalTo(Metrics.callToActionHeight)
         }
     }
 
     func setupObservers() {
+        viewModel.outputs.ctaText
+            .bind(to: label.rx.text)
+            .disposed(by: disposeBag)
+
         tapGesture.rx.event.voidify()
         .bind(to: viewModel.inputs.tap)
         .disposed(by: disposeBag)
@@ -107,7 +145,6 @@ fileprivate extension OWCommentCreationEntryView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
-                self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 // TODO: custon UI
             }).disposed(by: disposeBag)

@@ -91,7 +91,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
-        return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
+        return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
     }()
 
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
