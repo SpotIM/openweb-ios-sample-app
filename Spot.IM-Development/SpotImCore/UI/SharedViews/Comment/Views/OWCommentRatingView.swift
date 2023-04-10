@@ -31,6 +31,7 @@ class OWCommentRatingView: UIView {
             .axis(.horizontal)
             .alignment(.center)
             .backgroundColor(.clear)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var rankUpButton: SPAnimatedButton = {

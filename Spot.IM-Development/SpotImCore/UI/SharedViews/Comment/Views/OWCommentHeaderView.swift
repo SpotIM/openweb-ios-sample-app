@@ -126,6 +126,8 @@ class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
+        self.enforceSemanticAttribute()
+
         addSubview(userNameLabel)
         userNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         userNameLabel.OWSnp.makeConstraints { make in

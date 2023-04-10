@@ -177,6 +177,7 @@ fileprivate extension OWCommentTextViewModel {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = OWCommentContentView.Metrics.paragraphLineSpacing
+        paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
