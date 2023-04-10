@@ -317,7 +317,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .flatMap { [weak self] sortOption -> Observable<SPConversationReadRM> in
+            .flatMap { [weak self] sortOption -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
@@ -327,7 +327,7 @@ fileprivate extension OWPreConversationViewViewModel {
             }
 
         let conversationFetchedObservable = viewInitialized
-            .flatMap { _ -> Observable<SPConversationReadRM> in
+            .flatMap { _ -> Observable<OWConversationReadRM> in
                 return conversationReadObservable
                     .take(1)
             }
@@ -340,7 +340,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 var viewModels = [OWPreConversationCellOption]()
 
                 let numOfComments = self.preConversationStyle.numberOfComments
-                let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+                let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
@@ -437,8 +437,8 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<SPComment> in
-                let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
+            .flatMap { commentCellsVms -> Observable<OWComment> in
+                let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.replyClickedOutput

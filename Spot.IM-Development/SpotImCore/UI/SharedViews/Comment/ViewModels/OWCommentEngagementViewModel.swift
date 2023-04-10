@@ -43,7 +43,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
 
     fileprivate var _replies = BehaviorSubject<Int>(value: 0)
 
-    init(replies: Int, rank: SPComment.Rank) {
+    init(replies: Int, rank: OWComment.Rank) {
         _replies.onNext(replies)
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0,
                                                                         rankDownCount: rank.ranksDown ?? 0,
