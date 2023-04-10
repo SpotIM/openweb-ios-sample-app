@@ -10,5 +10,5 @@ import Foundation
 
 enum OWCommentCreationType {
     case comment
-    case replyToComment(originComment: SPComment)
+    case replyToComment(originComment: OWComment)
 }
