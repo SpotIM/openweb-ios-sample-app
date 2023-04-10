@@ -11,7 +11,8 @@ import RxSwift
 
 enum OWCommentThreadActionType {
     case collapseThread
-    case viewReplies(repliesCount: Int, totalRepliesCount: Int)
+    case viewMoreReplies(count: Int)
+    case viewMoreRepliesRange(from: Int, to: Int)
 }
 
 protocol OWCommentThreadActionsViewModelingInputs {
@@ -20,6 +21,8 @@ protocol OWCommentThreadActionsViewModelingInputs {
 
 protocol OWCommentThreadActionsViewModelingOutputs {
     var tapOutput: Observable<Void> { get }
+    var actionLabelText: Observable<String> { get }
+    var disclosureTransform: Observable<CGAffineTransform> { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -34,6 +37,37 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var tap = PublishSubject<Void>()
     var tapOutput: Observable<Void> {
         tap
+            .asObservable()
+    }
+
+    init(with type: OWCommentThreadActionType) {
+        switch type {
+        case .collapseThread:
+            // TODO - localization
+            _actionLabelText.onNext("Collapse thread")
+            _disclosureTransform.onNext(.identity)
+        case .viewMoreReplies(count: let count):
+            // TODO - localization + logic
+            _actionLabelText.onNext("View \(count) \(count > 1 ? "replies" : "reply")")
+            _disclosureTransform.onNext(.init(rotationAngle: .pi))
+        case .viewMoreRepliesRange(from: let from, to: let to):
+            // TODO - localization + logic
+            _actionLabelText.onNext("View \(from) of \(to) replies")
+            _disclosureTransform.onNext(.init(rotationAngle: .pi))
+        }
+    }
+
+    let _actionLabelText = BehaviorSubject<String?>(value: nil)
+    var actionLabelText: Observable<String> {
+        _actionLabelText
+            .unwrap()
+            .asObservable()
+    }
+
+    let _disclosureTransform = BehaviorSubject<CGAffineTransform?>(value: nil)
+    var disclosureTransform: Observable<CGAffineTransform> {
+        _disclosureTransform
+            .unwrap()
             .asObservable()
     }
 }

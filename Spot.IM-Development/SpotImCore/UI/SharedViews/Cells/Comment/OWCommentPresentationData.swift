@@ -11,6 +11,15 @@ import Foundation
 enum OWCommentPresentationRepliesThreadState: Equatable {
     case collapsed
     case showFirst(numberOfReplies: Int)
+
+    func getVisibleRepliesCount() -> Int {
+        switch self {
+        case .collapsed:
+            return 0
+        case .showFirst(let numberOfReplies):
+            return numberOfReplies
+        }
+    }
 }
 
 class OWCommentPresentationData {
