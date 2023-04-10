@@ -69,7 +69,6 @@ class OWCommentThreadActionsView: UIView {
             .userInteractionEnabled(false)
             .font(.preferred(style: .medium, of: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
-            .text("Collapse thread")
     }()
 
     fileprivate lazy var disclosureImageView: UIImageView = {
@@ -101,6 +100,14 @@ fileprivate extension OWCommentThreadActionsView {
                     self.disclosureImageView.tintColor = brandColor
                 }
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.actionLabelText
+            .bind(to: actionLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.disclosureTransform
+            .bind(to: disclosureImageView.rx.transform)
             .disposed(by: disposeBag)
 
         tapGesture.rx.event.voidify()
