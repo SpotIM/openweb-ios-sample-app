@@ -40,6 +40,7 @@ class OWCommentCreationEntryView: UIView {
                 color: OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
             .corner(radius: 6.0)
             .userInteractionEnabled(true)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var label: UILabel = {
@@ -47,6 +48,7 @@ class OWCommentCreationEntryView: UIView {
             .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
             .text(LocalizationManager.localizedString(key: "What do you think?"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {

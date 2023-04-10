@@ -69,6 +69,7 @@ class OWCommentEngagementView: UIView {
 
 fileprivate extension OWCommentEngagementView {
     func setupUI() {
+        self.enforceSemanticAttribute()
         self.addSubviews(replyButton, votingView)
 
         replyButton.OWSnp.makeConstraints { make in
