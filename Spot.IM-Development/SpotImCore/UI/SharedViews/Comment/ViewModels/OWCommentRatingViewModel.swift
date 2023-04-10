@@ -214,11 +214,24 @@ fileprivate extension OWCommentRatingViewModel {
             .disposed(by: disposeBag)
 
         tapRankDown.withLatestFrom(_rankedByUser.unwrap())
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { _ in ranked }
+            }
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
-                // TODO: call new api rank + update local
+                let change = SPRankChange(from: from, to: to)
+                self._rankChange.onNext(change)
             })
             .disposed(by: disposeBag)
 
@@ -231,10 +244,10 @@ fileprivate extension OWCommentRatingViewModel {
 
                 self.updateChangeLocally(rankChange: rankChange)
                 return self.sharedServiceProvider
-                .netwokAPI()
-                .conversation
-                .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
-                .response
+                    .netwokAPI()
+                    .conversation
+                    .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
+                    .response
             }
             .subscribe(onError: { error in
                 // TODO: if did not work - change locally back
