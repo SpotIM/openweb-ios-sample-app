@@ -64,7 +64,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     fileprivate var rankChange: Observable<SPRankChange> {
         _rankChange.asObservable()
     }
-    
+
     fileprivate let commentId: String
 
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
