@@ -37,15 +37,24 @@ class OWCommentThreadExpandCellViewModel: OWCommentThreadExpandCellViewModeling,
     init(data: OWCommentPresentationData) {
         self.commentPresentationData = data
 
-        // TODO - Add data
-        commentActionsVM = OWCommentThreadActionsViewModel()
+        let visibleRepliesCount = commentPresentationData.repliesThreadState.getVisibleRepliesCount()
+        let totalRepliesCount = commentPresentationData.totalRepliesCount
+
+        let extendedRepliesCount = min(visibleRepliesCount + 5, totalRepliesCount)
+
+        let commentThreadActionType: OWCommentThreadActionType
+        if (visibleRepliesCount == 0 && totalRepliesCount < 5) {
+            commentThreadActionType = .viewMoreReplies(count: extendedRepliesCount)
+        } else {
+            commentThreadActionType = .viewMoreRepliesRange(from: extendedRepliesCount, to: totalRepliesCount)
+        }
+        commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType)
     }
 
     init() {
-        // TODO - make OWCommentPresentationData a class
         self.commentPresentationData = OWCommentPresentationData(id: "", totalRepliesCount: 0, repliesOffset: 0)
 
-        commentActionsVM = OWCommentThreadActionsViewModel()
+        commentActionsVM = OWCommentThreadActionsViewModel(with: .collapseThread)
     }
 }
 
