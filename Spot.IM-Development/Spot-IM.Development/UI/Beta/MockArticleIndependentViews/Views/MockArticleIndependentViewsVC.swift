@@ -140,7 +140,7 @@ fileprivate extension MockArticleIndependentViewsVC {
                 case .preConversation:
                     self.handlePreConversationPresentation()
                 case.conversation:
-                    self.handleConversation()
+                    self.handleConversationPresentation()
                 default:
                     // TODO: Implement for supported types
                     break
@@ -160,7 +160,7 @@ fileprivate extension MockArticleIndependentViewsVC {
         }
     }
 
-    func handleConversation() {
+    func handleConversationPresentation() {
         guard let conversation = self.independentView else { return }
 
         scrollView.addSubview(conversation)

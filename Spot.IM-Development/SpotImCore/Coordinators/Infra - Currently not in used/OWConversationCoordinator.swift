@@ -153,27 +153,28 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        // TODO: Complete when we would like to support the conversation as a view
         let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData)
         let conversationView = OWConversationView(viewModel: conversationViewVM)
+        setupObservers(forViewModel: conversationViewVM)
+        setupViewActionsCallbacks(forViewModel: conversationViewVM)
         return .just(conversationView)
     }
 }
 
 fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
-        // Setting up general observers which affect app flow however not entirely inside the SDK
-
-        viewModel.outputs.userInitiatedAuthenticationFlow
-            .subscribe(onNext: { _ in
-                // TODO: Complete a callback to trigger auth flow at publisher side
-                // Complete by implementing OWUIAuthentication layer
-                // `let authenticationUI: OWUIAuthentication = manager.ui.authentication` according to the new API
-            })
-            .disposed(by: disposeBag)
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
+        // TODO: complete binding VM to actions callbacks
+    }
+
+    func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+    }
+
+    func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         // TODO: complete binding VM to actions callbacks
     }
 }
