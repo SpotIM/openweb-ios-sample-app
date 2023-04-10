@@ -115,7 +115,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 break
             case (.collapsed, _):
                 cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData)))
-                break
             case (.showFirst(let count), _):
                 cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData)))
 
