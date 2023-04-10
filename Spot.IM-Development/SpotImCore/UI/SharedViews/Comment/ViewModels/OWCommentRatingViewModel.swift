@@ -239,12 +239,11 @@ fileprivate extension OWCommentRatingViewModel {
             .flatMap { [weak self] rankChange -> Observable<SPRankChange> in
                 guard let self = self else { return .empty() }
 
-//                self.updateChangeLocally(rankChange: rankChange)
-                return self._rankUp
+                return Observable.combineLatest(self._rankUp, self._rankDown)
                     .take(1)
-                    .do(onNext: { [weak self] rank in
+                    .do(onNext: { [weak self] rankUp, rankDown in
                         guard let self = self else { return }
-                        self.updateChangeLocally(rankChange: rankChange, rankUp: rank ?? 0)
+                        self.updateChangeLocally(rankChange: rankChange, rankUp: rankUp ?? 0, rankDown: rankDown ?? 0)
                     })
                     .map { _ in rankChange}
             }
@@ -267,32 +266,28 @@ fileprivate extension OWCommentRatingViewModel {
             .disposed(by: disposeBag)
     }
 
-    func updateChangeLocally(rankChange: SPRankChange, rankUp: Int) {
+    func updateChangeLocally(rankChange: SPRankChange, rankUp: Int, rankDown: Int) {
         switch (rankChange.from, rankChange.to) {
         case (.unrank, .up):
             _rankedByUser.onNext(1)
             _rankUp.onNext(rankUp + 1)
-//            rankUp += 1
         case (.unrank, .down):
             _rankedByUser.onNext(-1)
-//            rankDown += 1
+            _rankDown.onNext(rankDown + 1)
         case (.up, .unrank):
             _rankedByUser.onNext(0)
             _rankUp.onNext(rankUp - 1)
-//            rankUp -= 1
         case (.up, .down):
             _rankedByUser.onNext(-1)
             _rankUp.onNext(rankUp - 1)
-//            rankUp -= 1
-//            rankDown += 1
+            _rankDown.onNext(rankDown + 1)
         case (.down, .unrank):
             _rankedByUser.onNext(0)
-//            rankDown -= 1
+            _rankDown.onNext(rankDown - 1)
         case (.down, .up):
             _rankedByUser.onNext(1)
             _rankUp.onNext(rankUp + 1)
-//            rankUp += 1
-//            rankDown -= 1
+            _rankDown.onNext(rankDown - 1)
         default: break
         }
     }
