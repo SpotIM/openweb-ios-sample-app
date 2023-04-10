@@ -44,6 +44,7 @@ class OWSpacerCell: UITableViewCell {
 fileprivate extension OWSpacerCell {
     func setupUI() {
         self.backgroundColor = .clear
+        self.selectionStyle = .none
         self.addSubviews(seperatorView)
 
         seperatorView.OWSnp.makeConstraints { make in
