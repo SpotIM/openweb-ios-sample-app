@@ -21,14 +21,14 @@ protocol OWViewActionsServicing {
 
 class OWViewActionsService: OWViewActionsServicing {
 
-    fileprivate let viewActionsCallbacks: OWViewActionsCallbacks
+    fileprivate var viewActionsCallbacks: OWViewActionsCallbacks?
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let viewSourceType: OWViewSourceType
     fileprivate let queue = OWQueue<OWViewActionCallbackType>(duplicationStrategy: .replaceDuplicates)
     fileprivate var disposeBag: DisposeBag?
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         viewActionsCallbacks: @escaping OWViewActionsCallbacks,
+         viewActionsCallbacks: OWViewActionsCallbacks?,
          viewSourceType: OWViewSourceType) {
         self.viewActionsCallbacks = viewActionsCallbacks
         self.servicesProvider = servicesProvider
@@ -59,7 +59,7 @@ fileprivate extension OWViewActionsService {
         guard let postId = OWManager.manager.postId else { return }
         while !queue.isEmpty(),
               let action = queue.popFirst() {
-            viewActionsCallbacks(action, viewSourceType, postId)
+            viewActionsCallbacks?(action, viewSourceType, postId)
         }
     }
 }

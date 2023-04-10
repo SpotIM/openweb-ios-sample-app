@@ -25,6 +25,9 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate let authenticationManager: OWAuthenticationManagerProtocol
+    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
+    }()
 
     // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
     fileprivate var isStandaloneMode: Bool
@@ -58,6 +61,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         if !isStandaloneMode {
             setupObservers(forViewModel: preConversationViewVM)
         }
+
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
         let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
@@ -133,6 +137,15 @@ fileprivate extension OWPreConversationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let contentPressed = viewModel.outputs.openFullConversation
+            .map { OWViewActionCallbackType.contentPressed }
+
+        Observable.merge(contentPressed)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 }
