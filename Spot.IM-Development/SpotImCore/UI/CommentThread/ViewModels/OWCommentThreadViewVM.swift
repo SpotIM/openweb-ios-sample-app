@@ -108,22 +108,24 @@ fileprivate extension OWCommentThreadViewViewModel {
 
             cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
 
+            let depth = commentCellVM.outputs.commentVM.outputs.comment.depth ?? 0
+
             switch (commentPresentationData.repliesThreadState, commentPresentationData.totalRepliesCount) {
             case (.collapsed, 0):
                 break
             case (.showFirst, 0):
                 break
             case (.collapsed, _):
-                cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData)))
+                cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
             case (.showFirst(let count), _):
-                cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData)))
+                cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData, depth: depth)))
 
                 let commentsToShow = Array(commentPresentationData.repliesPresentation.prefix(count))
 
                 cellOptions.append(contentsOf: getCells(for: commentsToShow))
 
                 if (commentsToShow.count < commentPresentationData.totalRepliesCount) {
-                    cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData)))
+                    cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
                 }
             }
         }
