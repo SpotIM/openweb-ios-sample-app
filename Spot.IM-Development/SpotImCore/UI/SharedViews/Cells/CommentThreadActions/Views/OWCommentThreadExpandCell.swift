@@ -11,7 +11,6 @@ import UIKit
 
 class OWCommentThreadExpandCell: UITableViewCell {
     fileprivate struct Metrics {
-        static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
     }
 
@@ -35,6 +34,10 @@ class OWCommentThreadExpandCell: UITableViewCell {
         self.viewModel = vm
 
         commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
+
+        commentThreadActionsView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().inset(CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
+        }
     }
 
     override func prepareForReuse() {
@@ -49,7 +52,7 @@ fileprivate extension OWCommentThreadExpandCell {
 
         commentThreadActionsView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview()
         }
     }
 }

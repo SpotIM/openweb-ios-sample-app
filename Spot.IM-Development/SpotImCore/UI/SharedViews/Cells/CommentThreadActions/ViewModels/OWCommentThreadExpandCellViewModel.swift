@@ -17,6 +17,7 @@ protocol OWCommentThreadExpandCellViewModelingOutputs {
     var id: String { get }
     var commentPresentationData: OWCommentPresentationData { get }
     var commentActionsVM: OWCommentThreadActionsViewModel { get }
+    var depth: Int { get }
 }
 
 protocol OWCommentThreadExpandCellViewModeling: OWCellViewModel {
@@ -30,12 +31,15 @@ class OWCommentThreadExpandCellViewModel: OWCommentThreadExpandCellViewModeling,
 
     var id: String = UUID().uuidString
 
+    var depth: Int = 0
+
     let commentPresentationData: OWCommentPresentationData
 
     let commentActionsVM: OWCommentThreadActionsViewModel
 
-    init(data: OWCommentPresentationData) {
+    init(data: OWCommentPresentationData, depth: Int = 0) {
         self.commentPresentationData = data
+        self.depth = depth
 
         let visibleRepliesCount = commentPresentationData.repliesThreadState.getVisibleRepliesCount()
         let totalRepliesCount = commentPresentationData.totalRepliesCount
