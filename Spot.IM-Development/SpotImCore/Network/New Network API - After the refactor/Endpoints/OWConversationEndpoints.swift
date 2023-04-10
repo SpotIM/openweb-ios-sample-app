@@ -108,11 +108,11 @@ fileprivate struct OWConversationEndpointConst {
 
 protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM>
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
-    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment>
+    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
-    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment>
+    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete>
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<Bool>
     func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse>
@@ -121,19 +121,19 @@ protocol OWConversationAPI {
 
 extension OWConversationAPI {
     // Better accesability to conversationRead
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM> {
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM> {
         return conversationRead(mode: mode, page: page, parentId: parentId, messageId: "", offset: offset)
     }
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String) -> OWNetworkResponse<SPConversationReadRM> {
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String) -> OWNetworkResponse<OWConversationReadRM> {
         return conversationRead(mode: mode, page: page, parentId: parentId, messageId: parentId, offset: 0)
     }
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage) -> OWNetworkResponse<SPConversationReadRM> {
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage) -> OWNetworkResponse<OWConversationReadRM> {
         return conversationRead(mode: mode, page: page, parentId: "", messageId: "", offset: 0)
     }
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, messageId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM> {
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM> {
         return conversationRead(mode: mode, page: page, parentId: "", messageId: messageId, offset: offset)
     }
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, messageId: String) -> OWNetworkResponse<SPConversationReadRM> {
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, messageId: String) -> OWNetworkResponse<OWConversationReadRM> {
         return conversationRead(mode: mode, page: page, parentId: "", messageId: messageId, offset: 0)
     }
 }
@@ -148,7 +148,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM> {
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM> {
         let endpoint = OWConversationEndpoints.conversationRead(mode: mode, page: page, parentId: parentId, messageId: messageId, offset: offset)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
@@ -160,7 +160,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment> {
+    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment> {
         let endpoint = OWConversationEndpoints.commentPost(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
@@ -172,7 +172,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment> {
+    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment> {
         let endpoint = OWConversationEndpoints.commentUpdate(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

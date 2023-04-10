@@ -151,7 +151,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         // TODO - split to - initial fetch / pull to refresh + pagination + replies
         let conversationThreadReadObservable = Observable.merge([_commentThreadData.unwrap().flatMap { _ in
             return Observable.just(0)
-        }, _loadMoreComments.distinctUntilChanged()]).flatMap { [weak self] offset -> Observable<SPConversationReadRM> in
+        }, _loadMoreComments.distinctUntilChanged()]).flatMap { [weak self] offset -> Observable<OWConversationReadRM> in
             guard let self = self else { return .empty() }
             return self.servicesProvider
             .netwokAPI()
@@ -162,7 +162,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         }
 
         let commentThreadFetchedObservable = viewInitialized
-            .flatMap { _ -> Observable<SPConversationReadRM> in
+            .flatMap { _ -> Observable<OWConversationReadRM> in
                 return conversationThreadReadObservable
             }
 
@@ -171,7 +171,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] response in
                 guard let self = self, let responseComments = response.conversation?.comments else { return }
 
-                let comments: [SPComment] = Array(responseComments)
+                let comments: [OWComment] = Array(responseComments)
 
                 var commentsPresentationData = [OWCommentPresentationData]()
                 var repliesPresentationData = [OWCommentPresentationData]()
@@ -285,8 +285,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<SPComment> in
-                let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
+            .flatMap { commentCellsVms -> Observable<OWComment> in
+                let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.replyClickedOutput

@@ -24,7 +24,7 @@ protocol OWCommentViewModelingOutputs {
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
 
-    var comment: SPComment { get }
+    var comment: OWComment { get }
 }
 
 protocol OWCommentViewModeling {
@@ -53,14 +53,14 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
     var commentEngagementVM: OWCommentEngagementViewModeling
-    var comment: SPComment
+    var comment: OWComment
 
     init(data: OWCommentRequiredData) {
         commentUserVM = OWCommentUserViewModel(user: data.user, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
-        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? SPComment.Rank())
+        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? OWComment.Rank())
         comment = data.comment
     }
 
@@ -70,6 +70,6 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
-        comment = SPComment()
+        comment = OWComment()
     }
 }

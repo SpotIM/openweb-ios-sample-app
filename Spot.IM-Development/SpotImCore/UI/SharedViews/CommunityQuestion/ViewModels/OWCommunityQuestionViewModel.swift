@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommunityQuestionViewModelingInputs {
-    var conversationFetched: PublishSubject<SPConversationReadRM> { get }
+    var conversationFetched: PublishSubject<OWConversationReadRM> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
@@ -27,7 +27,7 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
-    var conversationFetched = PublishSubject<SPConversationReadRM>()
+    var conversationFetched = PublishSubject<OWConversationReadRM>()
 
     var communityQuestionOutput: Observable<String?> {
         conversationFetched
