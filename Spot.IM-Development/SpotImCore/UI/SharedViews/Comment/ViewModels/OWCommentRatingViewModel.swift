@@ -236,13 +236,24 @@ fileprivate extension OWCommentRatingViewModel {
             .disposed(by: disposeBag)
 
         rankChange
+            .flatMap { [weak self] rankChange -> Observable<SPRankChange> in
+                guard let self = self else { return .empty() }
+
+//                self.updateChangeLocally(rankChange: rankChange)
+                return self._rankUp
+                    .take(1)
+                    .do(onNext: { [weak self] rank in
+                        guard let self = self else { return }
+                        self.updateChangeLocally(rankChange: rankChange, rankUp: rank ?? 0)
+                    })
+                    .map { _ in rankChange}
+            }
             .flatMap { [weak self] rankChange -> Observable<EmptyDecodable> in
                 guard let self = self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
                 else { return .empty() }
 
-                self.updateChangeLocally(rankChange: rankChange)
                 return self.sharedServiceProvider
                     .netwokAPI()
                     .conversation
@@ -250,25 +261,28 @@ fileprivate extension OWCommentRatingViewModel {
                     .response
             }
             .subscribe(onError: { error in
-                // TODO: if did not work - change locally back
+                // TODO: if did not work - change locally back (using rankChange.reverse)
                 print("NOGAH: error \(error)")
             })
             .disposed(by: disposeBag)
     }
 
-    func updateChangeLocally(rankChange: SPRankChange) {
+    func updateChangeLocally(rankChange: SPRankChange, rankUp: Int) {
         switch (rankChange.from, rankChange.to) {
         case (.unrank, .up):
             _rankedByUser.onNext(1)
+            _rankUp.onNext(rankUp + 1)
 //            rankUp += 1
         case (.unrank, .down):
             _rankedByUser.onNext(-1)
 //            rankDown += 1
         case (.up, .unrank):
             _rankedByUser.onNext(0)
+            _rankUp.onNext(rankUp - 1)
 //            rankUp -= 1
         case (.up, .down):
             _rankedByUser.onNext(-1)
+            _rankUp.onNext(rankUp - 1)
 //            rankUp -= 1
 //            rankDown += 1
         case (.down, .unrank):
@@ -276,6 +290,7 @@ fileprivate extension OWCommentRatingViewModel {
 //            rankDown -= 1
         case (.down, .up):
             _rankedByUser.onNext(1)
+            _rankUp.onNext(rankUp + 1)
 //            rankUp += 1
 //            rankDown -= 1
         default: break
