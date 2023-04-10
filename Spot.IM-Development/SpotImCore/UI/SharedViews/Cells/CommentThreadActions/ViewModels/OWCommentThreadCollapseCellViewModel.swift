@@ -17,6 +17,7 @@ protocol OWCommentThreadCollapseCellViewModelingOutputs {
     var id: String { get }
     var commentPresentationData: OWCommentPresentationData { get }
     var commentActionsVM: OWCommentThreadActionsViewModel { get }
+    var depth: Int { get }
 }
 
 protocol OWCommentThreadCollapseCellViewModeling: OWCellViewModel {
@@ -30,12 +31,15 @@ class OWCommentThreadCollapseCellViewModel: OWCommentThreadCollapseCellViewModel
 
     var id: String = UUID().uuidString
 
+    var depth: Int = 0
+
     let commentPresentationData: OWCommentPresentationData
 
     let commentActionsVM: OWCommentThreadActionsViewModel
 
-    init(data: OWCommentPresentationData) {
+    init(data: OWCommentPresentationData, depth: Int = 0) {
         self.commentPresentationData = data
+        self.depth = depth
         commentActionsVM = OWCommentThreadActionsViewModel(with: .collapseThread)
     }
 
