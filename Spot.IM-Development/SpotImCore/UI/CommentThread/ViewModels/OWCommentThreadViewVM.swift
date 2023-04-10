@@ -108,11 +108,24 @@ fileprivate extension OWCommentThreadViewViewModel {
 
             cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
 
-            if (commentPresentationData.repliesThreadState != .collapsed && commentPresentationData.repliesPresentation.count > 0 ) {
+            switch (commentPresentationData.repliesThreadState, commentPresentationData.totalRepliesCount) {
+            case (.collapsed, 0):
+                break
+            case (.showFirst, 0):
+                break
+            case (.collapsed, _):
+                cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData)))
+                break
+            case (.showFirst(let count), _):
+                cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData)))
 
-                cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel()))
+                let commentsToShow = Array(commentPresentationData.repliesPresentation.prefix(count))
 
-                cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
+                cellOptions.append(contentsOf: getCells(for: commentsToShow))
+
+                if (commentsToShow.count < commentPresentationData.totalRepliesCount) {
+                    cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData)))
+                }
             }
         }
         return cellOptions
@@ -199,7 +212,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                     let commentPresentationData = OWCommentPresentationData(
                         id: commentId,
-                        repliesThreadState: .showFirst(numberOfReplies: 2),
+                        repliesThreadState: .showFirst(numberOfReplies: repliesPresentationData.count),
                         repliesIds: comment.replies?.map { $0.id! } ?? [],
                         totalRepliesCount: comment.repliesCount ?? 0,
                         repliesOffset: comment.offset ?? 0,
