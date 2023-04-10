@@ -74,7 +74,6 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         }
 
         setupObservers()
-        testLogger()
     }
 
     var openSettings: Observable<SettingsGroupType> {
@@ -181,14 +180,6 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 }
 
 fileprivate extension MockArticleIndependentViewsViewModel {
-    func testLogger() {
-        let randomInt = Int.random(in: 1000..<9999)
-        loggerViewModel.inputs.log(text: "Testing logger with a new event \(randomInt)")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.testLogger()
-        }
-    }
-
     func setupObservers() {
         // Addressing horizontal margin
         viewTypeUpdaters
@@ -226,10 +217,16 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
 
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
             uiViews.preConversation(postId: settings.postId,
                                     article: article,
                                     additionalSettings: additionalSettings,
-                                    callbacks: nil,
+                                    callbacks: actionsCallbacks,
                                     completion: { result in
                 switch result {
                 case .success(let preConversationView):
