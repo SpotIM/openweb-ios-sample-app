@@ -59,22 +59,25 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .asObservable()
     }
-    
+
     fileprivate var _rankChange: PublishSubject<SPRankChange> = PublishSubject<SPRankChange>()
     fileprivate var rankChange: Observable<SPRankChange> {
         _rankChange.asObservable()
     }
+    
+    fileprivate let commentId: String
 
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
+        commentId = ""
     }
 
-    init(model: OWCommentVotingModel, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(model: OWCommentVotingModel, commentId: String, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         _rankUp.onNext(model.rankUpCount)
         _rankDown.onNext(model.rankDownCount)
         _rankedByUser.onNext(model.rankedByUserValue)
-
+        self.commentId = commentId
         setupObservers()
     }
 
@@ -201,7 +204,6 @@ fileprivate extension OWCommentRatingViewModel {
                 return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
                     .map { _ in ranked }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
@@ -221,10 +223,49 @@ fileprivate extension OWCommentRatingViewModel {
             .disposed(by: disposeBag)
 
         rankChange
-            .subscribe(onNext: { change in
-                // TODO: API call
-                print("Rank")
+            .flatMap { [weak self] rankChange -> Observable<EmptyDecodable> in
+                guard let self = self,
+                      let postId = OWManager.manager.postId,
+                      let operation = rankChange.operation
+                else { return .empty() }
+
+                self.updateChangeLocally(rankChange: rankChange)
+                return self.sharedServiceProvider
+                .netwokAPI()
+                .conversation
+                .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
+                .response
+            }
+            .subscribe(onError: { error in
+                // TODO: if did not work - change locally back
+                print("NOGAH: error \(error)")
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateChangeLocally(rankChange: SPRankChange) {
+        switch (rankChange.from, rankChange.to) {
+        case (.unrank, .up):
+            _rankedByUser.onNext(1)
+//            rankUp += 1
+        case (.unrank, .down):
+            _rankedByUser.onNext(-1)
+//            rankDown += 1
+        case (.up, .unrank):
+            _rankedByUser.onNext(0)
+//            rankUp -= 1
+        case (.up, .down):
+            _rankedByUser.onNext(-1)
+//            rankUp -= 1
+//            rankDown += 1
+        case (.down, .unrank):
+            _rankedByUser.onNext(0)
+//            rankDown -= 1
+        case (.down, .up):
+            _rankedByUser.onNext(1)
+//            rankUp += 1
+//            rankDown -= 1
+        default: break
+        }
     }
 }
