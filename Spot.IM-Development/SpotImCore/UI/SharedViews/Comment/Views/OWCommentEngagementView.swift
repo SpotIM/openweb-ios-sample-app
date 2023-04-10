@@ -117,6 +117,11 @@ fileprivate extension OWCommentEngagementView {
             .bind(to: viewModel.inputs.replyClicked)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.showReplyButton
+            .map { !$0 }
+            .bind(to: replyButton.rx.isHidden)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
