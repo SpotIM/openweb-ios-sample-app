@@ -59,6 +59,11 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .asObservable()
     }
+    
+    fileprivate var _rankChange: PublishSubject<SPRankChange> = PublishSubject<SPRankChange>()
+    fileprivate var rankChange: Observable<SPRankChange> {
+        _rankChange.asObservable()
+    }
 
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
@@ -184,11 +189,25 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 fileprivate extension OWCommentRatingViewModel {
     func setupObservers() {
         tapRankUp.withLatestFrom(_rankedByUser.unwrap())
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
-                 // TODO: call new api rank + update local
+                let change = SPRankChange(from: from, to: to)
+                self._rankChange.onNext(change)
             })
             .disposed(by: disposeBag)
 
@@ -197,8 +216,14 @@ fileprivate extension OWCommentRatingViewModel {
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
-
                 // TODO: call new api rank + update local
+            })
+            .disposed(by: disposeBag)
+
+        rankChange
+            .subscribe(onNext: { change in
+                // TODO: API call
+                print("Rank")
             })
             .disposed(by: disposeBag)
     }
