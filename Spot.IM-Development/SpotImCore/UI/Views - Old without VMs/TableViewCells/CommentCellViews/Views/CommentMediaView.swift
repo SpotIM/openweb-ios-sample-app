@@ -12,6 +12,8 @@ import UIKit
 internal class CommentMediaView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_media_view_id"
+        static let gifIdentifier = "comment_gif_webview_id"
+        static let imageIdentifier = "comment_image_view_id"
     }
 
     private let gifWebView: GifWebView = .init()
@@ -24,8 +26,8 @@ internal class CommentMediaView: OWBaseView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         self.backgroundColor = .clear
+        applyAccessibility()
     }
 
     private func configureGifWebView() {
@@ -65,5 +67,13 @@ internal class CommentMediaView: OWBaseView {
             configureGifWebView()
             gifWebView.configure(gifUrl: gifUrl)
         }
+    }
+}
+
+fileprivate extension CommentMediaView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        gifWebView.accessibilityIdentifier = Metrics.gifIdentifier
+        imageView.accessibilityIdentifier = Metrics.imageIdentifier
     }
 }
