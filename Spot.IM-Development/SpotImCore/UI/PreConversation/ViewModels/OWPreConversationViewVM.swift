@@ -451,7 +451,7 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Combinelatest
+        // Update comments cells on ReadOnly mode
         Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
             return (commentCellsVms, isReadOnly)
         }
