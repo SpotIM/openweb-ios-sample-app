@@ -23,6 +23,8 @@ class OWCommentEngagementView: UIView {
     fileprivate var viewModel: OWCommentEngagementViewModeling!
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
+    fileprivate var replyZeroWidthConstraint: OWConstraint? = nil
+
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
@@ -83,7 +85,9 @@ fileprivate extension OWCommentEngagementView {
 
         replyButton.OWSnp.makeConstraints { make in
             make.centerY.leading.equalToSuperview()
+            replyZeroWidthConstraint = make.width.equalTo(0).constraint
         }
+        replyZeroWidthConstraint?.isActive = false
 
         self.addSubview(replyDotDivider)
         replyDotDivider.OWSnp.makeConstraints { make in
@@ -115,6 +119,22 @@ fileprivate extension OWCommentEngagementView {
     func setupObservers() {
         replyButton.rx.tap
             .bind(to: viewModel.inputs.replyClicked)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showReplyButton
+            .subscribe(onNext: { [weak self] showReply in
+                guard let self = self else { return }
+                self.replyButton.isHidden = !showReply
+                self.replyDotDivider.isHidden = !showReply
+                self.replyZeroWidthConstraint?.isActive = !showReply
+                self.replyDotDivider.OWSnp.updateConstraints { make in
+                    make.size.equalTo(showReply ? Metrics.dotDividerSize : 0)
+                    make.leading.equalTo(self.replyButton.OWSnp.trailing).offset(showReply ? Metrics.baseOffset : 0)
+                }
+                self.votingView.OWSnp.updateConstraints { make in
+                    make.leading.equalTo(self.replyDotDivider.OWSnp.trailing).offset(showReply ? Metrics.baseOffset : 0)
+                }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

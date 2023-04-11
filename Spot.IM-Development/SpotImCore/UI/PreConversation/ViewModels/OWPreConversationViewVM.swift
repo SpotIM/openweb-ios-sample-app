@@ -451,6 +451,20 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Update comments cells on ReadOnly mode
+        Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
+            return (commentCellsVms, isReadOnly)
+        }
+        .subscribe(onNext: { commentCellsVms, isReadOnly in
+            commentCellsVms.forEach {
+                $0.outputs.commentVM
+                .outputs.commentEngagementVM
+                .inputs.isReadOnly
+                .onNext(isReadOnly)
+            }
+        })
+        .disposed(by: disposeBag)
+
         // Responding to comment height change (for updating cell)
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Int> in
