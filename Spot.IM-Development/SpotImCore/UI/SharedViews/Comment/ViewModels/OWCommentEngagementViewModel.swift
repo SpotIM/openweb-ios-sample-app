@@ -13,11 +13,13 @@ import UIKit
 
 protocol OWCommentEngagementViewModelingInputs {
     var replyClicked: PublishSubject<Void> { get }
+    var isReadOnly: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentEngagementViewModelingOutputs {
     var votingVM: OWCommentRatingViewModeling { get }
     var replyClickedOutput: Observable<Void> { get }
+    var showReplyButton: Observable<Bool> { get }
 }
 
 protocol OWCommentEngagementViewModeling {
@@ -38,6 +40,13 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var replyClicked = PublishSubject<Void>()
     var replyClickedOutput: Observable<Void> {
         replyClicked
+            .asObservable()
+    }
+
+    var isReadOnly = BehaviorSubject(value: true)
+    var showReplyButton: Observable<Bool> {
+        isReadOnly
+            .map { !$0 }
             .asObservable()
     }
 
