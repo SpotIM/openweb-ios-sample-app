@@ -69,8 +69,9 @@ extension OWManager {
            return _currentNonRxPostId
         }
         set(newPostId) {
-            _currentNonRxPostId = newPostId
-            _currentPostId.onNext(newPostId)
+            let encodedPostId = newPostId?.encoded
+            _currentNonRxPostId = encodedPostId
+            _currentPostId.onNext(encodedPostId)
         }
     }
 }
