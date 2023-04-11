@@ -1,5 +1,5 @@
 //
-//  OWAvatarViewModel.swift
+//  SPAvatarViewModel.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 24/03/2022.
@@ -11,31 +11,31 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWAvatarViewModelingInputs {
+protocol SPAvatarViewModelingInputs {
     func configureUser(user: SPUser)
     func changeAvatarVisibility(isVisible: Bool)
 
     var tapAvatar: PublishSubject<Void> { get }
 }
 
-protocol OWAvatarViewModelingOutputs {
+protocol SPAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var showOnlineIndicator: Observable<Bool> { get }
 
     var avatarTapped: Observable<Void> { get }
 }
 
-protocol OWAvatarViewModeling {
-    var inputs: OWAvatarViewModelingInputs { get }
-    var outputs: OWAvatarViewModelingOutputs { get }
+protocol SPAvatarViewModeling {
+    var inputs: SPAvatarViewModelingInputs { get }
+    var outputs: SPAvatarViewModelingOutputs { get }
 }
 
-class OWAvatarViewModel: OWAvatarViewModeling,
-                         OWAvatarViewModelingInputs,
-                         OWAvatarViewModelingOutputs {
+class SPAvatarViewModel: SPAvatarViewModeling,
+                         SPAvatarViewModelingInputs,
+                         SPAvatarViewModelingOutputs {
 
-    var inputs: OWAvatarViewModelingInputs { return self }
-    var outputs: OWAvatarViewModelingOutputs { return self }
+    var inputs: SPAvatarViewModelingInputs { return self }
+    var outputs: SPAvatarViewModelingOutputs { return self }
 
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate let _isAvatartVisible = BehaviorSubject<Bool>(value: true)
@@ -98,12 +98,12 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 }
 
 // TODO: this VM uses the new ImageProvider, once refactor is done old VM should be deleted
-class OWAvatarViewModelV2: OWAvatarViewModeling,
-                         OWAvatarViewModelingInputs,
-                         OWAvatarViewModelingOutputs {
+class OWAvatarViewModelV2: SPAvatarViewModeling,
+                         SPAvatarViewModelingInputs,
+                         SPAvatarViewModelingOutputs {
 
-    var inputs: OWAvatarViewModelingInputs { return self }
-    var outputs: OWAvatarViewModelingOutputs { return self }
+    var inputs: SPAvatarViewModelingInputs { return self }
+    var outputs: SPAvatarViewModelingOutputs { return self }
 
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)

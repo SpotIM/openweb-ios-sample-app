@@ -17,7 +17,7 @@ protocol OWCommentHeaderViewModelingInputs {
 
 protocol OWCommentHeaderViewModelingOutputs {
     var subscriberBadgeVM: OWSubscriberIconViewModeling { get }
-    var avatarVM: OWAvatarViewModeling { get }
+    var avatarVM: SPAvatarViewModeling { get }
 
     var shouldShowHiddenCommentMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
@@ -78,8 +78,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         userBadgeService = OWUserBadgeService()
     }
 
-    var avatarVM: OWAvatarViewModeling = {
-       return OWAvatarViewModel()
+    var avatarVM: SPAvatarViewModeling = {
+       return SPAvatarViewModel()
     }()
 
     var tapUserName = PublishSubject<Void>()
