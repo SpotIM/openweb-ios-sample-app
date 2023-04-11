@@ -12,6 +12,7 @@ import UIKit
 
 protocol OWAvatarViewModelingInputs {
     var tapAvatar: PublishSubject<Void> { get }
+    var userInput: BehaviorSubject<SPUser?> { get }
 }
 
 protocol OWAvatarViewModelingOutputs {
@@ -33,23 +34,25 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var inputs: OWAvatarViewModelingInputs { return self }
     var outputs: OWAvatarViewModelingOutputs { return self }
 
-    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    var userInput = BehaviorSubject<SPUser?>(value: nil)
     fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
 
     fileprivate let imageURLProvider: OWImageProviding
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
     var tapAvatar = PublishSubject<Void>()
 
-    init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(), sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
+        self.sharedServicesProvider = sharedServicesProvider
 
         if let user = user {
-            self._user.onNext(user)
+            self.userInput.onNext(user)
         }
     }
 
     fileprivate lazy var user: Observable<SPUser> = {
-        self._user
+        self.userInput
             .unwrap()
     }()
 
@@ -72,13 +75,23 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }
 
     var showOnlineIndicator: Observable<Bool> {
-        let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
-        return user
-            .map { user in
-                let isCurrentUser = user.id == SPUserSessionHolder.session.user?.id
-                let isUserOnline = (user.online ?? false) || isCurrentUser
-                return isUserOnline && !shouldDisableOnlineIndicator
+        return Observable.combineLatest(
+            user,
+            sharedServicesProvider.authenticationManager().activeUserAvailability,
+            sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+        ) { user, availability, config in
+            guard config.conversation?.disableOnlineDotIndicator != true else { return false }
+
+            if (user.online == true) {
+                return true
             }
+            switch availability {
+            case .user(let sessionUser):
+                return user.id == sessionUser.id
+            case .notAvailable:
+                return false
+            }
+        }
     }
 
     var avatarTapped: Observable<Void> {
