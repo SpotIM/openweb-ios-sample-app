@@ -30,7 +30,7 @@ class SPCommentCreationModel {
 
     private var currentUploadingImageId: String?
 
-    let avatarViewVM: OWAvatarViewModeling
+    let avatarViewVM: SPAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
 
     fileprivate let servicesProvider: OWSharedServicesProviding
@@ -57,7 +57,7 @@ class SPCommentCreationModel {
         commentService = updater
         self.articleMetadate = articleMetadate
         self.servicesProvider = servicesProvider
-        avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
+        avatarViewVM = SPAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: articleMetadate)
         setupCommentLabels()
 

@@ -17,7 +17,7 @@ protocol OWPreConversationCompactContentViewModelingInputs {
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
-    var avatarVM: OWAvatarViewModeling { get }
+    var avatarVM: SPAvatarViewModeling { get }
     var contentType: Observable<OWCompactContentType> { get }
     var isSkelatonHidden: Observable<Bool> { get }
     var isCommentHidden: Observable<Bool> { get }
@@ -110,7 +110,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
         setupObservers()
     }
 
-    lazy var avatarVM: OWAvatarViewModeling = {
+    lazy var avatarVM: SPAvatarViewModeling = {
         return OWAvatarViewModelV2(imageURLProvider: self.imageProvider)
     }()
 }
