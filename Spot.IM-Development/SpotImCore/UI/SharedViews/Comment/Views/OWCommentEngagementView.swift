@@ -87,6 +87,7 @@ fileprivate extension OWCommentEngagementView {
             make.centerY.leading.equalToSuperview()
             replyZeroWidthConstraint = make.width.equalTo(0).constraint
         }
+        replyZeroWidthConstraint?.isActive = false
 
         self.addSubview(replyDotDivider)
         replyDotDivider.OWSnp.makeConstraints { make in
