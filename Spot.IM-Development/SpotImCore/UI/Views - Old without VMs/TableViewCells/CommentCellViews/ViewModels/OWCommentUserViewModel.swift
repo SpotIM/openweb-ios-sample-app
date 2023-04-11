@@ -19,7 +19,7 @@ protocol OWCommentUserViewModelingInputs {
 
 protocol OWCommentUserViewModelingOutputs {
     var userNameVM: OWUserNameViewModeling { get }
-    var avatarVM: OWAvatarViewModeling { get }
+    var avatarVM: SPAvatarViewModeling { get }
 }
 
 protocol OWCommentUserViewModeling {
@@ -43,13 +43,13 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     fileprivate var user: SPUser?
     fileprivate var replyToCommentId: String?
 
-    let avatarVM: OWAvatarViewModeling
+    let avatarVM: SPAvatarViewModeling
     let userNameVM: OWUserNameViewModeling
 
     fileprivate let _conversationModel = BehaviorSubject<SPMainConversationModel?>(value: nil)
 
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
-        avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
+        avatarVM = SPAvatarViewModel(user: user, imageURLProvider: imageProvider)
         userNameVM = OWUserNameViewModel(user: user)
         self.user = user
 

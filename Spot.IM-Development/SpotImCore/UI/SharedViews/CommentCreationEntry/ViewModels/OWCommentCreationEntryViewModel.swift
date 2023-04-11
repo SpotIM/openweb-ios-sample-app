@@ -14,7 +14,7 @@ protocol OWCommentCreationEntryViewModelingInputs {
 }
 
 protocol OWCommentCreationEntryViewModelingOutputs {
-    var avatarViewVM: OWAvatarViewModeling { get }
+    var avatarViewVM: SPAvatarViewModeling { get }
     var tapped: Observable<Void> { get }
 }
 
@@ -44,7 +44,7 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
             .asObserver()
     }
 
-    lazy var avatarViewVM: OWAvatarViewModeling = {
+    lazy var avatarViewVM: SPAvatarViewModeling = {
         return OWAvatarViewModelV2(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
 }
