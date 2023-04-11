@@ -44,7 +44,6 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     }
 
     var isReadOnly = BehaviorSubject(value: true)
-//    var _showReplyButton = BehaviorSubject(value: true)
     var showReplyButton: Observable<Bool> {
         isReadOnly
             .map { !$0 }
@@ -58,21 +57,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0,
                                                                         rankDownCount: rank.ranksDown ?? 0,
                                                                         rankedByUserValue: rank.rankedByCurrentUser ?? 0))
-
-        setupObservers()
     }
 
     init() {
         self.votingVM = OWCommentRatingViewModel()
     }
 
-}
-
-fileprivate extension OWCommentEngagementViewModel {
-    func setupObservers() {
-//        isReadOnly
-//            .subscribe(onNext: {
-//                _showReplyButton.onNext(<#T##element: Bool##Bool#>)
-//            })
-    }
 }
