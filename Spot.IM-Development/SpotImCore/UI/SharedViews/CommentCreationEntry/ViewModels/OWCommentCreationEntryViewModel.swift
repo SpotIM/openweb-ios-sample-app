@@ -47,7 +47,7 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
     }
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
-        return OWAvatarViewModel(imageURLProvider: imageURLProvider)
+        return OWAvatarViewModel(backgroundColor: .backgroundColor2, imageURLProvider: imageURLProvider)
     }()
 }
 
