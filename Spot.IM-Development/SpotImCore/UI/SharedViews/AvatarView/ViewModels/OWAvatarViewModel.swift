@@ -18,8 +18,8 @@ protocol OWAvatarViewModelingInputs {
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var showOnlineIndicator: Observable<Bool> { get }
-
     var avatarTapped: Observable<Void> { get }
+    var backgroundColor: OWColor.OWType { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -42,10 +42,16 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     var tapAvatar = PublishSubject<Void>()
 
-    init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(), sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    var backgroundColor: OWColor.OWType
+
+    init (
+        user: SPUser? = nil,
+        backgroundColor: OWColor.OWType,
+        imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
+        sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
         self.sharedServicesProvider = sharedServicesProvider
-
+        self.backgroundColor = backgroundColor
         if let user = user {
             self.userInput.onNext(user)
         }
@@ -94,6 +100,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         }
     }
 
+    // TODO: handle tap in coordinator?
     var avatarTapped: Observable<Void> {
         tapAvatar
             .asObservable()

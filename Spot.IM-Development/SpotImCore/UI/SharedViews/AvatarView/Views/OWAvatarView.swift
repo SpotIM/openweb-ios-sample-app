@@ -15,9 +15,10 @@ final class OWAvatarView: UIView {
         static let avatarImageIdentifier = "avatar_image_id"
         static let avatarButtonIdentifier = "avatar_button_id"
         static let onlineIndicatorIdentifier = "online_indicator_id"
-    }
 
-    weak var delegate: OWAvatarViewDelegate? // TODO: delete
+        static let onlineIndicatorSize: CGFloat = 10
+        static let onlineIndicatorBorderWidth: CGFloat = 2
+    }
 
     fileprivate lazy var avatarButton: UIButton = {
         return UIButton()
@@ -28,14 +29,12 @@ final class OWAvatarView: UIView {
     }()
     fileprivate lazy var onlineIndicatorView: UIView = {
         let view = UIView()
-            .backgroundColor(.mediumGreen) // TODO: color
-            .border(width: 2, color: .white) // TODO: as backgroundColor!
+            .backgroundColor(OWColorPalette.shared.color(type: .green, themeStyle: .light))
+            .border(width: Metrics.onlineIndicatorBorderWidth, color: .clear)
+            .corner(radius: Metrics.onlineIndicatorSize / 2)
             .isHidden(true)
         return view
     }()
-
-//        onlineIndicatorView.layer.shouldRasterize = true // TODO: ?
-//        onlineIndicatorView.layer.rasterizationScale = UIScreen.main.scale // TODO: ?
 
     fileprivate lazy var defaultAvatar: UIImage = {
         let image = UIImage(spNamed: "defaultAvatar", supportDarkMode: true)!
@@ -67,9 +66,8 @@ final class OWAvatarView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        // Because avatar image size can be changed, we need to re-set corner radius
         avatarImageView.makeViewRound()
-        onlineIndicatorView.makeViewRound()
     }
 }
 
@@ -88,7 +86,7 @@ fileprivate extension OWAvatarView {
         addSubview(onlineIndicatorView)
         onlineIndicatorView.OWSnp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
-            make.size.equalTo(11.0) // TODO: metrics + real size
+            make.size.equalTo(Metrics.onlineIndicatorSize)
         }
     }
 
@@ -99,6 +97,7 @@ fileprivate extension OWAvatarView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.imageType
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] avatarImageType in
                 self?.updateAvatar(avatarImageType: avatarImageType)
             })
@@ -107,25 +106,25 @@ fileprivate extension OWAvatarView {
         avatarButton.rx.tap
             .bind(to: viewModel.inputs.tapAvatar)
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.onlineIndicatorView.layer.borderColor = OWColorPalette.shared.color(type: self.viewModel.outputs.backgroundColor, themeStyle: currentStyle).cgColor
+            }).disposed(by: disposeBag)
     }
 
     func updateAvatar(avatarImageType: OWImageType) {
         switch avatarImageType {
         case .defaultImage:
-            setAvatarOrDefault(image: defaultAvatar)
+            avatarImageView.image = defaultAvatar
         case .custom(let url):
             avatarImageView.setImage(with: url) { [weak self] (image, _) in
                 guard let self = self else { return }
-                self.setAvatarOrDefault(image: image ?? self.defaultAvatar)
+                self.avatarImageView.image = image ?? self.defaultAvatar
             }
         }
-    }
-
-    func setAvatarOrDefault(image: UIImage) {
-        avatarImageView.image = image
-        // TODO: what this is for ?
-//        avatarImageView.layer.shouldRasterize = true
-//        avatarImageView.layer.rasterizationScale = UIScreen.main.scale
     }
 
     func applyAccessibility() {
