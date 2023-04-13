@@ -161,7 +161,7 @@ fileprivate extension OWConversationViewViewModel {
             .outputs.communityQuestionViewModel
             .outputs.shouldShowView
             .delay(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] shouldShow in
+            .subscribe(onNext: { [weak self] _ in
                 self?._changeSizeAtIndex.onNext(0)
             })
             .disposed(by: disposeBag)

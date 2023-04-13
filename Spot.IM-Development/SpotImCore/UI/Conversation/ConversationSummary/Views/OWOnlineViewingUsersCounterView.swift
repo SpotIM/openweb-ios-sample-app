@@ -91,4 +91,3 @@ fileprivate extension OWOnlineViewingUsersCounterView {
     }
 }
 
-
