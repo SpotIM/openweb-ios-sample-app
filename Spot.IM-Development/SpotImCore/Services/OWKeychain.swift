@@ -52,7 +52,7 @@ class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
 
         // New keys - after the rafactor and new API
         case networkCredentials = "networkCredentialsKey"
-        case activeUser = "activeUserKey"
+        case activeUser = "activeUserKey" // Saved by [OWSpotId: OWUserAvailability] structure
     }
 
     func save<T>(value: T, forKey key: OWKey<T>) {
