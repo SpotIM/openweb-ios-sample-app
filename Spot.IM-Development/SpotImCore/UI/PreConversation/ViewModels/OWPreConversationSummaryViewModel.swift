@@ -43,7 +43,7 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
     var customizeCounterLabelUI = PublishSubject<UILabel>()
 
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
-        return OWOnlineViewingUsersCounterViewModelNew()
+        return OWOnlineViewingUsersCounterViewModel()
     }()
 
     var commentsCount: Observable<String> {

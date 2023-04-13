@@ -285,22 +285,21 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs
-            .communityQuestionViewModel.outputs
-            .shouldShowView
+        viewModel
+            .outputs.communityQuestionViewModel
+            .outputs.shouldShowView
             .map { !$0 }
             .bind(to: communityQuestionBottomDevider.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs
-            .communityGuidelinesViewModel
-            .outputs
-            .shouldBeHidden
+        viewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.shouldShowView
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isHidden in
+            .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
                 self.communityGuidelinesView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(isHidden ? 0 : Metrics.communityQuestionDeviderPadding)
+                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(shouldShow ? Metrics.communityQuestionDeviderPadding : 0)
                 }
             })
             .disposed(by: disposeBag)

@@ -37,13 +37,13 @@ internal final class SPPreConversationHeaderView: OWBaseView {
         return lbl
     }()
 
-    private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
-       return OWOnlineViewingUsersCounterView()
+    private lazy var onlineViewingUsersView: SPOnlineViewingUsersCounterView = {
+       return SPOnlineViewingUsersCounterView()
     }()
 
     internal weak var delegate: SPPreConversationHeaderViewDelegate?
 
-    init(onlineViewingUsersCounterVM: OWOnlineViewingUsersCounterViewModeling) {
+    init(onlineViewingUsersCounterVM: SPOnlineViewingUsersCounterViewModeling) {
         super.init(frame: .zero)
         onlineViewingUsersView.configure(with: onlineViewingUsersCounterVM)
         setupUI()
@@ -91,7 +91,7 @@ internal final class SPPreConversationHeaderView: OWBaseView {
     // Idealy this header view will have a VM as well which will hold the online users VM
     // I decided to wait with the refactoring and do so in a more specific task for it
     // The delegate flow for updating the custom UI here is anti patteren which will also be refactor soon. Prevented me from creating a VM file at the current state because it will be too much boilerplate code
-    func configure(onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling) {
+    func configure(onlineViewingUsersVM: SPOnlineViewingUsersCounterViewModeling) {
         onlineViewingUsersView.configure(with: onlineViewingUsersVM)
     }
 
