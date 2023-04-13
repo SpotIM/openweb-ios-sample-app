@@ -21,6 +21,10 @@ extension OWInitialSortStrategy {
         default: return .useServerConfig
         }
     }
+
+    static var defaultIndex: Int {
+        return 0
+    }
 }
 
 #endif
