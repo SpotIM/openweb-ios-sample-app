@@ -99,7 +99,7 @@ fileprivate extension OWConversationSortView {
         viewModel.outputs.openSort
             .subscribe(onNext: { [weak self] _ in
                 guard let _ = self else { return }
-                //TODO: open sort
+                // TODO: open sort
             })
             .disposed(by: disposeBag)
 
