@@ -288,7 +288,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
-        preConversationData: OWPreConversationRequiredData) {
+        preConversationData: OWPreConversationRequiredData,
+        viewableMode: OWViewableMode) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData

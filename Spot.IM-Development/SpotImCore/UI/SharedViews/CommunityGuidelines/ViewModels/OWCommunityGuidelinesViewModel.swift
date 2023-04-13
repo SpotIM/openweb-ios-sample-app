@@ -16,7 +16,8 @@ protocol OWCommunityGuidelinesViewModelingInputs {
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldBeHidden: Observable<Bool> { get }
+    var shouldShowView: Observable<Bool> { get }
+    var showContainer: Bool { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -24,7 +25,9 @@ protocol OWCommunityGuidelinesViewModeling {
     var outputs: OWCommunityGuidelinesViewModelingOutputs { get }
 }
 
-class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommunityGuidelinesViewModelingInputs, OWCommunityGuidelinesViewModelingOutputs {
+class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
+                                        OWCommunityGuidelinesViewModelingInputs,
+                                        OWCommunityGuidelinesViewModelingOutputs {
     struct Metrics {
         static let communityGuidelinesFontSize = 15.0
     }
@@ -41,7 +44,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         OWSharedServicesProvider.shared.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
-            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
+            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
+                                                      internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
@@ -57,26 +61,39 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             .asObservable()
     }
 
-    var shouldBeHidden: Observable<Bool> {
-        communityGuidelinesHtmlAttributedString
-            .map { [weak self] htmlString in
-                guard let self = self else { return true }
-                if htmlString != nil {
-                    return self.style == .none
-                }
-                return true
-            }
+    lazy var showContainer: Bool = {
+        return style == .compact
+    }()
+
+    var _shouldShowView = BehaviorSubject(value: false)
+    var shouldShowView: Observable<Bool> {
+        _shouldShowView
             .asObservable()
+            .share(replay: 0)
     }
 
     fileprivate let style: OWCommunityGuidelinesStyle
+    fileprivate let disposeBag = DisposeBag()
+
     init(style: OWCommunityGuidelinesStyle) {
         self.style = style
-        // TODO: support compact style
+        setupObservers()
     }
 }
 
 fileprivate extension OWCommunityGuidelinesViewModel {
+    func setupObservers() {
+        communityGuidelinesHtmlAttributedString
+            .subscribe(onNext: { [weak self] htmlString in
+                guard let self = self else { return }
+                if htmlString != nil {
+                    self._shouldShowView.onNext(self.style != .none)
+                } else {
+                    self._shouldShowView.onNext(false)
+                }
+            }).disposed(by: disposeBag)
+    }
+
     func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: String) -> String {
         var htmlString = communityGuidelinesTitle
 
@@ -96,7 +113,18 @@ fileprivate extension OWCommunityGuidelinesViewModel {
             )
             htmlMutableAttributedString.addAttribute(
                 .foregroundColor,
-                value: UIColor.spForeground0,
+                value: OWColorPalette.shared.color(type: .textColor2,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
+            )
+            htmlMutableAttributedString.addAttribute(
+                .underlineColor,
+                value: UIColor.green,
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
+            )
+            htmlMutableAttributedString.addAttribute(
+                .underlineStyle,
+                value: NSUnderlineStyle.single,
                 range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             return htmlMutableAttributedString

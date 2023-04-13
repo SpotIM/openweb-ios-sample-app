@@ -39,7 +39,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
 
-        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData)
+        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
+                                                                                 viewableMode: .partOfFlow)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
         let conversationPopped = PublishSubject<Void>()
 
@@ -153,7 +154,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData)
+        // TODO: Complete when we would like to support the conversation as a view
+        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
+                                                                                             viewableMode: .independent)
+
         let conversationView = OWConversationView(viewModel: conversationViewVM)
         setupObservers(forViewModel: conversationViewVM)
         setupViewActionsCallbacks(forViewModel: conversationViewVM)

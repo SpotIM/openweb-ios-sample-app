@@ -20,6 +20,7 @@ protocol OWConversationViewModelingOutputs {
     var ctaCommentCreationTapped: Observable<Void> { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
+    var shouldShowNavigationBar: Bool { get }
 }
 
 protocol OWConversationViewModeling {
@@ -33,15 +34,30 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
+    let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     lazy var conversationViewVM: OWConversationViewViewModeling = {
-        return OWConversationViewViewModel(conversationData: conversationData)
+        return OWConversationViewViewModel(conversationData: conversationData,
+                                           viewableMode: self.viewableMode)
     }()
 
     var ctaCommentCreationTapped: Observable<Void> {
         // TODO: Complete
         return .never()
+    }
+
+    var userInitiatedAuthenticationFlow: Observable<Void> {
+        // TODO: Complete
+        return .never()
+    }
+
+    var shouldShowNavigationBar: Bool {
+        guard let presentationalStyle = conversationData.presentationalStyle,
+              case let OWPresentationalModeCompact.present(style) = presentationalStyle,
+              style == .fullScreen else { return false }
+
+        return true
     }
 
     var highlightComment = PublishSubject<String>()
@@ -62,9 +78,11 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     }
 
     init (conversationData: OWConversationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.conversationData = conversationData
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }

@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWConversationVC: UIViewController {
     fileprivate struct Metrics {
-
+        static let navigationTitleFontSize: CGFloat = 18.0
     }
 
     fileprivate let viewModel: OWConversationViewModeling
@@ -34,20 +34,70 @@ class OWConversationVC: UIViewController {
 
     override func loadView() {
         super.loadView()
-        setupViews()
+        setupUI()
+        setupObservers()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         viewModel.inputs.viewDidLoad.onNext()
     }
 }
 
 fileprivate extension OWConversationVC {
-    func setupViews() {
+    func setupUI() {
         view.addSubview(conversationView)
         conversationView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+
+        if viewModel.outputs.shouldShowNavigationBar {
+            setupNavControllerUI()
+        }
+    }
+
+    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
+        let navController = self.navigationController
+
+        navController?.navigationBar.isTranslucent = false
+        let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
+                                                                       themeStyle: style)
+
+        // Setup Title
+        title = LocalizationManager.localizedString(key: "Conversation")
+        let navigationTitleTextAttributes = [
+            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold,
+                                                                size: Metrics.navigationTitleFontSize),
+            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1,
+                                                                                themeStyle: style)
+        ]
+
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            // Setup Back button
+            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+            appearance.backButtonAppearance = backButtonAppearance
+
+            navController?.navigationBar.standardAppearance = appearance
+            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
+        } else {
+            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.setupNavControllerUI(currentStyle)
+            }).disposed(by: disposeBag)
     }
 }
