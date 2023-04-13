@@ -217,8 +217,8 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
 
         // Stop / re-create services which depend on spot id
         /*
-         In order to not cause confusions, once we change in the SampleApp a spotId during the same app sesssion,
-         we are clearing any data relevent to the active user.
+         In order to not cause confusions, once we change in the SampleApp a spotId during the same app session,
+         we are clearing any data relevant to the active user.
          This means that if afterwards we re-select the original spotId, we will need to re-login and other user relevant functionality.
         */
         _authenticationManager.resetPersistence()
