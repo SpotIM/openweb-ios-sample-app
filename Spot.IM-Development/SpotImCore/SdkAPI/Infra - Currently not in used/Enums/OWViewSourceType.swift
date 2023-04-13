@@ -13,11 +13,13 @@ public enum OWViewSourceType {
     case preConversation
     case conversation
     case commentCreation
+    case commentThread
 }
 #else
 enum OWViewSourceType {
     case preConversation
     case conversation
     case commentCreation
+    case commentThread
 }
 #endif
