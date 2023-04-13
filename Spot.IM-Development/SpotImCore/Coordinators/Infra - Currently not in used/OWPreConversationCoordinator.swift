@@ -51,7 +51,8 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData)
+let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData,
+viewableMode: .independent)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
         // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
@@ -103,7 +104,8 @@ fileprivate extension OWPreConversationCoordinator {
             .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
-                                                                  settings: nil)
+                                                                  settings: nil,
+                                                                  presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                            conversationData: conversationData,
                                                                            actionsCallbacks: self.actionsCallbacks)

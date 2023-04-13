@@ -155,6 +155,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 fileprivate extension OWCommentSkeletonShimmeringCell {
     func setupUI() {
         self.selectionStyle = .none
+        backgroundColor = .clear
 
         self.addSubview(mainSkeletonShimmeringView)
         mainSkeletonShimmeringView.OWSnp.makeConstraints { make in
