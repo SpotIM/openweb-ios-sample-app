@@ -15,12 +15,14 @@ enum OWAuthenticationLevel {
 }
 
 extension OWAuthenticationLevel {
+    // Note that both .notAutenticated and .guest considered to have the same authentication level
+    // This is important for correct functionality in guest spots
     var level: Int {
         switch self {
         case .notAutenticated:
             return 0
         case .guest:
-            return 1
+            return 0
         case .loggedIn:
             return 2
         }

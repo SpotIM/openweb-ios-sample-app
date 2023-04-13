@@ -209,15 +209,23 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
 
     func set(spotId: OWSpotId) {
         configure(forSpotId: spotId)
+        _authenticationManager.loadPersistence(forSpotId: spotId)
     }
 
     func change(spotId: OWSpotId) {
         configure(forSpotId: spotId)
 
         // Stop / re-create services which depend on spot id
+        /*
+         In order to not cause confusions, once we change in the SampleApp a spotId during the same app session,
+         we are clearing any data relevant to the active user.
+         This means that if afterwards we re-select the original spotId, we will need to re-login and other user relevant functionality.
+        */
+        _authenticationManager.resetPersistence()
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()
         _sortDictateService.invalidateCache()
+        _blockerService.invalidateAllBlockers()
         _spotConfigurationService.spotChanged(spotId: spotId)
     }
 }
