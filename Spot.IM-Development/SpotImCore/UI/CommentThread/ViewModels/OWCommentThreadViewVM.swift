@@ -151,25 +151,36 @@ fileprivate extension OWCommentThreadViewViewModel {
     func setupObservers() {
         // Observable for the conversation network API
         // TODO - split to - initial fetch / pull to refresh + pagination + replies
-        let conversationThreadReadObservable = Observable.merge([_commentThreadData.unwrap().flatMap { _ in
-            return Observable.just(0)
-        }, _loadMoreComments.distinctUntilChanged()]).flatMap { [weak self] offset -> Observable<OWConversationReadRM> in
-            guard let self = self else { return .empty() }
-            return self.servicesProvider
-            .netwokAPI()
-            .conversation
-            .conversationRead(mode: .best, page: OWPaginationPage.first, parentId: "", offset: offset)
-//            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
-            .response
+        let initialConversationThreadReadObservable = _commentThreadData
+            .unwrap()
+            .flatMap { [weak self] _ -> Observable<OWConversationReadRM> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                .netwokAPI()
+                .conversation
+                .conversationRead(mode: .best, page: OWPaginationPage.first, parentId: "", offset: 0)
+    //            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
+                .response
         }
 
         let commentThreadFetchedObservable = viewInitialized
             .flatMap { _ -> Observable<OWConversationReadRM> in
-                return conversationThreadReadObservable
+                return initialConversationThreadReadObservable
+            }
+
+        let loadMoreCommentsReadObservable = _loadMoreComments
+            .distinctUntilChanged()
+            .flatMap { [weak self] offset -> Observable<OWConversationReadRM> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                .netwokAPI()
+                .conversation
+                .conversationRead(mode: .best, page: OWPaginationPage.next, parentId: "", offset: offset)
+                .response
             }
 
         // update comments presentation data
-        commentThreadFetchedObservable
+        Observable.merge(commentThreadFetchedObservable, loadMoreCommentsReadObservable)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self, let responseComments = response.conversation?.comments else { return }
 
@@ -205,7 +216,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                                 repliesThreadState: .collapsed,
                                 repliesIds: reply.replies?.map { $0.id! } ?? [],
                                 totalRepliesCount: reply.repliesCount ?? 0,
-                                repliesOffset: reply.offset ?? 0, repliesPresentation: []
+                                repliesOffset: reply.offset ?? 0,
+                                repliesPresentation: []
                             )
 
                             repliesPresentationData.append(replyPresentationData)
