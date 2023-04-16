@@ -31,23 +31,13 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
     var inputs: OWArticleDescriptionViewModelingInputs { return self }
     var outputs: OWArticleDescriptionViewModelingOutputs { return self }
 
-    fileprivate let _article = BehaviorSubject<OWArticleProtocol?>(value: nil)
-//    fileprivate let article: OWArticleProtocol
+    var tap = PublishSubject<Void>()
 
+    fileprivate let _article = BehaviorSubject<OWArticleProtocol?>(value: nil)
     fileprivate lazy var article: Observable<OWArticleProtocol> = {
         self._article
             .unwrap()
     }()
-
-    init(article: OWArticleProtocol) {
-        _article.onNext(article)
-    }
-
-    var tap = PublishSubject<Void>()
-
-    var headerTapped: Observable<Void> {
-        return tap.asObservable()
-    }
 
     var conversationImageType: Observable<OWImageType> {
         self.article
@@ -63,10 +53,19 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
         self.article
             .map { $0.title }
     }
+
     var conversationAuthor: Observable<String> {
         self.article
             .map { $0.subtitle }
             .unwrap()
             .map { $0.uppercased() }
+    }
+
+    var headerTapped: Observable<Void> {
+        return tap.asObservable()
+    }
+
+    init(article: OWArticleProtocol) {
+        _article.onNext(article)
     }
 }

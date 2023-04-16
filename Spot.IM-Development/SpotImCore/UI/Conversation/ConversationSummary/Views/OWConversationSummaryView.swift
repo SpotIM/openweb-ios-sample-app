@@ -46,8 +46,7 @@ class OWConversationSummaryView: UIView {
 
     private lazy var bottomHorizontalSeparator: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
-                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate var viewModel: OWConversationSummaryViewModeling
@@ -133,12 +132,9 @@ fileprivate extension OWConversationSummaryView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.commentsCountLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
-                                                                          themeStyle: currentStyle)
-                self.verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor(OWColorPalette.shared.color(type: .separatorColor2,
-                                                                                                                 themeStyle: currentStyle))
-                self.bottomHorizontalSeparator.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
-                                                                                           themeStyle: currentStyle))
+                self.commentsCountLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
+                self.bottomHorizontalSeparator.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle))
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
     }

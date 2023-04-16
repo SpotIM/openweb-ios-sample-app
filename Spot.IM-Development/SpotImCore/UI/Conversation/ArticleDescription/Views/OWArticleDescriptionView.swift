@@ -26,8 +26,7 @@ class OWArticleDescriptionView: UIView {
 
     private lazy var topSeparatorView: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
-                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var conversationImageView: UIImageView = {
@@ -41,9 +40,9 @@ class OWArticleDescriptionView: UIView {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
+            .enforceSemanticAttribute()
             .wrapContent()
             .numberOfLines(2)
-            .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular,
                                          size: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
@@ -52,9 +51,9 @@ class OWArticleDescriptionView: UIView {
 
     fileprivate lazy var authorLabel: UILabel = {
         return UILabel()
+            .enforceSemanticAttribute()
             .wrapContent()
             .numberOfLines(1)
-            .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular,
                                          size: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
@@ -62,7 +61,8 @@ class OWArticleDescriptionView: UIView {
     }()
 
     fileprivate lazy var titlesContainer: UIView = {
-        return UIView().enforceSemanticAttribute()
+        return UIView()
+            .enforceSemanticAttribute()
     }()
 
     private lazy var bottomSeparatorView: UIView = {
@@ -88,13 +88,6 @@ class OWArticleDescriptionView: UIView {
 }
 
 fileprivate extension OWArticleDescriptionView {
-    func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
-        conversationImageView.accessibilityIdentifier = Metrics.conversationImageIdentifier
-        titleLabel.accessibilityIdentifier = Metrics.conversationTitleIdentifier
-        authorLabel.accessibilityIdentifier = Metrics.conversationAuthorIdentifier
-    }
-
     func setupUI() {
         // Setup top separator
         self.addSubview(topSeparatorView)
@@ -152,12 +145,10 @@ fileprivate extension OWArticleDescriptionView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationTitle
-            .debug("RIVI:")
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationAuthor
-            .debug("RIVI:")
             .bind(to: authorLabel.rx.text)
             .disposed(by: disposeBag)
 
@@ -184,6 +175,13 @@ fileprivate extension OWArticleDescriptionView {
                 self.authorLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)
             }).disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        conversationImageView.accessibilityIdentifier = Metrics.conversationImageIdentifier
+        titleLabel.accessibilityIdentifier = Metrics.conversationTitleIdentifier
+        authorLabel.accessibilityIdentifier = Metrics.conversationAuthorIdentifier
     }
 
     func setImage(with url: URL) {

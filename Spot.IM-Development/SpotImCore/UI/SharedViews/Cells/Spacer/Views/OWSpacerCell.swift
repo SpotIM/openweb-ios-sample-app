@@ -8,20 +8,14 @@
 
 import Foundation
 import UIKit
-import RxSwift
 
 class OWSpacerCell: UITableViewCell {
 
-    fileprivate struct Metrics {
-        static let height: CGFloat = 1.0
-        static let verticalPadding: CGFloat = 16
-    }
-    fileprivate lazy var seperatorView: UIView = {
-       return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
+    fileprivate lazy var spacerView: OWSpacerView = {
+        return OWSpacerView()
     }()
+
     fileprivate var viewModel: OWSpacerCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,8 +30,8 @@ class OWSpacerCell: UITableViewCell {
         guard let vm = viewModel as? OWSpacerCellViewModel else { return }
 
         self.viewModel = vm
-        disposeBag = DisposeBag()
-        setupObservers()
+
+        spacerView.configure(with: self.viewModel.outputs.spacerViewModel)
     }
 }
 
@@ -45,22 +39,10 @@ fileprivate extension OWSpacerCell {
     func setupUI() {
         self.backgroundColor = .clear
         self.selectionStyle = .none
-        self.addSubviews(seperatorView)
 
-        seperatorView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.verticalPadding)
-            make.bottom.equalToSuperview().offset(-Metrics.verticalPadding)
-            make.height.equalTo(Metrics.height)
+        self.addSubview(spacerView)
+        spacerView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
-    }
-
-    func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
     }
 }
