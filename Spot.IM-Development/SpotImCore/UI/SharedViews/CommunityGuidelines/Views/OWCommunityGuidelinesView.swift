@@ -10,27 +10,24 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-// TODO: complete
 class OWCommunityGuidelinesView: UIView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
         static let containerCorderRadius: CGFloat = 8.0
+        static let containerHeight: CGFloat = 44
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 14.0
         static let horizontalPadding: CGFloat = 10.0
     }
 
     fileprivate lazy var titleTextView: UITextView = {
-        let textView = UITextView()
+        return UITextView()
             .backgroundColor(.clear)
             .delegate(self)
             .isEditable(false)
             .isSelectable(true)
             .isScrollEnabled(false)
             .dataDetectorTypes([.link])
-
-        textView.text = "TEST"
-        return textView
     }()
 
     fileprivate lazy var guidelinesContainer: UIView = {
@@ -40,21 +37,20 @@ class OWCommunityGuidelinesView: UIView {
     }()
 
     fileprivate lazy var guidelinesIcon: UIImageView = {
-        let img = UIImageView()
+        return UIImageView()
             .contentMode(.scaleAspectFit)
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
-
-        return img
     }()
 
     fileprivate var heightConstraint: OWConstraint? = nil
+
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        setupViews()
+        setupUI()
         setupObservers()
     }
 
@@ -66,17 +62,17 @@ class OWCommunityGuidelinesView: UIView {
         super.init(frame: .zero)
     }
 
-    // Only when using community question as a cell
+    // Only when using community guidelines as a cell
     func configure(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        self.setupViews()
+        self.setupUI()
         self.setupObservers()
     }
 }
 
-extension OWCommunityGuidelinesView {
-    fileprivate func setupViews() {
+fileprivate extension OWCommunityGuidelinesView {
+    func setupUI() {
         self.accessibilityIdentifier = Metrics.identifier
         self.backgroundColor = .clear
         self.isHidden = true
@@ -85,18 +81,19 @@ extension OWCommunityGuidelinesView {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
-                heightConstraint = make.height.equalTo(0).constraint
+                make.height.equalTo(Metrics.containerHeight)
             }
 
             guidelinesContainer.addSubview(guidelinesIcon)
             guidelinesIcon.OWSnp.makeConstraints { make in
+                make.top.equalToSuperview().offset(Metrics.verticalOffset)
                 make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
-                make.top.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             }
 
             guidelinesContainer.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
-                make.centerY.equalToSuperview()
+                make.centerY.equalTo(guidelinesIcon)
                 make.leading.equalTo(guidelinesIcon.OWSnp.trailing).offset(Metrics.horizontalPadding)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             }
@@ -104,6 +101,8 @@ extension OWCommunityGuidelinesView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.top.bottom.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
+
                 // avoide device notch in landscape
                 if #available(iOS 11.0, *) {
                     make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
@@ -113,14 +112,14 @@ extension OWCommunityGuidelinesView {
                     make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
                 }
             }
-        }
 
-        titleTextView.OWSnp.makeConstraints { make in
-            heightConstraint = make.height.equalTo(0).constraint
+            titleTextView.OWSnp.makeConstraints { make in
+                heightConstraint = make.height.equalTo(0).constraint
+            }
         }
     }
 
-    fileprivate func setupObservers() {
+    func setupObservers() {
         viewModel.outputs.shouldShowView
             .map { !$0 }
             .bind(to: self.rx.isHidden)

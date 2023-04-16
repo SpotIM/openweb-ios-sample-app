@@ -29,8 +29,6 @@ class OWCommunityQuestionCellViewModel: OWCommunityQuestionCellViewModeling,
     var inputs: OWCommunityQuestionCellViewModelingInputs { return self }
     var outputs: OWCommunityQuestionCellViewModelingOutputs { return self }
 
-    let disposeBag = DisposeBag()
-
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel(style: self.style)
     }()

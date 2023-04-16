@@ -17,8 +17,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
     }
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
-       let communityGuidelinesView = OWCommunityGuidelinesView()
-        return communityGuidelinesView
+        return OWCommunityGuidelinesView()
     }()
 
     fileprivate var viewModel: OWCommunityGuidelinesCellViewModeling!

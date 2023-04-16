@@ -10,9 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-protocol OWOnlineViewingUsersCounterViewModelingInputs {
-//    func configureModel(_ model: RealTimeOnlineViewingUsersModel)
-}
+protocol OWOnlineViewingUsersCounterViewModelingInputs { }
 
 protocol OWOnlineViewingUsersCounterViewModelingOutputs {
     var viewingCount: Observable<String> { get }

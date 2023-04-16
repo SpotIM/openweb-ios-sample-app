@@ -31,24 +31,11 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     var inputs: OWConversationSortViewModelingInputs { return self }
     var outputs: OWConversationSortViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _selectedSortOption = BehaviorSubject<OWSortOption?>(value: nil)
-    fileprivate let disposeBag = DisposeBag()
-
     var changeSelectedSortOption = PublishSubject<OWSortOption>()
     var sortTapped = PublishSubject<Void>()
     var sortSelected = PublishSubject<OWSortOption>()
 
-    fileprivate var postId: OWPostId {
-        return OWManager.manager.postId ?? ""
-    }
-
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.servicesProvider = servicesProvider
-
-        self.setupObservers()
-    }
-
+    fileprivate let _selectedSortOption = BehaviorSubject<OWSortOption?>(value: nil)
     var selectedSortOption: Observable<OWSortOption> {
         _selectedSortOption
             .unwrap()
@@ -59,6 +46,21 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
         sortTapped.asObservable()
     }
 
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
+    }
+
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+
+        self.setupObservers()
+    }
+}
+
+fileprivate extension OWConversationSortViewModel {
     func setupObservers() {
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider

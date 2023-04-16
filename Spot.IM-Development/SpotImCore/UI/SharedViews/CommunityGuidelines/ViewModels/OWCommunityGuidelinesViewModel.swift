@@ -42,32 +42,40 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     }
 
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId)
-            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
-                                                      internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
-            .map { config -> String? in
-                guard let conversationConfig = config.conversation,
-                      conversationConfig.communityGuidelinesEnabled == true else { return nil }
-                return config.conversation?.communityGuidelinesTitle?.value
-            }
-            .unwrap()
-            .map { [weak self] communityGuidelines in
-                guard let self = self else { return nil }
-                let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelines)
-                return self.getTitleTextViewAttributedText(htmlString: string)
-            }
-            .observe(on: MainScheduler.instance)
-            .asObservable()
+            return OWSharedServicesProvider.shared.spotConfigurationService()
+                .config(spotId: OWManager.manager.spotId)
+                .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
+                                                          internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
+                .map { config -> String? in
+                    guard let conversationConfig = config.conversation,
+                          conversationConfig.communityGuidelinesEnabled == true else { return nil }
+                        return config.conversation?.communityGuidelinesTitle?.value
+                }
+                .unwrap()
+                .map { [weak self] communityGuidelines in
+                    guard let self = self else { return nil }
+                    if self.style == .compact {
+                        let communityGuidelinesString = OWLocalizationManager.shared.localizedString(key: "Read our") + " " + OWLocalizationManager.shared.localizedString(key: "Community Guidelines")
+                        let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesString)
+                        return self.getTitleTextViewAttributedText(htmlString: string)
+                    }  else {
+                        let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelines)
+                        return self.getTitleTextViewAttributedText(htmlString: string)
+                    }
+                }
+                .observe(on: MainScheduler.instance)
+                .asObservable()
+
     }
 
     lazy var showContainer: Bool = {
         return style == .compact
     }()
 
-    var _shouldShowView = BehaviorSubject(value: false)
+    var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         _shouldShowView
+            .unwrap()
             .asObservable()
             .share(replay: 0)
     }
@@ -117,16 +125,7 @@ fileprivate extension OWCommunityGuidelinesViewModel {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
                 range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
-            htmlMutableAttributedString.addAttribute(
-                .underlineColor,
-                value: UIColor.green,
-                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
-            )
-            htmlMutableAttributedString.addAttribute(
-                .underlineStyle,
-                value: NSUnderlineStyle.single,
-                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
-            )
+            htmlMutableAttributedString.setAsLink(textToFind: OWLocalizationManager.shared.localizedString(key: "Community Guidelines"), linkURL: "")
             return htmlMutableAttributedString
         } else {
             return nil

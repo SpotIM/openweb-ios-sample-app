@@ -18,12 +18,13 @@ protocol OWConversationViewViewModelingInputs {
 
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTiTleHeader: Bool { get }
+    var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
-    var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
-    var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get}
+    var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
+    var initialDataLoaded: Observable<Bool> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -42,6 +43,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
+    lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
+        return OWConversationTitleHeaderViewModel()
+    }()
+
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
         return OWArticleDescriptionViewModel(article: conversationData.article)
     }()
@@ -58,6 +63,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWSpacerCellViewModel()
     }()
 
+    lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
+        return OWSpacerCellViewModel(style: .community)
+    }()
+
     lazy var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling = {
         return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
     }()
@@ -72,6 +81,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var updateCellSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
+            .asObservable()
+    }
+
+    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
+    var initialDataLoaded: Observable<Bool> {
+        return _initialDataLoaded
             .asObservable()
     }
 
@@ -150,42 +165,56 @@ fileprivate extension OWConversationViewViewModel {
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
-//        conversationFetchedObservable
-//            .subscribe(onNext: { conversation in
-//                print(conversation)
-//            })
-//            .disposed(by: disposeBag)
+        let shouldShowCommunityQuestion = communityQuestionCellViewModel.outputs
+            .communityQuestionViewModel.outputs
+            .shouldShowView
 
-        // Responding to comment height change (for updating cell)
-        communityQuestionCellViewModel
-            .outputs.communityQuestionViewModel
-            .outputs.shouldShowView
-            .delay(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] _ in
-                self?._changeSizeAtIndex.onNext(0)
-            })
-            .disposed(by: disposeBag)
+        let shouldShowCommunityGuidelines = communityGuidelinesCellViewModel.outputs
+            .communityGuidelinesViewModel.outputs
+            .shouldShowView
 
-        communityGuidelinesCellViewModel
-            .outputs.communityGuidelinesViewModel
-            .outputs.shouldShowView
+        Observable.combineLatest(conversationFetchedObservable,
+                                 shouldShowCommunityQuestion,
+                                 shouldShowCommunityGuidelines)
             .delay(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] _ in
-                self?._changeSizeAtIndex.onNext(2)
-            })
-            .disposed(by: disposeBag)
+            .subscribe(onNext: { [weak self] (_, shouldShowCommunityQuestion, shouldShowCommunityGuidelines) -> Void in
+            guard let self = self else { return }
+                self._cellsViewModels.removeAll()
+
+                switch (shouldShowCommunityQuestion, shouldShowCommunityGuidelines) {
+                    case (true, true):
+                        self.addCommunityQuestionCell()
+                        self.addCommunitySpacerCell()
+                        self.addCommunityGuidelinesCell()
+                    case (true, false):
+                        self.addCommunityQuestionCell()
+                    case (false, true):
+                        self.addCommunityGuidelinesCell()
+                    default:
+                        break
+                }
+
+                self._initialDataLoaded.onNext(true)
+        })
+        .disposed(by: disposeBag)
+    }
+
+    func addCommunityQuestionCell() {
+        let communityQuestionCellVM = OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
+        _cellsViewModels.append(communityQuestionCellVM)
+    }
+
+    func addCommunityGuidelinesCell() {
+        let communityGuidelinesCellVM = OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
+        _cellsViewModels.append(communityGuidelinesCellVM)
+    }
+
+    func addCommunitySpacerCell() {
+        let spacerVM = OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
+        _cellsViewModels.append(spacerVM)
     }
 
     func populateInitialUI() {
-        let communityQuestionCellVM = OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
-        _cellsViewModels.append(communityQuestionCellVM)
-
-        let spacerVM = OWConversationCellOption.spacer(viewModel: spacerCellViewModel)
-        _cellsViewModels.append(spacerVM)
-
-        let communityGuidelinesCellVM = OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
-        _cellsViewModels.append(communityGuidelinesCellVM)
-
         // TODO: Delete once working on the conversation view UI
         let skeletonCellVMs = (0 ..< 50).map { _ in
             return OWCommentSkeletonShimmeringCellViewModel()

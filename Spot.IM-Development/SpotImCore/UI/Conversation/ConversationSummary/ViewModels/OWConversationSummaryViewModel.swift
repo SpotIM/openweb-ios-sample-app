@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWConversationSummaryViewModelingInputs {
     var customizeCounterLabelUI: PublishSubject<UILabel> { get }
-//    var customizeSortLabelUI: PublishSubject<UILabel> { get }
+    var customizeSortLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWConversationSummaryViewModelingOutputs {
@@ -32,28 +32,8 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     var inputs: OWConversationSummaryViewModelingInputs { return self }
     var outputs: OWConversationSummaryViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
-    fileprivate let disposeBag = DisposeBag()
-
-    fileprivate var postId: OWPostId {
-        return OWManager.manager.postId ?? ""
-    }
-
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.servicesProvider = servicesProvider
-    }
-
     var customizeCounterLabelUI = PublishSubject<UILabel>()
     var customizeSortLabelUI = PublishSubject<UILabel>()
-    var changeSelectedSortOption = PublishSubject<OWSortOption>()
-
-    var selectedSortOption: Observable<OWSortOption> {
-        conversationSortVM
-            .outputs
-            .selectedSortOption
-            .map { $0 }
-    }
 
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
         return OWOnlineViewingUsersCounterViewModel()
@@ -63,6 +43,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
         return OWConversationSortViewModel()
     }()
 
+    fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
     var commentsCount: Observable<String> {
         guard let postId = OWManager.manager.postId else { return .empty()}
 
@@ -74,10 +55,21 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
             .unwrap()
             .map { count in
                 let commentsText: String = count > 1 ?
-                    LocalizationManager.localizedString(key: "Comments") :
-                    LocalizationManager.localizedString(key: "Comment")
+                LocalizationManager.localizedString(key: "Comments") :
+                LocalizationManager.localizedString(key: "Comment")
                 return count.kmFormatted + " " + commentsText
             }
             .asObservable()
+    }
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
+    }
+
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
     }
 }
