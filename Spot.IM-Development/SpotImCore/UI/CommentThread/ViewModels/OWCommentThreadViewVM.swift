@@ -111,21 +111,19 @@ fileprivate extension OWCommentThreadViewViewModel {
 
             let depth = commentCellVM.outputs.commentVM.outputs.comment.depth ?? 0
 
-            switch (commentPresentationData.repliesThreadState, commentPresentationData.totalRepliesCount) {
-            case (.collapsed, 0):
+            let repliesToShowCount = commentPresentationData.repliesPresentation.count
+
+            switch (repliesToShowCount, commentPresentationData.totalRepliesCount) {
+            case (_, 0):
                 break
-            case (.showFirst, 0):
-                break
-            case (.collapsed, _):
+            case (0, _):
                 cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
-            case (.showFirst(let count), _):
+            default:
                 cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData, depth: depth)))
 
-                let commentsToShow = Array(commentPresentationData.repliesPresentation.prefix(count))
+                cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
 
-                cellOptions.append(contentsOf: getCells(for: commentsToShow))
-
-                if (commentsToShow.count < commentPresentationData.totalRepliesCount) {
+                if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
                     cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
                 }
             }
@@ -213,7 +211,6 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                             let replyPresentationData = OWCommentPresentationData(
                                 id: replyId,
-                                repliesThreadState: .collapsed,
                                 repliesIds: reply.replies?.map { $0.id! } ?? [],
                                 totalRepliesCount: reply.repliesCount ?? 0,
                                 repliesOffset: reply.offset ?? 0,
@@ -226,7 +223,6 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                     let commentPresentationData = OWCommentPresentationData(
                         id: commentId,
-                        repliesThreadState: .showFirst(numberOfReplies: repliesPresentationData.count),
                         repliesIds: comment.replies?.map { $0.id! } ?? [],
                         totalRepliesCount: comment.repliesCount ?? 0,
                         repliesOffset: comment.offset ?? 0,
@@ -340,7 +336,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return Observable.merge(collapseClickObservable)
             }
             .subscribe(onNext: { commentPresentationData in
-                commentPresentationData.repliesThreadState = .collapsed
+                commentPresentationData.repliesPresentation.removeAll()
+
+                commentPresentationData.update.onNext()
             })
             .disposed(by: disposeBag)
 
