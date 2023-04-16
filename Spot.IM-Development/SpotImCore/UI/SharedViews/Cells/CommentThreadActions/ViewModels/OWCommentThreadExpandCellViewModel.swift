@@ -41,7 +41,7 @@ class OWCommentThreadExpandCellViewModel: OWCommentThreadExpandCellViewModeling,
         self.commentPresentationData = data
         self.depth = depth
 
-        let visibleRepliesCount = commentPresentationData.repliesThreadState.getVisibleRepliesCount()
+        let visibleRepliesCount = commentPresentationData.repliesPresentation.count
         let totalRepliesCount = commentPresentationData.totalRepliesCount
 
         let extendedRepliesCount = min(visibleRepliesCount + 5, totalRepliesCount)

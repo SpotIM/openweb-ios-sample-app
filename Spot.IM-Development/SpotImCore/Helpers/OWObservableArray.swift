@@ -22,14 +22,49 @@ struct OWArrayChangeEvent {
     }
 }
 
-struct OWObservableArray<Element>: ExpressibleByArrayLiteral {
+protocol OWUpdaterProtocol {
+    var update: PublishSubject<Void> { get }
+}
+
+extension OWUpdaterProtocol {
+    var update: PublishSubject<Void> {
+        return PublishSubject<Void>()
+    }
+}
+
+
+class OWObservableArray<Element: OWUpdaterProtocol>: ExpressibleByArrayLiteral {
     typealias EventType = OWArrayChangeEvent
 
     fileprivate let eventSubject = PublishSubject<EventType>()
     fileprivate let elementsSubject: BehaviorSubject<[Element]>
-    fileprivate var elements: [Element]
 
-    init() {
+    fileprivate var disposedBag = DisposeBag()
+
+    fileprivate var elements: [Element] {
+        didSet(newElements) {
+            self.setupObserversForElementsUpdater()
+        }
+    }
+
+    private func setupObserversForElementsUpdater() {
+        self.disposedBag = DisposeBag()
+
+        let elementsUpdaterObservables = elements.enumerated().map { (idx, element) -> Observable<Int> in
+            return element.update
+                .asObservable()
+                .map { idx }
+        }
+
+        Observable.merge(elementsUpdaterObservables)
+            .subscribe { [weak self] idx in
+                guard let self = self else { return }
+                self.arrayDidChange(OWArrayChangeEvent(updated: [idx]))
+            }
+            .disposed(by: disposedBag)
+    }
+
+    required init() {
         elements = []
         elementsSubject = BehaviorSubject<[Element]>(value: [])
     }
@@ -39,23 +74,23 @@ struct OWObservableArray<Element>: ExpressibleByArrayLiteral {
         elementsSubject = BehaviorSubject<[Element]>(value: elements)
     }
 
-    init<S: Sequence>(_ s: S) where S.Iterator.Element == Element {
+    required init<S: Sequence>(_ s: S) where S.Iterator.Element == Element {
         elements = Array(s)
         elementsSubject = BehaviorSubject<[Element]>(value: elements)
     }
 
-    init(arrayLiteral elements: Element...) {
+    required init(arrayLiteral elements: Element...) {
         self.elements = elements
         elementsSubject = BehaviorSubject<[Element]>(value: elements)
     }
 }
 
 extension OWObservableArray {
-    mutating func rx_elements() -> Observable<[Element]> {
+    func rx_elements() -> Observable<[Element]> {
         return elementsSubject
     }
 
-    mutating func rx_events() -> Observable<EventType> {
+    func rx_events() -> Observable<EventType> {
         return eventSubject
     }
 
@@ -84,79 +119,89 @@ extension OWObservableArray: Collection {
 }
 
 extension OWObservableArray: MutableCollection {
-    mutating func reserveCapacity(_ minimumCapacity: Int) {
+    func reserveCapacity(_ minimumCapacity: Int) {
         elements.reserveCapacity(minimumCapacity)
     }
 
-    mutating func append(_ newElement: Element) {
+    func append(_ newElement: Element) {
         elements.append(newElement)
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(inserted: [elements.count - 1]))
     }
 
-    mutating func append<S: Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
+    func append<S: Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
         let end = elements.count
         elements.append(contentsOf: newElements)
+        setupObserversForElementsUpdater()
         guard end != elements.count else {
             return
         }
         arrayDidChange(OWArrayChangeEvent(inserted: Array(end..<elements.count)))
     }
 
-    mutating func appendContentsOf<C: Collection>(_ newElements: C) where C.Iterator.Element == Element {
+    func appendContentsOf<C: Collection>(_ newElements: C) where C.Iterator.Element == Element {
         guard !newElements.isEmpty else {
             return
         }
         let end = elements.count
         elements.append(contentsOf: newElements)
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(inserted: Array(end..<elements.count)))
     }
 
-    @discardableResult mutating func removeLast() -> Element {
+    @discardableResult func removeLast() -> Element {
         let e = elements.removeLast()
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(deleted: [elements.count]))
         return e
     }
 
-    mutating func insert(_ newElement: Element, at i: Int) {
+    func insert(_ newElement: Element, at i: Int) {
         elements.insert(newElement, at: i)
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(inserted: [i]))
     }
 
-    @discardableResult mutating func remove(at index: Int) -> Element {
+    @discardableResult func remove(at index: Int) -> Element {
         let e = elements.remove(at: index)
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(deleted: [index]))
         return e
     }
 
-    mutating func removeAll(_ keepCapacity: Bool = false) {
+    func removeAll(_ keepCapacity: Bool = false) {
         guard !elements.isEmpty else {
             return
         }
         let originalElements = elements
         elements.removeAll(keepingCapacity: keepCapacity)
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(deleted: Array(0..<originalElements.count)))
     }
 
-    mutating func insertContentsOf(_ newElements: [Element], atIndex i: Int) {
+    func insertContentsOf(_ newElements: [Element], atIndex i: Int) {
         guard !newElements.isEmpty else {
             return
         }
         elements.insert(contentsOf: newElements, at: i)
+        setupObserversForElementsUpdater()
         arrayDidChange(OWArrayChangeEvent(inserted: Array(i..<i + newElements.count)))
     }
 
-    mutating func popLast() -> Element? {
+    func popLast() -> Element? {
         let e = elements.popLast()
+        setupObserversForElementsUpdater()
         if e != nil {
             arrayDidChange(OWArrayChangeEvent(deleted: [elements.count]))
         }
         return e
     }
 
-    mutating func replaceAll(with newElements: [Element]) {
+    func replaceAll(with newElements: [Element]) {
         let originalElements = elements
         elements.removeAll(keepingCapacity: true)
         elements.insert(contentsOf: newElements, at: 0)
+        setupObserversForElementsUpdater()
         if (originalElements.count < newElements.count) {
             arrayDidChange(OWArrayChangeEvent(updated: Array(0..<originalElements.count)))
             arrayDidChange(OWArrayChangeEvent(inserted: Array(originalElements.count..<newElements.count)))
@@ -170,9 +215,10 @@ extension OWObservableArray: MutableCollection {
 }
 
 extension OWObservableArray: RangeReplaceableCollection {
-    mutating func replaceSubrange<C: Collection>(_ subRange: Range<Int>, with newCollection: C) where C.Iterator.Element == Element {
+    func replaceSubrange<C: Collection>(_ subRange: Range<Int>, with newCollection: C) where C.Iterator.Element == Element {
         let oldCount = elements.count
         elements.replaceSubrange(subRange, with: newCollection)
+        setupObserversForElementsUpdater()
         let first = subRange.lowerBound
         let newCount = elements.count
         let end = first + (newCount - oldCount) + subRange.count
@@ -201,6 +247,7 @@ extension OWObservableArray: Sequence {
         }
         set {
             elements[index] = newValue
+            setupObserversForElementsUpdater()
             if index == elements.count {
                 arrayDidChange(OWArrayChangeEvent(inserted: [index]))
             } else {
@@ -215,10 +262,10 @@ extension OWObservableArray: Sequence {
         }
         set {
             elements[bounds] = newValue
+            setupObserversForElementsUpdater()
             let first = bounds.lowerBound
             arrayDidChange(OWArrayChangeEvent(inserted: Array(first..<first + newValue.count),
                                             deleted: Array(bounds.lowerBound..<bounds.upperBound)))
         }
     }
 }
-
