@@ -52,6 +52,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
+            .share()
             .asObservable()
     }()
 
