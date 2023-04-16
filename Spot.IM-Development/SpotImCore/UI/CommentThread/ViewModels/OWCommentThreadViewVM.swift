@@ -331,5 +331,36 @@ fileprivate extension OWCommentThreadViewViewModel {
                 commentPresentationData.repliesThreadState = .collapsed
             })
             .disposed(by: disposeBag)
+
+        // Observable of the comment expand cell VMs
+        let commentExpandCellsVmsObservable: Observable<[OWCommentThreadExpandCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentThreadExpandCellViewModeling]> in
+                let commentThreadExpandCellsVms: [OWCommentThreadExpandCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadExpand(let commentThreadExpandCellViewModel) = vm {
+                        return commentThreadExpandCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                    .unwrap()
+
+                return Observable.just(commentThreadExpandCellsVms)
+            }
+            .share()
+
+        // responding to expand thread clicked
+        commentExpandCellsVmsObservable
+            .flatMap { commentExpandCellsVms -> Observable<OWCommentPresentationData> in
+                let expandClickObservable: [Observable<OWCommentPresentationData>] = commentExpandCellsVms.map { commentExpandCellsVm in
+                    return commentExpandCellsVm.outputs.commentActionsVM
+                        .outputs.tapOutput
+                        .map { commentExpandCellsVm.outputs.commentPresentationData }
+                }
+                return Observable.merge(expandClickObservable)
+            }
+            .subscribe(onNext: { commentPresentationData in
+                // Handle expand thread
+            })
+            .disposed(by: disposeBag)
     }
 }
