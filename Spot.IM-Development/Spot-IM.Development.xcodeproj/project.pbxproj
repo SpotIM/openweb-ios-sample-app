@@ -328,6 +328,7 @@
 		3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A6E286B081D001A939C /* OWRealtimeService.swift */; };
 		3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A70286B18E7001A939C /* OpenWeb.swift */; };
 		3D894A73286C5222001A939C /* OWRealtimeEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */; };
+		3D91578C29E4962D00215A48 /* OWViewActionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D91578B29E4962D00215A48 /* OWViewActionsService.swift */; };
 		3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9C5825281AF64F002D0FCB /* OWFiles.swift */; };
 		3DA0AA05292A88DD00CED855 /* OpenWebSettings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3DA0AA04292A88DD00CED855 /* OpenWebSettings.plist */; };
 		3DA0AA07292A8BD900CED855 /* OWSettingsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA0AA06292A8BD900CED855 /* OWSettingsWrapper.swift */; };
@@ -732,6 +733,7 @@
 		9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */; };
 		9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
+		9ED2E57F29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
@@ -1099,6 +1101,7 @@
 		3D894A6E286B081D001A939C /* OWRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeService.swift; sourceTree = "<group>"; };
 		3D894A70286B18E7001A939C /* OpenWeb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeb.swift; sourceTree = "<group>"; };
 		3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeEndpoints.swift; sourceTree = "<group>"; };
+		3D91578B29E4962D00215A48 /* OWViewActionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewActionsService.swift; sourceTree = "<group>"; };
 		3D9C5825281AF64F002D0FCB /* OWFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFiles.swift; sourceTree = "<group>"; };
 		3DA0AA04292A88DD00CED855 /* OpenWebSettings.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = OpenWebSettings.plist; sourceTree = "<group>"; };
 		3DA0AA06292A8BD900CED855 /* OWSettingsWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSettingsWrapper.swift; sourceTree = "<group>"; };
@@ -1533,6 +1536,7 @@
 		9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityQuestionsStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Extensions.swift"; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
+		9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLocaleStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9EE9F79929D6DC99005FFC8A /* OWQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueue.swift; sourceTree = "<group>"; };
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
@@ -3684,6 +3688,7 @@
 				3D263D0C29C395B70013C532 /* OWAuthorizationRecoveryService.swift */,
 				249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */,
 				249DF2A2296D95C500F5D69A /* OWImageProvider.swift */,
+				3D91578B29E4962D00215A48 /* OWViewActionsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -4337,6 +4342,7 @@
 				9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */,
 				9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */,
 				9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */,
+				9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */,
 			);
 			path = "OpenWebSDK+Extensions";
 			sourceTree = "<group>";
@@ -4917,6 +4923,7 @@
 				3D20A38727B01F2E003F8513 /* OWConstraintMultiplierTarget.swift in Sources */,
 				3DFA6B9B29216DAE0047E313 /* OWAuthenticationLayer.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
+				3D91578C29E4962D00215A48 /* OWViewActionsService.swift in Sources */,
 				3DA264752951E3B200688FFF /* OWNetworkRequestInterceptor.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
@@ -5378,6 +5385,7 @@
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
 				9E73DAE029C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift in Sources */,
+				9ED2E57F29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift in Sources */,
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
 				9EBE5C2A29AE141E001150DA /* OWPreConversationStyle+Extensions.swift in Sources */,
 				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,
