@@ -13,6 +13,7 @@ protocol OWConversationViewModelingInputs {
     // String is the commentId
     var highlightComment: PublishSubject<String> { get }
     var viewDidLoad: PublishSubject<Void> { get }
+    var closeConversationTapped: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
@@ -21,7 +22,9 @@ protocol OWConversationViewModelingOutputs {
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
     var shouldShowNavigationBar: Bool { get }
+    var shouldShowCloseButton: Bool { get }
     var initialDataLoaded: Observable<Bool> { get }
+    var closeConversation: Observable<Void> { get }
 }
 
 protocol OWConversationViewModeling {
@@ -63,6 +66,10 @@ class OWConversationViewModel: OWConversationViewModeling,
         return true
     }
 
+    var shouldShowCloseButton: Bool {
+        return true
+    }
+
     var highlightComment = PublishSubject<String>()
     fileprivate var _highlightedComment = BehaviorSubject<String?>(value: nil)
     var highlightedComment: Observable<String> {
@@ -83,6 +90,11 @@ class OWConversationViewModel: OWConversationViewModeling,
     var initialDataLoaded: Observable<Bool> {
         return _initialDataLoaded
             .asObservable()
+    }
+
+    var closeConversationTapped = PublishSubject<Void>()
+    var closeConversation: Observable<Void> {
+        return closeConversationTapped.asObservable()
     }
 
     init (conversationData: OWConversationRequiredData,

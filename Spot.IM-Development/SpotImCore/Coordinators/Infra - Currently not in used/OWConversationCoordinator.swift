@@ -145,8 +145,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .outputs.conversationTitleHeaderViewModel
             .outputs.closeConversation
 
+        let partOfFlowPresentedConversationClosedObservable = conversationVM.outputs.closeConversation
+
         let conversationPoppedObservable = Observable.merge(conversationPopped,
-                                                            indipendentConversationClosedObservable)
+                                                            indipendentConversationClosedObservable,
+                                                            partOfFlowPresentedConversationClosedObservable)
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
@@ -177,9 +180,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
         // Coordinate to safari tab
-        Observable.merge(
-            viewModel.outputs.conversationViewVM.outputs.communityGuidelinesCellViewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput
-        )
+        viewModel
+            .outputs.conversationViewVM
+            .outputs.communityGuidelinesCellViewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.urlClickedOutput
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                     let safariCoordinator = OWSafariTabCoordinator(router: self.router,
