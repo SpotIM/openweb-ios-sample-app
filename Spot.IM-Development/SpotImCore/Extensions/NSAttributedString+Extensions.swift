@@ -220,8 +220,8 @@ extension NSAttributedString {
 }
 
 extension NSMutableAttributedString {
-    
-    public func setAsLink(textToFind:String, linkURL:String) -> Bool {
+
+    public func setAsLink(textToFind: String, linkURL: String) -> Bool {
 
             let foundRange = self.mutableString.range(of: textToFind)
             if foundRange.location != NSNotFound {
