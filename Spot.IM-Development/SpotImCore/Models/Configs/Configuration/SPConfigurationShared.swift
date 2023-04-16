@@ -14,11 +14,13 @@ struct SPConfigurationShared: Decodable {
     let commentLabels: Dictionary<String, SPCommentLabelsSectionConfiguration>?
     let votesType: OWVotesType
     let usePublisherUserProfile: Bool?
+    let reportReasonsOptions: OWConfigurationReportReasonOptions
 
     enum CodingKeys: String, CodingKey {
         case usePublisherUserProfile = "useCustomUserProfile"
         case enableCommentLabels,
              commentLabels,
-             votesType
+             votesType,
+             reportReasonsOptions
     }
 }
