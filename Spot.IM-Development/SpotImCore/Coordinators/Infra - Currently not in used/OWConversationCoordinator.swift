@@ -30,6 +30,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
+    }()
 
     init(router: OWRoutering! = nil, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
@@ -189,7 +192,7 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
     }
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
@@ -197,6 +200,6 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
     }
 }
