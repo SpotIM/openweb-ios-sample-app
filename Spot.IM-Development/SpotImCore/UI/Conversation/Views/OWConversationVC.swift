@@ -19,8 +19,16 @@ class OWConversationVC: UIViewController {
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var conversationView: OWConversationView = {
-        let conversationView = OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
-        return conversationView
+        return OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
+    }()
+
+    fileprivate lazy var closeButton: UIBarButtonItem = {
+        let closeButton = UIButton()
+            .image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
+            .horizontalAlignment(.left)
+
+        closeButton.addTarget(self, action: #selector(self.closeConversationTapped(_:)), for: .touchUpInside)
+        return UIBarButtonItem(customView: closeButton)
     }()
 
     required init?(coder aDecoder: NSCoder) {
@@ -99,5 +107,9 @@ fileprivate extension OWConversationVC {
                 guard let self = self else { return }
                 self.setupNavControllerUI(currentStyle)
             }).disposed(by: disposeBag)
+    }
+
+    @objc func closeConversationTapped(_ sender: UIBarButtonItem) {
+        viewModel.inputs.closeConversationTapped.onNext()
     }
 }
