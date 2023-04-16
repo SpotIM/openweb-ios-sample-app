@@ -55,10 +55,12 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                 .map { [weak self] communityGuidelines in
                     guard let self = self else { return nil }
                     if self.style == .compact {
-                        let communityGuidelinesString = OWLocalizationManager.shared.localizedString(key: "Read our") + " " + OWLocalizationManager.shared.localizedString(key: "Community Guidelines")
+                        let communityGuidelinesString = OWLocalizationManager.shared.localizedString(key: "Read our")
+                        + " "
+                        + OWLocalizationManager.shared.localizedString(key: "Community Guidelines")
                         let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesString)
                         return self.getTitleTextViewAttributedText(htmlString: string)
-                    }  else {
+                    } else {
                         let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelines)
                         return self.getTitleTextViewAttributedText(htmlString: string)
                     }
