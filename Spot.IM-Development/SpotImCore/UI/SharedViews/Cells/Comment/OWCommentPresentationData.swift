@@ -7,39 +7,41 @@
 //
 
 import Foundation
+import RxSwift
 
-enum OWCommentPresentationRepliesThreadState: Equatable {
-    case collapsed
-    case showFirst(numberOfReplies: Int)
+class OWCommentPresentationData: OWUpdaterProtocol {
+    fileprivate var disposedBag = DisposeBag()
 
-    func getVisibleRepliesCount() -> Int {
-        switch self {
-        case .collapsed:
-            return 0
-        case .showFirst(let numberOfReplies):
-            return numberOfReplies
-        }
-    }
-}
+    var update: PublishSubject<Void> = PublishSubject()
 
-class OWCommentPresentationData {
     let id: String
-    var repliesThreadState: OWCommentPresentationRepliesThreadState
     var repliesIds: [String]
     let totalRepliesCount: Int
     var repliesOffset: Int
-    var repliesPresentation: [OWCommentPresentationData]
+    var repliesPresentation: [OWCommentPresentationData] {
+        didSet(newRepliesPresentation) {
+            disposedBag = DisposeBag()
+
+            let repliesUpdateObservers = newRepliesPresentation.map { $0.update.asObservable() }
+
+            Observable.merge(repliesUpdateObservers)
+                .asObservable()
+                .subscribe { [weak self] _ in
+                    guard let self = self else { return }
+                    self.update.onNext()
+                }
+                .disposed(by: disposedBag)
+        }
+    }
 
     init(
         id: String,
-        repliesThreadState: OWCommentPresentationRepliesThreadState = .showFirst(numberOfReplies: 2),
         repliesIds: [String] = [],
         totalRepliesCount: Int,
         repliesOffset: Int,
         repliesPresentation: [OWCommentPresentationData] = []) {
 
         self.id = id
-        self.repliesThreadState = repliesThreadState
         self.repliesIds = repliesIds
         self.totalRepliesCount = totalRepliesCount
         self.repliesOffset = repliesOffset
@@ -50,7 +52,6 @@ class OWCommentPresentationData {
 extension OWCommentPresentationData: Equatable {
     static func == (lhs: OWCommentPresentationData, rhs: OWCommentPresentationData) -> Bool {
         return lhs.id == rhs.id &&
-        lhs.repliesThreadState == rhs.repliesThreadState &&
         lhs.repliesIds == rhs.repliesIds &&
         lhs.repliesPresentation == rhs.repliesPresentation &&
         lhs.repliesOffset == rhs.repliesOffset

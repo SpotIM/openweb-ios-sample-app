@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-enum OWPreConversationCellOption: CaseIterable {
+enum OWPreConversationCellOption: CaseIterable, OWUpdaterProtocol {
     static var allCases: [OWPreConversationCellOption] {
         return [.comment(viewModel: OWCommentCellViewModel.stub()),
                 .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
