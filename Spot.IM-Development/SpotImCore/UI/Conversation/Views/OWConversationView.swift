@@ -12,17 +12,24 @@ import RxCocoa
 
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-
+        static let conversationTitleHeaderHeight: CGFloat = 56
+        static let articleDescriptionHeight: CGFloat = 86
+        static let conversationSummaryHeight: CGFloat = 44
     }
+
+    fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
+        return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
+            .enforceSemanticAttribute()
+    }()
 
     fileprivate lazy var articleDescriptionView: OWArticleDescriptionView = {
         return OWArticleDescriptionView(viewModel: self.viewModel.outputs.articleDescriptionViewModel)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var conversationSummaryView: OWConversationSummaryView = {
-        let view = OWConversationSummaryView(viewModel: self.viewModel.outputs.conversationSummaryViewModel)
-        view.enforceSemanticAttribute()
-        return view
+        return OWConversationSummaryView(viewModel: self.viewModel.outputs.conversationSummaryViewModel)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var tableView: UITableView = {
@@ -31,7 +38,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
 
-//        tableView.isScrollEnabled = false
+        tableView.isScrollEnabled = false
         tableView.allowsSelection = false
 
         // Register cells
@@ -68,26 +75,40 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         self.viewModel = viewModel
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
-        setupViews()
+        setupUI()
         setupObservers()
     }
 }
 
 fileprivate extension OWConversationView {
-    func setupViews() {
+    func setupUI() {
         self.useAsThemeStyleInjector()
+
+        let shouldShowTiTleHeader = viewModel.outputs.shouldShowTiTleHeader
+        if shouldShowTiTleHeader {
+            self.addSubview(conversationTitleHeaderView)
+            conversationTitleHeaderView.OWSnp.makeConstraints { make in
+                make.top.leading.trailing.equalToSuperview()
+                make.height.equalTo(Metrics.conversationTitleHeaderHeight)
+            }
+        }
 
         self.addSubview(articleDescriptionView)
         articleDescriptionView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(86.0)
+            if shouldShowTiTleHeader {
+                make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+            } else {
+                make.top.equalToSuperview()
+            }
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.articleDescriptionHeight)
         }
 
         self.addSubview(conversationSummaryView)
         conversationSummaryView.OWSnp.makeConstraints { make in
             make.top.equalTo(articleDescriptionView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(44.0)
+            make.height.equalTo(Metrics.conversationSummaryHeight)
         }
 
         // After building the other views, position the table view in the appropriate place
@@ -116,10 +137,20 @@ fileprivate extension OWConversationView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
-                UIView.performWithoutAnimation {
-                    self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
-                }
+                self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.initialDataLoaded
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] initialDataLoaded in
+            guard initialDataLoaded, let self = self else { return }
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                }
+
+                self.tableView.isScrollEnabled = true
+        })
+        .disposed(by: disposeBag)
     }
 }

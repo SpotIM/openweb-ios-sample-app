@@ -21,6 +21,7 @@ protocol OWConversationViewModelingOutputs {
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
     var shouldShowNavigationBar: Bool { get }
+    var initialDataLoaded: Observable<Bool> { get }
 }
 
 protocol OWConversationViewModeling {
@@ -28,7 +29,9 @@ protocol OWConversationViewModeling {
     var outputs: OWConversationViewModelingOutputs { get }
 }
 
-class OWConversationViewModel: OWConversationViewModeling, OWConversationViewModelingInputs, OWConversationViewModelingOutputs {
+class OWConversationViewModel: OWConversationViewModeling,
+                                OWConversationViewModelingInputs,
+                                OWConversationViewModelingOutputs {
     var inputs: OWConversationViewModelingInputs { return self }
     var outputs: OWConversationViewModelingOutputs { return self }
 
@@ -61,7 +64,6 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     }
 
     var highlightComment = PublishSubject<String>()
-
     fileprivate var _highlightedComment = BehaviorSubject<String?>(value: nil)
     var highlightedComment: Observable<String> {
         return _highlightedComment
@@ -74,6 +76,12 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     var loadedToScreen: Observable<Void> {
         return _viewDidLoad
             .unwrap()
+            .asObservable()
+    }
+
+    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
+    var initialDataLoaded: Observable<Bool> {
+        return _initialDataLoaded
             .asObservable()
     }
 

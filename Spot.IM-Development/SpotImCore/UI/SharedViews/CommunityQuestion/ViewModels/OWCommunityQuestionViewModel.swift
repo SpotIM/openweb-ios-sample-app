@@ -40,9 +40,10 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
             .unwrap()
     }
 
-    var _shouldShowView = BehaviorSubject(value: false)
+    var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         _shouldShowView
+            .unwrap()
             .asObservable()
             .share(replay: 0)
     }

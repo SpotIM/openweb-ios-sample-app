@@ -137,7 +137,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
-        let conversationPoppedObservable = conversationPopped
+        let indipendentConversationClosedObservable = conversationVM
+            .outputs.conversationViewVM
+            .outputs.conversationTitleHeaderViewModel
+            .outputs.closeConversation
+
+        let conversationPoppedObservable = Observable.merge(conversationPopped,
+                                                            indipendentConversationClosedObservable)
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
@@ -167,7 +173,19 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
 fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
-        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+        // Coordinate to safari tab
+        Observable.merge(
+            viewModel.outputs.conversationViewVM.outputs.communityGuidelinesCellViewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput
+        )
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   url: url,
+                                                                   actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {

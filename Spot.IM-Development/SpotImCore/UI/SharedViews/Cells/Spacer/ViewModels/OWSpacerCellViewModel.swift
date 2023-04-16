@@ -9,11 +9,10 @@
 import Foundation
 import RxSwift
 
-protocol OWSpacerCellViewModelingInputs {
-
-}
+protocol OWSpacerCellViewModelingInputs { }
 
 protocol OWSpacerCellViewModelingOutputs {
+    var spacerViewModel: OWSpacerViewModeling { get }
     var id: String { get }
 }
 
@@ -22,12 +21,28 @@ protocol OWSpacerCellViewModeling: OWCellViewModel {
     var outputs: OWSpacerCellViewModelingOutputs { get }
 }
 
-class OWSpacerCellViewModel: OWSpacerCellViewModeling, OWSpacerCellViewModelingInputs, OWSpacerCellViewModelingOutputs {
+class OWSpacerCellViewModel: OWSpacerCellViewModeling,
+                                OWSpacerCellViewModelingInputs,
+                                OWSpacerCellViewModelingOutputs {
     var inputs: OWSpacerCellViewModelingInputs { return self }
     var outputs: OWSpacerCellViewModelingOutputs { return self }
 
+    lazy var spacerViewModel: OWSpacerViewModeling = {
+        return OWSpacerViewModel(style: self.style)
+    }()
+
+    fileprivate let style: OWSpacerStyle
+
     // Unique identifier
     let id: String = UUID().uuidString
+
+    init(style: OWSpacerStyle) {
+        self.style = style
+    }
+
+    init() {
+        self.style = .none
+    }
 }
 
 extension OWSpacerCellViewModel {

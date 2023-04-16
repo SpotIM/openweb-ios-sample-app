@@ -9,9 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol OWCommunityGuidelinesCellViewModelingInputs {
-
-}
+protocol OWCommunityGuidelinesCellViewModelingInputs { }
 
 protocol OWCommunityGuidelinesCellViewModelingOutputs {
     var id: String { get }
