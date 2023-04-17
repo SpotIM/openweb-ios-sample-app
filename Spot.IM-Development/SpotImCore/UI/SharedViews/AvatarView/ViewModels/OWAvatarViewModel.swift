@@ -109,10 +109,44 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
 fileprivate extension OWAvatarViewModel {
     func setupObservers() {
+        // Make sure config enable open profile
+        let openProfile: Observable<Void> = tapAvatar
+            .withLatestFrom(
+                sharedServicesProvider
+                    .spotConfigurationService()
+                    .config(spotId: OWManager.manager.spotId)
+            ) { _, config -> Void? in
+                guard config.mobileSdk.profileEnabled == true else { return nil }
+            }
+            .unwrap()
+
+        // Check if this is current user and token is needed
+        let openUserProfileWithToken: Observable<Bool> = openProfile
+            .withLatestFrom(
+                sharedServicesProvider.authenticationManager()
+                    .activeUserAvailability
+            ) { _, availability -> SPUser? in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .withLatestFrom(user) { sessionUser, avatarUser in
+                guard let sessionUser = sessionUser,
+                      sessionUser.id == avatarUser.id
+                else { return false }
+                return true
+            }
+
         // TODO: use profileEnabled from config, and call createSingleUseToken only if this is the loggedIn user
-        tapAvatar
-            .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
-                guard let self = self else { return .empty() }
+        // Create URL for user profie with token
+        let userProfileWithToken: Observable<URL> = openUserProfileWithToken
+            .flatMap { [weak self] openWithToken -> Observable<OWSingleUseTokenResponse> in
+                guard let self = self,
+                      openWithToken == true
+                else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()
                     .profile
                     .createSingleUseToken()
@@ -127,6 +161,19 @@ fileprivate extension OWAvatarViewModel {
                 return url
             }
             .unwrap()
+
+        // Create URL for user profile without token
+        let userProfileWithoutToken: Observable<URL> = openUserProfileWithToken
+            .withLatestFrom(user) { [weak self] openWithToken, user -> URL? in
+                guard let self = self,
+                      openWithToken == false,
+                      let url = self.profileUrl(singleUseTicket: nil, userId: user.id)
+                else { return nil }
+                return url
+            }
+            .unwrap()
+
+        Observable.merge(userProfileWithToken, userProfileWithoutToken)
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self._openAvatarProfile.onNext(url)
