@@ -111,7 +111,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     }
 
     lazy var avatarVM: OWAvatarViewModeling = {
-        return OWAvatarViewModel(backgroundColor: .backgroundColor3, imageURLProvider: self.imageProvider)
+        return OWAvatarViewModel(imageURLProvider: self.imageProvider)
     }()
 }
 

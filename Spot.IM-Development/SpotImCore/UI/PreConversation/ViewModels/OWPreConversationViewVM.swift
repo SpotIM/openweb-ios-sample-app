@@ -40,6 +40,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldAddContentTapRecognizer: Bool { get }
     var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
+    var openProfile: Observable<URL> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -168,6 +169,16 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
+            .asObservable()
+    }
+
+    var profileTap = PublishSubject<SPUser>()
+    var openProfile: Observable<URL> {
+        return profileTap
+            .map { user in
+                URL(string: "https://www.google.com/webhp?hl=en&sa=X&ved=0ahUKEwiglq2exrD-AhVLE-wKHXd2ClMQPAgI")
+            }
+            .unwrap()
             .asObservable()
     }
 
@@ -448,6 +459,21 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] comment in
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comment avatar click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<SPUser> in
+                let avatarClickOutputObservable: [Observable<SPUser>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    let avatarType = avatarVM.outputs.imageType
+                    return avatarVM.outputs.avatarTapped
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+            .subscribe(onNext: { [weak self] user in
+                self?.profileTap.onNext(user)
             })
             .disposed(by: disposeBag)
 
