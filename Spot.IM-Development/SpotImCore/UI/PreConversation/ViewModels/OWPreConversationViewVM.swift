@@ -172,13 +172,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
 
-    var profileTap = PublishSubject<SPUser>()
+    var profileTap = PublishSubject<URL>()
     var openProfile: Observable<URL> {
         return profileTap
-            .map { user in
-                URL(string: "https://www.google.com/webhp?hl=en&sa=X&ved=0ahUKEwiglq2exrD-AhVLE-wKHXd2ClMQPAgI")
-            }
-            .unwrap()
             .asObservable()
     }
 
@@ -464,11 +460,10 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<SPUser> in
-                let avatarClickOutputObservable: [Observable<SPUser>] = commentCellsVms.map { commentCellVm in
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
-                    let avatarType = avatarVM.outputs.imageType
-                    return avatarVM.outputs.avatarTapped
+                    return avatarVM.outputs.openProfile
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
