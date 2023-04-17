@@ -60,11 +60,6 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
 
-    fileprivate var _rankChange: PublishSubject<SPRankChange> = PublishSubject<SPRankChange>()
-    fileprivate var rankChange: Observable<SPRankChange> {
-        _rankChange.asObservable()
-    }
-
     fileprivate let commentId: String
 
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -191,7 +186,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
 fileprivate extension OWCommentRatingViewModel {
     func setupObservers() {
-        tapRankUp.withLatestFrom(_rankedByUser.unwrap())
+        let rankUpTriggeredObservable = tapRankUp.withLatestFrom(_rankedByUser.unwrap())
             .flatMapLatest { [weak self] ranked -> Observable<Int> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
@@ -204,16 +199,13 @@ fileprivate extension OWCommentRatingViewModel {
                 return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
                     .map { _ in ranked }
             }
-            .subscribe(onNext: { [weak self] ranked in
-                guard let self = self else { return }
+            .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
-                let change = SPRankChange(from: from, to: to)
-                self._rankChange.onNext(change)
-            })
-            .disposed(by: disposeBag)
+                return SPRankChange(from: from, to: to)
+            }
 
-        tapRankDown.withLatestFrom(_rankedByUser.unwrap())
+        let rankDownTriggeredObservable = tapRankDown.withLatestFrom(_rankedByUser.unwrap())
             .flatMapLatest { [weak self] ranked -> Observable<Int> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
@@ -226,16 +218,13 @@ fileprivate extension OWCommentRatingViewModel {
                 return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
                     .map { _ in ranked }
             }
-            .subscribe(onNext: { [weak self] ranked in
-                guard let self = self else { return }
+            .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
-                let change = SPRankChange(from: from, to: to)
-                self._rankChange.onNext(change)
-            })
-            .disposed(by: disposeBag)
+                return SPRankChange(from: from, to: to)
+            }
 
-        rankChange
+        let rankChangedLocallyObservable: Observable<SPRankChange> = Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
             .flatMap { [weak self] rankChange -> Observable<SPRankChange> in
                 guard let self = self else { return .empty() }
 
@@ -247,6 +236,9 @@ fileprivate extension OWCommentRatingViewModel {
                     })
                     .map { _ in rankChange}
             }
+
+        // Updating Network/Remote about rank change
+        rankChangedLocallyObservable
             .flatMap { [weak self] rankChange -> Observable<EmptyDecodable> in
                 guard let self = self,
                       let postId = OWManager.manager.postId,
@@ -261,7 +253,7 @@ fileprivate extension OWCommentRatingViewModel {
             }
             .subscribe(onError: { error in
                 // TODO: if did not work - change locally back (using rankChange.reverse)
-                print("NOGAH: error \(error)")
+                print("error \(error)")
             })
             .disposed(by: disposeBag)
     }
