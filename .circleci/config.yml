@@ -381,6 +381,7 @@ jobs:
 
   release_tag:
     <<: *ios_config_xcode
+    resource_class: macos.x86.medium.gen2
     steps:
       - release_tag
 
@@ -606,6 +607,13 @@ workflows:
                 - /^release/tag14.2/.*/
           xcode: "14.2.0"
 
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/tag14.3/.*/
+          xcode: "14.3.0"
+
       - release_app_job:
           context: mobile-automation
           filters:
@@ -666,6 +674,11 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.2.0"
+
+      - release_tag:
+          requires:
+            - "release_sdk_job"
+          xcode: "14.3.0"
 
   upload_app_to_s3_workflow:
     jobs:

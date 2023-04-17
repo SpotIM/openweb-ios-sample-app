@@ -20,6 +20,10 @@ extension OWThemeStyleEnforcement {
         default: return .none
         }
     }
+
+    static var defaultIndex: Int {
+        return 0
+    }
 }
 
 #endif

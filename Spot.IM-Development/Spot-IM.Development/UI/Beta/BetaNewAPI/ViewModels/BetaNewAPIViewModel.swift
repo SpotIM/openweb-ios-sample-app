@@ -194,7 +194,7 @@ fileprivate extension BetaNewAPIViewModel {
             .withLatestFrom(spotId)
             .subscribe(onNext: { [weak self] spotId in
 
-                self?.setSDKSpotId(spotId)
+                self?.setSDKConfigurations(spotId)
             })
             .disposed(by: disposeBag)
 
@@ -222,18 +222,19 @@ fileprivate extension BetaNewAPIViewModel {
 
     }
 
-    func setSDKSpotId(_ spotId: String) {
+    func setSDKConfigurations(_ spotId: String) {
         var manager = OpenWeb.manager
         manager.spotId = spotId
         var customizations = manager.ui.customizations
         // swiftlint:disable line_length
-        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
+        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.defaultIndex))
         // swiftlint:enable line_length
         var sorting = customizations.sorting
-        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: 0))
+        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.defaultIndex))
         customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
         var helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
+        helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
     }
 }
 
