@@ -13,6 +13,9 @@ protocol OWBlockerServicing {
     func add(blocker: OWBlockerActionProtocol)
     func removeBlocker(perType blockerType: OWBlockerActionType)
     func waitForNonBlocker(for blockersTypes: [OWBlockerActionType]) -> Observable<Void>
+
+    // Utility function to support multiple spotIds for the SampleApp
+    func invalidateAllBlockers()
 }
 
 extension OWBlockerServicing {
@@ -63,5 +66,9 @@ class OWBlockerService: OWBlockerServicing {
             }
             .voidify()
             .take(1)
+    }
+
+    func invalidateAllBlockers() {
+        _blockersMapper.onNext([:])
     }
 }

@@ -715,6 +715,7 @@
 		9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */; };
 		9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
+		9ED2E57F29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
@@ -1499,6 +1500,7 @@
 		9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityQuestionsStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Extensions.swift"; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
+		9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLocaleStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9EE9F79929D6DC99005FFC8A /* OWQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueue.swift; sourceTree = "<group>"; };
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
@@ -4166,6 +4168,7 @@
 				9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */,
 				9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */,
 				9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */,
+				9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */,
 			);
 			path = "OpenWebSDK+Extensions";
 			sourceTree = "<group>";
@@ -5190,6 +5193,7 @@
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
 				9E73DAE029C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift in Sources */,
+				9ED2E57F29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift in Sources */,
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
 				9EBE5C2A29AE141E001150DA /* OWPreConversationStyle+Extensions.swift in Sources */,
 				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,

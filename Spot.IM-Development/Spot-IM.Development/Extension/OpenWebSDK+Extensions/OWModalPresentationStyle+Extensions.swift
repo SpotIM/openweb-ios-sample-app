@@ -19,6 +19,10 @@ extension OWModalPresentationStyle {
         default: return .fullScreen
         }
     }
+
+    static var defaultIndex: Int {
+        return 0
+    }
 }
 
 #endif
