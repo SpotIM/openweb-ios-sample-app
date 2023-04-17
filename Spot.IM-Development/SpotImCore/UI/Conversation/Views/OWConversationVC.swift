@@ -22,13 +22,13 @@ class OWConversationVC: UIViewController {
         return OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
     }()
 
-    fileprivate lazy var closeButton: UIBarButtonItem = {
+    fileprivate lazy var closeButton: UIButton = {
         let closeButton = UIButton()
             .image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
 
         closeButton.addTarget(self, action: #selector(self.closeConversationTapped(_:)), for: .touchUpInside)
-        return UIBarButtonItem(customView: closeButton)
+        return closeButton
     }()
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,17 +69,19 @@ fileprivate extension OWConversationVC {
         let navController = self.navigationController
 
         navController?.navigationBar.isTranslucent = false
-        let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
-                                                                       themeStyle: style)
+        let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
         // Setup Title
         title = LocalizationManager.localizedString(key: "Conversation")
         let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold,
-                                                                size: Metrics.navigationTitleFontSize),
-            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1,
-                                                                                themeStyle: style)
+            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
+            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
         ]
+
+        // Setup close button
+        if viewModel.outputs.shouldShowCloseButton {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+        }
 
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
@@ -105,6 +107,7 @@ fileprivate extension OWConversationVC {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.closeButton.image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
                 self.setupNavControllerUI(currentStyle)
             }).disposed(by: disposeBag)
     }

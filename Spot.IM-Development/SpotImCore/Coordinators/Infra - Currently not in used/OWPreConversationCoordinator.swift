@@ -18,6 +18,10 @@ enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
+    fileprivate var _dissmissConversation = PublishSubject<Void>()
+    var dissmissConversation: Observable<Void> {
+        return _dissmissConversation.asObservable()
+    }
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
@@ -54,8 +58,8 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData,
-viewableMode: .independent)
+        let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData,
+                                                                                                      viewableMode: .independent)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
         // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
@@ -115,6 +119,15 @@ fileprivate extension OWPreConversationCoordinator {
                                                                            actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
             }
+            .do(onNext: { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                switch coordinatorResult {
+                case .popped:
+                    self._dissmissConversation.onNext()
+                default:
+                    break
+                }
+            })
             .subscribe()
             .disposed(by: disposeBag)
 

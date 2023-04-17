@@ -150,6 +150,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationPoppedObservable = Observable.merge(conversationPopped,
                                                             indipendentConversationClosedObservable,
                                                             partOfFlowPresentedConversationClosedObservable)
+            .debug("RIVI: conversationPoppedObservable")
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
@@ -206,5 +207,16 @@ fileprivate extension OWConversationCoordinator {
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let contentPressed = viewModel.outputs
+            .conversationTitleHeaderViewModel
+            .outputs.closeConversation
+            .map { OWViewActionCallbackType.contentPressed }
+
+        Observable.merge(contentPressed)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 }

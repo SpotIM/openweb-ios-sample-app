@@ -59,14 +59,12 @@ class OWConversationViewModel: OWConversationViewModeling,
     }
 
     var shouldShowNavigationBar: Bool {
-        guard let presentationalStyle = conversationData.presentationalStyle,
-              case let OWPresentationalModeCompact.present(style) = presentationalStyle,
-              style == .fullScreen else { return false }
-
-        return true
+        return viewableMode == .partOfFlow
     }
 
     var shouldShowCloseButton: Bool {
+        guard let presentationalStyle = conversationData.presentationalStyle,
+              case OWPresentationalModeCompact.present(_) = presentationalStyle else { return false }
         return true
     }
 
