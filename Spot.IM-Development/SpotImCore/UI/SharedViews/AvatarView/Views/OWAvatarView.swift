@@ -17,7 +17,7 @@ final class OWAvatarView: UIView {
         static let onlineIndicatorIdentifier = "online_indicator_id"
 
         static let onlineIndicatorSize: CGFloat = 10
-        static let onlineIndicatorBorderWidth: CGFloat = 2
+        static let innerIndicatorSize: CGFloat = 8
     }
 
     fileprivate lazy var avatarButton: UIButton = {
@@ -29,10 +29,23 @@ final class OWAvatarView: UIView {
     }()
     fileprivate lazy var onlineIndicatorView: UIView = {
         let view = UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .green, themeStyle: .light))
-            .border(width: Metrics.onlineIndicatorBorderWidth, color: .clear)
             .corner(radius: Metrics.onlineIndicatorSize / 2)
             .isHidden(true)
+        if let blurFilter = CIFilter(name: "CIGaussianBlur",
+                                     parameters: [kCIInputRadiusKey: 2]) {
+            view.layer.backgroundFilters = [blurFilter]
+        }
+
+        let greenView = UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .green, themeStyle: .light))
+            .corner(radius: Metrics.innerIndicatorSize / 2)
+
+        view.addSubview(greenView)
+        greenView.OWSnp.makeConstraints { make in
+            make.size.equalTo(Metrics.innerIndicatorSize)
+            make.center.equalToSuperview()
+        }
+
         return view
     }()
 
@@ -111,7 +124,7 @@ fileprivate extension OWAvatarView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.onlineIndicatorView.layer.borderColor = OWColorPalette.shared.color(type: self.viewModel.outputs.backgroundColor, themeStyle: currentStyle).cgColor
+                self.onlineIndicatorView.backgroundColor = OWColorPalette.shared.color(type: .borderColor3, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
 

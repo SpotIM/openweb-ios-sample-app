@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWPreConversationCompactContentView: UIView {
     fileprivate struct Metrics {
-        static let avatarSize: CGFloat = 36
+        static let avatarSize: CGFloat = 40
         static let fontSize: CGFloat = 13
         static let numberOfLines: Int = 2
         static let imageIconSize: CGFloat = 24
