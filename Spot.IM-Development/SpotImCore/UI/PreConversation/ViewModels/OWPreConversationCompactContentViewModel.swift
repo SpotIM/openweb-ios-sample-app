@@ -17,7 +17,7 @@ protocol OWPreConversationCompactContentViewModelingInputs {
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
-    var avatarVM: SPAvatarViewModeling { get }
+    var avatarVM: OWAvatarViewModeling { get }
     var contentType: Observable<OWCompactContentType> { get }
     var isSkelatonHidden: Observable<Bool> { get }
     var isCommentHidden: Observable<Bool> { get }
@@ -110,8 +110,8 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
         setupObservers()
     }
 
-    lazy var avatarVM: SPAvatarViewModeling = {
-        return OWAvatarViewModelV2(imageURLProvider: self.imageProvider)
+    lazy var avatarVM: OWAvatarViewModeling = {
+        return OWAvatarViewModel(backgroundColor: .backgroundColor3, imageURLProvider: self.imageProvider)
     }()
 }
 
@@ -129,7 +129,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 self.comment.onNext(comment)
                 // Set user (avatar)
                 guard let user = conversationResponse.conversation?.users?[comment.userId ?? ""] else { return }
-                self.avatarVM.inputs.configureUser(user: user)
+                self.avatarVM.inputs.userInput.onNext(user)
             })
             .disposed(by: disposeBag)
 
