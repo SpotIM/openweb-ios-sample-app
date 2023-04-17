@@ -24,8 +24,8 @@ class OWPreConversationCompactContentView: UIView {
         static let skelatonLinesLeadingPaddig: CGFloat = 12
     }
 
-    fileprivate lazy var avatarImageView: SPAvatarView = {
-        let avatar = SPAvatarView().backgroundColor(.clear)
+    fileprivate lazy var avatarImageView: OWAvatarView = {
+        let avatar = OWAvatarView().backgroundColor(.clear)
         avatar.configure(with: self.viewModel.outputs.avatarVM)
         return avatar
     }()
