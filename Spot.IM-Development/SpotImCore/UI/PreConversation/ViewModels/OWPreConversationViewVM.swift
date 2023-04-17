@@ -467,8 +467,8 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] user in
-                self?.profileTap.onNext(user)
+            .subscribe(onNext: { [weak self] url in
+                self?.profileTap.onNext(url)
             })
             .disposed(by: disposeBag)
 
