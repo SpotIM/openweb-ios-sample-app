@@ -67,7 +67,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
         self.user = data.user
-        avatarVM = OWAvatarViewModel(user: data.user, backgroundColor: .backgroundColor2 , imageURLProvider: imageProvider)
+        avatarVM = OWAvatarViewModel(user: data.user, backgroundColor: .backgroundColor2, imageURLProvider: imageProvider)
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
