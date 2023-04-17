@@ -116,9 +116,6 @@ fileprivate extension OWPreConversationCoordinator {
             .subscribe()
             .disposed(by: disposeBag)
 
-        let openSafariViewControllerObservable: Observable<URL> = viewModel.outputs.communityGuidelinesViewModel
-            .outputs.urlClickedOutput
-
         // Coordinate to safari tab
         Observable.merge(
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
