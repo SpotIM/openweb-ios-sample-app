@@ -113,21 +113,23 @@ fileprivate extension OWCommunityGuidelinesView {
                 }
             }
 
-            titleTextView.OWSnp.makeConstraints { make in
-                heightConstraint = make.height.equalTo(0).constraint
-            }
+//            titleTextView.OWSnp.makeConstraints { make in
+//                heightConstraint = make.height.equalTo(0).constraint
+//            }
         }
     }
 
     func setupObservers() {
         viewModel.outputs.shouldShowView
             .map { !$0 }
+            .debug("RIVI shouldShowView")
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
         if let heightConstraint = heightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
+                .debug("RIVI heightConstraint")
                 .bind(to: heightConstraint.rx.isActive)
                 .disposed(by: disposeBag)
         }
