@@ -43,7 +43,6 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     fileprivate let disposeBag = DisposeBag()
 
-
     init (
         user: SPUser? = nil,
         imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
