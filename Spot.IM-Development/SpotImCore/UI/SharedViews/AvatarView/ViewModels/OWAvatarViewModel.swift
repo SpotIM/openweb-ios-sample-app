@@ -34,12 +34,11 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var outputs: OWAvatarViewModelingOutputs { return self }
 
     var userInput = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
+
+    var tapAvatar = PublishSubject<Void>()
 
     fileprivate let imageURLProvider: OWImageProviding
     fileprivate let sharedServicesProvider: OWSharedServicesProviding
-
-    var tapAvatar = PublishSubject<Void>()
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -98,7 +97,6 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         }
     }
 
-    // TODO: handle tap in coordinator?
     fileprivate var _openAvatarProfile = PublishSubject<URL>()
     var openProfile: Observable<URL> {
         _openAvatarProfile
@@ -139,7 +137,6 @@ fileprivate extension OWAvatarViewModel {
                 return true
             }
 
-        // TODO: use profileEnabled from config, and call createSingleUseToken only if this is the loggedIn user
         // Create URL for user profie with token
         let userProfileWithToken: Observable<URL> = openUserProfileWithToken
             .flatMap { [weak self] openWithToken -> Observable<OWSingleUseTokenResponse> in
