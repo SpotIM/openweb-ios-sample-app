@@ -65,8 +65,8 @@ class OWPreConversationSummeryView: UIView {
     }
 
     private func updateCustomUI() {
-        viewModel.inputs.customizeTitleLabelUI.onNext(titleLabel)
-        viewModel.inputs.customizeCounterLabelUI.onNext(counterLabel)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
     }
 }
 
