@@ -472,6 +472,17 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Responding to comment creation entry avatar click
+        commentCreationEntryViewModel
+            .outputs
+            .avatarViewVM
+            .outputs
+            .openProfile
+            .subscribe(onNext: { [weak self] url in
+                self?.profileTap.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
         // Update comments cells on ReadOnly mode
         Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
             return (commentCellsVms, isReadOnly)
