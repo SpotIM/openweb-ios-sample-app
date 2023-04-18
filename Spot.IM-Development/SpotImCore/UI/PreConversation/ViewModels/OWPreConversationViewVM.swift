@@ -172,9 +172,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
 
-    var profileTap = PublishSubject<URL>()
+    fileprivate var _openProfile = PublishSubject<URL>()
     var openProfile: Observable<URL> {
-        return profileTap
+        return _openProfile
             .asObservable()
     }
 
@@ -468,7 +468,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 return Observable.merge(avatarClickOutputObservable)
             }
             .subscribe(onNext: { [weak self] url in
-                self?.profileTap.onNext(url)
+                self?._openProfile.onNext(url)
             })
             .disposed(by: disposeBag)
 
@@ -479,7 +479,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .outputs
             .openProfile
             .subscribe(onNext: { [weak self] url in
-                self?.profileTap.onNext(url)
+                self?._openProfile.onNext(url)
             })
             .disposed(by: disposeBag)
 
