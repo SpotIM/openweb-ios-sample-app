@@ -88,8 +88,7 @@ extension OWConversationCellOption: Equatable {
             return ""
 //            return viewModel.outputs.id
         case .spacer(let viewModel):
-            return ""
-//            return viewModel.outputs.id
+            return viewModel.outputs.id
         case .communityQuestion(let viewModel):
             return viewModel.outputs.id
         case .communityGuidelines(let viewModel):

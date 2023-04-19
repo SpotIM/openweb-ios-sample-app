@@ -220,7 +220,7 @@ extension OWUILayer {
 
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings,
-                                                                presentationalStyle: nil)
+                                                                presentationalStyle: .none)
 
         _ = viewsSdkCoordinator.preConversationView(preConversationData: preConversationData,
                                                 callbacks: callbacks)
@@ -252,7 +252,7 @@ extension OWUILayer {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
-                                                          presentationalStyle: nil)
+                                                          presentationalStyle: .none)
 
         _ = viewsSdkCoordinator.conversationView(conversationData: conversationData,
                                                 callbacks: callbacks)

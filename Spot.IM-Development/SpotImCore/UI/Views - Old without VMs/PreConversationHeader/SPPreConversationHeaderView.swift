@@ -43,11 +43,11 @@ internal final class SPPreConversationHeaderView: OWBaseView {
 
     internal weak var delegate: SPPreConversationHeaderViewDelegate?
 
-    init(onlineViewingUsersCounterVM: SPOnlineViewingUsersCounterViewModeling) {
-        super.init(frame: .zero)
-        onlineViewingUsersView.configure(with: onlineViewingUsersCounterVM)
-        setupUI()
-    }
+//    init(onlineViewingUsersCounterVM: SPOnlineViewingUsersCounterViewModeling) {
+//        super.init(frame: .zero)
+//        onlineViewingUsersView.configure(with: onlineViewingUsersCounterVM)
+//        setupUI()
+//    }
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier

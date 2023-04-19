@@ -134,9 +134,9 @@ extension NSAttributedString {
 
     func height(withConstrainedWidth width: CGFloat) -> CGFloat {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, context: nil)
+        let boundingBox = boundingRect(with: constraintRect, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
 
-        return ceil(boundingBox.height)
+        return ceil(boundingBox.size.height)
     }
 
     func width(withConstrainedHeight height: CGFloat) -> CGFloat {
@@ -221,7 +221,7 @@ extension NSAttributedString {
 
 extension NSMutableAttributedString {
 
-    public func setAsLink(textToFind: String, linkURL: String) -> Bool {
+    func setAsLink(textToFind: String, linkURL: String) -> Bool {
 
             let foundRange = self.mutableString.range(of: textToFind)
             if foundRange.location != NSNotFound {

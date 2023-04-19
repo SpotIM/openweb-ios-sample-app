@@ -21,7 +21,7 @@ class OWConversationSummaryView: UIView {
         static let identifier = "conversation_header_view_id"
     }
 
-    private lazy var commentsCountLabel: UILabel = {
+    fileprivate lazy var commentsCountLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular,
@@ -30,21 +30,21 @@ class OWConversationSummaryView: UIView {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: UIView = {
+    fileprivate lazy var verticalSeparatorBetweenCommentsAndViewingUsers: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
+    fileprivate lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
     }()
 
-    private lazy var conversationSortView: OWConversationSortView = {
+    fileprivate lazy var conversationSortView: OWConversationSortView = {
         return OWConversationSortView(viewModel: viewModel.outputs.conversationSortVM)
     }()
 
-    private lazy var bottomHorizontalSeparator: UIView = {
+    fileprivate lazy var bottomHorizontalSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -62,10 +62,6 @@ class OWConversationSummaryView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    private func updateCustomUI() {
-        viewModel.inputs.customizeCounterLabelUI.onNext(commentsCountLabel)
     }
 }
 
@@ -136,7 +132,12 @@ fileprivate extension OWConversationSummaryView {
                 self.verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
                 self.bottomHorizontalSeparator.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle))
                 self.updateCustomUI()
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.customizeCounterLabelUI.onNext(commentsCountLabel)
     }
 }
 

@@ -45,6 +45,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
 fileprivate extension OWCommunityGuidelinesCell {
     func setupUI() {
         self.backgroundColor = .clear
+        self.contentView.isUserInteractionEnabled = false
 
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in

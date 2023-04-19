@@ -66,11 +66,8 @@ fileprivate extension OWCommunityQuestionViewModel {
         communityQuestion
             .subscribe(onNext: { [weak self] question in
                 guard let self = self else { return }
-                if !question.isEmpty {
-                    self._shouldShowView.onNext(self.style != .none)
-                } else {
-                    self._shouldShowView.onNext(false)
-                }
+                let shouldShow = (!question.isEmpty) && (self.style != .none)
+                self._shouldShowView.onNext(shouldShow)
             })
             .disposed(by: disposeBag)
 

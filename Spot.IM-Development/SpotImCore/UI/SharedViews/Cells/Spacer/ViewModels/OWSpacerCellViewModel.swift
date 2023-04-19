@@ -36,12 +36,8 @@ class OWSpacerCellViewModel: OWSpacerCellViewModeling,
     // Unique identifier
     let id: String = UUID().uuidString
 
-    init(style: OWSpacerStyle) {
+    init(style: OWSpacerStyle = .none) {
         self.style = style
-    }
-
-    init() {
-        self.style = .none
     }
 }
 
@@ -50,3 +46,4 @@ extension OWSpacerCellViewModel {
         return OWSpacerCellViewModel()
     }
 }
+

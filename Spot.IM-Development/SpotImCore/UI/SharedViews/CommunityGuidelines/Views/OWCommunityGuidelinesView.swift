@@ -18,16 +18,25 @@ class OWCommunityGuidelinesView: UIView {
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 14.0
         static let horizontalPadding: CGFloat = 10.0
+
     }
 
     fileprivate lazy var titleTextView: UITextView = {
-        return UITextView()
+        let textView = UITextView()
             .backgroundColor(.clear)
             .delegate(self)
             .isEditable(false)
             .isSelectable(true)
+            .userInteractionEnabled(true)
             .isScrollEnabled(false)
+            .wrapContent(axis: .vertical)
+            .hugContent(axis: .vertical)
             .dataDetectorTypes([.link])
+
+        textView.textContainer.lineFragmentPadding = 0
+        textView.textContainerInset = .zero
+        textView.sizeToFit()
+        return textView
     }()
 
     fileprivate lazy var guidelinesContainer: UIView = {
@@ -50,8 +59,16 @@ class OWCommunityGuidelinesView: UIView {
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        self.isUserInteractionEnabled = true
         setupUI()
         setupObservers()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let viewModel = viewModel else { return }
+
+        viewModel.inputs.width.onNext(self.titleTextView.textContainer.size.width)
     }
 
     required init?(coder: NSCoder) {
@@ -101,7 +118,7 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.top.bottom.equalToSuperview()
-                heightConstraint = make.height.equalTo(0).constraint
+                heightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
 
                 // avoide device notch in landscape
                 if #available(iOS 11.0, *) {
@@ -112,25 +129,26 @@ fileprivate extension OWCommunityGuidelinesView {
                     make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
                 }
             }
-
-//            titleTextView.OWSnp.makeConstraints { make in
-//                heightConstraint = make.height.equalTo(0).constraint
-//            }
         }
     }
 
     func setupObservers() {
         viewModel.outputs.shouldShowView
             .map { !$0 }
-            .debug("RIVI shouldShowView")
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
         if let heightConstraint = heightConstraint {
-            viewModel.outputs.shouldShowView
-                .map { !$0 }
-                .debug("RIVI heightConstraint")
-                .bind(to: heightConstraint.rx.isActive)
+            Observable.combineLatest(viewModel.outputs.shouldShowView,
+                                     viewModel.outputs.titleTextViewHeight)
+                .filter { $0.0 }
+                .map { $0.1 }
+                .subscribe(onNext: { [weak self] titleTextViewHeight in
+                    guard let self = self else { return }
+                    heightConstraint.update(offset: titleTextViewHeight)
+                    self.setNeedsLayout()
+                    self.layoutIfNeeded()
+                })
                 .disposed(by: disposeBag)
         }
 
@@ -155,7 +173,8 @@ fileprivate extension OWCommunityGuidelinesView {
                 self.titleTextView.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
 
                 // TODO: custom UI
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

@@ -56,7 +56,6 @@ class SPOnlineViewingUsersCounterView: UIView {
         configureViews()
     }
 
-    // TODO: once old view is removed this configure function should be removed
     func configure(with viewModel: SPOnlineViewingUsersCounterViewModeling) {
         self.viewModel = viewModel
         configureViews()

@@ -45,7 +45,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
 
-        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData)
+        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
+                                                                                 viewableMode: .partOfFlow)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
         let conversationPopped = PublishSubject<Void>()
 
@@ -178,7 +179,25 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
-        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+        // Coordinate to safari tab
+        let coordinateToSafariObservables = Observable.merge(
+            viewModel.outputs.communityGuidelinesCellViewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput
+        )
+
+        coordinateToSafariObservables
+//            .filter { [weak self] _ in // TODO: change to viewable mode
+//                guard let self = self else { return true }
+//                return !self.isStandaloneMode
+//            }
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   url: url,
+                                                                   actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
