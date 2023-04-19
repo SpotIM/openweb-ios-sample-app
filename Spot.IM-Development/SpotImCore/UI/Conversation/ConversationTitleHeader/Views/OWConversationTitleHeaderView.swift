@@ -16,7 +16,7 @@ class OWConversationTitleHeaderView: UIView {
         static let verticalOffset: CGFloat = 16
     }
 
-    lazy var titleLabel: UILabel = {
+    fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
@@ -24,7 +24,7 @@ class OWConversationTitleHeaderView: UIView {
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
     }()
 
-    lazy var closeButton: UIButton = {
+    fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
     }()
@@ -72,6 +72,7 @@ fileprivate extension OWConversationTitleHeaderView {
 
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeButton", supportDarkMode: true), for: .normal)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }

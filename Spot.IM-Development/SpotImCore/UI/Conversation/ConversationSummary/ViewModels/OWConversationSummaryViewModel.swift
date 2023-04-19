@@ -44,12 +44,13 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     }()
 
     fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
-    var commentsCount: Observable<String> {
-        guard let postId = OWManager.manager.postId else { return .empty()}
+    lazy var commentsCount: Observable<String> = {
+        guard let postId = OWManager.manager.postId else { return .empty() }
 
-        return OWSharedServicesProvider.shared.realtimeService().realtimeData
+        let realtimeService = OWSharedServicesProvider.shared.realtimeService()
+        return realtimeService.realtimeData
             .map { realtimeData -> Int? in
-                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else { return nil }
                 return count
             }
             .unwrap()
@@ -60,7 +61,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
                 return count.kmFormatted + " " + commentsText
             }
             .asObservable()
-    }
+    }()
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()

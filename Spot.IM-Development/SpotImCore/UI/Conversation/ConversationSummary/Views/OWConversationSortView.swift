@@ -21,7 +21,7 @@ class OWConversationSortView: UIView {
     fileprivate var viewModel: OWConversationSortViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    private lazy var sortLabel: UILabel = {
+    fileprivate lazy var sortLabel: UILabel = {
         let lbl = UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.titleFontSize))
@@ -32,7 +32,7 @@ class OWConversationSortView: UIView {
         return lbl
     }()
 
-    private lazy var sortButton: UIButton = {
+    fileprivate lazy var sortButton: UIButton = {
         let btn = UIButton()
         btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.buttonFontSize)
         let spacing: CGFloat = Metrics.insetTiny
@@ -113,6 +113,7 @@ fileprivate extension OWConversationSortView {
                 self.sortButton.setTitleColor(OWColorPalette.shared.color(type: .textColor3,
                                                                           themeStyle: currentStyle), state: .normal)
                 self.sortButton.setImage(UIImage(spNamed: "sort", supportDarkMode: true), for: .normal)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }

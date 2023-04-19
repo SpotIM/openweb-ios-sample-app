@@ -66,50 +66,51 @@ fileprivate extension OWConversationVC {
     }
 
     func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-        let navController = self.navigationController
+//        let navController = self.navigationController
 
-        navController?.navigationBar.isTranslucent = false
-        let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
+//        navController?.navigationBar.isTranslucent = false
+//        let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
         // Setup Title
-        title = LocalizationManager.localizedString(key: "Conversation")
-        let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
-            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
-        ]
+//        title = LocalizationManager.localizedString(key: "Conversation")
+//        let navigationTitleTextAttributes = [
+//            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
+//            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
+//        ]
 
         // Setup close button
         if viewModel.outputs.shouldShowCloseButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
 
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
-
-            // Setup Back button
-            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            appearance.backButtonAppearance = backButtonAppearance
-
-            navController?.navigationBar.standardAppearance = appearance
-            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
-        } else {
-            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
+//        if #available(iOS 13.0, *) {
+//            let appearance = UINavigationBarAppearance()
+//            appearance.configureWithOpaqueBackground()
+//            appearance.backgroundColor = navigationBarBackgroundColor
+//            appearance.titleTextAttributes = navigationTitleTextAttributes
+//
+//            // Setup Back button
+//            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+//            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+//            appearance.backButtonAppearance = backButtonAppearance
+//
+//            navController?.navigationBar.standardAppearance = appearance
+//            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
+//        } else {
+//            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
+//            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+//        }
     }
 
     func setupObservers() {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] currentStyle in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.closeButton.image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
-                self.setupNavControllerUI(currentStyle)
-            }).disposed(by: disposeBag)
+//                self.setupNavControllerUI(currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 
     @objc func closeConversationTapped(_ sender: UIBarButtonItem) {

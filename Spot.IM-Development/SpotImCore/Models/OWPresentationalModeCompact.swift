@@ -12,5 +12,6 @@ import Foundation
 enum OWPresentationalModeCompact {
     case present(style: OWModalPresentationStyle)
     case push
+    case none
 }
 #endif

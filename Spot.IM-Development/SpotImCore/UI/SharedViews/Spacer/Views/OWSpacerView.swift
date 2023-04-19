@@ -76,6 +76,7 @@ extension OWSpacerView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }

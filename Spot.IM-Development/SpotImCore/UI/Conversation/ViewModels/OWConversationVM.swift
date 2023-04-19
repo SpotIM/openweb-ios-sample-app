@@ -63,8 +63,7 @@ class OWConversationViewModel: OWConversationViewModeling,
     }
 
     var shouldShowCloseButton: Bool {
-        guard let presentationalStyle = conversationData.presentationalStyle,
-              case OWPresentationalModeCompact.present(_) = presentationalStyle else { return false }
+        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle else { return false }
         return true
     }
 
