@@ -32,6 +32,9 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
     }()
+    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+        return OWCustomizationsService(viewSourceType: .preConversation)
+    }()
 
     // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
     fileprivate var isStandaloneMode: Bool
@@ -63,9 +66,9 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
         // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
-        if !isStandaloneMode {
+//        if !isStandaloneMode {
             setupObservers(forViewModel: preConversationViewVM)
-        }
+//        }
 
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
@@ -109,6 +112,10 @@ fileprivate extension OWPreConversationCoordinator {
 
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable, openCommentConversationObservable)
+            .filter { [weak self] _ in // TODO: change to viewable mode
+                guard let self = self else { return true }
+                return !self.isStandaloneMode
+            }
             .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
@@ -135,11 +142,17 @@ fileprivate extension OWPreConversationCoordinator {
             .outputs.urlClickedOutput
 
         // Coordinate to safari tab
-        Observable.merge(
+        let coordinateToSafariObservables = Observable.merge(
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
             viewModel.outputs.urlClickedOutput,
             viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput
         )
+
+        coordinateToSafariObservables
+            .filter { [weak self] _ in // TODO: change to viewable mode
+                guard let self = self else { return true }
+                return !self.isStandaloneMode
+            }
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                     let safariCoordinator = OWSafariTabCoordinator(router: self.router,
@@ -148,6 +161,21 @@ fileprivate extension OWPreConversationCoordinator {
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
             .subscribe()
+            .disposed(by: disposeBag)
+
+        let customizationElementsObservables = Observable.merge(
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.headerTitle(label: $0) },
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.headerCounter(label: $0) }
+        )
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
             .disposed(by: disposeBag)
     }
 
