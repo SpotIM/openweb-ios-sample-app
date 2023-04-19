@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import SpotImCore
 
 #if NEW_API
 
@@ -27,6 +28,7 @@ class BetaNewAPIVC: UIViewController {
         static let txtFieldPostIdIdentifier = "post_id"
         static let btnUIFlowsIdentifier = "btn_ui_flows_id"
         static let btnUIViewsIdentifier = "btn_ui_views_id"
+        static let btnReportReasonIdentifier = "btn_report_reason_id"
         static let btnMiscellaneousIdentifier = "btn_miscellaneous_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -129,6 +131,10 @@ class BetaNewAPIVC: UIViewController {
         return txtField
     }()
 
+    fileprivate lazy var btnReportReason: UIButton = {
+        return NSLocalizedString("ReportReason", comment: "").blueRoundedButton
+    }()
+
     fileprivate lazy var btnUIFlows: UIButton = {
         return NSLocalizedString("UIFlows", comment: "").blueRoundedButton
     }()
@@ -183,6 +189,7 @@ fileprivate extension BetaNewAPIVC {
         btnSelectPreset.accessibilityIdentifier = Metrics.btnSelectPresetIdentifier
         btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
+        btnReportReason.accessibilityIdentifier = Metrics.btnReportReasonIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
     }
 
@@ -221,12 +228,21 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.textFieldHeight)
         }
 
+        // Adding ReportReason button
+        scrollView.addSubview(btnReportReason)
+        btnReportReason.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
         // Adding UIFlows button
         scrollView.addSubview(btnUIFlows)
         btnUIFlows.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(btnReportReason.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
@@ -258,6 +274,7 @@ fileprivate extension BetaNewAPIVC {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
@@ -289,6 +306,10 @@ fileprivate extension BetaNewAPIVC {
 
         btnUIFlows.rx.tap
             .bind(to: viewModel.inputs.uiFlowsTapped)
+            .disposed(by: disposeBag)
+
+        btnReportReason.rx.tap
+            .bind(to: viewModel.inputs.reportReasonTapped)
             .disposed(by: disposeBag)
 
         viewModel.outputs.openUIFlows
@@ -343,6 +364,15 @@ fileprivate extension BetaNewAPIVC {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.openReportReason
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let reportReasonVM = OWReportReasonViewModel()
+                let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
+                self.navigationController?.pushViewController(reportReasonVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.openAuthentication
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -382,6 +412,7 @@ fileprivate extension BetaNewAPIVC {
             }
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
 
 fileprivate extension BetaNewAPIVC {
