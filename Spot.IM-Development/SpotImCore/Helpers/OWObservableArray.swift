@@ -32,7 +32,6 @@ extension OWUpdaterProtocol {
     }
 }
 
-
 class OWObservableArray<Element: OWUpdaterProtocol>: ExpressibleByArrayLiteral {
     typealias EventType = OWArrayChangeEvent
 
