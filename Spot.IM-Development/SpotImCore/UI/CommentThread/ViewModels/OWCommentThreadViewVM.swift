@@ -36,6 +36,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let numberOfCommentsInSkeleton: Int = 4
     }
 
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
@@ -57,8 +61,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
-
-    fileprivate var _commentIdToCommentCellVM: [String: OWCommentCellViewModel] = [:]
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentCreation: Observable<OWCommentCreationType> {
@@ -102,7 +104,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         var cellOptions = [OWCommentThreadCellOption]()
 
         for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
-            guard let commentCellVM = self._commentIdToCommentCellVM[commentPresentationData.id] else { continue }
+            guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
             if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
                 cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
@@ -157,22 +159,12 @@ fileprivate extension OWCommentThreadViewViewModel {
         for comment in comments {
             guard let commentId = comment.id else { continue }
 
-            guard self._commentIdToCommentCellVM[commentId] == nil else { continue }
-
-            guard let user = response.conversation?.users?[comment.userId ?? ""] else { continue }
-
-            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 4))
-            self._commentIdToCommentCellVM[commentId] = vm
-
             if let replies = comment.replies {
 
                 repliesPresentationData = []
 
                 for reply in replies {
                     guard let replyId = reply.id else { continue }
-                    guard let replyUser = response.conversation?.users?[reply.userId ?? ""] else { continue }
-                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: user, collapsableTextLineLimit: 4))
-                    self._commentIdToCommentCellVM[replyId] = vm
 
                     let replyPresentationData = OWCommentPresentationData(
                         id: replyId,
@@ -202,17 +194,42 @@ fileprivate extension OWCommentThreadViewViewModel {
     func getExistingRepliesPresentationData(for commentPresentationData: OWCommentPresentationData) -> [OWCommentPresentationData] {
         var existingRepliesPresentationData: [OWCommentPresentationData] = []
         for replyId in commentPresentationData.repliesIds {
-            if let replyCellVm = self._commentIdToCommentCellVM[replyId] {
-                let reply = replyCellVm.outputs.commentVM.outputs.comment
-                existingRepliesPresentationData.append(
-                    OWCommentPresentationData(
-                        id: replyId,
-                        totalRepliesCount: reply.repliesCount ?? 0,
-                        repliesOffset: reply.offset ?? 0)
-                )
-            }
+            guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
+
+            let reply = replyCellVm.outputs.commentVM.outputs.comment
+            existingRepliesPresentationData.append(
+                OWCommentPresentationData(
+                    id: replyId,
+                    totalRepliesCount: reply.repliesCount ?? 0,
+                    repliesOffset: reply.offset ?? 0)
+            )
         }
         return existingRepliesPresentationData
+    }
+
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
+        guard let comment = self.servicesProvider.commentsService().getComment(with: commentId, postId: self.postId),
+              let commentUserId = comment.userId,
+              let user = self.servicesProvider.usersService().getUser(with: commentUserId)
+        else { return nil }
+
+        var replyToUser: SPUser? = nil
+        if let replyToCommentId = comment.parentId,
+           let replyToComment = self.servicesProvider.commentsService().getComment(with: replyToCommentId, postId: self.postId),
+           let replyToUserId = replyToComment.userId {
+            replyToUser = self.servicesProvider.usersService().getUser(with: replyToUserId)
+        }
+
+        return OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: replyToUser, collapsableTextLineLimit: 4))
+    }
+
+    func cacheConversationRead(response: OWConversationReadRM) {
+        if let responseComments = response.conversation?.comments {
+            self.servicesProvider.commentsService().setComments(responseComments, postId: self.postId)
+        }
+        if let responseUsers = response.conversation?.users {
+            self.servicesProvider.usersService().setUsers(responseUsers)
+        }
     }
 }
 
@@ -254,7 +271,11 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
-                let commentsPresentationData = self.getCommentsPresentationData(from: response)
+                self.cacheConversationRead(response: response)
+
+                var commentsPresentationData = self.getCommentsPresentationData(from: response)
+
+                commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
 
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
             })
@@ -290,6 +311,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             // add presentation data from response
             var presentationDataFromResponse: [OWCommentPresentationData] = []
             if let response = response {
+                self.cacheConversationRead(response: response)
+
                 presentationDataFromResponse = self.getCommentsPresentationData(from: response)
 
                 // filter existing comments
@@ -302,7 +325,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
                 commentPresentationData.repliesOffset = response.conversation?.offset ?? 0
             }
-
 
             var repliesPresentation = existingRepliesPresentationData + presentationDataFromResponse
 
