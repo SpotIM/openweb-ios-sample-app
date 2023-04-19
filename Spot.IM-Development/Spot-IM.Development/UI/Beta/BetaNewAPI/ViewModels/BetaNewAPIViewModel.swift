@@ -15,6 +15,7 @@ import SpotImCore
 protocol BetaNewAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<String> { get }
     var enteredPostId: PublishSubject<String> { get }
+    var reportReasonTapped: PublishSubject<Void> { get }
     var uiFlowsTapped: PublishSubject<Void> { get }
     var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
@@ -37,6 +38,7 @@ protocol BetaNewAPIViewModelingOutputs {
     var openMiscellaneous: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
     var openAuthentication: Observable<Void> { get }
+    var openReportReason: Observable<Void> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -59,6 +61,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let enteredPostId = PublishSubject<String>()
     let uiFlowsTapped = PublishSubject<Void>()
     let uiViewsTapped = PublishSubject<Void>()
+    let reportReasonTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
     let selectPresetTapped = PublishSubject<Void>()
     let settingsTapped = PublishSubject<Void>()
@@ -106,6 +109,11 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
         return _openSettings.asObservable()
     }
 
+    fileprivate let _openReportReason = PublishSubject<Void>()
+    var openReportReason: Observable<Void> {
+        return _openReportReason.asObservable()
+    }
+
     fileprivate let _openAuthentication = PublishSubject<Void>()
     var openAuthentication: Observable<Void> {
         return _openAuthentication.asObservable()
@@ -126,6 +134,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 
     init() {
         setupObservers()
+        setSDKSpotId(Metrics.preFilledSpotId)
     }
 }
 
@@ -170,6 +179,10 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _openSettings)
             .disposed(by: disposeBag)
 
+        reportReasonTapped
+            .bind(to: _openReportReason)
+            .disposed(by: disposeBag)
+
         authenticationTapped
             .bind(to: _openAuthentication)
             .disposed(by: disposeBag)
@@ -185,16 +198,6 @@ fileprivate extension BetaNewAPIViewModel {
             .subscribe(onNext: { [weak self] _ in
 
                 self?._shouldShowSelectPreset.onNext(false)
-            })
-            .disposed(by: disposeBag)
-
-        Observable.merge(uiFlowsTapped.voidify(),
-                         uiViewsTapped.voidify(),
-                         miscellaneousTapped.voidify())
-            .withLatestFrom(spotId)
-            .subscribe(onNext: { [weak self] spotId in
-
-                self?.setSDKSpotId(spotId)
             })
             .disposed(by: disposeBag)
 
@@ -216,6 +219,7 @@ fileprivate extension BetaNewAPIViewModel {
             .do(onNext: { [weak self] dataModel in
                 self?._spotId.onNext(dataModel.spotId)
                 self?._postId.onNext(dataModel.postId)
+                self?.setSDKSpotId(dataModel.spotId)
             })
             .subscribe()
             .disposed(by: disposeBag)
