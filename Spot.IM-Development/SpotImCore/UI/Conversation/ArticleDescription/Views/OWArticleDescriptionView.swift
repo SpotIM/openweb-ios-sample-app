@@ -24,7 +24,7 @@ class OWArticleDescriptionView: UIView {
         static let descriptionLabelsPadding = 8.0
     }
 
-    private lazy var topSeparatorView: UIView = {
+    fileprivate lazy var topSeparatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -65,10 +65,14 @@ class OWArticleDescriptionView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    private lazy var bottomSeparatorView: UIView = {
+    fileprivate lazy var bottomSeparatorView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        return UITapGestureRecognizer()
     }()
 
     fileprivate var viewModel: OWArticleDescriptionViewModeling!
@@ -130,6 +134,8 @@ fileprivate extension OWArticleDescriptionView {
             make.top.equalTo(titleLabel.OWSnp.bottom).offset(Metrics.descriptionLabelsPadding)
             make.bottom.leading.trailing.equalToSuperview()
         }
+
+        self.addGestureRecognizer(tapGesture)
     }
 
     func setupObservers() {
@@ -152,14 +158,10 @@ fileprivate extension OWArticleDescriptionView {
             .bind(to: authorLabel.rx.text)
             .disposed(by: disposeBag)
 
-        let tapGesture = UITapGestureRecognizer()
-        self.addGestureRecognizer(tapGesture)
-
-        tapGesture.rx.event.map { _ in
-            return
-        }
-        .bind(to: viewModel.inputs.tap)
-        .disposed(by: disposeBag)
+        tapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.tap)
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style

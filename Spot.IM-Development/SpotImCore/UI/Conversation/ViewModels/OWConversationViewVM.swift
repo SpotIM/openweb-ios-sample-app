@@ -60,7 +60,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
-        return OWSpacerCellViewModel()
+        return OWSpacerCellViewModel(style: .none)
     }()
 
     lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
@@ -121,8 +121,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.servicesProvider = servicesProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
-        self.populateInitialUI()
         setupObservers()
+        self.populateInitialUI()
     }
 }
 
@@ -173,10 +173,31 @@ fileprivate extension OWConversationViewViewModel {
             .communityGuidelinesViewModel.outputs
             .shouldShowView
 
+        // Responding to guidelines height change (for updating cell)
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Int> in
+                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
+                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
+                        return guidelinesVM.outputs.shouldShowViewExternaly
+                            .filter { $0 == true }
+                            .map { _ in index }
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+                return Observable.merge(sizeChangeObservable)
+            }
+            .delay(.milliseconds(50), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] guidelinesIndex in
+                self?._changeSizeAtIndex.onNext(guidelinesIndex)
+            })
+            .disposed(by: disposeBag)
+
         Observable.combineLatest(conversationFetchedObservable,
                                  shouldShowCommunityQuestion,
                                  shouldShowCommunityGuidelines)
-            .delay(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] (_, shouldShowCommunityQuestion, shouldShowCommunityGuidelines) -> Void in
             guard let self = self else { return }
                 self._cellsViewModels.removeAll()
@@ -194,6 +215,7 @@ fileprivate extension OWConversationViewViewModel {
                         break
                 }
 
+//                self.populateInitialUI()
                 self._initialDataLoaded.onNext(true)
         })
         .disposed(by: disposeBag)

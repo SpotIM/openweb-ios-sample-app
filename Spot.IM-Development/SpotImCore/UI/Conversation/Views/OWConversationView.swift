@@ -140,17 +140,5 @@ fileprivate extension OWConversationView {
                 self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
             })
             .disposed(by: disposeBag)
-
-        viewModel.outputs.initialDataLoaded
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] initialDataLoaded in
-            guard initialDataLoaded, let self = self else { return }
-                UIView.performWithoutAnimation {
-                    self.tableView.reloadData()
-                }
-
-                self.tableView.isScrollEnabled = true
-        })
-        .disposed(by: disposeBag)
     }
 }

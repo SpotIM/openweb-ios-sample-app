@@ -11,5 +11,5 @@ import Foundation
 struct OWPreConversationRequiredData {
     let article: OWArticleProtocol
     let settings: OWPreConversationSettingsProtocol?
-    let presentationalStyle: OWPresentationalModeCompact?
+    let presentationalStyle: OWPresentationalModeCompact
 }

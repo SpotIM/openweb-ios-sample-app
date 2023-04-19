@@ -87,7 +87,8 @@ fileprivate extension OWOnlineViewingUsersCounterView {
 
                 self.lblViewersNumber.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

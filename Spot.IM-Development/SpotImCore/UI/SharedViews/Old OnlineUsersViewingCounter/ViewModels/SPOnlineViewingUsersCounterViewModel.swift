@@ -11,7 +11,6 @@ import UIKit
 import RxSwift
 
 protocol SPOnlineViewingUsersCounterViewModelingInputs {
-    // TODO: once old view is removed this configureModel function should be removed
     func configureModel(_ model: RealTimeOnlineViewingUsersModel)
 }
 

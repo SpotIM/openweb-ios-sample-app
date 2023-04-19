@@ -267,7 +267,6 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
 
-            // TODO: Add view action callbacks
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self = self else { return }
                 let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"

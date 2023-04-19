@@ -19,6 +19,7 @@ public enum OWViewActionCallbackType: Codable {
     case postCommentPressed
     case adClosed
     case adTapped
+    case closeConversationPressed
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -31,5 +32,6 @@ enum OWViewActionCallbackType: Codable {
     case postCommentPressed
     case adClosed
     case adTapped
+    case closeConversationPressed
 }
 #endif
