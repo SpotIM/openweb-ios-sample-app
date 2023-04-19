@@ -45,8 +45,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
 
-        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
-                                                                                 viewableMode: .partOfFlow)
+        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
         let conversationPopped = PublishSubject<Void>()
 
@@ -143,17 +142,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
-        let indipendentConversationClosedObservable = conversationVM
-            .outputs.conversationViewVM
-            .outputs.conversationTitleHeaderViewModel
-            .outputs.closeConversation
-
-        let partOfFlowPresentedConversationClosedObservable = conversationVM.outputs.closeConversation
-
-        let conversationPoppedObservable = Observable.merge(conversationPopped,
-                                                            indipendentConversationClosedObservable,
-                                                            partOfFlowPresentedConversationClosedObservable)
-            .debug("RIVI: conversationPoppedObservable")
+        let conversationPoppedObservable = conversationPopped
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
@@ -170,10 +159,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        // TODO: Complete when we would like to support the conversation as a view
         let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
                                                                                              viewableMode: .independent)
-
         let conversationView = OWConversationView(viewModel: conversationViewVM)
         setupObservers(forViewModel: conversationViewVM)
         setupViewActionsCallbacks(forViewModel: conversationViewVM)
@@ -183,21 +170,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
 fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
-        // Coordinate to safari tab
-        viewModel
-            .outputs.conversationViewVM
-            .outputs.communityGuidelinesCellViewModel
-            .outputs.communityGuidelinesViewModel
-            .outputs.urlClickedOutput
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
-                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-                                                                   url: url,
-                                                                   actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
-            }
-            .subscribe()
-            .disposed(by: disposeBag)
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
@@ -210,16 +183,5 @@ fileprivate extension OWConversationCoordinator {
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
-
-        let contentPressed = viewModel.outputs
-            .conversationTitleHeaderViewModel
-            .outputs.closeConversation
-            .map { OWViewActionCallbackType.contentPressed }
-
-        Observable.merge(contentPressed)
-            .subscribe { [weak self] viewActionType in
-                self?.viewActionsService.append(viewAction: viewActionType)
-            }
-            .disposed(by: disposeBag)
     }
 }
