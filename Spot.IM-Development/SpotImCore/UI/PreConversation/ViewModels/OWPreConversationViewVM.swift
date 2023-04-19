@@ -402,17 +402,6 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.isReadOnly)
             .disposed(by: disposeBag)
 
-        // Subscribing to customize UI related stuff
-        Observable.merge(
-            preConversationSummaryVM.inputs.customizeCounterLabelUI.asObservable(),
-            preConversationSummaryVM.inputs.customizeTitleLabelUI.asObservable()
-            )
-            .subscribe(onNext: { _ in
-//            TODO: custom UI
-//            TODO: Map to the appropriate case
-            })
-            .disposed(by: disposeBag)
-
         _ = commentCreationEntryViewModel.outputs
             .tapped
             .subscribe(onNext: { [weak self] in
