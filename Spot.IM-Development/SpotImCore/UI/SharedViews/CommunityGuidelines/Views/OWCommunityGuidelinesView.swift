@@ -70,7 +70,7 @@ class OWCommunityGuidelinesView: UIView {
         super.layoutSubviews()
         guard let viewModel = viewModel else { return }
 
-        viewModel.inputs.width.onNext(self.titleTextView.textContainer.size.width)
+        viewModel.inputs.titleTextViewWidthChanged.onNext(self.titleTextView.textContainer.size.width)
     }
 
     required init?(coder: NSCoder) {
