@@ -30,7 +30,6 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
     var conversationFetched = PublishSubject<SPConversationReadRM>()
-    var heightConstraintIsActive = PublishSubject<Bool>()
     var textChanged = PublishSubject<String>()
     var _textChanged = BehaviorSubject<String?>(value: nil)
 

@@ -38,12 +38,8 @@ class OWCommunityQuestionCellViewModel: OWCommunityQuestionCellViewModeling,
     // Unique identifier
     let id: String = UUID().uuidString
 
-    init(style: OWCommunityQuestionsStyle) {
+    init(style: OWCommunityQuestionsStyle = .regular) {
         self.style = style
-    }
-
-    init() {
-        self.style = .regular
     }
 }
 

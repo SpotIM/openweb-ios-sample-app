@@ -40,7 +40,7 @@ class OWConversationViewModel: OWConversationViewModeling,
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
-    let viewableMode: OWViewableMode
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     lazy var conversationViewVM: OWConversationViewViewModeling = {
