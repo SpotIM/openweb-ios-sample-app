@@ -114,6 +114,7 @@ fileprivate extension OWCommunityQuestionView {
                 self.questionContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: currentStyle).cgColor
 
                 // TODO: custom UI
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }
