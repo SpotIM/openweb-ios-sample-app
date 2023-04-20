@@ -35,7 +35,7 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
         self.servicesProvider = servicesProvider
     }
 
-    var viewingCount: Observable<String> {
+    lazy var viewingCount: Observable<String> = {
         guard let postId = OWManager.manager.postId else { return .empty() }
 
         let realtimeService = OWSharedServicesProvider.shared.realtimeService()
@@ -49,6 +49,6 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
                 $0.decimalFormatted
             }
             .asObservable()
-    }
+    }()
 }
 
