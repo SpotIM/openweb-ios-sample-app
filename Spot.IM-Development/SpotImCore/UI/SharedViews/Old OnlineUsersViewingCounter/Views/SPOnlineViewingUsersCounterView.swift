@@ -88,14 +88,6 @@ fileprivate extension SPOnlineViewingUsersCounterView {
             .startWith("1")
             .bind(to: lblViewersNumber.rx.text)
             .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-
-                self.lblViewersNumber.textColor = .spForeground3
-            }).disposed(by: disposeBag)
     }
 }
 
