@@ -153,6 +153,40 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        // URL tapped from community guidelines screen
+        let communityGuidelinesURLTapped = conversationVM.outputs
+            .conversationViewVM.outputs
+            .communityGuidelinesCellViewModel.outputs
+            .communityGuidelinesViewModel.outputs
+            .urlClickedOutput
+
+        // Coordinate to safari tab
+        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
+        let coordinateToSafariObservable = coordinateToSafariObservables
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                               url: url,
+                                                               actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+                return Observable.never()
+            }
+
         let indipendentConversationClosedObservable = conversationVM.outputs
             .conversationViewVM.outputs
             .conversationTitleHeaderViewModel.outputs
@@ -174,7 +208,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             conversationPoppedObservable,
             coordinateCommentCreationObservable,
             coordinateCommentThreadObservable,
-            conversationLoadedObservable
+            conversationLoadedObservable,
+            coordinateToSafariObservable
         )
     }
     // swiftlint:enable function_body_length
@@ -200,25 +235,7 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
-        // Coordinate to safari tab
-        let coordinateToSafariObservables = Observable.merge(
-            viewModel.outputs.communityGuidelinesCellViewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput
-        )
-
-        coordinateToSafariObservables
-            .filter { [weak self] _ in
-                guard let self = self else { return false }
-                return self.viewableMode == .partOfFlow
-            }
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
-                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-                                                                   url: url,
-                                                                   actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
-            }
-            .subscribe()
-            .disposed(by: disposeBag)
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
