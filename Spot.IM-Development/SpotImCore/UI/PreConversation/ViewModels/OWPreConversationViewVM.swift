@@ -288,7 +288,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
-        preConversationData: OWPreConversationRequiredData) {
+        preConversationData: OWPreConversationRequiredData,
+        viewableMode: OWViewableMode) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
@@ -351,7 +352,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
-                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
                     }
                 }
                 self._cellsViewModels.removeAll()
