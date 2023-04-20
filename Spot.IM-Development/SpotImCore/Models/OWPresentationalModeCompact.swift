@@ -14,4 +14,10 @@ enum OWPresentationalModeCompact {
     case push
     case none
 }
+#else
+enum OWPresentationalModeCompact {
+    case present(style: OWModalPresentationStyle)
+    case push
+    case none
+}
 #endif
