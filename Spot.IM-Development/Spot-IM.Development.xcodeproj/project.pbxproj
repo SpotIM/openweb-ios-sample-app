@@ -376,6 +376,8 @@
 		3DA57BB1298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BB0298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift */; };
 		3DA8DBF429F142E500783BA5 /* TestingPlaygroundVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8DBF329F142E500783BA5 /* TestingPlaygroundVC.swift */; };
 		3DA8DBF629F151D900783BA5 /* TestingPlaygroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8DBF529F151D900783BA5 /* TestingPlaygroundViewModel.swift */; };
+		3DA8DBF829F1596B00783BA5 /* TestingPlaygroundIndependentViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8DBF729F1596B00783BA5 /* TestingPlaygroundIndependentViewVC.swift */; };
+		3DA8DBFA29F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8DBF929F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift */; };
 		3DA9A42A284398150033BB8C /* OWNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */; };
 		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
 		3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D177281FC123008654CF /* SPLogMethod.swift */; };
@@ -1132,6 +1134,8 @@
 		3DA57BB0298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWPreConversationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		3DA8DBF329F142E500783BA5 /* TestingPlaygroundVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundVC.swift; sourceTree = "<group>"; };
 		3DA8DBF529F151D900783BA5 /* TestingPlaygroundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundViewModel.swift; sourceTree = "<group>"; };
+		3DA8DBF729F1596B00783BA5 /* TestingPlaygroundIndependentViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundIndependentViewVC.swift; sourceTree = "<group>"; };
+		3DA8DBF929F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundIndependentViewViewModel.swift; sourceTree = "<group>"; };
 		3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkInterceptor.swift; sourceTree = "<group>"; };
 		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
 		3DB3D177281FC123008654CF /* SPLogMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLogMethod.swift; sourceTree = "<group>"; };
@@ -2754,6 +2758,7 @@
 			isa = PBXGroup;
 			children = (
 				3DA8DBF329F142E500783BA5 /* TestingPlaygroundVC.swift */,
+				3DA8DBF729F1596B00783BA5 /* TestingPlaygroundIndependentViewVC.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2762,6 +2767,7 @@
 			isa = PBXGroup;
 			children = (
 				3DA8DBF529F151D900783BA5 /* TestingPlaygroundViewModel.swift */,
+				3DA8DBF929F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5160,6 +5166,7 @@
 				3D611B7B28BFA91A003960CE /* BetaNewAPIViewModel.swift in Sources */,
 				9EA0F83629A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
+				3DA8DBFA29F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift in Sources */,
 				9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewType.swift in Sources */,
 				9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
@@ -5245,6 +5252,7 @@
 				3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
 				9EBE5C2629AE080B001150DA /* IAUSettingsVM.swift in Sources */,
+				3DA8DBF829F1596B00783BA5 /* TestingPlaygroundIndependentViewVC.swift in Sources */,
 				9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */,
 				3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */,
 				3DB3D194282A82D8008654CF /* RxSwift+Helpers.swift in Sources */,
