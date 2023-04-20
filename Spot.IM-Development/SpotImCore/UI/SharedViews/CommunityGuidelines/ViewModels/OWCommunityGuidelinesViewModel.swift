@@ -74,7 +74,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         return _shouldShowView
-            .debug("RIVI shouldShowView")
             .unwrap()
             .asObservable()
             .share(replay: 1)
@@ -83,6 +82,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
             .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
                                                       internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
             .map { config -> String? in

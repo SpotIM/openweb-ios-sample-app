@@ -36,12 +36,8 @@ class OWCommunityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling,
     // Unique identifier
     let id: String = UUID().uuidString
 
-    init(style: OWCommunityGuidelinesStyle) {
+    init(style: OWCommunityGuidelinesStyle = .regular) {
         self.style = style
-    }
-
-    init() {
-        self.style = .regular
     }
 }
 

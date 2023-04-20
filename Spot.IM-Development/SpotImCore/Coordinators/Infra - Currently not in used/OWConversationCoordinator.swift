@@ -153,8 +153,16 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        let indipendentConversationClosedObservable = conversationVM.outputs
+            .conversationViewVM.outputs
+            .conversationTitleHeaderViewModel.outputs
+            .closeConversation
+
+        let partOfFlowPresentedConversationClosedObservable = conversationVM.outputs.closeConversation
+
         let conversationPoppedObservable = Observable.merge(conversationPopped,
-                                                            conversationVM.outputs.closeConversation)
+                                                            indipendentConversationClosedObservable,
+                                                            partOfFlowPresentedConversationClosedObservable)
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
