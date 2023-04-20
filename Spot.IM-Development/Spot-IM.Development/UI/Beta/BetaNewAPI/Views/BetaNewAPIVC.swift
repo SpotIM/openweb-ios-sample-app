@@ -389,12 +389,12 @@ fileprivate extension BetaNewAPIVC {
         let navController = self.navigationController
 
         navController?.navigationBar.isTranslucent = false
-        let navigationBarBackgroundColor = UIColor.gray
+        let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
 
         // Setup Title font
         let navigationTitleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .bold),
-            NSAttributedString.Key.foregroundColor: UIColor.green
+            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
         ]
 
         if #available(iOS 13.0, *) {
