@@ -33,6 +33,8 @@ class OWCommunityGuidelinesView: UIView {
             .hugContent(axis: .vertical)
             .dataDetectorTypes([.link])
 
+        textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
+                                       NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.textContainer.lineFragmentPadding = 0
         textView.textContainerInset = .zero
         textView.sizeToFit()
