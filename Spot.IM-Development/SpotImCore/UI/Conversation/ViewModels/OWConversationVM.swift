@@ -23,7 +23,6 @@ protocol OWConversationViewModelingOutputs {
     var loadedToScreen: Observable<Void> { get }
     var shouldCustomizeNavigationBar: Bool { get }
     var shouldShowCloseButton: Bool { get }
-    var initialDataLoaded: Observable<Bool> { get }
     var closeConversation: Observable<Void> { get }
 }
 
@@ -34,7 +33,8 @@ protocol OWConversationViewModeling {
 
 class OWConversationViewModel: OWConversationViewModeling,
                                 OWConversationViewModelingInputs,
-                                OWConversationViewModelingOutputs {
+                               OWConversationViewModelingOutputs {
+
     var inputs: OWConversationViewModelingInputs { return self }
     var outputs: OWConversationViewModelingOutputs { return self }
 
@@ -49,11 +49,6 @@ class OWConversationViewModel: OWConversationViewModeling,
     }()
 
     var ctaCommentCreationTapped: Observable<Void> {
-        // TODO: Complete
-        return .never()
-    }
-
-    var userInitiatedAuthenticationFlow: Observable<Void> {
         // TODO: Complete
         return .never()
     }
@@ -82,12 +77,6 @@ class OWConversationViewModel: OWConversationViewModeling,
     var loadedToScreen: Observable<Void> {
         return _viewDidLoad
             .unwrap()
-            .asObservable()
-    }
-
-    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
-    var initialDataLoaded: Observable<Bool> {
-        return _initialDataLoaded
             .asObservable()
     }
 

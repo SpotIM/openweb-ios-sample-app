@@ -38,6 +38,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var inputs: OWConversationViewViewModelingInputs { return self }
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let delayForCellSizeChanges: Int = 100
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
@@ -191,7 +195,7 @@ fileprivate extension OWConversationViewViewModel {
                 let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
                     if case.communityGuidelines(let guidelinesCellViewModel) = vm {
                         let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowViewExternaly
+                        return guidelinesVM.outputs.shouldShowViewAfterHeightChanged
                             .filter { $0 == true }
                             .map { _ in index }
                     } else {
@@ -201,7 +205,7 @@ fileprivate extension OWConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(50), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForCellSizeChanges), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] guidelinesIndex in
                 self?._changeSizeAtIndex.onNext(guidelinesIndex)
             })
@@ -229,8 +233,8 @@ fileprivate extension OWConversationViewViewModel {
                     break
                 }
 
-                let skeletons = self.getInitialUI()
-                cellsToApped.append(contentsOf: skeletons)
+                let skeletonsCellsModels = self.getSkeletonsCellsModels()
+                cellsToApped.append(contentsOf: skeletonsCellsModels)
 
                 self._cellsViewModels.append(contentsOf: cellsToApped)
                 self._initialDataLoaded.onNext(true)
@@ -238,7 +242,7 @@ fileprivate extension OWConversationViewViewModel {
         .disposed(by: disposeBag)
     }
 
-    func getInitialUI() -> [OWConversationCellOption] {
+    func getSkeletonsCellsModels() -> [OWConversationCellOption] {
         // TODO: Delete once working on the conversation view UI
         let skeletonCellVMs = (0 ..< 50).map { _ in
             return OWCommentSkeletonShimmeringCellViewModel()
@@ -248,7 +252,7 @@ fileprivate extension OWConversationViewViewModel {
 
     func populateInitialUI() {
         // TODO: Delete once working on the conversation view UI
-        let skeletons = getInitialUI()
-        _cellsViewModels.append(contentsOf: skeletons)
+        let skeletonsCellsModels = getSkeletonsCellsModels()
+        _cellsViewModels.append(contentsOf: skeletonsCellsModels)
     }
 }

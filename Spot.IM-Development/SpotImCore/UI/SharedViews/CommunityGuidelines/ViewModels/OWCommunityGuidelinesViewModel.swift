@@ -11,13 +11,13 @@ import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
     var urlClicked: PublishSubject<URL> { get }
-    var width: BehaviorSubject<CGFloat> { get }
+    var titleTextViewWidthChanged: BehaviorSubject<CGFloat> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowViewExternaly: Observable<Bool> { get }
+    var shouldShowViewAfterHeightChanged: Observable<Bool> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
     var titleTextViewHeight: Observable<CGFloat> { get }
@@ -49,9 +49,9 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
 
     var titleTextViewHeightNoneRX: CGFloat = 0
 
-    var width = BehaviorSubject<CGFloat>(value: 0)
+    var titleTextViewWidthChanged = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
-        width
+        titleTextViewWidthChanged
             .distinctUntilChanged()
             .asObservable()
     }
@@ -65,7 +65,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         .share(replay: 1)
     }
 
-    var shouldShowViewExternaly: Observable<Bool> {
+    var shouldShowViewAfterHeightChanged: Observable<Bool> {
         return Observable.combineLatest(shouldShowView, titleTextViewHeight)
             .map { $0.0 }
             .share()
