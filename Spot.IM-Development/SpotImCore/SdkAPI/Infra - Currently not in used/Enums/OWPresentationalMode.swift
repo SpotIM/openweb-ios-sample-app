@@ -26,5 +26,14 @@ public enum OWPresentationalMode {
 enum OWPresentationalMode {
     case present(viewController: UIViewController, style: OWModalPresentationStyle = .pageSheet)
     case push(navigationController: UINavigationController)
+
+    var style: OWPresentationalModeCompact {
+        switch self {
+        case .present(_, let style):
+            return .present(style: style)
+        case .push(_):
+            return .push
+        }
+    }
 }
 #endif
