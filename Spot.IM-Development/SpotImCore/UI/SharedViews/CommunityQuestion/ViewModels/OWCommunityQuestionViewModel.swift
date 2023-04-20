@@ -14,7 +14,7 @@ protocol OWCommunityQuestionViewModelingInputs {
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
-    var communityQuestionOutput: Observable<String?> { get }
+    var communityQuestion: Observable<String> { get }
     var shouldShowView: Observable<Bool> { get }
 }
 
@@ -23,42 +23,60 @@ protocol OWCommunityQuestionViewModeling {
     var outputs: OWCommunityQuestionViewModelingOutputs { get }
 }
 
-class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunityQuestionViewModelingInputs, OWCommunityQuestionViewModelingOutputs {
+class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
+                                        OWCommunityQuestionViewModelingInputs,
+                                        OWCommunityQuestionViewModelingOutputs {
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
     var conversationFetched = PublishSubject<SPConversationReadRM>()
+    var textChanged = PublishSubject<String>()
+    var _textChanged = BehaviorSubject<String?>(value: nil)
 
-    var communityQuestionOutput: Observable<String?> {
-        conversationFetched
-            .map { $0.conversation?.communityQuestion }
+    let _communityQuestion = BehaviorSubject<String?>(value: nil)
+    var communityQuestion: Observable<String> {
+        _communityQuestion
+            .unwrap()
     }
 
-    var _shouldShowView = BehaviorSubject(value: false)
+    var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         _shouldShowView
-            .asObserver()
+            .unwrap()
+            .asObservable()
+            .share(replay: 0)
     }
 
     fileprivate let style: OWCommunityQuestionsStyle
     fileprivate let disposeBag = DisposeBag()
+
     init(style: OWCommunityQuestionsStyle) {
         self.style = style
         setupObservers()
+    }
+
+    init() {
+        style = .regular
     }
 }
 
 fileprivate extension OWCommunityQuestionViewModel {
     func setupObservers() {
-        communityQuestionOutput
+        communityQuestion
             .subscribe(onNext: { [weak self] question in
                 guard let self = self else { return }
-                if let question = question, !question.isEmpty {
-                    self._shouldShowView.onNext(self.style != .none)
-                } else {
-                    self._shouldShowView.onNext(false)
-                }
+                let shouldShow = (!question.isEmpty) && (self.style != .none)
+                self._shouldShowView.onNext(shouldShow)
             })
             .disposed(by: disposeBag)
+
+        conversationFetched
+            .map { $0.conversation?.communityQuestion }
+            .subscribe(onNext: { [weak self] question in
+                guard let self = self else { return }
+                self._communityQuestion.onNext(question)
+            })
+            .disposed(by: disposeBag)
+
     }
 }

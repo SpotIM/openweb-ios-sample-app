@@ -30,6 +30,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
     }()
@@ -43,9 +44,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         self.actionsCallbacks = actionsCallbacks
     }
 
+    // swiftlint:disable function_body_length
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
-
-        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData)
+        viewableMode = .partOfFlow
+        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
+                                                                                 viewableMode: viewableMode)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
         let conversationPopped = PublishSubject<Void>()
 
@@ -97,6 +100,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         // Coordinate to comment creation
         let coordinateCommentCreationObservable = Observable.merge(ctaCommentCreationTapped,
                                                          deepLinkToCommentCreation.unwrap().asObservable())
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
             .flatMap { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
@@ -122,6 +129,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         // Coordinate to comment thread
         let coordinateCommentThreadObservable = deepLinkToCommentThread.unwrap().asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
             .flatMap { [weak self] commentThreadData -> Observable<OWCommentThreadCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(router: self.router,
@@ -142,7 +153,50 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
-        let conversationPoppedObservable = conversationPopped
+        // URL tapped from community guidelines screen
+        let communityGuidelinesURLTapped = conversationVM.outputs
+            .conversationViewVM.outputs
+            .communityGuidelinesCellViewModel.outputs
+            .communityGuidelinesViewModel.outputs
+            .urlClickedOutput
+
+        // Coordinate to safari tab
+        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
+        let coordinateToSafariObservable = coordinateToSafariObservables
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                               url: url,
+                                                               actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+                return Observable.never()
+            }
+
+        let indipendentConversationClosedObservable = conversationVM.outputs
+            .conversationViewVM.outputs
+            .conversationTitleHeaderViewModel.outputs
+            .closeConversation
+
+        let partOfFlowPresentedConversationClosedObservable = conversationVM.outputs.closeConversation
+
+        let conversationPoppedObservable = Observable.merge(conversationPopped,
+                                                            indipendentConversationClosedObservable,
+                                                            partOfFlowPresentedConversationClosedObservable)
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
@@ -154,12 +208,16 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             conversationPoppedObservable,
             coordinateCommentCreationObservable,
             coordinateCommentThreadObservable,
-            conversationLoadedObservable
+            conversationLoadedObservable,
+            coordinateToSafariObservable
         )
     }
+    // swiftlint:enable function_body_length
 
     override func showableComponent() -> Observable<OWShowable> {
-        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData)
+        viewableMode = .independent
+        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData,
+                                                                                             viewableMode: viewableMode)
         let conversationView = OWConversationView(viewModel: conversationViewVM)
         setupObservers(forViewModel: conversationViewVM)
         setupViewActionsCallbacks(forViewModel: conversationViewVM)
@@ -169,7 +227,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
 fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
-        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+        setupObservers(forViewModel: viewModel.outputs.conversationViewVM)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
@@ -182,5 +240,16 @@ fileprivate extension OWConversationCoordinator {
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let closeConversationPressed = viewModel
+            .outputs.conversationTitleHeaderViewModel
+            .outputs.closeConversation
+            .map { OWViewActionCallbackType.closeConversationPressed }
+
+        Observable.merge(closeConversationPressed)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 }

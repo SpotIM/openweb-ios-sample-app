@@ -62,7 +62,7 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
     }
 
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
-        return OWOnlineViewingUsersCounterViewModelNew()
+        return OWOnlineViewingUsersCounterViewModel()
     }()
 
     var commentsCount: Observable<String> {

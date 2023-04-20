@@ -32,7 +32,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var commentType: OWCommentCreationType
 
     init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
         self._commentCreationData.onNext(commentCreationData)
         commentType = commentCreationData.commentCreationType

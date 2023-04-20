@@ -185,6 +185,11 @@ extension UIButton {
         return self
     }
 
+    @discardableResult func titleEdgeInsets(_ titleEdgeInsets: UIEdgeInsets) -> Self {
+        self.titleEdgeInsets = titleEdgeInsets
+        return self
+    }
+
     @discardableResult func setTitle(_ title: String?, state: UIControl.State) -> Self {
         self.setTitle(title, for: state)
         return self
@@ -204,6 +209,18 @@ extension UIButton {
 extension UIImageView {
     @discardableResult func contentMode(_ contentMode: UIView.ContentMode) -> Self {
         self.contentMode = contentMode
+        return self
+    }
+
+    @discardableResult func image(_ image: UIImage) -> Self {
+        self.image = image
+        return self
+    }
+
+    @discardableResult func cornerRadius(_ radius: CGFloat) -> Self {
+        self.layer.cornerRadius = radius
+        self.layer.masksToBounds = radius != 0
+
         return self
     }
 }
