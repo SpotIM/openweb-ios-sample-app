@@ -21,7 +21,7 @@ protocol OWConversationViewModelingOutputs {
     var ctaCommentCreationTapped: Observable<Void> { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
-    var shouldShowNavigationBar: Bool { get }
+    var shouldCustomizeNavigationBar: Bool { get }
     var shouldShowCloseButton: Bool { get }
     var initialDataLoaded: Observable<Bool> { get }
     var closeConversation: Observable<Void> { get }
@@ -58,8 +58,10 @@ class OWConversationViewModel: OWConversationViewModeling,
         return .never()
     }
 
-    var shouldShowNavigationBar: Bool {
-        return viewableMode == .partOfFlow
+    var shouldCustomizeNavigationBar: Bool {
+        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
+              viewableMode == .partOfFlow else { return false }
+        return true
     }
 
     var shouldShowCloseButton: Bool {

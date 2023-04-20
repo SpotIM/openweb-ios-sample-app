@@ -52,7 +52,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
         width
-            .debug("RIVI widthObservable")
             .distinctUntilChanged()
             .asObservable()
     }
@@ -62,8 +61,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                                         widthObservable) { htmlString, viewWidth in
             return htmlString.height(withConstrainedWidth: viewWidth)
         }
-        .debug("RIVI titleTextViewHeight")
-//        .distinctUntilChanged()
         .asObservable()
         .share(replay: 1)
     }
@@ -81,20 +78,11 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .unwrap()
             .asObservable()
             .share(replay: 1)
-//            .distinctUntilChanged()
     }
-
-//    var changeTextViewHeight: Observable<CGFloat> {
-//        return isHiddenTextHeightCombine
-//            .debug("RIVI changeTextViewHeight")
-//            .filter { !$0.0 }
-//            .map { $0.1 }
-//    }
 
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
-//            .take(1)
             .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
                                                       internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
             .map { config -> String? in
@@ -114,20 +102,11 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             }
             .observe(on: MainScheduler.instance)
             .asObservable()
-//            .share()
     }
 
     lazy var showContainer: Bool = {
         return style == .compact
     }()
-
-//    var _isHidden = BehaviorSubject<Bool?>(value: nil)
-//    var isHidden: Observable<Bool> {
-//        _isHidden
-//            .unwrap()
-//            .asObservable()
-//            .share(replay: 0)
-//    }
 
     fileprivate let style: OWCommunityGuidelinesStyle
     fileprivate let disposeBag = DisposeBag()
@@ -189,7 +168,7 @@ fileprivate extension OWCommunityGuidelinesViewModel {
             )
 
             if let url = url {
-                _ = htmlMutableAttributedString.setAsLink(textToFind: Metrics.communityGuidelinesTitle, linkURL: url.absoluteString)
+                htmlMutableAttributedString.setAsLink(textToFind: Metrics.communityGuidelinesTitle, linkURL: url.absoluteString)
             }
 
             return htmlMutableAttributedString
@@ -202,27 +181,6 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         let communityGuidelinesString = Metrics.readOurTitle + " " + Metrics.communityGuidelinesTitle
         let url = locateURLInText(text: communityGuidelinesTitle)
         return self.getTitleTextViewAttributedText(htmlString: communityGuidelinesString, url: url)
-    }
-
-    func extractPlainTextFromHTML(html: String) -> String {
-        // Remove any HTML tags and convert entities
-        let plainText = html.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
-            .removingPercentEncoding ?? html
-
-        var urls = [String]()
-        // Remove any URLs
-        if let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) {
-            let range = NSRange(location: 0, length: plainText.utf16.count)
-            let matches = detector.matches(in: plainText, options: [], range: range)
-            urls = matches.map { $0.url!.absoluteString }
-        }
-        var filteredText = plainText
-        for url in urls {
-            filteredText = filteredText.replacingOccurrences(of: url, with: "")
-        }
-
-        // Trim any leading/trailing whitespace
-        return filteredText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     func locateURLInText(text: String) -> URL? {

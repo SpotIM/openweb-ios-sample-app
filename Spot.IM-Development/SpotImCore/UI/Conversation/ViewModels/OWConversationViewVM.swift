@@ -71,6 +71,18 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
     }()
 
+    fileprivate lazy var communityQuestionCellOptions: OWConversationCellOption = {
+        return OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
+    }()
+
+    fileprivate lazy var communityGuidelinesCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
+    }()
+
+    fileprivate lazy var communitySpacerCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
+    }()
+
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
         return _cellsViewModels
@@ -202,46 +214,41 @@ fileprivate extension OWConversationViewViewModel {
             guard let self = self else { return }
                 self._cellsViewModels.removeAll()
 
+                var cellsToApped = [OWConversationCellOption]()
+
                 switch (shouldShowCommunityQuestion, shouldShowCommunityGuidelines) {
-                    case (true, true):
-                        self.addCommunityQuestionCell()
-                        self.addCommunitySpacerCell()
-                        self.addCommunityGuidelinesCell()
-                    case (true, false):
-                        self.addCommunityQuestionCell()
-                    case (false, true):
-                        self.addCommunityGuidelinesCell()
-                    default:
-                        break
+                case (true, true):
+                    cellsToApped.append(contentsOf: [self.communityQuestionCellOptions,
+                                                     self.communitySpacerCellOption,
+                                                     self.communityGuidelinesCellOption])
+                case (true, false):
+                    cellsToApped.append(self.communityQuestionCellOptions)
+                case (false, true):
+                    cellsToApped.append(self.communityGuidelinesCellOption)
+                default:
+                    break
                 }
 
-//                self.populateInitialUI()
+                let skeletons = self.getInitialUI()
+                cellsToApped.append(contentsOf: skeletons)
+
+                self._cellsViewModels.append(contentsOf: cellsToApped)
                 self._initialDataLoaded.onNext(true)
         })
         .disposed(by: disposeBag)
     }
 
-    func addCommunityQuestionCell() {
-        let communityQuestionCellVM = OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
-        _cellsViewModels.append(communityQuestionCellVM)
-    }
-
-    func addCommunityGuidelinesCell() {
-        let communityGuidelinesCellVM = OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
-        _cellsViewModels.append(communityGuidelinesCellVM)
-    }
-
-    func addCommunitySpacerCell() {
-        let spacerVM = OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
-        _cellsViewModels.append(spacerVM)
-    }
-
-    func populateInitialUI() {
+    func getInitialUI() -> [OWConversationCellOption] {
         // TODO: Delete once working on the conversation view UI
         let skeletonCellVMs = (0 ..< 50).map { _ in
             return OWCommentSkeletonShimmeringCellViewModel()
         }
-        let skeletonCells = skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
-        _cellsViewModels.append(contentsOf: skeletonCells)
+        return skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
+    }
+
+    func populateInitialUI() {
+        // TODO: Delete once working on the conversation view UI
+        let skeletons = getInitialUI()
+        _cellsViewModels.append(contentsOf: skeletons)
     }
 }
