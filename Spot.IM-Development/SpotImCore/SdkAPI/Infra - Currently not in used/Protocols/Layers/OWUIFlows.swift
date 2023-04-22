@@ -38,6 +38,13 @@ public protocol OWUIFlows {
                        additionalSettings: OWCommentThreadSettingsProtocol?,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
+
+#if BETA
+    func testingPlayground(postId: OWPostId,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           callbacks: OWViewActionsCallbacks?,
+                           completion: @escaping OWViewCompletion)
+#endif
 }
 #else
 protocol OWUIFlows {

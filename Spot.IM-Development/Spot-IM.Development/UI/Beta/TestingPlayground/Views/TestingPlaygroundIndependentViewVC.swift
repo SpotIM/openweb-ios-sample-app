@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+#if BETA
+
 class TestingPlaygroundIndependentViewVC: UIViewController {
     fileprivate struct Metrics {
         static let verticalMargin: CGFloat = 40
@@ -94,3 +96,5 @@ fileprivate extension TestingPlaygroundIndependentViewVC {
             .disposed(by: disposeBag)
     }
 }
+
+#endif

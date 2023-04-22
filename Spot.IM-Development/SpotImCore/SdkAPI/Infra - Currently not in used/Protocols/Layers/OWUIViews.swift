@@ -21,6 +21,14 @@ public protocol OWUIViews {
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
+
+#if BETA
+    func testingPlayground(postId: OWPostId,
+                           presentationalMode: OWPresentationalMode,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           callbacks: OWViewActionsCallbacks?,
+                           completion: @escaping OWDefaultCompletion)
+#endif
 }
 #else
 protocol OWUIViews {

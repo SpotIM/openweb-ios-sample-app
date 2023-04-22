@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
+#if BETA
 
 protocol TestingPlaygroundViewModelingInputs {
     var playgroundPushModeTapped: PublishSubject<Void> { get }
@@ -103,8 +103,8 @@ fileprivate extension TestingPlaygroundViewModel {
                 return PresentationalModeCompact.present(style: self.presentStyle)
             }
             .unwrap()
-        
-        //Testing playground - Flows
+
+        // Testing playground - Flows
 //        Observable.merge(playgroundPushModeObservable, playgroundPresentModeObservable)
 //            .subscribe(onNext: { [weak self] mode in
 //                guard let self = self else { return }
