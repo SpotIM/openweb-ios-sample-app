@@ -252,12 +252,12 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnUIViews.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            #if !(NEW_API)
+            #if !(BETA)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
             #endif
         }
 
-        #if NEW_API
+        #if BETA
         // Adding testing playground button
         scrollView.addSubview(btnTestingPlayground)
         btnTestingPlayground.snp.makeConstraints { make in

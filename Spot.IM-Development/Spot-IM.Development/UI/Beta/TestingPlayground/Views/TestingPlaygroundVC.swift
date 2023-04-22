@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-#if NEW_API
+#if BETA
 
 class TestingPlaygroundVC: UIViewController {
 

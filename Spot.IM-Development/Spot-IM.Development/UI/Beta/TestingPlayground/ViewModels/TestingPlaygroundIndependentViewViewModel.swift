@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-#if NEW_API
+#if BETA
 
 protocol TestingPlaygroundIndependentViewModelingInputs {
 
@@ -67,7 +67,7 @@ fileprivate extension TestingPlaygroundIndependentViewModel {
 
     func setupObservers() {
 
-        //Testing playground - Views
+        // Testing playground - Views
 //        Observable.just()
 //            .subscribe(onNext: { [weak self] _ in
 //                guard let self = self else { return }
