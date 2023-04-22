@@ -20,38 +20,13 @@ class TestingPlaygroundIndependentViewVC: UIViewController {
     fileprivate let viewModel: TestingPlaygroundIndependentViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate lazy var articleView: UIView = {
-        let article = UIView()
-
-        article.addSubview(loggerView)
-        loggerView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.verticalMargin)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.loggerHeight)
-            make.bottom.equalToSuperview()
-        }
-
-        return article
+    fileprivate lazy var contentView: UIView = {
+        let view = UIView()
+            .backgroundColor(.clear)
+        return view
     }()
 
-    fileprivate lazy var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
-
-        scroll.contentLayoutGuide.snp.makeConstraints { make in
-            make.width.equalTo(scroll.snp.width)
-        }
-
-        return scroll
-    }()
-
-    fileprivate var independentView: UIView? = nil
-
-    fileprivate lazy var settingsBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
-                               style: .plain,
-                               target: nil,
-                               action: nil)
-    }()
+    fileprivate var testingPlaygroundView: UIView? = nil
 
     fileprivate lazy var loggerView: UILoggerView = {
         return UILoggerView(viewModel: viewModel.outputs.loggerViewModel)
@@ -80,30 +55,42 @@ class TestingPlaygroundIndependentViewVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupObservers()
-        navigationItem.rightBarButtonItems = [settingsBarItem]
     }
 }
 
 fileprivate extension TestingPlaygroundIndependentViewVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
     }
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
 
-        view.addSubview(articleView)
-        articleView.snp.makeConstraints { make in
+        view.addSubview(loggerView)
+        loggerView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(Metrics.loggerHeight)
         }
 
-        view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { make in
+        view.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(articleView.snp.bottom)
+            make.top.equalTo(loggerView.snp.bottom)
         }
     }
 
     func setupObservers() {
         title = viewModel.outputs.title
+
+        viewModel.outputs.testingPlaygroundView
+            .subscribe(onNext: { [weak self] view in
+                guard let self = self else { return }
+                self.testingPlaygroundView = view
+                self.contentView.addSubview(view)
+                view.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+}

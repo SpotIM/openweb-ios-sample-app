@@ -23,6 +23,7 @@ protocol TestingPlaygroundViewModelingInputs {
 protocol TestingPlaygroundViewModelingOutputs {
     var title: String { get }
     var showError: Observable<String> { get }
+    var openTestingPlaygroundIndependent: Observable<SDKConversationDataModel> { get }
 }
 
 protocol TestingPlaygroundViewModeling {
@@ -46,6 +47,16 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
     let playgroundPushModeTapped = PublishSubject<Void>()
     let playgroundPresentModeTapped = PublishSubject<Void>()
     let playgroundIndependentModeTapped = PublishSubject<Void>()
+
+    var openTestingPlaygroundIndependent: Observable<SDKConversationDataModel> {
+        return playgroundIndependentModeTapped
+            .asObservable()
+            .map { [weak self] _ -> SDKConversationDataModel? in
+                guard let self = self else { return nil }
+                return self.dataModel
+            }
+            .unwrap()
+    }
 
     fileprivate let _showError = PublishSubject<String>()
     var showError: Observable<String> {
