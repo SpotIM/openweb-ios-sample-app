@@ -141,6 +141,15 @@ fileprivate extension TestingPlaygroundVC {
                 self?.showError(message: message)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.openTestingPlaygroundIndependent
+            .subscribe(onNext: { [weak self] dataModel in
+                guard let self = self else { return }
+                let testingPlaygroundIndependentVM = TestingPlaygroundIndependentViewModel(dataModel: dataModel)
+                let testingPlaygroundIndependentVC = TestingPlaygroundIndependentViewVC(viewModel: testingPlaygroundIndependentVM)
+                self.navigationController?.pushViewController(testingPlaygroundIndependentVC, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
     func showError(message: String) {

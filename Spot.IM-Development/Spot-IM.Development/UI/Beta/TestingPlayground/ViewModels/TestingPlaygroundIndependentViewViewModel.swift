@@ -6,4 +6,94 @@
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import RxSwift
+
+#if NEW_API
+
+protocol TestingPlaygroundIndependentViewModelingInputs {
+
+}
+
+protocol TestingPlaygroundIndependentViewModelingOutputs {
+    var title: String { get }
+    var loggerViewModel: UILoggerViewModeling { get }
+    var testingPlaygroundView: Observable<UIView> { get }
+}
+
+protocol TestingPlaygroundIndependentViewModeling {
+    var inputs: TestingPlaygroundIndependentViewModelingInputs { get }
+    var outputs: TestingPlaygroundIndependentViewModelingOutputs { get }
+}
+
+class TestingPlaygroundIndependentViewModel: TestingPlaygroundIndependentViewModeling,
+                                TestingPlaygroundIndependentViewModelingOutputs,
+                                TestingPlaygroundIndependentViewModelingInputs {
+    var inputs: TestingPlaygroundIndependentViewModelingInputs { return self }
+    var outputs: TestingPlaygroundIndependentViewModelingOutputs { return self }
+
+    fileprivate let dataModel: SDKConversationDataModel
+
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate let _showError = PublishSubject<String>()
+    var showError: Observable<String> {
+        return _showError
+            .asObservable()
+    }
+
+    fileprivate let _testingPlaygroundView = BehaviorSubject<UIView?>(value: nil)
+    var testingPlaygroundView: Observable<UIView> {
+        return _testingPlaygroundView
+            .unwrap()
+            .asObservable()
+    }
+
+    lazy var title: String = {
+        return NSLocalizedString("TestingPlayground", comment: "")
+    }()
+
+    lazy var loggerViewModel: UILoggerViewModeling = {
+        return UILoggerViewModel(title: NSLocalizedString("TestingPlaygroundLogger", comment: ""))
+    }()
+
+    init(dataModel: SDKConversationDataModel) {
+        self.dataModel = dataModel
+        setupObservers()
+    }
+}
+
+fileprivate extension TestingPlaygroundIndependentViewModel {
+
+    func setupObservers() {
+
+        //Testing playground - Views
+//        Observable.just()
+//            .subscribe(onNext: { [weak self] _ in
+//                guard let self = self else { return }
+//                let postId = self.dataModel.postId
+//
+//                let manager = OpenWeb.manager
+//                let views = manager.ui.views
+//
+//                views.testingPlayground(postId: postId,
+//                                    additionalSettings: nil,
+//                                    callbacks: nil,
+//                                    completion: { [weak self] result in
+//                    guard let self = self else { return }
+//                    switch result {
+//                    case .success(let view):
+//                        self._testingPlaygroundView.onNext(view)
+//                        break
+//                    case .failure(let error):
+//                        let message = error.description
+//                        DLog("Calling flows.testingPlayground error: \(message)")
+//                        self.logger.inputs.log(text: message)
+//                    }
+//                })
+//            })
+//            .disposed(by: disposeBag)
+    }
+}
+
+#endif
