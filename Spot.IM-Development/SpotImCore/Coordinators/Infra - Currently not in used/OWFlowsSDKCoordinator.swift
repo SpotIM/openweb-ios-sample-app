@@ -34,7 +34,19 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                                   actionsCallbacks: callbacks)
 
                     self.store(coordinator: preConversationCoordinator)
-                    return preConversationCoordinator.showableComponent()
+
+                    let dissmissConversation = preConversationCoordinator.dissmissConversation
+                        .do(onNext: { [weak self] in
+                            guard let self = self else { return }
+                            self.cleanRouter(presentationalMode: presentationalMode)
+                        })
+                        .map { _ -> OWShowable? in
+                            return nil
+                        }
+                        .unwrap()
+
+                    return Observable.merge(dissmissConversation,
+                                            preConversationCoordinator.showableComponent())
                 }
     }
 
@@ -51,6 +63,12 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                 actionsCallbacks: callbacks)
 
         return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
+            .do { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                if coordinatorResult == .popped {
+                    self.cleanRouter(presentationalMode: presentationalMode)
+                }
+            }
     }
 
     func startCommentCreationFlow(conversationData: OWConversationRequiredData,
@@ -115,6 +133,15 @@ fileprivate extension OWFlowsSDKCoordinator {
         }
 
         router = OWRouter(navigationController: navigationController, presentationalMode: presentationalModeExtended)
+    }
+
+    func cleanRouter(presentationalMode: OWPresentationalMode) {
+        switch presentationalMode {
+        case .present(viewController: _):
+            router.dismiss(animated: true, completion: nil)
+        default:
+            break
+        }
     }
 
     func invalidateExistingFlows() {

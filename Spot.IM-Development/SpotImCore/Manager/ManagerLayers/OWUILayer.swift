@@ -60,7 +60,8 @@ extension OWUILayer {
         }
 
         let preConversationData = OWPreConversationRequiredData(article: article,
-                                                                settings: additionalSettings)
+                                                                settings: additionalSettings,
+                                                                presentationalStyle: presentationalMode.style)
 
         flowsSdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
                                                 presentationalMode: presentationalMode,
@@ -93,7 +94,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings)
+                                                          settings: additionalSettings,
+                                                          presentationalStyle: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
@@ -131,7 +133,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings)
+                                                          settings: additionalSettings?.conversationSettings,
+                                                          presentationalStyle: presentationalMode.style)
         let commentCreationData = OWCommentCreationRequiredData(article: article, commentCreationType: .comment)
 
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
@@ -173,7 +176,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings)
+                                                          settings: additionalSettings?.conversationSettings,
+                                                          presentationalStyle: presentationalMode.style)
         let commentThreadData = OWCommentThreadRequiredData(commentId: commentId)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
@@ -254,7 +258,8 @@ extension OWUILayer {
         }
 
         let preConversationData = OWPreConversationRequiredData(article: article,
-                                                                settings: additionalSettings)
+                                                                settings: additionalSettings,
+                                                                presentationalStyle: .none)
 
         _ = viewsSdkCoordinator.preConversationView(preConversationData: preConversationData,
                                                 callbacks: callbacks)
@@ -285,7 +290,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                                settings: additionalSettings)
+                                                          settings: additionalSettings,
+                                                          presentationalStyle: .none)
 
         _ = viewsSdkCoordinator.conversationView(conversationData: conversationData,
                                                 callbacks: callbacks)

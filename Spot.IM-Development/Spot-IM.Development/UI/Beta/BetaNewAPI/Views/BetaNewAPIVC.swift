@@ -195,6 +195,8 @@ fileprivate extension BetaNewAPIVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
 
+        setupNavControllerUI()
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -417,6 +419,37 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func setupNavControllerUI() {
+        let navController = self.navigationController
+
+        navController?.navigationBar.isTranslucent = false
+        let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
+
+        // Setup Title font
+        let navigationTitleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .bold),
+            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
+        ]
+
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            // Setup Back button
+            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+            appearance.backButtonAppearance = backButtonAppearance
+
+            navController?.navigationBar.standardAppearance = appearance
+            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
+        } else {
+            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
+    }
 }
 
 fileprivate extension BetaNewAPIVC {
