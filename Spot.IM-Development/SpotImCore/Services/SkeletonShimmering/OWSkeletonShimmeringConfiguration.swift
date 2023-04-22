@@ -23,9 +23,9 @@ struct OWSkeletonShimmeringConfiguration {
 extension OWSkeletonShimmeringConfiguration {
     static let `default`: OWSkeletonShimmeringConfiguration = {
         let config = OWSkeletonShimmeringConfiguration(shimmeringDirection: .rightToLeft,
-                                          duration: 1000,
-                                          backgroundColor: .skeletonColor,
-                                          highlightColor: .skeletonShimmeringColor)
+                                                       duration: 1000,
+                                                       backgroundColor: .skeletonColor,
+                                                       highlightColor: .skeletonShimmeringColor)
         return config
     }()
 

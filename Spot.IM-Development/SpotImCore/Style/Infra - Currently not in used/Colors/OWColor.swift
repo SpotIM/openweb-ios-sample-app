@@ -19,6 +19,7 @@ struct OWColor {
         case foreground2Color
         case separatorColor1
         case separatorColor2
+        case separatorColor3
         case textColor1
         case textColor2
         case textColor3
@@ -51,6 +52,9 @@ struct OWColor {
             case .separatorColor2:
                 return OWColor(lightThemeColor: OWDesignColors.L2,
                                darkThemeColor: OWDesignColors.D2)
+            case .separatorColor3:
+                return OWColor(lightThemeColor: OWDesignColors.L1,
+                               darkThemeColor: OWDesignColors.D1)
             case .textColor1:
                 return OWColor(lightThemeColor: OWDesignColors.L6,
                                darkThemeColor: OWDesignColors.G1)
