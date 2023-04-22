@@ -105,34 +105,34 @@ fileprivate extension TestingPlaygroundViewModel {
             .unwrap()
 
         // Testing playground - Flows
-//        Observable.merge(playgroundPushModeObservable, playgroundPresentModeObservable)
-//            .subscribe(onNext: { [weak self] mode in
-//                guard let self = self else { return }
-//                let postId = self.dataModel.postId
-//
-//                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
-//
-//                let manager = OpenWeb.manager
-//                let flows = manager.ui.flows
-//
-//                flows.testingPlayground(postId: postId,
-//                                    presentationalMode: presentationalMode,
-//                                    additionalSettings: nil,
-//                                    callbacks: nil,
-//                                    completion: { [weak self] result in
-//                    guard let self = self else { return }
-//                    switch result {
-//                    case .success(_):
-//                        // All good
-//                        break
-//                    case .failure(let error):
-//                        let message = error.description
-//                        DLog("Calling flows.testingPlayground error: \(message)")
-//                        self._showError.onNext(message)
-//                    }
-//                })
-//            })
-//            .disposed(by: disposeBag)
+        Observable.merge(playgroundPushModeObservable, playgroundPresentModeObservable)
+            .subscribe(onNext: { [weak self] mode in
+                guard let self = self else { return }
+                let postId = self.dataModel.postId
+
+                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                flows.testingPlayground(postId: postId,
+                                        presentationalMode: presentationalMode,
+                                        additionalSettings: nil,
+                                        callbacks: nil,
+                                        completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.testingPlayground error: \(message)")
+                        self._showError.onNext(message)
+                    }
+                })
+            })
+            .disposed(by: disposeBag)
     }
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {

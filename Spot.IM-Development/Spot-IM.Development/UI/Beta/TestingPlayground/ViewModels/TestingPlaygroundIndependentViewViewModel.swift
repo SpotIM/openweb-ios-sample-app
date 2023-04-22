@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import SpotImCore
 
 #if BETA
 
@@ -68,31 +69,30 @@ fileprivate extension TestingPlaygroundIndependentViewModel {
     func setupObservers() {
 
         // Testing playground - Views
-//        Observable.just()
-//            .subscribe(onNext: { [weak self] _ in
-//                guard let self = self else { return }
-//                let postId = self.dataModel.postId
-//
-//                let manager = OpenWeb.manager
-//                let views = manager.ui.views
-//
-//                views.testingPlayground(postId: postId,
-//                                    additionalSettings: nil,
-//                                    callbacks: nil,
-//                                    completion: { [weak self] result in
-//                    guard let self = self else { return }
-//                    switch result {
-//                    case .success(let view):
-//                        self._testingPlaygroundView.onNext(view)
-//                        break
-//                    case .failure(let error):
-//                        let message = error.description
-//                        DLog("Calling flows.testingPlayground error: \(message)")
-//                        self.logger.inputs.log(text: message)
-//                    }
-//                })
-//            })
-//            .disposed(by: disposeBag)
+        Observable.just(())
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let postId = self.dataModel.postId
+
+                let manager = OpenWeb.manager
+                let views = manager.ui.views
+
+                views.testingPlayground(postId: postId,
+                                    additionalSettings: nil,
+                                    callbacks: nil,
+                                    completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let view):
+                        self._testingPlaygroundView.onNext(view)
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.testingPlayground error: \(message)")
+                        self.loggerViewModel.inputs.log(text: message)
+                    }
+                })
+            })
+            .disposed(by: disposeBag)
     }
 }
 

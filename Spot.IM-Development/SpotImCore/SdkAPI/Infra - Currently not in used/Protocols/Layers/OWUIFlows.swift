@@ -41,9 +41,10 @@ public protocol OWUIFlows {
 
 #if BETA
     func testingPlayground(postId: OWPostId,
+                           presentationalMode: OWPresentationalMode,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol?,
                            callbacks: OWViewActionsCallbacks?,
-                           completion: @escaping OWViewCompletion)
+                           completion: @escaping OWDefaultCompletion)
 #endif
 }
 #else

@@ -24,10 +24,9 @@ public protocol OWUIViews {
 
 #if BETA
     func testingPlayground(postId: OWPostId,
-                           presentationalMode: OWPresentationalMode,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol?,
                            callbacks: OWViewActionsCallbacks?,
-                           completion: @escaping OWDefaultCompletion)
+                           completion: @escaping OWViewCompletion)
 #endif
 }
 #else
