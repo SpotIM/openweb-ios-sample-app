@@ -12,7 +12,7 @@ import RxCocoa
 
 #if NEW_API
 
-public class OWReportReasonVC: UIViewController {
+class OWReportReasonVC: UIViewController {
     fileprivate struct Metrics {
 
     }
@@ -29,18 +29,19 @@ public class OWReportReasonVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public init(viewModel: OWReportReasonViewModeling = OWReportReasonViewModel()) {
+    init(viewModel: OWReportReasonViewModeling = OWReportReasonViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
-    public override func loadView() {
+    override func loadView() {
         super.loadView()
         setupViews()
     }
 
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.inputs.viewDidLoad.onNext()
     }
 }
 

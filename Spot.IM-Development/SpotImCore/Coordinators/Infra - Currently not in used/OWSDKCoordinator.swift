@@ -12,6 +12,18 @@ import RxSwift
 class OWSDKCoordinator: OWBaseCoordinator<Void> {
     fileprivate var router: OWRoutering!
 
+    func startReportReasonFlow(presentationalMode: OWPresentationalMode,
+                               callbacks: OWViewActionsCallbacks?) -> Observable<OWReportReasonCoordinatorResult> {
+        invalidateExistingFlows()
+
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+
+        let reportReasonCoordinator = OWReportReasonCoordinator(router: router,
+                                                                actionsCallbacks: callbacks)
+
+        return coordinate(to: reportReasonCoordinator)
+    }
+
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
                                   callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {

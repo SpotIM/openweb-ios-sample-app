@@ -180,6 +180,41 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         })
         .disposed(by: flowDisposeBag)
     }
+
+    func reportReason(postId: OWPostId,
+                      commentId: OWCommentId,
+                      presentationalMode: OWPresentationalMode,
+                      additionalSettings: OWReportReasonSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWDefaultCompletion) {
+        prepareForNewFlow()
+
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        _ = sdkCoordinator.startReportReasonFlow(presentationalMode: presentationalMode,
+                                                 callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
+                completion(.success(()))
+            default:
+                break
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.reportReasonFlow
+            completion(.failure(error))
+        })
+        .disposed(by: flowDisposeBag)
+    }
 }
 
 fileprivate extension OWUILayer {

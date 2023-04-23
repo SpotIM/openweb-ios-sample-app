@@ -17,8 +17,24 @@ class OWReportReasonView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_view_id"
         static let cellIdentifier = "reportReasonCell"
+        static let titleViewIdentifier = "title_view_id"
+        static let titleLabelIdentifier = "title_label_id"
         static let cellHeight: CGFloat = 68
+        static let titleFontSize: CGFloat = 15
+        static let titleViewHeight: CGFloat = 70
+        static let titleLeadingPadding: CGFloat = 16
     }
+
+    fileprivate lazy var titleView: UIView = {
+        let titleView = UIView()
+        return titleView
+    }()
+
+    fileprivate lazy var titleLabel: UILabel = {
+        return viewModel.outputs.title
+                .label
+                .font(UIFont.preferred(style: .bold, of: Metrics.titleFontSize))
+    }()
 
     fileprivate lazy var tableViewReasons: UITableView = {
         var tableViewReasons = UITableView()
@@ -46,12 +62,28 @@ class OWReportReasonView: UIView {
 fileprivate extension OWReportReasonView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        titleView.accessibilityIdentifier = Metrics.titleViewIdentifier
+        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
     }
 
     func setupViews() {
+        self.addSubview(titleView)
+        titleView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.titleViewHeight)
+        }
+
+        titleView.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(Metrics.titleLeadingPadding)
+            make.centerY.equalToSuperview()
+        }
+
         self.addSubview(tableViewReasons)
         tableViewReasons.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(titleView.OWSnp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 

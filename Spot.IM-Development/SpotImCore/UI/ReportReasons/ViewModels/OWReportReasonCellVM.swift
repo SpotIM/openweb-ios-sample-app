@@ -11,17 +11,17 @@ import Foundation
 
 #if NEW_API
 
-public protocol OWReportReasonCellViewModelingInputs {
+protocol OWReportReasonCellViewModelingInputs {
     var setSelected: BehaviorSubject<Bool> { get }
 }
 
-public protocol OWReportReasonCellViewModelingOutputs {
+protocol OWReportReasonCellViewModelingOutputs {
     var title: String { get }
     var subtitle: String { get }
     var isSelected: Observable<Bool> { get }
 }
 
-public protocol OWReportReasonCellViewModeling {
+protocol OWReportReasonCellViewModeling {
     var inputs: OWReportReasonCellViewModelingInputs { get }
     var outputs: OWReportReasonCellViewModelingOutputs { get }
 }
