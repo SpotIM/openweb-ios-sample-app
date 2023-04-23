@@ -14,6 +14,7 @@ public enum OWError: Error {
     case conversationFlow
     case preConversationFlow
     case commentCreationFlow
+    case reportReasonFlow
     public var description: String {
         switch self {
         case .castingError(let des):
@@ -24,6 +25,8 @@ public enum OWError: Error {
             return "Error in the process of starting pre conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
+        case .reportReasonFlow:
+            return "Error in the process of starting report reason flow"
         }
     }
 }

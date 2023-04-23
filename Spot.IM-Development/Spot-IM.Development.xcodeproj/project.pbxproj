@@ -636,6 +636,8 @@
 		9E36BFE929ED33CC00478D06 /* OWReportReasonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFE829ED33CC00478D06 /* OWReportReasonVC.swift */; };
 		9E36BFEB29ED353A00478D06 /* OWReportReasonVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */; };
 		9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */; };
+		9E36BFEF29F160E600478D06 /* OWReportReasonCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */; };
+		9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */; };
 		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
@@ -1380,6 +1382,8 @@
 		9E36BFE829ED33CC00478D06 /* OWReportReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonVC.swift; sourceTree = "<group>"; };
 		9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonVM.swift; sourceTree = "<group>"; };
 		9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRoundCheckBox.swift; sourceTree = "<group>"; };
+		9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCoordinator.swift; sourceTree = "<group>"; };
+		9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonSettingsProtocol.swift; sourceTree = "<group>"; };
 		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
@@ -2446,6 +2450,7 @@
 				3D611BB428C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift */,
 				161270DA29ACD9EF001F9715 /* OWCommentThreadSettingsProtocol.swift */,
 				3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */,
+				9E36BFF029F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift */,
 			);
 			path = MiscellaneousSettings;
 			sourceTree = "<group>";
@@ -2856,6 +2861,7 @@
 				1640F2BF28ACDA0100FB863B /* OWCommentCreationCoordinator.swift */,
 				161270D529ACCB38001F9715 /* OWCommentThreadCoordinator.swift */,
 				24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */,
+				9E36BFEE29F160E600478D06 /* OWReportReasonCoordinator.swift */,
 			);
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
@@ -4300,6 +4306,7 @@
 				4454181023685144001D0ED0 /* SPPreConversationViewController.swift in Sources */,
 				16BD5F84270C3FB000066505 /* OWImagePicker.swift in Sources */,
 				24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */,
+				9E36BFF129F16A2A00478D06 /* OWReportReasonSettingsProtocol.swift in Sources */,
 				9ED2E58129EBFF3B00B39A00 /* OWReportReasonType.swift in Sources */,
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
 				44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */,
@@ -4749,6 +4756,7 @@
 				445418AE23685154001D0ED0 /* JSONDecoder+SPExtensions.swift in Sources */,
 				6D22A46623BBA26700DCE08A /* DataRequest+Logging.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
+				9E36BFEF29F160E600478D06 /* OWReportReasonCoordinator.swift in Sources */,
 				3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */,
 				9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */,
 				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,

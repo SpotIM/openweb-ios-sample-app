@@ -38,6 +38,13 @@ public protocol OWUIFlows {
                        additionalSettings: OWCommentThreadSettingsProtocol?,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
+
+    func reportReason(postId: OWPostId,
+                      commentId: OWCommentId,
+                      presentationalMode: OWPresentationalMode,
+                      additionalSettings: OWReportReasonSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWDefaultCompletion)
 }
 #else
 protocol OWUIFlows {

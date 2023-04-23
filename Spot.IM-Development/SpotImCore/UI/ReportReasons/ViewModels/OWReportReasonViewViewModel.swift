@@ -11,20 +11,31 @@ import RxSwift
 
 #if NEW_API
 
-public protocol OWReportReasonViewViewModelingInputs {
+protocol OWReportReasonViewViewModelingInputs {
 }
 
-public protocol OWReportReasonViewViewModelingOutputs {
+protocol OWReportReasonViewViewModelingOutputs {
+    var title: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
 }
 
-public protocol OWReportReasonViewViewModeling {
+protocol OWReportReasonViewViewModeling {
     var inputs: OWReportReasonViewViewModelingInputs { get }
     var outputs: OWReportReasonViewViewModelingOutputs { get }
 }
 
 class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWReportReasonViewViewModelingOutputs, OWReportReasonViewViewModeling {
     fileprivate struct Metrics {
+        static let titleKey = "ReportReasonTitle"
+        static let textViewPlaceholderKey = "ReportReasonTextViewPlaceholder"
+    }
+
+    var title: String {
+        return LocalizationManager.localizedString(key: Metrics.titleKey)
+    }
+
+    var textViewPlaceholder: String {
+        return LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey)
     }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
