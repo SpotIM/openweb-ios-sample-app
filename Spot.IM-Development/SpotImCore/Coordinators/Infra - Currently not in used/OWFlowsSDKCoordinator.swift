@@ -88,12 +88,29 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                 presentationalMode: OWPresentationalMode,
                                 callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
-      let deepLink = OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
-      return startConversationFlow(conversationData: conversationData,
-                                   presentationalMode: presentationalMode,
-                                   callbacks: callbacks,
-                                   deepLinkOptions: deepLink)
-  }
+        let deepLink = OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+        return startConversationFlow(conversationData: conversationData,
+                                     presentationalMode: presentationalMode,
+                                     callbacks: callbacks,
+                                     deepLinkOptions: deepLink)
+    }
+
+#if BETA
+    func startTestingPlaygroundFlow(testingPlaygroundData: OWTestingPlaygroundRequiredData,
+                                    presentationalMode: OWPresentationalMode,
+                                    callbacks: OWViewActionsCallbacks?,
+                                    deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
+        invalidateExistingFlows()
+
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+
+        let testingPlaygroundCoordinator = OWTestingPlaygroundCoordinator(router: router,
+                                                                          testingPlaygroundData: testingPlaygroundData,
+                                                                          actionsCallbacks: callbacks)
+
+        return coordinate(to: testingPlaygroundCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+#endif
 }
 
 fileprivate extension OWFlowsSDKCoordinator {
