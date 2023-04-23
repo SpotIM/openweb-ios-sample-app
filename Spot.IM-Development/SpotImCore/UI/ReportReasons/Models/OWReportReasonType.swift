@@ -41,10 +41,10 @@ enum OWNetworkReportReasonType: String, Codable {
     }
 
     var toReportReasonType: OWReportReasonType {
-        if let reportType = OWReportReasonType(rawValue: self.rawValue) {
-            return reportType
+        guard let reportType = OWReportReasonType(rawValue: self.rawValue) else {
+            fatalError("All new reasons need to be added both in OWNetworkReportReasonType and OWReportReasonType")
         }
-        fatalError("All new reasons need to be added both in OWNetworkReportReasonType and OWReportReasonType")
+        return reportType
     }
 }
 

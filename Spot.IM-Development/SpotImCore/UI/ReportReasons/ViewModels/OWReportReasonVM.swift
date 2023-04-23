@@ -11,27 +11,34 @@ import RxSwift
 
 #if NEW_API
 
-public protocol OWReportReasonViewModelingInputs {
+protocol OWReportReasonViewModelingInputs {
+    var viewDidLoad: PublishSubject<Void> { get }
 }
 
-public protocol OWReportReasonViewModelingOutputs {
+protocol OWReportReasonViewModelingOutputs {
     var reportReasonViewViewModel: OWReportReasonViewViewModeling { get }
+    var loadedToScreen: Observable<Void> { get }
 }
 
-public protocol OWReportReasonViewModeling {
+protocol OWReportReasonViewModeling {
     var inputs: OWReportReasonViewModelingInputs { get }
     var outputs: OWReportReasonViewModelingOutputs { get }
 }
 
-public class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewModelingInputs, OWReportReasonViewModelingOutputs {
-    public var inputs: OWReportReasonViewModelingInputs { return self }
-    public var outputs: OWReportReasonViewModelingOutputs { return self }
+class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewModelingInputs, OWReportReasonViewModelingOutputs {
+    var inputs: OWReportReasonViewModelingInputs { return self }
+    var outputs: OWReportReasonViewModelingOutputs { return self }
 
-    lazy public var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
+    var viewDidLoad = PublishSubject<Void>()
+    var loadedToScreen: Observable<Void> {
+        return viewDidLoad.asObservable()
+    }
+
+    lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
         return OWReportReasonViewViewModel()
     }()
 
-    public init () {
+    init () {
         setupObservers()
     }
 }

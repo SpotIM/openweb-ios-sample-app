@@ -367,9 +367,24 @@ fileprivate extension BetaNewAPIVC {
         viewModel.outputs.openReportReason
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                let reportReasonVM = OWReportReasonViewModel()
-                let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
-                self.navigationController?.pushViewController(reportReasonVC, animated: true)
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                flows.reportReason(postId: "",
+                                   commentId: "",
+                                   presentationalMode: .push(navigationController: self.navigationController!),
+                                   additionalSettings: nil,
+                                   callbacks: nil,
+                                   completion: { result in
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.commentCreation error: \(message)")
+                    }
+                })
             })
             .disposed(by: disposeBag)
 
