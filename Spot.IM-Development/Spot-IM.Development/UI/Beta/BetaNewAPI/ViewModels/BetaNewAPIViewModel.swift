@@ -19,6 +19,7 @@ protocol BetaNewAPIViewModelingInputs {
     var uiFlowsTapped: PublishSubject<Void> { get }
     var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
+    var testingPlaygroundTapped: PublishSubject<Void> { get }
     var selectPresetTapped: PublishSubject<Void> { get }
     var doneSelectPresetTapped: PublishSubject<Void> { get }
     var settingsTapped: PublishSubject<Void> { get }
@@ -36,6 +37,7 @@ protocol BetaNewAPIViewModelingOutputs {
     var openUIFlows: Observable<SDKConversationDataModel> { get }
     var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<SDKConversationDataModel> { get }
+    var openTestingPlayground: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
     var openAuthentication: Observable<Void> { get }
     var openReportReason: Observable<Void> { get }
@@ -63,6 +65,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let uiViewsTapped = PublishSubject<Void>()
     let reportReasonTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
+    let testingPlaygroundTapped = PublishSubject<Void>()
     let selectPresetTapped = PublishSubject<Void>()
     let settingsTapped = PublishSubject<Void>()
     let authenticationTapped = PublishSubject<Void>()
@@ -104,6 +107,11 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
         return _openMiscellaneous.asObservable()
     }
 
+    fileprivate let _openTestingPlayground = PublishSubject<SDKConversationDataModel>()
+    var openTestingPlayground: Observable<SDKConversationDataModel> {
+        return _openTestingPlayground.asObservable()
+    }
+
     fileprivate let _openSettings = PublishSubject<Void>()
     var openSettings: Observable<Void> {
         return _openSettings.asObservable()
@@ -134,7 +142,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 
     init() {
         setupObservers()
-        setSDKSpotId(Metrics.preFilledSpotId)
+        setSDKConfigurations(Metrics.preFilledSpotId)
     }
 }
 
@@ -170,6 +178,11 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _openMiscellaneous)
             .disposed(by: disposeBag)
 
+        testingPlaygroundTapped
+            .withLatestFrom(conversationDataModelObservable)
+            .bind(to: _openTestingPlayground)
+            .disposed(by: disposeBag)
+
         selectPresetTapped
             .map { true }
             .bind(to: _shouldShowSelectPreset)
@@ -190,6 +203,7 @@ fileprivate extension BetaNewAPIViewModel {
         Observable.merge(uiFlowsTapped.voidify(),
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),
+                         testingPlaygroundTapped.voidify(),
                          settingsTapped.voidify(),
                          authenticationTapped.voidify(),
                          enteredSpotId.voidify().skip(1),
@@ -198,6 +212,17 @@ fileprivate extension BetaNewAPIViewModel {
             .subscribe(onNext: { [weak self] _ in
 
                 self?._shouldShowSelectPreset.onNext(false)
+            })
+            .disposed(by: disposeBag)
+
+        Observable.merge(uiFlowsTapped.voidify(),
+                         uiViewsTapped.voidify(),
+                         miscellaneousTapped.voidify(),
+                         testingPlaygroundTapped.voidify())
+            .withLatestFrom(spotId)
+            .subscribe(onNext: { [weak self] spotId in
+
+                self?.setSDKConfigurations(spotId)
             })
             .disposed(by: disposeBag)
 
@@ -219,25 +244,26 @@ fileprivate extension BetaNewAPIViewModel {
             .do(onNext: { [weak self] dataModel in
                 self?._spotId.onNext(dataModel.spotId)
                 self?._postId.onNext(dataModel.postId)
-                self?.setSDKSpotId(dataModel.spotId)
+                self?.setSDKConfigurations(dataModel.spotId)
             })
             .subscribe()
             .disposed(by: disposeBag)
 
     }
 
-    func setSDKSpotId(_ spotId: String) {
+    func setSDKConfigurations(_ spotId: String) {
         var manager = OpenWeb.manager
         manager.spotId = spotId
         var customizations = manager.ui.customizations
         // swiftlint:disable line_length
-        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
+        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.defaultIndex))
         // swiftlint:enable line_length
         var sorting = customizations.sorting
-        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: 0))
-        customizations.fontFamily = .fontGroupFamily(fromData: UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: Data()))
+        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.defaultIndex))
+        customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
         var helpers = OpenWeb.manager.helpers
-        helpers.languageStrategy = .languageStrategy(fromData: UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: Data()))
+        helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
+        helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
     }
 }
 

@@ -10,7 +10,7 @@ import Foundation
 
 extension OWPostId {
     // Encoded
-    var encoded: String {
+    var encoded: OWPostId {
         return self.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
             .replacingOccurrences(of: ",", with: ";")
             .replacingOccurrences(of: "_", with: "$")
@@ -21,7 +21,7 @@ extension OWPostId {
 
     // Decoded
     // We cannot decode back an original space, that's a limitation we cannot solve at this point of the product
-    var decoded: String {
+    var decoded: OWPostId {
         return self.replacingOccurrences(of: "urn$3Auri$3Abase64$3A", with: "urn:uri:base64:")
             .replacingOccurrences(of: ";", with: ",")
             .replacingOccurrences(of: "$2F", with: "/")

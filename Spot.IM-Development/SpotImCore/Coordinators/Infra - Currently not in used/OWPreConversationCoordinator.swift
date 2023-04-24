@@ -18,15 +18,39 @@ enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
+    fileprivate var _dissmissConversation = PublishSubject<Void>()
+    var dissmissConversation: Observable<Void> {
+        return _dissmissConversation.asObservable()
+    }
 
-    fileprivate let router: OWRoutering
+    // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
+    // Trying to use that in `Standalone Views` mode will cause a crash immediately.
+    fileprivate var router: OWRoutering!
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
+    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
+    }()
+    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+        return OWCustomizationsService(viewSourceType: .preConversation)
+    }()
 
-    init(router: OWRoutering, preConversationData: OWPreConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
+    fileprivate var isStandaloneMode: Bool
+
+    init(router: OWRoutering! = nil,
+         preConversationData: OWPreConversationRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
         self.router = router
+
+        // TODO: An easy soultion just to prevent crashes in standalone mode until Revital will merge the `ViewableMode` enum in the branch she's working on
+        isStandaloneMode = router == nil
+
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
+        self.authenticationManager = authenticationManager
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWPreConversationCoordinatorResult> {
@@ -37,10 +61,15 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData)
+        let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData,
+                                                                                                      viewableMode: .independent)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
-        setupObservers(forViewModel: preConversationViewVM)
+        // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
+//        if !isStandaloneMode {
+            setupObservers(forViewModel: preConversationViewVM)
+//        }
+
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
         let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
@@ -60,7 +89,22 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
+                    .map { _ in type }
+            }
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 2. Waiting for authentication required for commenting
+                // Can be immediately if anyone can comment in the active spotId, or the user already connected
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.waitForAuthentication(for: .commenting)
+                    .map { _ in type }
+            }
+            .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWDeepLinkOptions? in
+                // 3. Perform deeplink to comment creation screen
                 guard let self = self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, commentCreationType: type)
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
@@ -68,15 +112,29 @@ fileprivate extension OWPreConversationCoordinator {
 
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable, openCommentConversationObservable)
+            .filter { [weak self] _ in // TODO: change to viewable mode
+                guard let self = self else { return true }
+                return !self.isStandaloneMode
+            }
             .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
-                                                                  settings: nil)
+                                                                  settings: nil,
+                                                                  presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                            conversationData: conversationData,
                                                                            actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
             }
+            .do(onNext: { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                switch coordinatorResult {
+                case .popped:
+                    self._dissmissConversation.onNext()
+                default:
+                    break
+                }
+            })
             .subscribe()
             .disposed(by: disposeBag)
 
@@ -84,11 +142,17 @@ fileprivate extension OWPreConversationCoordinator {
             .outputs.urlClickedOutput
 
         // Coordinate to safari tab
-        Observable.merge(
+        let coordinateToSafariObservables = Observable.merge(
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
             viewModel.outputs.urlClickedOutput,
             viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput
         )
+
+        coordinateToSafariObservables
+            .filter { [weak self] _ in // TODO: change to viewable mode
+                guard let self = self else { return true }
+                return !self.isStandaloneMode
+            }
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                     let safariCoordinator = OWSafariTabCoordinator(router: self.router,
@@ -98,9 +162,33 @@ fileprivate extension OWPreConversationCoordinator {
             }
             .subscribe()
             .disposed(by: disposeBag)
+
+        let customizationElementsObservables = Observable.merge(
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.headerTitle(label: $0) },
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.headerCounter(label: $0) }
+        )
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let contentPressed = viewModel.outputs.openFullConversation
+            .map { OWViewActionCallbackType.contentPressed }
+
+        Observable.merge(contentPressed)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 }

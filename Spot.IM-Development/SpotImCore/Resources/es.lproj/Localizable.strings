@@ -75,6 +75,7 @@
 "Terms" = "Términos";
 "Privacy" = "Privacidad";
 "Powered by OpenWeb" = "Powered by OpenWeb";
+"Powered by" = "Desarrollado por";
 "Type your reply…" = "Escriba su respuesta";
 "Replying to " = "Responder a ";
 "Comments" = "Comentarios";
@@ -104,3 +105,8 @@
 "Mute" = "Silenciar";
 "Mute User" = "Silenciar usuario";
 "MuteUserMessage" = "Tras silenciar a este usuario no podrás ver su actividad. Para gestionar a los usuarios que hayas silenciado, dirígete a a los ajustes de privacidad de tu perfil.";
+"Image" = "Imagen";
+"This conversation has ended and comments are no longer being accepted." = "Esta conversación ha terminado y ya no se admiten comentarios.";
+"Start the conversation and share your thoughts and ideas with the community." = "Empieza la conversación y comparte tu opinión y tus ideas con la comunidad.";
+"Community Guidelines" = "Normas de la comunidad";
+"Read our" = "Lee nuestra";

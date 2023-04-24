@@ -26,8 +26,8 @@ class OWReportReasonView: UIView {
     }
 
     fileprivate lazy var titleView: UIView = {
-        let titleView = UIView()
-        return titleView
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -37,10 +37,10 @@ class OWReportReasonView: UIView {
     }()
 
     fileprivate lazy var tableViewReasons: UITableView = {
-        var tableViewReasons = UITableView()
-        tableViewReasons.separatorStyle = .none
-        tableViewReasons.delegate = self
-        return tableViewReasons
+        return UITableView()
+                .delegate(self)
+                .separatorStyle(.none)
+                .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate let viewModel: OWReportReasonViewViewModeling
@@ -69,8 +69,7 @@ fileprivate extension OWReportReasonView {
     func setupViews() {
         self.addSubview(titleView)
         titleView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(Metrics.titleViewHeight)
         }
 
@@ -89,6 +88,15 @@ fileprivate extension OWReportReasonView {
 
     func setupObservers() {
         bindTableView()
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.titleView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableViewReasons.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 
     func bindTableView() {

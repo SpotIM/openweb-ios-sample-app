@@ -97,10 +97,11 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case initialSortIndex = "initialSortIndex"
         case fontGroupType = "fontGroupType"
         case articleAssociatedURL = "articleAssociatedURL"
-        case preConversationCustomStyle = "preConversationCustomStyle"
-        case conversationCustomStyleIndex = "conversationCustomStyleModeSelectedIndex"
+        case preConversationStyle = "preConversationCustomStyle"
+        case conversationStyle = "conversationCustomStyleModeSelected"
         case commentCreationCustomStyleIndex = "commentCreationCustomStyleModeSelectedIndex"
         case languageStrategy = "languageStrategy"
+        case localeStrategy = "localeStrategy"
     }
 }
 
@@ -150,16 +151,18 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores initial sort (server, best, newest, oldest)"
         case .articleAssociatedURL:
             return "Key which stores injected article url for easy testing"
-        case .preConversationCustomStyle:
-            return "Key which stores pre conversation's custom style"
-        case .conversationCustomStyleIndex:
-            return "Key which stores conversation's custom style index"
+        case .preConversationStyle:
+            return "Key which stores pre conversation's style"
+        case .conversationStyle:
+            return "Key which stores conversation's style"
         case .commentCreationCustomStyleIndex:
             return "Key which stores comment creation's custom style index"
         case .fontGroupType:
             return "Key which stores general setting's font type"
         case .languageStrategy:
                     return "Key which stores general setting's language strategy"
+        case .localeStrategy:
+                    return "Key which stores general setting's locale strategy"
         }
     }
 }

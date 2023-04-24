@@ -30,7 +30,8 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
-        return OWCommentThreadViewViewModel(servicesProvider: self.servicesProvider)
+        return OWCommentThreadViewViewModel(servicesProvider: self.servicesProvider,
+                                            viewableMode: .partOfFlow)
     }()
 
     var viewDidLoad = PublishSubject<Void>()

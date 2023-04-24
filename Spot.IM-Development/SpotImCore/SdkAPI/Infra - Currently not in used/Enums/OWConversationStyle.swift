@@ -9,14 +9,14 @@
 import Foundation
 
 #if NEW_API
-public enum OWConversationStyle {
+public enum OWConversationStyle: Codable {
     case regular
     case compact
     case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionsStyle, spacing: OWConversationSpacing)
 }
 
 #else
-enum OWConversationStyle {
+enum OWConversationStyle: Codable {
     case regular
     case compact
     case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionsStyle, spacing: OWConversationSpacing)

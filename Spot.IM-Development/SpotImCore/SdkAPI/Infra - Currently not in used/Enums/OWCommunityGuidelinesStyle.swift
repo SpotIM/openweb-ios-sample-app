@@ -9,14 +9,14 @@
 import Foundation
 
 #if NEW_API
-public enum OWCommunityGuidelinesStyle {
+public enum OWCommunityGuidelinesStyle: Codable {
     case none
     case regular
     case compact
 }
 
 #else
-enum OWCommunityGuidelinesStyle {
+enum OWCommunityGuidelinesStyle: Codable {
     case none
     case regular
     case compact

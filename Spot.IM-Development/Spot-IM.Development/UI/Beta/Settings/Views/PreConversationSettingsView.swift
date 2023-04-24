@@ -15,8 +15,8 @@ class PreConversationSettingsView: UIView {
 
     fileprivate struct Metrics {
         static let identifier = "pre_conversation_settings_view_id"
-        static let segmentedCustomStyleModeIdentifier = "custom_style_mode"
-        static let pickerCustomStyleLinesIdentifier = "custom_style_lines"
+        static let segmentedStyleModeIdentifier = "custom_style_mode"
+        static let pickerCustomStyleNumberOfCommentsIdentifier = "custom_style_number_of_comments"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -35,20 +35,20 @@ class PreConversationSettingsView: UIView {
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedCustomStyleMode: SegmentedControlSetting = {
-        let title = viewModel.outputs.customStyleModeTitle
-        let items = viewModel.outputs.customStyleModeSettings
+    fileprivate lazy var segmentedStyleMode: SegmentedControlSetting = {
+        let title = viewModel.outputs.styleModeTitle
+        let items = viewModel.outputs.styleModeSettings
 
         return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedCustomStyleModeIdentifier,
+                                       accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
                                        items: items)
     }()
 
-    fileprivate lazy var pickerCustomStyleLines: PickerSetting = {
-        let title = viewModel.outputs.customStyleLinesTitle
+    fileprivate lazy var pickerCustomStyleNumberOfComments: PickerSetting = {
+        let title = viewModel.outputs.customStyleNumberOfCommentsTitle
         let picker = PickerSetting(title: title,
-                                   accessibilityPrefixId: Metrics.pickerCustomStyleLinesIdentifier,
-                                   items: viewModel.outputs.customStyleLinesSettings)
+                                   accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
+                                   items: viewModel.outputs.customStyleNumberOfCommentsSettings)
         return picker
     }()
 
@@ -85,42 +85,42 @@ fileprivate extension PreConversationSettingsView {
         }
 
         stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(segmentedCustomStyleMode)
-        stackView.addArrangedSubview(pickerCustomStyleLines)
+        stackView.addArrangedSubview(segmentedStyleMode)
+        stackView.addArrangedSubview(pickerCustomStyleNumberOfComments)
     }
 
     func setupObservers() {
-        viewModel.outputs.customStyleModeIndex
-            .bind(to: segmentedCustomStyleMode.rx.selectedSegmentIndex)
+        viewModel.outputs.styleModeIndex
+            .bind(to: segmentedStyleMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
-        segmentedCustomStyleMode.rx.selectedSegmentIndex
+        segmentedStyleMode.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.customStyleLines
+        viewModel.outputs.customStyleNumberOfComments
             .map { [weak self] in
-                guard let self = self, let index = self.viewModel.outputs.customStyleLinesSettings.firstIndex(of: String($0))
+                guard let self = self, let index = self.viewModel.outputs.customStyleNumberOfCommentsSettings.firstIndex(of: String($0))
                 else { return nil }
                 return (index, 0)
             }
             .unwrap()
-            .bind(to: pickerCustomStyleLines.rx.setSelectedPickerIndex)
+            .bind(to: pickerCustomStyleNumberOfComments.rx.setSelectedPickerIndex)
             .disposed(by: disposeBag)
 
-        pickerCustomStyleLines.rx.selectedPickerIndex
+        pickerCustomStyleNumberOfComments.rx.selectedPickerIndex
             .map { [weak self] in
                 guard let self = self else { return nil }
-                return Int(self.viewModel.outputs.customStyleLinesSettings[$0.row])
+                return Int(self.viewModel.outputs.customStyleNumberOfCommentsSettings[$0.row])
             }
             .unwrap()
             .distinctUntilChanged()
-            .bind(to: viewModel.inputs.customStyleModeSelectedLines)
+            .bind(to: viewModel.inputs.customStyleModeSelectedNumberOfComments)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showCustomStyleLines
+        viewModel.outputs.showCustomStyleNumberOfComments
             .map { !$0 }
-            .bind(to: pickerCustomStyleLines.rx.isHidden)
+            .bind(to: pickerCustomStyleNumberOfComments.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

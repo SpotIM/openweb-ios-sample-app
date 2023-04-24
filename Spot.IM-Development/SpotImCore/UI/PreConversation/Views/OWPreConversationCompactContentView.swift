@@ -46,8 +46,9 @@ class OWPreConversationCompactContentView: UIView {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .numberOfLines(Metrics.numberOfLines)
-            .textColor(OWColorPalette.shared.color(type: .compactText,
+            .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .enforceSemanticAttribute()
     }()
     fileprivate lazy var cameraIcon: UIImageView = {
         let imageView = UIImageView()
@@ -56,6 +57,7 @@ class OWPreConversationCompactContentView: UIView {
     }()
     fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
+        view.enforceSemanticAttribute()
 
         view.addSubview(avatarSkeleton)
         avatarSkeleton.OWSnp.makeConstraints { make in
@@ -118,6 +120,8 @@ class OWPreConversationCompactContentView: UIView {
 
 fileprivate extension OWPreConversationCompactContentView {
     func setupViews() {
+        self.enforceSemanticAttribute()
+
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -204,7 +208,7 @@ fileprivate extension OWPreConversationCompactContentView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.textLabel.textColor = OWColorPalette.shared.color(type: .compactText, themeStyle: currentStyle)
+                self.textLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.emptyConversationImageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
                 self.closedImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
                 self.cameraIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)

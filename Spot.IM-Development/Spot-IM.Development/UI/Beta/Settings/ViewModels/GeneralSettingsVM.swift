@@ -24,6 +24,7 @@ protocol GeneralSettingsViewModelingInputs {
     var articleAssociatedSelectedURL: PublishSubject<String> { get }
     var languageStrategySelectedIndex: BehaviorSubject<Int> { get }
     var languageSelectedName: BehaviorSubject<String> { get }
+    var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
 }
 
 protocol GeneralSettingsViewModelingOutputs {
@@ -59,6 +60,10 @@ protocol GeneralSettingsViewModelingOutputs {
     var languageStrategyIndex: Observable<Int> { get }
     var languageName: Observable<String> { get }
     var languageStrategySettings: [String] { get }
+
+    var localeStrategyIndex: Observable<Int> { get }
+    var localeStrategyTitle: String { get }
+    var localeStrategySettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -81,6 +86,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var articleAssociatedSelectedURL = PublishSubject<String>()
     var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
+    var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.defaultLocaleIndex)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
@@ -99,6 +105,14 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     .skip(2)
     .asObservable()
 
+    fileprivate lazy var localeStrategyObservable =
+    localeStrategySelectedIndex
+        .map { index in
+            return OWLocaleStrategy.localeStrategy(fromIndex: index)
+        }
+        .skip(1)
+        .asObservable()
+
     var shouldHideArticleHeader: Observable<Bool> {
         return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
     }
@@ -112,21 +126,20 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var themeModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: 0)
+        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.defaultIndex)
     }
 
     var modalStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: 0)
+        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.defaultIndex)
     }
 
     var initialSortIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: 0)
+        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.defaultIndex)
     }
 
     var fontGroupTypeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: Data())
-            .map {
-                let fontGroupFamily = OWFontGroupFamily.fontGroupFamily(fromData: $0)
+        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
+            .map { fontGroupFamily in
                 switch fontGroupFamily {
                 case .`default`:
                     return 0
@@ -140,9 +153,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var customFontGroupTypeName: Observable<String> {
-        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: Data())
-            .map {
-                let fontGroupFamily = OWFontGroupFamily.fontGroupFamily(fromData: $0)
+        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
+            .map { fontGroupFamily in
                 switch fontGroupFamily {
                 case .custom(fontFamily: let fontFamily):
                     return fontFamily
@@ -158,9 +170,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var showCustomFontName: Observable<Bool> {
-        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: Data())
-            .map {
-                let fontGroupFamily = OWFontGroupFamily.fontGroupFamily(fromData: $0)
+        return userDefaultsProvider.values(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
+            .map { fontGroupFamily in
                 switch fontGroupFamily {
                 case .custom(fontFamily: _):
                     return true
@@ -171,10 +182,24 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .asObservable()
     }
 
+    var localeStrategyIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
+            .map { localeStrategy in
+                switch localeStrategy {
+                case .useDevice:
+                    return 0
+                case .useServerConfig:
+                    return 1
+                default:
+                    return OWLocaleStrategy.defaultLocaleIndex
+                }
+            }
+            .asObservable()
+    }
+
     var languageStrategyIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: Data())
-            .map {
-                let languageStrategy = OWLanguageStrategy.languageStrategy(fromData: $0)
+        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
+            .map { languageStrategy in
                 switch languageStrategy {
                 case .useDevice:
                     return 0
@@ -190,9 +215,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var languageName: Observable<String> {
-        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: Data())
-            .map {
-                let languageStrategy = OWLanguageStrategy.languageStrategy(fromData: $0)
+        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
+            .map { languageStrategy in
                 switch languageStrategy {
                 case .use(language: let language):
                     return language.languageName
@@ -297,17 +321,27 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             return [_useDevice, _useServerConfig, _useLanguage]
         }()
 
-        lazy var languageStrategyTitle: String = {
-            return NSLocalizedString("LanguageStrategy", comment: "")
+    lazy var languageStrategyTitle: String = {
+        return NSLocalizedString("LanguageStrategy", comment: "")
+    }()
+
+    lazy var localeStrategyTitle: String = {
+        return NSLocalizedString("LocaleStrategy", comment: "")
+    }()
+
+    lazy var localeStrategySettings: [String] = {
+            let _useDevice = NSLocalizedString("Device", comment: "")
+            let _useServerConfig = NSLocalizedString("Server", comment: "")
+            return [_useDevice, _useServerConfig]
         }()
 
-        lazy var supportedLanguageTitle: String = {
-            return NSLocalizedString("SupportedLanguages", comment: "")
-        }()
+    lazy var supportedLanguageTitle: String = {
+        return NSLocalizedString("SupportedLanguages", comment: "")
+    }()
 
-        lazy var supportedLanguageItems: [String] = {
-            return OWSupportedLanguage.allCases.map { $0.languageName }
-        }()
+    lazy var supportedLanguageItems: [String] = {
+        return OWSupportedLanguage.allCases.map { $0.languageName }
+    }()
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          manager: OWManagerProtocol = OpenWeb.manager) {
@@ -356,9 +390,9 @@ extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         fontGroupTypeObservable
-            .map { $0.data }
+            .map { $0 }
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Data>.fontGroupType))
+            .setValues(key: UserDefaultsProvider.UDKey<OWFontGroupFamily>.fontGroupType))
             .disposed(by: disposeBag)
 
         articleAssociatedSelectedURL
@@ -384,9 +418,13 @@ extension GeneralSettingsVM {
             .disposed(by: disposeBag)
 
         languageStrategyObservable
-            .map { $0.data }
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Data>.languageStrategy))
+            .setValues(key: UserDefaultsProvider.UDKey<OWLanguageStrategy>.languageStrategy))
+            .disposed(by: disposeBag)
+
+        localeStrategyObservable
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWLocaleStrategy>.localeStrategy))
             .disposed(by: disposeBag)
     }
 }

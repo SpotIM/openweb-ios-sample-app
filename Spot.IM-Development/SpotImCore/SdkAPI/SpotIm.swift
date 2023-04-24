@@ -141,9 +141,6 @@ public class SpotIm {
      - Parameter completion: Initialize success callback
      */
     public static func initialize(spotId: String, completion: InitizlizeCompletionHandler? = nil) {
-        // Remove this migration within half a year from now
-        servicesProvider.keychainMigrationService().migrateToKeychainIfNeeded()
-
         if SpotIm.reinit {
             SpotIm.reinit = false
             SpotIm.spotId = nil

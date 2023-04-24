@@ -25,6 +25,7 @@ class GeneralSettingsView: UIView {
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
         static let textFieldArticleURLIdentifier = "article_url"
         static let segmentedLanguageStrategyIdentifier = "language_strategy"
+        static let segmentedLocaleStrategyIdentifier = "locale_strategy"
         static let pickerLanguageCodeIdentifier = "language_code"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
@@ -122,6 +123,15 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
+    fileprivate lazy var segmentedLocaleStrategy: SegmentedControlSetting = {
+        let title = viewModel.outputs.localeStrategyTitle
+        let items = viewModel.outputs.localeStrategySettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
+                                       items: items)
+    }()
+
     fileprivate lazy var pickerLanguageCode: PickerSetting = {
         let title = viewModel.outputs.supportedLanguageTitle
         let items = viewModel.outputs.supportedLanguageItems
@@ -174,6 +184,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(textFieldCustomFontName)
         stackView.addArrangedSubview(segmentedLanguageStrategy)
         stackView.addArrangedSubview(pickerLanguageCode)
+        stackView.addArrangedSubview(segmentedLocaleStrategy)
         stackView.addArrangedSubview(textFieldArticleURL)
     }
 
@@ -264,6 +275,14 @@ fileprivate extension GeneralSettingsView {
 
         segmentedLanguageStrategy.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.languageStrategySelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.localeStrategyIndex
+            .bind(to: segmentedLocaleStrategy.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        segmentedLocaleStrategy.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.localeStrategySelectedIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.languageName
