@@ -91,14 +91,14 @@ final class SPMainConversationModel {
 
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
-    let onlineViewingUsersPreConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
+    let onlineViewingUsersPreConversationVM: SPOnlineViewingUsersCounterViewModeling = SPOnlineViewingUsersCounterViewModel()
 
     // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
-    let conversationSummaryVM: OWConversationSummaryViewModeling
-    let preConvCommetEntryVM: OWCommentCreationEntryViewModeling
-    let convCommetEntryVM: OWCommentCreationEntryViewModeling
-    let articleHeaderVM: OWArticleHeaderViewModeling
+    let conversationSummaryVM: SPConversationSummaryViewModeling
+    let preConvCommetEntryVM: SPCommentCreationEntryViewModeling
+    let convCommetEntryVM: SPCommentCreationEntryViewModeling
+    let articleHeaderVM: SPArticleHeaderViewModeling
 
     private(set) var dataSource: SPMainConversationDataSource
     var sortOption: SPCommentSortMode = .best {
@@ -134,12 +134,12 @@ final class SPMainConversationModel {
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
         self.servicesProvider = servicesProvider
-        preConvCommetEntryVM = OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
-        convCommetEntryVM = OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+        preConvCommetEntryVM = SPCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+        convCommetEntryVM = SPCommentCreationEntryViewModel(imageURLProvider: imageProvider)
         dataSource = conversationDataSource
-        articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
-        let conversationSortVM = OWConversationSortViewModel(sortOption: self.sortOption)
-        conversationSummaryVM = OWConversationSummaryViewModel(conversationSortVM: conversationSortVM)
+        articleHeaderVM = SPArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
+        let conversationSortVM = SPConversationSortViewModel(sortOption: self.sortOption)
+        conversationSummaryVM = SPConversationSummaryViewModel(conversationSortVM: conversationSortVM)
         dataSource.messageCounterUpdated = { [weak self] count in
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
             self?.conversationSummaryVM.inputs.configure(commentsCount: count)

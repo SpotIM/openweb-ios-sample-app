@@ -60,7 +60,8 @@ extension OWUILayer {
         }
 
         let preConversationData = OWPreConversationRequiredData(article: article,
-                                                                settings: additionalSettings)
+                                                                settings: additionalSettings,
+                                                                presentationalStyle: presentationalMode.style)
 
         flowsSdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
                                                 presentationalMode: presentationalMode,
@@ -93,7 +94,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings)
+                                                          settings: additionalSettings,
+                                                          presentationalStyle: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
@@ -131,7 +133,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings)
+                                                          settings: additionalSettings?.conversationSettings,
+                                                          presentationalStyle: presentationalMode.style)
         let commentCreationData = OWCommentCreationRequiredData(article: article, commentCreationType: .comment)
 
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
@@ -173,7 +176,8 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings)
+                                                          settings: additionalSettings?.conversationSettings,
+                                                          presentationalStyle: presentationalMode.style)
         let commentThreadData = OWCommentThreadRequiredData(article: article, commentId: commentId)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
@@ -194,6 +198,45 @@ extension OWUILayer {
         })
         .disposed(by: flowDisposeBag)
     }
+
+#if BETA
+    func testingPlayground(postId: OWPostId,
+                           presentationalMode: OWPresentationalMode,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol? = nil,
+                           callbacks: OWViewActionsCallbacks? = nil,
+                           completion: @escaping OWDefaultCompletion) {
+        prepareForNewFlow()
+
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let testingPlaygroundData = OWTestingPlaygroundRequiredData(settings: additionalSettings)
+
+        _ = flowsSdkCoordinator.startTestingPlaygroundFlow(testingPlaygroundData: testingPlaygroundData,
+                                                           presentationalMode: presentationalMode,
+                                                           callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
+                completion(.success(()))
+            default:
+                break
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+        .disposed(by: flowDisposeBag)
+    }
+#endif
 }
 
 // UIViews
@@ -215,7 +258,8 @@ extension OWUILayer {
         }
 
         let preConversationData = OWPreConversationRequiredData(article: article,
-                                                                settings: additionalSettings)
+                                                                settings: additionalSettings,
+                                                                presentationalStyle: .none)
 
         _ = viewsSdkCoordinator.preConversationView(preConversationData: preConversationData,
                                                 callbacks: callbacks)
@@ -235,8 +279,62 @@ extension OWUILayer {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 
-        completion(.failure(OWError.missingImplementation))
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let conversationData = OWConversationRequiredData(article: article,
+                                                          settings: additionalSettings,
+                                                          presentationalStyle: .none)
+
+        _ = viewsSdkCoordinator.conversationView(conversationData: conversationData,
+                                                callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.preConversationView
+            completion(.failure(error))
+        })
     }
+
+#if BETA
+    func testingPlayground(postId: OWPostId,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           callbacks: OWViewActionsCallbacks?,
+                           completion: @escaping OWViewCompletion) {
+
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let testingPlaygroundData = OWTestingPlaygroundRequiredData(settings: additionalSettings)
+
+        _ = viewsSdkCoordinator.testingPlaygroundView(testingPlaygroundData: testingPlaygroundData,
+                                                callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+    }
+#endif
 }
 
 fileprivate extension OWUILayer {

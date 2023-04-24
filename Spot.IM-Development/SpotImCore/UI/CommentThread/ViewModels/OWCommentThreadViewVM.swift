@@ -93,7 +93,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
         self._commentThreadData.onNext(commentThreadData)
         self.setupObservers()
@@ -108,7 +108,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
             if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
-                cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
             }
 
             cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))

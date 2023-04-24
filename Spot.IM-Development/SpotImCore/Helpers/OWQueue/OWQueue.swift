@@ -18,9 +18,10 @@ protocol OWQueueProtocol {
     func pop(atIndex index: Int) -> Node?
     func insert(_ node: Node, atIndex index: Int)
     func index(of node: Node) -> Int?
+    func isEmpty() -> Bool
 }
 
-class OWQueue<Node: Equatable, Codable>: OWQueueProtocol {
+class OWQueue<Node: Equatable & Codable>: OWQueueProtocol {
     fileprivate var queue: [Node] = []
     fileprivate let duplicationStrategy: OWQueueDuplicationStrategy
 
@@ -81,5 +82,9 @@ class OWQueue<Node: Equatable, Codable>: OWQueueProtocol {
 
     func index(of node: Node) -> Int? {
         return queue.firstIndex(where: { $0 == node })
+    }
+
+    func isEmpty() -> Bool {
+        return queue.isEmpty
     }
 }

@@ -18,11 +18,16 @@ class OWCommentContentView: UIView {
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
         static let editedTopPadding: CGFloat = 4.0
+        static let identifier = "comment_content_view_id"
+        static let textLabelIdentifier = "comment_content_text_label_id"
+        static let mediaViewIdentifier = "comment_media_view_id"
+        static let editedLabelIdentifier = "comment_edited_label_id"
     }
 
     fileprivate lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var mediaView: CommentMediaView = {
@@ -34,6 +39,7 @@ class OWCommentContentView: UIView {
             .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
             .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate var viewModel: OWCommentContentViewModeling!
@@ -48,6 +54,7 @@ class OWCommentContentView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        applyAccessibility()
     }
 
     func configure(with viewModel: OWCommentContentViewModeling) {
@@ -60,6 +67,7 @@ class OWCommentContentView: UIView {
 
 fileprivate extension OWCommentContentView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.addSubviews(textLabel, mediaView)
 
         textLabel.OWSnp.makeConstraints { make in
@@ -151,5 +159,14 @@ fileprivate extension OWCommentContentView {
                 guard let self = self else { return }
                 self.editedLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
+    }
+}
+
+fileprivate extension OWCommentContentView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier
+        mediaView.accessibilityIdentifier = Metrics.mediaViewIdentifier
+        editedLabel.accessibilityIdentifier = Metrics.editedLabelIdentifier
     }
 }

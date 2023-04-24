@@ -16,6 +16,7 @@ class OWCommentTextLabel: UILabel {
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
+        tap.delegate = self
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
         return tap
@@ -61,5 +62,15 @@ fileprivate extension OWCommentTextLabel {
                 self.viewModel.inputs.labelClickIndex.onNext(index)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+extension OWCommentTextLabel: UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer is UITapGestureRecognizer, let viewModel = self.viewModel else { return true }
+
+        let tapLocation = gestureRecognizer.location(in: self)
+        let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
+        return viewModel.inputs.shouldTapBeHandeled(at: index)
     }
 }
