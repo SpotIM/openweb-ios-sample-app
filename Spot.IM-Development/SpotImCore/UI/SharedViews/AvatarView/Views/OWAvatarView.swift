@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-final class OWAvatarView: UIView {
+class OWAvatarView: UIView {
     fileprivate struct Metrics {
         static let identifier = "user_avatar_view_id"
         static let avatarImageIdentifier = "avatar_image_id"
@@ -127,7 +127,8 @@ fileprivate extension OWAvatarView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.onlineIndicatorView.backgroundColor = OWColorPalette.shared.color(type: .borderColor3, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 
     func updateAvatar(avatarImageType: OWImageType) {
