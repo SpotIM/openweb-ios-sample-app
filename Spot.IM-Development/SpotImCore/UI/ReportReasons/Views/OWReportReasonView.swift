@@ -13,7 +13,7 @@ import Foundation
 
 #if NEW_API
 
-class OWReportReasonView: UIView {
+class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "report_reason_view_id"
         static let cellIdentifier = "reportReasonCell"
@@ -21,7 +21,7 @@ class OWReportReasonView: UIView {
         static let titleLabelIdentifier = "title_label_id"
         static let cellHeight: CGFloat = 68
         static let titleFontSize: CGFloat = 15
-        static let titleViewHeight: CGFloat = 70
+        static let titleViewHeight: CGFloat = 56
         static let titleLeadingPadding: CGFloat = 16
     }
 
@@ -46,7 +46,7 @@ class OWReportReasonView: UIView {
     fileprivate let viewModel: OWReportReasonViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWReportReasonViewViewModeling = OWReportReasonViewViewModel()) {
+    init(viewModel: OWReportReasonViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: CGRect.zero)
         setupViews()
@@ -67,21 +67,31 @@ fileprivate extension OWReportReasonView {
     }
 
     func setupViews() {
-        self.addSubview(titleView)
-        titleView.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(Metrics.titleViewHeight)
-        }
+        self.useAsThemeStyleInjector()
 
-        titleView.addSubview(titleLabel)
-        titleLabel.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(Metrics.titleLeadingPadding)
-            make.centerY.equalToSuperview()
+        let shouldShowTitleView = viewModel.outputs.shouldShowTitleView
+
+        if shouldShowTitleView {
+            self.addSubview(titleView)
+            titleView.OWSnp.makeConstraints { make in
+                make.leading.trailing.top.equalToSuperview()
+                make.height.equalTo(Metrics.titleViewHeight)
+            }
+
+            titleView.addSubview(titleLabel)
+            titleLabel.OWSnp.makeConstraints { make in
+                make.leading.equalToSuperview().inset(Metrics.titleLeadingPadding)
+                make.centerY.equalToSuperview()
+            }
         }
 
         self.addSubview(tableViewReasons)
         tableViewReasons.OWSnp.makeConstraints { make in
-            make.top.equalTo(titleView.OWSnp.bottom)
+            if shouldShowTitleView {
+                make.top.equalTo(titleView.OWSnp.bottom)
+            } else {
+                make.top.equalToSuperview()
+            }
             make.leading.trailing.bottom.equalToSuperview()
         }
     }

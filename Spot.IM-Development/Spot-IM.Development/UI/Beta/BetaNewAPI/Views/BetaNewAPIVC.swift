@@ -407,7 +407,7 @@ fileprivate extension BetaNewAPIVC {
 
                 flows.reportReason(postId: "",
                                    commentId: "",
-                                   presentationalMode: .push(navigationController: self.navigationController!),
+                                   presentationalMode: .present(viewController: self, style: .fullScreen),
                                    additionalSettings: nil,
                                    callbacks: nil,
                                    completion: { result in

@@ -28,15 +28,17 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     fileprivate let router: OWRoutering
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    let presentationalMode: OWPresentationalModeCompact
 
-    init(router: OWRoutering, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering, actionsCallbacks: OWViewActionsCallbacks?, presentationalMode: OWPresentationalModeCompact) {
         self.router = router
         self.actionsCallbacks = actionsCallbacks
+        self.presentationalMode = presentationalMode
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
         // TODO: complete the flow
-        let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel()
+        let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(viewableMode: .partOfFlow, presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
 
         let reportReasonPopped = PublishSubject<Void>()
@@ -68,7 +70,9 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: Complete when we would like to support comment creation as a view
-        let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(servicesProvider: OWSharedServicesProvider.shared)
+        let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(viewableMode: .independent,
+                                                                                             presentationalMode: .none,
+                                                                                             servicesProvider: OWSharedServicesProvider.shared)
         let reportReasonView = OWReportReasonView(viewModel: reportReasonViewVM)
         return .just(reportReasonView)
     }
@@ -80,6 +84,24 @@ fileprivate extension OWReportReasonCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWReportReasonViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        viewModel.outputs
+            .reportReasonViewViewModel.outputs.closeReportReasonTapped
+            .filter { viewModel.outputs.viewableMode == .independent }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                    print("Open Cancel report view")
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
+            .reportReasonViewViewModel.outputs.closeReportReasonTapped
+            .filter { viewModel.outputs.viewableMode == .partOfFlow }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                    // Open Cancel report screen
+                print("Open Cancel report screen")
+                self.router.navigationController?.dismiss(animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }

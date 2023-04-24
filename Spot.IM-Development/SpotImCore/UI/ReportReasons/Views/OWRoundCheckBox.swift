@@ -105,9 +105,31 @@ class OWRoundCheckBox: UIView {
                       let outerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.outerCircleName }) as? CAShapeLayer,
                         let innerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.innerCircleName }) as? CAShapeLayer
                 else { return }
-                outerCircleShape.strokeColor = selected ? UIColor.brandColor.cgColor : UIColor.black.cgColor
-                innerCircleShape.fillColor = selected ? UIColor.brandColor.cgColor : UIColor.clear.cgColor
+                let selectedColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
+                let unselectedColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
+                outerCircleShape.strokeColor = selected ? selectedColor : unselectedColor
+                innerCircleShape.fillColor = selected ? selectedColor : UIColor.clear.cgColor
             }
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.setSelected
+                    .take(1)
+                    .subscribe { [weak self] selected in
+                        guard let self = self,
+                              let outerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.outerCircleName }) as? CAShapeLayer,
+                              let innerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.innerCircleName }) as? CAShapeLayer
+                        else { return }
+                        let selectedColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
+                        let unselectedColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle).cgColor
+                        outerCircleShape.strokeColor = selected ? selectedColor : unselectedColor
+                        innerCircleShape.fillColor = selected ? selectedColor : UIColor.clear.cgColor
+                    }
+                    .disposed(by: disposeBag)
+            })
             .disposed(by: disposeBag)
     }
 }
