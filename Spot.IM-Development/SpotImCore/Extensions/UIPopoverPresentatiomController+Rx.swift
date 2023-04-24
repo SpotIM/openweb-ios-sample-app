@@ -18,7 +18,7 @@ extension Reactive where Base: UIPopoverPresentationController {
                      message: String,
                      actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
 
-        return Observable.create { observer in
+        return Observable.create { _ in
             // Map to regular UIAlertAction
 //            let alertActions = actions.map { rxAlert in
 //                UIAction(title: rxAlert.title,
@@ -28,7 +28,6 @@ extension Reactive where Base: UIPopoverPresentationController {
 //                }
 //            }
 
-            
 //            let shareText = "Check out this photo I took!"
 //            let shareImage = UIImage(named: "my-photo.jpg")
 
@@ -62,9 +61,6 @@ extension Reactive where Base: UIPopoverPresentationController {
             return Disposables.create()
         }
     }
-
-
-
 
 //    static func show(onViewController viewController: UIViewController,
 //                     sourceView: UIView? = nil,
