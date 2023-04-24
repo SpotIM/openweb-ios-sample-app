@@ -73,8 +73,8 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             loggerViewTitle = "Independed ad unit logger"
         }
 
+        setupCustomizationsCallaback()
         setupObservers()
-        testLogger()
     }
 
     var openSettings: Observable<SettingsGroupType> {
@@ -137,8 +137,16 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new conversation component
     fileprivate lazy var conversationStyleChanged: Observable<Void> = {
-        // TODO: Complete once developed
-        return Observable.never()
+        return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
+                guard let self = self else { return .empty() }
+                return self.actionSettings
+                    .take(1)
+                    .map { $0.viewType }
+            }
+            .filter { $0 == .conversation }
+            .voidify()
     }()
     fileprivate lazy var conversationUpdater: Observable<Void> = {
         return Observable.merge(self.conversationStyleChanged)
@@ -173,14 +181,6 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 }
 
 fileprivate extension MockArticleIndependentViewsViewModel {
-    func testLogger() {
-        let randomInt = Int.random(in: 1000..<9999)
-        loggerViewModel.inputs.log(text: "Testing logger with a new event \(randomInt)")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.testLogger()
-        }
-    }
-
     func setupObservers() {
         // Addressing horizontal margin
         viewTypeUpdaters
@@ -197,10 +197,25 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             .disposed(by: disposeBag)
     }
 
+    func setupCustomizationsCallaback() {
+        let customizations: OWCustomizations = OpenWeb.manager.ui.customizations
+
+        let customizableClosure: OWCustomizableElementCallback = { [weak self] element, source, style, postId in
+            guard let self = self else { return }
+            let postIdString = postId ?? "No postId"
+            let log = "Received OWCustomizableElementCallback element: \(element), from source: \(source), style: \(style), postId: \(postIdString)\n"
+            self.loggerViewModel.inputs.log(text: log)
+        }
+
+        customizations.addElementCallback(customizableClosure)
+    }
+
     func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         switch settings.viewType {
         case .preConversation:
             return self.retrievePreConversation(settings: settings)
+        case .conversation:
+            return self.retrieveConversation(settings: settings)
         default:
             return Observable.error(GeneralErrors.missingImplementation)
         }
@@ -216,10 +231,16 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
 
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
             uiViews.preConversation(postId: settings.postId,
                                     article: article,
                                     additionalSettings: additionalSettings,
-                                    callbacks: nil,
+                                    callbacks: actionsCallbacks,
                                     completion: { result in
                 switch result {
                 case .success(let preConversationView):
@@ -228,6 +249,42 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 case .failure(let error):
                     let message = error.description
                     DLog("Calling retrievePreConversation error: \(message)")
+                    observer.onError(error)
+                }
+            })
+
+            return Disposables.create()
+        }
+    }
+
+    func retrieveConversation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else { return Disposables.create() }
+
+            let additionalSettings = self.commonCreatorService.conversationSettings()
+            let article = self.commonCreatorService.mockArticle()
+
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
+            uiViews.conversation(postId: settings.postId,
+                                    article: article,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: actionsCallbacks,
+                                    completion: { result in
+                switch result {
+                case .success(let conversationView):
+                    observer.onNext(conversationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveConversation error: \(message)")
                     observer.onError(error)
                 }
             })

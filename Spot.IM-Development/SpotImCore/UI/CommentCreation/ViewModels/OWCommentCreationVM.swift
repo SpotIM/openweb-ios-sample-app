@@ -15,7 +15,6 @@ protocol OWCommentCreationViewModelingInputs {
 
 protocol OWCommentCreationViewModelingOutputs {
     var commentCreationViewVM: OWCommentCreationViewViewModeling { get }
-    var userInitiatedAuthenticationFlow: Observable<Void> { get }
     var commentCreated: Observable<SPComment> { get }
     var loadedToScreen: Observable<Void> { get }
 }
@@ -33,13 +32,9 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
-        return OWCommentCreationViewViewModel(commentCreationData: commentCreationData)
+        return OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
+                                              viewableMode: .partOfFlow)
     }()
-
-    var userInitiatedAuthenticationFlow: Observable<Void> {
-        // TODO: Complete
-        return .never()
-    }
 
     var commentCreated: Observable<SPComment> {
         // TODO: Complete

@@ -10,12 +10,12 @@ import UIKit
 
 #if NEW_API
 public enum OWCustomizableElement {
-    // TODO: Complete
+    case headerTitle(label: UILabel)
+    case headerCounter(label: UILabel)
 }
 #else
 enum OWCustomizableElement {
-    case communityQuestion(textView: UITextView)
-    case communityGuidelines(textView: UITextView)
-    // TODO: Complete
+    case headerTitle(label: UILabel)
+    case headerCounter(label: UILabel)
 }
 #endif

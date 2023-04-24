@@ -31,6 +31,12 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     fileprivate let router: OWRoutering!
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentCreation)
+    }()
+    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+        return OWCustomizationsService(viewSourceType: .commentCreation)
+    }()
 
     init(router: OWRoutering! = nil, commentCreationData: OWCommentCreationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
@@ -70,26 +76,29 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: Complete when we would like to support comment creation as a view
-        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData)
+        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
+                                                                                                      viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
+        setupObservers(forViewModel: commentCreationViewVM)
+        setupViewActionsCallbacks(forViewModel: commentCreationViewVM)
         return .just(commentCreationView)
     }
 }
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
-        // Setting up general observers which affect app flow however not entirely inside the SDK
-
-        viewModel.outputs.userInitiatedAuthenticationFlow
-            .subscribe(onNext: { _ in
-                // TODO: Complete a callback to trigger auth flow at publisher side
-                // Complete by implementing OWUIAuthentication layer
-                // `let authenticationUI: OWUIAuthentication = manager.ui.authentication` according to the new API
-            })
-            .disposed(by: disposeBag)
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+    }
+
+    func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+    }
+
+    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
     }
 }

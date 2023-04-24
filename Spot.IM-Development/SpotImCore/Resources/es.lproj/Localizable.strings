@@ -75,7 +75,7 @@
 "Terms" = "Términos";
 "Privacy" = "Privacidad";
 "Powered by OpenWeb" = "Powered by OpenWeb";
-"Powered by" = "Powered by";
+"Powered by" = "Desarrollado por";
 "Type your reply…" = "Escriba su respuesta";
 "Replying to " = "Responder a ";
 "Comments" = "Comentarios";
@@ -108,3 +108,5 @@
 "Image" = "Imagen";
 "This conversation has ended and comments are no longer being accepted." = "Esta conversación ha terminado y ya no se admiten comentarios.";
 "Start the conversation and share your thoughts and ideas with the community." = "Empieza la conversación y comparte tu opinión y tus ideas con la comunidad.";
+"Community Guidelines" = "Normas de la comunidad";
+"Read our" = "Lee nuestra";

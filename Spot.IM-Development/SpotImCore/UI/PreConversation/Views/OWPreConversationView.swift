@@ -48,6 +48,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+        view.enforceSemanticAttribute()
         return view
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
@@ -59,7 +60,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -135,6 +136,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWPreConversationView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
         self.addSubviews(preConversationSummary)
@@ -184,8 +186,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom).offset(Metrics.commentCreationTopPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             commentCreationZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
@@ -283,22 +284,21 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs
-            .communityQuestionViewModel.outputs
-            .shouldShowView
+        viewModel
+            .outputs.communityQuestionViewModel
+            .outputs.shouldShowView
             .map { !$0 }
             .bind(to: communityQuestionBottomDevider.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs
-            .communityGuidelinesViewModel
-            .outputs
-            .shouldBeHidden
+        viewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.shouldShowView
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isHidden in
+            .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
                 self.communityGuidelinesView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(isHidden ? 0 : Metrics.communityQuestionDeviderPadding)
+                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(shouldShow ? Metrics.communityQuestionDeviderPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
@@ -456,6 +456,13 @@ fileprivate extension OWPreConversationView {
                 self.tableView.OWSnp.updateConstraints { make in
                     make.height.equalTo(height)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.inputs.fullConversationTap.onNext()
             })
             .disposed(by: disposeBag)
     }

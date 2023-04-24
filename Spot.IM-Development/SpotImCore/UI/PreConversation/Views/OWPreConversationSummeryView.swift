@@ -39,11 +39,13 @@ class OWPreConversationSummeryView: UIView {
 
     private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var nextArrow: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
+        imageView.enforceSemanticAttribute()
         return imageView
     }()
 
@@ -63,8 +65,8 @@ class OWPreConversationSummeryView: UIView {
     }
 
     private func updateCustomUI() {
-        viewModel.inputs.customizeTitleLabelUI.onNext(titleLabel)
-        viewModel.inputs.customizeCounterLabelUI.onNext(counterLabel)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
     }
 }
 

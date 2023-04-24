@@ -15,7 +15,9 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
                 .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
                 .reply(viewModel: OWReplyCellViewModel.stub()),
                 .ad(viewModel: OWAdCellViewModel.stub()),
-                .spacer(viewModel: OWSpacerCellViewModel.stub())]
+                .spacer(viewModel: OWSpacerCellViewModel.stub()),
+                .communityQuestion(viewModel: OWCommunityQuestionCellViewModel.stub()),
+                .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub())]
     }
 
     case comment(viewModel: OWCommentCellViewModeling)
@@ -23,6 +25,8 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
     case reply(viewModel: OWReplyCellViewModeling)
     case ad(viewModel: OWAdCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
+    case communityQuestion(viewModel: OWCommunityQuestionCellViewModeling)
+    case communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModeling)
 }
 
 extension OWConversationCellOption {
@@ -37,6 +41,10 @@ extension OWConversationCellOption {
         case .ad(let viewModel):
             return viewModel
         case .spacer(let viewModel):
+            return viewModel
+        case .communityQuestion(let viewModel):
+            return viewModel
+        case .communityGuidelines(let viewModel):
             return viewModel
         }
     }
@@ -53,7 +61,11 @@ extension OWConversationCellOption {
         case .ad:
             return UITableViewCell.self
         case .spacer:
-            return UITableViewCell.self
+            return OWSpacerCell.self
+        case .communityQuestion:
+            return OWCommunityQuestionCell.self
+        case .communityGuidelines:
+            return OWCommunityGuidelinesCell.self
         }
     }
 }
@@ -76,8 +88,11 @@ extension OWConversationCellOption: Equatable {
             return ""
 //            return viewModel.outputs.id
         case .spacer(let viewModel):
-            return ""
-//            return viewModel.outputs.id
+            return viewModel.outputs.id
+        case .communityQuestion(let viewModel):
+            return viewModel.outputs.id
+        case .communityGuidelines(let viewModel):
+            return viewModel.outputs.id
         }
     }
 
