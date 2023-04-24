@@ -120,7 +120,7 @@ fileprivate extension OWAvatarViewModel {
             .unwrap()
 
         // Check if this is current user and token is needed
-        let openUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
+        let shouldOpenUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
             .withLatestFrom(
                 sharedServicesProvider.authenticationManager()
                     .activeUserAvailability
@@ -140,17 +140,15 @@ fileprivate extension OWAvatarViewModel {
             }
 
         // Create URL for user profie with token
-        let userProfileWithToken: Observable<URL> = openUserProfileWithToken
-            .flatMap { [weak self] openWithToken -> Observable<OWSingleUseTokenResponse> in
-                guard let self = self,
-                      openWithToken == true
-                else { return .empty() }
+        let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
+            .filter { $0 }
+            .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
+                guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()
                     .profile
                     .createSingleUseToken()
                     .response
             }
-            .observe(on: MainScheduler.instance)
             .withLatestFrom(user) { [weak self] response, user -> URL? in
                 guard let self = self,
                       let token = response["single_use_token"],
@@ -161,10 +159,10 @@ fileprivate extension OWAvatarViewModel {
             .unwrap()
 
         // Create URL for user profile without token
-        let userProfileWithoutToken: Observable<URL> = openUserProfileWithToken
-            .withLatestFrom(user) { [weak self] openWithToken, user -> URL? in
+        let userProfileWithoutToken: Observable<URL> = shouldOpenUserProfileWithToken
+            .filter { !$0 }
+            .withLatestFrom(user) { [weak self] _, user -> URL? in
                 guard let self = self,
-                      openWithToken == false,
                       let url = self.profileUrl(singleUseTicket: nil, userId: user.id)
                 else { return nil }
                 return url
@@ -172,6 +170,7 @@ fileprivate extension OWAvatarViewModel {
             .unwrap()
 
         Observable.merge(userProfileWithToken, userProfileWithoutToken)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self._openAvatarProfile.onNext(url)
