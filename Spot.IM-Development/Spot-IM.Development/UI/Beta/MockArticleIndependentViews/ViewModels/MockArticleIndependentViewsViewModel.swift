@@ -73,6 +73,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             loggerViewTitle = "Independed ad unit logger"
         }
 
+        setupCustomizationsCallaback()
         setupObservers()
     }
 
@@ -196,6 +197,19 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             .disposed(by: disposeBag)
     }
 
+    func setupCustomizationsCallaback() {
+        let customizations: OWCustomizations = OpenWeb.manager.ui.customizations
+
+        let customizableClosure: OWCustomizableElementCallback = { [weak self] element, source, style, postId in
+            guard let self = self else { return }
+            let postIdString = postId ?? "No postId"
+            let log = "Received OWCustomizableElementCallback element: \(element), from source: \(source), style: \(style), postId: \(postIdString)\n"
+            self.loggerViewModel.inputs.log(text: log)
+        }
+
+        customizations.addElementCallback(customizableClosure)
+    }
+
     func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         switch settings.viewType {
         case .preConversation:
@@ -253,10 +267,16 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
 
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
             uiViews.conversation(postId: settings.postId,
                                     article: article,
                                     additionalSettings: additionalSettings,
-                                    callbacks: nil,
+                                    callbacks: actionsCallbacks,
                                     completion: { result in
                 switch result {
                 case .success(let conversationView):
