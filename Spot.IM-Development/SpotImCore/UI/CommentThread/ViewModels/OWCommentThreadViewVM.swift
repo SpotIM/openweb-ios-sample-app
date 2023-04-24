@@ -41,9 +41,17 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return OWManager.manager.postId ?? ""
     }
 
+    fileprivate let commentThreadData: OWCommentThreadRequiredData
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
+
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
+    fileprivate lazy var isReadOnly: Observable<Bool> = {
+        return _isReadOnly
+            .share(replay: 1)
+    }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
         return _commentsPresentationData
@@ -95,6 +103,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
+        self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
         self.setupObservers()
     }
@@ -256,6 +265,23 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return initialConversationThreadReadObservable
             }
 
+        // Set read only mode
+        commentThreadFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+                switch self.commentThreadData.article.additionalSettings.readOnlyMode {
+                case .disable:
+                    isReadOnly = false
+                case .enable:
+                    isReadOnly = true
+                case .default:
+                    break
+                }
+                self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
+
         let loadMoreCommentsReadObservable = _loadMoreComments
             .distinctUntilChanged()
             .flatMap { [weak self] offset -> Observable<OWConversationReadRM> in
@@ -412,6 +438,20 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
+
+        // Update comments cells on ReadOnly mode
+        Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
+            return (commentCellsVms, isReadOnly)
+        }
+        .subscribe(onNext: { commentCellsVms, isReadOnly in
+            commentCellsVms.forEach {
+                $0.outputs.commentVM
+                .outputs.commentEngagementVM
+                .inputs.isReadOnly
+                .onNext(isReadOnly)
+            }
+        })
+        .disposed(by: disposeBag)
 
         // Observable of the comment collapse cell VMs
         let commentCollapseCellsVmsObservable: Observable<[OWCommentThreadCollapseCellViewModeling]> = cellsViewModels
