@@ -18,21 +18,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
     var repliesIds: [String]
     let totalRepliesCount: Int
     var repliesOffset: Int
-    var repliesPresentation: [OWCommentPresentationData] {
-        didSet(newRepliesPresentation) {
-            disposedBag = DisposeBag()
-
-            let repliesUpdateObservers = newRepliesPresentation.map { $0.update.asObservable() }
-
-            Observable.merge(repliesUpdateObservers)
-                .asObservable()
-                .subscribe { [weak self] _ in
-                    guard let self = self else { return }
-                    self.update.onNext()
-                }
-                .disposed(by: disposedBag)
-        }
-    }
+    private(set) var repliesPresentation: [OWCommentPresentationData]
 
     init(
         id: String,
@@ -46,6 +32,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         self.totalRepliesCount = totalRepliesCount
         self.repliesOffset = repliesOffset
         self.repliesPresentation = repliesPresentation
+        self.updateRepliesPresentationObservers()
     }
 }
 
@@ -55,5 +42,27 @@ extension OWCommentPresentationData: Equatable {
         lhs.repliesIds == rhs.repliesIds &&
         lhs.repliesPresentation == rhs.repliesPresentation &&
         lhs.repliesOffset == rhs.repliesOffset
+    }
+}
+
+extension OWCommentPresentationData {
+    func setRepliesPresentation(_ repliesPresentation: [OWCommentPresentationData]) {
+        self.repliesPresentation = repliesPresentation
+        self.updateRepliesPresentationObservers()
+    }
+}
+
+fileprivate extension OWCommentPresentationData {
+    func updateRepliesPresentationObservers() {
+        disposedBag = DisposeBag()
+
+        let repliesUpdateObservers = repliesPresentation.map { $0.update.asObservable() }
+
+        Observable.merge(repliesUpdateObservers)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.update.onNext()
+            })
+            .disposed(by: disposedBag)
     }
 }

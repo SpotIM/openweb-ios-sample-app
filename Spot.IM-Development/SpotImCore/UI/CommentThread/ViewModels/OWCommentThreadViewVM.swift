@@ -379,9 +379,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
             repliesPresentation = Array(repliesPresentation.prefix(countAfterUpdate))
 
-            commentPresentationData.repliesPresentation = repliesPresentation
-
+            commentPresentationData.setRepliesPresentation(repliesPresentation)
             commentPresentationData.update.onNext()
+
+
         })
         .disposed(by: disposeBag)
 
@@ -500,8 +501,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return Observable.merge(collapseClickObservable)
             }
             .subscribe(onNext: { commentPresentationData in
-                commentPresentationData.repliesPresentation.removeAll()
-
+                commentPresentationData.setRepliesPresentation([])
                 commentPresentationData.update.onNext()
             })
             .disposed(by: disposeBag)
