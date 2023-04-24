@@ -33,6 +33,9 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
     }()
+    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+        return OWCustomizationsService(viewSourceType: .commentThread)
+    }()
 
     init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
@@ -66,7 +69,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel()
+        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(viewableMode: .independent)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
         setupObservers(forViewModel: commentThreadViewVM)
         setupViewActionsCallbacks(forViewModel: commentThreadViewVM)
