@@ -23,7 +23,8 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
         let reportReasonCoordinator = OWReportReasonCoordinator(router: router,
-                                                                actionsCallbacks: callbacks)
+                                                                actionsCallbacks: callbacks,
+                                                                presentationalMode: presentationalMode.style)
 
         return coordinate(to: reportReasonCoordinator)
     }
