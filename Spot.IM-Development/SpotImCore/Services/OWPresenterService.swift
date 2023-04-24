@@ -39,18 +39,27 @@ class OWPresenterService: OWPresenterServicing {
         // Add UIMenu for iOS 14+
         if #available(iOS 14.0, *) {
             guard let source = source else { return .empty() }
-            // TODO: items
-            let menuItems: [UIAction] = actions.map {
-                var action = UIAction(title: $0.title, handler: {_ in })
-                action.state = .on
-                return action
+            return Observable.create { observer in
+                // TODO: items
+//                let menuItems: [UIAction] = actions.map {
+//                    let action = UIAction(title: $0.title, handler: {_ in })
+//    //                action.state = .on
+//                    return action
+//                }
+                // Map to regular UIAction
+                let menuItems = actions.map { rxAlert in
+                    UIAction(title: rxAlert.title) { _ in
+                        observer.onNext(.selected(action: rxAlert))
+                        observer.onCompleted()
+                    }
+                }
+                var menu: UIMenu {
+                    return UIMenu(identifier: nil, options: [], children: menuItems)
+                }
+                source.menu = menu
+                source.showsMenuAsPrimaryAction = true
+                return Disposables.create()
             }
-            var menu: UIMenu {
-                return UIMenu(identifier: nil, options: [], children: menuItems)
-            }
-            source.menu = menu
-            source.showsMenuAsPrimaryAction = true
-            return .empty()
         } else {
             // Fallback on earlier versions - show actionSheet
             guard let navController = routering?.routering.navigationController
