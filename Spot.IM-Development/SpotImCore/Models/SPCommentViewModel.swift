@@ -60,7 +60,7 @@ internal struct CommentViewModel {
         return id == rootCommentId
     }
 
-    let commentUserVM: OWCommentUserViewModeling
+    let commentUserVM: SPCommentUserViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
     let statusIndicationVM: OWCommentStatusIndicationViewModeling = OWCommentStatusIndicationViewModel()
 
@@ -72,7 +72,7 @@ internal struct CommentViewModel {
         user: SPUser? = nil,
         imageProvider: SPImageProvider? = nil,
         conversationModel: SPMainConversationModel? = nil) {
-        commentUserVM = OWCommentUserViewModel(user: user, imageProvider: imageProvider)
+        commentUserVM = SPCommentUserViewModel(user: user, imageProvider: imageProvider)
         isDeleted = comment.deleted
         isEdited = comment.edited
         authorId = comment.userId
