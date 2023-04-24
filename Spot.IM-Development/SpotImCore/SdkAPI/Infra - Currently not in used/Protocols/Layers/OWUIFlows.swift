@@ -10,21 +10,21 @@ import Foundation
 
 #if NEW_API
 public protocol OWUIFlows {
-    func preConversation(postId: String,
+    func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
-    func conversation(postId: String,
+    func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
 
-    func commentCreation(postId: String,
+    func commentCreation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol?,
@@ -45,27 +45,43 @@ public protocol OWUIFlows {
                       additionalSettings: OWReportReasonSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
+
+#if BETA
+    func testingPlayground(postId: OWPostId,
+                           presentationalMode: OWPresentationalMode,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           callbacks: OWViewActionsCallbacks?,
+                           completion: @escaping OWDefaultCompletion)
+#endif
 }
 #else
 protocol OWUIFlows {
-    func preConversation(postId: String,
+    func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
-    func conversation(postId: String,
+    func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
 
-    func commentCreation(postId: String, article: OWArticleProtocol,
+    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
+
+    func commentThread(postId: OWPostId,
+                       article: OWArticleProtocol,
+                       commentId: OWCommentId,
+                       presentationalMode: OWPresentationalMode,
+                       additionalSettings: OWCommentThreadSettingsProtocol?,
+                       callbacks: OWViewActionsCallbacks?,
+                       completion: @escaping OWDefaultCompletion)
 }
 #endif

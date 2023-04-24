@@ -26,15 +26,16 @@ protocol OWSharedServicesProviding: AnyObject {
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
     func analyticsService() -> OWAnalyticsServicing
-    // Remove this migration service within half a year from now
-    func keychainMigrationService() -> OWKeychainMigrationServicing
     func userDefaults() -> OWUserDefaultsProtocol
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
+    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
     func sortDictateService() -> OWSortDictateServicing
+    func authenticationManager() -> OWAuthenticationManagerProtocol
+    func blockerServicing() -> OWBlockerServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -86,10 +87,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWAnalyticsService()
     }()
 
-    fileprivate lazy var _keychainMigration: OWKeychainMigrationServicing = {
-        return OWKeychainMigrationService(servicesProvider: self)
-    }()
-
     fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
         return OWUserDefaults(servicesProvider: self)
     }()
@@ -106,6 +103,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
     }()
 
+    fileprivate lazy var _authorizationRecoveryServiceOldAPI: OWAuthorizationRecoveryServicingOldAPI = {
+        return OWAuthorizationRecoveryServiceOldAPI(servicesProvider: self)
+    }()
+
     fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
         return OWAuthorizationRecoveryService(servicesProvider: self)
     }()
@@ -116,6 +117,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _sortDictateService: OWSortDictateServicing = {
         return OWSortDictateService(servicesProvider: self)
+    }()
+
+    fileprivate lazy var _authenticationManager: OWAuthenticationManagerProtocol = {
+        return OWAuthenticationManager(servicesProvider: self)
+    }()
+
+    fileprivate lazy var _blockerService: OWBlockerServicing = {
+        return OWBlockerService()
     }()
 
     func themeStyleService() -> OWThemeStyleServicing {
@@ -146,10 +155,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _keychain
     }
 
-    func keychainMigrationService() -> OWKeychainMigrationServicing {
-        return _keychainMigration
-    }
-
     func userDefaults() -> OWUserDefaultsProtocol {
         return _userDefaults
     }
@@ -170,6 +175,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _skeletonShimmeringService
     }
 
+    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI {
+        return _authorizationRecoveryServiceOldAPI
+    }
+
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing {
         return _authorizationRecoveryService
     }
@@ -180,6 +189,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func sortDictateService() -> OWSortDictateServicing {
         return _sortDictateService
+    }
+
+    func authenticationManager() -> OWAuthenticationManagerProtocol {
+        return _authenticationManager
+    }
+
+    func blockerServicing() -> OWBlockerServicing {
+        return _blockerService
     }
 }
 
@@ -192,15 +209,23 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
 
     func set(spotId: OWSpotId) {
         configure(forSpotId: spotId)
+        _authenticationManager.loadPersistence(forSpotId: spotId)
     }
 
     func change(spotId: OWSpotId) {
         configure(forSpotId: spotId)
 
         // Stop / re-create services which depend on spot id
+        /*
+         In order to not cause confusions, once we change in the SampleApp a spotId during the same app session,
+         we are clearing any data relevant to the active user.
+         This means that if afterwards we re-select the original spotId, we will need to re-login and other user relevant functionality.
+        */
+        _authenticationManager.resetPersistence()
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()
         _sortDictateService.invalidateCache()
+        _blockerService.invalidateAllBlockers()
         _spotConfigurationService.spotChanged(spotId: spotId)
     }
 }

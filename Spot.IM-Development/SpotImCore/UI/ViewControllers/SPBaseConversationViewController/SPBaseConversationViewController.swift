@@ -856,7 +856,7 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 
 }
 
-extension SPBaseConversationViewController: OWCommentCreationEntryViewDelegate {
+extension SPBaseConversationViewController: SPCommentCreationEntryViewDelegate {
     func labelContainerDidTap() {
         guard let delegate = delegate else { return }
 

@@ -9,13 +9,13 @@
 import Foundation
 
 #if NEW_API
-public enum OWCommunityQuestionsStyle {
+public enum OWCommunityQuestionsStyle: Codable {
     case none
     case regular
 }
 
 #else
-enum OWCommunityQuestionsStyle {
+enum OWCommunityQuestionsStyle: Codable {
     case none
     case regular
 }

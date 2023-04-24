@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWPreConversationSummaryViewModelingInputs {
-    var customizeTitleLabelUI: PublishSubject<UILabel> { get }
-    var customizeCounterLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeCounterLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWPreConversationSummaryViewModelingOutputs {
@@ -20,6 +20,9 @@ protocol OWPreConversationSummaryViewModelingOutputs {
     var titleFontSize: CGFloat { get }
     var counterFontSize: CGFloat { get }
     var showNextArrow: Bool { get }
+    var isVisible: Bool { get }
+    var customizeTitleLabelUI: Observable<UILabel> { get }
+    var customizeCounterLabelUI: Observable<UILabel> { get }
 }
 
 protocol OWPreConversationSummaryViewModeling {
@@ -38,11 +41,28 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
     var inputs: OWPreConversationSummaryViewModelingInputs { return self }
     var outputs: OWPreConversationSummaryViewModelingOutputs { return self }
 
-    var customizeTitleLabelUI = PublishSubject<UILabel>()
-    var customizeCounterLabelUI = PublishSubject<UILabel>()
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let disposeBag = DisposeBag()
+
+    var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
+    var triggerCustomizeCounterLabelUI = PublishSubject<UILabel>()
+
+    var customizeTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeTitleLabelUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeCounterLabelUI: Observable<UILabel> {
+        return _triggerCustomizeCounterLabelUI
+            .unwrap()
+            .asObservable()
+    }
 
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
-        return OWOnlineViewingUsersCounterViewModelNew()
+        return OWOnlineViewingUsersCounterViewModel()
     }()
 
     var commentsCount: Observable<String> {
@@ -72,9 +92,26 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
         return style == .compact
     }()
 
+    lazy var isVisible: Bool = {
+        return style != .none
+    }()
+
     fileprivate let style: OWPreConversationSummaryStyle
 
     init(style: OWPreConversationSummaryStyle) {
         self.style = style
+        setupObservers()
+    }
+}
+
+fileprivate extension OWPreConversationSummaryViewModel {
+    func setupObservers() {
+        triggerCustomizeTitleLabelUI
+            .bind(to: _triggerCustomizeTitleLabelUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeCounterLabelUI
+            .bind(to: _triggerCustomizeCounterLabelUI)
+            .disposed(by: disposeBag)
     }
 }

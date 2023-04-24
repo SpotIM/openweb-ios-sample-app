@@ -16,7 +16,7 @@ import Foundation
  */
 
 #if NEW_API
-public typealias OWSSOStartHandler = (Result<Void, OWError>) -> Void
+public typealias OWSSOStartHandler = (Result<OWSSOStartModel, OWError>) -> Void
 #else
-typealias OWSSOStartHandler = (Result<Void, OWError>) -> Void
+typealias OWSSOStartHandler = (Result<OWSSOStartModel, OWError>) -> Void
 #endif

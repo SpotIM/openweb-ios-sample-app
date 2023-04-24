@@ -10,10 +10,37 @@ import Foundation
 
 #if NEW_API
 public protocol OWUIViews {
-    // TODO: Complete
+    func preConversation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         additionalSettings: OWPreConversationSettingsProtocol?,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
+
+    func conversation(postId: OWPostId,
+                      article: OWArticleProtocol,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion)
+
+#if BETA
+    func testingPlayground(postId: OWPostId,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           callbacks: OWViewActionsCallbacks?,
+                           completion: @escaping OWViewCompletion)
+#endif
 }
 #else
 protocol OWUIViews {
-    // TODO: Complete
+    func preConversation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         additionalSettings: OWPreConversationSettingsProtocol?,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
+
+    func conversation(postId: OWPostId,
+                      article: OWArticleProtocol,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion)
 }
 #endif

@@ -8,19 +8,14 @@
 
 import Foundation
 import UIKit
-import RxSwift
 
 class OWSpacerCell: UITableViewCell {
 
-    fileprivate struct Metrics {
-        static let height: CGFloat = 1.0
-    }
-    fileprivate lazy var seperatorView: UIView = {
-       return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor, themeStyle: .light))
+    fileprivate lazy var spacerView: OWSpacerView = {
+        return OWSpacerView()
     }()
+
     fileprivate var viewModel: OWSpacerCellViewModeling!
-    fileprivate var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -35,28 +30,19 @@ class OWSpacerCell: UITableViewCell {
         guard let vm = viewModel as? OWSpacerCellViewModel else { return }
 
         self.viewModel = vm
-        disposeBag = DisposeBag()
-        setupObservers()
+
+        spacerView.configure(with: self.viewModel.outputs.spacerViewModel)
     }
 }
 
 fileprivate extension OWSpacerCell {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(seperatorView)
+        self.selectionStyle = .none
 
-        seperatorView.OWSnp.makeConstraints { make in
+        self.addSubview(spacerView)
+        spacerView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(Metrics.height)
         }
-    }
-
-    func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
     }
 }

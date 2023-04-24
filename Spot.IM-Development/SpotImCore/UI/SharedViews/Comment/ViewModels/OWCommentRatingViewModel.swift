@@ -60,16 +60,19 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
 
+    fileprivate let commentId: String
+
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
+        commentId = ""
     }
 
-    init(model: OWCommentVotingModel, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(model: OWCommentVotingModel, commentId: String, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         _rankUp.onNext(model.rankUpCount)
         _rankDown.onNext(model.rankDownCount)
         _rankedByUser.onNext(model.rankedByUserValue)
-
+        self.commentId = commentId
         setupObservers()
     }
 
@@ -79,7 +82,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .withLatestFrom(_voteSymbolType) { rankUpCount, votesType in
                 let formattedRankCount = rankUpCount.kmFormatted
                 if (votesType == .recommend) {
-                    let recommendText = LocalizationManager.localizedString(key: "Recommend")
+                    let recommendText = OWLocalizationManager.shared.localizedString(key: "Recommend")
                     return "\(recommendText) (\(formattedRankCount))"
                 } else {
                     return rankUpCount > 0 ? formattedRankCount : ""
@@ -111,7 +114,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .withLatestFrom(_voteSymbolType) { voteTypes, availableTypes -> [VoteType] in
                 if([OWVotesType.heart, OWVotesType.recommend].contains(availableTypes)) {
-                    return voteTypes.filter { $0 == .voteDown }
+                    return voteTypes.filter { $0 == .voteUp }
                 }
                 return voteTypes
             }
@@ -183,23 +186,101 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
 fileprivate extension OWCommentRatingViewModel {
     func setupObservers() {
-        tapRankUp.withLatestFrom(_rankedByUser.unwrap())
-            .subscribe(onNext: { [weak self] ranked in
-                guard let self = self else { return }
+        let rankUpTriggeredObservable = tapRankUp.withLatestFrom(_rankedByUser.unwrap())
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
-                 // TODO: call new api rank + update local
-            })
-            .disposed(by: disposeBag)
+                return SPRankChange(from: from, to: to)
+            }
 
-        tapRankDown.withLatestFrom(_rankedByUser.unwrap())
-            .subscribe(onNext: { [weak self] ranked in
-                guard let self = self else { return }
+        let rankDownTriggeredObservable = tapRankDown.withLatestFrom(_rankedByUser.unwrap())
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { _ in ranked }
+            }
+            .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
+                return SPRankChange(from: from, to: to)
+            }
 
-                // TODO: call new api rank + update local
+        let rankChangedLocallyObservable: Observable<SPRankChange> = Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
+            .flatMap { [weak self] rankChange -> Observable<SPRankChange> in
+                guard let self = self else { return .empty() }
+
+                return Observable.combineLatest(self._rankUp, self._rankDown)
+                    .take(1)
+                    .do(onNext: { [weak self] rankUp, rankDown in
+                        guard let self = self else { return }
+                        self.updateChangeLocally(rankChange: rankChange, rankUp: rankUp ?? 0, rankDown: rankDown ?? 0)
+                    })
+                    .map { _ in rankChange}
+            }
+
+        // Updating Network/Remote about rank change
+        rankChangedLocallyObservable
+            .flatMap { [weak self] rankChange -> Observable<EmptyDecodable> in
+                guard let self = self,
+                      let postId = OWManager.manager.postId,
+                      let operation = rankChange.operation
+                else { return .empty() }
+
+                return self.sharedServiceProvider
+                    .netwokAPI()
+                    .conversation
+                    .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
+                    .response
+            }
+            .subscribe(onError: { error in
+                // TODO: if did not work - change locally back (using rankChange.reverse)
+                print("error \(error)")
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateChangeLocally(rankChange: SPRankChange, rankUp: Int, rankDown: Int) {
+        switch (rankChange.from, rankChange.to) {
+        case (.unrank, .up):
+            _rankedByUser.onNext(1)
+            _rankUp.onNext(rankUp + 1)
+        case (.unrank, .down):
+            _rankedByUser.onNext(-1)
+            _rankDown.onNext(rankDown + 1)
+        case (.up, .unrank):
+            _rankedByUser.onNext(0)
+            _rankUp.onNext(rankUp - 1)
+        case (.up, .down):
+            _rankedByUser.onNext(-1)
+            _rankUp.onNext(rankUp - 1)
+            _rankDown.onNext(rankDown + 1)
+        case (.down, .unrank):
+            _rankedByUser.onNext(0)
+            _rankDown.onNext(rankDown - 1)
+        case (.down, .up):
+            _rankedByUser.onNext(1)
+            _rankUp.onNext(rankUp + 1)
+            _rankDown.onNext(rankDown - 1)
+        default: break
+        }
     }
 }
