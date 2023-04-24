@@ -18,6 +18,8 @@ protocol OWReportReasonViewModelingInputs {
 protocol OWReportReasonViewModelingOutputs {
     var reportReasonViewViewModel: OWReportReasonViewViewModeling { get }
     var loadedToScreen: Observable<Void> { get }
+    var title: String { get }
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWReportReasonViewModeling {
@@ -26,6 +28,10 @@ protocol OWReportReasonViewModeling {
 }
 
 class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewModelingInputs, OWReportReasonViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let titleKey = "ReportReasonTitle"
+    }
+
     var inputs: OWReportReasonViewModelingInputs { return self }
     var outputs: OWReportReasonViewModelingOutputs { return self }
 
@@ -34,11 +40,20 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
         return viewDidLoad.asObservable()
     }
 
+    let viewableMode: OWViewableMode
+    let presentationalMode: OWPresentationalModeCompact
+
     lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
-        return OWReportReasonViewViewModel()
+        return OWReportReasonViewViewModel(viewableMode: viewableMode, presentationalMode: presentationalMode)
     }()
 
-    init () {
+    var title: String {
+        return LocalizationManager.localizedString(key: Metrics.titleKey)
+    }
+
+    init (viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
+        self.viewableMode = viewableMode
+        self.presentationalMode = presentMode
         setupObservers()
     }
 }
