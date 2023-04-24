@@ -264,6 +264,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMap { _ -> Observable<OWConversationReadRM> in
                 return initialConversationThreadReadObservable
             }
+            .share()
 
         // Set read only mode
         commentThreadFetchedObservable
@@ -293,8 +294,24 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .response
             }
 
-        // append new comments
-        Observable.merge(commentThreadFetchedObservable, loadMoreCommentsReadObservable)
+        // first load comments or refresh comments
+        commentThreadFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+
+                self.cacheConversationRead(response: response)
+
+                var commentsPresentationData = self.getCommentsPresentationData(from: response)
+
+                commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
+
+                self._commentsPresentationData.removeAll()
+                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
+        // append new comments on load more
+        loadMoreCommentsReadObservable
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
