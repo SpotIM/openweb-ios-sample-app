@@ -16,6 +16,7 @@ typealias OWRangeURLsMapper = [NSRange: URL]
 protocol OWCommentTextViewModelingInputs {
     var width: BehaviorSubject<CGFloat> { get }
     var labelClickIndex: PublishSubject<Int> { get }
+    func shouldTapBeHandeled(at index: Int) -> Bool
 }
 
 protocol OWCommentTextViewModelingOutputs {
@@ -43,8 +44,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let collapsableTextLineLimit: Int
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
-    fileprivate var editedText: String = LocalizationManager.localizedString(key: "Edited")
+    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "Read More")
 
     var labelClickIndex = PublishSubject<Int>()
 
@@ -108,15 +108,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return (attString, style)
             }
             .unwrap()
-            .withLatestFrom(comment) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
-                let (attString, style) = res
-                guard let self = self,
-                      comment.edited == true
-                else { return (attString, style) }
-
-                attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes(with: style)))
-                return (attString, style)
-            }
             .map { [weak self] (attString, style) in
                 guard var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
                 self?.locateURLsInText(text: &res, style: style)
@@ -141,6 +132,13 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         urlTap
             .asObservable()
     }
+
+    func shouldTapBeHandeled(at index: Int) -> Bool {
+        if isReadMoreTap(at: index) || getActiveUrl(at: index) != nil {
+            return true
+        }
+        return false
+    }
 }
 
 fileprivate extension OWCommentTextViewModel {
@@ -149,13 +147,27 @@ fileprivate extension OWCommentTextViewModel {
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
 
-                if let range = self.readMoreRange, range.contains(index) {
+                if self.isReadMoreTap(at: index) {
                     self._textState.onNext(.expanded)
-                } else if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
+                } else if let activeUrl = self.getActiveUrl(at: index) {
                     self.urlTap.onNext(activeUrl)
                 }
             })
             .disposed(by: disposeBag)
+    }
+
+    func isReadMoreTap(at index: Int) -> Bool {
+        if let range = self.readMoreRange, range.contains(index) {
+            return true
+        }
+        return false
+    }
+
+    func getActiveUrl(at index: Int) -> URL? {
+        if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
+            return activeUrl
+        }
+        return nil
     }
 }
 
@@ -165,11 +177,12 @@ fileprivate extension OWCommentTextViewModel {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = OWCommentContentView.Metrics.paragraphLineSpacing
+        paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .font: OWFontBook.shared.font(style: .regular, size: OWCommentContentView.Metrics.fontSize),
-            .foregroundColor: OWColorPalette.shared.color(type: .foreground1Color, themeStyle: style),
+            .foregroundColor: OWColorPalette.shared.color(type: .textColor4, themeStyle: style),
             .paragraphStyle: paragraphStyle
         ]
 
@@ -179,14 +192,6 @@ fileprivate extension OWCommentTextViewModel {
     func readMoreStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.font] = OWFontBook.shared.font(style: .bold, size: OWCommentContentView.Metrics.fontSize)
-
-        return attributes
-    }
-
-    func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
-        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
-        attributes[.foregroundColor] = UIColor.gray
-        attributes[.font] = OWFontBook.shared.font(style: .italic, size: OWCommentContentView.Metrics.editedFontSize)
 
         return attributes
     }
@@ -239,7 +244,9 @@ fileprivate extension OWCommentTextViewModel {
 
             for match in matches {
                 if let urlMatch = match.url, isUrlSchemeValid(for: urlMatch) {
-                    text.addAttributes([.foregroundColor: OWColorPalette.shared.color(type: .linkColor, themeStyle: style)], range: match.range)
+                    text.addAttributes([
+                        .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
+                        .underlineStyle: NSUnderlineStyle.single.rawValue], range: match.range)
                         activeURLs[match.range] = urlMatch
                 }
             }

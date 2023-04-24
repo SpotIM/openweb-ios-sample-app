@@ -18,9 +18,9 @@ protocol CommentCreationSettingsViewModelingInputs {
 
 protocol CommentCreationSettingsViewModelingOutputs {
     var title: String { get }
-    var customStyleModeTitle: String { get }
-    var customStyleModeIndex: Observable<Int> { get }
-    var customStyleModeSettings: [String] { get }
+    var styleModeTitle: String { get }
+    var styleModeIndex: Observable<Int> { get }
+    var styleModeSettings: [String] { get }
 }
 
 protocol CommentCreationSettingsViewModeling {
@@ -36,7 +36,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
-    var customStyleModeIndex: Observable<Int> {
+    var styleModeIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .commentCreationCustomStyleIndex, defaultValue: 0)
     }
 
@@ -46,11 +46,11 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return NSLocalizedString("CommentCreationSettings", comment: "")
     }()
 
-    lazy var customStyleModeTitle: String = {
-        return NSLocalizedString("CustomStyleModeTitle", comment: "")
+    lazy var styleModeTitle: String = {
+        return NSLocalizedString("StyleModeTitle", comment: "")
     }()
 
-    lazy var customStyleModeSettings: [String] = {
+    lazy var styleModeSettings: [String] = {
         let _regular = NSLocalizedString("Regular", comment: "")
         let _light = NSLocalizedString("Light", comment: "")
         let _floatingKeyboard = NSLocalizedString("FloatingKeyboard", comment: "")

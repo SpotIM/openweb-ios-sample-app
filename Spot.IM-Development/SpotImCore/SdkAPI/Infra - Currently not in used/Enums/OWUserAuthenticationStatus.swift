@@ -10,12 +10,14 @@ import Foundation
 
 #if NEW_API
 public enum OWUserAuthenticationStatus {
+    case notAutenticated
     case guest
-    case loggedIn(userId: String)
+    case ssoLoggedIn(userId: String)
 }
 #else
 enum OWUserAuthenticationStatus {
+    case notAutenticated
     case guest
-    case loggedIn(userId: String)
+    case ssoLoggedIn(userId: String)
 }
 #endif

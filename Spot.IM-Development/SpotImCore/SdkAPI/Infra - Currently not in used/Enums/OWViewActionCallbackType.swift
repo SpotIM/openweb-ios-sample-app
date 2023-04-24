@@ -9,7 +9,8 @@
 import Foundation
 
 #if NEW_API
-public enum OWViewActionCallbackType {
+public enum OWViewActionCallbackType: Codable {
+    case contentPressed
     case showMoreCommentsPressed
     case writeCommentPressed
     case articleHeaderPressed
@@ -18,9 +19,11 @@ public enum OWViewActionCallbackType {
     case postCommentPressed
     case adClosed
     case adTapped
+    case closeConversationPressed
 }
 #else
-enum OWViewActionCallbackType {
+enum OWViewActionCallbackType: Codable {
+    case contentPressed
     case showMoreCommentsPressed
     case writeCommentPressed
     case articleHeaderPressed
@@ -29,5 +32,6 @@ enum OWViewActionCallbackType {
     case postCommentPressed
     case adClosed
     case adTapped
+    case closeConversationPressed
 }
 #endif

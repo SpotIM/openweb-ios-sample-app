@@ -22,7 +22,7 @@ class OWPreConversationSummeryView: UIView {
         let lbl = UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .bold, size: viewModel.outputs.titleFontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground0Color,
+            .textColor(OWColorPalette.shared.color(type: .textColor1,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
         return lbl
@@ -32,18 +32,20 @@ class OWPreConversationSummeryView: UIView {
         let lbl = UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular, size: viewModel.outputs.counterFontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground1Color,
+            .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         return lbl
     }()
 
     private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var nextArrow: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
+        imageView.enforceSemanticAttribute()
         return imageView
     }()
 
@@ -63,8 +65,8 @@ class OWPreConversationSummeryView: UIView {
     }
 
     private func updateCustomUI() {
-        viewModel.inputs.customizeTitleLabelUI.onNext(titleLabel)
-        viewModel.inputs.customizeCounterLabelUI.onNext(counterLabel)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
     }
 }
 
@@ -102,6 +104,13 @@ fileprivate extension OWPreConversationSummeryView {
                 make.trailing.equalToSuperview().offset(-Metrics.margins.right)
             }
         }
+
+        self.isHidden = !viewModel.outputs.isVisible
+        if (!viewModel.outputs.isVisible) {
+            self.OWSnp.makeConstraints { make in
+                make.height.equalTo(0)
+            }
+        }
     }
 
     func setupObservers() {
@@ -115,9 +124,9 @@ fileprivate extension OWPreConversationSummeryView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1,
                                                                         themeStyle: currentStyle)
-                self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color,
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                           themeStyle: currentStyle)
                 self.nextArrow.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
                 self.updateCustomUI()

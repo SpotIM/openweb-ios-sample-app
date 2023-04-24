@@ -14,32 +14,10 @@ import SpotImCore
 extension OWFontGroupFamily {
     static func fontGroupFamily(fromIndex index: Int, name: String = "") -> OWFontGroupFamily {
         switch index {
-        case 0: return .default
+        case 0: return .`default`
         case 1: return .custom(fontFamily: name)
-        default: return .default
+        default: return .`default`
         }
-    }
-
-    static func fontGroupFamily(fromData data: Data) -> OWFontGroupFamily {
-        do {
-            let decoded = try JSONDecoder().decode(OWFontGroupFamily.self, from: data)
-            return decoded
-        } catch {
-            DLog("Failed to decode fontGroupFamily \(error.localizedDescription)")
-        }
-        return .default
-    }
-
-    var data: Data {
-        let encoder = JSONEncoder()
-
-        do {
-            let data = try encoder.encode(self)
-            return data
-        } catch {
-            DLog("Failed to encode fontGroupFamily \(error.localizedDescription)")
-        }
-        return Data()
     }
 
     enum CodingKeys: String, CodingKey {

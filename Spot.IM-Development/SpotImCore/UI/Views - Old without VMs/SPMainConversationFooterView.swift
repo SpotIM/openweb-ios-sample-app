@@ -15,7 +15,7 @@ final class SPMainConversationFooterView: OWBaseView {
         static let readOnlyLabelIdentifier = "main_conversation_footer_readOnly_label_id"
     }
 
-    let commentCreationEntryView: OWCommentCreationEntryView = .init()
+    let commentCreationEntryView: SPCommentCreationEntryView = .init()
 
     private lazy var separatorView: OWBaseView = .init()
     private lazy var bannerContainerView: OWBaseView = .init()

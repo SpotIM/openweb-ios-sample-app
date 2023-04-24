@@ -35,7 +35,7 @@ class OWReportReasonCell: UITableViewCell {
     fileprivate lazy var lblTitle: UILabel = {
         let lblTitle = UILabel()
         return lblTitle
-                .textColor(OWColorPalette.shared.color(type: .compactText, themeStyle: .light))
+                .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .font(.openSans(style: .regular, of: Metrics.titleFontSize))
                 .lineBreakMode(.byWordWrapping)
     }()
@@ -43,7 +43,7 @@ class OWReportReasonCell: UITableViewCell {
     fileprivate lazy var lblSubtitle: UILabel = {
         let lblSubtitle = UILabel()
         return lblSubtitle
-                .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .font(.openSans(style: .regular, of: Metrics.subtitleFontSize))
                 .numberOfLines(2)
                 .lineBreakMode(.byTruncatingMiddle)
@@ -71,8 +71,8 @@ class OWReportReasonCell: UITableViewCell {
 
     func configure(with viewModel: OWReportReasonCellViewModeling) {
         self.viewModel = viewModel
-        setupObservers()
         configureViews()
+        setupObservers()
     }
 }
 
@@ -120,6 +120,15 @@ fileprivate extension OWReportReasonCell {
 
         viewModel.outputs.isSelected
             .bind(to: self.checkBox.setSelected)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.lblTitle.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
+                self.lblSubtitle.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+            })
             .disposed(by: disposeBag)
     }
 }

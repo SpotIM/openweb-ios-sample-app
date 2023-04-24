@@ -16,12 +16,11 @@ protocol OWCommentHeaderViewModelingInputs {
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
-    var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
+    var subscriberBadgeVM: OWSubscriberIconViewModeling { get }
     var avatarVM: OWAvatarViewModeling { get }
 
     var shouldShowHiddenCommentMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
-    var nameTextStyle: Observable<SPFontStyle> { get }
     var subtitleText: Observable<String> { get }
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
@@ -52,6 +51,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.unwrap()
     }
 
+    fileprivate var user: SPUser? = nil
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()
@@ -66,8 +66,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     ) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
+        self.user = data.user
         avatarVM = OWAvatarViewModelV2(user: data.user, imageURLProvider: imageProvider)
-        subscriberBadgeVM.inputs.configureUser(user: data.user)
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
@@ -85,7 +85,9 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()
 
-    let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
+    lazy var subscriberBadgeVM: OWSubscriberIconViewModeling = {
+        return OWSubscriberIconViewModel(user: user!, servicesProvider: servicesProvider, subscriberBadgeService: OWSubscriberBadgeService())
+    }()
 
     var subtitleText: Observable<String> {
         _replyToUser
@@ -103,7 +105,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _unwrappedModel
             .map({ model in
                 guard let writtenAt = model.writtenAt else { return "" }
-                let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
+                let timestamp = Date(timeIntervalSince1970: writtenAt).owTimeAgo()
                 return model.isReply ? " · ".appending(timestamp) : timestamp
             })
     }
@@ -140,11 +142,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .map({ user -> String in
                 return user.displayName ?? ""
             })
-    }
-
-    var nameTextStyle: Observable<SPFontStyle> {
-        _unwrappedModel
-            .map { $0.isReply ? .medium : .bold }
     }
 
     var hiddenCommentReasonText: Observable<String> {
