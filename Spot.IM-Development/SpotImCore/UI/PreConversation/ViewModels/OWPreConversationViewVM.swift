@@ -13,7 +13,7 @@ import RxSwift
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
-    var fullConversationTap: PublishSubject<Void> { get }
+    var fullConversationTap: PublishSubject<UIView> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var viewInitialized: PublishSubject<Void> { get }
 }
@@ -165,10 +165,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         .unwrap()
     }
 
-    var fullConversationTap = PublishSubject<Void>()
+    var fullConversationTap = PublishSubject<UIView>()
     var openFullConversation: Observable<Void> {
-        return fullConversationTap
-            .asObservable()
+//        return fullConversationTap
+//            .voidify()
+//            .asObservable()
+        return .empty()
     }
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
@@ -307,6 +309,24 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
 
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
+        fullConversationTap
+            .subscribe(onNext: { [weak self] view in
+                guard let self = self else { return }
+
+                self.servicesProvider.presenterService().showPopoverOptions(source: view)
+                    .take(2) // Taking 2 cause the first one is the completion. No need to dispose cause the whole subscription will finish when the user select an option
+                    .subscribe(onNext: { [weak self] result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            break
+                        }
+                    })
             })
             .disposed(by: disposeBag)
 
