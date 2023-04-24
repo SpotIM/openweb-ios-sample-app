@@ -155,7 +155,7 @@ class ViewController: UIViewController {
     private func setupNavigationBar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
-        navigationController?.navigationBar.barTintColor = ColorPalette.shared.color(type: .background)
+        navigationController?.navigationBar.barTintColor = ColorPalette.shared.color(type: .white)
     }
 
     private func fillVersionAndBuildNumber() {

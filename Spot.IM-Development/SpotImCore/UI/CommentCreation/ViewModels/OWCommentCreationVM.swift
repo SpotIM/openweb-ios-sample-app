@@ -32,7 +32,8 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
-        return OWCommentCreationViewViewModel(commentCreationData: commentCreationData)
+        return OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
+                                              viewableMode: .partOfFlow)
     }()
 
     var commentCreated: Observable<SPComment> {
