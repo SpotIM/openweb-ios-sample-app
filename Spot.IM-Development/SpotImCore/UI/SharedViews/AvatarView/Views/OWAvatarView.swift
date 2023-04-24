@@ -18,6 +18,8 @@ final class OWAvatarView: UIView {
 
         static let onlineIndicatorSize: CGFloat = 10
         static let innerIndicatorSize: CGFloat = 8
+        static let onlineIndicatorBlurStyle: String = "CIGaussianBlur"
+        static let onlineIndicatorBlurRadius: CGFloat = 2
     }
 
     fileprivate lazy var avatarButton: UIButton = {
@@ -31,8 +33,8 @@ final class OWAvatarView: UIView {
         let view = UIView()
             .corner(radius: Metrics.onlineIndicatorSize / 2)
             .isHidden(true)
-        if let blurFilter = CIFilter(name: "CIGaussianBlur",
-                                     parameters: [kCIInputRadiusKey: 2]) {
+        if let blurFilter = CIFilter(name: Metrics.onlineIndicatorBlurStyle,
+                                     parameters: [kCIInputRadiusKey: Metrics.onlineIndicatorBlurRadius]) {
             view.layer.backgroundFilters = [blurFilter]
         }
 
