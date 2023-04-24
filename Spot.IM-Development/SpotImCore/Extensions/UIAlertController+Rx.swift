@@ -18,8 +18,8 @@ extension Reactive where Base: UIAlertController {
     static func show(onViewController viewController: UIViewController,
                      animated: Bool = true,
                      preferredStyle: UIAlertController.Style = .alert,
-                     title: String,
-                     message: String,
+                     title: String?,
+                     message: String?,
                      actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
 
         return Observable.create { observer in
