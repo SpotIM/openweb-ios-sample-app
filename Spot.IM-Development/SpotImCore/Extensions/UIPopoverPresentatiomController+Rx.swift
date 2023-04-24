@@ -20,35 +20,44 @@ extension Reactive where Base: UIPopoverPresentationController {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
-            let alertActions = actions.map { rxAlert in
-                UIAlertAction(title: rxAlert.title,
-                              style: rxAlert.style) { _ in
-                    observer.onNext(.selected(action: rxAlert))
-                    observer.onCompleted()
-                }
-            }
+//            let alertActions = actions.map { rxAlert in
+//                UIAction(title: rxAlert.title,
+//                              style: rxAlert.style) { _ in
+//                    observer.onNext(.selected(action: rxAlert))
+//                    observer.onCompleted()
+//                }
+//            }
 
-            // Create UIAlertController
-            let alertVC = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-            // Add the actions to the alertVC
-            alertActions.forEach { alertVC.addAction($0) }
+            
+//            let shareText = "Check out this photo I took!"
+//            let shareImage = UIImage(named: "my-photo.jpg")
 
-            alertVC.modalPresentationStyle = .popover
+//            let activityViewController = UIActivityViewController(activityItems: ["alertActions"], applicationActivities: nil)
+////            activityViewController.popoverPresentationController?.barButtonItem = sourceView // assuming that 'ellipsisButton' is the UIBarButtonItem that was created earlier
+//            activityViewController.popoverPresentationController?.sourceView = sourceView
+//            viewController.present(activityViewController, animated: true, completion: nil)
 
-            var showRect = CGRect()
-            if let sourceView = sourceView {
-                showRect = viewController.view.convert(sourceView.frame, to: viewController.view)
-            }
-            if let popoverController = alertVC.popoverPresentationController {
-                popoverController.sourceView = viewController.view
-                popoverController.sourceRect = CGRect(x: viewController.view.bounds.midX, y: viewController.view.bounds.midY, width: 0, height: 0)
-                popoverController.permittedArrowDirections = .any
-            }
-//            let presentingViewController = viewController.presentingViewController ?? viewController
+//            // Create UIAlertController
+//            let alertVC = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+//            // Add the actions to the alertVC
+//            alertActions.forEach { alertVC.addAction($0) }
+//
+//            alertVC.modalPresentationStyle = .popover
+//
+//            var showRect = CGRect()
+//            if let sourceView = sourceView {
+//                showRect = viewController.view.convert(sourceView.frame, to: viewController.view)
+//            }
+//            if let popoverController = alertVC.popoverPresentationController {
+//                popoverController.sourceView = viewController.view
+//                popoverController.sourceRect = CGRect(x: viewController.view.bounds.midX, y: viewController.view.bounds.midY, width: 0, height: 0)
+//                popoverController.permittedArrowDirections = .any
+//            }
+////            let presentingViewController = viewController.presentingViewController ?? viewController
 
-            viewController.present(alertVC, animated: animated) {
-                observer.onNext(.completion)
-            }
+//            viewController.present(activityViewController, animated: animated) {
+//                observer.onNext(.completion)
+//            }
 
             return Disposables.create()
         }

@@ -125,12 +125,35 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @available(iOS 13.0, *)
+    var menuItems: [UIAction] {
+        return [
+            UIAction(title: "Standard item", image: UIImage(systemName: "sun.max"), handler: { (_) in
+            }),
+            UIAction(title: "Disabled item", image: UIImage(systemName: "moon"), attributes: .disabled, handler: { (_) in
+            }),
+            UIAction(title: "Delete..", image: UIImage(systemName: "trash"), attributes: .destructive, handler: { (_) in
+            })
+        ]
+    }
+
+    @available(iOS 13.0, *)
+    var demoMenu: UIMenu {
+        return UIMenu(title: "My menu", image: nil, identifier: nil, options: [], children: menuItems)
+    }
+
     init(viewModel: OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
+//        if #available(iOS 14.0, *) {
+//            btnCTAConversation.menu = demoMenu
+//            btnCTAConversation.showsMenuAsPrimaryAction = true
+//        } else {
+//            // Fallback on earlier versions
+//        }
     }
 }
 

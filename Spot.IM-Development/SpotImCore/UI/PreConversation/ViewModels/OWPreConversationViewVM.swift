@@ -13,7 +13,7 @@ import RxSwift
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
-    var fullConversationTap: PublishSubject<UIView> { get }
+    var fullConversationTap: PublishSubject<UIButton> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var viewInitialized: PublishSubject<Void> { get }
 }
@@ -165,7 +165,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         .unwrap()
     }
 
-    var fullConversationTap = PublishSubject<UIView>()
+    var fullConversationTap = PublishSubject<UIButton>()
     var openFullConversation: Observable<Void> {
 //        return fullConversationTap
 //            .voidify()
@@ -312,11 +312,14 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        let actions = [UIRxAlertAction(title: LocalizationManager.localizedString(key: "OK"), style: .default),
+                       UIRxAlertAction(title: LocalizationManager.localizedString(key: "action 2"), style: .default),
+                       UIRxAlertAction(title: LocalizationManager.localizedString(key: "action 3"), style: .destructive)]
         fullConversationTap
             .subscribe(onNext: { [weak self] view in
                 guard let self = self else { return }
 
-                self.servicesProvider.presenterService().showPopoverOptions(source: view)
+                self.servicesProvider.presenterService().showMenu(source: view, actions: actions)
                     .take(2) // Taking 2 cause the first one is the completion. No need to dispose cause the whole subscription will finish when the user select an option
                     .subscribe(onNext: { [weak self] result in
                         switch result {
