@@ -107,18 +107,20 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 fileprivate extension OWAvatarViewModel {
     func setupObservers() {
         // Make sure config enable open profile
-        let openProfile: Observable<Void> = tapAvatar
+        let shouldOpenSDKProfile: Observable<Void> = tapAvatar
             .withLatestFrom(
                 sharedServicesProvider
                     .spotConfigurationService()
                     .config(spotId: OWManager.manager.spotId)
             ) { _, config -> Void? in
-                guard config.mobileSdk.profileEnabled == true else { return nil }
+                guard config.mobileSdk.profileEnabled == true,
+                      config.shared?.usePublisherUserProfile != true
+                else { return nil }
             }
             .unwrap()
 
         // Check if this is current user and token is needed
-        let openUserProfileWithToken: Observable<Bool> = openProfile
+        let openUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
             .withLatestFrom(
                 sharedServicesProvider.authenticationManager()
                     .activeUserAvailability
@@ -175,6 +177,29 @@ fileprivate extension OWAvatarViewModel {
                 self._openAvatarProfile.onNext(url)
             })
             .disposed(by: disposeBag)
+
+        // Open user profile if needed
+        let shouldOpenPublisherProfile: Observable<Void> = tapAvatar
+            .withLatestFrom(
+                sharedServicesProvider
+                    .spotConfigurationService()
+                    .config(spotId: OWManager.manager.spotId)
+            ) { _, config -> Void? in
+                guard config.mobileSdk.profileEnabled == true,
+                      config.shared?.usePublisherUserProfile == true
+                else { return nil }
+            }
+            .unwrap()
+
+        shouldOpenPublisherProfile
+            .withLatestFrom(user) { _, user -> SPUser in
+                return user
+            }
+            .subscribe(onNext: { user in
+                // TODO: use OWViewActionsService to show publisher profile screen
+            })
+            .disposed(by: disposeBag)
+
     }
 
     func profileUrl(singleUseTicket: String?, userId: String?) -> URL? {
