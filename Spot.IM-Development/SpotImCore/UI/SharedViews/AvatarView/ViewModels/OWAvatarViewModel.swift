@@ -17,7 +17,7 @@ protocol OWAvatarViewModelingInputs {
 
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
-    var showOnlineIndicator: Observable<Bool> { get }
+    var shouldShowOnlineIndicator: Observable<Bool> { get }
     var openProfile: Observable<URL> { get }
 }
 
@@ -77,7 +77,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             .startWith(.defaultImage)
     }
 
-    var showOnlineIndicator: Observable<Bool> {
+    var shouldShowOnlineIndicator: Observable<Bool> {
         return Observable.combineLatest(
             user,
             sharedServicesProvider.authenticationManager().activeUserAvailability,
@@ -191,12 +191,6 @@ fileprivate extension OWAvatarViewModel {
             url.appendQueryParam(name: "user_id", value: userId)
         }
         url = SPWebSDKProvider.urlWithDarkModeParam(url: url)
-//        TODO
-//        if Settings.helpers.shouldSuppressFinmbFilter {
-//            // Current way for Yahoo internal testing for suppress finmb
-//            // We will remove this noize from the code soon
-//            url.appendQueryParam(name: Settings.tenantConfigCommentsFilter, value: "")
-//        }
 
         return url
     }
