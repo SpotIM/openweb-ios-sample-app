@@ -46,7 +46,7 @@ extension Reactive where Base: UIAlertController {
     }
 }
 
-struct UIRxAlertAction: Equatable {
+struct UIRxAlertAction: Equatable { // Protocol that the enums will inherit from
     var uuid: String = UUID().uuidString
     let title: String
     let style: UIAlertAction.Style
