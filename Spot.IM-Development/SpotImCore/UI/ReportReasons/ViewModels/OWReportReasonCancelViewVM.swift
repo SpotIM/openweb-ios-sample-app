@@ -56,7 +56,7 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     var titleIconName: String {
         return Metrics.titleIconName
     }
-    
+
     var trashIcon: String {
         return Metrics.trashIcon
     }
