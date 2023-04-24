@@ -240,10 +240,10 @@ fileprivate extension OWPreConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
-        compactTapGesture.rx.event
-            .voidify()
-            .bind(to: viewModel.inputs.fullConversationTap)
-            .disposed(by: disposeBag)
+//        compactTapGesture.rx.event
+//            .voidify()
+//            .bind(to: viewModel.inputs.fullConversationTap)
+//            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -326,7 +326,10 @@ fileprivate extension OWPreConversationView {
 
         btnCTAConversation.rx.tap
             .voidify()
-            .bind(to: viewModel.inputs.fullConversationTap)
+            .subscribe(onNext: {
+                self.viewModel.inputs.fullConversationTap.onNext(self.btnCTAConversation)
+            })
+//            .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowCommentCreationEntryView
@@ -461,12 +464,12 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        tableView.rx.itemSelected
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.viewModel.inputs.fullConversationTap.onNext()
-            })
-            .disposed(by: disposeBag)
+//        tableView.rx.itemSelected
+//            .subscribe(onNext: { [weak self] _ in
+//                guard let self = self else { return }
+//                self.viewModel.inputs.fullConversationTap.onNext()
+//            })
+//            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 }
