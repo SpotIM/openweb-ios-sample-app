@@ -25,6 +25,10 @@ protocol OWAuthenticationManagerProtocol {
     func logout() -> Observable<Void>
     func startSSO() -> Observable<OWSSOStartModel>
     func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel>
+
+    // Those methods exposed since we are testing multiple SpotIds inside our SampleApp - therefore we must considered the "current" spotId
+    func loadPersistence(forSpotId spotId: OWSpotId)
+    func resetPersistence()
 }
 
 extension OWAuthenticationManagerProtocol {
@@ -35,6 +39,7 @@ extension OWAuthenticationManagerProtocol {
 
 class OWAuthenticationManager: OWAuthenticationManagerProtocol {
 
+    fileprivate typealias OWUserAvailabilityMapper = [OWSpotId: OWUserAvailability]
     fileprivate unowned let manager: OWManagerProtocol & OWManagerInternalProtocol
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
 
@@ -47,7 +52,7 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
         self.manager = manager
         self.servicesProvider = servicesProvider
 
-        loadPersistence()
+        loadGeneralPersistence()
     }
 
     fileprivate var _networkCredentials = OWNetworkSessionCredentials.none
@@ -288,25 +293,12 @@ extension OWAuthenticationManager {
 }
 
 // Persistence related methods
-fileprivate extension OWAuthenticationManager {
-    func loadPersistence() {
+extension OWAuthenticationManager {
+    func loadPersistence(forSpotId spotId: OWSpotId) {
         let keychain = servicesProvider.keychain()
 
-        // Loading from persistence if exist
-        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
-            self._networkCredentials = credentials
-        }
-
-        // Generating guid if needed
-        if _networkCredentials.guid == nil {
-            let randomGUID = self.generateGUID()
-            let credentials = OWNetworkSessionCredentials(guid: randomGUID,
-                                                             openwebToken: _networkCredentials.openwebToken,
-                                                             authorization: _networkCredentials.authorization)
-            update(credentials: credentials)
-        }
-
-        if let userAvailability = keychain.get(key: OWKeychain.OWKey<OWUserAvailability>.activeUser) {
+        if let userAvailabilityMapper = keychain.get(key: OWKeychain.OWKey<OWUserAvailabilityMapper>.activeUser),
+            let userAvailability = userAvailabilityMapper[spotId] {
             self._activeUserAvailability.onNext(userAvailability)
 
             // Assuming user authentication status accordingly - renew SSO will take care of the actual `Authorization` header if needed to renew
@@ -323,6 +315,44 @@ fileprivate extension OWAuthenticationManager {
         }
     }
 
+    func resetPersistence() {
+        let keychain = servicesProvider.keychain()
+
+        // Remove persistence to the user availability and also "RAM" references
+        let userAvailabilityMapper: OWUserAvailabilityMapper = [:]
+        keychain.save(value: userAvailabilityMapper, forKey: OWKeychain.OWKey<OWUserAvailabilityMapper>.activeUser)
+        self._activeUserAvailability.onNext(.notAvailable)
+        self._userAuthenticationStatus.onNext(.notAutenticated)
+
+        // Remove authorization if exist from before as this field associated to an active user
+        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
+            let newCredentials = OWNetworkSessionCredentials(guid: credentials.guid,
+                                                          openwebToken: credentials.openwebToken,
+                                                             authorization: nil)
+            keychain.save(value: newCredentials, forKey: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials)
+            self._networkCredentials = newCredentials
+        }
+    }
+}
+fileprivate extension OWAuthenticationManager {
+    func loadGeneralPersistence() {
+        let keychain = servicesProvider.keychain()
+
+        // Loading from persistence if exist
+        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
+            self._networkCredentials = credentials
+        }
+
+        // Generating guid if needed
+        if _networkCredentials.guid == nil {
+            let randomGUID = self.generateGUID()
+            let credentials = OWNetworkSessionCredentials(guid: randomGUID,
+                                                             openwebToken: _networkCredentials.openwebToken,
+                                                             authorization: _networkCredentials.authorization)
+            update(credentials: credentials)
+        }
+    }
+
     func update(credentials: OWNetworkSessionCredentials) {
         self._networkCredentials = credentials
         let keychain = servicesProvider.keychain()
@@ -332,7 +362,9 @@ fileprivate extension OWAuthenticationManager {
     func update(userAvailability: OWUserAvailability) {
         self._activeUserAvailability.onNext(userAvailability)
         let keychain = servicesProvider.keychain()
-        keychain.save(value: userAvailability, forKey: OWKeychain.OWKey<OWUserAvailability>.activeUser)
+        let spotId = OpenWeb.manager.spotId
+        let userAvailabilityMapper: OWUserAvailabilityMapper = [spotId: userAvailability]
+        keychain.save(value: userAvailabilityMapper, forKey: OWKeychain.OWKey<OWUserAvailabilityMapper>.activeUser)
     }
 }
 

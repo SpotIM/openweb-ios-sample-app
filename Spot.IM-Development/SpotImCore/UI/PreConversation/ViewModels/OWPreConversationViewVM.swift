@@ -91,7 +91,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
-        return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
+        return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
     }()
 
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
@@ -288,7 +288,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
-        preConversationData: OWPreConversationRequiredData) {
+        preConversationData: OWPreConversationRequiredData,
+        viewableMode: OWViewableMode) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
@@ -351,7 +352,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
-                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
                     }
                 }
                 self._cellsViewModels.removeAll()
@@ -401,17 +402,6 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.isReadOnly)
             .disposed(by: disposeBag)
 
-        // Subscribing to customize UI related stuff
-        Observable.merge(
-            preConversationSummaryVM.inputs.customizeCounterLabelUI.asObservable(),
-            preConversationSummaryVM.inputs.customizeTitleLabelUI.asObservable()
-            )
-            .subscribe(onNext: { _ in
-//            TODO: custom UI
-//            TODO: Map to the appropriate case
-            })
-            .disposed(by: disposeBag)
-
         _ = commentCreationEntryViewModel.outputs
             .tapped
             .subscribe(onNext: { [weak self] in
@@ -450,6 +440,20 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
+
+        // Update comments cells on ReadOnly mode
+        Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
+            return (commentCellsVms, isReadOnly)
+        }
+        .subscribe(onNext: { commentCellsVms, isReadOnly in
+            commentCellsVms.forEach {
+                $0.outputs.commentVM
+                .outputs.commentEngagementVM
+                .inputs.isReadOnly
+                .onNext(isReadOnly)
+            }
+        })
+        .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell)
         cellsViewModels

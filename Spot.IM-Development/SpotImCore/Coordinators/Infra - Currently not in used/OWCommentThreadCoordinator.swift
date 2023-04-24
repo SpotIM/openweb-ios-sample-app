@@ -30,6 +30,12 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let router: OWRoutering!
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
+    }()
+    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+        return OWCustomizationsService(viewSourceType: .commentThread)
+    }()
 
     init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
@@ -88,8 +94,10 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData)
+        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: .independent)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
+        setupObservers(forViewModel: commentThreadViewVM)
+        setupViewActionsCallbacks(forViewModel: commentThreadViewVM)
         return .just(commentThreadView)
     }
 }
@@ -100,6 +108,14 @@ fileprivate extension OWCommentThreadCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewModeling) {
-        // TODO: complete binding VM to actions callbacks
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+    }
+
+    func setupObservers(forViewModel viewModel: OWCommentThreadViewViewModeling) {
+        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+    }
+
+    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
     }
 }

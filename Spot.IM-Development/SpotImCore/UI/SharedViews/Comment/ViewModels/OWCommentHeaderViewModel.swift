@@ -105,7 +105,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _unwrappedModel
             .map({ model in
                 guard let writtenAt = model.writtenAt else { return "" }
-                let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
+                let timestamp = Date(timeIntervalSince1970: writtenAt).owTimeAgo()
                 return model.isReply ? " · ".appending(timestamp) : timestamp
             })
     }
