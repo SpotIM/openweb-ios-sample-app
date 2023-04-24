@@ -194,7 +194,7 @@ fileprivate extension OWAvatarViewModel {
             .withLatestFrom(user) { _, user -> SPUser in
                 return user
             }
-            .subscribe(onNext: { user in
+            .subscribe(onNext: { _ in
                 // TODO: use OWViewActionsService to show publisher profile screen
             })
             .disposed(by: disposeBag)
