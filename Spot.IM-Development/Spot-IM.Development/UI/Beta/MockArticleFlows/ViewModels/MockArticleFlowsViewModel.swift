@@ -304,7 +304,7 @@ fileprivate extension MockArticleFlowsViewModel {
 
                 flows.commentThread(postId: postId,
                                     article: article,
-                                    commentId: "TODO - Comment ID",
+                                    commentId: "TODO - Comment ID, we should also use TextFieldSetting",
                                     presentationalMode: presentationalMode,
                                     additionalSettings: nil,
                                     callbacks: nil,
