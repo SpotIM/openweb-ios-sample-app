@@ -40,47 +40,29 @@ class OWObservableArray<Element: OWUpdaterProtocol>: ExpressibleByArrayLiteral {
 
     fileprivate var disposedBag = DisposeBag()
 
-    fileprivate var elements: [Element] {
-        didSet(newElements) {
-            self.setupObserversForElementsUpdater()
-        }
-    }
-
-    private func setupObserversForElementsUpdater() {
-        self.disposedBag = DisposeBag()
-
-        let elementsUpdaterObservables = elements.enumerated().map { (idx, element) -> Observable<Int> in
-            return element.update
-                .asObservable()
-                .map { idx }
-        }
-
-        Observable.merge(elementsUpdaterObservables)
-            .subscribe { [weak self] idx in
-                guard let self = self else { return }
-                self.arrayDidChange(OWArrayChangeEvent(updated: [idx]))
-            }
-            .disposed(by: disposedBag)
-    }
+    fileprivate var elements: [Element]
 
     required init() {
-        elements = []
-        elementsSubject = BehaviorSubject<[Element]>(value: [])
+        self.elements = []
+        self.elementsSubject = BehaviorSubject<[Element]>(value: [])
     }
 
     init(count: Int, repeatedValue: Element) {
-        elements = Array(repeating: repeatedValue, count: count)
-        elementsSubject = BehaviorSubject<[Element]>(value: elements)
+        self.elements = Array(repeating: repeatedValue, count: count)
+        self.elementsSubject = BehaviorSubject<[Element]>(value: elements)
+        self.setupObserversForElementsUpdater()
     }
 
     required init<S: Sequence>(_ s: S) where S.Iterator.Element == Element {
-        elements = Array(s)
-        elementsSubject = BehaviorSubject<[Element]>(value: elements)
+        self.elements = Array(s)
+        self.elementsSubject = BehaviorSubject<[Element]>(value: elements)
+        self.setupObserversForElementsUpdater()
     }
 
     required init(arrayLiteral elements: Element...) {
         self.elements = elements
-        elementsSubject = BehaviorSubject<[Element]>(value: elements)
+        self.elementsSubject = BehaviorSubject<[Element]>(value: elements)
+        self.setupObserversForElementsUpdater()
     }
 }
 
@@ -266,5 +248,24 @@ extension OWObservableArray: Sequence {
             arrayDidChange(OWArrayChangeEvent(inserted: Array(first..<first + newValue.count),
                                             deleted: Array(bounds.lowerBound..<bounds.upperBound)))
         }
+    }
+}
+
+fileprivate extension OWObservableArray {
+    func setupObserversForElementsUpdater() {
+        self.disposedBag = DisposeBag()
+
+        let elementsUpdaterObservables = elements.enumerated().map { (idx, element) -> Observable<Int> in
+            return element.update
+                .asObservable()
+                .map { idx }
+        }
+
+        Observable.merge(elementsUpdaterObservables)
+            .subscribe { [weak self] idx in
+                guard let self = self else { return }
+                self.arrayDidChange(OWArrayChangeEvent(updated: [idx]))
+            }
+            .disposed(by: disposedBag)
     }
 }
