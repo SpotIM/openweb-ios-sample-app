@@ -104,7 +104,7 @@ fileprivate extension OWAvatarView {
     }
 
     func setupObservers() {
-        viewModel.outputs.showOnlineIndicator
+        viewModel.outputs.shouldShowOnlineIndicator
             .map { !$0 }
             .bind(to: onlineIndicatorView.rx.isHidden)
             .disposed(by: disposeBag)

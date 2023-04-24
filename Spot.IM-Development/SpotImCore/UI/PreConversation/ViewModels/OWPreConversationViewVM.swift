@@ -459,7 +459,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
-        commentCellsVmsObservable
+        let commentAvatarClickObservable: Observable<URL> = commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<URL> in
                 let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
@@ -467,17 +467,15 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] url in
-                self?._openProfile.onNext(url)
-            })
-            .disposed(by: disposeBag)
 
         // Responding to comment creation entry avatar click
-        commentCreationEntryViewModel
+        let commentCreationAvatarClickObservable: Observable<URL> = commentCreationEntryViewModel
             .outputs
             .avatarViewVM
             .outputs
             .openProfile
+
+        Observable.merge(commentAvatarClickObservable, commentCreationAvatarClickObservable)
             .subscribe(onNext: { [weak self] url in
                 self?._openProfile.onNext(url)
             })
