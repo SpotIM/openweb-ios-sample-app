@@ -246,16 +246,19 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        // Observable for the sort option
+        let sortOptionObservable = self.servicesProvider
+            .sortDictateService()
+            .sortOption(perPostId: self.postId)
+
         // Observable for the conversation network API
-        // TODO - split to - initial fetch / pull to refresh + pagination + replies
-        let initialConversationThreadReadObservable = _commentThreadData
-            .unwrap()
-            .flatMap { [weak self] _ -> Observable<OWConversationReadRM> in
+        let initialConversationThreadReadObservable = Observable.combineLatest(_commentThreadData.unwrap(), sortOptionObservable)
+            .flatMap { [weak self] (_, sortOption) -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
-                .conversationRead(mode: .best, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
     //            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
                 .response
         }
