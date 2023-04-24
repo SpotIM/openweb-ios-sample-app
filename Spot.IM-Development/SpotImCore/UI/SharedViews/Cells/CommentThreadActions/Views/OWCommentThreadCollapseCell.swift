@@ -36,7 +36,7 @@ class OWCommentThreadCollapseCell: UITableViewCell {
         commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
 
         commentThreadActionsView.OWSnp.updateConstraints { make in
-            make.leading.equalToSuperview().inset(CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
+            make.leading.equalToSuperview().offset(CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
         }
     }
 
