@@ -41,6 +41,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<URL> { get }
+    var openPublisherProfile: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -175,6 +176,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate var _openProfile = PublishSubject<URL>()
     var openProfile: Observable<URL> {
         return _openProfile
+            .asObservable()
+    }
+
+    fileprivate var _openPublisherProfile = PublishSubject<String>()
+    var openPublisherProfile: Observable<String> {
+        return _openPublisherProfile
             .asObservable()
     }
 
@@ -468,6 +475,28 @@ fileprivate extension OWPreConversationViewViewModel {
         Observable.merge(commentAvatarClickObservable, commentCreationAvatarClickObservable)
             .subscribe(onNext: { [weak self] url in
                 self?._openProfile.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to open publisher profile
+        let commentCreationOpenPublisherProfileObservable: Observable<String> = commentCreationEntryViewModel
+            .outputs
+            .avatarViewVM
+            .outputs
+            .openPublisherProfile
+
+        let commentOpenPublisherProfileObservable: Observable<String> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<String> in
+                let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openPublisherProfile
+                }
+                return Observable.merge(commentOpenPublisherProfileOutput)
+            }
+
+        Observable.merge(commentOpenPublisherProfileObservable, commentCreationOpenPublisherProfileObservable)
+            .subscribe(onNext: { [weak self] id in
+                self?._openPublisherProfile.onNext(id)
             })
             .disposed(by: disposeBag)
 

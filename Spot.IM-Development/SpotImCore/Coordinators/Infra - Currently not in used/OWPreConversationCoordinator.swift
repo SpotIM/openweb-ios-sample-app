@@ -183,7 +183,10 @@ fileprivate extension OWPreConversationCoordinator {
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }
 
-        Observable.merge(contentPressed)
+        let openPublisherProfile = viewModel.outputs.openPublisherProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(contentPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

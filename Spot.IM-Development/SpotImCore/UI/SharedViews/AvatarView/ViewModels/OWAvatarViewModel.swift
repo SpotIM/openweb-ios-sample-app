@@ -19,6 +19,7 @@ protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var shouldShowOnlineIndicator: Observable<Bool> { get }
     var openProfile: Observable<URL> { get }
+    var openPublisherProfile: Observable<String> { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -102,6 +103,12 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         _openAvatarProfile
             .asObservable()
     }
+
+    fileprivate var _openPublisherProfile = PublishSubject<String>()
+    var openPublisherProfile: Observable<String> {
+        _openPublisherProfile
+            .asObservable()
+    }
 }
 
 fileprivate extension OWAvatarViewModel {
@@ -112,12 +119,10 @@ fileprivate extension OWAvatarViewModel {
                 sharedServicesProvider
                     .spotConfigurationService()
                     .config(spotId: OWManager.manager.spotId)
-            ) { _, config -> Void? in
-                guard config.mobileSdk.profileEnabled == true,
-                      config.shared?.usePublisherUserProfile != true
-                else { return nil }
-            }
-            .unwrap()
+            )
+            .filter { $0.mobileSdk.profileEnabled == true }
+            .filter { $0.shared?.usePublisherUserProfile != true }
+            .voidify()
 
         // Check if this is current user and token is needed
         let shouldOpenUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
@@ -183,19 +188,19 @@ fileprivate extension OWAvatarViewModel {
                 sharedServicesProvider
                     .spotConfigurationService()
                     .config(spotId: OWManager.manager.spotId)
-            ) { _, config -> Void? in
-                guard config.mobileSdk.profileEnabled == true,
-                      config.shared?.usePublisherUserProfile == true
-                else { return nil }
-            }
-            .unwrap()
+            )
+            .filter { $0.mobileSdk.profileEnabled == true }
+            .filter { $0.shared?.usePublisherUserProfile == true }
+            .voidify()
 
         shouldOpenPublisherProfile
-            .withLatestFrom(user) { _, user -> SPUser in
-                return user
+            .withLatestFrom(user) { _, user -> String? in
+                return user.ssoPublisherId
             }
-            .subscribe(onNext: { _ in
-                // TODO: use OWViewActionsService to show publisher profile screen
+            .unwrap()
+            .subscribe(onNext: { [weak self] ssoPublisherId in
+                guard let self = self else { return }
+                self._openPublisherProfile.onNext(ssoPublisherId)
             })
             .disposed(by: disposeBag)
 
