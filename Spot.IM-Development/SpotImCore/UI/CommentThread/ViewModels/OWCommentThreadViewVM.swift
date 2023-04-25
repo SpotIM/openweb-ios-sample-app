@@ -28,7 +28,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
 
         setupObservers()

@@ -98,3 +98,8 @@
 "None" = "None";
 "LoggerView" = "Logger View";
 "LocaleStrategy" = "Locale strategy";
+"TestingPlayground" = "Testing Playground";
+"PlaygroundPushMode" = "Playground - Push Mode";
+"PlaygroundPresentMode" = "Playground - Present Mode";
+"PlaygroundIndependentMode" = "Playground - Independent Mode";
+"TestingPlaygroundLogger" = "Testing playground logger";

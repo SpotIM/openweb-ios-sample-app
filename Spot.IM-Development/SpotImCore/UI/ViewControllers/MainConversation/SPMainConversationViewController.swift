@@ -28,7 +28,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private let summaryView = SPConversationSummaryView()
 
     private lazy var refreshControl = UIRefreshControl()
-    private lazy var articleHeader = OWArticleHeader()
+    private lazy var articleHeader = SPArticleHeader()
     private lazy var loginPromptView = SPLoginPromptView()
     private lazy var collapsableContainer = OWBaseView()
     private lazy var communityQuestionView = SPCommunityQuestionView()

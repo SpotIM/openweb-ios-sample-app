@@ -28,6 +28,7 @@ class BetaNewAPIVC: UIViewController {
         static let btnUIFlowsIdentifier = "btn_ui_flows_id"
         static let btnUIViewsIdentifier = "btn_ui_views_id"
         static let btnMiscellaneousIdentifier = "btn_miscellaneous_id"
+        static let btnTestingPlaygroundIdentifier = "btn_testing_playground_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let textFieldHeight: CGFloat = 40
@@ -141,6 +142,10 @@ class BetaNewAPIVC: UIViewController {
         return NSLocalizedString("Miscellaneous", comment: "").blueRoundedButton
     }()
 
+    fileprivate lazy var btnTestingPlayground: UIButton = {
+        return NSLocalizedString("TestingPlayground", comment: "").blueRoundedButton
+    }()
+
     fileprivate var selectedAnswer: ConversationPreset?
 
     init(viewModel: BetaNewAPIViewModeling = BetaNewAPIViewModel()) {
@@ -184,10 +189,13 @@ fileprivate extension BetaNewAPIVC {
         btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
+        btnTestingPlayground.accessibilityIdentifier = Metrics.btnTestingPlaygroundIdentifier
     }
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
+
+        setupNavControllerUI()
 
         // Adding scroll view
         view.addSubview(scrollView)
@@ -246,8 +254,22 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnUIViews.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            #if !(BETA)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+            #endif
+        }
+
+        #if BETA
+        // Adding testing playground button
+        scrollView.addSubview(btnTestingPlayground)
+        btnTestingPlayground.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnMiscellaneous.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
+        #endif
 
         // Setup preset picker and its container.
         view.addSubview(conversationPresetSelectionView)
@@ -258,6 +280,7 @@ fileprivate extension BetaNewAPIVC {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
@@ -326,6 +349,19 @@ fileprivate extension BetaNewAPIVC {
             })
             .disposed(by: disposeBag)
 
+        btnTestingPlayground.rx.tap
+            .bind(to: viewModel.inputs.testingPlaygroundTapped)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openTestingPlayground
+            .subscribe(onNext: { [weak self] dataModel in
+                guard let self = self else { return }
+                let testingPlaygroundVM = TestingPlaygroundViewModel(dataModel: dataModel)
+                let testingPlaygroundVC = TestingPlaygroundVC(viewModel: testingPlaygroundVM)
+                self.navigationController?.pushViewController(testingPlaygroundVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
         settingsBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
@@ -381,6 +417,38 @@ fileprivate extension BetaNewAPIVC {
                 return item
             }
             .disposed(by: disposeBag)
+    }
+    // swiftlint:enable function_body_length
+
+    func setupNavControllerUI() {
+        let navController = self.navigationController
+
+        navController?.navigationBar.isTranslucent = false
+        let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
+
+        // Setup Title font
+        let navigationTitleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .bold),
+            NSAttributedString.Key.foregroundColor: ColorPalette.shared.color(type: .text)
+        ]
+
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            // Setup Back button
+            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+            appearance.backButtonAppearance = backButtonAppearance
+
+            navController?.navigationBar.standardAppearance = appearance
+            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
+        } else {
+            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
     }
 }
 
