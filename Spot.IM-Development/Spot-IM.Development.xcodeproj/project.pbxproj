@@ -398,6 +398,7 @@
 		3DB3B97D29F7DB3100C50192 /* OWTestingRedFirstLevelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B97C29F7DB3100C50192 /* OWTestingRedFirstLevelViewModel.swift */; };
 		3DB3B97F29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B97E29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift */; };
 		3DB3B98129F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98029F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift */; };
+		3DB3B98329F7F01E00C50192 /* OWTestingCellState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98229F7F01E00C50192 /* OWTestingCellState.swift */; };
 		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
 		3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D177281FC123008654CF /* SPLogMethod.swift */; };
 		3DB3D17A281FC60C008654CF /* SPLogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D179281FC60B008654CF /* SPLogLevel.swift */; };
@@ -1197,6 +1198,7 @@
 		3DB3B97C29F7DB3100C50192 /* OWTestingRedFirstLevelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingRedFirstLevelViewModel.swift; sourceTree = "<group>"; };
 		3DB3B97E29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingRedSecondLevelViewModel.swift; sourceTree = "<group>"; };
 		3DB3B98029F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingRxTableViewCellOption.swift; sourceTree = "<group>"; };
+		3DB3B98229F7F01E00C50192 /* OWTestingCellState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingCellState.swift; sourceTree = "<group>"; };
 		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
 		3DB3D177281FC123008654CF /* SPLogMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLogMethod.swift; sourceTree = "<group>"; };
 		3DB3D179281FC60B008654CF /* SPLogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLogLevel.swift; sourceTree = "<group>"; };
@@ -2889,6 +2891,7 @@
 			isa = PBXGroup;
 			children = (
 				3DB3B98029F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift */,
+				3DB3B98229F7F01E00C50192 /* OWTestingCellState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5504,6 +5507,7 @@
 				3D611B9128C643F2003960CE /* OWArticleProtocol.swift in Sources */,
 				8D358D6629D1DD9100E229A3 /* OWOnlineViewingUsersCounterViewModel.swift in Sources */,
 				24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */,
+				3DB3B98329F7F01E00C50192 /* OWTestingCellState.swift in Sources */,
 				3D08E0752875CC7500E6F1AC /* OWPresentationalMode.swift in Sources */,
 				445418B223685154001D0ED0 /* UIImageView+SPExtensions.swift in Sources */,
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
