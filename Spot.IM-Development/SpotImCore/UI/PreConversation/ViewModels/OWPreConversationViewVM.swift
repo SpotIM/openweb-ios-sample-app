@@ -13,7 +13,7 @@ import RxSwift
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
-    var fullConversationTap: PublishSubject<UIButton> { get }
+    var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var viewInitialized: PublishSubject<Void> { get }
 }
@@ -165,12 +165,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         .unwrap()
     }
 
-    var fullConversationTap = PublishSubject<UIButton>()
+    var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
-//        return fullConversationTap
-//            .voidify()
-//            .asObservable()
-        return .empty()
+        return fullConversationTap
+            .voidify()
+            .asObservable()
     }
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
@@ -310,27 +309,6 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
 
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
-
-        let actions = [UIRxAction(title: "OK"),
-                       UIRxAction(title: "action 2"),
-                       UIRxAction(title: "action 3", destructive: true)]
-        fullConversationTap
-            .subscribe(onNext: { [weak self] view in
-                guard let self = self else { return }
-
-                self.servicesProvider.presenterService().showMenu(source: view, actions: actions)
-                    .take(2) // Taking 2 cause the first one is the completion. No need to dispose cause the whole subscription will finish when the user select an option
-                    .subscribe(onNext: { [weak self] result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(let action):
-                            break
-                        }
-                    })
             })
             .disposed(by: disposeBag)
 

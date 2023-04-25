@@ -125,35 +125,12 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @available(iOS 13.0, *)
-    var menuItems: [UIAction] {
-        return [
-            UIAction(title: "Standard item", image: UIImage(systemName: "sun.max"), handler: { (_) in
-            }),
-            UIAction(title: "Disabled item", image: UIImage(systemName: "moon"), attributes: .disabled, handler: { (_) in
-            }),
-            UIAction(title: "Delete..", image: UIImage(systemName: "trash"), attributes: .destructive, handler: { (_) in
-            })
-        ]
-    }
-
-    @available(iOS 13.0, *)
-    var demoMenu: UIMenu {
-        return UIMenu(title: "My menu", image: nil, identifier: nil, options: [], children: menuItems)
-    }
-
     init(viewModel: OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
-//        if #available(iOS 14.0, *) {
-//            btnCTAConversation.menu = demoMenu
-//            btnCTAConversation.showsMenuAsPrimaryAction = true
-//        } else {
-//            // Fallback on earlier versions
-//        }
     }
 }
 
@@ -263,10 +240,10 @@ fileprivate extension OWPreConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
-//        compactTapGesture.rx.event
-//            .voidify()
-//            .bind(to: viewModel.inputs.fullConversationTap)
-//            .disposed(by: disposeBag)
+        compactTapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -348,10 +325,7 @@ fileprivate extension OWPreConversationView {
 
         btnCTAConversation.rx.tap
             .voidify()
-            .subscribe(onNext: {
-                self.viewModel.inputs.fullConversationTap.onNext(self.btnCTAConversation)
-            })
-//            .bind(to: viewModel.inputs.fullConversationTap)
+            .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowCommentCreationEntryView
@@ -486,12 +460,12 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-//        tableView.rx.itemSelected
-//            .subscribe(onNext: { [weak self] _ in
-//                guard let self = self else { return }
-//                self.viewModel.inputs.fullConversationTap.onNext()
-//            })
-//            .disposed(by: disposeBag)
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.inputs.fullConversationTap.onNext()
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 }
