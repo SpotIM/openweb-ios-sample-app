@@ -34,6 +34,9 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentCreation)
     }()
+    fileprivate lazy var customizationsService: OWCustomizationsServicing = {
+        return OWCustomizationsService(viewSourceType: .commentCreation)
+    }()
 
     init(router: OWRoutering! = nil, commentCreationData: OWCommentCreationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
@@ -73,7 +76,8 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: Complete when we would like to support comment creation as a view
-        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData)
+        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
+                                                                                                      viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
         setupObservers(forViewModel: commentCreationViewVM)
         setupViewActionsCallbacks(forViewModel: commentCreationViewVM)
