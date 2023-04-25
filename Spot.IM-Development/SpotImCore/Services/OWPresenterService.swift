@@ -11,8 +11,8 @@ import RxSwift
 
 protocol OWPresenterServicing {
     // TODO: should return some observable for actions
-    func showAlert(title: String, message: String, actions: [UIRxAlertAction]) -> Observable<UIAlertType>
-    func showMenu(source: UIButton?, actions: [UIRxAlertAction]) -> Observable<UIAlertType>
+    func showAlert(title: String, message: String, actions: [UIRxAction]) -> Observable<UIAlertType>
+    func showMenu(source: UIButton, actions: [UIRxAction]) -> Observable<UIAlertType>
 }
 
 class OWPresenterService: OWPresenterServicing {
@@ -24,7 +24,7 @@ class OWPresenterService: OWPresenterServicing {
     }
 
     // TODO
-    func showAlert(title: String, message: String, actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
+    func showAlert(title: String, message: String, actions: [UIRxAction]) -> Observable<UIAlertType> {
         guard let navController = routering?.routering.navigationController
         else { return .empty() }
 
@@ -35,31 +35,10 @@ class OWPresenterService: OWPresenterServicing {
                                          actions: actions)
     }
 
-    func showMenu(source: UIButton?, actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
+    func showMenu(source: UIButton, actions: [UIRxAction]) -> Observable<UIAlertType> {
         // Add UIMenu for iOS 14+
         if #available(iOS 14.0, *) {
-            guard let source = source else { return .empty() }
-            return Observable.create { observer in
-                // TODO: items
-//                let menuItems: [UIAction] = actions.map {
-//                    let action = UIAction(title: $0.title, handler: {_ in })
-//    //                action.state = .on
-//                    return action
-//                }
-                // Map to regular UIAction
-                let menuItems = actions.map { rxAlert in
-                    UIAction(title: rxAlert.title) { _ in
-                        observer.onNext(.selected(action: rxAlert))
-                        observer.onCompleted()
-                    }
-                }
-                var menu: UIMenu {
-                    return UIMenu(identifier: nil, options: [], children: menuItems)
-                }
-                source.menu = menu
-                source.showsMenuAsPrimaryAction = true
-                return Disposables.create()
-            }
+            return UIMenu.rx.show(onButton: source, actions: actions)
         } else {
             // Fallback on earlier versions - show actionSheet
             guard let navController = routering?.routering.navigationController
