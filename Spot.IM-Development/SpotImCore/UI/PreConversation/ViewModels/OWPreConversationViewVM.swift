@@ -312,9 +312,9 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let actions = [UIRxAlertAction(title: LocalizationManager.localizedString(key: "OK"), style: .default),
-                       UIRxAlertAction(title: LocalizationManager.localizedString(key: "action 2"), style: .default),
-                       UIRxAlertAction(title: LocalizationManager.localizedString(key: "action 3"), style: .destructive)]
+        let actions = [UIRxAction(title: "OK"),
+                       UIRxAction(title: "action 2"),
+                       UIRxAction(title: "action 3", destructive: true)]
         fullConversationTap
             .subscribe(onNext: { [weak self] view in
                 guard let self = self else { return }

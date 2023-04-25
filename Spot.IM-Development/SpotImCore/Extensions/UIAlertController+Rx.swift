@@ -11,7 +11,7 @@ import RxSwift
 
 enum UIAlertType {
     case completion
-    case selected(action: UIRxAlertAction)
+    case selected(action: UIRxAction)
 }
 
 extension Reactive where Base: UIAlertController {
@@ -20,13 +20,13 @@ extension Reactive where Base: UIAlertController {
                      preferredStyle: UIAlertController.Style = .alert,
                      title: String?,
                      message: String?,
-                     actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
+                     actions: [UIRxAction]) -> Observable<UIAlertType> {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
             let alertActions = actions.map { rxAlert in
                 UIAlertAction(title: rxAlert.title,
-                              style: rxAlert.style) { _ in
+                              style: rxAlert.destructive ? .destructive : .default) { _ in
                     observer.onNext(.selected(action: rxAlert))
                     observer.onCompleted()
                 }
@@ -46,14 +46,16 @@ extension Reactive where Base: UIAlertController {
     }
 }
 
-struct UIRxAlertAction: Equatable { // Protocol that the enums will inherit from
+struct UIRxAction: Equatable {
     var uuid: String = UUID().uuidString
     let title: String
-    let style: UIAlertAction.Style
+    var selected: Bool = false
+    var disabeled: Bool = false
+    var destructive: Bool = false
 }
 
-extension UIRxAlertAction {
-    static func == (lhs: UIRxAlertAction, rhs: UIRxAlertAction) -> Bool {
+extension UIRxAction {
+    static func == (lhs: UIRxAction, rhs: UIRxAction) -> Bool {
         return lhs.uuid == rhs.uuid
     }
 }
