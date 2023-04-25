@@ -13,6 +13,7 @@ protocol OWConversationViewModelingInputs {
     // String is the commentId
     var highlightComment: PublishSubject<String> { get }
     var viewDidLoad: PublishSubject<Void> { get }
+    var closeConversationTapped: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
@@ -20,6 +21,9 @@ protocol OWConversationViewModelingOutputs {
     var ctaCommentCreationTapped: Observable<Void> { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
+    var shouldCustomizeNavigationBar: Bool { get }
+    var shouldShowCloseButton: Bool { get }
+    var closeConversation: Observable<Void> { get }
 }
 
 protocol OWConversationViewModeling {
@@ -27,16 +31,21 @@ protocol OWConversationViewModeling {
     var outputs: OWConversationViewModelingOutputs { get }
 }
 
-class OWConversationViewModel: OWConversationViewModeling, OWConversationViewModelingInputs, OWConversationViewModelingOutputs {
+class OWConversationViewModel: OWConversationViewModeling,
+                                OWConversationViewModelingInputs,
+                               OWConversationViewModelingOutputs {
+
     var inputs: OWConversationViewModelingInputs { return self }
     var outputs: OWConversationViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     lazy var conversationViewVM: OWConversationViewViewModeling = {
-        return OWConversationViewViewModel(conversationData: conversationData)
+        return OWConversationViewViewModel(conversationData: conversationData,
+                                           viewableMode: self.viewableMode)
     }()
 
     var ctaCommentCreationTapped: Observable<Void> {
@@ -44,8 +53,18 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
         return .never()
     }
 
-    var highlightComment = PublishSubject<String>()
+    var shouldCustomizeNavigationBar: Bool {
+        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
+              viewableMode == .partOfFlow else { return false }
+        return true
+    }
 
+    var shouldShowCloseButton: Bool {
+        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle else { return false }
+        return true
+    }
+
+    var highlightComment = PublishSubject<String>()
     fileprivate var _highlightedComment = BehaviorSubject<String?>(value: nil)
     var highlightedComment: Observable<String> {
         return _highlightedComment
@@ -61,10 +80,17 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
             .asObservable()
     }
 
+    var closeConversationTapped = PublishSubject<Void>()
+    var closeConversation: Observable<Void> {
+        return closeConversationTapped.asObservable()
+    }
+
     init (conversationData: OWConversationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.conversationData = conversationData
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }

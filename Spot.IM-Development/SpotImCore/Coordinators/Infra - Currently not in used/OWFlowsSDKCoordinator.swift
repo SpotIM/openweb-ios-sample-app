@@ -27,15 +27,27 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                 self.invalidateExistingFlows()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
-            .flatMap { [ weak self] _ -> Observable<OWShowable> in
-                guard let self = self else { return .empty() }
-                let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
-                                                                        preConversationData: preConversationData,
-                                                                        actionsCallbacks: callbacks)
+                .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                    guard let self = self else { return .empty() }
+                    let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
+                                                                                  preConversationData: preConversationData,
+                                                                                  actionsCallbacks: callbacks)
 
-                self.store(coordinator: preConversationCoordinator)
-                return preConversationCoordinator.showableComponent()
-            }
+                    self.store(coordinator: preConversationCoordinator)
+
+                    let dissmissConversation = preConversationCoordinator.dissmissConversation
+                        .do(onNext: { [weak self] in
+                            guard let self = self else { return }
+                            self.cleanRouter(presentationalMode: presentationalMode)
+                        })
+                        .map { _ -> OWShowable? in
+                            return nil
+                        }
+                        .unwrap()
+
+                    return Observable.merge(dissmissConversation,
+                                            preConversationCoordinator.showableComponent())
+                }
     }
 
     func startConversationFlow(conversationData: OWConversationRequiredData,
@@ -51,6 +63,12 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                 actionsCallbacks: callbacks)
 
         return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
+            .do { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                if coordinatorResult == .popped {
+                    self.cleanRouter(presentationalMode: presentationalMode)
+                }
+            }
     }
 
     func startCommentCreationFlow(conversationData: OWConversationRequiredData,
@@ -70,12 +88,29 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                 presentationalMode: OWPresentationalMode,
                                 callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
-      let deepLink = OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
-      return startConversationFlow(conversationData: conversationData,
-                                   presentationalMode: presentationalMode,
-                                   callbacks: callbacks,
-                                   deepLinkOptions: deepLink)
-  }
+        let deepLink = OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+        return startConversationFlow(conversationData: conversationData,
+                                     presentationalMode: presentationalMode,
+                                     callbacks: callbacks,
+                                     deepLinkOptions: deepLink)
+    }
+
+#if BETA
+    func startTestingPlaygroundFlow(testingPlaygroundData: OWTestingPlaygroundRequiredData,
+                                    presentationalMode: OWPresentationalMode,
+                                    callbacks: OWViewActionsCallbacks?,
+                                    deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
+        invalidateExistingFlows()
+
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+
+        let testingPlaygroundCoordinator = OWTestingPlaygroundCoordinator(router: router,
+                                                                          testingPlaygroundData: testingPlaygroundData,
+                                                                          actionsCallbacks: callbacks)
+
+        return coordinate(to: testingPlaygroundCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+#endif
 }
 
 fileprivate extension OWFlowsSDKCoordinator {
@@ -98,6 +133,15 @@ fileprivate extension OWFlowsSDKCoordinator {
         }
 
         router = OWRouter(navigationController: navigationController, presentationalMode: presentationalModeExtended)
+    }
+
+    func cleanRouter(presentationalMode: OWPresentationalMode) {
+        switch presentationalMode {
+        case .present(viewController: _):
+            router.dismiss(animated: true, completion: nil)
+        default:
+            break
+        }
     }
 
     func invalidateExistingFlows() {

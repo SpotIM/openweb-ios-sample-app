@@ -75,7 +75,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     private let commentingContainer: UIView = .init()
     private let commentingOnLabel: OWBaseLabel = .init()
-    private lazy var articleView: OWArticleHeader = OWArticleHeader()
+    private lazy var articleView: SPArticleHeader = SPArticleHeader()
 
     private var imagePicker: OWImagePicker?
 
