@@ -10,7 +10,6 @@ import Foundation
 import RxSwift
 
 protocol OWPresenterServicing {
-    // TODO: should return some observable for actions
     func showAlert(title: String, message: String, actions: [UIRxAction]) -> Observable<UIAlertType>
     func showMenu(source: UIButton, actions: [UIRxAction]) -> Observable<UIAlertType>
 }
@@ -22,7 +21,6 @@ class OWPresenterService: OWPresenterServicing {
         self.routering = routering
     }
 
-    // TODO
     func showAlert(title: String, message: String, actions: [UIRxAction]) -> Observable<UIAlertType> {
         guard let navController = routering?.routering.navigationController
         else { return .empty() }
