@@ -16,8 +16,7 @@ protocol OWPresenterServicing {
 }
 
 class OWPresenterService: OWPresenterServicing {
-    fileprivate var routering: OWRouteringCompatible? // weak ?
-//    fileprivate weak var viewCoordinator: OWViewsSDKCoordinator?
+    fileprivate var routering: OWRouteringCompatible?
 
     init(routering: OWRouteringCompatible?) {
         self.routering = routering
