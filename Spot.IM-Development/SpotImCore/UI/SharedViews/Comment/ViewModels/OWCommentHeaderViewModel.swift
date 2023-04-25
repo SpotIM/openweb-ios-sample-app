@@ -12,7 +12,7 @@ import UIKit
 
 protocol OWCommentHeaderViewModelingInputs {
     var tapUserName: PublishSubject<Void> { get }
-    var tapMore: PublishSubject<OWUISource> { get }
+    var tapMore: PublishSubject<UIButton> { get }
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
@@ -71,6 +71,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
+        setupObservers()
     }
 
     init() {
@@ -83,7 +84,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }()
 
     var tapUserName = PublishSubject<Void>()
-    var tapMore = PublishSubject<OWUISource>()
+    var tapMore = PublishSubject<UIButton>()
 
     lazy var subscriberBadgeVM: OWSubscriberIconViewModeling = {
         return OWSubscriberIconViewModel(user: user!, servicesProvider: servicesProvider, subscriberBadgeService: OWSubscriberBadgeService())
@@ -97,7 +98,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
-                : LocalizationManager.localizedString(key: "To") + " \($0)"
+                : OWLocalizationManager.shared.localizedString(key: "To") + " \($0)"
             })
     }
 
@@ -157,7 +158,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             } else {
                 return ""
             }
-            return LocalizationManager.localizedString(key: localizationKey)
+            return OWLocalizationManager.shared.localizedString(key: localizationKey)
         }
     }
 
@@ -173,6 +174,38 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var moreTapped: Observable<OWUISource> {
         tapMore
+            .map { $0 as OWUISource }
             .asObservable()
+    }
+
+    // TODO: properly get the relevant actions
+    fileprivate lazy var optionsActions: [UIRxAction] = {
+        return [
+            UIRxAction(title: OWLocalizationManager.shared.localizedString(key: "Report"))
+        ]
+    }()
+}
+
+fileprivate extension OWCommentHeaderViewModel {
+    func setupObservers() {
+        tapMore
+            .subscribe(onNext: { [weak self] btn in
+                guard let self = self else { return }
+                _ = self.servicesProvider.presenterService()
+                    .showMenu(source: btn, actions: self.optionsActions)
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            // TODO: handle selection
+                            print("Selected item \(action.title)")
+                            break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }

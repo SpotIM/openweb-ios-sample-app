@@ -168,7 +168,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
-            .voidify()
             .asObservable()
     }
 
