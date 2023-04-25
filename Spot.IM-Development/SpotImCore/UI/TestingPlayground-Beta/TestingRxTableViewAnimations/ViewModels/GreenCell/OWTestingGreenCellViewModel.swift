@@ -11,10 +11,15 @@
 import Foundation
 import RxSwift
 
-protocol OWTestingGreenCellViewModelingInputs { }
+protocol OWTestingGreenCellViewModelingInputs {
+    var removeTap: PublishSubject<Void> { get }
+    var changeCellStateTap: PublishSubject<Void> { get }
+}
 
 protocol OWTestingGreenCellViewModelingOutputs {
     var id: String { get }
+    var removeTapped: Observable<Void> { get }
+    var changeCellState: Observable<OWTestingCellState> { get }
 }
 
 protocol OWTestingGreenCellViewModeling: OWCellViewModel {
@@ -28,8 +33,39 @@ class OWTestingGreenCellViewModel: OWTestingGreenCellViewModeling,
     var inputs: OWTestingGreenCellViewModelingInputs { return self }
     var outputs: OWTestingGreenCellViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
+    var changeCellState: Observable<OWTestingCellState> {
+        return cellState
+            .distinctUntilChanged()
+            .asObservable()
+    }
+
+    var removeTap = PublishSubject<Void>()
+    var removeTapped: Observable<Void> {
+        return removeTap
+            .asObservable()
+    }
+
+    var changeCellStateTap = PublishSubject<Void>()
+
     // Unique identifier
     let id: String = UUID().uuidString
+
+    init() {
+        setupObservers()
+    }
+}
+
+fileprivate extension OWTestingGreenCellViewModel {
+    func setupObservers() {
+        changeCellStateTap
+            .withLatestFrom(cellState)
+            .map { $0.opposite }
+            .bind(to: cellState)
+            .disposed(by: disposeBag)
+    }
 }
 
 #endif
