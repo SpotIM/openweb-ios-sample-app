@@ -12,7 +12,6 @@ import Foundation
 #if NEW_API
 
 class OWReportReasonThanksVC: UIViewController {
-
 }
 
 #endif

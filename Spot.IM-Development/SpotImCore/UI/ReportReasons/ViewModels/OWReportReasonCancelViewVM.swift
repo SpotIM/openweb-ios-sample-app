@@ -13,6 +13,7 @@ import RxSwift
 
 protocol OWReportReasonCancelViewViewModelingInputs {
     var closeReportReasonCancelTap: PublishSubject<Void> { get }
+    var cancelReportReasonCancelTap: PublishSubject<Void> { get }
 }
 
 protocol OWReportReasonCancelViewViewModelingOutputs {
@@ -22,6 +23,7 @@ protocol OWReportReasonCancelViewViewModelingOutputs {
     var continueButtonText: String { get }
     var cancelButtonText: String { get }
     var closeReportReasonCancelTapped: Observable<Void> { get }
+    var cancelReportReasonCancelTapped: Observable<Void> { get }
 }
 
 protocol OWReportReasonCancelViewViewModeling {
@@ -72,6 +74,11 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     var closeReportReasonCancelTap = PublishSubject<Void>()
     var closeReportReasonCancelTapped: Observable<Void> {
         return closeReportReasonCancelTap.asObservable()
+    }
+
+    var cancelReportReasonCancelTap = PublishSubject<Void>()
+    var cancelReportReasonCancelTapped: Observable<Void> {
+        return cancelReportReasonCancelTap.asObservable()
     }
 }
 
