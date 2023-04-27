@@ -399,6 +399,9 @@
 		3DB3B97F29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B97E29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift */; };
 		3DB3B98129F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98029F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift */; };
 		3DB3B98329F7F01E00C50192 /* OWTestingCellState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98229F7F01E00C50192 /* OWTestingCellState.swift */; };
+		3DB3B98529FAD35300C50192 /* OWTestingCellsGeneratorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98429FAD35300C50192 /* OWTestingCellsGeneratorViewModel.swift */; };
+		3DB3B98729FAD38E00C50192 /* OWTestingCellsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98629FAD38E00C50192 /* OWTestingCellsGenerator.swift */; };
+		3DB3B98929FAD99500C50192 /* OWTestingCellsGeneratorRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B98829FAD99500C50192 /* OWTestingCellsGeneratorRequiredData.swift */; };
 		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
 		3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D177281FC123008654CF /* SPLogMethod.swift */; };
 		3DB3D17A281FC60C008654CF /* SPLogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D179281FC60B008654CF /* SPLogLevel.swift */; };
@@ -1199,6 +1202,9 @@
 		3DB3B97E29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingRedSecondLevelViewModel.swift; sourceTree = "<group>"; };
 		3DB3B98029F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingRxTableViewCellOption.swift; sourceTree = "<group>"; };
 		3DB3B98229F7F01E00C50192 /* OWTestingCellState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingCellState.swift; sourceTree = "<group>"; };
+		3DB3B98429FAD35300C50192 /* OWTestingCellsGeneratorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingCellsGeneratorViewModel.swift; sourceTree = "<group>"; };
+		3DB3B98629FAD38E00C50192 /* OWTestingCellsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingCellsGenerator.swift; sourceTree = "<group>"; };
+		3DB3B98829FAD99500C50192 /* OWTestingCellsGeneratorRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingCellsGeneratorRequiredData.swift; sourceTree = "<group>"; };
 		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
 		3DB3D177281FC123008654CF /* SPLogMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLogMethod.swift; sourceTree = "<group>"; };
 		3DB3D179281FC60B008654CF /* SPLogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLogLevel.swift; sourceTree = "<group>"; };
@@ -2883,6 +2889,7 @@
 				3DB3B96829F7DA4300C50192 /* GreenCell */,
 				3DB3B95A29F7D99500C50192 /* OWTestingRxTableViewAnimationsVC.swift */,
 				3DB3B95C29F7D9A700C50192 /* OWTestingRxTableViewAnimationsView.swift */,
+				3DB3B98629FAD38E00C50192 /* OWTestingCellsGenerator.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2892,6 +2899,7 @@
 			children = (
 				3DB3B98029F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift */,
 				3DB3B98229F7F01E00C50192 /* OWTestingCellState.swift */,
+				3DB3B98829FAD99500C50192 /* OWTestingCellsGeneratorRequiredData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2904,6 +2912,7 @@
 				3DB3B97329F7DACB00C50192 /* GreenCell */,
 				3DB3B95E29F7D9B700C50192 /* OWTestingRxTableViewAnimationsViewModel.swift */,
 				3DB3B96029F7D9C300C50192 /* OWTestingRxTableViewAnimationsViewViewModel.swift */,
+				3DB3B98429FAD35300C50192 /* OWTestingCellsGeneratorViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5133,6 +5142,7 @@
 				3DA264752951E3B200688FFF /* OWNetworkRequestInterceptor.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
+				3DB3B98729FAD38E00C50192 /* OWTestingCellsGenerator.swift in Sources */,
 				16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */,
 				3D20A38D27B020E8003F8513 /* OWConstraintPriorityTarget.swift in Sources */,
 				1640F2C828AD05B100FB863B /* SPCommentCreationEntryViewModel.swift in Sources */,
@@ -5165,6 +5175,7 @@
 				3DA2646C2951E3B200688FFF /* OWNetworkParameterEncoding.swift in Sources */,
 				449F5F74237C5D7300F81EA3 /* OWMulticastDelegate.swift in Sources */,
 				1628A75628EB0D8E0019B5EC /* OWSpacerCellViewModel.swift in Sources */,
+				3DB3B98529FAD35300C50192 /* OWTestingCellsGeneratorViewModel.swift in Sources */,
 				3DA2646B2951E3B200688FFF /* OWNetworkMultipartFormData.swift in Sources */,
 				3D08E08F287708FC00E6F1AC /* OWAnimatableSectionModelType+ItemPath.swift in Sources */,
 				3D263CE429BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift in Sources */,
@@ -5503,6 +5514,7 @@
 				3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */,
 				3DDA9A4628F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift in Sources */,
 				3D611BBE28C8B6CF003960CE /* OWArticle.swift in Sources */,
+				3DB3B98929FAD99500C50192 /* OWTestingCellsGeneratorRequiredData.swift in Sources */,
 				16A62B6826662F6C00DFE9B7 /* OWCustomUIDelegate.swift in Sources */,
 				3D611B9128C643F2003960CE /* OWArticleProtocol.swift in Sources */,
 				8D358D6629D1DD9100E229A3 /* OWOnlineViewingUsersCounterViewModel.swift in Sources */,
