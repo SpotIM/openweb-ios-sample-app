@@ -22,7 +22,11 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let cellHeight: CGFloat = 68
         static let titleFontSize: CGFloat = 15
         static let titleViewHeight: CGFloat = 56
+        static let footerViewHeight: CGFloat = 70
         static let titleLeadingPadding: CGFloat = 16
+        static let buttonsRadius: CGFloat = 6
+        static let buttonsPadding: CGFloat = 15
+        static let buttonsHeight: CGFloat = 40
     }
 
     fileprivate lazy var titleView: UIView = {
@@ -31,9 +35,37 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var titleLabel: UILabel = {
-        return viewModel.outputs.title
+        return viewModel.outputs.titleText
                 .label
                 .font(UIFont.preferred(style: .bold, of: Metrics.titleFontSize))
+    }()
+
+    fileprivate lazy var footerView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var footerStackView: UIStackView = {
+        return UIStackView()
+            .spacing(Metrics.buttonsPadding)
+            .axis(.horizontal)
+            .distribution(.fillEqually)
+    }()
+
+    fileprivate lazy var cancelButton: UIButton = {
+        return UIButton()
+                .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .setTitle(viewModel.outputs.cancelButtonText, state: .normal)
+                .corner(radius: Metrics.buttonsRadius)
+    }()
+
+    fileprivate lazy var submitButton: UIButton = {
+        return UIButton()
+                .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(.white)
+                .setTitle(viewModel.outputs.submitButtonText, state: .normal)
+                .corner(radius: Metrics.buttonsRadius)
     }()
 
     fileprivate lazy var tableViewReasons: UITableView = {
@@ -74,13 +106,13 @@ fileprivate extension OWReportReasonView {
         if shouldShowTitleView {
             self.addSubview(titleView)
             titleView.OWSnp.makeConstraints { make in
-                make.leading.trailing.top.equalToSuperview()
+                make.leading.trailing.top.equalToSuperViewSafeArea()
                 make.height.equalTo(Metrics.titleViewHeight)
             }
 
             titleView.addSubview(titleLabel)
             titleLabel.OWSnp.makeConstraints { make in
-                make.leading.equalToSuperview().inset(Metrics.titleLeadingPadding)
+                make.leading.equalToSuperViewSafeArea().inset(Metrics.titleLeadingPadding)
                 make.centerY.equalToSuperview()
             }
         }
@@ -92,8 +124,26 @@ fileprivate extension OWReportReasonView {
             } else {
                 make.top.equalToSuperview()
             }
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperViewSafeArea()
         }
+
+        self.addSubviews(footerView)
+        footerView.OWSnp.makeConstraints { make in
+            make.top.equalTo(tableViewReasons.OWSnp.bottom)
+            make.height.equalTo(Metrics.footerViewHeight)
+            make.leading.trailing.equalToSuperViewSafeArea()
+            make.bottom.equalToSuperViewSafeArea()
+        }
+
+        footerView.addSubview(footerStackView)
+        footerStackView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(Metrics.buttonsPadding)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(Metrics.buttonsHeight)
+        }
+
+        footerStackView.addArrangedSubview(cancelButton)
+        footerStackView.addArrangedSubview(submitButton)
     }
 
     func setupObservers() {
@@ -105,7 +155,18 @@ fileprivate extension OWReportReasonView {
                 guard let self = self else { return }
                 self.titleView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.tableViewReasons.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.cancelButton.setBackgroundColor(color: OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), forState: .normal)
+                self.cancelButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
+            .disposed(by: disposeBag)
+
+        cancelButton.rx.tap
+            .bind(to: viewModel.inputs.cancelReportReasonTap)
+            .disposed(by: disposeBag)
+
+        submitButton.rx.tap
+            .bind(to: viewModel.inputs.submitReportReasonTap)
             .disposed(by: disposeBag)
     }
 
@@ -133,7 +194,6 @@ extension OWReportReasonView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return Metrics.cellHeight
     }
-
 }
 
 #endif

@@ -93,15 +93,30 @@ fileprivate extension OWReportReasonCoordinator {
             })
             .disposed(by: disposeBag)
 
+        Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
+                         viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
+        .filter { viewModel.outputs.viewableMode == .partOfFlow }
+        .subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            let reportReasonCancelViewVM = OWReportReasonCancelViewViewModel()
+            let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewViewModel: reportReasonCancelViewVM)
+            reportReasonCancelVC.modalPresentationStyle = .fullScreen
+            self.router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+
+            reportReasonCancelViewVM.closeReportReasonCancelTap
+                .subscribe { _ in
+                    reportReasonCancelVC.dismiss(animated: true)
+                }
+                .disposed(by: disposeBag)
+        })
+        .disposed(by: disposeBag)
+
         viewModel.outputs
-            .reportReasonViewViewModel.outputs.closeReportReasonTapped
-            .filter { viewModel.outputs.viewableMode == .partOfFlow }
-            .subscribe(onNext: { [weak self] _ in
+            .reportReasonViewViewModel.outputs.submitReportReasonTapped
+            .subscribe { [weak self] _ in
                 guard let self = self else { return }
-                    // Open Cancel report screen
-                print("Open Cancel report screen")
-                self.router.navigationController?.dismiss(animated: true)
-            })
+                print("Submit")
+            }
             .disposed(by: disposeBag)
     }
 }

@@ -13,13 +13,19 @@ import RxSwift
 
 protocol OWReportReasonViewViewModelingInputs {
     var closeReportReasonTap: PublishSubject<Void> { get }
+    var cancelReportReasonTap: PublishSubject<Void> { get }
+    var submitReportReasonTap: PublishSubject<Void> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
-    var title: String { get }
+    var titleText: String { get }
+    var cancelButtonText: String { get }
+    var submitButtonText: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
     var shouldShowTitleView: Bool { get }
     var closeReportReasonTapped: Observable<Void> { get }
+    var cancelReportReasonTapped: Observable<Void> { get }
+    var submitReportReasonTapped: Observable<Void> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -32,10 +38,20 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate struct Metrics {
         static let titleKey = "ReportReasonTitle"
         static let textViewPlaceholderKey = "ReportReasonTextViewPlaceholder"
+        static let cancelKey = "Cancel"
+        static let submitKey = "Submit"
     }
 
-    var title: String {
+    var titleText: String {
         return LocalizationManager.localizedString(key: Metrics.titleKey)
+    }
+
+    var cancelButtonText: String {
+        return LocalizationManager.localizedString(key: Metrics.cancelKey)
+    }
+
+    var submitButtonText: String {
+        return LocalizationManager.localizedString(key: Metrics.submitKey)
     }
 
     var textViewPlaceholder: String {
@@ -53,6 +69,16 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var closeReportReasonTap = PublishSubject<Void>()
     var closeReportReasonTapped: Observable<Void> {
         return closeReportReasonTap.asObservable()
+    }
+
+    var cancelReportReasonTap = PublishSubject<Void>()
+    var cancelReportReasonTapped: Observable<Void> {
+        return cancelReportReasonTap.asObservable()
+    }
+
+    var submitReportReasonTap = PublishSubject<Void>()
+    var submitReportReasonTapped: Observable<Void> {
+        return submitReportReasonTap.asObservable()
     }
 
     init(viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {

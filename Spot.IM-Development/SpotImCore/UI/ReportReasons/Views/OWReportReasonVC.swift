@@ -29,8 +29,6 @@ class OWReportReasonVC: UIViewController {
         let closeButton = UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
-
-        closeButton.addTarget(self, action: #selector(self.closeReportReasonTap(_:)), for: .touchUpInside)
         return closeButton
     }()
 
@@ -113,10 +111,10 @@ fileprivate extension OWReportReasonVC {
                 self.setupNavControllerUI(currentStyle)
             })
             .disposed(by: disposeBag)
-    }
 
-    @objc func closeReportReasonTap(_ sender: UIBarButtonItem) {
-        viewModel.outputs.reportReasonViewViewModel.inputs.closeReportReasonTap.onNext()
+        closeButton.rx.tap
+            .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.closeReportReasonTap)
+            .disposed(by: disposeBag)
     }
 }
 

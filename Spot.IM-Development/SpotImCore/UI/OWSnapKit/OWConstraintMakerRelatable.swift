@@ -60,6 +60,14 @@ class OWConstraintMakerRelatable {
     }
 
     @discardableResult
+    func equalToSuperViewSafeArea(_ file: String = #file, _ line: UInt = #line) -> OWConstraintMakerEditable {
+        guard let other = self.description.item.superview else {
+            fatalError("OWSnapKit - Expected superview but found nil when attempting make constraint `equalToSuperViewSafeArea`.")
+        }
+        return self.relatedTo(other.safeAreaLayoutGuide, relation: .equal, file: file, line: line)
+    }
+
+    @discardableResult
     func equalToSuperview(_ file: String = #file, _ line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
             fatalError("OWSnapKit - Expected superview but found nil when attempting make constraint `equalToSuperview`.")
