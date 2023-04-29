@@ -18,6 +18,38 @@ class OWTestingRxTableViewAnimationsView: UIView {
         static let horizontalMargin: CGFloat = 15.0
     }
 
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+            .backgroundColor(UIColor.clear)
+            .separatorStyle(.none)
+
+        tableView.allowsSelection = false
+
+        // Register cells
+        for option in OWTestingRxTableViewCellOption.allCases {
+            tableView.register(cellClass: option.cellClass)
+        }
+
+        return tableView
+    }()
+
+    fileprivate lazy var tableViewDataDataSource: OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel> = {
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<OWTestingRxDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+            guard let self = self else { return UITableViewCell() }
+
+            let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
+            cell.configure(with: item.viewModel)
+
+            return cell
+        })
+
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .bottom)
+        dataSource.animationConfiguration = animationConfiguration
+        return dataSource
+    }()
+
     fileprivate lazy var cellsGeneratorView: UIStackView = {
         let stack = UIStackView()
             .backgroundColor(.white)
@@ -80,10 +112,25 @@ fileprivate extension OWTestingRxTableViewAnimationsView {
             make.top.leading.trailing.equalToSuperview()
         }
 
+        addSubview(tableView)
+        tableView.OWSnp.makeConstraints { make in
+            make.top.equalTo(cellsGeneratorView.OWSnp.bottom)
+            make.bottom.leading.trailing.equalToSuperview()
+        }
     }
 
     func setupObservers() {
+        viewModel.outputs.cellsDataSourceSections
+            .bind(to: tableView.rx.items(dataSource: tableViewDataDataSource))
+            .disposed(by: disposeBag)
 
+//        viewModel.outputs.updateCellSizeAtIndex
+//            .observe(on: MainScheduler.instance)
+//            .subscribe(onNext: { [weak self] index in
+//                guard let self = self else { return }
+//                self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+//            })
+//            .disposed(by: disposeBag)
     }
 }
 
