@@ -15,13 +15,45 @@ import RxCocoa
 class OWTestingRxTableViewAnimationsView: UIView {
 
     fileprivate struct Metrics {
-        static let cellsGeneratorViewHeight: CGFloat = 60.0
         static let horizontalMargin: CGFloat = 15.0
     }
 
-    fileprivate lazy var cellsGeneratorView: UIView = {
-        return UIView()
+    fileprivate lazy var cellsGeneratorView: UIStackView = {
+        let stack = UIStackView()
             .backgroundColor(.white)
+
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+
+        stack.addArrangedSubview(redCellsGenerator)
+        stack.addArrangedSubview(blueCellsGenerator)
+        stack.addArrangedSubview(greenCellsGenerator)
+
+        redCellsGenerator.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+        }
+
+        blueCellsGenerator.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+        }
+
+        greenCellsGenerator.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+        }
+
+        return stack
+    }()
+
+    fileprivate lazy var redCellsGenerator: OWTestingCellsGenerator = {
+        return OWTestingCellsGenerator(viewModel: viewModel.outputs.redCellsGeneratorVM)
+    }()
+
+    fileprivate lazy var blueCellsGenerator: OWTestingCellsGenerator = {
+        return OWTestingCellsGenerator(viewModel: viewModel.outputs.blueCellsGeneratorVM)
+    }()
+
+    fileprivate lazy var greenCellsGenerator: OWTestingCellsGenerator = {
+        return OWTestingCellsGenerator(viewModel: viewModel.outputs.greenCellsGeneratorVM)
     }()
 
     fileprivate var viewModel: OWTestingRxTableViewAnimationsViewViewModeling!
@@ -42,6 +74,11 @@ class OWTestingRxTableViewAnimationsView: UIView {
 fileprivate extension OWTestingRxTableViewAnimationsView {
     func setupUI() {
         self.backgroundColor = .white
+
+        addSubview(cellsGeneratorView)
+        cellsGeneratorView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
 
     }
 

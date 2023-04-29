@@ -8,12 +8,16 @@
 
 #if BETA
 
-import Foundation
+import UIKit
 import RxSwift
 
 protocol OWTestingRxTableViewAnimationsViewViewModelingInputs { }
 
-protocol OWTestingRxTableViewAnimationsViewViewModelingOutputs { }
+protocol OWTestingRxTableViewAnimationsViewViewModelingOutputs {
+    var redCellsGeneratorVM: OWTestingCellsGeneratorViewModeling { get }
+    var blueCellsGeneratorVM: OWTestingCellsGeneratorViewModeling { get }
+    var greenCellsGeneratorVM: OWTestingCellsGeneratorViewModeling { get }
+}
 
 protocol OWTestingRxTableViewAnimationsViewViewModeling {
     var inputs: OWTestingRxTableViewAnimationsViewViewModelingInputs { get }
@@ -25,6 +29,21 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
                                 OWTestingRxTableViewAnimationsViewViewModelingOutputs {
     var inputs: OWTestingRxTableViewAnimationsViewViewModelingInputs { return self }
     var outputs: OWTestingRxTableViewAnimationsViewViewModelingOutputs { return self }
+
+    lazy var redCellsGeneratorVM: OWTestingCellsGeneratorViewModeling = {
+        let requiredData = OWTestingCellsGeneratorRequiredData(color: .red, title: "Red")
+        return OWTestingCellsGeneratorViewModel(requiredData: requiredData)
+    }()
+
+    lazy var blueCellsGeneratorVM: OWTestingCellsGeneratorViewModeling = {
+        let requiredData = OWTestingCellsGeneratorRequiredData(color: .blue, title: "Blue")
+        return OWTestingCellsGeneratorViewModel(requiredData: requiredData)
+    }()
+
+    lazy var greenCellsGeneratorVM: OWTestingCellsGeneratorViewModeling = {
+        let requiredData = OWTestingCellsGeneratorRequiredData(color: .green, title: "Green")
+        return OWTestingCellsGeneratorViewModel(requiredData: requiredData)
+    }()
 
 }
 

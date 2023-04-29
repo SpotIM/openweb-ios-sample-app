@@ -23,6 +23,8 @@ class OWTestingCellsGenerator: UIView {
         static let horizontalMargin: CGFloat = 8.0
         static let roundCorners: CGFloat = 10.0
         static let txtFieldHeight: CGFloat = 40.0
+        static let buttonsPadding: CGFloat = 8.0
+        static let textFieldWidth: CGFloat = 30.0
     }
 
     fileprivate var viewModel: OWTestingCellsGeneratorViewModeling!
@@ -46,10 +48,11 @@ class OWTestingCellsGenerator: UIView {
 
         view.addSubview(textFieldNumberToAdd)
         textFieldNumberToAdd.OWSnp.makeConstraints { make in
-            make.top.greaterThanOrEqualToSuperview()
-            make.bottom.lessThanOrEqualToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.width.equalTo(Metrics.textFieldWidth)
             make.centerY.equalToSuperview()
-            make.leading.equalTo(btnAdd).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(btnAdd.OWSnp.trailing).offset(Metrics.horizontalMargin)
             make.trailing.equalToSuperview()
         }
 
@@ -61,6 +64,8 @@ class OWTestingCellsGenerator: UIView {
             .button
             .backgroundColor(.lightGray)
             .textColor(.black)
+            .withPadding(Metrics.buttonsPadding)
+            .corner(radius: Metrics.roundCorners)
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.secondaryFontSize))
     }()
 
@@ -73,7 +78,17 @@ class OWTestingCellsGenerator: UIView {
         txtField.textColor = UIColor.black
         txtField.font = UIFont.systemFont(ofSize: Metrics.secondaryFontSize)
         txtField.keyboardType = .numberPad
-        txtField.returnKeyType = .done
+        txtField.textAlignment = .center
+
+        // Add done button
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.items = [
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(endKeybaord))
+        ]
+        toolbar.sizeToFit()
+        txtField.inputAccessoryView = toolbar
 
         return txtField
     }()
@@ -83,6 +98,8 @@ class OWTestingCellsGenerator: UIView {
             .button
             .backgroundColor(.lightGray)
             .textColor(.black)
+            .withPadding(Metrics.buttonsPadding)
+            .corner(radius: Metrics.roundCorners)
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.secondaryFontSize))
     }()
 
@@ -91,6 +108,8 @@ class OWTestingCellsGenerator: UIView {
             .button
             .backgroundColor(.lightGray)
             .textColor(.black)
+            .withPadding(Metrics.buttonsPadding)
+            .corner(radius: Metrics.roundCorners)
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.secondaryFontSize))
     }()
 
@@ -170,6 +189,11 @@ fileprivate extension OWTestingCellsGenerator {
         viewModel.outputs.mainTextColor
             .bind(to: mainTitle.rx.textColor)
             .disposed(by: disposeBag)
+    }
+
+    @objc func endKeybaord() {
+        textFieldNumberToAdd.resignFirstResponder()
+        viewModel.inputs.textFieldFinish.onNext(textFieldNumberToAdd.text ?? "")
     }
 }
 
