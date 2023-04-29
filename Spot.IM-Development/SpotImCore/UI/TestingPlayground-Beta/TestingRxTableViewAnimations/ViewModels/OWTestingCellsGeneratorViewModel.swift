@@ -15,6 +15,7 @@ protocol OWTestingCellsGeneratorViewModelingInputs {
     var addTap: PublishSubject<Void> { get }
     var reloadAllTap: PublishSubject<Void> { get }
     var removeAllTap: PublishSubject<Void> { get }
+    var textFieldFinish: PublishSubject<String> { get }
 }
 
 protocol OWTestingCellsGeneratorViewModelingOutputs {
@@ -37,13 +38,23 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
     var inputs: OWTestingCellsGeneratorViewModelingInputs { return self }
     var outputs: OWTestingCellsGeneratorViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let defaultCellsToAdd: Int = 1
+        static let minCellsToAdd: Int = 1
+        static let maxCellsToAdd: Int = 99
+    }
+
     let addTap = PublishSubject<Void>()
     let reloadAllTap = PublishSubject<Void>()
     let removeAllTap = PublishSubject<Void>()
+    var textFieldFinish = PublishSubject<String>()
+
+    fileprivate let disposeBag = DisposeBag()
 
     init(requiredData: OWTestingCellsGeneratorRequiredData) {
         _mainText.onNext(requiredData.title)
         _mainTextColor.onNext(requiredData.color)
+        setupObservers()
     }
 
     fileprivate let _mainText = BehaviorSubject<String?>(value: nil)
@@ -58,7 +69,7 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
             .unwrap()
     }
 
-    fileprivate let _numberOfCellsToAdd = BehaviorSubject<Int>(value: 0)
+    fileprivate let _numberOfCellsToAdd = BehaviorSubject<Int>(value: Metrics.defaultCellsToAdd)
     var textFieldNumberString: Observable<String> {
         return _numberOfCellsToAdd
             .map { "\($0)" }
@@ -78,6 +89,25 @@ class OWTestingCellsGeneratorViewModel: OWTestingCellsGeneratorViewModeling,
     var removeAll: Observable<Void> {
         return removeAllTap
             .asObservable()
+    }
+}
+
+fileprivate extension OWTestingCellsGeneratorViewModel {
+    func setupObservers() {
+        textFieldFinish
+            .map { numberText -> Int in
+                guard let number = Int(numberText) else { return Metrics.defaultCellsToAdd }
+
+                if number > Metrics.maxCellsToAdd {
+                    return Metrics.maxCellsToAdd
+                } else if number < Metrics.minCellsToAdd {
+                    return Metrics.minCellsToAdd
+                } else {
+                    return number
+                }
+            }
+            .bind(to: _numberOfCellsToAdd)
+            .disposed(by: disposeBag)
     }
 }
 
