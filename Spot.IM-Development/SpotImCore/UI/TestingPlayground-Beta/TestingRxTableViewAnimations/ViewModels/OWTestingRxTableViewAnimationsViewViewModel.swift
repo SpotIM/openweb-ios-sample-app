@@ -302,6 +302,18 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .disposed(by: disposeBag)
 
         // Updating table view about required animation
+        let redCellsChangedState = redCellsObservable
+            .flatMapLatest { redCellsVms -> Observable<Void> in
+                let changeStateObservable: [Observable<Void>] = redCellsVms.map { redCellVm in
+                    return redCellVm.outputs.firstLevelVM
+                        .outputs.secondLevelVM
+                        .outputs.changeCellState
+                        .skip(1)
+                        .voidify()
+                }
+                return Observable.merge(changeStateObservable)
+            }
+
         let blueCellsChangedState = blueCellsObservable
             .flatMapLatest { blueCellsVms -> Observable<Void> in
                 let changeStateObservable: [Observable<Void>] = blueCellsVms.map { blueCellVm in
@@ -323,7 +335,7 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
                 return Observable.merge(changeStateObservable)
             }
 
-        Observable.merge(blueCellsChangedState, greenCellsChangedState)
+        Observable.merge(redCellsChangedState, blueCellsChangedState, greenCellsChangedState)
             // Minor delay, just to ensure the table view animation will be performed after constraints updated
             .delay(.milliseconds(Metrics.delayForTableViewAnimation), scheduler: MainScheduler.asyncInstance)
             .bind(to: _performTableViewAnimation)

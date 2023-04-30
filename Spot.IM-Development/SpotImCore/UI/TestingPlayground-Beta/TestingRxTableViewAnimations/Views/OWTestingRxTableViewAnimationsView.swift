@@ -16,7 +16,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
 
     fileprivate struct Metrics {
         static let horizontalMargin: CGFloat = 15.0
-        static let tableViewAnimationDuration: Double = 0.2 // 0.1 is equal to 100 ms
+        static let tableViewAnimationDuration: Double = 0.25 // 0.1 is equal to 100 ms
     }
 
     fileprivate let disposeBag = DisposeBag()
