@@ -11,10 +11,15 @@
 import Foundation
 import RxSwift
 
-protocol OWTestingRedSecondLevelViewModelingInputs { }
+protocol OWTestingRedSecondLevelViewModelingInputs {
+    var removeTap: PublishSubject<Void> { get }
+    var changeCellStateTap: PublishSubject<Void> { get }
+}
 
 protocol OWTestingRedSecondLevelViewModelingOutputs {
     var id: String { get } // Used for presentation inside the label
+    var removeTapped: Observable<Void> { get }
+    var changeCellState: Observable<OWTestingCellState> { get }
 }
 
 protocol OWTestingRedSecondLevelViewModeling {
@@ -30,8 +35,36 @@ class OWTestingRedSecondLevelViewModel: OWTestingRedSecondLevelViewModeling,
 
     let id: String
 
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
+    var changeCellState: Observable<OWTestingCellState> {
+        return cellState
+            .distinctUntilChanged()
+            .asObservable()
+    }
+
+    var removeTap = PublishSubject<Void>()
+    var removeTapped: Observable<Void> {
+        return removeTap
+            .asObservable()
+    }
+
+    var changeCellStateTap = PublishSubject<Void>()
+
     init(id: String) {
         self.id = id
+        setupObservers()
+    }
+}
+
+fileprivate extension OWTestingRedSecondLevelViewModel {
+    func setupObservers() {
+        changeCellStateTap
+            .withLatestFrom(cellState)
+            .map { $0.opposite }
+            .bind(to: cellState)
+            .disposed(by: disposeBag)
     }
 }
 
