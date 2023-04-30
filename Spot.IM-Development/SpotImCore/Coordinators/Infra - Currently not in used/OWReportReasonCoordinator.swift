@@ -93,6 +93,7 @@ fileprivate extension OWReportReasonCoordinator {
             })
             .disposed(by: disposeBag)
 
+        // Cancel
         Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
                          viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
         .filter { viewModel.outputs.viewableMode == .partOfFlow }
@@ -111,11 +112,31 @@ fileprivate extension OWReportReasonCoordinator {
         })
         .disposed(by: disposeBag)
 
+        // Submit
         viewModel.outputs
             .reportReasonViewViewModel.outputs.submitReportReasonTapped
             .subscribe { [weak self] _ in
                 guard let self = self else { return }
-                print("Submit")
+                let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
+                let reportReasonThanksVC = OWReportReasonThanksVC(reportReasonThanksViewViewModel: reportReasonThanksViewVM)
+                reportReasonThanksVC.modalPresentationStyle = .fullScreen
+                self.router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
+
+                reportReasonThanksViewVM.closeReportReasonThanksTap
+                    .subscribe { [weak self] _ in
+                        guard let self = self else { return }
+                        self.router.dismiss(animated: true, completion: nil)
+                    }
+                    .disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
+
+        // Additional information
+        viewModel.outputs
+            .reportReasonViewViewModel.outputs
+            .textViewVM.outputs.textViewTapped
+            .subscribe { _ in
+                print("Open additional information")
             }
             .disposed(by: disposeBag)
     }

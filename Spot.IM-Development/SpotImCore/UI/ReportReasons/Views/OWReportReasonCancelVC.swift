@@ -19,8 +19,7 @@ class OWReportReasonCancelVC: UIViewController {
     let reportReasonCancelViewViewModel: OWReportReasonCancelViewViewModeling
 
     fileprivate lazy var reportReasonCancelView: OWReportReasonCancelView = {
-        let reportReasonCancelView = OWReportReasonCancelView(viewModel: reportReasonCancelViewViewModel)
-        return reportReasonCancelView
+        return OWReportReasonCancelView(viewModel: reportReasonCancelViewViewModel)
     }()
 
     required init?(coder aDecoder: NSCoder) {
