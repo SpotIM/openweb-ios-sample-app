@@ -42,6 +42,7 @@ class OWTestingRedSecondLevelViewModel: OWTestingRedSecondLevelViewModeling,
         return cellState
             .distinctUntilChanged()
             .asObservable()
+            .share(replay: 1)
     }
 
     var removeTap = PublishSubject<Void>()
