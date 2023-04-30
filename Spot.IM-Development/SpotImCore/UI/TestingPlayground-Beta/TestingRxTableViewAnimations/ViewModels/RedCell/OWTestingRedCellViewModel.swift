@@ -33,7 +33,7 @@ class OWTestingRedCellViewModel: OWTestingRedCellViewModeling,
     let id: String = UUID().uuidString
 
     lazy var firstLevelVM: OWTestingRedFirstLevelViewModeling = {
-        return OWTestingRedFirstLevelViewModel()
+        return OWTestingRedFirstLevelViewModel(id: id)
     }()
 }
 

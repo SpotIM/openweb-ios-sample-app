@@ -13,7 +13,9 @@ import RxSwift
 
 protocol OWTestingBlueFirstLevelViewModelingInputs { }
 
-protocol OWTestingBlueFirstLevelViewModelingOutputs { }
+protocol OWTestingBlueFirstLevelViewModelingOutputs {
+    var id: String { get } // Used for presentation inside the label
+}
 
 protocol OWTestingBlueFirstLevelViewModeling {
     var inputs: OWTestingBlueFirstLevelViewModelingInputs { get }
@@ -26,6 +28,11 @@ class OWTestingBlueFirstLevelViewModel: OWTestingBlueFirstLevelViewModeling,
     var inputs: OWTestingBlueFirstLevelViewModelingInputs { return self }
     var outputs: OWTestingBlueFirstLevelViewModelingOutputs { return self }
 
+    let id: String
+
+    init(id: String) {
+        self.id = id
+    }
 }
 
 #endif
