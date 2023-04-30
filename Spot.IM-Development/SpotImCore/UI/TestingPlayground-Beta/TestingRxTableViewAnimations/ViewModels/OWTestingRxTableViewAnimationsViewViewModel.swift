@@ -20,6 +20,7 @@ protocol OWTestingRxTableViewAnimationsViewViewModelingOutputs {
     var blueCellsGeneratorVM: OWTestingCellsGeneratorViewModeling { get }
     var greenCellsGeneratorVM: OWTestingCellsGeneratorViewModeling { get }
     var cellsDataSourceSections: Observable<[OWTestingRxDataSourceModel]> { get }
+    var performTableViewAnimation: Observable<Void> { get }
 }
 
 protocol OWTestingRxTableViewAnimationsViewViewModeling {
@@ -32,6 +33,10 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
                                 OWTestingRxTableViewAnimationsViewViewModelingOutputs {
     var inputs: OWTestingRxTableViewAnimationsViewViewModelingInputs { return self }
     var outputs: OWTestingRxTableViewAnimationsViewViewModelingOutputs { return self }
+
+    fileprivate struct Metrics {
+        static let delayForTableViewAnimation: Int = 50 // In ms
+    }
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -65,6 +70,12 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
                 let section = OWTestingRxDataSourceModel(model: "TheOnlySection", items: items)
                 return [section]
             }
+    }
+
+    fileprivate let _performTableViewAnimation = PublishSubject<Void>()
+    var performTableViewAnimation: Observable<Void> {
+        return _performTableViewAnimation
+            .asObservable()
     }
 
     init() {
@@ -288,6 +299,23 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
                 guard let self = self else { return }
                 self._cellsViewModels.remove(at: indices)
             })
+            .disposed(by: disposeBag)
+
+        // Updating table view about required animation
+        let greenCellsChangedState = greenCellsObservable
+            .flatMapLatest { greenCellsVms -> Observable<Void> in
+                let changeStateObservable: [Observable<Void>] = greenCellsVms.map { greenCellVm in
+                    return greenCellVm.outputs.changeCellState
+                        .skip(1)
+                        .voidify()
+                }
+                return Observable.merge(changeStateObservable)
+            }
+
+        Observable.merge(greenCellsChangedState)
+            // Minor delay, just to ensure the table view animation will be performed after constraints updated
+            .delay(.milliseconds(Metrics.delayForTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
     }
 }
