@@ -14,6 +14,7 @@ class OWTestingRedFirstLevel: UIView {
 
     fileprivate struct Metrics {
         static let insetForSecondLevel: CGFloat = 5.0
+        static let roundCorners: CGFloat = 10.0
         static let borderWidth: CGFloat = 2.0
     }
 
@@ -40,8 +41,9 @@ class OWTestingRedFirstLevel: UIView {
 
 fileprivate extension OWTestingRedFirstLevel {
     func setupUI() {
-        self.backgroundColor = .red
-        self.border(width: Metrics.borderWidth, color: .gray)
+        self .backgroundColor(.red)
+            .border(width: Metrics.borderWidth, color: .gray)
+            .corner(radius: Metrics.roundCorners)
 
         self.addSubview(secondLevelView)
         secondLevelView.OWSnp.makeConstraints { make in

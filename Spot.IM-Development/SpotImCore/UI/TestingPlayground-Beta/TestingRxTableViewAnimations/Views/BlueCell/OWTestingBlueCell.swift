@@ -14,6 +14,8 @@ class OWTestingBlueCell: UITableViewCell {
 
     fileprivate struct Metrics {
         static let insetForFirstLevel: CGFloat = 5.0
+        static let roundCorners: CGFloat = 10.0
+        static let padding: CGFloat = 8.0
     }
 
     fileprivate lazy var firstLevelView: OWTestingBlueFirstLevel = {
@@ -21,6 +23,19 @@ class OWTestingBlueCell: UITableViewCell {
     }()
 
     fileprivate var viewModel: OWTestingBlueCellViewModeling!
+
+    fileprivate lazy var cellContent: UIView = {
+        let view = UIView()
+            .backgroundColor(.blue)
+            .corner(radius: Metrics.roundCorners)
+
+        view.addSubview(firstLevelView)
+        firstLevelView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(Metrics.insetForFirstLevel)
+        }
+
+        return view
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,12 +56,12 @@ class OWTestingBlueCell: UITableViewCell {
 
 fileprivate extension OWTestingBlueCell {
     func setupUI() {
-        self.backgroundColor = .blue
+        self.backgroundColor = .clear
         self.selectionStyle = .none
 
-        self.addSubview(firstLevelView)
-        firstLevelView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.insetForFirstLevel)
+        self.addSubview(cellContent)
+        cellContent.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(Metrics.padding)
         }
     }
 }
