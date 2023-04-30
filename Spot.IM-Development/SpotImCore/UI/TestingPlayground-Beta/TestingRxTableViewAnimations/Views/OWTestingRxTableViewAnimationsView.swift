@@ -16,6 +16,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
 
     fileprivate struct Metrics {
         static let horizontalMargin: CGFloat = 15.0
+        static let tableViewAnimationDuration: Double = 0.2 // 0.1 is equal to 100 ms
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -26,6 +27,8 @@ class OWTestingRxTableViewAnimationsView: UIView {
             .separatorStyle(.none)
 
         tableView.allowsSelection = false
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 130
 
         // Register cells
         for option in OWTestingRxTableViewCellOption.allCases {
@@ -124,13 +127,16 @@ fileprivate extension OWTestingRxTableViewAnimationsView {
             .bind(to: tableView.rx.items(dataSource: tableViewDataDataSource))
             .disposed(by: disposeBag)
 
-//        viewModel.outputs.updateCellSizeAtIndex
-//            .observe(on: MainScheduler.instance)
-//            .subscribe(onNext: { [weak self] index in
-//                guard let self = self else { return }
-//                self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
-//            })
-//            .disposed(by: disposeBag)
+        viewModel.outputs.performTableViewAnimation
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                    self.tableView.beginUpdates()
+                    self.tableView.endUpdates()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
 
