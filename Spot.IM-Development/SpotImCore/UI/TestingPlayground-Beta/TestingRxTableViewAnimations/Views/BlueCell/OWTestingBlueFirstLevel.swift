@@ -9,19 +9,34 @@
 #if BETA
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class OWTestingBlueFirstLevel: UIView {
 
     fileprivate struct Metrics {
         static let borderWidth: CGFloat = 2.0
-        static let buttonsMargin: CGFloat = 15.0
+        static let margin: CGFloat = 15.0
+        static let roundCorners: CGFloat = 10.0
+        static let padding: CGFloat = 8.0
+        static let collapsedCellContentHeight: CGFloat = 115.0
+        static let expandedCellContentHeight: CGFloat = 155.0
     }
+
+    fileprivate lazy var lblIdentifier: UILabel = {
+        return UILabel()
+            .textColor(.black)
+            .numberOfLines(1)
+            .font(OWFontBook.shared.font(style: .regular, size: 15.0))
+    }()
 
     fileprivate lazy var btnRemove: UIButton = {
         return "Remove"
             .button
             .backgroundColor(.lightGray)
             .textColor(.black)
+            .withPadding(Metrics.padding)
+            .corner(radius: Metrics.roundCorners)
             .font(OWFontBook.shared.font(style: .regular, size: 15.0))
     }()
 
@@ -30,10 +45,13 @@ class OWTestingBlueFirstLevel: UIView {
             .button
             .backgroundColor(.lightGray)
             .textColor(.black)
+            .withPadding(Metrics.padding)
+            .corner(radius: Metrics.roundCorners)
             .font(OWFontBook.shared.font(style: .regular, size: 15.0))
     }()
 
     fileprivate var viewModel: OWTestingBlueFirstLevelViewModeling!
+    fileprivate var disposeBag = DisposeBag()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -46,25 +64,42 @@ class OWTestingBlueFirstLevel: UIView {
 
     func configure(with viewModel: OWTestingBlueFirstLevelViewModeling) {
         self.viewModel = viewModel
+        self.disposeBag = DisposeBag()
+        setupObservers()
     }
 }
 
 fileprivate extension OWTestingBlueFirstLevel {
     func setupUI() {
-        self.backgroundColor = .blue
-        self.border(width: Metrics.borderWidth, color: .gray)
+        self .backgroundColor(.blue)
+            .border(width: Metrics.borderWidth, color: .gray)
+            .corner(radius: Metrics.roundCorners)
+
+        self.OWSnp.makeConstraints { make in
+            make.height.equalTo(Metrics.collapsedCellContentHeight)
+        }
+
+        self.addSubview(lblIdentifier)
+        lblIdentifier.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.margin)
+            make.leading.trailing.equalToSuperview().inset(Metrics.margin)
+        }
 
         self.addSubview(btnState)
         btnState.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(Metrics.buttonsMargin)
+            make.bottom.equalToSuperview().offset(-Metrics.margin)
+            make.leading.equalToSuperview().offset(Metrics.margin)
         }
 
         self.addSubview(btnRemove)
         btnRemove.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-Metrics.buttonsMargin)
+            make.bottom.equalToSuperview().offset(-Metrics.margin)
+            make.trailing.equalToSuperview().offset(-Metrics.margin)
         }
+    }
+
+    func setupObservers() {
+        lblIdentifier.text = "Cell ID: \(viewModel.outputs.id)"
     }
 }
 

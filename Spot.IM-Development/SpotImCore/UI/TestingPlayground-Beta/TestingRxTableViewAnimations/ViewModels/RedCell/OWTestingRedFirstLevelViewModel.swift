@@ -28,8 +28,14 @@ class OWTestingRedFirstLevelViewModel: OWTestingRedFirstLevelViewModeling,
     var inputs: OWTestingRedFirstLevelViewModelingInputs { return self }
     var outputs: OWTestingRedFirstLevelViewModelingOutputs { return self }
 
+    fileprivate let id: String
+
+    init(id: String) {
+        self.id = id
+    }
+
     lazy var secondLevelVM: OWTestingRedSecondLevelViewModeling = {
-        return OWTestingRedSecondLevelViewModel()
+        return OWTestingRedSecondLevelViewModel(id: id)
     }()
 }
 
