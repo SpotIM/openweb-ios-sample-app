@@ -15,6 +15,7 @@ protocol OWReportReasonViewViewModelingInputs {
     var closeReportReasonTap: PublishSubject<Void> { get }
     var cancelReportReasonTap: PublishSubject<Void> { get }
     var submitReportReasonTap: PublishSubject<Void> { get }
+    var reasonIndexSelect: BehaviorSubject<Int?> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
@@ -26,6 +27,8 @@ protocol OWReportReasonViewViewModelingOutputs {
     var closeReportReasonTapped: Observable<Void> { get }
     var cancelReportReasonTapped: Observable<Void> { get }
     var submitReportReasonTapped: Observable<Void> { get }
+    var textViewVM: OWTextViewViewModeling { get }
+    var selectedReason: Observable<OWReportReason?> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -34,12 +37,13 @@ protocol OWReportReasonViewViewModeling {
 }
 
 class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWReportReasonViewViewModelingOutputs, OWReportReasonViewViewModeling {
-
     fileprivate struct Metrics {
         static let titleKey = "ReportReasonTitle"
         static let textViewPlaceholderKey = "ReportReasonTextViewPlaceholder"
+        static let textViewMandatoryPlaceholderKey = "ReportReasonTextViewMandatoryPlaceholder"
         static let cancelKey = "Cancel"
         static let submitKey = "Submit"
+        static let textViewMaxCharecters = 280
     }
 
     var titleText: String {
@@ -54,9 +58,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return LocalizationManager.localizedString(key: Metrics.submitKey)
     }
 
-    var textViewPlaceholder: String {
-        return LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey)
-    }
+    lazy var textViewPlaceholderText: BehaviorSubject<String> = BehaviorSubject(value: LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey))
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
     var outputs: OWReportReasonViewViewModelingOutputs { return self }
@@ -81,21 +83,33 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return submitReportReasonTap.asObservable()
     }
 
+    var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
+
+    let textViewVM: OWTextViewViewModeling
+
     init(viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
+        self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.textViewMaxCharecters,
+                                              placeholderText: LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey),
+                                              isEditable: false)
+        setupObservers()
     }
 
     var shouldShowTitleView: Bool {
         return viewableMode == .independent
     }
 
-    lazy var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> =
+    lazy var reportReasons: Observable<[OWReportReason]> =
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { $0.shared?.reportReasonsOptions?.reasonsList }
             .unwrap()
+            .asObservable()
+
+    lazy var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> =
+        reportReasons
             .map { reasons in
                 var viewModels: [OWReportReasonCellViewModeling] = []
                 for reason in reasons {
@@ -104,6 +118,33 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 return viewModels
             }
             .asObservable()
+
+    lazy var selectedReason: Observable<OWReportReason?> =
+        Observable.combineLatest(reportReasons, reasonIndexSelect)
+            .map { (reasons, selectedIndex) in
+                guard let index = selectedIndex else { return nil }
+                return reasons[index]
+            }
+            .asObservable()
+}
+
+fileprivate extension OWReportReasonViewViewModel {
+    func setupObservers() {
+        textViewPlaceholderText
+            .bind(to: textViewVM.inputs.placeholderTextChange)
+            .disposed(by: disposeBag)
+
+        selectedReason
+            .map {
+                if $0 == nil || $0?.requiredAdditionalInfo == false {
+                    return LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey)
+                } else {
+                    return LocalizationManager.localizedString(key: Metrics.textViewMandatoryPlaceholderKey)
+                }
+            }
+            .bind(to: textViewPlaceholderText)
+            .disposed(by: disposeBag)
+    }
 }
 
 #endif

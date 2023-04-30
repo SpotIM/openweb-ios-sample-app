@@ -752,6 +752,9 @@
 		9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */; };
 		9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */; };
 		9EC88D8B29FA760400EBD165 /* OWTitleSubtitleIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC88D8A29FA760400EBD165 /* OWTitleSubtitleIconView.swift */; };
+		9EC88D8D29FAB82400EBD165 /* OWReportReasonThanksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC88D8C29FAB82400EBD165 /* OWReportReasonThanksView.swift */; };
+		9EC88D8F29FE633F00EBD165 /* OWTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC88D8E29FE633F00EBD165 /* OWTextView.swift */; };
+		9EC88D9129FE638A00EBD165 /* OWTextViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC88D9029FE638A00EBD165 /* OWTextViewVM.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
 		9ED2E57F29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */; };
 		9ED2E58129EBFF3B00B39A00 /* OWReportReasonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58029EBFF3B00B39A00 /* OWReportReasonType.swift */; };
@@ -1584,6 +1587,9 @@
 		9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityQuestionsStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Extensions.swift"; sourceTree = "<group>"; };
 		9EC88D8A29FA760400EBD165 /* OWTitleSubtitleIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTitleSubtitleIconView.swift; sourceTree = "<group>"; };
+		9EC88D8C29FAB82400EBD165 /* OWReportReasonThanksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonThanksView.swift; sourceTree = "<group>"; };
+		9EC88D8E29FE633F00EBD165 /* OWTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextView.swift; sourceTree = "<group>"; };
+		9EC88D9029FE638A00EBD165 /* OWTextViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextViewVM.swift; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
 		9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLocaleStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9ED2E58029EBFF3B00B39A00 /* OWReportReasonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonType.swift; sourceTree = "<group>"; };
@@ -4444,13 +4450,15 @@
 			isa = PBXGroup;
 			children = (
 				9ED2E58C29EC01AD00B39A00 /* OWReportReasonView.swift */,
-				9ED2E58E29EC01E900B39A00 /* OWReportReasonThanksVC.swift */,
 				9ED2E58429EC011000B39A00 /* OWReportReasonCell.swift */,
 				9E36BFE829ED33CC00478D06 /* OWReportReasonVC.swift */,
 				9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */,
 				9E4163BC29F6C9BB00819BC2 /* OWReportReasonCancelVC.swift */,
 				9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */,
+				9ED2E58E29EC01E900B39A00 /* OWReportReasonThanksVC.swift */,
+				9EC88D8C29FAB82400EBD165 /* OWReportReasonThanksView.swift */,
 				9EC88D8A29FA760400EBD165 /* OWTitleSubtitleIconView.swift */,
+				9EC88D8E29FE633F00EBD165 /* OWTextView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4465,6 +4473,7 @@
 				9E4163C029F6C9E300819BC2 /* OWReportReasonCancelVM.swift */,
 				9E4163C229F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift */,
 				9E4163C429F6CEC700819BC2 /* OWReportReasonThanksViewVM.swift */,
+				9EC88D9029FE638A00EBD165 /* OWTextViewVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5014,6 +5023,7 @@
 				3DC7BD9A29A4EA4100DF72E4 /* OWLoggerConfiguration.swift in Sources */,
 				249BCDFE27F5B5BF00703CC9 /* SPConversationSummaryViewModel.swift in Sources */,
 				4416C65F237B15A800D3F7B9 /* SPRealtimeDataProvider.swift in Sources */,
+				9EC88D8F29FE633F00EBD165 /* OWTextView.swift in Sources */,
 				3D20A36D27B0124F003F8513 /* OWConstraint.swift in Sources */,
 				24B516DB294B062A00EBD965 /* OWCommentLabelView.swift in Sources */,
 				4454180323685144001D0ED0 /* SPAnimatedButton.swift in Sources */,
@@ -5197,6 +5207,7 @@
 				6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */,
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
 				3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */,
+				9EC88D8D29FAB82400EBD165 /* OWReportReasonThanksView.swift in Sources */,
 				4454181F23685144001D0ED0 /* SPPreConversationHeaderView.swift in Sources */,
 				3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */,
 				441165A52375C4BD00B781F3 /* OWDecodableParser.swift in Sources */,
@@ -5242,6 +5253,7 @@
 				3DA264792951E3B200688FFF /* OWNetworkMultipartUpload.swift in Sources */,
 				449F5F72237C064F00F81EA3 /* RealTimeService.swift in Sources */,
 				3D0AFC8F29C721B4002670D1 /* OWSSOProvider.swift in Sources */,
+				9EC88D9129FE638A00EBD165 /* OWTextViewVM.swift in Sources */,
 				8DE52F4529D9957600D3985C /* OWCommunityQuestionView.swift in Sources */,
 				16BD5F8A27144F2C00066505 /* OWCommentImagePreview.swift in Sources */,
 				3D20A38327B01D90003F8513 /* OWConstraintMakerRelatable.swift in Sources */,

@@ -27,6 +27,9 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let buttonsRadius: CGFloat = 6
         static let buttonsPadding: CGFloat = 15
         static let buttonsHeight: CGFloat = 40
+        static let textViewPadding: CGFloat = 10
+        static let textViewHeight: CGFloat = 62
+        static let submitDisabledOpacity: CGFloat = 0.5
     }
 
     fileprivate lazy var titleView: UIView = {
@@ -43,6 +46,10 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var footerView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var textView: OWTextView = {
+        return OWTextView(viewModel: viewModel.outputs.textViewVM)
     }()
 
     fileprivate lazy var footerStackView: UIStackView = {
@@ -66,6 +73,8 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
                 .textColor(.white)
                 .setTitle(viewModel.outputs.submitButtonText, state: .normal)
                 .corner(radius: Metrics.buttonsRadius)
+                .isEnabled(false)
+                .alpha(Metrics.submitDisabledOpacity)
     }()
 
     fileprivate lazy var tableViewReasons: UITableView = {
@@ -130,16 +139,22 @@ fileprivate extension OWReportReasonView {
         self.addSubviews(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(tableViewReasons.OWSnp.bottom)
-            make.height.equalTo(Metrics.footerViewHeight)
             make.leading.trailing.equalToSuperViewSafeArea()
             make.bottom.equalToSuperViewSafeArea()
         }
 
+        footerView.addSubview(textView)
+        textView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview().inset(Metrics.textViewPadding)
+            make.height.equalTo(Metrics.textViewHeight)
+        }
+
         footerView.addSubview(footerStackView)
         footerStackView.OWSnp.makeConstraints { make in
+            make.top.equalTo(textView.OWSnp.bottom).offset(Metrics.textViewPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.buttonsPadding)
-            make.centerY.equalToSuperview()
             make.height.equalTo(Metrics.buttonsHeight)
+            make.bottom.equalToSuperview().inset(Metrics.buttonsPadding)
         }
 
         footerStackView.addArrangedSubview(cancelButton)
@@ -168,6 +183,17 @@ fileprivate extension OWReportReasonView {
         submitButton.rx.tap
             .bind(to: viewModel.inputs.submitReportReasonTap)
             .disposed(by: disposeBag)
+
+        Observable.combineLatest(viewModel.outputs.selectedReason, viewModel.outputs.textViewVM.outputs.textViewTextCount)
+            .subscribe { [weak self] reportReason, textCount in
+                guard let self = self,
+                      let reportReason = reportReason
+                else { return }
+                let canSubmit = !reportReason.requiredAdditionalInfo || textCount > 0
+                self.submitButton.isEnabled = canSubmit
+                self.submitButton.alpha = canSubmit ? 1 : Metrics.submitDisabledOpacity
+            }
+            .disposed(by: disposeBag)
     }
 
     func bindTableView() {
@@ -185,8 +211,15 @@ fileprivate extension OWReportReasonView {
 
         tableViewReasons.rx.modelSelected(OWReportReasonCellViewModeling.self)
             .subscribe(onNext: { viewModel in
-            viewModel.inputs.setSelected.onNext(true)
+                viewModel.inputs.setSelected.onNext(true)
         }).disposed(by: disposeBag)
+
+        tableViewReasons.rx.itemSelected
+            .subscribe { [weak self] indexPath in
+                guard let self = self else { return }
+                self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
+            }
+            .disposed(by: disposeBag)
     }
 }
 

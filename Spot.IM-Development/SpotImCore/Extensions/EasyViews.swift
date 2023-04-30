@@ -209,6 +209,16 @@ extension UIButton {
         self.titleLabel?.font = font
         return self
     }
+
+    @discardableResult func isEnabled(_ isEnabled: Bool) -> Self {
+        self.isEnabled = isEnabled
+        return self
+    }
+
+    @discardableResult func alpha(_ alpha: CGFloat) -> Self {
+        self.alpha = alpha
+        return self
+    }
 }
 
 extension UIImageView {
@@ -281,6 +291,11 @@ extension UITextView {
 
     @discardableResult func isEditable(_ editable: Bool) -> Self {
         self.isEditable = editable
+        return self
+    }
+
+    @discardableResult func text(_ text: String) -> Self {
+        self.text = text
         return self
     }
 
