@@ -50,6 +50,8 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
         return OWTestingCellsGeneratorViewModel(requiredData: requiredData)
     }()
 
+    fileprivate var cellsIdToIndexMapper = [String: Int]()
+
     fileprivate var _cellsViewModels = OWObservableArray<OWTestingRxTableViewCellOption>()
     fileprivate var cellsViewModels: Observable<[OWTestingRxTableViewCellOption]> {
         return _cellsViewModels
@@ -71,7 +73,21 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
 }
 
 fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        // Update cells id to index mapper
+        cellsViewModels
+            .subscribe(onNext: { [weak self] cellOptions in
+                guard let self = self else { return }
+                self.cellsIdToIndexMapper.removeAll()
+                for index in 0..<cellOptions.count {
+                    let cellOption = cellOptions[index]
+                    self.cellsIdToIndexMapper[cellOption.identifier] = index
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // Adding cells subscribtion
         let addRedObservable = redCellsGeneratorVM.outputs.addCells
             .map { num -> [OWTestingRxTableViewCellOption] in
                 var cellOptions = [OWTestingRxTableViewCellOption]()
@@ -109,6 +125,168 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .subscribe(onNext: { [weak self] cellOptions in
                 guard let self = self else { return }
                 self._cellsViewModels.append(contentsOf: cellOptions)
+            })
+            .disposed(by: disposeBag)
+
+        // Cells by colors observable
+        let redCellsObservable = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWTestingRedCellViewModeling]> in
+                let redCellsVms: [OWTestingRedCellViewModeling] = viewModels.map { vm in
+                    if case.red(let redCellViewModel) = vm {
+                        return redCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+
+                return Observable.just(redCellsVms)
+            }
+            .share(replay: 1)
+
+        let blueCellsObservable = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWTestingBlueCellViewModeling]> in
+                let blueCellsVms: [OWTestingBlueCellViewModeling] = viewModels.map { vm in
+                    if case.blue(let blueCellViewModel) = vm {
+                        return blueCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+
+                return Observable.just(blueCellsVms)
+            }
+            .share(replay: 1)
+
+        let greenCellsObservable = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWTestingGreenCellViewModeling]> in
+                let greenCellsVms: [OWTestingGreenCellViewModeling] = viewModels.map { vm in
+                    if case.green(let greenCellViewModel) = vm {
+                        return greenCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+
+                return Observable.just(greenCellsVms)
+            }
+            .share(replay: 1)
+
+        // Removing individual cells subscribtion
+        let removeRedIndexObservable = redCellsObservable
+            .flatMapLatest { redCellsVms -> Observable<Int> in
+                let reomveOutputObservable: [Observable<Int>] = redCellsVms.map { redCellVm in
+                    return redCellVm.outputs.firstLevelVM
+                        .outputs.secondLevelVM
+                        .outputs.removeTapped
+                        .map { redCellVm.outputs.id }
+                        .map { [weak self] cellId -> Int? in
+                            guard let self = self,
+                                  let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                            return cellIndex
+                        }
+                        .unwrap()
+                }
+                return Observable.merge(reomveOutputObservable)
+            }
+
+        let removeBlueIndexObservable = blueCellsObservable
+            .flatMapLatest { blueCellsVms -> Observable<Int> in
+                let reomveOutputObservable: [Observable<Int>] = blueCellsVms.map { blueCellVm in
+                    return blueCellVm.outputs.firstLevelVM
+                        .outputs.removeTapped
+                        .map { blueCellVm.outputs.id }
+                        .map { [weak self] cellId -> Int? in
+                            guard let self = self,
+                                  let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                            return cellIndex
+                        }
+                        .unwrap()
+                }
+                return Observable.merge(reomveOutputObservable)
+            }
+
+        let removeGreenIndexObservable = greenCellsObservable
+            .flatMapLatest { greenCellsVms -> Observable<Int> in
+                let reomveOutputObservable: [Observable<Int>] = greenCellsVms.map { greenCellVm in
+                    return greenCellVm.outputs.removeTapped
+                        .map { greenCellVm.outputs.id }
+                        .map { [weak self] cellId -> Int? in
+                            guard let self = self,
+                                  let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                            return cellIndex
+                        }
+                        .unwrap()
+                }
+                return Observable.merge(reomveOutputObservable)
+            }
+
+        Observable.merge(removeRedIndexObservable, removeBlueIndexObservable, removeGreenIndexObservable)
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                self._cellsViewModels.remove(at: index)
+            })
+            .disposed(by: disposeBag)
+
+        // Removing entire cells type subscribtion
+        let removeAllRedsObservable = redCellsGeneratorVM.outputs.removeAll
+            .flatMapLatest { _ -> Observable<[OWTestingRedCellViewModeling]> in
+                return redCellsObservable
+                    .take(1)
+            }
+            .map { cellsVm -> [Int] in
+                let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
+                    let cellId = individualCellVm.outputs.id
+                    guard let self = self,
+                          let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                    return cellIndex
+                }
+                .unwrap()
+
+                return indices
+            }
+
+        let removeAllBluesObservable = blueCellsGeneratorVM.outputs.removeAll
+            .flatMapLatest { _ -> Observable<[OWTestingBlueCellViewModeling]> in
+                return blueCellsObservable
+                    .take(1)
+            }
+            .map { cellsVm -> [Int] in
+                let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
+                    let cellId = individualCellVm.outputs.id
+                    guard let self = self,
+                          let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                    return cellIndex
+                }
+                .unwrap()
+
+                return indices
+            }
+
+        let removeAllGreensObservable = greenCellsGeneratorVM.outputs.removeAll
+            .flatMapLatest { _ -> Observable<[OWTestingGreenCellViewModeling]> in
+                return greenCellsObservable
+                    .take(1)
+            }
+            .map { cellsVm -> [Int] in
+                let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
+                    let cellId = individualCellVm.outputs.id
+                    guard let self = self,
+                          let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                    return cellIndex
+                }
+                .unwrap()
+
+                return indices
+            }
+
+        Observable.merge(removeAllRedsObservable, removeAllBluesObservable, removeAllGreensObservable)
+            .filter { !$0.isEmpty }
+            .subscribe(onNext: { [weak self] indices in
+                guard let self = self else { return }
+                self._cellsViewModels.remove(at: indices)
             })
             .disposed(by: disposeBag)
     }

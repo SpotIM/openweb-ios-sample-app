@@ -100,7 +100,7 @@ fileprivate extension OWTestingGreenCell {
         self.backgroundColor = .clear
         self.selectionStyle = .none
 
-        self.addSubview(cellContent)
+        contentView.addSubview(cellContent)
         cellContent.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview().inset(Metrics.padding)
             make.height.equalTo(Metrics.collapsedCellContentHeight)
@@ -109,6 +109,14 @@ fileprivate extension OWTestingGreenCell {
 
     func setupObservers() {
         lblIdentifier.text = "Cell ID: \(viewModel.outputs.id)"
+
+        btnRemove.rx.tap
+            .bind(to: viewModel.inputs.removeTap)
+            .disposed(by: disposeBag)
+
+        btnState.rx.tap
+            .bind(to: viewModel.inputs.changeCellStateTap)
+            .disposed(by: disposeBag)
     }
 }
 

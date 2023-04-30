@@ -128,6 +128,19 @@ extension OWObservableArray: MutableCollection {
         return e
     }
 
+    @discardableResult mutating func remove(at indices: [Int]) -> [Element] {
+        let sortedIndices = indices.sorted { $0 > $1 }
+        var elementsToReturn = [Element]( )
+
+        for index in sortedIndices {
+            let e = elements.remove(at: index)
+            elementsToReturn.append(e)
+        }
+
+        arrayDidChange(OWArrayChangeEvent(deleted: indices))
+        return elementsToReturn
+    }
+
     mutating func removeAll(_ keepCapacity: Bool = false) {
         guard !elements.isEmpty else {
             return
