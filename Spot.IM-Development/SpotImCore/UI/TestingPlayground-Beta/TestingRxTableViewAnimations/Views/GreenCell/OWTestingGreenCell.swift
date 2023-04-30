@@ -19,7 +19,7 @@ class OWTestingGreenCell: UITableViewCell {
         static let roundCorners: CGFloat = 10.0
         static let padding: CGFloat = 8.0
         static let collapsedCellContentHeight: CGFloat = 120.0
-        static let expandedCellContentHeight: CGFloat = 160.0
+        static let expandedCellContentHeight: CGFloat = 180.0
     }
 
     fileprivate lazy var cellContent: UIView = {
@@ -92,6 +92,7 @@ class OWTestingGreenCell: UITableViewCell {
         self.viewModel = vm
         self.disposeBag = DisposeBag()
         setupObservers()
+        ensureCorrectState()
     }
 }
 
@@ -116,6 +117,71 @@ fileprivate extension OWTestingGreenCell {
 
         btnState.rx.tap
             .bind(to: viewModel.inputs.changeCellStateTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.changeCellState
+            .skip(1)
+            .subscribe(onNext: { [weak self] state in
+                guard let self = self else { return }
+
+                let height: CGFloat
+                switch state {
+                case .collapsed:
+                    height = Metrics.collapsedCellContentHeight
+                case .expanded:
+                    height = Metrics.expandedCellContentHeight
+                }
+
+                self.cellContent.OWSnp.updateConstraints { make in
+                    make.height.equalTo(height)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.changeCellState
+            .map { state -> String in
+                let text: String
+                switch state {
+                case .collapsed:
+                    text = "Expand"
+                case .expanded:
+                    text = "Collapse"
+                }
+
+                return text
+            }
+            .subscribe(onNext: { [weak self] title in
+                self?.btnState.setTitle(title, for: .normal)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    /*
+     This is essential as the cells being reused and sometime and expanded cell might be reused.
+     Here we are ensuring that as soon as the cell configured with a new VM - the correct size updated via the VM output which we use instantly.
+     Note that `changeCellState` have share(reply:1) - means that we getting instantly the last value it had.
+     Setting collapsed height in prepare for reuse won't be enough - as this will cause expanded cells to show as collapsed after scrolling away and back to them.
+     We must ensure correct size as soon as we configure with a new VM.
+     Lastly, since the cell is going to be shown, an animation already happen it the table view - that's why we don't need to update the view side about this height change as the table view already in "animation" mode while the cell created after the cell re-added to the table (from prepareForReuse).
+     */
+    func ensureCorrectState() {
+       viewModel.outputs.changeCellState
+            .take(1)
+            .subscribe(onNext: { [weak self] state in
+                guard let self = self else { return }
+
+                let height: CGFloat
+                switch state {
+                case .collapsed:
+                    height = Metrics.collapsedCellContentHeight
+                case .expanded:
+                    height = Metrics.expandedCellContentHeight
+                }
+
+                self.cellContent.OWSnp.updateConstraints { make in
+                    make.height.equalTo(height)
+                }
+            })
             .disposed(by: disposeBag)
     }
 }

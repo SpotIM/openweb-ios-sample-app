@@ -20,7 +20,7 @@ class OWTestingRedSecondLevel: UIView {
         static let roundCorners: CGFloat = 10.0
         static let padding: CGFloat = 8.0
         static let collapsedCellContentHeight: CGFloat = 110.0
-        static let expandedCellContentHeight: CGFloat = 150.0
+        static let expandedCellContentHeight: CGFloat = 170.0
     }
 
     fileprivate lazy var lblIdentifier: UILabel = {
