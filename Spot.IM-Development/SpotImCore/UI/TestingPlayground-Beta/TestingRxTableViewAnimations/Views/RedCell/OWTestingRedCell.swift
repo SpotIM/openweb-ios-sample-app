@@ -62,7 +62,7 @@ fileprivate extension OWTestingRedCell {
         self.backgroundColor = .clear
         self.selectionStyle = .none
 
-        self.addSubview(cellContent)
+        contentView.addSubview(cellContent)
         cellContent.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview().inset(Metrics.padding)
         }

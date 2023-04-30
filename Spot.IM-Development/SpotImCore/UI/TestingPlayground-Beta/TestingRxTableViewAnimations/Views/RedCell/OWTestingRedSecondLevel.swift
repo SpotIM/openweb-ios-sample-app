@@ -100,6 +100,14 @@ fileprivate extension OWTestingRedSecondLevel {
 
     func setupObservers() {
         lblIdentifier.text = "Cell ID: \(viewModel.outputs.id)"
+
+        btnRemove.rx.tap
+            .bind(to: viewModel.inputs.removeTap)
+            .disposed(by: disposeBag)
+
+        btnState.rx.tap
+            .bind(to: viewModel.inputs.changeCellStateTap)
+            .disposed(by: disposeBag)
     }
 }
 
