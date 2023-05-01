@@ -67,6 +67,7 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
     var cellsDataSourceSections: Observable<[OWTestingRxDataSourceModel]> {
         return cellsViewModels
             .map { items in
+            .map { items in
                 let section = OWTestingRxDataSourceModel(model: "TheOnlySection", items: items)
                 return [section]
             }
@@ -301,13 +302,91 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Updating table view about required animation
+        // Reloading entire cells type subscribtion
+        let reloadAllRedsObservable = redCellsGeneratorVM.outputs.reloadAll
+            .flatMapLatest { _ -> Observable<[OWTestingRedCellViewModeling]> in
+                return redCellsObservable
+                    .take(1)
+            }
+            .map { cellsVm -> [(OWTestingRxTableViewCellOption, Int)] in
+                let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
+                    let cellId = individualCellVm.outputs.id
+                    guard let self = self,
+                          let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                    return cellIndex
+                }
+                .unwrap()
+
+                let newCellsVm = cellsVm.map { $0.outputs.copy() }
+                    .map { OWTestingRxTableViewCellOption.red(viewModel: $0) }
+                var elementsAndIndices = [(OWTestingRxTableViewCellOption, Int)]()
+                for index in 0..<newCellsVm.count {
+                    elementsAndIndices.append((newCellsVm[index], indices[index]))
+                }
+                return elementsAndIndices
+            }
+
+        let reloadAllBluesObservable = blueCellsGeneratorVM.outputs.reloadAll
+            .flatMapLatest { _ -> Observable<[OWTestingBlueCellViewModeling]> in
+                return blueCellsObservable
+                    .take(1)
+            }
+            .map { cellsVm -> [(OWTestingRxTableViewCellOption, Int)] in
+                let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
+                    let cellId = individualCellVm.outputs.id
+                    guard let self = self,
+                          let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                    return cellIndex
+                }
+                .unwrap()
+
+                let newCellsVm = cellsVm.map { $0.outputs.copy() }
+                    .map { OWTestingRxTableViewCellOption.blue(viewModel: $0) }
+                var elementsAndIndices = [(OWTestingRxTableViewCellOption, Int)]()
+                for index in 0..<newCellsVm.count {
+                    elementsAndIndices.append((newCellsVm[index], indices[index]))
+                }
+                return elementsAndIndices
+            }
+
+        let reloadAllGreensObservable = greenCellsGeneratorVM.outputs.reloadAll
+            .flatMapLatest { _ -> Observable<[OWTestingGreenCellViewModeling]> in
+                return greenCellsObservable
+                    .take(1)
+            }
+            .map { cellsVm -> [(OWTestingRxTableViewCellOption, Int)] in
+                let indices: [Int] = cellsVm.map { [weak self] individualCellVm in
+                    let cellId = individualCellVm.outputs.id
+                    guard let self = self,
+                          let cellIndex = self.cellsIdToIndexMapper[cellId] else { return nil }
+                    return cellIndex
+                }
+                .unwrap()
+
+                let newCellsVm = cellsVm.map { $0.outputs.copy() }
+                    .map { OWTestingRxTableViewCellOption.green(viewModel: $0) }
+                var elementsAndIndices = [(OWTestingRxTableViewCellOption, Int)]()
+                for index in 0..<newCellsVm.count {
+                    elementsAndIndices.append((newCellsVm[index], indices[index]))
+                }
+                return elementsAndIndices
+            }
+
+        Observable.merge(reloadAllRedsObservable, reloadAllBluesObservable, reloadAllGreensObservable)
+            .filter { !$0.isEmpty }
+            .subscribe(onNext: { [weak self] elementsAndIndices in
+                guard let self = self else { return }
+                self._cellsViewModels.update(elementsWithIndices: elementsAndIndices)
+            })
+            .disposed(by: disposeBag)
+
+        // Updating table view about required animation for expand/collapse
         let redCellsChangedState = redCellsObservable
             .flatMapLatest { redCellsVms -> Observable<Void> in
                 let changeStateObservable: [Observable<Void>] = redCellsVms.map { redCellVm in
                     return redCellVm.outputs.firstLevelVM
                         .outputs.secondLevelVM
-                        .outputs.changeCellState
+                        .outputs.changedCellState
                         .skip(1)
                         .voidify()
                 }
@@ -318,17 +397,17 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             .flatMapLatest { blueCellsVms -> Observable<Void> in
                 let changeStateObservable: [Observable<Void>] = blueCellsVms.map { blueCellVm in
                     return blueCellVm.outputs.firstLevelVM
-                        .outputs.changeCellState
+                        .outputs.changedCellState
                         .skip(1)
                         .voidify()
                 }
                 return Observable.merge(changeStateObservable)
             }
-        
+
         let greenCellsChangedState = greenCellsObservable
             .flatMapLatest { greenCellsVms -> Observable<Void> in
                 let changeStateObservable: [Observable<Void>] = greenCellsVms.map { greenCellVm in
-                    return greenCellVm.outputs.changeCellState
+                    return greenCellVm.outputs.changedCellState
                         .skip(1)
                         .voidify()
                 }

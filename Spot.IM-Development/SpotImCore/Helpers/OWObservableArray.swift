@@ -141,6 +141,22 @@ extension OWObservableArray: MutableCollection {
         return elementsToReturn
     }
 
+    mutating func update(elementsWithIndices: [(Element, Int)]) {
+        let regularSorted = elementsWithIndices.sorted { $0.1 < $1.1 }
+        let reverseSorted = elementsWithIndices.sorted { $0.1 > $1.1 }
+
+        for elementAndIndex in reverseSorted {
+            elements.remove(at: elementAndIndex.1)
+        }
+
+        for elementAndIndex in regularSorted {
+            elements.insert(elementAndIndex.0, at: elementAndIndex.1)
+        }
+
+        let indices = elementsWithIndices.map { $0.1 }
+        arrayDidChange(OWArrayChangeEvent(updated: indices))
+    }
+
     mutating func removeAll(_ keepCapacity: Bool = false) {
         guard !elements.isEmpty else {
             return
