@@ -16,6 +16,7 @@ protocol OWTestingBlueCellViewModelingInputs { }
 protocol OWTestingBlueCellViewModelingOutputs {
     var id: String { get }
     var firstLevelVM: OWTestingBlueFirstLevelViewModeling { get }
+    func copy() -> OWTestingBlueCellViewModeling
 }
 
 protocol OWTestingBlueCellViewModeling: OWCellViewModel {
@@ -30,11 +31,25 @@ class OWTestingBlueCellViewModel: OWTestingBlueCellViewModeling,
     var outputs: OWTestingBlueCellViewModelingOutputs { return self }
 
     // Unique identifier
-    let id: String = UUID().uuidString
+    let id: String
 
     lazy var firstLevelVM: OWTestingBlueFirstLevelViewModeling = {
         return OWTestingBlueFirstLevelViewModel(id: id)
     }()
+
+    init(id: String = UUID().uuidString) {
+        self.id = id
+    }
+
+    func copy() -> OWTestingBlueCellViewModeling {
+        let newVM = OWTestingBlueCellViewModel(id: self.id)
+        _ = self.firstLevelVM.outputs.changedCellState
+            .take(1)
+            .subscribe(onNext: { state in
+                newVM.firstLevelVM.inputs.changeCellStateTo.onNext(state)
+            })
+        return newVM
+    }
 }
 
 #endif

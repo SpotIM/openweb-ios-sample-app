@@ -48,7 +48,7 @@ class OWTestingRxTableViewAnimationsView: UIView {
             return cell
         })
 
-        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .bottom)
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .fade, deleteAnimation: .bottom)
         dataSource.animationConfiguration = animationConfiguration
         return dataSource
     }()
