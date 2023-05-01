@@ -19,7 +19,8 @@ protocol OWTestingGreenCellViewModelingInputs {
 protocol OWTestingGreenCellViewModelingOutputs {
     var id: String { get }
     var removeTapped: Observable<Void> { get }
-    var changeCellState: Observable<OWTestingCellState> { get }
+    var changedCellState: Observable<OWTestingCellState> { get }
+    func copy() -> OWTestingGreenCellViewModeling
 }
 
 protocol OWTestingGreenCellViewModeling: OWCellViewModel {
@@ -36,7 +37,7 @@ class OWTestingGreenCellViewModel: OWTestingGreenCellViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
-    var changeCellState: Observable<OWTestingCellState> {
+    var changedCellState: Observable<OWTestingCellState> {
         return cellState
             .distinctUntilChanged()
             .asObservable()
@@ -52,10 +53,21 @@ class OWTestingGreenCellViewModel: OWTestingGreenCellViewModeling,
     var changeCellStateTap = PublishSubject<Void>()
 
     // Unique identifier
-    let id: String = UUID().uuidString
+    let id: String
 
-    init() {
+    init(id: String = UUID().uuidString) {
+        self.id = id
         setupObservers()
+    }
+
+    func copy() -> OWTestingGreenCellViewModeling {
+        let newVM = OWTestingGreenCellViewModel(id: self.id)
+        _ = changedCellState
+            .take(1)
+            .subscribe(onNext: { state in
+                newVM.cellState.onNext(state)
+            })
+        return newVM
     }
 }
 

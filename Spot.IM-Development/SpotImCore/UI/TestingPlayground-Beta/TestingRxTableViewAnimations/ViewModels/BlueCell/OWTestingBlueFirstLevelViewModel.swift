@@ -14,12 +14,13 @@ import RxSwift
 protocol OWTestingBlueFirstLevelViewModelingInputs {
     var removeTap: PublishSubject<Void> { get }
     var changeCellStateTap: PublishSubject<Void> { get }
+    var changeCellStateTo: PublishSubject<OWTestingCellState> { get }
 }
 
 protocol OWTestingBlueFirstLevelViewModelingOutputs {
     var id: String { get } // Used for presentation inside the label
     var removeTapped: Observable<Void> { get }
-    var changeCellState: Observable<OWTestingCellState> { get }
+    var changedCellState: Observable<OWTestingCellState> { get }
 }
 
 protocol OWTestingBlueFirstLevelViewModeling {
@@ -36,7 +37,7 @@ class OWTestingBlueFirstLevelViewModel: OWTestingBlueFirstLevelViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let cellState = BehaviorSubject<OWTestingCellState>(value: .collapsed)
-    var changeCellState: Observable<OWTestingCellState> {
+    var changedCellState: Observable<OWTestingCellState> {
         return cellState
             .distinctUntilChanged()
             .asObservable()
@@ -50,6 +51,7 @@ class OWTestingBlueFirstLevelViewModel: OWTestingBlueFirstLevelViewModeling,
     }
 
     var changeCellStateTap = PublishSubject<Void>()
+    var changeCellStateTo = PublishSubject<OWTestingCellState>()
 
     let id: String
 
@@ -64,6 +66,10 @@ fileprivate extension OWTestingBlueFirstLevelViewModel {
         changeCellStateTap
             .withLatestFrom(cellState)
             .map { $0.opposite }
+            .bind(to: cellState)
+            .disposed(by: disposeBag)
+
+        changeCellStateTo
             .bind(to: cellState)
             .disposed(by: disposeBag)
     }

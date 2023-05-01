@@ -119,7 +119,7 @@ fileprivate extension OWTestingGreenCell {
             .bind(to: viewModel.inputs.changeCellStateTap)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.changeCellState
+        viewModel.outputs.changedCellState
             .skip(1)
             .subscribe(onNext: { [weak self] state in
                 guard let self = self else { return }
@@ -138,7 +138,7 @@ fileprivate extension OWTestingGreenCell {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.changeCellState
+        viewModel.outputs.changedCellState
             .map { state -> String in
                 let text: String
                 switch state {
@@ -165,7 +165,7 @@ fileprivate extension OWTestingGreenCell {
      Lastly, since the cell is going to be shown, an animation already happen it the table view - that's why we don't need to update the view side about this height change as the table view already in "animation" mode while the cell created after the cell re-added to the table (from prepareForReuse).
      */
     func ensureCorrectState() {
-       viewModel.outputs.changeCellState
+       viewModel.outputs.changedCellState
             .take(1)
             .subscribe(onNext: { [weak self] state in
                 guard let self = self else { return }
