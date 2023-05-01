@@ -115,7 +115,7 @@ fileprivate extension OWAvatarViewModel {
     func setupObservers() {
         let profileOptionToUse = profileOptionToUse()
 
-        // Make sure config enable open profile
+        // Check if sdk profile should be opened
         let shouldOpenSDKProfile: Observable<Void> = tapAvatar
             .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> Bool in
                 if case .SDKProfile = profileOptionToUse {
