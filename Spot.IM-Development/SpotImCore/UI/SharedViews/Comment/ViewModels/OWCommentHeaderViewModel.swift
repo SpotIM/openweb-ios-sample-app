@@ -201,7 +201,6 @@ fileprivate extension OWCommentHeaderViewModel {
                         case .selected(let action):
                             // TODO: handle selection
                             print("Selected item \(action.title)")
-                            break
                         }
                     })
                     .disposed(by: self.disposeBag)
