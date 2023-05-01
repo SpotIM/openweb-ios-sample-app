@@ -113,15 +113,17 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
 fileprivate extension OWAvatarViewModel {
     func setupObservers() {
+        let profileOptionToUse = profileOptionToUse()
+
         // Make sure config enable open profile
         let shouldOpenSDKProfile: Observable<Void> = tapAvatar
-            .withLatestFrom(
-                sharedServicesProvider
-                    .spotConfigurationService()
-                    .config(spotId: OWManager.manager.spotId)
-            )
-            .filter { $0.mobileSdk.profileEnabled == true }
-            .filter { $0.shared?.usePublisherUserProfile != true }
+            .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> Bool in
+                if case .SDKProfile = profileOptionToUse {
+                    return true
+                }
+                return false
+            }
+            .filter { $0 }
             .voidify()
 
         // Check if this is current user and token is needed
@@ -182,20 +184,15 @@ fileprivate extension OWAvatarViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Open user profile if needed
-        let shouldOpenPublisherProfile: Observable<Void> = tapAvatar
-            .withLatestFrom(
-                sharedServicesProvider
-                    .spotConfigurationService()
-                    .config(spotId: OWManager.manager.spotId)
-            )
-            .filter { $0.mobileSdk.profileEnabled == true }
-            .filter { $0.shared?.usePublisherUserProfile == true }
-            .voidify()
-
-        shouldOpenPublisherProfile
-            .withLatestFrom(user) { _, user -> String? in
-                return user.ssoPublisherId
+        // Open publisher profile if needed
+        tapAvatar
+            .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> String? in
+                switch (profileOptionToUse) {
+                case .publisherProfile(let ssoPublisherId):
+                    return ssoPublisherId
+                default:
+                    return nil
+                }
             }
             .unwrap()
             .subscribe(onNext: { [weak self] ssoPublisherId in
@@ -222,5 +219,26 @@ fileprivate extension OWAvatarViewModel {
         url = SPWebSDKProvider.urlWithDarkModeParam(url: url)
 
         return url
+    }
+
+    func profileOptionToUse() -> Observable<OWProfileOption> {
+        return Observable.combineLatest(sharedServicesProvider
+            .spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId), user) { config, user -> OWProfileOption in
+                guard config.mobileSdk.profileEnabled == true else { return .none }
+                if config.shared?.usePublisherUserProfile == true,
+                   let ssoPublisherId = user.ssoPublisherId,
+                   !ssoPublisherId.isEmpty {
+                    return .publisherProfile(ssoPublisherId: ssoPublisherId)
+                }
+                return .SDKProfile
+            }
+            .share(replay: 1)
+    }
+
+    enum OWProfileOption: Equatable {
+        case none
+        case SDKProfile
+        case publisherProfile(ssoPublisherId: String)
     }
 }
