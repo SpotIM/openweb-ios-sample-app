@@ -67,7 +67,6 @@ class OWTestingRxTableViewAnimationsViewViewModel: OWTestingRxTableViewAnimation
     var cellsDataSourceSections: Observable<[OWTestingRxDataSourceModel]> {
         return cellsViewModels
             .map { items in
-            .map { items in
                 let section = OWTestingRxDataSourceModel(model: "TheOnlySection", items: items)
                 return [section]
             }
