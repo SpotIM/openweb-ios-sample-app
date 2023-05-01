@@ -32,35 +32,35 @@ extension ConversationPreset {
 
     #else
         return demoConversationPreset + [ConversationPreset(displayName: "FOX News",
-                                                         conversationDataModel: SDKConversationDataModel(spotId: "sp_ANQXRpqH",
-                                                                                                         postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
-
-                                      ConversationPreset(displayName: "Yahoo",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_ANQXRpqH",
+                                                                                                            postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
+                                         ConversationPreset(displayName: "Yahoo",
                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_Rba9aFpG",
                                                                                                             postId: "finmb$24937")),
-
-                                      ConversationPreset(displayName: "Ynet",
-                                                               conversationDataModel: SDKConversationDataModel(spotId: "sp_AJXaDckj",
-                                                                                                               postId: "S19Z20aTU")),
-                                     ConversationPreset(displayName: "DailyMotion",
-                                                              conversationDataModel: SDKConversationDataModel(spotId: "sp_ybZYQUfH",
-                                                                                                              postId: "x8jj55n")),
-
-                                      ConversationPreset(displayName: "mobile SSO",
-                                                         conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSSO",
-                                                                                                         postId: "sdk1")),
-
-                                      ConversationPreset(displayName: "mobile Guest",
-                                                         conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileGuest",
-                                                                                                         postId: "sdk1")),
-
-                                      ConversationPreset(displayName: "mobile Social",
-                                                         conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocial",
-                                                                                                         postId: "sdk1")),
-
-                                      ConversationPreset(displayName: "mobile Social Guest",
-                                                         conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocialGuest",
-                                                                                                         postId: "sdk1"))]
+                                         ConversationPreset(displayName: "Ynet",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_AJXaDckj",
+                                                                                                            postId: "S19Z20aTU")),
+                                         ConversationPreset(displayName: "DailyMotion - Staging",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_srsgdH9A",
+                                                                                                            postId: "x8ick9b")),
+                                         ConversationPreset(displayName: "DailyMotion - beta",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_ToLXXNEQ",
+                                                                                                            postId: "x8cpf62")),
+                                         ConversationPreset(displayName: "DailyMotion - Prod",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_ybZYQUfH",
+                                                                                                            postId: "x8jj55n")),
+                                         ConversationPreset(displayName: "mobile SSO",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSSO",
+                                                                                                            postId: "sdk1")),
+                                         ConversationPreset(displayName: "mobile Guest",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileGuest",
+                                                                                                            postId: "sdk1")),
+                                         ConversationPreset(displayName: "mobile Social",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocial",
+                                                                                                            postId: "sdk1")),
+                                         ConversationPreset(displayName: "mobile Social Guest",
+                                                            conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocialGuest",
+                                                                                                            postId: "sdk1"))]
 
     #endif
     }
