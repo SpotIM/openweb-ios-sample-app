@@ -417,6 +417,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return rowIndex
             }
             .unwrap()
+            .throttle(.milliseconds(700), scheduler: MainScheduler.asyncInstance)
             .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
                 return (rowIndex, cellsVMs.count)
             }.subscribe(onNext: { [weak self] rowIndex, cellsCount in
