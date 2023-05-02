@@ -382,7 +382,6 @@ fileprivate extension OWCommentThreadViewViewModel {
             commentPresentationData.setRepliesPresentation(repliesPresentation)
             commentPresentationData.update.onNext()
 
-
         })
         .disposed(by: disposeBag)
 
