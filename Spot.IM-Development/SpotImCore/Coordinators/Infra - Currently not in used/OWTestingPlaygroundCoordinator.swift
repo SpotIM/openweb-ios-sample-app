@@ -47,8 +47,8 @@ class OWTestingPlaygroundCoordinator: OWBaseCoordinator<OWTestingPlaygroundCoord
         // Add the VC and VM you would like to test
 //        let someVM: OWSomeViewModeling = ...
 //        let someVC = OWSomeVC(viewModel: someVM)
-        let someVC = UIViewController()
-        someVC.view.backgroundColor = .green
+        let someVM = OWTestingRxTableViewAnimationsViewModel()
+        let someVC = OWTestingRxTableViewAnimationsVC(viewModel: someVM)
 
         let testingPlaygroundPopped = PublishSubject<Void>()
 
@@ -77,8 +77,8 @@ class OWTestingPlaygroundCoordinator: OWBaseCoordinator<OWTestingPlaygroundCoord
         // Add the View and VM you would like to test
 //        let someViewVM: OWSomeViewViewModeling = ...
 //        let someView = OWSomeView(viewModel: someViewVM)
-        let someView = UIView()
-            .backgroundColor(.green)
+        let someViewVM = OWTestingRxTableViewAnimationsViewViewModel()
+        let someView = OWTestingRxTableViewAnimationsView(viewModel: someViewVM)
 
         return .just(someView)
     }
