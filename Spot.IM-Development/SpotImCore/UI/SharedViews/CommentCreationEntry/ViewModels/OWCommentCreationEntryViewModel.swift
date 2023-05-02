@@ -31,9 +31,11 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
     fileprivate let disposeBag = DisposeBag()
 
     var imageURLProvider: OWImageProviding
+    var sharedServiceProvider: OWSharedServicesProviding
 
-    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(), sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
+        self.sharedServiceProvider = sharedServiceProvider
         setupObservers()
     }
 
@@ -45,18 +47,23 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
     }
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
-        return OWAvatarViewModelV2(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
+        return OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 }
 
 fileprivate extension OWCommentCreationEntryViewModel {
     func setupObservers() {
-        // TODO: should set the avatar viewModel according to the current connected user (not in infra yet)
-        // TODO: open current user profile on click (once current user infra is ready)
-        outputs.avatarViewVM.outputs.avatarTapped
-            .subscribe(onNext: { [weak self] _ in
+        sharedServiceProvider.authenticationManager()
+            .activeUserAvailability
+            .subscribe(onNext: { [weak self] availability in
                 guard let self = self else { return }
-//            self.delegate?.userAvatarDidTap()
-        }).disposed(by: disposeBag)
+                switch (availability) {
+                case .notAvailable:
+                    self.avatarViewVM.inputs.userInput.onNext(nil)
+                case .user(let user):
+                    self.avatarViewVM.inputs.userInput.onNext(user)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
