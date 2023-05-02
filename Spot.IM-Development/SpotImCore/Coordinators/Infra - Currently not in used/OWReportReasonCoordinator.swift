@@ -28,6 +28,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     fileprivate let router: OWRoutering
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let reportReasonPopped = PublishSubject<Void>()
     let presentationalMode: OWPresentationalModeCompact
 
     init(router: OWRoutering, actionsCallbacks: OWViewActionsCallbacks?, presentationalMode: OWPresentationalModeCompact) {
@@ -40,8 +41,6 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         // TODO: complete the flow
         let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(viewableMode: .partOfFlow, presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
-
-        let reportReasonPopped = PublishSubject<Void>()
 
         router.start()
 
@@ -66,7 +65,6 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .asObservable()
 
         return Observable.merge(reportReasonPoppedObservable, reportReasonLoadedToScreenObservable)
-            .debug("Alon start ended")
     }
 
     override func showableComponent() -> Observable<OWShowable> {

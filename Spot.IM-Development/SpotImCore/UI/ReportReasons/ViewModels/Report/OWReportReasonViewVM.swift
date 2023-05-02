@@ -22,6 +22,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var titleText: String { get }
     var cancelButtonText: String { get }
     var submitButtonText: String { get }
+    var tableViewHeaderText: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
     var shouldShowTitleView: Bool { get }
     var closeReportReasonTapped: Observable<Void> { get }
@@ -43,6 +44,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         static let textViewMandatoryPlaceholderKey = "ReportReasonTextViewMandatoryPlaceholder"
         static let cancelKey = "Cancel"
         static let submitKey = "Submit"
+        static let tableViewHeaderKey = "ReportReasonHelpUsTitle"
         static let textViewMaxCharecters = 280
     }
 
@@ -58,7 +60,9 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return LocalizationManager.localizedString(key: Metrics.submitKey)
     }
 
-    lazy var textViewPlaceholderText: BehaviorSubject<String> = BehaviorSubject(value: LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey))
+    var tableViewHeaderText: String {
+        return LocalizationManager.localizedString(key: Metrics.tableViewHeaderKey)
+    }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
     var outputs: OWReportReasonViewViewModelingOutputs { return self }
@@ -130,10 +134,6 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
 fileprivate extension OWReportReasonViewViewModel {
     func setupObservers() {
-        textViewPlaceholderText
-            .bind(to: textViewVM.inputs.placeholderTextChange)
-            .disposed(by: disposeBag)
-
         selectedReason
             .map {
                 if $0 == nil || $0?.requiredAdditionalInfo == false {
@@ -142,7 +142,7 @@ fileprivate extension OWReportReasonViewViewModel {
                     return LocalizationManager.localizedString(key: Metrics.textViewMandatoryPlaceholderKey)
                 }
             }
-            .bind(to: textViewPlaceholderText)
+            .bind(to: textViewVM.inputs.placeholderTextChange)
             .disposed(by: disposeBag)
     }
 }
