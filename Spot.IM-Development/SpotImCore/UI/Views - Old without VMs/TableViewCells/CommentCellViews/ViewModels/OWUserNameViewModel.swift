@@ -68,7 +68,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
-                : OWLocalizationManager.shared.localizedString(key: "To") + " \($0)"
+                : LocalizationManager.localizedString(key: "To") + " \($0)"
             })
     }
 
@@ -120,10 +120,12 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                     localizationKey = "This user is muted."
                 } else if (model.isReported) {
                     localizationKey = "This message was reported."
+                } else if (model.status == .block || model.status == .reject) {
+                    localizationKey = "This comment violated our policy."
                 } else {
                     localizationKey = "This message was deleted."
                 }
-                return OWLocalizationManager.shared.localizedString(key: localizationKey)
+                return LocalizationManager.localizedString(key: localizationKey)
             }
     }
 
