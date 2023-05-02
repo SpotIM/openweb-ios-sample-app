@@ -10,14 +10,14 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWUserNameViewModelingInputs {
+protocol SPUserNameViewModelingInputs {
     func configure(with model: CommentViewModel)
 
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
 
-protocol OWUserNameViewModelingOutputs {
+protocol SPUserNameViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
 
     var shouldShowDeletedOrReportedMessage: Observable<Bool> { get }
@@ -33,17 +33,17 @@ protocol OWUserNameViewModelingOutputs {
     var moreTapped: Observable<OWUISource> { get }
 }
 
-protocol OWUserNameViewModeling {
-    var inputs: OWUserNameViewModelingInputs { get }
-    var outputs: OWUserNameViewModelingOutputs { get }
+protocol SPUserNameViewModeling {
+    var inputs: SPUserNameViewModelingInputs { get }
+    var outputs: SPUserNameViewModelingOutputs { get }
 }
 
-class OWUserNameViewModel: OWUserNameViewModeling,
-                              OWUserNameViewModelingInputs,
-                              OWUserNameViewModelingOutputs {
+class SPUserNameViewModel: SPUserNameViewModeling,
+                           SPUserNameViewModelingInputs,
+                           SPUserNameViewModelingOutputs {
 
-    var inputs: OWUserNameViewModelingInputs { return self }
-    var outputs: OWUserNameViewModelingOutputs { return self }
+    var inputs: SPUserNameViewModelingInputs { return self }
+    var outputs: SPUserNameViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
 
