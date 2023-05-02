@@ -37,7 +37,7 @@ final class SPAvatarView: OWBaseView {
         return image
     }()
 
-    fileprivate var viewModel: OWAvatarViewModeling!
+    fileprivate var viewModel: SPAvatarViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
     override init(frame: CGRect) {
@@ -46,7 +46,7 @@ final class SPAvatarView: OWBaseView {
         applyAccessibility()
     }
 
-    func configure(with viewModel: OWAvatarViewModeling) {
+    func configure(with viewModel: SPAvatarViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
