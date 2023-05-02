@@ -13,7 +13,7 @@ import RxSwift
 class OWReportReasonCancelView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_cancel_view_id"
-        static let titleViewPrefixIdentifier = "report_reason_cancel_view"
+        static let titleViewPrefixIdentifier = "report_reason_cancel"
         static let closeButtonTopSpacing: CGFloat = 18
         static let horizontalSpacing: CGFloat = 16
         static let titleViewTopSpacing: CGFloat = 20
@@ -51,14 +51,14 @@ fileprivate extension OWReportReasonCancelView {
     func setupViews() {
         self.addSubviews(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.top.equalToSuperViewSafeArea().offset(Metrics.closeButtonTopSpacing)
-            make.trailing.equalToSuperview().inset(Metrics.horizontalSpacing)
+            make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing)
+            make.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
 
         self.addSubviews(titleView)
         titleView.OWSnp.makeConstraints { make in
             make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopSpacing)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalSpacing)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
     }
 

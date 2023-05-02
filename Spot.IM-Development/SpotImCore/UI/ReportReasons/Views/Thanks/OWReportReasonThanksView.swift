@@ -13,10 +13,11 @@ import RxSwift
 class OWReportReasonThanksView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_thanks_view_id"
-        static let titleViewPrefixIdentifier = "report_reason_thanks_view"
-        static let closeButtonTopSpacing: CGFloat = 18
+        static let titleViewPrefixIdentifier = "report_reason_thanks"
+        static let closeButtonTopPadding: CGFloat = 18
         static let horizontalSpacing: CGFloat = 16
-        static let titleViewTopSpacing: CGFloat = 20
+        static let closeButtonTrailingPadding = 19
+        static let titleViewTopPadding: CGFloat = 20
     }
 
     fileprivate lazy var closeButton: UIButton = {
@@ -51,14 +52,14 @@ fileprivate extension OWReportReasonThanksView {
     func setupViews() {
         self.addSubviews(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.top.equalToSuperViewSafeArea().offset(Metrics.closeButtonTopSpacing)
-            make.trailing.equalToSuperview().inset(Metrics.horizontalSpacing)
+            make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopPadding)
+            make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingPadding)
         }
 
         self.addSubviews(titleView)
         titleView.OWSnp.makeConstraints { make in
-            make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopSpacing)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalSpacing)
+            make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopPadding)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
     }
 

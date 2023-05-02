@@ -16,7 +16,10 @@ class OWReportReasonCell: UITableViewCell {
     fileprivate var disposeBag: DisposeBag!
 
     fileprivate struct Metrics {
-        static let identifier = "pre_conversation_footer_id"
+        static let identifier = "report_reason_cell_id"
+        static let titleLabelIdentifier = "report_reason_cell_title_label_id"
+        static let subtitleLabelIdentifier = "report_reason_cell_subtitle_label_id"
+        static let checkboxIdentifier = "report_reason_cell_checkbox_id"
         static let titleFontSize: CGFloat = 15
         static let subtitleFontSize: CGFloat = 13
         static let checkboxTrailingPadding: CGFloat = 10
@@ -73,10 +76,18 @@ class OWReportReasonCell: UITableViewCell {
         self.viewModel = viewModel
         configureViews()
         setupObservers()
+        applyAccessibility()
     }
 }
 
 fileprivate extension OWReportReasonCell {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        lblTitle.accessibilityIdentifier = Metrics.titleLabelIdentifier
+        lblSubtitle.accessibilityIdentifier = Metrics.subtitleLabelIdentifier
+        checkBox.accessibilityIdentifier = Metrics.checkboxIdentifier
+    }
+
     func setupViews() {
         selectionStyle = .none
         self.backgroundColor = .clear

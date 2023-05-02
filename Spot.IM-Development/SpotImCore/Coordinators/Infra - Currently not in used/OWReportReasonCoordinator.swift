@@ -66,6 +66,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .asObservable()
 
         return Observable.merge(reportReasonPoppedObservable, reportReasonLoadedToScreenObservable)
+            .debug("Alon start ended")
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -84,16 +85,17 @@ fileprivate extension OWReportReasonCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWReportReasonViewModeling) {
-        viewModel.outputs
-            .reportReasonViewViewModel.outputs.closeReportReasonTapped
-            .filter { viewModel.outputs.viewableMode == .independent }
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                    print("Open Cancel report view")
-            })
-            .disposed(by: disposeBag)
+        // Cancel Independent
+        Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
+                         viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
+                        .filter { viewModel.outputs.viewableMode == .independent }
+                        .subscribe(onNext: { [weak self] _ in
+                            guard let self = self else { return }
+                                print("Open Independent Cancel report view")
+                        })
+                        .disposed(by: disposeBag)
 
-        // Cancel
+        // Cancel Flow
         Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
                          viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
         .filter { viewModel.outputs.viewableMode == .partOfFlow }
@@ -112,7 +114,7 @@ fileprivate extension OWReportReasonCoordinator {
         })
         .disposed(by: disposeBag)
 
-        // Submit
+        // Submit Flow
         viewModel.outputs
             .reportReasonViewViewModel.outputs.submitReportReasonTapped
             .subscribe { [weak self] _ in
@@ -132,11 +134,32 @@ fileprivate extension OWReportReasonCoordinator {
             .disposed(by: disposeBag)
 
         // Additional information
-        viewModel.outputs
-            .reportReasonViewViewModel.outputs
+        viewModel.outputs.reportReasonViewViewModel.outputs
             .textViewVM.outputs.textViewTapped
-            .subscribe { _ in
-                print("Open additional information")
+            .subscribe { [weak self] (placeholderText, textViewText) in
+                guard let self = self else { return }
+                let additionalInfoViewVM = OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
+                                                                         placeholderText: placeholderText,
+                                                                         textViewText: textViewText)
+                let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
+                self.router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+
+                additionalInfoViewVM.outputs.cancelAdditionalInfoTapped
+                    .take(1)
+                    .subscribe { [weak self] _ in
+                        guard let self = self else { return }
+                        self.router.pop(animated: true)
+                    }
+                    .disposed(by: self.disposeBag)
+
+                additionalInfoViewVM.outputs.submitAdditionalInfoTapped
+                    .take(1)
+                    .subscribe { [weak self] text in
+                        guard let self = self else { return }
+                        viewModel.outputs.reportReasonViewViewModel.outputs.textViewVM.inputs.textViewTextChange.onNext(text)
+                        self.router.pop(animated: true)
+                    }
+                    .disposed(by: self.disposeBag)
             }
             .disposed(by: disposeBag)
     }

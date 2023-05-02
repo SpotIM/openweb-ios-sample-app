@@ -10,18 +10,22 @@ import Foundation
 import RxSwift
 
 protocol OWTextViewViewModelingInputs {
-    var textViewTap: PublishSubject<Void> { get }
+    var becomeFirstResponderCall: PublishSubject<Void> { get }
+    var textViewTap: PublishSubject<(String, String)> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
+    var textViewTextChange: BehaviorSubject<String> { get }
     var textViewCharectersCount: BehaviorSubject<Int> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
-    var textViewTapped: Observable<Void> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
+    var textViewTapped: Observable<(String, String)> { get }
     var textViewMaxCharecters: Int { get }
     var isEditable: Bool { get }
     var placeholderText: Observable<String> { get }
     var textViewTextCount: Observable<Int> { get }
     var hidePlaceholder: Observable<Bool> { get }
+    var textViewText: Observable<String> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -37,8 +41,13 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     let isEditable: Bool
     let textViewMaxCharecters: Int
 
-    var textViewTap = PublishSubject<Void>()
-    var textViewTapped: Observable<Void> {
+    var becomeFirstResponderCall = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponderCall.asObservable()
+    }
+
+    var textViewTap = PublishSubject<(String, String)>()
+    var textViewTapped: Observable<(String, String)> {
         return textViewTap.asObservable()
     }
 
@@ -53,14 +62,21 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
                 .asObserver()
     }
 
+    var textViewTextChange: BehaviorSubject<String>
+    var textViewText: Observable<String> {
+        return textViewTextChange
+                .asObserver()
+    }
+
     var hidePlaceholder: Observable<Bool> {
         return textViewCharectersCount
             .map { $0 > 0 }
     }
 
-    init(textViewMaxCharecters: Int, placeholderText: String, isEditable: Bool) {
+    init(textViewMaxCharecters: Int, placeholderText: String, textViewText: String = "", isEditable: Bool) {
         self.textViewMaxCharecters = textViewMaxCharecters
         self.placeholderTextChange = BehaviorSubject(value: placeholderText)
+        self.textViewTextChange = BehaviorSubject(value: textViewText)
         self.isEditable = isEditable
     }
 }
