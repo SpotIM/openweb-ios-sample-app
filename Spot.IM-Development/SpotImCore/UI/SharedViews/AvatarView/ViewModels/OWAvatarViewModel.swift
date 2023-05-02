@@ -120,8 +120,9 @@ fileprivate extension OWAvatarViewModel {
             .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> Bool in
                 if case .SDKProfile = profileOptionToUse {
                     return true
+                } else {
+                    return false
                 }
-                return false
             }
             .filter { $0 }
             .voidify()
@@ -230,15 +231,10 @@ fileprivate extension OWAvatarViewModel {
                    let ssoPublisherId = user.ssoPublisherId,
                    !ssoPublisherId.isEmpty {
                     return .publisherProfile(ssoPublisherId: ssoPublisherId)
+                } else {
+                    return .SDKProfile
                 }
-                return .SDKProfile
             }
             .share(replay: 1)
-    }
-
-    enum OWProfileOption: Equatable {
-        case none
-        case SDKProfile
-        case publisherProfile(ssoPublisherId: String)
     }
 }
