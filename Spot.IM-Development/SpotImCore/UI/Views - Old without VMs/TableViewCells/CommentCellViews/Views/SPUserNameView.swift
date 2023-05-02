@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-internal final class UserNameView: OWBaseView {
+internal final class SPUserNameView: OWBaseView {
 
     enum ContentType {
         case comment, reply
@@ -33,7 +33,7 @@ internal final class UserNameView: OWBaseView {
         static let subscriberBadgeViewIdentifier = "user_name_view_subscriber_badge_view_id"
     }
 
-    fileprivate var viewModel: OWUserNameViewModeling!
+    fileprivate var viewModel: SPUserNameViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
     private let userNameLabel: OWBaseLabel = .init()
@@ -75,7 +75,7 @@ internal final class UserNameView: OWBaseView {
         hiddenCommentReasonLabel.backgroundColor = .spBackground0
     }
 
-    func configure(with viewModel: OWUserNameViewModeling) {
+    func configure(with viewModel: SPUserNameViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
 
@@ -85,7 +85,7 @@ internal final class UserNameView: OWBaseView {
     }
 }
 
-fileprivate extension UserNameView {
+fileprivate extension SPUserNameView {
     func setupViews() {
         addSubviews(hiddenCommentReasonLabel,
                     userNameLabel,
@@ -192,7 +192,7 @@ fileprivate extension UserNameView {
     }
 }
 
-fileprivate extension UserNameView {
+fileprivate extension SPUserNameView {
     func setupObservers() {
         let tapGesture = UITapGestureRecognizer()
         userNameLabel.addGestureRecognizer(tapGesture)
@@ -272,7 +272,7 @@ fileprivate extension UserNameView {
 
 // MARK: Accessibility
 
-extension UserNameView {
+extension SPUserNameView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
