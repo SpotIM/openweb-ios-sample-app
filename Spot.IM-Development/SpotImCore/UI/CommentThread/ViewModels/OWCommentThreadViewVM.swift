@@ -14,6 +14,7 @@ typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWComm
 
 protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
+    var pullToRefresh: PublishSubject<Void> { get }
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
 }
 
@@ -89,6 +90,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     var viewInitialized = PublishSubject<Void>()
+    var pullToRefresh = PublishSubject<Void>()
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
     fileprivate var _loadMoreComments = PublishSubject<Int>()
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -263,7 +265,10 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .response
         }
 
-        let commentThreadFetchedObservable = viewInitialized
+        let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
+            .do(onNext: { [weak self] _ in
+                self?._commentsPresentationData.removeAll()
+            })
             .flatMap { _ -> Observable<OWConversationReadRM> in
                 return initialConversationThreadReadObservable
             }
