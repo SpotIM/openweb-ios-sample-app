@@ -34,8 +34,8 @@ class OWCommentHeaderView: UIView {
     fileprivate var viewModel: OWCommentHeaderViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    fileprivate lazy var avatarImageView: SPAvatarView = {
-        return SPAvatarView()
+    fileprivate lazy var avatarImageView: OWAvatarView = {
+        return OWAvatarView()
             .backgroundColor(.clear)
     }()
 

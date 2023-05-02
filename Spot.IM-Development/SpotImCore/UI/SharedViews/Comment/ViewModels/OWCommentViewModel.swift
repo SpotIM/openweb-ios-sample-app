@@ -15,7 +15,7 @@ protocol OWCommentViewModelingInputs {
 }
 
 protocol OWCommentViewModelingOutputs {
-    var commentUserVM: OWCommentUserViewModeling { get }
+    var commentUserVM: SPCommentUserViewModeling { get }
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
 
@@ -39,7 +39,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
 
-    var commentUserVM: OWCommentUserViewModeling
+    var commentUserVM: SPCommentUserViewModeling
 
     var statusIndicationVM: OWCommentStatusIndicationViewModeling {
         return OWCommentStatusIndicationViewModel()
@@ -56,7 +56,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var comment: SPComment
 
     init(data: OWCommentRequiredData) {
-        commentUserVM = OWCommentUserViewModel(user: data.user, imageProvider: nil)
+        commentUserVM = SPCommentUserViewModel(user: data.user, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
@@ -65,7 +65,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     init() {
-        commentUserVM = OWCommentUserViewModel(user: nil, imageProvider: nil)
+        commentUserVM = SPCommentUserViewModel(user: nil, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
