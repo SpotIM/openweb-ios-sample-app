@@ -1,0 +1,98 @@
+//
+//  SPAvatarViewModel.swift
+//  SpotImCore
+//
+//  Created by  Nogah Melamed on 24/03/2022.
+//  Copyright © 2022 Spot.IM. All rights reserved.
+//
+
+import Foundation
+import RxSwift
+import RxCocoa
+import UIKit
+
+protocol SPAvatarViewModelingInputs {
+    func configureUser(user: SPUser)
+    func changeAvatarVisibility(isVisible: Bool)
+
+    var tapAvatar: PublishSubject<Void> { get }
+}
+
+protocol SPAvatarViewModelingOutputs {
+    var imageType: Observable<OWImageType> { get }
+    var showOnlineIndicator: Observable<Bool> { get }
+
+    var avatarTapped: Observable<Void> { get }
+}
+
+protocol SPAvatarViewModeling {
+    var inputs: SPAvatarViewModelingInputs { get }
+    var outputs: SPAvatarViewModelingOutputs { get }
+}
+
+class SPAvatarViewModel: SPAvatarViewModeling,
+                         SPAvatarViewModelingInputs,
+                         SPAvatarViewModelingOutputs {
+
+    var inputs: SPAvatarViewModelingInputs { return self }
+    var outputs: SPAvatarViewModelingOutputs { return self }
+
+    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool>(value: true)
+
+    fileprivate let imageURLProvider: SPImageProvider?
+
+    var tapAvatar = PublishSubject<Void>()
+
+    init (user: SPUser? = nil, imageURLProvider: SPImageProvider? = nil) {
+        self.imageURLProvider = imageURLProvider
+
+        if let user = user {
+            configureUser(user: user)
+        }
+    }
+
+    fileprivate lazy var user: Observable<SPUser> = {
+        self._user
+            .unwrap()
+    }()
+
+    fileprivate lazy var isAvatartVisible: Observable<Bool> = {
+        self._isAvatartVisible
+    }()
+
+    var imageType: Observable<OWImageType> {
+        Observable.combineLatest(user, isAvatartVisible)
+            .map { user, isAvatartVisible in
+                if let url = self.imageURLProvider?.imageURL(with: user.imageId, size: nil),
+                    isAvatartVisible {
+                    return .custom(url: url)
+                }
+                return .defaultImage
+            }
+            .distinctUntilChanged()
+    }
+
+    var showOnlineIndicator: Observable<Bool> {
+        let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
+        return user
+            .map { user in
+                let isCurrentUser = user.id == SPUserSessionHolder.session.user?.id
+                let isUserOnline = (user.online ?? false) || isCurrentUser
+                return isUserOnline && !shouldDisableOnlineIndicator
+            }
+    }
+
+    var avatarTapped: Observable<Void> {
+        tapAvatar
+            .asObservable()
+    }
+
+    func configureUser(user: SPUser) {
+        self._user.onNext(user)
+    }
+
+    func changeAvatarVisibility(isVisible: Bool) {
+        self._isAvatartVisible.onNext(isVisible)
+    }
+}
