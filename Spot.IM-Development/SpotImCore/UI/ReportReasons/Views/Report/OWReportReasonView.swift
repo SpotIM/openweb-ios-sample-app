@@ -26,6 +26,8 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let textViewPadding: CGFloat = 10
         static let textViewHeight: CGFloat = 62
         static let submitDisabledOpacity: CGFloat = 0.5
+        static let headerTextPadding: CGFloat = 16
+        static let headerTextFontSize: CGFloat = 15
     }
 
     fileprivate lazy var titleView: OWTitleView = {
@@ -36,6 +38,7 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var footerView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .apply(shadow: .low, direction: .up)
     }()
 
     fileprivate lazy var textView: OWTextView = {
@@ -69,10 +72,23 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var tableViewReasons: UITableView = {
-        return UITableView()
+        return UITableView(frame: .zero, style: .grouped)
                 .delegate(self)
                 .separatorStyle(.none)
                 .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var tableViewHeaderView: UIView = {
+        return UIView()
+                .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var tableViewHeaderLabel: UILabel = {
+        return UILabel()
+                .backgroundColor(.clear)
+                .text(viewModel.outputs.tableViewHeaderText)
+                .numberOfLines(0)
+                .font(OWFontBook.shared.font(style: .regular, size: Metrics.headerTextFontSize))
     }()
 
     fileprivate let viewModel: OWReportReasonViewViewModeling
@@ -142,6 +158,11 @@ fileprivate extension OWReportReasonView {
 
         footerStackView.addArrangedSubview(cancelButton)
         footerStackView.addArrangedSubview(submitButton)
+
+        tableViewHeaderView.addSubview(tableViewHeaderLabel)
+        tableViewHeaderLabel.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(Metrics.headerTextPadding)
+        }
     }
 
     func setupObservers() {
@@ -213,6 +234,10 @@ fileprivate extension OWReportReasonView {
 extension OWReportReasonView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return Metrics.cellHeight
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return tableViewHeaderView
     }
 }
 
