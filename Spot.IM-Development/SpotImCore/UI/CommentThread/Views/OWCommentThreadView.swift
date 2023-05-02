@@ -38,6 +38,8 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.white)
             .separatorStyle(.none)
 
+        tableView.refreshControl = tableViewRefreshControl
+
         tableView.allowsSelection = false
 
         // Register cells
@@ -46,6 +48,11 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         }
 
         return tableView
+    }()
+
+    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        return refresh
     }()
 
     fileprivate let viewModel: OWCommentThreadViewViewModeling
@@ -84,12 +91,20 @@ fileprivate extension OWCommentThreadView {
     func setupObservers() {
         viewModel.outputs.commentThreadDataSourceSections
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableViewRefreshControl.endRefreshing()
+            })
             .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
             .disposed(by: disposeBag)
 
         tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
+
+        tableViewRefreshControl.rx.controlEvent(.valueChanged)
+            .bind(to: viewModel.inputs.pullToRefresh)
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateCellSizeAtIndex
