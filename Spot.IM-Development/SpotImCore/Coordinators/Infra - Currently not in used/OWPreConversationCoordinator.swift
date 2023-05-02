@@ -138,14 +138,12 @@ fileprivate extension OWPreConversationCoordinator {
             .subscribe()
             .disposed(by: disposeBag)
 
-        let openSafariViewControllerObservable: Observable<URL> = viewModel.outputs.communityGuidelinesViewModel
-            .outputs.urlClickedOutput
-
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
             viewModel.outputs.urlClickedOutput,
-            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput
+            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput,
+            viewModel.outputs.openProfile
         )
 
         coordinateToSafariObservables
@@ -185,7 +183,10 @@ fileprivate extension OWPreConversationCoordinator {
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }
 
-        Observable.merge(contentPressed)
+        let openPublisherProfile = viewModel.outputs.openPublisherProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(contentPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
