@@ -266,9 +266,6 @@ fileprivate extension OWCommentThreadViewViewModel {
         }
 
         let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
-            .do(onNext: { [weak self] _ in
-                self?._commentsPresentationData.removeAll()
-            })
             .flatMap { _ -> Observable<OWConversationReadRM> in
                 return initialConversationThreadReadObservable
             }
@@ -309,12 +306,9 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 self.cacheConversationRead(response: response)
 
-                var commentsPresentationData = self.getCommentsPresentationData(from: response)
+                let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
-
-                self._commentsPresentationData.removeAll()
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 

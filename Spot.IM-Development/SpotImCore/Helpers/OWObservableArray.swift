@@ -183,7 +183,9 @@ extension OWObservableArray: MutableCollection {
         elements.removeAll(keepingCapacity: true)
         elements.insert(contentsOf: newElements, at: 0)
         setupObserversForElementsUpdater()
-        if (originalElements.count < newElements.count) {
+        if (originalElements.count == 0) {
+            arrayDidChange(OWArrayChangeEvent(inserted: Array(0..<newElements.count)))
+        } else if (originalElements.count < newElements.count) {
             arrayDidChange(OWArrayChangeEvent(updated: Array(0..<originalElements.count)))
             arrayDidChange(OWArrayChangeEvent(inserted: Array(originalElements.count..<newElements.count)))
         } else {
