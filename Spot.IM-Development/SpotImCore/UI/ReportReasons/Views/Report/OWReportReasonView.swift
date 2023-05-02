@@ -16,14 +16,10 @@ import Foundation
 class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "report_reason_view_id"
-        static let cellIdentifier = "reportReasonCell"
-        static let titleViewIdentifier = "title_view_id"
-        static let titleLabelIdentifier = "title_label_id"
+        static let cellReuseIdentifier = "reportReasonCell"
+        static let prefixIdentifier = "report_reason"
         static let cellHeight: CGFloat = 68
-        static let titleFontSize: CGFloat = 15
         static let titleViewHeight: CGFloat = 56
-        static let footerViewHeight: CGFloat = 70
-        static let titleLeadingPadding: CGFloat = 16
         static let buttonsRadius: CGFloat = 6
         static let buttonsPadding: CGFloat = 15
         static let buttonsHeight: CGFloat = 40
@@ -32,15 +28,9 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let submitDisabledOpacity: CGFloat = 0.5
     }
 
-    fileprivate lazy var titleView: UIView = {
-        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-    }()
-
-    fileprivate lazy var titleLabel: UILabel = {
-        return viewModel.outputs.titleText
-                .label
-                .font(UIFont.preferred(style: .bold, of: Metrics.titleFontSize))
+    fileprivate lazy var titleView: OWTitleView = {
+        return OWTitleView(title: viewModel.outputs.titleText,
+                           prefixIdentifier: Metrics.prefixIdentifier)
     }()
 
     fileprivate lazy var footerView: UIView = {
@@ -49,7 +39,8 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var textView: OWTextView = {
-        return OWTextView(viewModel: viewModel.outputs.textViewVM)
+        return OWTextView(viewModel: viewModel.outputs.textViewVM,
+                          prefixIdentifier: Metrics.prefixIdentifier)
     }()
 
     fileprivate lazy var footerStackView: UIStackView = {
@@ -103,8 +94,6 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWReportReasonView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        titleView.accessibilityIdentifier = Metrics.titleViewIdentifier
-        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
     }
 
     func setupViews() {
@@ -115,14 +104,8 @@ fileprivate extension OWReportReasonView {
         if shouldShowTitleView {
             self.addSubview(titleView)
             titleView.OWSnp.makeConstraints { make in
-                make.leading.trailing.top.equalToSuperViewSafeArea()
+                make.leading.trailing.top.equalToSuperviewSafeArea()
                 make.height.equalTo(Metrics.titleViewHeight)
-            }
-
-            titleView.addSubview(titleLabel)
-            titleLabel.OWSnp.makeConstraints { make in
-                make.leading.equalToSuperViewSafeArea().inset(Metrics.titleLeadingPadding)
-                make.centerY.equalToSuperview()
             }
         }
 
@@ -133,14 +116,14 @@ fileprivate extension OWReportReasonView {
             } else {
                 make.top.equalToSuperview()
             }
-            make.leading.trailing.equalToSuperViewSafeArea()
+            make.leading.trailing.equalToSuperviewSafeArea()
         }
 
         self.addSubviews(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(tableViewReasons.OWSnp.bottom)
-            make.leading.trailing.equalToSuperViewSafeArea()
-            make.bottom.equalToSuperViewSafeArea()
+            make.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalToSuperviewSafeArea()
         }
 
         footerView.addSubview(textView)
@@ -194,13 +177,17 @@ fileprivate extension OWReportReasonView {
                 self.submitButton.alpha = canSubmit ? 1 : Metrics.submitDisabledOpacity
             }
             .disposed(by: disposeBag)
+
+        titleView.outputs.closeTapped
+            .bind(to: viewModel.inputs.closeReportReasonTap)
+            .disposed(by: disposeBag)
     }
 
     func bindTableView() {
-        tableViewReasons.register(OWReportReasonCell.self, forCellReuseIdentifier: Metrics.cellIdentifier)
+        tableViewReasons.register(OWReportReasonCell.self, forCellReuseIdentifier: Metrics.cellReuseIdentifier)
 
         viewModel.outputs.reportReasonCellViewModels
-            .bind(to: tableViewReasons.rx.items(cellIdentifier: Metrics.cellIdentifier, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: Metrics.cellReuseIdentifier, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
             cell.configure(with: viewModel)
         }.disposed(by: disposeBag)
 
