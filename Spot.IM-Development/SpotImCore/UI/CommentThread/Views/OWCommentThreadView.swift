@@ -103,8 +103,12 @@ fileprivate extension OWCommentThreadView {
             .bind(to: viewModel.inputs.willDisplayCell)
             .disposed(by: disposeBag)
 
-        tableViewRefreshControl.rx.controlEvent(.valueChanged)
-            .bind(to: viewModel.inputs.pullToRefresh)
+        tableView.rx.didEndDecelerating
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self, self.tableViewRefreshControl.isRefreshing else { return }
+                self.viewModel.inputs.pullToRefresh.onNext()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateCellSizeAtIndex
