@@ -337,14 +337,24 @@ fileprivate extension OWPreConversationViewViewModel {
         // Creating the cells VMs for the pre conversation
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
-                guard let self = self, let responseComments = response.conversation?.comments else { return }
+                guard
+                    let self = self,
+                    let responseComments = response.conversation?.comments,
+                    let responseUsers = response.conversation?.users
+                else { return }
                 var viewModels = [OWPreConversationCellOption]()
 
                 let numOfComments = self.preConversationStyle.numberOfComments
                 let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
 
+                // cache comments in comment service
+                self.servicesProvider.commentsService().setComments(responseComments, postId: self.postId)
+
+                // cache users in users service
+                self.servicesProvider.usersService().setUsers(responseUsers)
+
                 for (index, comment) in comments.enumerated() {
-                    guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+                    guard let user = responseUsers[comment.userId ?? ""] else { return }
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
                         comment: comment,
                         user: user,
