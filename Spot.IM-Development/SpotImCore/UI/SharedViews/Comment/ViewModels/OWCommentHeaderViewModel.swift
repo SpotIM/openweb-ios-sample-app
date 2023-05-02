@@ -91,13 +91,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var subtitleText: Observable<String> {
         _replyToUser
-            .unwrap()
             .map({ user -> String? in
-                return user.displayName
+                return user?.displayName
             })
-            .unwrap()
-            .map({ $0.isEmpty ? ""
-                : LocalizationManager.localizedString(key: "To") + " \($0)"
+            .map({ displayName -> String in
+                guard let displayName = displayName, !displayName.isEmpty else {
+                    return ""
+                }
+                return LocalizationManager.localizedString(key: "To") + " \(displayName)"
             })
     }
 
