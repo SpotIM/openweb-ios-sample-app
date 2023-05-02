@@ -139,6 +139,7 @@
 "ReportReasonThanksContinueButton" = "Got it";
 "ReportReasonTextViewPlaceholder" = "You can add additional information here";
 "ReportReasonTextViewMandatoryPlaceholder" = "Please provide additional information";
+"AdditionalInfoTitle" = "Additional information";
 "Submit" = "Submit";
 "Image" = "Image";
 "This conversation has ended and comments are no longer being accepted." = "This conversation has ended and comments are no longer being accepted.";
