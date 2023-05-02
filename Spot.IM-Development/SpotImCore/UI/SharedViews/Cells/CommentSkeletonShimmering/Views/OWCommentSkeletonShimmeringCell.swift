@@ -142,10 +142,8 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentSkeletonShimmeringCellViewModeling else { return }
         self.viewModel = vm
 
-        if self.viewModel.outputs.depth > 0 {
-            mainSkeletonShimmeringView.OWSnp.updateConstraints { make in
-                make.leading.equalToSuperview().inset(Metrics.horizontalOffset + CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
-            }
+        mainSkeletonShimmeringView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().inset(Metrics.horizontalOffset + CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
         }
 
         // Start shimmering effect
