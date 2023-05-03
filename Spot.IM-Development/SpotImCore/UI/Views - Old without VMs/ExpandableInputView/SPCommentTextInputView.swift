@@ -86,7 +86,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         setShowAvatar(showAvatar: showAvatar)
     }
 
-    func configureAvatarViewModel(with model: OWAvatarViewModeling) {
+    func configureAvatarViewModel(with model: SPAvatarViewModeling) {
         self.avatarUserView.configure(with: model)
     }
 

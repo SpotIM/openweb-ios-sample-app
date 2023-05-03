@@ -2,27 +2,24 @@
 //  OWAvatarViewModel.swift
 //  SpotImCore
 //
-//  Created by  Nogah Melamed on 24/03/2022.
-//  Copyright © 2022 Spot.IM. All rights reserved.
+//  Created by  Nogah Melamed on 11/04/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
 //
-
 import Foundation
 import RxSwift
 import RxCocoa
 import UIKit
 
 protocol OWAvatarViewModelingInputs {
-    func configureUser(user: SPUser)
-    func changeAvatarVisibility(isVisible: Bool)
-
     var tapAvatar: PublishSubject<Void> { get }
+    var userInput: BehaviorSubject<SPUser?> { get }
 }
 
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
-    var showOnlineIndicator: Observable<Bool> { get }
-
-    var avatarTapped: Observable<Void> { get }
+    var shouldShowOnlineIndicator: Observable<Bool> { get }
+    var openProfile: Observable<URL> { get }
+    var openPublisherProfile: Observable<String> { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -37,91 +34,29 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var inputs: OWAvatarViewModelingInputs { return self }
     var outputs: OWAvatarViewModelingOutputs { return self }
 
-    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate let _isAvatartVisible = BehaviorSubject<Bool>(value: true)
-
-    fileprivate let imageURLProvider: SPImageProvider?
+    var userInput = BehaviorSubject<SPUser?>(value: nil)
 
     var tapAvatar = PublishSubject<Void>()
-
-    init (user: SPUser? = nil, imageURLProvider: SPImageProvider? = nil) {
-        self.imageURLProvider = imageURLProvider
-
-        if let user = user {
-            configureUser(user: user)
-        }
-    }
-
-    fileprivate lazy var user: Observable<SPUser> = {
-        self._user
-            .unwrap()
-    }()
-
-    fileprivate lazy var isAvatartVisible: Observable<Bool> = {
-        self._isAvatartVisible
-    }()
-
-    var imageType: Observable<OWImageType> {
-        Observable.combineLatest(user, isAvatartVisible)
-            .map { user, isAvatartVisible in
-                if let url = self.imageURLProvider?.imageURL(with: user.imageId, size: nil),
-                    isAvatartVisible {
-                    return .custom(url: url)
-                }
-                return .defaultImage
-            }
-            .distinctUntilChanged()
-    }
-
-    var showOnlineIndicator: Observable<Bool> {
-        let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
-        return user
-            .map { user in
-                let isCurrentUser = user.id == SPUserSessionHolder.session.user?.id
-                let isUserOnline = (user.online ?? false) || isCurrentUser
-                return isUserOnline && !shouldDisableOnlineIndicator
-            }
-    }
-
-    var avatarTapped: Observable<Void> {
-        tapAvatar
-            .asObservable()
-    }
-
-    func configureUser(user: SPUser) {
-        self._user.onNext(user)
-    }
-
-    func changeAvatarVisibility(isVisible: Bool) {
-        self._isAvatartVisible.onNext(isVisible)
-    }
-}
-
-// TODO: this VM uses the new ImageProvider, once refactor is done old VM should be deleted
-class OWAvatarViewModelV2: OWAvatarViewModeling,
-                         OWAvatarViewModelingInputs,
-                         OWAvatarViewModelingOutputs {
-
-    var inputs: OWAvatarViewModelingInputs { return self }
-    var outputs: OWAvatarViewModelingOutputs { return self }
-
-    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
 
     fileprivate let imageURLProvider: OWImageProviding
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
-    var tapAvatar = PublishSubject<Void>()
+    fileprivate let disposeBag = DisposeBag()
 
-    init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init (
+        user: SPUser? = nil,
+        imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
+        sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
-
+        self.sharedServicesProvider = sharedServicesProvider
         if let user = user {
-            configureUser(user: user)
+            self.userInput.onNext(user)
         }
+        setupObservers()
     }
 
     fileprivate lazy var user: Observable<SPUser> = {
-        self._user
+        self.userInput
             .unwrap()
     }()
 
@@ -140,29 +75,166 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
                 return .custom(url: url)
             }
             .asObservable()
+            .startWith(.defaultImage)
     }
 
-    var showOnlineIndicator: Observable<Bool> {
-        let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
-        return user
-            .map { user in
-                let isCurrentUser = user.id == SPUserSessionHolder.session.user?.id
-                let isUserOnline = (user.online ?? false) || isCurrentUser
-                return isUserOnline && !shouldDisableOnlineIndicator
+    var shouldShowOnlineIndicator: Observable<Bool> {
+        return Observable.combineLatest(
+            user,
+            sharedServicesProvider.authenticationManager().activeUserAvailability,
+            sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+        ) { user, availability, config in
+            guard config.conversation?.disableOnlineDotIndicator != true else { return false }
+
+            if (user.online == true) {
+                return true
             }
+            switch availability {
+            case .user(let sessionUser):
+                return user.id == sessionUser.id
+            case .notAvailable:
+                return false
+            }
+        }
     }
 
-    var avatarTapped: Observable<Void> {
-        tapAvatar
+    fileprivate var _openAvatarProfile = PublishSubject<URL>()
+    var openProfile: Observable<URL> {
+        _openAvatarProfile
             .asObservable()
     }
 
-    func configureUser(user: SPUser) {
-        self._user.onNext(user)
-    }
-
-    func changeAvatarVisibility(isVisible: Bool) {
-        self._isAvatartVisible.onNext(isVisible)
+    fileprivate var _openPublisherProfile = PublishSubject<String>()
+    var openPublisherProfile: Observable<String> {
+        _openPublisherProfile
+            .asObservable()
     }
 }
 
+fileprivate extension OWAvatarViewModel {
+    func setupObservers() {
+        let profileOptionToUse = profileOptionToUse()
+
+        // Check if sdk profile should be opened
+        let shouldOpenSDKProfile: Observable<Void> = tapAvatar
+            .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> Bool in
+                if case .SDKProfile = profileOptionToUse {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            .filter { $0 }
+            .voidify()
+
+        // Check if this is current user and token is needed
+        let shouldOpenUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
+            .withLatestFrom(
+                sharedServicesProvider.authenticationManager()
+                    .activeUserAvailability
+            ) { _, availability -> SPUser? in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .withLatestFrom(user) { sessionUser, avatarUser in
+                guard let sessionUser = sessionUser,
+                      sessionUser.id == avatarUser.id
+                else { return false }
+                return true
+            }
+
+        // Create URL for user profie with token
+        let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
+            .filter { $0 }
+            .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
+                guard let self = self else { return .empty() }
+                return self.sharedServicesProvider.netwokAPI()
+                    .profile
+                    .createSingleUseToken()
+                    .response
+            }
+            .withLatestFrom(user) { [weak self] response, user -> URL? in
+                guard let self = self,
+                      let token = response["single_use_token"],
+                      let url = self.profileUrl(singleUseTicket: token, userId: user.id)
+                else { return nil }
+                return url
+            }
+            .unwrap()
+
+        // Create URL for user profile without token
+        let userProfileWithoutToken: Observable<URL> = shouldOpenUserProfileWithToken
+            .filter { !$0 }
+            .withLatestFrom(user) { [weak self] _, user -> URL? in
+                guard let self = self,
+                      let url = self.profileUrl(singleUseTicket: nil, userId: user.id)
+                else { return nil }
+                return url
+            }
+            .unwrap()
+
+        Observable.merge(userProfileWithToken, userProfileWithoutToken)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] url in
+                guard let self = self else { return }
+                self._openAvatarProfile.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Open publisher profile if needed
+        tapAvatar
+            .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> String? in
+                switch (profileOptionToUse) {
+                case .publisherProfile(let ssoPublisherId):
+                    return ssoPublisherId
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] ssoPublisherId in
+                guard let self = self else { return }
+                self._openPublisherProfile.onNext(ssoPublisherId)
+            })
+            .disposed(by: disposeBag)
+
+    }
+
+    func profileUrl(singleUseTicket: String?, userId: String?) -> URL? {
+        let baseUrl = URL(string: "https://sdk.openweb.com/index.html")
+        guard var url = baseUrl,
+              let postId = OWManager.manager.postId
+        else { return nil }
+
+        url.appendQueryParam(name: "module_name", value: "user-profile")
+        url.appendQueryParam(name: "spot_id", value: OWManager.manager.spotId)
+        url.appendQueryParam(name: "post_id", value: postId)
+        url.appendQueryParam(name: "single_use_ticket", value: singleUseTicket)
+        if let userId = userId {
+            url.appendQueryParam(name: "user_id", value: userId)
+        }
+        url = SPWebSDKProvider.urlWithDarkModeParam(url: url)
+
+        return url
+    }
+
+    func profileOptionToUse() -> Observable<OWProfileOption> {
+        return Observable.combineLatest(sharedServicesProvider
+            .spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId), user) { config, user -> OWProfileOption in
+                guard config.mobileSdk.profileEnabled == true else { return .none }
+                if config.shared?.usePublisherUserProfile == true,
+                   let ssoPublisherId = user.ssoPublisherId,
+                   !ssoPublisherId.isEmpty {
+                    return .publisherProfile(ssoPublisherId: ssoPublisherId)
+                } else {
+                    return .SDKProfile
+                }
+            }
+            .share(replay: 1)
+    }
+}
