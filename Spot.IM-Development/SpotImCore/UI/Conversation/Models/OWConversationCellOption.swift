@@ -13,7 +13,8 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
     static var allCases: [OWConversationCellOption] {
         return [.comment(viewModel: OWCommentCellViewModel.stub()),
                 .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
-                .reply(viewModel: OWReplyCellViewModel.stub()),
+                .commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel.stub()),
+                .commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel.stub()),
                 .ad(viewModel: OWAdCellViewModel.stub()),
                 .spacer(viewModel: OWSpacerCellViewModel.stub()),
                 .communityQuestion(viewModel: OWCommunityQuestionCellViewModel.stub()),
@@ -22,7 +23,8 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
 
     case comment(viewModel: OWCommentCellViewModeling)
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
-    case reply(viewModel: OWReplyCellViewModeling)
+    case commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModeling)
+    case commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModeling)
     case ad(viewModel: OWAdCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
     case communityQuestion(viewModel: OWCommunityQuestionCellViewModeling)
@@ -36,7 +38,9 @@ extension OWConversationCellOption {
             return viewModel
         case .commentSkeletonShimmering(let viewModel):
             return viewModel
-        case .reply(let viewModel):
+        case .commentThreadCollapse(let viewModel):
+            return viewModel
+        case .commentThreadExpand(let viewModel):
             return viewModel
         case .ad(let viewModel):
             return viewModel
@@ -53,11 +57,13 @@ extension OWConversationCellOption {
         // TODO: Return the actual cell type once developed
         switch self {
         case .comment:
-            return UITableViewCell.self
+            return OWCommentCell.self
         case .commentSkeletonShimmering:
             return OWCommentSkeletonShimmeringCell.self
-        case .reply:
-            return UITableViewCell.self
+        case .commentThreadCollapse:
+            return OWCommentThreadCollapseCell.self
+        case .commentThreadExpand:
+            return OWCommentThreadExpandCell.self
         case .ad:
             return UITableViewCell.self
         case .spacer:
@@ -77,13 +83,13 @@ extension OWConversationCellOption: Equatable {
         // This is necessary so we won't have UI animations/flickering when loading the same data.
         switch self {
         case .comment(let viewModel):
-            return ""
-//            return viewModel.outputs.id
+            return viewModel.outputs.id
         case .commentSkeletonShimmering(let viewModel):
             return viewModel.outputs.id
-        case .reply(let viewModel):
-            return ""
-//            return viewModel.outputs.id
+        case .commentThreadCollapse(let viewModel):
+            return viewModel.outputs.id
+        case .commentThreadExpand(let viewModel):
+            return viewModel.outputs.id
         case .ad(let viewModel):
             return ""
 //            return viewModel.outputs.id
@@ -102,7 +108,9 @@ extension OWConversationCellOption: Equatable {
             return lhs.identifier == rhs.identifier
         case (.commentSkeletonShimmering(_), .commentSkeletonShimmering(_)):
             return lhs.identifier == rhs.identifier
-        case (.reply(_), .reply(_)):
+        case (.commentThreadCollapse(_), .commentThreadCollapse(_)):
+            return lhs.identifier == rhs.identifier
+        case (.commentThreadExpand(_), .commentThreadExpand(_)):
             return lhs.identifier == rhs.identifier
         case (.ad(_), .ad(_)):
             return lhs.identifier == rhs.identifier
