@@ -38,7 +38,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
 
-        tableView.isScrollEnabled = false
         tableView.allowsSelection = false
 
         // Register cells
