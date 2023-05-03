@@ -604,6 +604,7 @@ internal final class SPMainConversationDataSource {
                            replyingToCommentId: String? = nil,
                            replyingToDisplayName: String? = nil) -> [[CommentViewModel]] {
         var visibleComments = [[CommentViewModel]]()
+        var allCommentsAndReplies = [CommentViewModel]()
 
         comments?.forEach { comment in
             var section = [CommentViewModel]()
@@ -617,6 +618,7 @@ internal final class SPMainConversationDataSource {
             }
 
             section.append(viewModel)
+            allCommentsAndReplies.append(viewModel)
 
             guard let replies = comment.replies, !replies.isEmpty else {
                 visibleComments.append(section)
@@ -627,6 +629,7 @@ internal final class SPMainConversationDataSource {
 
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
+                allCommentsAndReplies.append(reply)
                 if showReplies {
                     section.insert(reply, at: 1)
                     if let replyId = reply.commentId,
@@ -646,7 +649,7 @@ internal final class SPMainConversationDataSource {
                 hiddenData[id]?.reverse()
             }
 
-            if viewModel.isHiddenComment() && areAllCommentAndRepliesHidden(atCommentVMs: section) {
+            if viewModel.isHiddenComment() && areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) {
                 // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
                 return
             }
