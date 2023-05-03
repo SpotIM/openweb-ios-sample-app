@@ -122,10 +122,10 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.placeholderText
-            .subscribe { [weak self] placeholderText in
+            .subscribe(onNext: { [weak self] placeholderText in
                 guard let self = self else { return }
                 self.textViewPlaceholder.text = placeholderText
-            }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.hidePlaceholder
@@ -134,11 +134,6 @@ fileprivate extension OWTextView {
 
         if !viewModel.outputs.isEditable {
             textView.rx.didBeginEditing
-                .delay(.microseconds(1), scheduler: MainScheduler.asyncInstance)
-                .map { [weak self] _ -> (String, String) in
-                    guard let self = self else { return ("", "") }
-                    return (self.textViewPlaceholder.text ?? "", self.textView.text)
-                }
                 .bind(to: viewModel.inputs.textViewTap)
                 .disposed(by: disposeBag)
 
@@ -156,10 +151,10 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.becomeFirstResponderCalled
-            .subscribe { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.textView.becomeFirstResponder()
-            }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

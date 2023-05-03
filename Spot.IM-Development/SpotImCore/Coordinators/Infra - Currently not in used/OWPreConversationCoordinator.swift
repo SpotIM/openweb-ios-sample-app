@@ -173,9 +173,9 @@ fileprivate extension OWPreConversationCoordinator {
         )
 
         customizationElementsObservables
-            .subscribe { [weak self] element in
+            .subscribe(onNext: { [weak self] element in
                 self?.customizationsService.trigger(customizableElement: element)
-            }
+            })
             .disposed(by: disposeBag)
     }
 
@@ -186,9 +186,9 @@ fileprivate extension OWPreConversationCoordinator {
             .map { OWViewActionCallbackType.contentPressed }
 
         Observable.merge(contentPressed)
-            .subscribe { [weak self] viewActionType in
+            .subscribe(onNext: { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
-            }
+            })
             .disposed(by: disposeBag)
     }
 }

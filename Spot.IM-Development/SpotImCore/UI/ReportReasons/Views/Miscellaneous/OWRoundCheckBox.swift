@@ -100,7 +100,7 @@ class OWRoundCheckBox: UIView {
 
     func setupObservers() {
         setSelected
-            .subscribe { [weak self] selected in
+            .subscribe(onNext: { [weak self] selected in
                 guard let self = self,
                       let outerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.outerCircleName }) as? CAShapeLayer,
                         let innerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.innerCircleName }) as? CAShapeLayer
@@ -109,7 +109,7 @@ class OWRoundCheckBox: UIView {
                 let unselectedColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
                 outerCircleShape.strokeColor = selected ? selectedColor : unselectedColor
                 innerCircleShape.fillColor = selected ? selectedColor : UIColor.clear.cgColor
-            }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
@@ -118,7 +118,7 @@ class OWRoundCheckBox: UIView {
                 guard let self = self else { return }
                 self.setSelected
                     .take(1)
-                    .subscribe { [weak self] selected in
+                    .subscribe(onNext: { [weak self] selected in
                         guard let self = self,
                               let outerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.outerCircleName }) as? CAShapeLayer,
                               let innerCircleShape = self.checkBoxView.layer.sublayers?.first(where: { $0.name == Metrics.innerCircleName }) as? CAShapeLayer
@@ -127,7 +127,7 @@ class OWRoundCheckBox: UIView {
                         let unselectedColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle).cgColor
                         outerCircleShape.strokeColor = selected ? selectedColor : unselectedColor
                         innerCircleShape.fillColor = selected ? selectedColor : UIColor.clear.cgColor
-                    }
+                    })
                     .disposed(by: disposeBag)
             })
             .disposed(by: disposeBag)

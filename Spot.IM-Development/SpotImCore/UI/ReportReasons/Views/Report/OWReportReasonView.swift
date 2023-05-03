@@ -27,7 +27,6 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let textViewHeight: CGFloat = 62
         static let submitDisabledOpacity: CGFloat = 0.5
         static let headerTextPadding: CGFloat = 16
-        static let headerTextFontSize: CGFloat = 15
     }
 
     fileprivate lazy var titleView: OWTitleView = {
@@ -86,9 +85,12 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var tableViewHeaderLabel: UILabel = {
         return UILabel()
                 .backgroundColor(.clear)
-                .text(viewModel.outputs.tableViewHeaderText)
                 .numberOfLines(0)
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.headerTextFontSize))
+                .attributedText(viewModel.outputs.tableViewHeaderAttributedText)
+                .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
+                    guard let self = self else { return }
+                    self.viewModel.inputs.learnMoreTap.onNext()
+                }
     }()
 
     fileprivate let viewModel: OWReportReasonViewViewModeling
@@ -189,14 +191,14 @@ fileprivate extension OWReportReasonView {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(viewModel.outputs.selectedReason, viewModel.outputs.textViewVM.outputs.textViewTextCount)
-            .subscribe { [weak self] reportReason, textCount in
+            .subscribe(onNext: { [weak self] reportReason, textCount in
                 guard let self = self,
                       let reportReason = reportReason
                 else { return }
                 let canSubmit = !reportReason.requiredAdditionalInfo || textCount > 0
                 self.submitButton.isEnabled = canSubmit
                 self.submitButton.alpha = canSubmit ? 1 : Metrics.submitDisabledOpacity
-            }
+            })
             .disposed(by: disposeBag)
 
         titleView.outputs.closeTapped
@@ -223,10 +225,10 @@ fileprivate extension OWReportReasonView {
         }).disposed(by: disposeBag)
 
         tableViewReasons.rx.itemSelected
-            .subscribe { [weak self] indexPath in
+            .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }
                 self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
-            }
+            })
             .disposed(by: disposeBag)
     }
 }

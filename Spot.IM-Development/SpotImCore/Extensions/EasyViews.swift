@@ -147,6 +147,11 @@ extension UILabel {
 
         return self
     }
+
+    @discardableResult func attributedText(_ attributedText: NSAttributedString) -> UILabel {
+        self.attributedText = attributedText
+        return self
+    }
 }
 
 extension UIButton {
