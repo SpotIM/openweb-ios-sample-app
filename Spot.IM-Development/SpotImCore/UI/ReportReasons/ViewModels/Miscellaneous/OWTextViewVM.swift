@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWTextViewViewModelingInputs {
     var becomeFirstResponderCall: PublishSubject<Void> { get }
-    var textViewTap: PublishSubject<(String, String)> { get }
+    var textViewTap: PublishSubject<Void> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
     var textViewTextChange: BehaviorSubject<String> { get }
     var textViewCharectersCount: BehaviorSubject<Int> { get }
@@ -19,7 +19,7 @@ protocol OWTextViewViewModelingInputs {
 
 protocol OWTextViewViewModelingOutputs {
     var becomeFirstResponderCalled: Observable<Void> { get }
-    var textViewTapped: Observable<(String, String)> { get }
+    var textViewTapped: Observable<Void> { get }
     var textViewMaxCharecters: Int { get }
     var isEditable: Bool { get }
     var placeholderText: Observable<String> { get }
@@ -46,8 +46,8 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         return becomeFirstResponderCall.asObservable()
     }
 
-    var textViewTap = PublishSubject<(String, String)>()
-    var textViewTapped: Observable<(String, String)> {
+    var textViewTap = PublishSubject<Void>()
+    var textViewTapped: Observable<Void> {
         return textViewTap.asObservable()
     }
 

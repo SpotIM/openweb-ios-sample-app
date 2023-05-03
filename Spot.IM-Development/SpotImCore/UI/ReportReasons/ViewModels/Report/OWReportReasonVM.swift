@@ -54,12 +54,6 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     init (viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
         self.viewableMode = viewableMode
         self.presentationalMode = presentMode
-        setupObservers()
-    }
-}
-
-fileprivate extension OWReportReasonViewModel {
-    func setupObservers() {
     }
 }
 

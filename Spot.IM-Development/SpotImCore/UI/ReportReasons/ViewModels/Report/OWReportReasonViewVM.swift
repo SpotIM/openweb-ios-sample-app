@@ -12,6 +12,7 @@ import RxSwift
 #if NEW_API
 
 protocol OWReportReasonViewViewModelingInputs {
+    var learnMoreTap: PublishSubject<Void> { get }
     var closeReportReasonTap: PublishSubject<Void> { get }
     var cancelReportReasonTap: PublishSubject<Void> { get }
     var submitReportReasonTap: PublishSubject<Void> { get }
@@ -22,7 +23,8 @@ protocol OWReportReasonViewViewModelingOutputs {
     var titleText: String { get }
     var cancelButtonText: String { get }
     var submitButtonText: String { get }
-    var tableViewHeaderText: String { get }
+    var tableViewHeaderAttributedText: NSAttributedString { get }
+    var tableViewHeaderTapText: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
     var shouldShowTitleView: Bool { get }
     var closeReportReasonTapped: Observable<Void> { get }
@@ -30,6 +32,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var submitReportReasonTapped: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var selectedReason: Observable<OWReportReason?> { get }
+    var learnMoreTapped: Observable<URL?> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -45,7 +48,9 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         static let cancelKey = "Cancel"
         static let submitKey = "Submit"
         static let tableViewHeaderKey = "ReportReasonHelpUsTitle"
+        static let tableViewHeaderTapKey = "ReportReasonHelpUsClickText"
         static let textViewMaxCharecters = 280
+        static let headerTextFontSize: CGFloat = 15
     }
 
     var titleText: String {
@@ -60,8 +65,17 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return LocalizationManager.localizedString(key: Metrics.submitKey)
     }
 
-    var tableViewHeaderText: String {
+    var tableViewHeaderTapText: String {
+        return LocalizationManager.localizedString(key: Metrics.tableViewHeaderTapKey)
+    }
+
+    var tableViewHeaderAttributedText: NSAttributedString {
         return LocalizationManager.localizedString(key: Metrics.tableViewHeaderKey)
+            .attributedString
+            .fontForText(OWFontBook.shared.font(style: .regular,
+                                                size: Metrics.headerTextFontSize))
+            .colorForText(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
+                          text: tableViewHeaderTapText)
     }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
@@ -71,6 +85,13 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let viewableMode: OWViewableMode
     fileprivate let presentationalMode: OWPresentationalModeCompact
+
+    var learnMoreTap = PublishSubject<Void>()
+    var learnMoreTapped: Observable<URL?> {
+        return learnMoreTap
+            .withLatestFrom(communityGuidelinesUrl)
+            .asObservable()
+    }
 
     var closeReportReasonTap = PublishSubject<Void>()
     var closeReportReasonTapped: Observable<Void> {
@@ -130,6 +151,22 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 return reasons[index]
             }
             .asObservable()
+
+    fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
+        let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { config -> String? in
+                guard let conversationConfig = config.conversation,
+                      conversationConfig.communityGuidelinesEnabled == true else { return nil }
+                return config.conversation?.communityGuidelinesTitle?.value
+            }
+            .unwrap()
+            .map { communityGuidelines in
+                return communityGuidelines.locateURLInText
+            }
+            .asObservable()
+    }()
 }
 
 fileprivate extension OWReportReasonViewViewModel {
