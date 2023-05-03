@@ -39,13 +39,22 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let delayForCellSizeChanges: Int = 100
+        static let numberOfCommentsInSkeleton: Int = 4
+        static let delayForUICellUpdate: Int = 100
+    }
+
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
     }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
+
+    fileprivate var offset = 0
+
+    fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -61,10 +70,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     lazy var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling = {
         return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle)
-    }()
-
-    lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
-        return OWSpacerCellViewModel(style: .none)
     }()
 
     lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
@@ -87,11 +92,49 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
     }()
 
-    var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
-        return _cellsViewModels
+    fileprivate var shouldShowCommunityQuestion: Observable<Bool> {
+        return communityQuestionCellViewModel.outputs
+            .communityQuestionViewModel.outputs
+            .shouldShowView
+    }
+
+    fileprivate var shouldShowCommunityGuidelines: Observable<Bool> {
+        return communityGuidelinesCellViewModel.outputs
+            .communityGuidelinesViewModel.outputs
+            .shouldShowView
+    }
+
+    fileprivate var commentCellsOptions: Observable<[OWConversationCellOption]> {
+        return _commentsPresentationData
             .rx_elements()
+            .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
+                guard let self = self else { return Observable.never() }
+
+                return Observable.just(self.getCommentCells(for: commentsPresentationData))
+            })
+            .share()
             .asObservable()
+    }
+
+    fileprivate var topCellsOptions: Observable<[OWConversationCellOption]> {
+        return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
+            .flatMapLatest({ [weak self] showCommunityQuestion, showCommunityGuidlines -> Observable<[OWConversationCellOption]> in
+                guard let self = self else { return Observable.never() }
+                return Observable.just(self.getTopCells(shouldShowCommunityQuestion: showCommunityQuestion, shouldShowCommunityGuidelines: showCommunityGuidlines))
+            })
+            .share()
+            .asObservable()
+    }
+
+    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
+        return Observable.combineLatest(topCellsOptions.startWith([]), commentCellsOptions.startWith([]))
+            .flatMapLatest({ [weak self] topCellsOptions, commentCellsOptions -> Observable<[OWConversationCellOption]> in
+                guard let self = self else { return Observable.never() }
+                if commentCellsOptions.isEmpty {
+                    return Observable.just(self.getSkeletonCells())
+                }
+                return Observable.just(topCellsOptions + commentCellsOptions)
+            })
     }
 
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
@@ -127,10 +170,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var viewInitialized = PublishSubject<Void>()
 
-    fileprivate var postId: OWPostId {
-        return OWManager.manager.postId ?? ""
-    }
-
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           conversationData: OWConversationRequiredData,
           viewableMode: OWViewableMode) {
@@ -138,7 +177,156 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.conversationData = conversationData
         self.viewableMode = viewableMode
         setupObservers()
-        self.populateInitialUI()
+    }
+}
+
+fileprivate extension OWConversationViewViewModel {
+    func getCommentCells(for commentsPresentationData: [OWCommentPresentationData]) -> [OWConversationCellOption] {
+        var cellOptions = [OWConversationCellOption]()
+
+        for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
+            guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
+
+            if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
+                cellOptions.append(OWConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
+            }
+
+            cellOptions.append(OWConversationCellOption.comment(viewModel: commentCellVM))
+
+            let depth = commentCellVM.outputs.commentVM.outputs.comment.depth ?? 0
+
+            let repliesToShowCount = commentPresentationData.repliesPresentation.count
+
+            switch (repliesToShowCount, commentPresentationData.totalRepliesCount) {
+            case (_, 0):
+                break
+            case (0, _):
+                cellOptions.append(OWConversationCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
+            default:
+                cellOptions.append(OWConversationCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData, depth: depth)))
+
+                cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
+
+                if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
+                    cellOptions.append(OWConversationCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
+                }
+            }
+        }
+        return cellOptions
+    }
+
+    func getTopCells(shouldShowCommunityQuestion: Bool, shouldShowCommunityGuidelines: Bool) -> [OWConversationCellOption] {
+        var cells = [OWConversationCellOption]()
+
+        switch (shouldShowCommunityQuestion, shouldShowCommunityGuidelines) {
+        case (true, true):
+            cells.append(contentsOf: [self.communityQuestionCellOptions,
+                                             self.communitySpacerCellOption,
+                                             self.communityGuidelinesCellOption])
+        case (true, false):
+            cells.append(self.communityQuestionCellOptions)
+        case (false, true):
+            cells.append(self.communityGuidelinesCellOption)
+        default:
+            break
+        }
+
+        return cells
+    }
+
+    func getSkeletonCells() -> [OWConversationCellOption] {
+        let skeletonCellVMs = (0 ..< Metrics.numberOfCommentsInSkeleton).map { _ in
+            OWCommentSkeletonShimmeringCellViewModel()
+        }
+        let skeletonCells = skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
+
+        return skeletonCells
+    }
+
+    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
+        guard let responseComments = response.conversation?.comments else { return [] }
+
+        let comments: [OWComment] = Array(responseComments)
+
+        var commentsPresentationData = [OWCommentPresentationData]()
+        var repliesPresentationData = [OWCommentPresentationData]()
+
+        self.offset = response.conversation?.offset ?? 0
+
+        for comment in comments {
+            guard let commentId = comment.id else { continue }
+
+            if let replies = comment.replies {
+
+                repliesPresentationData = []
+
+                for reply in replies {
+                    guard let replyId = reply.id else { continue }
+
+                    let replyPresentationData = OWCommentPresentationData(
+                        id: replyId,
+                        repliesIds: reply.replies?.map { $0.id! } ?? [],
+                        totalRepliesCount: reply.repliesCount ?? 0,
+                        repliesOffset: reply.offset ?? 0,
+                        repliesPresentation: []
+                    )
+
+                    repliesPresentationData.append(replyPresentationData)
+                }
+            }
+
+            let commentPresentationData = OWCommentPresentationData(
+                id: commentId,
+                repliesIds: comment.replies?.map { $0.id! } ?? [],
+                totalRepliesCount: comment.repliesCount ?? 0,
+                repliesOffset: comment.offset ?? 0,
+                repliesPresentation: repliesPresentationData
+            )
+
+            commentsPresentationData.append(commentPresentationData)
+        }
+        return commentsPresentationData
+    }
+
+    func getExistingRepliesPresentationData(for commentPresentationData: OWCommentPresentationData) -> [OWCommentPresentationData] {
+        var existingRepliesPresentationData: [OWCommentPresentationData] = []
+        for replyId in commentPresentationData.repliesIds {
+            guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
+
+            let reply = replyCellVm.outputs.commentVM.outputs.comment
+            existingRepliesPresentationData.append(
+                OWCommentPresentationData(
+                    id: replyId,
+                    totalRepliesCount: reply.repliesCount ?? 0,
+                    repliesOffset: reply.offset ?? 0)
+            )
+        }
+        return existingRepliesPresentationData
+    }
+
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
+        guard let comment = self.servicesProvider.commentsService().getComment(with: commentId, postId: self.postId),
+              let commentUserId = comment.userId,
+              let user = self.servicesProvider.usersService().getUser(with: commentUserId)
+        else { return nil }
+
+        var replyToUser: SPUser? = nil
+        if let replyToCommentId = comment.parentId,
+           let replyToComment = self.servicesProvider.commentsService().getComment(with: replyToCommentId, postId: self.postId),
+           let replyToUserId = replyToComment.userId {
+            replyToUser = self.servicesProvider.usersService().getUser(with: replyToUserId)
+        }
+
+        return OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: replyToUser, collapsableTextLineLimit: 4))
+    }
+
+    func cacheConversationRead(response: OWConversationReadRM) {
+        if let responseComments = response.conversation?.comments {
+            self.servicesProvider.commentsService().setComments(responseComments, postId: self.postId)
+        }
+        if let responseUsers = response.conversation?.users {
+            self.servicesProvider.usersService().setUsers(responseUsers)
+        }
     }
 }
 
@@ -176,18 +364,23 @@ fileprivate extension OWConversationViewViewModel {
             }
             .share()
 
+        // first load comments or refresh comments
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+
+                self.cacheConversationRead(response: response)
+
+                let commentsPresentationData = self.getCommentsPresentationData(from: response)
+
+                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
         // Binding to community question component
         conversationFetchedObservable
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
-
-        let shouldShowCommunityQuestion = communityQuestionCellViewModel.outputs
-            .communityQuestionViewModel.outputs
-            .shouldShowView
-
-        let shouldShowCommunityGuidelines = communityGuidelinesCellViewModel.outputs
-            .communityGuidelinesViewModel.outputs
-            .shouldShowView
 
         // Responding to guidelines height change (for updating cell)
         cellsViewModels
@@ -205,54 +398,10 @@ fileprivate extension OWConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForCellSizeChanges), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] guidelinesIndex in
                 self?._changeSizeAtIndex.onNext(guidelinesIndex)
             })
             .disposed(by: disposeBag)
-
-        Observable.combineLatest(conversationFetchedObservable,
-                                 shouldShowCommunityQuestion,
-                                 shouldShowCommunityGuidelines)
-            .subscribe(onNext: { [weak self] (_, shouldShowCommunityQuestion, shouldShowCommunityGuidelines) -> Void in
-            guard let self = self else { return }
-                self._cellsViewModels.removeAll()
-
-                var cellsToApped = [OWConversationCellOption]()
-
-                switch (shouldShowCommunityQuestion, shouldShowCommunityGuidelines) {
-                case (true, true):
-                    cellsToApped.append(contentsOf: [self.communityQuestionCellOptions,
-                                                     self.communitySpacerCellOption,
-                                                     self.communityGuidelinesCellOption])
-                case (true, false):
-                    cellsToApped.append(self.communityQuestionCellOptions)
-                case (false, true):
-                    cellsToApped.append(self.communityGuidelinesCellOption)
-                default:
-                    break
-                }
-
-                let skeletonsCellsModels = self.getSkeletonsCellsModels()
-                cellsToApped.append(contentsOf: skeletonsCellsModels)
-
-                self._cellsViewModels.append(contentsOf: cellsToApped)
-                self._initialDataLoaded.onNext(true)
-        })
-        .disposed(by: disposeBag)
-    }
-
-    func getSkeletonsCellsModels() -> [OWConversationCellOption] {
-        // TODO: Delete once working on the conversation view UI
-        let skeletonCellVMs = (0 ..< 50).map { _ in
-            return OWCommentSkeletonShimmeringCellViewModel()
-        }
-        return skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
-    }
-
-    func populateInitialUI() {
-        // TODO: Delete once working on the conversation view UI
-        let skeletonsCellsModels = getSkeletonsCellsModels()
-        _cellsViewModels.append(contentsOf: skeletonsCellsModels)
     }
 }
