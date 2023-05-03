@@ -51,6 +51,7 @@ internal struct CommentViewModel {
     var showStatusIndicator: Bool = false
     var anyHiddenReply: Bool = false
     private (set) var isStaff: Bool = false
+    var status: SPComment.CommentStatus = .unknown
 
     var brandColor: UIColor = .brandColor
 
@@ -82,6 +83,10 @@ internal struct CommentViewModel {
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
         isCommentAuthorMuted = user?.isMuted ?? false
+
+        if let commentStatus = comment.status {
+            status = commentStatus
+        }
 
         if let commentId = commentId {
             isReported = SPUserSessionHolder.session.reportedComments[commentId] ?? false
