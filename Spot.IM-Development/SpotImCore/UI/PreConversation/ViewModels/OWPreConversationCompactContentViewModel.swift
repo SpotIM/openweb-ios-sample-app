@@ -111,7 +111,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     }
 
     lazy var avatarVM: OWAvatarViewModeling = {
-        return OWAvatarViewModelV2(imageURLProvider: self.imageProvider)
+        return OWAvatarViewModel(imageURLProvider: self.imageProvider)
     }()
 }
 
@@ -129,7 +129,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 self.comment.onNext(comment)
                 // Set user (avatar)
                 guard let user = conversationResponse.conversation?.users?[comment.userId ?? ""] else { return }
-                self.avatarVM.inputs.configureUser(user: user)
+                self.avatarVM.inputs.userInput.onNext(user)
             })
             .disposed(by: disposeBag)
 

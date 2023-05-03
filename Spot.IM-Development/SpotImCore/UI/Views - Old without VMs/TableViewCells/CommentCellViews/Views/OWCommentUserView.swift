@@ -22,11 +22,11 @@ final class OWCommentUserView: OWBaseView {
         static let avatarImageViewTrailingOffset: CGFloat = 11.0
     }
 
-    fileprivate var viewModel: OWCommentUserViewModeling!
+    fileprivate var viewModel: SPCommentUserViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
     private let avatarImageView: SPAvatarView = SPAvatarView()
-    private let userNameView: UserNameView = .init()
+    private let userNameView: SPUserNameView = .init()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
