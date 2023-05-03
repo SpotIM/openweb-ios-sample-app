@@ -456,6 +456,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             let currentCenterConstant = typingViewCenterCurrentOffset
             else { return }
 
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         typingViewCenterConstraint?.update(offset: currentCenterConstant > 0 ? view.bounds.width : -view.bounds.width)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
@@ -474,6 +475,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     }
 
     private func hideTypingIndicationView() {
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         typingViewBottomConstraint?.update(offset: 100.0)
         UIView.animate(
             withDuration: 0.3,
@@ -489,6 +491,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     }
 
     private func createAndShowTypingIndicationView() {
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 78, right: 0)
         typingIndicationView = TotalTypingIndicationView()
         typingIndicationView?.delegate = self
         typingIndicationView?.alpha = 0
