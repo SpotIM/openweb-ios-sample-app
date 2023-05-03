@@ -105,9 +105,9 @@ fileprivate extension OWReportReasonCoordinator {
             self.router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
 
             reportReasonCancelViewVM.closeReportReasonCancelTap
-                .subscribe { _ in
+                .subscribe(onNext: { _ in
                     reportReasonCancelVC.dismiss(animated: true)
-                }
+                })
                 .disposed(by: disposeBag)
         })
         .disposed(by: disposeBag)
@@ -115,7 +115,7 @@ fileprivate extension OWReportReasonCoordinator {
         // Submit Flow
         viewModel.outputs
             .reportReasonViewViewModel.outputs.submitReportReasonTapped
-            .subscribe { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
                 let reportReasonThanksVC = OWReportReasonThanksVC(reportReasonThanksViewViewModel: reportReasonThanksViewVM)
@@ -123,18 +123,24 @@ fileprivate extension OWReportReasonCoordinator {
                 self.router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
 
                 reportReasonThanksViewVM.closeReportReasonThanksTap
-                    .subscribe { [weak self] _ in
+                    .subscribe(onNext: { [weak self] _ in
                         guard let self = self else { return }
                         self.router.dismiss(animated: true, completion: nil)
-                    }
+                    })
                     .disposed(by: disposeBag)
-            }
+            })
             .disposed(by: disposeBag)
 
         // Additional information
-        viewModel.outputs.reportReasonViewViewModel.outputs
-            .textViewVM.outputs.textViewTapped
-            .subscribe { [weak self] (placeholderText, textViewText) in
+        let reportTextViewVM = viewModel.outputs.reportReasonViewViewModel.outputs
+            .textViewVM
+        reportTextViewVM.outputs.textViewTapped
+            .flatMap { _ -> Observable<(String, String)> in
+                return Observable.combineLatest(reportTextViewVM.outputs.placeholderText,
+                                                reportTextViewVM.outputs.textViewText)
+                .take(1)
+            }
+            .subscribe(onNext: { [weak self] placeholderText, textViewText in
                 guard let self = self else { return }
                 let additionalInfoViewVM = OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                                          placeholderText: placeholderText,
@@ -143,22 +149,32 @@ fileprivate extension OWReportReasonCoordinator {
                 self.router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
 
                 additionalInfoViewVM.outputs.cancelAdditionalInfoTapped
+                    .debug("Refael cancelAdditionalInfoTapped ***")
                     .take(1)
-                    .subscribe { [weak self] _ in
+                    .subscribe(onNext: { [weak self] _ in
                         guard let self = self else { return }
                         self.router.pop(animated: true)
-                    }
+                    })
                     .disposed(by: self.disposeBag)
 
                 additionalInfoViewVM.outputs.submitAdditionalInfoTapped
+                    .debug("Refael submitAdditionalInfoTapped ***")
+                    .withLatestFrom(additionalInfoViewVM.outputs.textViewVM.outputs.textViewText)
                     .take(1)
-                    .subscribe { [weak self] text in
+                    .subscribe(onNext: { [weak self] textViewText in
                         guard let self = self else { return }
-                        viewModel.outputs.reportReasonViewViewModel.outputs.textViewVM.inputs.textViewTextChange.onNext(text)
+                        reportTextViewVM.inputs.textViewTextChange.onNext(textViewText)
                         self.router.pop(animated: true)
-                    }
+                    })
                     .disposed(by: self.disposeBag)
-            }
+            })
+            .disposed(by: disposeBag)
+
+        // Open Guidelines
+        viewModel.outputs.reportReasonViewViewModel.outputs.learnMoreTapped
+            .subscribe(onNext: { url in
+                print("Open guidelines \(url?.absoluteString ?? "")")
+            })
             .disposed(by: disposeBag)
     }
 }

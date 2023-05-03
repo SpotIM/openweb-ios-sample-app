@@ -46,9 +46,9 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
     func log(text: String) {
         _ = _loggerText
             .take(1)
-            .subscribe { [weak self] lastText in
+            .subscribe(onNext: { [weak self] lastText in
                 guard let self = self else { return }
                 self._loggerText.onNext(lastText + "\n" + text)
-            }
+            })
     }
 }

@@ -179,28 +179,7 @@ fileprivate extension OWCommunityGuidelinesViewModel {
 
     func getCommunityGuidelinesCompactString(communityGuidelinesTitle: String) -> NSMutableAttributedString? {
         let communityGuidelinesString = Metrics.readOurTitle + " " + Metrics.communityGuidelinesTitle
-        let url = locateURLInText(text: communityGuidelinesTitle)
+        let url = communityGuidelinesTitle.locateURLInText
         return self.getTitleTextViewAttributedText(htmlString: communityGuidelinesString, url: url)
-    }
-
-    func locateURLInText(text: String) -> URL? {
-        let linkType: NSTextCheckingResult.CheckingType = [.link]
-
-        var url: URL? = nil
-        if let detector = try? NSDataDetector(types: linkType.rawValue) {
-            let matches = detector.matches(
-                in: text,
-                options: [],
-                range: NSRange(location: 0, length: text.count)
-            )
-
-            for match in matches {
-                if let urlMatch = match.url {
-                    url = urlMatch
-                }
-            }
-        }
-
-        return url
     }
 }

@@ -141,6 +141,7 @@
 "ReportReasonTextViewMandatoryPlaceholder" = "Please provide additional information";
 "AdditionalInfoTitle" = "Additional information";
 "ReportReasonHelpUsTitle" = "To help us understand the problem, please choose which of these options best describe the violation (learn more):";
+"ReportReasonHelpUsClickText" = "(learn more)";
 "Submit" = "Submit";
 "Image" = "Image";
 "This conversation has ended and comments are no longer being accepted." = "This conversation has ended and comments are no longer being accepted.";

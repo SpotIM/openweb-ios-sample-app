@@ -85,10 +85,10 @@ fileprivate extension UILoggerView {
 
         viewModel.outputs.loggerText
             .delay(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
-            .subscribe { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.scrollTextViewToBottom(textView: self.loggerTextView)
-            }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.title
