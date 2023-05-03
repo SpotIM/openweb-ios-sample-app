@@ -18,7 +18,7 @@ protocol SPCommentUserViewModelingInputs {
 }
 
 protocol SPCommentUserViewModelingOutputs {
-    var userNameVM: OWUserNameViewModeling { get }
+    var userNameVM: SPUserNameViewModeling { get }
     var avatarVM: SPAvatarViewModeling { get }
 }
 
@@ -44,13 +44,13 @@ class SPCommentUserViewModel: SPCommentUserViewModeling,
     fileprivate var replyToCommentId: String?
 
     let avatarVM: SPAvatarViewModeling
-    let userNameVM: OWUserNameViewModeling
+    let userNameVM: SPUserNameViewModeling
 
     fileprivate let _conversationModel = BehaviorSubject<SPMainConversationModel?>(value: nil)
 
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
         avatarVM = SPAvatarViewModel(user: user, imageURLProvider: imageProvider)
-        userNameVM = OWUserNameViewModel(user: user)
+        userNameVM = SPUserNameViewModel(user: user)
         self.user = user
 
         self.setupObservers()
