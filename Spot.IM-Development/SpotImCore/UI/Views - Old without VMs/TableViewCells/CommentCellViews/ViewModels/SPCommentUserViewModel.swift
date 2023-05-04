@@ -12,27 +12,27 @@ import UIKit
 
 typealias ConversationModelIsAvatarSource = (SPMainConversationModel, Bool)
 
-protocol OWCommentUserViewModelingInputs {
+protocol SPCommentUserViewModelingInputs {
     func configure(with model: CommentViewModel)
     func setDelegate(_ delegate: SPCommentCellDelegate)
 }
 
-protocol OWCommentUserViewModelingOutputs {
-    var userNameVM: OWUserNameViewModeling { get }
-    var avatarVM: OWAvatarViewModeling { get }
+protocol SPCommentUserViewModelingOutputs {
+    var userNameVM: SPUserNameViewModeling { get }
+    var avatarVM: SPAvatarViewModeling { get }
 }
 
-protocol OWCommentUserViewModeling {
-    var inputs: OWCommentUserViewModelingInputs { get }
-    var outputs: OWCommentUserViewModelingOutputs { get }
+protocol SPCommentUserViewModeling {
+    var inputs: SPCommentUserViewModelingInputs { get }
+    var outputs: SPCommentUserViewModelingOutputs { get }
 }
 
-class OWCommentUserViewModel: OWCommentUserViewModeling,
-                              OWCommentUserViewModelingInputs,
-                              OWCommentUserViewModelingOutputs {
+class SPCommentUserViewModel: SPCommentUserViewModeling,
+                              SPCommentUserViewModelingInputs,
+                              SPCommentUserViewModelingOutputs {
 
-    var inputs: OWCommentUserViewModelingInputs { return self }
-    var outputs: OWCommentUserViewModelingOutputs { return self }
+    var inputs: SPCommentUserViewModelingInputs { return self }
+    var outputs: SPCommentUserViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -43,14 +43,14 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     fileprivate var user: SPUser?
     fileprivate var replyToCommentId: String?
 
-    let avatarVM: OWAvatarViewModeling
-    let userNameVM: OWUserNameViewModeling
+    let avatarVM: SPAvatarViewModeling
+    let userNameVM: SPUserNameViewModeling
 
     fileprivate let _conversationModel = BehaviorSubject<SPMainConversationModel?>(value: nil)
 
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
-        avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
-        userNameVM = OWUserNameViewModel(user: user)
+        avatarVM = SPAvatarViewModel(user: user, imageURLProvider: imageProvider)
+        userNameVM = SPUserNameViewModel(user: user)
         self.user = user
 
         self.setupObservers()
@@ -71,7 +71,7 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     }
 }
 
-fileprivate extension OWCommentUserViewModel {
+fileprivate extension SPCommentUserViewModel {
     func setupObservers() {
         userNameVM.outputs.moreTapped.subscribe(onNext: { [weak self] sender in
             guard let self = self else { return }

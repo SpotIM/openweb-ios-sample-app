@@ -19,7 +19,7 @@ protocol SPCommentCreationEntryViewModelingInputs {
 }
 
 protocol SPCommentCreationEntryViewModelingOutputs {
-    var avatarViewVM: OWAvatarViewModeling { get }
+    var avatarViewVM: SPAvatarViewModeling { get }
     var ctaText: Observable<String> { get }
     var tapped: Observable<Void> { get }
 }
@@ -59,8 +59,8 @@ class SPCommentCreationEntryViewModel: SPCommentCreationEntryViewModeling, SPCom
             .asObserver()
     }
 
-    lazy var avatarViewVM: OWAvatarViewModeling = {
-        return OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
+    lazy var avatarViewVM: SPAvatarViewModeling = {
+        return SPAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
 
     func configure(user: SPUser) {
