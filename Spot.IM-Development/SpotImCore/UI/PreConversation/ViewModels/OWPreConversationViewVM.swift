@@ -40,6 +40,8 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldAddContentTapRecognizer: Bool { get }
     var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
+    var openProfile: Observable<URL> { get }
+    var openPublisherProfile: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -168,6 +170,18 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
+            .asObservable()
+    }
+
+    fileprivate var _openProfile = PublishSubject<URL>()
+    var openProfile: Observable<URL> {
+        return _openProfile
+            .asObservable()
+    }
+
+    fileprivate var _openPublisherProfile = PublishSubject<String>()
+    var openPublisherProfile: Observable<String> {
+        return _openPublisherProfile
             .asObservable()
     }
 
@@ -438,6 +452,51 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] comment in
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comment avatar click
+        let commentAvatarClickObservable: Observable<URL> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openProfile
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+
+        // Responding to comment creation entry avatar click
+        let commentCreationAvatarClickObservable: Observable<URL> = commentCreationEntryViewModel
+            .outputs
+            .avatarViewVM
+            .outputs
+            .openProfile
+
+        Observable.merge(commentAvatarClickObservable, commentCreationAvatarClickObservable)
+            .subscribe(onNext: { [weak self] url in
+                self?._openProfile.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to open publisher profile
+        let commentCreationOpenPublisherProfileObservable: Observable<String> = commentCreationEntryViewModel
+            .outputs
+            .avatarViewVM
+            .outputs
+            .openPublisherProfile
+
+        let commentOpenPublisherProfileObservable: Observable<String> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<String> in
+                let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openPublisherProfile
+                }
+                return Observable.merge(commentOpenPublisherProfileOutput)
+            }
+
+        Observable.merge(commentOpenPublisherProfileObservable, commentCreationOpenPublisherProfileObservable)
+            .subscribe(onNext: { [weak self] id in
+                self?._openPublisherProfile.onNext(id)
             })
             .disposed(by: disposeBag)
 
