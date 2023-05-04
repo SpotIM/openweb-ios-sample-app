@@ -11,6 +11,10 @@ import RxSwift
 
 internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
 
+    fileprivate struct Metrics {
+        static let tableViewBottomPadding: CGFloat = 78
+    }
+
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
 
@@ -456,7 +460,6 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             let currentCenterConstant = typingViewCenterCurrentOffset
             else { return }
 
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         typingViewCenterConstraint?.update(offset: currentCenterConstant > 0 ? view.bounds.width : -view.bounds.width)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
@@ -465,6 +468,8 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             self.typingIndicationView = nil
             self.typingViewCenterCurrentOffset = 0
         })
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 
     private func returnTypingViewToTheCenter() {
@@ -475,7 +480,6 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     }
 
     private func hideTypingIndicationView() {
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         typingViewBottomConstraint?.update(offset: 100.0)
         UIView.animate(
             withDuration: 0.3,
@@ -488,10 +492,11 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
                 self.typingIndicationView = nil
             }
         )
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 
     private func createAndShowTypingIndicationView() {
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 78, right: 0)
         typingIndicationView = TotalTypingIndicationView()
         typingIndicationView?.delegate = self
         typingIndicationView?.alpha = 0
@@ -516,6 +521,8 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
                 self.view.layoutIfNeeded()
             }
         )
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Metrics.tableViewBottomPadding, right: 0)
     }
 }
 
