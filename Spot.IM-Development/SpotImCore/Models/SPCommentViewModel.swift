@@ -51,6 +51,7 @@ internal struct CommentViewModel {
     var showStatusIndicator: Bool = false
     var anyHiddenReply: Bool = false
     private (set) var isStaff: Bool = false
+    var status: SPComment.CommentStatus = .unknown
 
     var brandColor: UIColor = .brandColor
 
@@ -60,7 +61,7 @@ internal struct CommentViewModel {
         return id == rootCommentId
     }
 
-    let commentUserVM: OWCommentUserViewModeling
+    let commentUserVM: SPCommentUserViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
     let statusIndicationVM: OWCommentStatusIndicationViewModeling = OWCommentStatusIndicationViewModel()
 
@@ -72,7 +73,7 @@ internal struct CommentViewModel {
         user: SPUser? = nil,
         imageProvider: SPImageProvider? = nil,
         conversationModel: SPMainConversationModel? = nil) {
-        commentUserVM = OWCommentUserViewModel(user: user, imageProvider: imageProvider)
+        commentUserVM = SPCommentUserViewModel(user: user, imageProvider: imageProvider)
         isDeleted = comment.deleted
         isEdited = comment.edited
         authorId = comment.userId
@@ -82,6 +83,10 @@ internal struct CommentViewModel {
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
         isCommentAuthorMuted = user?.isMuted ?? false
+
+        if let commentStatus = comment.status {
+            status = commentStatus
+        }
 
         if let commentId = commentId {
             isReported = SPUserSessionHolder.session.reportedComments[commentId] ?? false
