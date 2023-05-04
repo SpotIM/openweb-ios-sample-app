@@ -83,7 +83,7 @@ fileprivate extension OWReportReasonCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWReportReasonViewModeling) {
-        // Cancel Independent
+        // Open Cancel Independent
         Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
                          viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
                         .filter { viewModel.outputs.viewableMode == .independent }
@@ -93,7 +93,7 @@ fileprivate extension OWReportReasonCoordinator {
                         })
                         .disposed(by: disposeBag)
 
-        // Cancel Flow
+        // Open Cancel Flow
         Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
                          viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
         .filter { viewModel.outputs.viewableMode == .partOfFlow }
@@ -112,7 +112,7 @@ fileprivate extension OWReportReasonCoordinator {
         })
         .disposed(by: disposeBag)
 
-        // Submit Flow
+        // Open Submit Flow
         viewModel.outputs
             .reportReasonViewViewModel.outputs.submitReportReasonTapped
             .subscribe(onNext: { [weak self] _ in
@@ -131,7 +131,7 @@ fileprivate extension OWReportReasonCoordinator {
             })
             .disposed(by: disposeBag)
 
-        // Additional information
+        // Open Additional information - Flow
         let reportTextViewVM = viewModel.outputs.reportReasonViewViewModel.outputs
             .textViewVM
         reportTextViewVM.outputs.textViewTapped
@@ -170,11 +170,21 @@ fileprivate extension OWReportReasonCoordinator {
             })
             .disposed(by: disposeBag)
 
-        // Open Guidelines
+        // Open Guidelines - Flow
         viewModel.outputs.reportReasonViewViewModel.outputs.learnMoreTapped
-            .subscribe(onNext: { url in
-                print("Open guidelines \(url?.absoluteString ?? "")")
-            })
+            .unwrap()
+            .filter { [weak self] _ in // TODO: change to viewable mode
+                guard let self = self else { return true }
+                return viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                               url: url,
+                                                               actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .subscribe()
             .disposed(by: disposeBag)
     }
 }
