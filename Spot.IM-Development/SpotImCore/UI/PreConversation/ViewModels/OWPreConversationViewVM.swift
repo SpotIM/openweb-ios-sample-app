@@ -346,6 +346,20 @@ fileprivate extension OWPreConversationViewViewModel {
                 return conversationReadObservable
                     .take(1)
             }
+            .materialize() // Required to keep the final subscriber even if errors arrived from the network
+            .map { event -> SPConversationReadRM? in
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldDhowError).
+                    return conversationRead
+                case .error(_):
+                    // TODO: handle error - update something like _shouldDhowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
             .share()
 
         // Creating the cells VMs for the pre conversation
