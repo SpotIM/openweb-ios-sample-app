@@ -21,6 +21,7 @@ class OWReportReasonThanksView: UIView {
         static let buttonRadius: CGFloat = 6
         static let buttonHeight: CGFloat = 40
         static let bottomPadding: CGFloat = 20
+        static let buttonFontSize: CGFloat = 15
     }
 
     fileprivate lazy var closeButton: UIButton = {
@@ -33,6 +34,7 @@ class OWReportReasonThanksView: UIView {
         return UIButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
+                .font(.openSans(style: .semibold, of: Metrics.buttonFontSize))
                 .setTitle(viewModel.outputs.gotitButtonText, state: .normal)
                 .corner(radius: Metrics.buttonRadius)
     }()

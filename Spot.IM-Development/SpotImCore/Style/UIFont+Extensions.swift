@@ -72,6 +72,7 @@ internal enum SPFontStyle: String {
     case light = "Light"
     case medium = "Medium"
     case bold = "Bold"
+    case semibold = "SemiBold"
     case italic = "Italic"
 }
 
