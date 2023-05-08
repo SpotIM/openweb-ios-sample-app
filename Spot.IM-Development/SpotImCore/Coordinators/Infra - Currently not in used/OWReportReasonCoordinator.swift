@@ -52,7 +52,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             router.setRoot(reportReasonVC, animated: false, dismissCompletion: reportReasonPopped)
         } else {
             router.push(reportReasonVC,
-                        pushStyle: .regular,
+                        pushStyle: .presentStyle,
                         animated: true,
                         popCompletion: reportReasonPopped)
         }
@@ -113,14 +113,14 @@ fileprivate extension OWReportReasonCoordinator {
                 .subscribe(onNext: { _ in
                     reportReasonCancelVC.dismiss(animated: true)
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: self.disposeBag)
 
             reportReasonCancelViewVM.cancelReportReasonCancelTap
                 .subscribe(onNext: { _ in
                     // TODO close the whole Flow
                     reportReasonCancelVC.dismiss(animated: true)
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: self.disposeBag)
         })
         .disposed(by: disposeBag)
 
@@ -139,7 +139,7 @@ fileprivate extension OWReportReasonCoordinator {
                         guard let self = self else { return }
                         self.router.dismiss(animated: true, completion: nil)
                     })
-                    .disposed(by: disposeBag)
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
