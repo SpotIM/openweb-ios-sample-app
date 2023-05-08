@@ -25,6 +25,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var initialDataLoaded: Observable<Bool> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -55,6 +56,18 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var offset = 0
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
+
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
+    fileprivate lazy var isReadOnly: Observable<Bool> = {
+        return _isReadOnly
+            .share(replay: 1)
+    }()
+
+    var commentCreationTap = PublishSubject<OWCommentCreationType>()
+    var openCommentCreation: Observable<OWCommentCreationType> {
+        return commentCreationTap
+            .asObservable()
+    }
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -112,7 +125,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
                 return Observable.just(self.getCommentCells(for: commentsPresentationData))
             })
-            .share()
             .asObservable()
     }
 
@@ -122,12 +134,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 guard let self = self else { return Observable.never() }
                 return Observable.just(self.getTopCells(shouldShowCommunityQuestion: showCommunityQuestion, shouldShowCommunityGuidelines: showCommunityGuidlines))
             })
-            .share()
             .asObservable()
     }
 
-    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
-        return Observable.combineLatest(topCellsOptions.startWith([]), commentCellsOptions.startWith([]))
+    // TODO - Check why when it is not lazy we are not observing cells
+    fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
+        return Observable.combineLatest(topCellsOptions, commentCellsOptions)
+            .startWith(([], []))
             .flatMapLatest({ [weak self] topCellsOptions, commentCellsOptions -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
                 if commentCellsOptions.isEmpty {
@@ -135,7 +148,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 }
                 return Observable.just(topCellsOptions + commentCellsOptions)
             })
-    }
+            .share()
+            .asObservable()
+    }()
 
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var updateCellSizeAtIndex: Observable<Int> {
@@ -373,7 +388,25 @@ fileprivate extension OWConversationViewViewModel {
 
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+                self._commentsPresentationData.removeAll()
+                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
+        // Set read only mode
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+                switch self.conversationData.article.additionalSettings.readOnlyMode {
+                case .disable:
+                    isReadOnly = false
+                case .enable:
+                    isReadOnly = true
+                case .default:
+                    break
+                }
+                self._isReadOnly.onNext(isReadOnly)
             })
             .disposed(by: disposeBag)
 
@@ -403,5 +436,51 @@ fileprivate extension OWConversationViewViewModel {
                 self?._changeSizeAtIndex.onNext(guidelinesIndex)
             })
             .disposed(by: disposeBag)
+
+        // Observable of the comment cell VMs
+        let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
+                let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        return commentCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+
+                 return Observable.just(commentCellsVms)
+            }
+            .share()
+
+        // Responding to reply click from comment cells VMs
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWComment> in
+                let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.replyClickedOutput
+                        .map { commentVM.outputs.comment }
+                }
+                return Observable.merge(replyClickOutputObservable)
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+            })
+            .disposed(by: disposeBag)
+
+        // Update comments cells on ReadOnly mode
+        Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
+            return (commentCellsVms, isReadOnly)
+        }
+        .subscribe(onNext: { commentCellsVms, isReadOnly in
+            commentCellsVms.forEach {
+                $0.outputs.commentVM
+                .outputs.commentEngagementVM
+                .inputs.isReadOnly
+                .onNext(isReadOnly)
+            }
+        })
+        .disposed(by: disposeBag)
     }
 }
