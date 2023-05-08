@@ -19,6 +19,7 @@ protocol OWNetworkAPIProtocol {
     var images: OWImagesAPI { get }
     var authentication: OWAuthenticationAPI { get }
     var conversation: OWConversationAPI { get }
+    var reportReason: OWReportReasonAPI { get }
     var failureReporter: OWFailureReportAPI { get }
 }
 

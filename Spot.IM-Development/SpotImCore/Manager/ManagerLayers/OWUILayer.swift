@@ -217,8 +217,9 @@ extension OWUILayer {
             }
         }
 
-        _ = flowsSdkCoordinator.startReportReasonFlow(presentationalMode: presentationalMode,
-                                                 callbacks: callbacks)
+        _ = flowsSdkCoordinator.startReportReasonFlow(commentId: commentId,
+                                                      presentationalMode: presentationalMode,
+                                                      callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .subscribe(onNext: { result in
             switch result {

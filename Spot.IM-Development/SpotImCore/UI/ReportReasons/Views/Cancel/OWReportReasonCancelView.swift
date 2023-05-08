@@ -16,7 +16,12 @@ class OWReportReasonCancelView: UIView {
         static let titleViewPrefixIdentifier = "report_reason_cancel"
         static let closeButtonTopSpacing: CGFloat = 18
         static let horizontalSpacing: CGFloat = 16
+        static let verticalSpacing: CGFloat = 16
         static let titleViewTopSpacing: CGFloat = 20
+        static let buttonsRadius: CGFloat = 6
+        static let buttonsHeight: CGFloat = 40
+        static let bottomPadding: CGFloat = 20
+        static let trashIconPadding: CGFloat = 10
     }
 
     fileprivate lazy var closeButton: UIButton = {
@@ -30,6 +35,32 @@ class OWReportReasonCancelView: UIView {
                                        title: viewModel.outputs.title,
                                        subtitle: viewModel.outputs.subtitle,
                                        accessibilityPrefixId: Metrics.titleViewPrefixIdentifier)
+    }()
+
+    fileprivate lazy var buttonsStackView: UIStackView = {
+        return UIStackView()
+            .axis(.vertical)
+            .spacing(Metrics.verticalSpacing)
+            .distribution(.fillEqually)
+    }()
+
+    fileprivate lazy var continueButton: UIButton = {
+        return UIButton()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .setTitle(viewModel.outputs.continueButtonText, state: .normal)
+            .corner(radius: Metrics.buttonsRadius)
+    }()
+
+    fileprivate lazy var cancelButton: UIButton = {
+        return UIButton()
+            .backgroundColor(.clear)
+            .textColor(OWDesignColors.G4)
+            .border(width: 1, color: OWDesignColors.G4)
+            .setTitle(viewModel.outputs.cancelButtonText, state: .normal)
+            .corner(radius: Metrics.buttonsRadius)
+            .image(UIImage(spNamed: viewModel.outputs.trashIconName), state: .normal)
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Metrics.trashIconPadding))
     }()
 
     fileprivate let viewModel: OWReportReasonCancelViewViewModeling
@@ -60,11 +91,33 @@ fileprivate extension OWReportReasonCancelView {
             make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopSpacing)
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
+
+        self.addSubviews(buttonsStackView)
+        buttonsStackView.OWSnp.makeConstraints { make in
+            make.bottom.equalToSuperviewSafeArea().inset(Metrics.bottomPadding)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
+        }
+
+        continueButton.OWSnp.makeConstraints { make in
+            make.height.equalTo(Metrics.buttonsHeight)
+        }
+
+        cancelButton.OWSnp.makeConstraints { make in
+            make.height.equalTo(Metrics.buttonsHeight)
+        }
+
+        buttonsStackView.addArrangedSubview(continueButton)
+        buttonsStackView.addArrangedSubview(cancelButton)
     }
 
     func setupObservers() {
-        closeButton.rx.tap
+        Observable.of(closeButton.rx.tap, continueButton.rx.tap)
+            .merge()
             .bind(to: viewModel.inputs.closeReportReasonCancelTap)
+            .disposed(by: disposeBag)
+
+        cancelButton.rx.tap
+            .bind(to: viewModel.inputs.cancelReportReasonCancelTap)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

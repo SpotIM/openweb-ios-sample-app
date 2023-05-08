@@ -54,43 +54,43 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var cancelButton: UIButton = {
         return UIButton()
-                .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .setTitle(viewModel.outputs.cancelButtonText, state: .normal)
-                .corner(radius: Metrics.buttonsRadius)
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .setTitle(viewModel.outputs.cancelButtonText, state: .normal)
+            .corner(radius: Metrics.buttonsRadius)
     }()
 
     fileprivate lazy var submitButton: UIButton = {
         return UIButton()
-                .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .textColor(.white)
-                .setTitle(viewModel.outputs.submitButtonText, state: .normal)
-                .corner(radius: Metrics.buttonsRadius)
-                .isEnabled(false)
-                .alpha(Metrics.submitDisabledOpacity)
+            .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textColor(.white)
+            .setTitle(viewModel.outputs.submitButtonText, state: .normal)
+            .corner(radius: Metrics.buttonsRadius)
+            .isEnabled(false)
+            .alpha(Metrics.submitDisabledOpacity)
     }()
 
     fileprivate lazy var tableViewReasons: UITableView = {
         return UITableView(frame: .zero, style: .grouped)
-                .delegate(self)
-                .separatorStyle(.none)
-                .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .delegate(self)
+            .separatorStyle(.none)
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var tableViewHeaderView: UIView = {
         return UIView()
-                .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var tableViewHeaderLabel: UILabel = {
         return UILabel()
-                .backgroundColor(.clear)
-                .numberOfLines(0)
-                .attributedText(viewModel.outputs.tableViewHeaderAttributedText)
-                .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
-                    guard let self = self else { return }
-                    self.viewModel.inputs.learnMoreTap.onNext()
-                }
+            .backgroundColor(.clear)
+            .numberOfLines(0)
+            .attributedText(viewModel.outputs.tableViewHeaderAttributedText)
+            .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
+                guard let self = self else { return }
+                self.viewModel.inputs.learnMoreTap.onNext()
+            }
     }()
 
     fileprivate let viewModel: OWReportReasonViewViewModeling
@@ -211,18 +211,18 @@ fileprivate extension OWReportReasonView {
 
         viewModel.outputs.reportReasonCellViewModels
             .bind(to: tableViewReasons.rx.items(cellIdentifier: Metrics.cellReuseIdentifier, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
-            cell.configure(with: viewModel)
-        }.disposed(by: disposeBag)
+                cell.configure(with: viewModel)
+            }.disposed(by: disposeBag)
 
         tableViewReasons.rx.modelDeselected(OWReportReasonCellViewModeling.self)
             .subscribe(onNext: { viewModel in
-            viewModel.inputs.setSelected.onNext(false)
-        }).disposed(by: disposeBag)
+                viewModel.inputs.setSelected.onNext(false)
+            }).disposed(by: disposeBag)
 
         tableViewReasons.rx.modelSelected(OWReportReasonCellViewModeling.self)
             .subscribe(onNext: { viewModel in
                 viewModel.inputs.setSelected.onNext(true)
-        }).disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
 
         tableViewReasons.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in

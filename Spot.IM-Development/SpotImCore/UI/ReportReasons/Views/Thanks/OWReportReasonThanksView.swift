@@ -18,12 +18,23 @@ class OWReportReasonThanksView: UIView {
         static let horizontalSpacing: CGFloat = 16
         static let closeButtonTrailingPadding = 19
         static let titleViewTopPadding: CGFloat = 20
+        static let buttonRadius: CGFloat = 6
+        static let buttonHeight: CGFloat = 40
+        static let bottomPadding: CGFloat = 20
     }
 
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
+    }()
+
+    fileprivate lazy var gotitButton: UIButton = {
+        return UIButton()
+                .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(.white)
+                .setTitle(viewModel.outputs.gotitButtonText, state: .normal)
+                .corner(radius: Metrics.buttonRadius)
     }()
 
     fileprivate lazy var titleView: OWTitleSubtitleIconView = {
@@ -61,10 +72,18 @@ fileprivate extension OWReportReasonThanksView {
             make.top.equalTo(closeButton.OWSnp.bottom).offset(Metrics.titleViewTopPadding)
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
+
+        self.addSubviews(gotitButton)
+        gotitButton.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
+            make.bottom.equalToSuperviewSafeArea().inset(Metrics.bottomPadding)
+            make.height.equalTo(Metrics.buttonHeight)
+        }
     }
 
     func setupObservers() {
-        closeButton.rx.tap
+        Observable.of(closeButton.rx.tap, gotitButton.rx.tap)
+            .merge()
             .bind(to: viewModel.inputs.closeReportReasonThanksTap)
             .disposed(by: disposeBag)
 
