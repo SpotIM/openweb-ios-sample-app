@@ -165,7 +165,7 @@ fileprivate extension OWAdditionalInfoView {
         Observable.combineLatest(submitButton.rx.tap, textView.viewModel.outputs.textViewText)
             .subscribe(onNext: { [weak self] _, text in
                 guard let self = self else { return }
-                viewModel.inputs.submitAdditionalInfoTap.onNext(text)
+                self.viewModel.inputs.submitAdditionalInfoTap.onNext(text)
             })
             .disposed(by: disposeBag)
 
