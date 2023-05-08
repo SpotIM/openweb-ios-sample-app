@@ -199,6 +199,8 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
+#if NEW_API
+
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       presentationalMode: OWPresentationalMode,
@@ -234,6 +236,8 @@ extension OWUILayer {
         })
         .disposed(by: flowDisposeBag)
     }
+
+#endif
 
 #if BETA
     func testingPlayground(postId: OWPostId,
