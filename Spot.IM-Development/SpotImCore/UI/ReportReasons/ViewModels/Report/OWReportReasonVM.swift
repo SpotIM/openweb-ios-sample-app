@@ -41,17 +41,19 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     }
 
     let viewableMode: OWViewableMode
+    let commentId: OWCommentId
     let presentationalMode: OWPresentationalModeCompact
 
     lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
-        return OWReportReasonViewViewModel(viewableMode: viewableMode, presentationalMode: presentationalMode)
+        return OWReportReasonViewViewModel(commentId: commentId, viewableMode: viewableMode, presentationalMode: presentationalMode)
     }()
 
     var title: String {
         return LocalizationManager.localizedString(key: Metrics.titleKey)
     }
 
-    init (viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
+    init (commentId: OWCommentId, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
+        self.commentId = commentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentMode
     }

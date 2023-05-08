@@ -741,6 +741,7 @@
 		9E3B8B7F2A025145006BB207 /* UILabel+OWExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B7E2A025145006BB207 /* UILabel+OWExtensions.swift */; };
 		9E3B8B812A0272CE006BB207 /* String+OWExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B802A0272CE006BB207 /* String+OWExtensions.swift */; };
 		9E3B8B832A02826C006BB207 /* NSMutableAttributedString+OWExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B8B822A02826C006BB207 /* NSMutableAttributedString+OWExtensions.swift */; };
+		9E3D65DB2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3D65DA2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift */; };
 		9E4163BD29F6C9BB00819BC2 /* OWReportReasonCancelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BC29F6C9BB00819BC2 /* OWReportReasonCancelVC.swift */; };
 		9E4163BF29F6C9C700819BC2 /* OWReportReasonCancelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */; };
 		9E4163C129F6C9E300819BC2 /* OWReportReasonCancelVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C029F6C9E300819BC2 /* OWReportReasonCancelVM.swift */; };
@@ -1611,6 +1612,7 @@
 		9E3B8B7E2A025145006BB207 /* UILabel+OWExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+OWExtensions.swift"; sourceTree = "<group>"; };
 		9E3B8B802A0272CE006BB207 /* String+OWExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+OWExtensions.swift"; sourceTree = "<group>"; };
 		9E3B8B822A02826C006BB207 /* NSMutableAttributedString+OWExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+OWExtensions.swift"; sourceTree = "<group>"; };
+		9E3D65DA2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonEndpoints.swift; sourceTree = "<group>"; };
 		9E4163BC29F6C9BB00819BC2 /* OWReportReasonCancelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelVC.swift; sourceTree = "<group>"; };
 		9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelView.swift; sourceTree = "<group>"; };
 		9E4163C029F6C9E300819BC2 /* OWReportReasonCancelVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelVM.swift; sourceTree = "<group>"; };
@@ -3227,6 +3229,7 @@
 				24B087CA288E747200CAA0EB /* OWAuthenticationEndpoints.swift */,
 				24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */,
 				24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */,
+				9E3D65DA2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift */,
 			);
 			path = Endpoints;
 			sourceTree = "<group>";
@@ -5798,6 +5801,7 @@
 				3DB3B98929FAD99500C50192 /* OWTestingCellsGeneratorRequiredData.swift in Sources */,
 				16A62B6826662F6C00DFE9B7 /* OWCustomUIDelegate.swift in Sources */,
 				3D611B9128C643F2003960CE /* OWArticleProtocol.swift in Sources */,
+				9E3D65DB2A08E6ED009B4A0D /* OWReportReasonEndpoints.swift in Sources */,
 				8D358D6629D1DD9100E229A3 /* OWOnlineViewingUsersCounterViewModel.swift in Sources */,
 				24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */,
 				3DB3B98329F7F01E00C50192 /* OWTestingCellState.swift in Sources */,

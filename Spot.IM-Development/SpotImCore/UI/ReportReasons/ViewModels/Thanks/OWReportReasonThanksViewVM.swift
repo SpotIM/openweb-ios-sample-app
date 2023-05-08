@@ -21,6 +21,7 @@ protocol OWReportReasonThanksViewViewModelingOutputs {
     var titleIconName: String { get }
     var continueButtonText: String { get }
     var closeReportReasonThanksTapped: Observable<Void> { get }
+    var gotitButtonText: String { get }
 }
 
 protocol OWReportReasonThanksViewViewModeling {
@@ -35,6 +36,7 @@ class OWReportReasonThanksViewViewModel: OWReportReasonThanksViewViewModelingInp
         static let subtitleKey = "ReportReasonThanksSubtitle"
         static let titleIconName = "ReportReasonThanksIcon"
         static let continueButtonKey = "ReportReasonThanksContinueButton"
+        static let gotitKey = "GotIt"
     }
 
     var inputs: OWReportReasonThanksViewViewModelingInputs { return self }
@@ -56,6 +58,10 @@ class OWReportReasonThanksViewViewModel: OWReportReasonThanksViewViewModelingInp
 
     var continueButtonText: String {
         return LocalizationManager.localizedString(key: Metrics.continueButtonKey)
+    }
+
+    var gotitButtonText: String {
+        return LocalizationManager.localizedString(key: Metrics.gotitKey)
     }
 
     var closeReportReasonThanksTap = PublishSubject<Void>()
