@@ -113,7 +113,10 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     let textViewVM: OWTextViewViewModeling
 
-    init(commentId: OWCommentId, viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentId: OWCommentId,
+         viewableMode: OWViewableMode,
+         presentationalMode: OWPresentationalModeCompact,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.commentId = commentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
