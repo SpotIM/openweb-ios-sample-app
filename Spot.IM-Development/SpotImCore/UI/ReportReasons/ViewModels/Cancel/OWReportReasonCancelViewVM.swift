@@ -24,6 +24,7 @@ protocol OWReportReasonCancelViewViewModelingOutputs {
     var cancelButtonText: String { get }
     var closeReportReasonCancelTapped: Observable<Void> { get }
     var cancelReportReasonCancelTapped: Observable<Void> { get }
+    var trashIconName: String { get }
 }
 
 protocol OWReportReasonCancelViewViewModeling {
@@ -59,7 +60,7 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
         return Metrics.titleIconName
     }
 
-    var trashIcon: String {
+    var trashIconName: String {
         return Metrics.trashIcon
     }
 

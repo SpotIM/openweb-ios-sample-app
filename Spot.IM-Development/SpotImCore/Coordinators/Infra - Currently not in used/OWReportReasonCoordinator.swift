@@ -26,12 +26,14 @@ enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult> {
 
+    fileprivate let commentId: OWCommentId
     fileprivate let router: OWRoutering
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate let reportReasonPopped = PublishSubject<Void>()
     let presentationalMode: OWPresentationalModeCompact
 
-    init(router: OWRoutering, actionsCallbacks: OWViewActionsCallbacks?, presentationalMode: OWPresentationalModeCompact) {
+    init(commentId: OWCommentId, router: OWRoutering, actionsCallbacks: OWViewActionsCallbacks?, presentationalMode: OWPresentationalModeCompact) {
+        self.commentId = commentId
         self.router = router
         self.actionsCallbacks = actionsCallbacks
         self.presentationalMode = presentationalMode
@@ -39,7 +41,9 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
         // TODO: complete the flow
-        let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(viewableMode: .partOfFlow, presentMode: self.presentationalMode)
+        let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(commentId: commentId,
+                                                                                 viewableMode: .partOfFlow,
+                                                                                 presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
 
         router.start()
@@ -69,7 +73,8 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: Complete when we would like to support comment creation as a view
-        let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(viewableMode: .independent,
+        let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(commentId: commentId,
+                                                                                             viewableMode: .independent,
                                                                                              presentationalMode: .none,
                                                                                              servicesProvider: OWSharedServicesProvider.shared)
         let reportReasonView = OWReportReasonView(viewModel: reportReasonViewVM)
@@ -93,7 +98,7 @@ fileprivate extension OWReportReasonCoordinator {
                         })
                         .disposed(by: disposeBag)
 
-        // Open Cancel Flow
+        // Open Cancel - Flow
         Observable.merge(viewModel.outputs.reportReasonViewViewModel.outputs.closeReportReasonTapped,
                          viewModel.outputs.reportReasonViewViewModel.outputs.cancelReportReasonTapped)
         .filter { viewModel.outputs.viewableMode == .partOfFlow }
@@ -109,12 +114,19 @@ fileprivate extension OWReportReasonCoordinator {
                     reportReasonCancelVC.dismiss(animated: true)
                 })
                 .disposed(by: disposeBag)
+
+            reportReasonCancelViewVM.cancelReportReasonCancelTap
+                .subscribe(onNext: { _ in
+                    // TODO close the whole Flow
+                    reportReasonCancelVC.dismiss(animated: true)
+                })
+                .disposed(by: disposeBag)
         })
         .disposed(by: disposeBag)
 
-        // Open Submit Flow
+        // Submit and Open Thanks Screen - Flow
         viewModel.outputs
-            .reportReasonViewViewModel.outputs.submitReportReasonTapped
+            .reportReasonViewViewModel.outputs.submittedReportReasonObservable
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
@@ -173,8 +185,7 @@ fileprivate extension OWReportReasonCoordinator {
         // Open Guidelines - Flow
         viewModel.outputs.reportReasonViewViewModel.outputs.learnMoreTapped
             .unwrap()
-            .filter { [weak self] _ in // TODO: change to viewable mode
-                guard let self = self else { return true }
+            .filter { _ in // TODO: change to viewable mode
                 return viewModel.outputs.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in

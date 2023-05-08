@@ -16,13 +16,15 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         return router
     }
 
-    func startReportReasonFlow(presentationalMode: OWPresentationalMode,
+    func startReportReasonFlow(commentId: OWCommentId,
+                               presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?) -> Observable<OWReportReasonCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
-        let reportReasonCoordinator = OWReportReasonCoordinator(router: router,
+        let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+                                                                router: router,
                                                                 actionsCallbacks: callbacks,
                                                                 presentationalMode: presentationalMode.style)
 

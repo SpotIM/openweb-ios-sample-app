@@ -29,7 +29,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var shouldShowTitleView: Bool { get }
     var closeReportReasonTapped: Observable<Void> { get }
     var cancelReportReasonTapped: Observable<Void> { get }
-    var submitReportReasonTapped: Observable<Void> { get }
+    var submittedReportReasonObservable: Observable<EmptyDecodable> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var selectedReason: Observable<OWReportReason?> { get }
     var learnMoreTapped: Observable<URL?> { get }
@@ -85,6 +85,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let viewableMode: OWViewableMode
     fileprivate let presentationalMode: OWPresentationalModeCompact
+    fileprivate let commentId: OWCommentId
 
     var learnMoreTap = PublishSubject<Void>()
     var learnMoreTapped: Observable<URL?> {
@@ -112,7 +113,8 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     let textViewVM: OWTextViewViewModeling
 
-    init(viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentId: OWCommentId, viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.commentId = commentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
@@ -167,6 +169,26 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             }
             .asObservable()
     }()
+
+    // Observable for the RepertReason network API
+    lazy var submittedReportReasonObservable = submitReportReasonTapped
+        .withLatestFrom(selectedReason)
+        .withLatestFrom(textViewVM.outputs.textViewText) { [weak self] selectedReason, userDescription -> Observable<EmptyDecodable> in
+            guard let self = self,
+                  let selectedReason = selectedReason
+            else { return .empty() }
+            return self.servicesProvider
+                .netwokAPI()
+                .reportReason
+                .report(commentId: self.commentId,
+                        reasonMain: selectedReason.reportType.rawValue,
+                        reasonSub: selectedReason.reportType.localizedSubtitle,
+                        userDescription: userDescription)
+                .response
+        }
+        .flatMap { observable -> Observable<EmptyDecodable> in
+            return observable
+        }
 }
 
 fileprivate extension OWReportReasonViewViewModel {
@@ -180,6 +202,16 @@ fileprivate extension OWReportReasonViewViewModel {
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)
+            .disposed(by: disposeBag)
+
+        submittedReportReasonObservable
+            .subscribe { response in
+                guard let code = response.error?.asOWNetworkError?.responseCode else { return }
+                if code != 202 {
+                    // TODO show error
+                    print("error code is \(code)")
+                }
+            }
             .disposed(by: disposeBag)
     }
 }

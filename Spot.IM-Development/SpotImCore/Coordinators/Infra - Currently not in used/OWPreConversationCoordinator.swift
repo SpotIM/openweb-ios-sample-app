@@ -189,7 +189,7 @@ fileprivate extension OWPreConversationCoordinator {
         Observable.merge(contentPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
-            })
+            }
             .disposed(by: disposeBag)
     }
 }
