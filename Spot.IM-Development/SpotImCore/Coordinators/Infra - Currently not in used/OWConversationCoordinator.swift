@@ -97,9 +97,19 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
             .unwrap()
 
+        let replyToCommentTap = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
+            .map { [weak self] commentCreationType -> OWCommentCreationRequiredData? in
+                guard let self = self else { return nil }
+                return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: commentCreationType)
+            }
+            .unwrap()
+
         // Coordinate to comment creation
-        let coordinateCommentCreationObservable = Observable.merge(ctaCommentCreationTapped,
-                                                         deepLinkToCommentCreation.unwrap().asObservable())
+        let coordinateCommentCreationObservable = Observable.merge(
+            ctaCommentCreationTapped,
+            deepLinkToCommentCreation.unwrap().asObservable(),
+            replyToCommentTap
+        )
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
