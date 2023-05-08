@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import RxSwift
 
+#if NEW_API
+
 class OWReportReasonThanksView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_thanks_view_id"
@@ -99,3 +101,5 @@ fileprivate extension OWReportReasonThanksView {
             .disposed(by: disposeBag)
     }
 }
+
+#endif

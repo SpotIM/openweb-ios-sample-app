@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if NEW_API
 
 struct SPConfigurationShared: Decodable {
 
@@ -24,3 +25,22 @@ struct SPConfigurationShared: Decodable {
              reportReasonsOptions
     }
 }
+
+#else
+
+struct SPConfigurationShared: Decodable {
+
+    let enableCommentLabels: Bool?
+    let commentLabels: Dictionary<String, SPCommentLabelsSectionConfiguration>?
+    let votesType: OWVotesType
+    let usePublisherUserProfile: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case usePublisherUserProfile = "useCustomUserProfile"
+        case enableCommentLabels,
+             commentLabels,
+             votesType
+    }
+}
+
+#endif

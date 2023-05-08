@@ -16,6 +16,8 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         return router
     }
 
+#if NEW_API
+
     func startReportReasonFlow(commentId: OWCommentId,
                                presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?) -> Observable<OWReportReasonCoordinatorResult> {
@@ -30,6 +32,8 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
         return coordinate(to: reportReasonCoordinator)
     }
+
+#endif
 
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
