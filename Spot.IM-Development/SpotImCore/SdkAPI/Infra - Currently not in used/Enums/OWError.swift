@@ -9,6 +9,7 @@
 import Foundation
 
 #if NEW_API
+
 public enum OWError: Error {
     case missingSpotId
     case castingError(description: String)
@@ -68,7 +69,9 @@ public enum OWError: Error {
         }
     }
 }
+
 #else
+
 enum OWError: Error {
     case missingSpotId
     case castingError(description: String)
@@ -125,4 +128,5 @@ enum OWError: Error {
         }
     }
 }
+
 #endif

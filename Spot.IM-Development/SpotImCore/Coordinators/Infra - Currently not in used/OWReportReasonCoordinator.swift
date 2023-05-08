@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+#if NEW_API
+
 enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
     case loadedToScreen
     case popped
@@ -199,3 +201,5 @@ fileprivate extension OWReportReasonCoordinator {
             .disposed(by: disposeBag)
     }
 }
+
+#endif
