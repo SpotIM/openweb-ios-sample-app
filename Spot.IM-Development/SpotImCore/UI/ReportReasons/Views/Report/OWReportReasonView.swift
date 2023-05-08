@@ -174,11 +174,22 @@ fileprivate extension OWReportReasonView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.titleView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.tableViewReasons.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.cancelButton.setBackgroundColor(color: OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), forState: .normal)
-                self.cancelButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+                self.titleView
+                    .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
+                                                                 themeStyle: currentStyle))
+                self.tableViewReasons
+                    .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
+                                                                 themeStyle: currentStyle))
+                self.footerView
+                    .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
+                                                                 themeStyle: currentStyle))
+                self.cancelButton
+                    .setBackgroundColor(color: OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), forState: .normal)
+                self.cancelButton
+                    .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+                self.tableViewHeaderView
+                    .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
+                                                                 themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
 
