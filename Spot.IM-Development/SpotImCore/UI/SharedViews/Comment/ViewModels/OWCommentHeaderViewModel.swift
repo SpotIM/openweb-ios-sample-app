@@ -189,7 +189,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 fileprivate extension OWCommentHeaderViewModel {
     func setupObservers() {
         tapMore
-            .subscribe(onNext: { [weak self] btn in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 _ = self.servicesProvider.presenterService()
                     .showMenu(actions: self.optionsActions)
