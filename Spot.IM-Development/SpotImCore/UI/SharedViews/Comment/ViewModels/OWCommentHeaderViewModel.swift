@@ -12,7 +12,7 @@ import UIKit
 
 protocol OWCommentHeaderViewModelingInputs {
     var tapUserName: PublishSubject<Void> { get }
-    var tapMore: PublishSubject<UIButton> { get }
+    var tapMore: PublishSubject<OWUISource> { get }
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
@@ -84,7 +84,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }()
 
     var tapUserName = PublishSubject<Void>()
-    var tapMore = PublishSubject<UIButton>()
+    var tapMore = PublishSubject<OWUISource>()
 
     lazy var subscriberBadgeVM: OWSubscriberIconViewModeling = {
         return OWSubscriberIconViewModel(user: user!, servicesProvider: servicesProvider, subscriberBadgeService: OWSubscriberBadgeService())
@@ -174,14 +174,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var moreTapped: Observable<OWUISource> {
         tapMore
-            .map { $0 as OWUISource }
             .asObservable()
     }
 
     // TODO: properly get the relevant actions
-    fileprivate lazy var optionsActions: [UIRxAction] = {
+    fileprivate lazy var optionsActions: [UIRxPresenterAction] = {
         return [
-            UIRxAction(title: OWLocalizationManager.shared.localizedString(key: "Report"))
+            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report")),
+            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), style: .cancel)
         ]
     }()
 }
@@ -192,7 +192,7 @@ fileprivate extension OWCommentHeaderViewModel {
             .subscribe(onNext: { [weak self] btn in
                 guard let self = self else { return }
                 _ = self.servicesProvider.presenterService()
-                    .showMenu(source: btn, actions: self.optionsActions)
+                    .showMenu(actions: self.optionsActions)
                     .subscribe(onNext: { result in
                         switch result {
                         case .completion:
@@ -200,7 +200,7 @@ fileprivate extension OWCommentHeaderViewModel {
                             break
                         case .selected(let action):
                             // TODO: handle selection
-                            print("Selected item \(action.title)")
+                            break
                         }
                     })
                     .disposed(by: self.disposeBag)
