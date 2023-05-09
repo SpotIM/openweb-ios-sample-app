@@ -11,19 +11,14 @@ import RxSwift
 
 protocol OWPresenterServicing {
     // should get viewable mode - and show accordingly using the OWRouteringCompatible
-    func showAlert(title: String, message: String, actions: [UIRxPresenterAction]) -> Observable<UIAlertType>
-    func showMenu(actions: [UIRxPresenterAction]) -> Observable<UIAlertType>
+    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType>
+    func showMenu(actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType>
 }
 
 class OWPresenterService: OWPresenterServicing {
-    fileprivate var routering: OWRouteringCompatible?
 
-    init(routering: OWRouteringCompatible?) {
-        self.routering = routering
-    }
-
-    func showAlert(title: String, message: String, actions: [UIRxPresenterAction]) -> Observable<UIAlertType> {
-        guard let navController = routering?.routering.navigationController
+    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType> {
+        guard let navController = getViewController(for: viewableMode)
         else { return .empty() }
 
         return UIAlertController.rx.show(onViewController: navController,
@@ -33,14 +28,25 @@ class OWPresenterService: OWPresenterServicing {
                                          actions: actions)
     }
 
-    func showMenu(actions: [UIRxPresenterAction]) -> Observable<UIAlertType> {
+    func showMenu(actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType> {
         // TODO: show proper menu instead of actionSheet
-        guard let navController = routering?.routering.navigationController
+        guard let navController = getViewController(for: viewableMode)
         else { return .empty() }
         return UIAlertController.rx.show(onViewController: navController,
                                          preferredStyle: .actionSheet,
                                          title: nil,
                                          message: nil,
                                          actions: actions)
+    }
+}
+
+fileprivate extension OWPresenterService {
+    func getViewController(for viewableMode: OWViewableMode) -> UIViewController? {
+        switch(viewableMode) {
+        case .independent:
+            return (OWManager.manager.uiLayer as? OWCompactRouteringCompatible)?.compactRoutering.topController
+        case .partOfFlow:
+            return (OWManager.manager.uiLayer as? OWRouteringCompatible)?.routering.navigationController
+        }
     }
 }

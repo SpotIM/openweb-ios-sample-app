@@ -129,7 +129,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
-        return OWPresenterService(routering: OWManager.manager.ui as? OWRouteringCompatible)
+        return OWPresenterService()
     }()
 
     func themeStyleService() -> OWThemeStyleServicing {
