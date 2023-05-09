@@ -103,7 +103,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         }
     }
 
-    func configureAvatarViewModel(with model: OWAvatarViewModeling) {
+    func configureAvatarViewModel(with model: SPAvatarViewModeling) {
         self.avatarUserView.configure(with: model)
     }
 
