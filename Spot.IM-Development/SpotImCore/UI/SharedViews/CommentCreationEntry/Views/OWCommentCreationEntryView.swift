@@ -22,8 +22,8 @@ class OWCommentCreationEntryView: UIView {
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
 
-    fileprivate lazy var userAvatarView: SPAvatarView = {
-        let avatarView = SPAvatarView()
+    fileprivate lazy var userAvatarView: OWAvatarView = {
+        let avatarView = OWAvatarView()
         avatarView.backgroundColor = .clear
         return avatarView
     }()
