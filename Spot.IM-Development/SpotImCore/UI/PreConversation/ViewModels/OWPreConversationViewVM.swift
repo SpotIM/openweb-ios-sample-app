@@ -579,7 +579,9 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
+            // swiftlint:disable unused_closure_parameter
             .subscribe(onNext: { [weak self] comment, actions in
+            // swiftlint:enable unused_closure_parameter
                 guard let self = self else { return }
                 _ = self.servicesProvider.presenterService()
                     .showMenu(actions: actions, viewableMode: self.viewableMode) // TODO: viewableMode
