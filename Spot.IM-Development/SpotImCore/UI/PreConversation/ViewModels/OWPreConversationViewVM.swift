@@ -60,6 +60,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
@@ -307,6 +308,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
+            self.viewableMode = viewableMode
             self.populateInitialUI()
             setupObservers()
     }
@@ -562,6 +564,36 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Open menu for comment and handle actions
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(SPComment, [UIRxPresenterAction])> in
+                let openMenuClickObservable: [Observable<(SPComment, [UIRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(SPComment, [UIRxPresenterAction])> in
+                    let commentVm = commentCellVm.outputs.commentVM
+                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
+
+                    return commentHeaderVm.outputs.openMenu
+                        .map { (commentVm.outputs.comment, $0) }
+                }
+                return Observable.merge(openMenuClickObservable)
+            }
+            .subscribe(onNext: { [weak self] comment, actions in
+                guard let self = self else { return }
+                _ = self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, viewableMode: self.viewableMode) // TODO: viewableMode
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            // TODO: handle selection
+                            break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
     }
