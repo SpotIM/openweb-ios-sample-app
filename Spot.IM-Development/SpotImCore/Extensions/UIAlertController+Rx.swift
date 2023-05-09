@@ -11,7 +11,7 @@ import RxSwift
 
 enum UIAlertType {
     case completion
-    case selected(action: UIRxAction)
+    case selected(action: UIRxPresenterAction)
 }
 
 extension Reactive where Base: UIAlertController {
@@ -20,14 +20,14 @@ extension Reactive where Base: UIAlertController {
                      preferredStyle: UIAlertController.Style = .alert,
                      title: String?,
                      message: String?,
-                     actions: [UIRxAction]) -> Observable<UIAlertType> {
+                     actions: [UIRxPresenterAction]) -> Observable<UIAlertType> {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
-            let alertActions = actions.map { rxAlert in
-                UIAlertAction(title: rxAlert.title,
-                              style: rxAlert.destructive ? .destructive : .default) { _ in
-                    observer.onNext(.selected(action: rxAlert))
+            let alertActions = actions.map { rxAction in
+                UIAlertAction(title: rxAction.title,
+                              style: rxAction.style) { _ in
+                    observer.onNext(.selected(action: rxAction))
                     observer.onCompleted()
                 }
             }
@@ -46,16 +46,14 @@ extension Reactive where Base: UIAlertController {
     }
 }
 
-struct UIRxAction: Equatable {
+struct UIRxPresenterAction: Equatable {
     var uuid: String = UUID().uuidString
     let title: String
-    var selected: Bool = false
-    var disabeled: Bool = false
-    var destructive: Bool = false
+    var style: UIAlertAction.Style = .default
 }
 
-extension UIRxAction {
-    static func == (lhs: UIRxAction, rhs: UIRxAction) -> Bool {
+extension UIRxPresenterAction {
+    static func == (lhs: UIRxPresenterAction, rhs: UIRxPresenterAction) -> Bool {
         return lhs.uuid == rhs.uuid
     }
 }
