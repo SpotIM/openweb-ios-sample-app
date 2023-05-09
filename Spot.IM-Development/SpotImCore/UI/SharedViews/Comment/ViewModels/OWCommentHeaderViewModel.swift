@@ -67,7 +67,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
         self.user = data.user
-        avatarVM = OWAvatarViewModelV2(user: data.user, imageURLProvider: imageProvider)
+        avatarVM = OWAvatarViewModel(user: data.user, imageURLProvider: imageProvider)
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
@@ -80,7 +80,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     var avatarVM: OWAvatarViewModeling = {
-       return OWAvatarViewModel()
+        return OWAvatarViewModel()
     }()
 
     var tapUserName = PublishSubject<Void>()
