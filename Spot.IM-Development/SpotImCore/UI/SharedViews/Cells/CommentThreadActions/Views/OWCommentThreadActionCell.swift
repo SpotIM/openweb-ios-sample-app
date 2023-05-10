@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class OWCommentThreadCollapseCell: UITableViewCell {
+class OWCommentThreadActionCell: UITableViewCell {
     fileprivate struct Metrics {
         static let depthOffset: CGFloat = 23
     }
@@ -18,7 +18,7 @@ class OWCommentThreadCollapseCell: UITableViewCell {
        return OWCommentThreadActionsView()
     }()
 
-    fileprivate var viewModel: OWCommentThreadCollapseCellViewModeling!
+    fileprivate var viewModel: OWCommentThreadActionsCellViewModeling!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,7 +30,7 @@ class OWCommentThreadCollapseCell: UITableViewCell {
     }
 
     override func configure(with viewModel: OWCellViewModel) {
-        guard let vm = viewModel as? OWCommentThreadCollapseCellViewModeling else { return }
+        guard let vm = viewModel as? OWCommentThreadActionsCellViewModeling else { return }
         self.viewModel = vm
 
         commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
@@ -45,7 +45,7 @@ class OWCommentThreadCollapseCell: UITableViewCell {
     }
 }
 
-fileprivate extension OWCommentThreadCollapseCell {
+fileprivate extension OWCommentThreadActionCell {
     func setupUI() {
         self.backgroundColor = .clear
         self.contentView.addSubviews(commentThreadActionsView)

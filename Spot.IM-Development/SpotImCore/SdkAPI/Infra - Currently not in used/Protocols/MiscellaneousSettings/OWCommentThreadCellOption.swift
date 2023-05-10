@@ -15,16 +15,14 @@ enum OWCommentThreadCellOption: CaseIterable {
             .comment(viewModel: OWCommentCellViewModel.stub()),
             .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
             .spacer(viewModel: OWSpacerCellViewModel.stub()),
-            .commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel.stub()),
-            .commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel.stub())
+            .commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel.stub())
         ]
     }
 
     case comment(viewModel: OWCommentCellViewModeling)
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
-    case commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModeling)
-    case commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModeling)
+    case commentThreadActions(viewModel: OWCommentThreadActionsCellViewModeling)
 }
 
 extension OWCommentThreadCellOption {
@@ -36,9 +34,7 @@ extension OWCommentThreadCellOption {
             return viewModel
         case .spacer(let viewModel):
             return viewModel
-        case .commentThreadCollapse(let viewModel):
-            return viewModel
-        case .commentThreadExpand(let viewModel):
+        case .commentThreadActions(let viewModel):
             return viewModel
         }
     }
@@ -51,10 +47,8 @@ extension OWCommentThreadCellOption {
             return OWCommentSkeletonShimmeringCell.self
         case .spacer:
             return OWSpacerCell.self
-        case .commentThreadCollapse:
-            return OWCommentThreadCollapseCell.self
-        case .commentThreadExpand:
-            return OWCommentThreadExpandCell.self
+        case .commentThreadActions:
+            return OWCommentThreadActionCell.self
         }
     }
 }
@@ -68,9 +62,7 @@ extension OWCommentThreadCellOption: Equatable {
             return viewModel.outputs.id
         case .spacer(let viewModel):
             return viewModel.outputs.id
-        case .commentThreadCollapse(let viewModel):
-            return viewModel.outputs.id
-        case .commentThreadExpand(let viewModel):
+        case .commentThreadActions(let viewModel):
             return viewModel.outputs.id
         }
     }
@@ -83,9 +75,7 @@ extension OWCommentThreadCellOption: Equatable {
             return lhs.identifier == rhs.identifier
         case (.spacer(_), .spacer(_)):
             return lhs.identifier == rhs.identifier
-        case (.commentThreadCollapse(_), .commentThreadCollapse(_)):
-            return lhs.identifier == rhs.identifier
-        case (.commentThreadExpand(_), .commentThreadExpand(_)):
+        case (.commentThreadActions(_), .commentThreadActions(_)):
             return lhs.identifier == rhs.identifier
         default:
             return false
