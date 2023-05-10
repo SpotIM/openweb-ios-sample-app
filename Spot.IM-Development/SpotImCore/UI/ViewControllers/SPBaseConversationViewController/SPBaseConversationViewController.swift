@@ -11,6 +11,10 @@ import RxSwift
 
 internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
 
+    fileprivate struct Metrics {
+        static let tableViewBottomPadding: CGFloat = 78
+    }
+
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
 
@@ -459,11 +463,14 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
         typingViewCenterConstraint?.update(offset: currentCenterConstant > 0 ? view.bounds.width : -view.bounds.width)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
-        }, completion: { _ in
+        }, completion: { [ weak self] _ in
+            guard let self = self else { return }
             self.typingIndicationView?.removeFromSuperview()
             self.typingIndicationView = nil
             self.typingViewCenterCurrentOffset = 0
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         })
+
     }
 
     private func returnTypingViewToTheCenter() {
@@ -481,9 +488,11 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
                 self.typingIndicationView?.alpha = 0
                 self.view.layoutIfNeeded()
             },
-            completion: { _ in
+            completion: { [weak self] _ in
+                guard let self = self else { return }
                 self.typingIndicationView?.removeFromSuperview()
                 self.typingIndicationView = nil
+                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             }
         )
     }
@@ -511,6 +520,10 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             animations: {
                 self.typingIndicationView?.alpha = 1
                 self.view.layoutIfNeeded()
+            },
+            completion: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Metrics.tableViewBottomPadding, right: 0)
             }
         )
     }
