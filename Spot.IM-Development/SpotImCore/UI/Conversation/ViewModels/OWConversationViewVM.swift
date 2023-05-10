@@ -23,7 +23,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
-    var updateCellSizeAtIndex: Observable<Int> { get }
+    var performTableViewAnimation: Observable<Void> { get }
     var initialDataLoaded: Observable<Bool> { get }
     var openCommentCreation: Observable<OWCommentCreationType> { get }
 }
@@ -41,7 +41,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformGuidelinesViewAnimation: Int = 500
+        static let delayForPerformTableViewAnimation: Int = 10
     }
 
     fileprivate var postId: OWPostId {
@@ -154,9 +155,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var updateCellSizeAtIndex: Observable<Int> {
-        return _changeSizeAtIndex
+    fileprivate var _performTableViewAnimation = PublishSubject<Void>()
+    var performTableViewAnimation: Observable<Void> {
+        return _performTableViewAnimation
             .asObservable()
     }
 
@@ -495,13 +496,13 @@ fileprivate extension OWConversationViewViewModel {
 
         // Responding to guidelines height change (for updating cell)
         cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Int> in
-                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.communityGuidelines(let guidelinesCellViewModel) = vm {
                         let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
                         return guidelinesVM.outputs.shouldShowViewAfterHeightChanged
                             .filter { $0 == true }
-                            .map { _ in index }
+                            .voidify()
                     } else {
                         return nil
                     }
@@ -509,9 +510,31 @@ fileprivate extension OWConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] guidelinesIndex in
-                self?._changeSizeAtIndex.onNext(guidelinesIndex)
+            .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comment height change (for updating cell)
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        let commentVM = commentCellViewModel.outputs.commentVM
+                        return commentVM.outputs.contentVM
+                            .outputs.collapsableLabelViewModel.outputs.height
+                            .voidify()
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+                return Observable.merge(sizeChangeObservable)
+            }
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 
