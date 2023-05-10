@@ -203,7 +203,10 @@ fileprivate extension OWConversationViewViewModel {
             guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
             if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
-                cellOptions.append(OWConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
+                cellOptions.append(OWConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(
+                    id: "\(commentPresentationData.id)_spacer",
+                    style: .comment
+                )))
             }
 
             cellOptions.append(OWConversationCellOption.comment(viewModel: commentCellVM))
@@ -216,14 +219,29 @@ fileprivate extension OWConversationViewViewModel {
             case (_, 0):
                 break
             case (0, _):
-                cellOptions.append(OWConversationCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
+                cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                    id: "\(commentPresentationData.id)_expand_only",
+                    data: commentPresentationData,
+                    mode: .expand,
+                    depth: depth
+                )))
             default:
-                cellOptions.append(OWConversationCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData, depth: depth)))
+                cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                    id: "\(commentPresentationData.id)_collapse",
+                    data: commentPresentationData,
+                    mode: .collapse,
+                    depth: depth
+                )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
 
                 if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
-                    cellOptions.append(OWConversationCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
+                    cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_expand",
+                        data: commentPresentationData,
+                        mode: .expand,
+                        depth: depth
+                    )))
                 }
             }
         }
