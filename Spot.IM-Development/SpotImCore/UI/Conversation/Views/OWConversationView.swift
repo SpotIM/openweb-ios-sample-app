@@ -15,6 +15,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationTitleHeaderHeight: CGFloat = 56
         static let articleDescriptionHeight: CGFloat = 86
         static let conversationSummaryHeight: CGFloat = 44
+        static let tableViewAnimationDuration: Double = 0.25
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -44,6 +45,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         for option in OWConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
         }
+
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 130
 
         return tableView
     }()
@@ -132,12 +136,15 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateCellSizeAtIndex
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
-            })
-            .disposed(by: disposeBag)
+        viewModel.outputs.performTableViewAnimation
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                    }
+                })
+                .disposed(by: disposeBag)
     }
 }

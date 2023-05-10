@@ -68,7 +68,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var shouldShowViewAfterHeightChanged: Observable<Bool> {
         return Observable.combineLatest(shouldShowView, titleTextViewHeight)
             .map { $0.0 }
-            .share()
+            .share(replay: 1)
     }
 
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
