@@ -20,7 +20,7 @@ protocol OWCommentThreadViewViewModelingInputs {
 
 protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
-    var updateCellSizeAtIndex: Observable<Int> { get }
+    var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationType> { get }
 }
 
@@ -35,7 +35,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformTableViewAnimation: Int = 10
     }
 
     fileprivate var postId: OWPostId {
@@ -97,9 +97,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var offset = 0
 
-    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var updateCellSizeAtIndex: Observable<Int> {
-        return _changeSizeAtIndex
+    fileprivate var _performTableViewAnimation = PublishSubject<Void>()
+    var performTableViewAnimation: Observable<Void> {
+        return _performTableViewAnimation
             .asObservable()
     }
 
@@ -403,15 +403,14 @@ fileprivate extension OWCommentThreadViewViewModel {
         .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell)
-        // TODO - remove!!
         cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Int> in
-                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
                         return commentVM.outputs.contentVM
                             .outputs.collapsableLabelViewModel.outputs.height
-                            .map { _ in index }
+                            .voidify()
                     } else {
                         return nil
                     }
@@ -419,9 +418,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] commentIndex in
-                self?._changeSizeAtIndex.onNext(commentIndex)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 
