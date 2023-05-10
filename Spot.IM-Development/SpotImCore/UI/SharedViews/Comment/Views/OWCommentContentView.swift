@@ -164,7 +164,7 @@ fileprivate extension OWCommentContentView {
 
 fileprivate extension OWCommentContentView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        // self.accessibilityIdentifier = Metrics.identifier
         textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier
         mediaView.accessibilityIdentifier = Metrics.mediaViewIdentifier
         editedLabel.accessibilityIdentifier = Metrics.editedLabelIdentifier
