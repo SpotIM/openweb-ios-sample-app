@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-enum UIAlertType {
+enum UIRxPresenterResponseType {
     case completion
     case selected(action: UIRxPresenterAction)
 }
@@ -20,7 +20,7 @@ extension Reactive where Base: UIAlertController {
                      preferredStyle: UIAlertController.Style = .alert,
                      title: String?,
                      message: String?,
-                     actions: [UIRxPresenterAction]) -> Observable<UIAlertType> {
+                     actions: [UIRxPresenterAction]) -> Observable<UIRxPresenterResponseType> {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
