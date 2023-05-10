@@ -35,7 +35,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
-            .backgroundColor(UIColor.white)
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
             .separatorStyle(.none)
 
         tableView.refreshControl = tableViewRefreshControl
@@ -78,8 +78,6 @@ fileprivate extension OWCommentThreadView {
     }
 
     func setupViews() {
-        self.backgroundColor = .cyan
-
         self.useAsThemeStyleInjector()
 
         self.addSubview(tableView)
@@ -89,6 +87,14 @@ fileprivate extension OWCommentThreadView {
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.commentThreadDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
