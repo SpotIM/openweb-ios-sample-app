@@ -13,7 +13,7 @@ import RxCocoa
 class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
-
+        static let tableViewAnimationDuration: Double = 0.25
         static let identifier = "comment_thread_view_id"
     }
 
@@ -35,12 +35,15 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
-            .backgroundColor(UIColor.white)
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
             .separatorStyle(.none)
 
         tableView.refreshControl = tableViewRefreshControl
 
         tableView.allowsSelection = false
+
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 130
 
         // Register cells
         for option in OWCommentThreadCellOption.allCases {
@@ -78,8 +81,6 @@ fileprivate extension OWCommentThreadView {
     }
 
     func setupViews() {
-        self.backgroundColor = .cyan
-
         self.useAsThemeStyleInjector()
 
         self.addSubview(tableView)
@@ -89,6 +90,14 @@ fileprivate extension OWCommentThreadView {
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.commentThreadDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -111,12 +120,13 @@ fileprivate extension OWCommentThreadView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateCellSizeAtIndex
+        viewModel.outputs.performTableViewAnimation
                 .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] index in
+                .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
-                    UIView.performWithoutAnimation {
-                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
                     }
                 })
                 .disposed(by: disposeBag)

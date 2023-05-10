@@ -27,7 +27,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
-    var updateCellSizeAtIndex: Observable<Int> { get }
+    var performTableViewAnimation: Observable<Void> { get }
     var urlClickedOutput: Observable<URL> { get }
     var summaryTopPadding: Observable<CGFloat> { get }
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
@@ -51,7 +51,7 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformTableViewAnimation: Int = 10
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -191,9 +191,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
 
-    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var updateCellSizeAtIndex: Observable<Int> {
-        return _changeSizeAtIndex
+    fileprivate var _performTableViewAnimation = PublishSubject<Void>()
+    var performTableViewAnimation: Observable<Void> {
+        return _performTableViewAnimation
             .asObservable()
     }
 
@@ -526,13 +526,13 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to comment height change (for updating cell)
         cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Int> in
-                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
                         return commentVM.outputs.contentVM
                             .outputs.collapsableLabelViewModel.outputs.height
-                            .map { _ in index }
+                            .voidify()
                     } else {
                         return nil
                     }
@@ -540,9 +540,9 @@ fileprivate extension OWPreConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] commentIndex in
-                self?._changeSizeAtIndex.onNext(commentIndex)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 
