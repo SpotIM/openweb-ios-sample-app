@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class OWCommentThreadActionCell: UITableViewCell {
     fileprivate struct Metrics {
@@ -19,6 +20,7 @@ class OWCommentThreadActionCell: UITableViewCell {
     }()
 
     fileprivate var viewModel: OWCommentThreadActionsCellViewModeling!
+    fileprivate var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,6 +33,7 @@ class OWCommentThreadActionCell: UITableViewCell {
 
     override func configure(with viewModel: OWCellViewModel) {
         guard let vm = viewModel as? OWCommentThreadActionsCellViewModeling else { return }
+        self.disposeBag = DisposeBag()
         self.viewModel = vm
 
         commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
@@ -38,6 +41,8 @@ class OWCommentThreadActionCell: UITableViewCell {
         commentThreadActionsView.OWSnp.updateConstraints { make in
             make.leading.equalToSuperview().offset(CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
         }
+
+        self.setupObservers()
     }
 
     override func prepareForReuse() {
@@ -47,12 +52,22 @@ class OWCommentThreadActionCell: UITableViewCell {
 
 fileprivate extension OWCommentThreadActionCell {
     func setupUI() {
-        self.backgroundColor = .clear
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
         self.contentView.addSubviews(commentThreadActionsView)
 
         commentThreadActionsView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }
