@@ -16,7 +16,6 @@ class GeneralSettingsView: UIView {
     fileprivate struct Metrics {
         static let identifier = "general_settings_view_id"
         static let switchHideArticleHeaderIdentifier = "hide_article_header"
-        static let switchCommentCreationNewDesignIdentifier = "comment_creation_new_design"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedModalStyleIdentifier = "modal_style"
@@ -48,11 +47,6 @@ class GeneralSettingsView: UIView {
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
         return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle,
                              accessibilityPrefixId: Metrics.switchHideArticleHeaderIdentifier)
-    }()
-
-    fileprivate lazy var switchCommentCreationNewDesign: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.commentCreationNewDesignTitle,
-                             accessibilityPrefixId: Metrics.switchCommentCreationNewDesignIdentifier)
     }()
 
     fileprivate lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
@@ -175,7 +169,6 @@ fileprivate extension GeneralSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(switchHideArticleHeader)
-        stackView.addArrangedSubview(switchCommentCreationNewDesign)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
         stackView.addArrangedSubview(segmentedModalStyle)
@@ -192,10 +185,6 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.shouldHideArticleHeader
             .bind(to: switchHideArticleHeader.rx.isOn)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.shouldCommentCreationNewDesign
-            .bind(to: switchCommentCreationNewDesign.rx.isOn)
             .disposed(by: disposeBag)
 
         viewModel.outputs.readOnlyModeIndex
@@ -228,10 +217,6 @@ fileprivate extension GeneralSettingsView {
 
         switchHideArticleHeader.rx.isOn
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
-            .disposed(by: disposeBag)
-
-        switchCommentCreationNewDesign.rx.isOn
-            .bind(to: viewModel.inputs.commentCreationNewDesignToggled)
             .disposed(by: disposeBag)
 
         segmentedReadOnlyMode.rx.selectedSegmentIndex

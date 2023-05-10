@@ -19,6 +19,7 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
+    var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
@@ -52,6 +53,7 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
         static let delayForUICellUpdate: Int = 100
+        static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -60,6 +62,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
@@ -79,6 +82,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 return [section]
             }
     }
+
+    lazy var viewAccessibilityIdentifier: String = {
+        let styleId = (preConversationData.settings?.style ?? .compact).styleIdentifier
+        return Metrics.viewAccessibilityIdentifier.replacingOccurrences(of: "@", with: styleId)
+    }()
 
     lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
         return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
@@ -307,6 +315,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
+            self.viewableMode = viewableMode
             self.populateInitialUI()
             setupObservers()
     }
@@ -346,6 +355,20 @@ fileprivate extension OWPreConversationViewViewModel {
                 return conversationReadObservable
                     .take(1)
             }
+            .materialize() // Required to keep the final subscriber even if errors arrived from the network
+            .map { event -> SPConversationReadRM? in
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldDhowError).
+                    return conversationRead
+                case .error(_):
+                    // TODO: handle error - update something like _shouldDhowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
             .share()
 
         // Creating the cells VMs for the pre conversation
@@ -548,6 +571,38 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Open menu for comment and handle actions
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(SPComment, [UIRxPresenterAction])> in
+                let openMenuClickObservable: [Observable<(SPComment, [UIRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(SPComment, [UIRxPresenterAction])> in
+                    let commentVm = commentCellVm.outputs.commentVM
+                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
+
+                    return commentHeaderVm.outputs.openMenu
+                        .map { (commentVm.outputs.comment, $0) }
+                }
+                return Observable.merge(openMenuClickObservable)
+            }
+            // swiftlint:disable unused_closure_parameter
+            .subscribe(onNext: { [weak self] comment, actions in
+            // swiftlint:enable unused_closure_parameter
+                guard let self = self else { return }
+                _ = self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, viewableMode: self.viewableMode) // TODO: viewableMode
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            // TODO: handle selection
+                            break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
     }

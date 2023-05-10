@@ -104,3 +104,5 @@
 "PlaygroundPresentMode" = "Playground - Present Mode";
 "PlaygroundIndependentMode" = "Playground - Independent Mode";
 "TestingPlaygroundLogger" = "Testing playground logger";
+"CommentThreadSettings" = "Comment Thread:";
+"OpenCommentId" = "Open comment id";

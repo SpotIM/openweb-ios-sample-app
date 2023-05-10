@@ -30,6 +30,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
         static let readOnlyTopPadding: CGFloat = 40
+        static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -131,10 +132,16 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 }
 
 fileprivate extension OWPreConversationView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = viewModel.outputs.viewAccessibilityIdentifier
+        btnCTAConversation.accessibilityIdentifier = Metrics.moreCommentsButtonIdentifier
+    }
+
     func setupViews() {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
