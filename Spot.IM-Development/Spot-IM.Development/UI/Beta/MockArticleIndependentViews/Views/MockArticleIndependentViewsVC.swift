@@ -31,7 +31,7 @@ class MockArticleIndependentViewsVC: UIViewController {
 
         article.addSubview(loggerView)
         loggerView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.verticalMargin)
+            make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.loggerHeight)
             make.bottom.equalToSuperview()
