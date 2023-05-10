@@ -508,7 +508,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .share()
 
-        // responding to collapse thread clicked
+        // responding to thread action clicked
         commentCollapseCellsVmsObservable
             .flatMap { commentCollapseCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
                 let collapseClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentCollapseCellsVms.map { commentCollapseCellsVm in
