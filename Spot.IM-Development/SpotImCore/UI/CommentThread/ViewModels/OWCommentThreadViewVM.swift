@@ -491,7 +491,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         })
         .disposed(by: disposeBag)
 
-        // Observable of the comment collapse cell VMs
+        // Observable of the comment action cell VMs
         let commentCollapseCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
             .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
                 let commentThreadCollapseCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
