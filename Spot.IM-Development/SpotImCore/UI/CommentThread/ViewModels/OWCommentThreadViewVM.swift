@@ -20,7 +20,7 @@ protocol OWCommentThreadViewViewModelingInputs {
 
 protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
-    var updateCellSizeAtIndex: Observable<Int> { get }
+    var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationType> { get }
 }
 
@@ -35,7 +35,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformTableViewAnimation: Int = 10
     }
 
     fileprivate var postId: OWPostId {
@@ -97,9 +97,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var offset = 0
 
-    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var updateCellSizeAtIndex: Observable<Int> {
-        return _changeSizeAtIndex
+    fileprivate var _performTableViewAnimation = PublishSubject<Void>()
+    var performTableViewAnimation: Observable<Void> {
+        return _performTableViewAnimation
             .asObservable()
     }
 
@@ -119,7 +119,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
             if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
-                cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
+                cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel(
+                    id: "\(commentPresentationData.id)_spacer",
+                    style: .comment
+                )))
             }
 
             cellOptions.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
@@ -132,14 +135,29 @@ fileprivate extension OWCommentThreadViewViewModel {
             case (_, 0):
                 break
             case (0, _):
-                cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
+                cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                    id: "\(commentPresentationData.id)_expand_only",
+                    data: commentPresentationData,
+                    mode: .expand,
+                    depth: depth
+                )))
             default:
-                cellOptions.append(OWCommentThreadCellOption.commentThreadCollapse(viewModel: OWCommentThreadCollapseCellViewModel(data: commentPresentationData, depth: depth)))
+                cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                    id: "\(commentPresentationData.id)_collapse",
+                    data: commentPresentationData,
+                    mode: .collapse,
+                    depth: depth
+                )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
 
                 if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
-                    cellOptions.append(OWCommentThreadCellOption.commentThreadExpand(viewModel: OWCommentThreadExpandCellViewModel(data: commentPresentationData, depth: depth)))
+                    cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_expand",
+                        data: commentPresentationData,
+                        mode: .expand,
+                        depth: depth
+                    )))
                 }
             }
         }
@@ -386,13 +404,13 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Responding to comment height change (for updating cell)
         cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Int> in
-                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
                         return commentVM.outputs.contentVM
                             .outputs.collapsableLabelViewModel.outputs.height
-                            .map { _ in index }
+                            .voidify()
                     } else {
                         return nil
                     }
@@ -400,9 +418,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] commentIndex in
-                self?._changeSizeAtIndex.onNext(commentIndex)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 
@@ -474,10 +492,10 @@ fileprivate extension OWCommentThreadViewViewModel {
         .disposed(by: disposeBag)
 
         // Observable of the comment collapse cell VMs
-        let commentCollapseCellsVmsObservable: Observable<[OWCommentThreadCollapseCellViewModeling]> = cellsViewModels
-            .flatMapLatest { viewModels -> Observable<[OWCommentThreadCollapseCellViewModeling]> in
-                let commentThreadCollapseCellsVms: [OWCommentThreadCollapseCellViewModeling] = viewModels.map { vm in
-                    if case.commentThreadCollapse(let commentThreadCollapseCellViewModel) = vm {
+        let commentCollapseCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
+                let commentThreadCollapseCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadActions(let commentThreadCollapseCellViewModel) = vm {
                         return commentThreadCollapseCellViewModel
                     } else {
                         return nil
@@ -489,51 +507,26 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .share()
 
-        // responding to collapse thread clicked
+        // responding to thread action clicked
         commentCollapseCellsVmsObservable
-            .flatMap { commentCollapseCellsVms -> Observable<OWCommentPresentationData> in
-                let collapseClickObservable: [Observable<OWCommentPresentationData>] = commentCollapseCellsVms.map { commentCollapseCellsVm in
+            .flatMap { commentCollapseCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
+                let collapseClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentCollapseCellsVms.map { commentCollapseCellsVm in
                     return commentCollapseCellsVm.outputs.commentActionsVM
                         .outputs.tapOutput
-                        .map { commentCollapseCellsVm.outputs.commentPresentationData }
+                        .map { (commentCollapseCellsVm.outputs.commentPresentationData, commentCollapseCellsVm.outputs.mode) }
                 }
                 return Observable.merge(collapseClickObservable)
             }
-            .subscribe(onNext: { commentPresentationData in
-                commentPresentationData.setRepliesPresentation([])
-                commentPresentationData.update.onNext()
-            })
-            .disposed(by: disposeBag)
-
-        // Observable of the comment expand cell VMs
-        let commentExpandCellsVmsObservable: Observable<[OWCommentThreadExpandCellViewModeling]> = cellsViewModels
-            .flatMapLatest { viewModels -> Observable<[OWCommentThreadExpandCellViewModeling]> in
-                let commentThreadExpandCellsVms: [OWCommentThreadExpandCellViewModeling] = viewModels.map { vm in
-                    if case.commentThreadExpand(let commentThreadExpandCellViewModel) = vm {
-                        return commentThreadExpandCellViewModel
-                    } else {
-                        return nil
-                    }
-                }
-                    .unwrap()
-
-                return Observable.just(commentThreadExpandCellsVms)
-            }
-            .share()
-
-        // responding to expand thread clicked
-        commentExpandCellsVmsObservable
-            .flatMap { commentExpandCellsVms -> Observable<OWCommentPresentationData> in
-                let expandClickObservable: [Observable<OWCommentPresentationData>] = commentExpandCellsVms.map { commentExpandCellsVm in
-                    return commentExpandCellsVm.outputs.commentActionsVM
-                        .outputs.tapOutput
-                        .map { commentExpandCellsVm.outputs.commentPresentationData }
-                }
-                return Observable.merge(expandClickObservable)
-            }
-            .subscribe(onNext: { [weak self] commentPresentationData in
+            .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
-                self._loadMoreReplies.onNext(commentPresentationData)
+                switch mode {
+                case .collapse:
+                    commentPresentationData.setRepliesPresentation([])
+                    commentPresentationData.update.onNext()
+                case .expand:
+                    self._loadMoreReplies.onNext(commentPresentationData)
+                }
+
             })
             .disposed(by: disposeBag)
     }
