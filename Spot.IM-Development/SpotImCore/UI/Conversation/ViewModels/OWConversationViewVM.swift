@@ -346,6 +346,7 @@ fileprivate extension OWConversationViewViewModel {
 }
 
 fileprivate extension OWConversationViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // Subscribing to start realtime service
         viewInitialized
