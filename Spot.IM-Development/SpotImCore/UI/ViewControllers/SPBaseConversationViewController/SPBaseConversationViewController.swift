@@ -785,7 +785,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             showActionSheet(actions: actions, sender: sender)
         } else {
             servicesProvider.logger().log(level: .verbose, "Showing the user a message because there are no available options to interact with a comment after pressing the 3 dots")
-            let actions = [UIRxAlertAction(title: LocalizationManager.localizedString(key: "OK"), style: .default)]
+            let actions = [UIRxPresenterAction(title: LocalizationManager.localizedString(key: "OK"))]
             _ = UIAlertController.rx.show(onViewController: self, title: "",
                                       message: LocalizationManager.localizedString(key: "No available options"),
                                       actions: actions)

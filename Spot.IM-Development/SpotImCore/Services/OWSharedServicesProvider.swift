@@ -36,6 +36,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func sortDictateService() -> OWSortDictateServicing
     func authenticationManager() -> OWAuthenticationManagerProtocol
     func blockerServicing() -> OWBlockerServicing
+    func presenterService() -> OWPresenterServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -127,6 +128,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWBlockerService()
     }()
 
+    fileprivate lazy var _presenterService: OWPresenterServicing = {
+        return OWPresenterService()
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -197,6 +202,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func blockerServicing() -> OWBlockerServicing {
         return _blockerService
+    }
+
+    func presenterService() -> OWPresenterServicing {
+        return _presenterService
     }
 }
 
