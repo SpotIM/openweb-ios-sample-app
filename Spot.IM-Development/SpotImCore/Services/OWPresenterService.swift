@@ -10,29 +10,28 @@ import Foundation
 import RxSwift
 
 protocol OWPresenterServicing {
-    // should get viewable mode - and show accordingly using the OWRouteringCompatible
-    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType>
-    func showMenu(actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType>
+    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType>
+    func showMenu(actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType>
 }
 
 class OWPresenterService: OWPresenterServicing {
 
-    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType> {
-        guard let navController = getViewController(for: viewableMode)
+    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType> {
+        guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
 
-        return UIAlertController.rx.show(onViewController: navController,
+        return UIAlertController.rx.show(onViewController: presenterVC,
                                          preferredStyle: .alert,
                                          title: title,
                                          message: message,
                                          actions: actions)
     }
 
-    func showMenu(actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIAlertType> {
+    func showMenu(actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType> {
         // TODO: show proper menu instead of actionSheet
-        guard let navController = getViewController(for: viewableMode)
+        guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
-        return UIAlertController.rx.show(onViewController: navController,
+        return UIAlertController.rx.show(onViewController: presenterVC,
                                          preferredStyle: .actionSheet,
                                          title: nil,
                                          message: nil,
@@ -41,7 +40,7 @@ class OWPresenterService: OWPresenterServicing {
 }
 
 fileprivate extension OWPresenterService {
-    func getViewController(for viewableMode: OWViewableMode) -> UIViewController? {
+    func getPresenterVC(for viewableMode: OWViewableMode) -> UIViewController? {
         switch(viewableMode) {
         case .independent:
             return (OWManager.manager.uiLayer as? OWCompactRouteringCompatible)?.compactRoutering.topController
