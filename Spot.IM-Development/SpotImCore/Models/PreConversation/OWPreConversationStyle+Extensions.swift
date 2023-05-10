@@ -24,6 +24,19 @@ extension OWPreConversationStyle {
         }
     }
 
+    var styleIdentifier: String {
+        switch self {
+        case .regular(numberOfComments: _):
+            return "regular"
+        case .compact:
+            return "compact"
+        case .ctaButtonOnly:
+            return "button_only"
+        case .ctaWithSummary:
+            return "summary"
+        }
+    }
+
     var numberOfComments: Int {
         switch self {
         case .regular(let numOfComments):
