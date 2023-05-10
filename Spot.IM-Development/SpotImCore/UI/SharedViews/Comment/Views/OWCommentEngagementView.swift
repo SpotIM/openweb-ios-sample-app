@@ -18,6 +18,7 @@ class OWCommentEngagementView: UIView {
         static let dotDividerSize: CGFloat = 3
         static let identifier = "comment_actions_view_id"
         static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
+        static let shareButtonIdentifier = "comment_actions_view_share_button_id"
     }
 
     fileprivate var viewModel: OWCommentEngagementViewModeling!
@@ -64,6 +65,7 @@ class OWCommentEngagementView: UIView {
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         replyButton.accessibilityIdentifier = Metrics.replyButtonIdentifier
+        shareButton.accessibilityIdentifier = Metrics.shareButtonIdentifier
     }
 
     func configure(with viewModel: OWCommentEngagementViewModeling) {
