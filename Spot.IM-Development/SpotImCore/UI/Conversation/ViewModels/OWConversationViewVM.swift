@@ -57,6 +57,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
+    fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
+
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
         return _isReadOnly
@@ -434,6 +436,63 @@ fileprivate extension OWConversationViewViewModel {
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
+        let loadMoreRepliesReadObservable = _loadMoreReplies
+            .flatMap { [weak self] commentPresentationData -> Observable<(OWCommentPresentationData, OWConversationReadRM?)> in
+                guard let self = self else { return .empty() }
+
+                let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
+
+                if countAfterUpdate <= commentPresentationData.repliesIds.count {
+                    // no need to fetch more comments
+                    return Observable.just((commentPresentationData, nil))
+                }
+
+                let currentRepliesCount = commentPresentationData.repliesIds.count
+                let fetchCount = countAfterUpdate - currentRepliesCount
+
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .conversationRead(mode: .best, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
+                    .response
+                    .map { (commentPresentationData, $0) }
+            }
+
+        loadMoreRepliesReadObservable.subscribe(onNext: { [weak self] (commentPresentationData, response) in
+            guard let self = self else { return }
+
+            let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
+
+            // add presentation data from response
+            var presentationDataFromResponse: [OWCommentPresentationData] = []
+            if let response = response {
+                self.cacheConversationRead(response: response)
+
+                presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+
+                // filter existing comments
+                presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
+
+                // filter existing reply ids
+                let newRepliesIds = (response.conversation?.comments?.map { $0.id! })?.filter { !commentPresentationData.repliesIds.contains($0) }
+
+                // update commentPresentationData according to the response
+                commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
+                commentPresentationData.repliesOffset = response.conversation?.offset ?? 0
+            }
+
+            var repliesPresentation = existingRepliesPresentationData + presentationDataFromResponse
+
+            // take required count of replies
+            let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
+            repliesPresentation = Array(repliesPresentation.prefix(countAfterUpdate))
+
+            commentPresentationData.setRepliesPresentation(repliesPresentation)
+            commentPresentationData.update.onNext()
+
+        })
+        .disposed(by: disposeBag)
+
         // Responding to guidelines height change (for updating cell)
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Int> in
@@ -501,5 +560,44 @@ fileprivate extension OWConversationViewViewModel {
             }
         })
         .disposed(by: disposeBag)
+
+        // Observable of the comment action cell VMs
+        let commentThreadActionsCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
+                let commentThreadActionsCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadActions(let commentThreadActionsCellViewModel) = vm {
+                        return commentThreadActionsCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                    .unwrap()
+
+                return Observable.just(commentThreadActionsCellsVms)
+            }
+            .share()
+
+        // responding to thread action clicked
+        commentThreadActionsCellsVmsObservable
+            .flatMap { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
+                let threadActionsClickObservable = commentThreadActionsCellsVms.map { commentThreadActionsCellsVm in
+                    return commentThreadActionsCellsVm.outputs.commentActionsVM
+                        .outputs.tapOutput
+                        .map { (commentThreadActionsCellsVm.outputs.commentPresentationData, commentThreadActionsCellsVm.outputs.mode) }
+                }
+                return Observable.merge(threadActionsClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentPresentationData, mode in
+                guard let self = self else { return }
+                switch mode {
+                case .collapse:
+                    commentPresentationData.setRepliesPresentation([])
+                    commentPresentationData.update.onNext()
+                case .expand:
+                    self._loadMoreReplies.onNext(commentPresentationData)
+                }
+
+            })
+            .disposed(by: disposeBag)
     }
 }
