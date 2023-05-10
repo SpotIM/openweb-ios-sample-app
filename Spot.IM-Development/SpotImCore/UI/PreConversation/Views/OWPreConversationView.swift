@@ -30,6 +30,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
         static let readOnlyTopPadding: CGFloat = 40
+        static let tableViewAnimationDuration: Double = 0.25
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -312,12 +313,13 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateCellSizeAtIndex
+        viewModel.outputs.performTableViewAnimation
                 .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] index in
+                .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
-                    UIView.performWithoutAnimation {
-                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
                     }
                 })
                 .disposed(by: disposeBag)

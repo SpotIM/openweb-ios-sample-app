@@ -34,9 +34,10 @@ class OWSpacerCellViewModel: OWSpacerCellViewModeling,
     fileprivate let style: OWSpacerStyle
 
     // Unique identifier
-    let id: String = UUID().uuidString
+    let id: String
 
-    init(style: OWSpacerStyle = .none) {
+    init(id: String = UUID().uuidString, style: OWSpacerStyle = .none) {
+        self.id = id
         self.style = style
     }
 }
