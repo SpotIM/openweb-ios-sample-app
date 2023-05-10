@@ -17,6 +17,7 @@ class GeneralSettingsView: UIView {
         static let identifier = "general_settings_view_id"
         static let switchHideArticleHeaderIdentifier = "hide_article_header"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
+        static let segmentedElementsCustomisationStyleIdentifier = "elements_customisation_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedModalStyleIdentifier = "modal_style"
         static let segmentedInitialSortIdentifier = "initial_sort"
@@ -42,6 +43,15 @@ class GeneralSettingsView: UIView {
         titleLabel.text = viewModel.outputs.title
         titleLabel.font = FontBook.secondaryHeadingBold
         return titleLabel
+    }()
+
+    fileprivate lazy var segmentedElementsCustomisationStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.elementsCustomisationStyleTitle
+        let items = viewModel.outputs.elementsCustomisationStyleSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedElementsCustomisationStyleIdentifier,
+                                       items: items)
     }()
 
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
@@ -169,6 +179,7 @@ fileprivate extension GeneralSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(switchHideArticleHeader)
+        stackView.addArrangedSubview(segmentedElementsCustomisationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
         stackView.addArrangedSubview(segmentedModalStyle)
@@ -185,6 +196,10 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.shouldHideArticleHeader
             .bind(to: switchHideArticleHeader.rx.isOn)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.elementsCustomisationStyleIndex
+            .bind(to: segmentedElementsCustomisationStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.readOnlyModeIndex
@@ -217,6 +232,10 @@ fileprivate extension GeneralSettingsView {
 
         switchHideArticleHeader.rx.isOn
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
+            .disposed(by: disposeBag)
+
+        segmentedElementsCustomisationStyle.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.elementsCustomisationStyleSelectedIndex)
             .disposed(by: disposeBag)
 
         segmentedReadOnlyMode.rx.selectedSegmentIndex
