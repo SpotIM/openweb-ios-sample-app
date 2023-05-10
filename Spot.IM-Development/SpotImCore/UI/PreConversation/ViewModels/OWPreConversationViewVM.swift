@@ -19,6 +19,7 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
+    var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
@@ -52,6 +53,7 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
         static let delayForUICellUpdate: Int = 100
+        static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -80,6 +82,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 return [section]
             }
     }
+
+    lazy var viewAccessibilityIdentifier: String = {
+        let styleId = (preConversationData.settings?.style ?? .compact).styleIdentifier
+        return Metrics.viewAccessibilityIdentifier.replacingOccurrences(of: "@", with: styleId)
+    }()
 
     lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
         return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)

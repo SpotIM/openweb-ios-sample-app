@@ -152,7 +152,7 @@ final class SPAvatarView: OWBaseView {
 
 extension SPAvatarView {
     func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
+        // self.accessibilityIdentifier = Metrics.identifier
         avatarImageView.accessibilityIdentifier = Metrics.avatarImageIdentifier
         avatarButton.accessibilityIdentifier = Metrics.avatarButtonIdentifier
         onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
