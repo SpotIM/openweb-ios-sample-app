@@ -39,8 +39,7 @@ public protocol OWUIFlows {
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
 
-    func reportReason(postId: OWPostId,
-                      commentId: OWCommentId,
+    func reportReason(commentId: OWCommentId,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWReportReasonSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,

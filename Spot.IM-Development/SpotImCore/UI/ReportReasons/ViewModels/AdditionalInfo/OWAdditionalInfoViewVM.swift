@@ -22,6 +22,7 @@ protocol OWAdditionalInfoViewViewModelingOutputs {
     var submitButtonText: String { get }
     var titleText: String { get }
     var shouldShowTitleView: Bool { get }
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWAdditionalInfoViewViewModeling {
@@ -67,7 +68,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     }
 
     let textViewVM: OWTextViewViewModeling
-    fileprivate let viewableMode: OWViewableMode
+    let viewableMode: OWViewableMode
 
     init(viewableMode: OWViewableMode, placeholderText: String, textViewText: String, textViewMaxCharecters: Int = Metrics.textViewMaxCharecters) {
         self.viewableMode = viewableMode

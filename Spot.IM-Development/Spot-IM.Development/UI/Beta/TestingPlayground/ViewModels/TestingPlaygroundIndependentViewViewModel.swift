@@ -65,7 +65,6 @@ class TestingPlaygroundIndependentViewModel: TestingPlaygroundIndependentViewMod
 }
 
 fileprivate extension TestingPlaygroundIndependentViewModel {
-
     func setupObservers() {
 
         // Testing playground - Views
@@ -77,10 +76,16 @@ fileprivate extension TestingPlaygroundIndependentViewModel {
                 let manager = OpenWeb.manager
                 let views = manager.ui.views
 
-                views.testingPlayground(postId: postId,
-                                    additionalSettings: nil,
-                                    callbacks: nil,
-                                    completion: { [weak self] result in
+                let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                    guard let self = self else { return }
+                    let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                    self.loggerViewModel.inputs.log(text: log)
+                }
+
+                views.reportReason(commentId: postId,
+                                   additionalSettings: nil,
+                                   callbacks: actionsCallbacks,
+                                   completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let view):

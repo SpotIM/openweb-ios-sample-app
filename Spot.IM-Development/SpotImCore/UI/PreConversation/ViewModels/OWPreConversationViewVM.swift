@@ -19,6 +19,8 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
+    var reportActionTitle: String { get }
+    var cancelActionTitle: String { get }
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
@@ -43,6 +45,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var openReportReason: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -54,6 +57,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate struct Metrics {
         static let delayForUICellUpdate: Int = 100
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
+        static let reportActionKey = "Report"
+        static let cancelActionKey = "Cancel"
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -82,6 +87,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 return [section]
             }
     }
+
+    lazy var reportActionTitle: String = {
+        return OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey)
+    }()
+
+    lazy var cancelActionTitle: String = {
+        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelActionKey)
+    }()
 
     lazy var viewAccessibilityIdentifier: String = {
         let styleId = (preConversationData.settings?.style ?? .compact).styleIdentifier
@@ -190,6 +203,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate var _openPublisherProfile = PublishSubject<String>()
     var openPublisherProfile: Observable<String> {
         return _openPublisherProfile
+            .asObservable()
+    }
+
+    fileprivate var _openReportReason = PublishSubject<String>()
+    var openReportReason: Observable<String> {
+        return _openReportReason
             .asObservable()
     }
 
@@ -592,14 +611,20 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 _ = self.servicesProvider.presenterService()
                     .showMenu(actions: actions, viewableMode: self.viewableMode) // TODO: viewableMode
-                    .subscribe(onNext: { result in
+                    .subscribe(onNext: { [weak self] result in
+                        guard let self = self else { return }
                         switch result {
                         case .completion:
                             // Do nothing
                             break
                         case .selected(let action):
                             // TODO: handle selection
-                            break
+                            switch action.title {
+                            case OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey):
+                                guard let commentId = comment.id else { return }
+                                self._openReportReason.onNext(commentId)
+                            default: break
+                            }
                         }
                     })
                     .disposed(by: self.disposeBag)
