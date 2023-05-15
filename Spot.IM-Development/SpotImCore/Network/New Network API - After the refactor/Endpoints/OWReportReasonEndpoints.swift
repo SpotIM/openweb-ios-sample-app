@@ -24,7 +24,7 @@ enum OWReportReasonEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        case .report: return "/moderation/message/report"
+        case .report: return "/conversation/report/message"
         }
     }
 

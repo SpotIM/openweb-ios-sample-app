@@ -405,8 +405,7 @@ fileprivate extension BetaNewAPIVC {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                flows.reportReason(postId: "",
-                                   commentId: "sp_ANQXRpqH_urn$3Auri$3Abase64$3Ac28b405d-5b04-5dc9-85c3-af3941dc713d_c_2PTPfsw4jUsBIBbbhDoCV7qpyS2_r_2PTS1KzPePcK8j6eQhyd9OfYFx4",
+                flows.reportReason(commentId: "sp_ANQXRpqH_urn$3Auri$3Abase64$3Ac28b405d-5b04-5dc9-85c3-af3941dc713d_c_2PTPfsw4jUsBIBbbhDoCV7qpyS2_r_2PTS1KzPePcK8j6eQhyd9OfYFx4",
                                    presentationalMode: .present(viewController: self, style: .fullScreen),
                                    additionalSettings: nil,
                                    callbacks: nil,

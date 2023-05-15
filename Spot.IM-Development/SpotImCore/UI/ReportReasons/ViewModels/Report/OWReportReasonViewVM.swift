@@ -33,6 +33,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var textViewVM: OWTextViewViewModeling { get }
     var selectedReason: Observable<OWReportReason?> { get }
     var learnMoreTapped: Observable<URL?> { get }
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -81,9 +82,10 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var inputs: OWReportReasonViewViewModelingInputs { return self }
     var outputs: OWReportReasonViewViewModelingOutputs { return self }
 
+    let viewableMode: OWViewableMode
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let viewableMode: OWViewableMode
     fileprivate let presentationalMode: OWPresentationalModeCompact
     fileprivate let commentId: OWCommentId
 
@@ -209,10 +211,8 @@ fileprivate extension OWReportReasonViewViewModel {
 
         submittedReportReasonObservable
             .subscribe { response in
-                guard let code = response.error?.asOWNetworkError?.responseCode else { return }
-                if code != 202 {
-                    // TODO show error
-                    print("error code is \(code)")
+                if response.error != nil {
+                    print("*** ERROR ***")
                 }
             }
             .disposed(by: disposeBag)

@@ -81,8 +81,9 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
 }
 
 fileprivate extension OWPreConversationCoordinator {
+    // swiftlint:disable function_body_length
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
-
+    // swiftlint:enable function_body_length
         let openFullConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openFullConversation
             .map { _ -> OWDeepLinkOptions? in
                 return nil
@@ -175,6 +176,36 @@ fileprivate extension OWPreConversationCoordinator {
                 self?.customizationsService.trigger(customizableElement: element)
             })
             .disposed(by: disposeBag)
+
+#if NEW_API
+
+        // Coordinate to report reasons - Flow
+        viewModel.outputs.openReportReason
+            .filter { [weak self] _ in
+                guard let self = self else { return true }
+                return !self.isStandaloneMode
+            }
+            .flatMap { commentId -> Observable<OWReportReasonCoordinatorResult> in
+                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+                                                                        router: self.router,
+                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        presentationalMode: self.preConversationData.presentationalStyle)
+
+                return self.coordinate(to: reportReasonCoordinator)
+            }
+            .do(onNext: { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                switch coordinatorResult {
+                case .popped:
+                    self._dissmissConversation.onNext()
+                default:
+                    break
+                }
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
+
+#endif
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
@@ -186,7 +217,10 @@ fileprivate extension OWPreConversationCoordinator {
         let openPublisherProfile = viewModel.outputs.openPublisherProfile
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
-        Observable.merge(contentPressed, openPublisherProfile)
+        let openReportReason = viewModel.outputs.openReportReason
+            .map { OWViewActionCallbackType.openReportReason(commentId: $0) }
+
+        Observable.merge(contentPressed, openPublisherProfile, openReportReason)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

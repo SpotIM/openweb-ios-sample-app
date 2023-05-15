@@ -14,13 +14,15 @@ public enum OWViewActionCallbackType: Codable {
     case showMoreCommentsPressed
     case writeCommentPressed
     case articleHeaderPressed
-    case communityGuidelinesPressed
+    case communityGuidelinesPressed(url: URL)
     case communityQuestionsPressed
     case postCommentPressed
     case adClosed
     case adTapped
     case closeConversationPressed
     case openPublisherProfile(userId: String)
+    case openReportReason(commentId: String)
+    case closeReportReason
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -28,12 +30,13 @@ enum OWViewActionCallbackType: Codable {
     case showMoreCommentsPressed
     case writeCommentPressed
     case articleHeaderPressed
-    case communityGuidelinesPressed
+    case communityGuidelinesPressed(url: URL)
     case communityQuestionsPressed
     case postCommentPressed
     case adClosed
     case adTapped
     case closeConversationPressed
+    case openReportReason(commentId: String)
     case openPublisherProfile(userId: String)
 }
 #endif

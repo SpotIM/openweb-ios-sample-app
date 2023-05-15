@@ -130,7 +130,12 @@ fileprivate extension OWReportReasonCancelView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+                self.closeButton
+                    .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+
+                self.continueButton
+                    .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
+                    .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
     }
