@@ -201,23 +201,12 @@ extension OWUILayer {
 
 #if NEW_API
 
-    func reportReason(postId: OWPostId,
-                      commentId: OWCommentId,
+    func reportReason(commentId: OWCommentId,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWReportReasonSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
-
-        setPostId(postId: postId) { result in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-                return
-            case .success(_):
-                break
-            }
-        }
 
         _ = flowsSdkCoordinator.startReportReasonFlow(commentId: commentId,
                                                       presentationalMode: presentationalMode,
@@ -344,6 +333,26 @@ extension OWUILayer {
             completion(.failure(error))
         })
     }
+
+#if NEW_API
+
+    func reportReason(commentId: OWCommentId,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion) {
+        _ = viewsSdkCoordinator.reportReasonView(commentId: commentId,
+                                                 callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+    }
+
+#endif
 
 #if BETA
     func testingPlayground(postId: OWPostId,

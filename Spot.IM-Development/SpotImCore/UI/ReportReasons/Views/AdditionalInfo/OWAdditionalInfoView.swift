@@ -101,6 +101,8 @@ fileprivate extension OWAdditionalInfoView {
     }
 
     func setupViews() {
+        backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+
         let shouldShowTitleView = viewModel.outputs.shouldShowTitleView
         if shouldShowTitleView {
             self.addSubviews(titleView)
@@ -150,6 +152,7 @@ fileprivate extension OWAdditionalInfoView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 self.titleView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
@@ -173,42 +176,44 @@ fileprivate extension OWAdditionalInfoView {
             .bind(to: viewModel.inputs.cancelAdditionalInfoTap)
             .disposed(by: disposeBag)
 
-        let keyboardShowHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillShowNotification)
-            .map { notification -> CGFloat in
-                // swiftlint:disable line_length
-                let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-                // swiftlint:enable line_length
-                return height ?? 0
-            }
-
-        let keyboardChangeHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardDidChangeFrameNotification)
-            .map { notification -> CGFloat in
-                // swiftlint:disable line_length
-                let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-                // swiftlint:enable line_length
-                return height ?? 0
-            }
-
-        let keyboardHideHeight = NotificationCenter.default.rx
-            .notification(UIResponder.keyboardWillHideNotification)
-            .map { _ -> CGFloat in
-                0
-            }
-
-        let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight, keyboardChangeHeight])
-            .merge()
-
-        keyboardHeight
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                self.footerBottomPaddingConstraint?.update(inset: height)
-                self.footerBottomPaddingConstraint?.isActive = height > 0
-                UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
-                    self.layoutIfNeeded()
+        if viewModel.outputs.viewableMode == .partOfFlow {
+            let keyboardShowHeight = NotificationCenter.default.rx
+                .notification(UIResponder.keyboardWillShowNotification)
+                .map { notification -> CGFloat in
+                    // swiftlint:disable line_length
+                    let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+                    // swiftlint:enable line_length
+                    return height ?? 0
                 }
-            })
-            .disposed(by: disposeBag)
+
+            let keyboardChangeHeight = NotificationCenter.default.rx
+                .notification(UIResponder.keyboardDidChangeFrameNotification)
+                .map { notification -> CGFloat in
+                    // swiftlint:disable line_length
+                    let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+                    // swiftlint:enable line_length
+                    return height ?? 0
+                }
+
+            let keyboardHideHeight = NotificationCenter.default.rx
+                .notification(UIResponder.keyboardWillHideNotification)
+                .map { _ -> CGFloat in
+                    0
+                }
+
+            let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight, keyboardChangeHeight])
+                .merge()
+
+            keyboardHeight
+                .subscribe(onNext: { [weak self] height in
+                    guard let self = self else { return }
+                    self.footerBottomPaddingConstraint?.update(inset: height)
+                    self.footerBottomPaddingConstraint?.isActive = height > 0
+                    UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
+                        self.layoutIfNeeded()
+                    }
+                })
+                .disposed(by: disposeBag)
+        }
     }
 }

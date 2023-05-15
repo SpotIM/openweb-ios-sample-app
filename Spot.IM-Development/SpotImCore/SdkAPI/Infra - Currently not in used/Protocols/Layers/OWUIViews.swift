@@ -22,6 +22,11 @@ public protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
+    func reportReason(commentId: OWCommentId,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion)
+
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol?,

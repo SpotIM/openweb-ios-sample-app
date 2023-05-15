@@ -71,6 +71,12 @@ fileprivate extension OWReportReasonVC {
         // Setup close button
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
 
+        // Hide navigation back button
+        navigationItem.setHidesBackButton(true, animated: false)
+
+        // Disable navigation back by swipe
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
         title = viewModel.outputs.title
 
         navController?.navigationBar.isTranslucent = false

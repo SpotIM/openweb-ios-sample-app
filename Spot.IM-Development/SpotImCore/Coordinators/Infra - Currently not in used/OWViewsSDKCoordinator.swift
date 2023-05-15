@@ -57,6 +57,27 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             }
     }
 
+#if NEW_API
+
+    func reportReasonView(commentId: OWCommentId,
+                          callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWTestingPlaygroundCoordinatorResult>.self)
+            })
+                .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                    guard let self = self else { return .empty() }
+                    let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+                                                                            actionsCallbacks: callbacks)
+                    self.store(coordinator: reportReasonCoordinator)
+                    return reportReasonCoordinator.showableComponent()
+                }
+    }
+
+#endif
+
 #if BETA
     func testingPlaygroundView(testingPlaygroundData: OWTestingPlaygroundRequiredData,
                                callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
