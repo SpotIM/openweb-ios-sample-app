@@ -8,12 +8,14 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 // Our sections is just a string as we will flat all the comments, replies, ads and everything into cells
 typealias ConversationDataSourceModel = OWAnimatableSectionModel<String, OWConversationCellOption>
 
 protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
+    var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -43,6 +45,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfCommentsInSkeleton: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500
         static let delayForPerformTableViewAnimation: Int = 10
+        static let willDisplayCellThrottle: Int = 700
     }
 
     fileprivate var postId: OWPostId {
@@ -59,6 +62,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
+    fileprivate var _loadMoreComments = PublishSubject<Int>()
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -187,6 +191,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var viewInitialized = PublishSubject<Void>()
+    var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           conversationData: OWConversationRequiredData,
@@ -494,6 +499,36 @@ fileprivate extension OWConversationViewViewModel {
         })
         .disposed(by: disposeBag)
 
+        // fetch more comments
+        let loadMoreCommentsReadObservable = _loadMoreComments
+            .distinctUntilChanged()
+            .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
+                return (sortOption, offset)
+            }
+            .flatMap { [weak self] (sortOption, offset) -> Observable<OWConversationReadRM> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                .netwokAPI()
+                .conversation
+                .conversationRead(mode: sortOption, page: OWPaginationPage.next, parentId: "", offset: offset)
+                .response
+            }
+
+        // append new comments on load more
+        loadMoreCommentsReadObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+
+                self.cacheConversationRead(response: response)
+
+                var commentsPresentationData = self.getCommentsPresentationData(from: response)
+
+                commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
+
+                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
         // Responding to guidelines height change (for updating cell)
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Void> in
@@ -620,6 +655,27 @@ fileprivate extension OWConversationViewViewModel {
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
+            })
+            .disposed(by: disposeBag)
+
+        // Observe tableview will display cell to load more comments
+        willDisplayCell
+            .map { willDisplayCellEvent -> Int in
+                return willDisplayCellEvent.indexPath.row
+            }
+            .withLatestFrom(_commentsPresentationData.rx_elements()) { rowIndex, presentationData -> Int? in
+                guard !presentationData.isEmpty else { return nil }
+                return rowIndex
+            }
+            .unwrap()
+            .throttle(.milliseconds(Metrics.willDisplayCellThrottle), scheduler: MainScheduler.asyncInstance)
+            .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
+                return (rowIndex, cellsVMs.count)
+            }.subscribe(onNext: { [weak self] rowIndex, cellsCount in
+                guard let self = self else { return }
+                if (rowIndex > cellsCount - 5) {
+                    self._loadMoreComments.onNext(self.offset)
+                }
             })
             .disposed(by: disposeBag)
     }
