@@ -23,6 +23,7 @@ public enum OWViewActionCallbackType: Codable {
     case openPublisherProfile(userId: String)
     case openReportReason(commentId: String)
     case closeReportReason
+    case error(_ error: OWError)
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -38,6 +39,7 @@ enum OWViewActionCallbackType: Codable {
     case closeConversationPressed
     case openReportReason(commentId: String)
     case openPublisherProfile(userId: String)
+    case error(_ error: OWError)
 }
 #endif
 
