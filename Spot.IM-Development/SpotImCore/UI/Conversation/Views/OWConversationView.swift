@@ -39,6 +39,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
 
+        tableView.refreshControl = tableViewRefreshControl
+
         tableView.allowsSelection = false
 
         // Register cells
@@ -50,6 +52,11 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         tableView.estimatedRowHeight = 130
 
         return tableView
+    }()
+
+    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        return refresh
     }()
 
     fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
@@ -150,6 +157,14 @@ fileprivate extension OWConversationView {
         tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
+
+        tableView.rx.didEndDecelerating
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self, self.tableViewRefreshControl.isRefreshing else { return }
+                self.viewModel.inputs.pullToRefresh.onNext()
+            })
             .disposed(by: disposeBag)
     }
 }

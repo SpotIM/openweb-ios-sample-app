@@ -16,6 +16,7 @@ typealias ConversationDataSourceModel = OWAnimatableSectionModel<String, OWConve
 protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
+    var pullToRefresh: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -192,6 +193,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var viewInitialized = PublishSubject<Void>()
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
+    var pullToRefresh = PublishSubject<Void>()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           conversationData: OWConversationRequiredData,
@@ -399,7 +401,7 @@ fileprivate extension OWConversationViewViewModel {
                 .response
             }
 
-        let conversationFetchedObservable = viewInitialized
+        let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
             .flatMap { _ -> Observable<OWConversationReadRM> in
                 return conversationReadObservable
                     .take(1)
