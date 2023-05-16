@@ -16,6 +16,7 @@ protocol OWCommentCellViewModelingInputs {
 protocol OWCommentCellViewModelingOutputs {
     var commentVM: OWCommentViewModeling { get }
     var id: String { get }
+    var viewAccessibilityIdentifier: String { get }
 }
 
 protocol OWCommentCellViewModeling: OWCellViewModel {
@@ -24,8 +25,16 @@ protocol OWCommentCellViewModeling: OWCellViewModel {
 }
 
 class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModelingInputs, OWCommentCellViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let viewAccessibilityIdentifier = "comment_cell_id_"
+    }
+
     var inputs: OWCommentCellViewModelingInputs { return self }
     var outputs: OWCommentCellViewModelingOutputs { return self }
+
+    lazy var viewAccessibilityIdentifier: String = {
+        return Metrics.viewAccessibilityIdentifier + id
+    }()
 
     let commentVM: OWCommentViewModeling
 

@@ -23,6 +23,8 @@ class SettingsViewsFactory {
             return ConversationSettingsView(viewModel: settingsVM as! ConversationSettingsVM)
         case is CommentCreationSettingsVM:
             return CommentCreationSettingsView(viewModel: settingsVM as! CommentCreationSettingsVM)
+        case is CommentThreadSettingsVM:
+            return CommentThreadSettingsView(viewModel: settingsVM as! CommentThreadSettingsVM)
         case is IAUSettingsVM:
             return IAUSettingsView(viewModel: settingsVM as! IAUSettingsVM)
         default:
