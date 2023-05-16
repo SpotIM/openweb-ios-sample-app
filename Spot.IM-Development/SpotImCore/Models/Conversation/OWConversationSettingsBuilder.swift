@@ -35,6 +35,7 @@ struct OWConversationSettingsBuilder {
 
     @discardableResult mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
         self.style = style
+        return self
     }
 
     func build() -> OWConversationSettingsProtocol {
