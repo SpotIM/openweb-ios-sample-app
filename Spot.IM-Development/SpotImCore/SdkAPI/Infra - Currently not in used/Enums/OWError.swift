@@ -10,7 +10,8 @@ import Foundation
 
 #if NEW_API
 
-public enum OWError: Error {
+public enum OWError: Error, Codable {
+    case reportReasonSubmitError(title: String, description: String)
     case missingSpotId
     case missingPostId
     case castingError(description: String)
@@ -33,6 +34,8 @@ public enum OWError: Error {
 
     public var description: String {
         switch self {
+        case .reportReasonSubmitError:
+            return "Error - submitting report reason failed"
         case .missingSpotId:
             return "Error - spotId must be set first under `OpenWeb.manager`"
         case .missingPostId:
@@ -75,7 +78,8 @@ public enum OWError: Error {
 
 #else
 
-enum OWError: Error {
+enum OWError: Error, Codable {
+    case reportReasonSubmitError(title: String, description: String)
     case missingSpotId
     case castingError(description: String)
     case preConversationFlow
@@ -96,6 +100,8 @@ enum OWError: Error {
 
     var description: String {
         switch self {
+        case .reportReasonSubmitError:
+            return "Error - submitting report reason failed"
         case .missingSpotId:
             return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):

@@ -149,3 +149,5 @@
 "Start the conversation and share your thoughts and ideas with the community." = "Start the conversation and share your thoughts and ideas with the community.";
 "Community Guidelines" = "Community Guidelines";
 "Read our" = "Read our";
+"ReportSubmissionFailedTitle" = "Report Submission Failed";
+"ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";

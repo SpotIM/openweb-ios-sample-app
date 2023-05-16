@@ -12,6 +12,7 @@ import RxSwift
 #if NEW_API
 
 protocol OWReportReasonViewViewModelingInputs {
+    var errorSubmitting: PublishSubject<Void> { get }
     var learnMoreTap: PublishSubject<Void> { get }
     var closeReportReasonTap: PublishSubject<Void> { get }
     var cancelReportReasonTap: PublishSubject<Void> { get }
@@ -20,6 +21,7 @@ protocol OWReportReasonViewViewModelingInputs {
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
+    var errorAlertActionText: String { get }
     var titleText: String { get }
     var cancelButtonText: String { get }
     var submitButtonText: String { get }
@@ -34,6 +36,8 @@ protocol OWReportReasonViewViewModelingOutputs {
     var selectedReason: Observable<OWReportReason?> { get }
     var learnMoreTapped: Observable<URL?> { get }
     var viewableMode: OWViewableMode { get }
+    var presentError: Observable<UIAlertController> { get }
+    var callbackErrorSubmitting: Observable<OWError> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -48,10 +52,41 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         static let textViewMandatoryPlaceholderKey = "ReportReasonTextViewMandatoryPlaceholder"
         static let cancelKey = "Cancel"
         static let submitKey = "Submit"
+        static let errorAlertActionKey = "GotIt"
+        static let errorAlertSubmitTitleKey = "ReportSubmissionFailedTitle"
+        static let errorAlertSubmitMessageKey = "ReportSubmissionFailedMessage"
         static let tableViewHeaderKey = "ReportReasonHelpUsTitle"
         static let tableViewHeaderTapKey = "ReportReasonHelpUsClickText"
         static let textViewMaxCharecters = 280
         static let headerTextFontSize: CGFloat = 15
+    }
+
+    var errorSubmitting = PublishSubject<Void>()
+    var presentError: Observable<UIAlertController> {
+        return errorSubmitting
+            .map { [weak self] in
+                let title = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitTitleKey)
+                let message = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitMessageKey)
+                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: self?.errorAlertActionText, style: .default, handler: nil))
+                return alert
+            }
+            .asObservable()
+    }
+
+    var callbackErrorSubmitting: Observable<OWError> {
+        return errorSubmitting
+            .map {
+                let title = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitTitleKey)
+                let message = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitMessageKey)
+                let error: OWError = .reportReasonSubmitError(title: title, description: message)
+                return error
+            }
+            .asObservable()
+    }
+
+    var errorAlertActionText: String {
+        return LocalizationManager.localizedString(key: Metrics.errorAlertActionKey)
     }
 
     var titleText: String {
@@ -108,7 +143,8 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     var submitReportReasonTap = PublishSubject<Void>()
     var submitReportReasonTapped: Observable<Void> {
-        return submitReportReasonTap.asObservable()
+        return submitReportReasonTap
+                .asObservable()
     }
 
     var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
@@ -210,9 +246,9 @@ fileprivate extension OWReportReasonViewViewModel {
             .disposed(by: disposeBag)
 
         submittedReportReasonObservable
-            .subscribe { response in
+            .subscribe { [weak self] response in
                 if response.error != nil {
-                    print("*** ERROR ***")
+                    self?.errorSubmitting.onNext()
                 }
             }
             .disposed(by: disposeBag)
