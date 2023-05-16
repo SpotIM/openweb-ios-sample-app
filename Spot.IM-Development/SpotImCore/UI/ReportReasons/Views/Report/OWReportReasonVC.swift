@@ -26,7 +26,6 @@ class OWReportReasonVC: UIViewController {
     fileprivate lazy var closeButton: UIButton = {
         let closeButton = UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
-            .horizontalAlignment(.left)
         return closeButton
     }()
 

@@ -14,9 +14,9 @@ class OWReportReasonThanksView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_thanks_view_id"
         static let titleViewPrefixIdentifier = "report_reason_thanks"
-        static let closeButtonTopPadding: CGFloat = 18
+        static let closeButtonTopSpacing: CGFloat = 17
+        static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
-        static let closeButtonTrailingPadding = 19
         static let titleViewTopPadding: CGFloat = 20
         static let buttonRadius: CGFloat = 6
         static let buttonHeight: CGFloat = 40
@@ -27,7 +27,6 @@ class OWReportReasonThanksView: UIView {
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
-            .horizontalAlignment(.left)
     }()
 
     fileprivate lazy var gotitButton: UIButton = {
@@ -65,8 +64,8 @@ fileprivate extension OWReportReasonThanksView {
     func setupViews() {
         self.addSubviews(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopPadding)
-            make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingPadding)
+            make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing)
+            make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing)
         }
 
         self.addSubviews(titleView)
