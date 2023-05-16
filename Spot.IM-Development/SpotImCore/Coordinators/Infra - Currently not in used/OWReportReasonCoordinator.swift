@@ -29,10 +29,11 @@ enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
 class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult> {
     fileprivate struct Metrics {
         static let fadeDuration: CGFloat = 0.3
+        static let errorAlertActionKey = "GotIt"
     }
 
     fileprivate let commentId: OWCommentId
-    fileprivate let router: OWRoutering!
+    fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .reportReason)
@@ -42,7 +43,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     var reportReasonView: UIView?
 
     init(commentId: OWCommentId,
-         router: OWRoutering! = nil,
+         router: OWRoutering? = nil,
          actionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none) {
         self.commentId = commentId
@@ -52,7 +53,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
-        // TODO: complete the flow
+        guard let router = router else { return .empty() }
         let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(commentId: commentId,
                                                                                  viewableMode: .partOfFlow,
                                                                                  presentMode: self.presentationalMode)
@@ -149,10 +150,11 @@ fileprivate extension OWReportReasonCoordinator {
         .filter { viewModel.outputs.viewableMode == .partOfFlow }
         .subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
+            guard let router = self.router else { return }
             let reportReasonCancelViewVM = OWReportReasonCancelViewViewModel()
             let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewViewModel: reportReasonCancelViewVM)
             reportReasonCancelVC.modalPresentationStyle = .fullScreen
-            self.router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+            router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
 
             reportReasonCancelViewVM.closeReportReasonCancelTap
                 .subscribe(onNext: { _ in
@@ -163,8 +165,9 @@ fileprivate extension OWReportReasonCoordinator {
             reportReasonCancelViewVM.cancelReportReasonCancelTap
                 .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
+                    guard let router = self.router else { return }
                     reportReasonCancelVC.dismiss(animated: true)
-                    self.router.pop(animated: false)
+                    router.pop(animated: false)
                 })
                 .disposed(by: self.disposeBag)
         })
@@ -208,16 +211,18 @@ fileprivate extension OWReportReasonCoordinator {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                guard let router = self.router else { return }
                 let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
                 let reportReasonThanksVC = OWReportReasonThanksVC(reportReasonThanksViewViewModel: reportReasonThanksViewVM)
                 reportReasonThanksVC.modalPresentationStyle = .fullScreen
-                self.router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
+                router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
 
                 reportReasonThanksViewVM.closeReportReasonThanksTap
                     .subscribe(onNext: { [weak self] _ in
                         guard let self = self else { return }
+                        guard let router = self.router else { return }
                         reportReasonThanksVC.dismiss(animated: true)
-                        self.router.pop(animated: false)
+                        router.pop(animated: false)
                     })
                     .disposed(by: self.disposeBag)
             })
@@ -291,17 +296,19 @@ fileprivate extension OWReportReasonCoordinator {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] placeholderText, textViewText in
                 guard let self = self else { return }
+                guard let router = self.router else { return }
                 let additionalInfoViewVM = OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                                          placeholderText: placeholderText,
                                                                          textViewText: textViewText)
                 let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
-                self.router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+                router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
 
                 additionalInfoViewVM.outputs.cancelAdditionalInfoTapped
                     .take(1)
                     .subscribe(onNext: { [weak self] _ in
                         guard let self = self else { return }
-                        self.router.pop(animated: true)
+                        guard let router = self.router else { return }
+                        router.pop(animated: true)
                     })
                     .disposed(by: self.disposeBag)
 
@@ -310,8 +317,9 @@ fileprivate extension OWReportReasonCoordinator {
                     .take(1)
                     .subscribe(onNext: { [weak self] textViewText in
                         guard let self = self else { return }
+                        guard let router = self.router else { return }
                         reportTextViewVM.inputs.textViewTextChange.onNext(textViewText)
-                        self.router.pop(animated: true)
+                        router.pop(animated: true)
                     })
                     .disposed(by: self.disposeBag)
             })
@@ -323,10 +331,10 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 return viewModel.outputs.viewableMode == .independent
             }
-            .subscribe { [weak self] url in
+            .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self.viewActionsService.append(viewAction: OWViewActionCallbackType.communityGuidelinesPressed(url: url))
-            }
+            })
             .disposed(by: disposeBag)
 
         // Open Guidelines - Flow
@@ -337,12 +345,36 @@ fileprivate extension OWReportReasonCoordinator {
             }
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                guard let router = self.router else { return .empty() }
+                let safariCoordinator = OWSafariTabCoordinator(router: router,
                                                                url: url,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
             .subscribe()
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.presentError
+            .filter { _ in
+                return viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] alert in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                router.navigationController?.topViewController?.present(alert, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.callbackErrorSubmitting
+            .filter { _ in
+                return viewModel.outputs.viewableMode == .independent
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] error in
+                guard let self = self else { return }
+                self.viewActionsService.append(viewAction: OWViewActionCallbackType.error(error))
+            })
             .disposed(by: disposeBag)
     }
 }
