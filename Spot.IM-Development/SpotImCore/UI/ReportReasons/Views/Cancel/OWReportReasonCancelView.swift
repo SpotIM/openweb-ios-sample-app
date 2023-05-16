@@ -14,7 +14,8 @@ class OWReportReasonCancelView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_cancel_view_id"
         static let titleViewPrefixIdentifier = "report_reason_cancel"
-        static let closeButtonTopSpacing: CGFloat = 18
+        static let closeButtonTopSpacing: CGFloat = 17
+        static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
         static let verticalSpacing: CGFloat = 16
         static let titleViewTopSpacing: CGFloat = 20
@@ -28,7 +29,6 @@ class OWReportReasonCancelView: UIView {
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
-            .horizontalAlignment(.left)
     }()
 
     fileprivate lazy var titleView: OWTitleSubtitleIconView = {
@@ -86,7 +86,7 @@ fileprivate extension OWReportReasonCancelView {
         self.addSubviews(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing)
-            make.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
+            make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing)
         }
 
         self.addSubviews(titleView)

@@ -48,7 +48,6 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
-            .horizontalAlignment(.left)
     }()
 
     init(title: String, prefixIdentifier: String) {
