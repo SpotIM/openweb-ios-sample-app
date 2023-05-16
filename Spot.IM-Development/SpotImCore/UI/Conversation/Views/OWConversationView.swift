@@ -146,5 +146,10 @@ fileprivate extension OWConversationView {
                     }
                 })
                 .disposed(by: disposeBag)
+
+        tableView.rx.willDisplayCell
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
     }
 }
