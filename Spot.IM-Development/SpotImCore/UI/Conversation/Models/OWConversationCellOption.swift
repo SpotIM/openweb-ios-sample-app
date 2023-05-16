@@ -17,7 +17,8 @@ enum OWConversationCellOption: CaseIterable {
                 .ad(viewModel: OWAdCellViewModel.stub()),
                 .spacer(viewModel: OWSpacerCellViewModel.stub()),
                 .communityQuestion(viewModel: OWCommunityQuestionCellViewModel.stub()),
-                .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub())]
+                .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub()),
+                .conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModel.stub())]
     }
 
     case comment(viewModel: OWCommentCellViewModeling)
@@ -27,6 +28,7 @@ enum OWConversationCellOption: CaseIterable {
     case spacer(viewModel: OWSpacerCellViewModeling)
     case communityQuestion(viewModel: OWCommunityQuestionCellViewModeling)
     case communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModeling)
+    case conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModeling)
 }
 
 extension OWConversationCellOption {
@@ -45,6 +47,8 @@ extension OWConversationCellOption {
         case .communityQuestion(let viewModel):
             return viewModel
         case .communityGuidelines(let viewModel):
+            return viewModel
+        case .conversationEmptyState(viewModel: let viewModel):
             return viewModel
         }
     }
@@ -66,6 +70,8 @@ extension OWConversationCellOption {
             return OWCommunityQuestionCell.self
         case .communityGuidelines:
             return OWCommunityGuidelinesCell.self
+        case .conversationEmptyState:
+            return OWConversationEmptyStateCell.self
         }
     }
 }
@@ -92,6 +98,8 @@ extension OWConversationCellOption: Equatable {
         case .communityQuestion(let viewModel):
             return viewModel.outputs.id
         case .communityGuidelines(let viewModel):
+            return viewModel.outputs.id
+        case .conversationEmptyState(viewModel: let viewModel):
             return viewModel.outputs.id
         }
     }
