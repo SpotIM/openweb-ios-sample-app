@@ -340,6 +340,17 @@ extension OWUILayer {
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
+
+        checkIfPostIdExists { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
         _ = viewsSdkCoordinator.reportReasonView(commentId: commentId,
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
@@ -395,6 +406,14 @@ fileprivate extension OWUILayer {
         }
 
         manager.postId = postId
+    }
+
+    func checkIfPostIdExists(completion: @escaping OWDefaultCompletion) {
+        guard OWManager.manager.postId != nil else {
+            completion(.failure(OWError.missingPostId))
+            return
+        }
+        completion(.success(()))
     }
 
     func prepareForNewFlow() {
