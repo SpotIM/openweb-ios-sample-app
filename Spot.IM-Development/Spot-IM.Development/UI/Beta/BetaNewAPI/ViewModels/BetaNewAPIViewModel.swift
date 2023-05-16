@@ -15,7 +15,6 @@ import SpotImCore
 protocol BetaNewAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<String> { get }
     var enteredPostId: PublishSubject<String> { get }
-    var reportReasonTapped: PublishSubject<Void> { get }
     var uiFlowsTapped: PublishSubject<Void> { get }
     var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
@@ -40,7 +39,6 @@ protocol BetaNewAPIViewModelingOutputs {
     var openTestingPlayground: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
     var openAuthentication: Observable<Void> { get }
-    var openReportReason: Observable<Void> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -63,7 +61,6 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let enteredPostId = PublishSubject<String>()
     let uiFlowsTapped = PublishSubject<Void>()
     let uiViewsTapped = PublishSubject<Void>()
-    let reportReasonTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
     let testingPlaygroundTapped = PublishSubject<Void>()
     let selectPresetTapped = PublishSubject<Void>()
@@ -115,11 +112,6 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _openSettings = PublishSubject<Void>()
     var openSettings: Observable<Void> {
         return _openSettings.asObservable()
-    }
-
-    fileprivate let _openReportReason = PublishSubject<Void>()
-    var openReportReason: Observable<Void> {
-        return _openReportReason.asObservable()
     }
 
     fileprivate let _openAuthentication = PublishSubject<Void>()
@@ -190,10 +182,6 @@ fileprivate extension BetaNewAPIViewModel {
 
         settingsTapped
             .bind(to: _openSettings)
-            .disposed(by: disposeBag)
-
-        reportReasonTapped
-            .bind(to: _openReportReason)
             .disposed(by: disposeBag)
 
         authenticationTapped
