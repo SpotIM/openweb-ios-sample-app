@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-#if NEW_API
-
 class OWReportReasonCancelVC: UIViewController {
     fileprivate struct Metrics {
     }
@@ -51,5 +49,3 @@ fileprivate extension OWReportReasonCancelVC {
         }
     }
 }
-
-#endif

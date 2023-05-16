@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-#if NEW_API
-
 class OWAdditionalInfoVC: UIViewController {
     fileprivate struct Metrics {
     }
@@ -51,5 +49,3 @@ fileprivate extension OWAdditionalInfoVC {
         }
     }
 }
-
-#endif

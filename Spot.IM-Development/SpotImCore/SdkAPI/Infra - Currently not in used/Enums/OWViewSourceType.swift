@@ -22,5 +22,6 @@ enum OWViewSourceType {
     case conversation
     case commentCreation
     case commentThread
+    case reportReason
 }
 #endif

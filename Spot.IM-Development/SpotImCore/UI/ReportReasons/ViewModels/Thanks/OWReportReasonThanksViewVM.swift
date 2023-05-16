@@ -9,8 +9,6 @@
 import Foundation
 import RxSwift
 
-#if NEW_API
-
 protocol OWReportReasonThanksViewViewModelingInputs {
     var closeReportReasonThanksTap: PublishSubject<Void> { get }
 }
@@ -69,5 +67,3 @@ class OWReportReasonThanksViewViewModel: OWReportReasonThanksViewViewModelingInp
         return closeReportReasonThanksTap.asObservable()
     }
 }
-
-#endif

@@ -177,8 +177,6 @@ fileprivate extension OWPreConversationCoordinator {
             })
             .disposed(by: disposeBag)
 
-#if NEW_API
-
         // Coordinate to report reasons - Flow
         viewModel.outputs.openReportReason
             .filter { [weak self] _ in
@@ -204,8 +202,6 @@ fileprivate extension OWPreConversationCoordinator {
             })
             .subscribe()
             .disposed(by: disposeBag)
-
-#endif
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {

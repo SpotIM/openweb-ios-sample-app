@@ -9,8 +9,6 @@
 import Foundation
 import RxSwift
 
-#if NEW_API
-
 protocol OWReportReasonViewViewModelingInputs {
     var errorSubmitting: PublishSubject<Void> { get }
     var learnMoreTap: PublishSubject<Void> { get }
@@ -254,5 +252,3 @@ fileprivate extension OWReportReasonViewViewModel {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

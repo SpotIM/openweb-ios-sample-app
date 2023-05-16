@@ -334,8 +334,6 @@ extension OWUILayer {
         })
     }
 
-#if NEW_API
-
     func reportReason(commentId: OWCommentId,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
@@ -362,8 +360,6 @@ extension OWUILayer {
             completion(.failure(error))
         })
     }
-
-#endif
 
 #if BETA
     func testingPlayground(postId: OWPostId,

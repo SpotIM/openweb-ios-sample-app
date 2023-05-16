@@ -9,8 +9,6 @@
 import RxSwift
 import Foundation
 
-#if NEW_API
-
 protocol OWReportReasonCellViewModelingInputs {
     var setSelected: BehaviorSubject<Bool> { get }
 }
@@ -45,5 +43,3 @@ class OWReportReasonCellViewModel: OWReportReasonCellViewModelingInputs, OWRepor
         self.subtitle = reason.reportType.localizedSubtitle
     }
 }
-
-#endif
