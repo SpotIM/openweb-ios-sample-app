@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if NEW_API
-
 struct OWConfigurationReportReasonOptions: Codable {
     fileprivate let reasons: [OWNetworkReportReason]
     let reasonsList: [OWReportReason]
@@ -24,5 +22,3 @@ struct OWConfigurationReportReasonOptions: Codable {
             }
     }
 }
-
-#endif

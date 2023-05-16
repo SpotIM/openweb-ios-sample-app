@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if NEW_API
-
 // All new reasons need to be added both in OWNetworkReportReasonType and OWReportReasonType
 enum OWNetworkReportReasonType: String, Codable {
     case identity_attack
@@ -71,5 +69,3 @@ extension OWReportReasonType {
         return LocalizationManager.localizedString(key: "\(self.rawValue)_subtitle")
     }
 }
-
-#endif
