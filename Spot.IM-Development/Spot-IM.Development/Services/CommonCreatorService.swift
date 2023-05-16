@@ -28,12 +28,14 @@ class CommonCreatorService: CommonCreatorServicing {
     func preConversationSettings() -> OWPreConversationSettingsProtocol {
         let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let additionalSettings = OWPreConversationSettingsBuilder(style: preConversationStyle)
+            .build()
         return additionalSettings
     }
 
     func conversationSettings() -> OWConversationSettingsProtocol {
         let styleFromPersistence = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
         let additionalSettings = OWConversationSettingsBuilder(style: styleFromPersistence)
+            .build()
         return additionalSettings
     }
 
