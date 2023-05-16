@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal typealias ImageName = String
+internal typealias OWImageName = String
 
 internal extension UIImage {
 
@@ -16,7 +16,7 @@ internal extension UIImage {
     /// Dark images should have "-dark" postfix in the Asset catalog.
     /// - Parameter spNamed: image name in the bundle.
     /// - Parameter supportDarkMode: default is false to prevent crashes if the developer did not provide an image for dark mode.
-    convenience init?(spNamed: ImageName, supportDarkMode: Bool = false) {
+    convenience init?(spNamed: OWImageName, supportDarkMode: Bool = false) {
         var imageName = spNamed
 
         if (supportDarkMode && SPUserInterfaceStyle.isDarkMode) {
@@ -27,7 +27,7 @@ internal extension UIImage {
     }
 }
 
-fileprivate extension ImageName {
+fileprivate extension OWImageName {
     var dark: String {
         appending("-dark")
     }

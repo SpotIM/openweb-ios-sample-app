@@ -32,11 +32,11 @@ class OWCommunityGuidelinesView: UIView {
             .wrapContent(axis: .vertical)
             .hugContent(axis: .vertical)
             .dataDetectorTypes([.link])
+            .textContainerInset(.zero)
 
         textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
                                        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.textContainer.lineFragmentPadding = 0
-        textView.textContainerInset = .zero
         textView.sizeToFit()
         return textView
     }()
@@ -105,8 +105,7 @@ fileprivate extension OWCommunityGuidelinesView {
 
             guidelinesContainer.addSubview(guidelinesIcon)
             guidelinesIcon.OWSnp.makeConstraints { make in
-                make.top.equalToSuperview().offset(Metrics.verticalOffset)
-                make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+                make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             }
 
@@ -119,17 +118,8 @@ fileprivate extension OWCommunityGuidelinesView {
         } else {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview()
+                make.top.bottom.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
-
-                // avoide device notch in landscape
-                if #available(iOS 11.0, *) {
-                    make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
-                    make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.horizontalOffset)
-                } else {
-                    make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-                    make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-                }
             }
         }
     }

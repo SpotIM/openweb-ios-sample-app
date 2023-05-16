@@ -119,7 +119,7 @@
 		24A24A14291BABB300D72755 /* OWSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A13291BABB300D72755 /* OWSafariViewController.swift */; };
 		24A24A18291BAC7C00D72755 /* OWSafariViewControllerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */; };
 		24A24A1A291BEAB300D72755 /* OWSafariViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */; };
-		24A691C329D2BB28005A5DFE /* OWPreConversationClosedPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A691C229D2BB27005A5DFE /* OWPreConversationClosedPlaceholderView.swift */; };
+		24A691C329D2BB28005A5DFE /* OWCommentingReadOnlyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A691C229D2BB27005A5DFE /* OWCommentingReadOnlyView.swift */; };
 		24B087CB288E747200CAA0EB /* OWAuthenticationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CA288E747200CAA0EB /* OWAuthenticationEndpoints.swift */; };
 		24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */; };
 		24B087CF288EB51F00CAA0EB /* OWFailureReportEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */; };
@@ -707,6 +707,15 @@
 		8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D7A63297560FC0082A7C6 /* swiftlint */; };
 		8D7FC65E299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7FC65D299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift */; };
 		8D7FC66029A3AA510047DA22 /* OWConversationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7FC65F29A3AA510047DA22 /* OWConversationSummaryView.swift */; };
+		8D99C6772A07D94300DAB542 /* OWCommentingCTAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6762A07D94300DAB542 /* OWCommentingCTAView.swift */; };
+		8D99C6792A07D95600DAB542 /* OWCommentingCTAViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6782A07D95600DAB542 /* OWCommentingCTAViewModel.swift */; };
+		8D99C67B2A07E5FF00DAB542 /* OWCommentingCTAStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C67A2A07E5FF00DAB542 /* OWCommentingCTAStyle.swift */; };
+		8D99C6822A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6812A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift */; };
+		8D99C6842A0B68FF00DAB542 /* OWConversationEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6832A0B68FF00DAB542 /* OWConversationEmptyStateView.swift */; };
+		8D99C6862A0B6B6600DAB542 /* OWConversationEmptyStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6852A0B6B6600DAB542 /* OWConversationEmptyStateViewModel.swift */; };
+		8D99C6892A13516400DAB542 /* OWConversationContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6882A13516400DAB542 /* OWConversationContentType.swift */; };
+		8D99C68E2A138C1A00DAB542 /* OWConversationEmptyStateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C68D2A138C1A00DAB542 /* OWConversationEmptyStateCell.swift */; };
+		8D99C6902A138C6300DAB542 /* OWConversationEmptyStateCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C68F2A138C6300DAB542 /* OWConversationEmptyStateCellViewModel.swift */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
@@ -917,7 +926,7 @@
 		24A24A13291BABB300D72755 /* OWSafariViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewController.swift; sourceTree = "<group>"; };
 		24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewControllerOptions.swift; sourceTree = "<group>"; };
 		24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewModel.swift; sourceTree = "<group>"; };
-		24A691C229D2BB27005A5DFE /* OWPreConversationClosedPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationClosedPlaceholderView.swift; sourceTree = "<group>"; };
+		24A691C229D2BB27005A5DFE /* OWCommentingReadOnlyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentingReadOnlyView.swift; sourceTree = "<group>"; };
 		24B087CA288E747200CAA0EB /* OWAuthenticationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailureReportEndpoints.swift; sourceTree = "<group>"; };
@@ -1541,6 +1550,15 @@
 		8D5D7A63297560FC0082A7C6 /* swiftlint */ = {isa = PBXFileReference; lastKnownFileType = folder; path = swiftlint; sourceTree = "<group>"; };
 		8D7FC65D299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryViewModel.swift; sourceTree = "<group>"; };
 		8D7FC65F29A3AA510047DA22 /* OWConversationSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryView.swift; sourceTree = "<group>"; };
+		8D99C6762A07D94300DAB542 /* OWCommentingCTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentingCTAView.swift; sourceTree = "<group>"; };
+		8D99C6782A07D95600DAB542 /* OWCommentingCTAViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentingCTAViewModel.swift; sourceTree = "<group>"; };
+		8D99C67A2A07E5FF00DAB542 /* OWCommentingCTAStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentingCTAStyle.swift; sourceTree = "<group>"; };
+		8D99C6812A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentingCTASkeletonView.swift; sourceTree = "<group>"; };
+		8D99C6832A0B68FF00DAB542 /* OWConversationEmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEmptyStateView.swift; sourceTree = "<group>"; };
+		8D99C6852A0B6B6600DAB542 /* OWConversationEmptyStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEmptyStateViewModel.swift; sourceTree = "<group>"; };
+		8D99C6882A13516400DAB542 /* OWConversationContentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationContentType.swift; sourceTree = "<group>"; };
+		8D99C68D2A138C1A00DAB542 /* OWConversationEmptyStateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEmptyStateCell.swift; sourceTree = "<group>"; };
+		8D99C68F2A138C6300DAB542 /* OWConversationEmptyStateCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEmptyStateCellViewModel.swift; sourceTree = "<group>"; };
 		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
@@ -1751,6 +1769,7 @@
 		1628A74728EB0D8E0019B5EC /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				8D99C68A2A138BD100DAB542 /* ConversationEmptyStateCell */,
 				1628A74828EB0D8E0019B5EC /* Ad */,
 				1628A74B28EB0D8E0019B5EC /* Comment */,
 				3DDA9A5A2906CFBC00FE3B86 /* CommentSkeletonShimmering */,
@@ -2101,7 +2120,6 @@
 				24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */,
 				24C3423729067133004189EA /* OWPreConversationSummeryView.swift */,
 				24D37E7729B8B27F0056450D /* OWPreConversationCompactContentView.swift */,
-				24A691C229D2BB27005A5DFE /* OWPreConversationClosedPlaceholderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2210,6 +2228,7 @@
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
+				8D99C6732A07D89400DAB542 /* CommentingCTA */,
 				24D7C25329E53019001F148B /* AvatarView */,
 				24C9BD5629DD53FA00D74034 /* CommentCreationEntry */,
 				3DDA9A61290808E600FE3B86 /* SkeletonShimmering */,
@@ -2245,6 +2264,7 @@
 		3D08E0592875987500E6F1AC /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
+				8D99C67029F6B24C00DAB542 /* ConversationEmptyState */,
 				8D358D6929D1E8AE00E229A3 /* ArticleDescription */,
 				8D358D5C29CB2AD900E229A3 /* ConversationSummary */,
 				8D358D4D29C9BFC500E229A3 /* ConversationTitleHeader */,
@@ -3383,6 +3403,7 @@
 			isa = PBXGroup;
 			children = (
 				3DFC32C428916760005F1C5A /* OWConversationCellOption.swift */,
+				8D99C6882A13516400DAB542 /* OWConversationContentType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4300,6 +4321,132 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		8D99C67029F6B24C00DAB542 /* ConversationEmptyState */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C67229F6B67F00DAB542 /* ViewModels */,
+				8D99C67129F6B67700DAB542 /* Views */,
+			);
+			path = ConversationEmptyState;
+			sourceTree = "<group>";
+		};
+		8D99C67129F6B67700DAB542 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6832A0B68FF00DAB542 /* OWConversationEmptyStateView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D99C67229F6B67F00DAB542 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6852A0B6B6600DAB542 /* OWConversationEmptyStateViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8D99C6732A07D89400DAB542 /* CommentingCTA */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6872A1350CB00DAB542 /* Models */,
+				8D99C67F2A0B674000DAB542 /* CommentingCTASkeleton */,
+				8D99C67C2A0B663600DAB542 /* CommentingReadOnly */,
+				8D99C6752A07D92100DAB542 /* ViewModels */,
+				8D99C6742A07D91A00DAB542 /* Views */,
+			);
+			path = CommentingCTA;
+			sourceTree = "<group>";
+		};
+		8D99C6742A07D91A00DAB542 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6762A07D94300DAB542 /* OWCommentingCTAView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D99C6752A07D92100DAB542 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6782A07D95600DAB542 /* OWCommentingCTAViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8D99C67C2A0B663600DAB542 /* CommentingReadOnly */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C67E2A0B665800DAB542 /* ViewModels */,
+				8D99C67D2A0B665100DAB542 /* Views */,
+			);
+			path = CommentingReadOnly;
+			sourceTree = "<group>";
+		};
+		8D99C67D2A0B665100DAB542 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24A691C229D2BB27005A5DFE /* OWCommentingReadOnlyView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D99C67E2A0B665800DAB542 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8D99C67F2A0B674000DAB542 /* CommentingCTASkeleton */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6802A0B677600DAB542 /* Views */,
+			);
+			path = CommentingCTASkeleton;
+			sourceTree = "<group>";
+		};
+		8D99C6802A0B677600DAB542 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C6812A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D99C6872A1350CB00DAB542 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C67A2A07E5FF00DAB542 /* OWCommentingCTAStyle.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8D99C68A2A138BD100DAB542 /* ConversationEmptyStateCell */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C68C2A138C0100DAB542 /* ViewModels */,
+				8D99C68B2A138BFC00DAB542 /* Views */,
+			);
+			path = ConversationEmptyStateCell;
+			sourceTree = "<group>";
+		};
+		8D99C68B2A138BFC00DAB542 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C68D2A138C1A00DAB542 /* OWConversationEmptyStateCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D99C68C2A138C0100DAB542 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D99C68F2A138C6300DAB542 /* OWConversationEmptyStateCellViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		8DCBE85A293CEF7D00C8677C /* UIFlows */ = {
 			isa = PBXGroup;
 			children = (
@@ -5008,7 +5155,7 @@
 				24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */,
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
 				44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */,
-				24A691C329D2BB28005A5DFE /* OWPreConversationClosedPlaceholderView.swift in Sources */,
+				24A691C329D2BB28005A5DFE /* OWCommentingReadOnlyView.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
 				3DDA9A772919370200FE3B86 /* OWUIAuthenticationLayer.swift in Sources */,
 				16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */,
@@ -5069,6 +5216,7 @@
 				3D08E06C2875BAEC00E6F1AC /* OWUI.swift in Sources */,
 				3D611BB928C8AC3C003960CE /* OWConversationSettingsBuilder.swift in Sources */,
 				3DDA9A7B29196CC200FE3B86 /* OWAuthenticationFlowCallback.swift in Sources */,
+				8D99C6842A0B68FF00DAB542 /* OWConversationEmptyStateView.swift in Sources */,
 				3DA57BA92989358E0016BF2A /* OWConversationStyle.swift in Sources */,
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				4454188423685154001D0ED0 /* SPDefaultDecoder.swift in Sources */,
@@ -5086,6 +5234,7 @@
 				3DA2646E2951E3B200688FFF /* URLRequest+Network.swift in Sources */,
 				3D08E0872877072F00E6F1AC /* OWSectionModel.swift in Sources */,
 				3D611B9728C64533003960CE /* OWReadOnlyMode.swift in Sources */,
+				8D99C68E2A138C1A00DAB542 /* OWConversationEmptyStateCell.swift in Sources */,
 				3DFA6BA32921700C0047E313 /* OWProviderSSOHandler.swift in Sources */,
 				3DA2646F2951E3B200688FFF /* OWNetworkReachabilityManager.swift in Sources */,
 				3DA2646D2951E3B200688FFF /* OWNetworkURLEncodedFormEncoder.swift in Sources */,
@@ -5122,6 +5271,7 @@
 				3DA264022951E32E00688FFF /* OWNetworkCachedResponseHandler.swift in Sources */,
 				24EF864829CAE8D800327394 /* OWSubscriberIconView.swift in Sources */,
 				3D263CF529C0FDB80013C532 /* OWBlockerService.swift in Sources */,
+				8D99C6902A138C6300DAB542 /* OWConversationEmptyStateCellViewModel.swift in Sources */,
 				3D20A36527B00CAC003F8513 /* OWConstraintDSL.swift in Sources */,
 				3DD72C66280EF07B00117946 /* OWEnvironment.swift in Sources */,
 				3D08E09D28770FFD00E6F1AC /* OWTableViewSectionedDataSource.swift in Sources */,
@@ -5191,6 +5341,7 @@
 				3DF74FBF29EEFA2300A8265A /* OWCustomizationsService.swift in Sources */,
 				1628A75528EB0D8E0019B5EC /* OWCommentCellViewModel.swift in Sources */,
 				16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */,
+				8D99C6862A0B6B6600DAB542 /* OWConversationEmptyStateViewModel.swift in Sources */,
 				3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */,
 				445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */,
 				3D08E0B1287722F700E6F1AC /* UI+OWSectionedViewType.swift in Sources */,
@@ -5226,6 +5377,7 @@
 				24993F8C28CF094200452AF8 /* OWAnalyticEvent.swift in Sources */,
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
+				8D99C67B2A07E5FF00DAB542 /* OWCommentingCTAStyle.swift in Sources */,
 				3DA264632951E3B200688FFF /* OWNetworkRetryPolicy.swift in Sources */,
 				3DDCB2A22995478700B8ED8E /* OWSortingCustomizations.swift in Sources */,
 				3D08E0A728771B9D00E6F1AC /* OWViewTransition.swift in Sources */,
@@ -5264,7 +5416,9 @@
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
 				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
+				8D99C6892A13516400DAB542 /* OWConversationContentType.swift in Sources */,
 				8DE52F4A29E430F000D3985C /* OWPresentationalModeCompact.swift in Sources */,
+				8D99C6822A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift in Sources */,
 				3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */,
 				3DD72C76280EF95200117946 /* OWRequestLogger.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
@@ -5431,6 +5585,7 @@
 				4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */,
 				3D31FB8C29AB645B002B88E0 /* OWLanguageStrategy.swift in Sources */,
 				24B516DD294B077F00EBD965 /* OWCommentLabelViewModel.swift in Sources */,
+				8D99C6772A07D94300DAB542 /* OWCommentingCTAView.swift in Sources */,
 				445418A423685154001D0ED0 /* SPCommentSortMode.swift in Sources */,
 				24B32BA028BCBA4A00FB701C /* OWPreConversationView.swift in Sources */,
 				3DDA9A792919374C00FE3B86 /* OWUIAuthentication.swift in Sources */,
@@ -5510,6 +5665,7 @@
 				3DB3B95D29F7D9A700C50192 /* OWTestingRxTableViewAnimationsView.swift in Sources */,
 				247C01812805A4D3006A3962 /* OWImageType.swift in Sources */,
 				3D31FB8A29AB62D8002B88E0 /* OWLocalizationManager.swift in Sources */,
+				8D99C6792A07D95600DAB542 /* OWCommentingCTAViewModel.swift in Sources */,
 				3D08E0AF287721A400E6F1AC /* OWDifferentiatorError.swift in Sources */,
 				3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */,
 				16BD5F87270C694F00066505 /* SPPermissionsProvider.swift in Sources */,
