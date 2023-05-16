@@ -41,7 +41,7 @@ class OWAdditionalInfoVC: UIViewController {
 
 fileprivate extension OWAdditionalInfoVC {
     func setupViews() {
-        self.navigationController?.title = additionalInfoViewViewModel.titleText
+        self.title = additionalInfoViewViewModel.titleText
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(additionalInfoView)
         additionalInfoView.OWSnp.makeConstraints { make in
