@@ -23,6 +23,8 @@ class MockArticleFlowsVC: UIViewController {
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
+        static let identifier = "mock_article_flows_vc_id"
+        static let viewIdentifier = "mock_article_flows_view_id"
     }
 
     fileprivate let viewModel: MockArticleFlowsViewModeling
@@ -128,6 +130,7 @@ class MockArticleFlowsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -137,6 +140,11 @@ class MockArticleFlowsVC: UIViewController {
 }
 
 fileprivate extension MockArticleFlowsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        articleView.accessibilityIdentifier = Metrics.viewIdentifier
+    }
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
 

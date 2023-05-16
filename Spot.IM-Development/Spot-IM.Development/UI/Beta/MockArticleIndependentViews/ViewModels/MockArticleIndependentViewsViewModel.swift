@@ -195,6 +195,15 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        // Clear logger
+        viewTypeUpdaters
+            .voidify()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.loggerViewModel.inputs.clear()
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupCustomizationsCallaback() {

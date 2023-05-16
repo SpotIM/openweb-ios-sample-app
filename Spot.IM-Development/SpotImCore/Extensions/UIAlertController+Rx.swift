@@ -9,25 +9,25 @@
 import UIKit
 import RxSwift
 
-enum UIAlertType {
+enum UIRxPresenterResponseType {
     case completion
-    case selected(action: UIRxAlertAction)
+    case selected(action: UIRxPresenterAction)
 }
 
 extension Reactive where Base: UIAlertController {
     static func show(onViewController viewController: UIViewController,
                      animated: Bool = true,
                      preferredStyle: UIAlertController.Style = .alert,
-                     title: String,
-                     message: String,
-                     actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
+                     title: String?,
+                     message: String?,
+                     actions: [UIRxPresenterAction]) -> Observable<UIRxPresenterResponseType> {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
-            let alertActions = actions.map { rxAlert in
-                UIAlertAction(title: rxAlert.title,
-                              style: rxAlert.style) { _ in
-                    observer.onNext(.selected(action: rxAlert))
+            let alertActions = actions.map { rxAction in
+                UIAlertAction(title: rxAction.title,
+                              style: rxAction.style) { _ in
+                    observer.onNext(.selected(action: rxAction))
                     observer.onCompleted()
                 }
             }
@@ -46,14 +46,14 @@ extension Reactive where Base: UIAlertController {
     }
 }
 
-struct UIRxAlertAction: Equatable {
+struct UIRxPresenterAction: Equatable {
     var uuid: String = UUID().uuidString
     let title: String
-    let style: UIAlertAction.Style
+    var style: UIAlertAction.Style = .default
 }
 
-extension UIRxAlertAction {
-    static func == (lhs: UIRxAlertAction, rhs: UIRxAlertAction) -> Bool {
+extension UIRxPresenterAction {
+    static func == (lhs: UIRxPresenterAction, rhs: UIRxPresenterAction) -> Bool {
         return lhs.uuid == rhs.uuid
     }
 }
