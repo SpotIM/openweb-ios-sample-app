@@ -28,7 +28,6 @@ class BetaNewAPIVC: UIViewController {
         static let txtFieldPostIdIdentifier = "post_id"
         static let btnUIFlowsIdentifier = "btn_ui_flows_id"
         static let btnUIViewsIdentifier = "btn_ui_views_id"
-        static let btnReportReasonIdentifier = "btn_report_reason_id"
         static let btnMiscellaneousIdentifier = "btn_miscellaneous_id"
         static let btnTestingPlaygroundIdentifier = "btn_testing_playground_id"
         static let verticalMargin: CGFloat = 40
@@ -132,10 +131,6 @@ class BetaNewAPIVC: UIViewController {
         return txtField
     }()
 
-    fileprivate lazy var btnReportReason: UIButton = {
-        return NSLocalizedString("ReportReason", comment: "").blueRoundedButton
-    }()
-
     fileprivate lazy var btnUIFlows: UIButton = {
         return NSLocalizedString("UIFlows", comment: "").blueRoundedButton
     }()
@@ -194,7 +189,6 @@ fileprivate extension BetaNewAPIVC {
         btnSelectPreset.accessibilityIdentifier = Metrics.btnSelectPresetIdentifier
         btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
-        btnReportReason.accessibilityIdentifier = Metrics.btnReportReasonIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
         btnTestingPlayground.accessibilityIdentifier = Metrics.btnTestingPlaygroundIdentifier
     }
@@ -236,21 +230,12 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.textFieldHeight)
         }
 
-        // Adding ReportReason button
-        scrollView.addSubview(btnReportReason)
-        btnReportReason.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-        }
-
         // Adding UIFlows button
         scrollView.addSubview(btnUIFlows)
         btnUIFlows.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnReportReason.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
@@ -330,10 +315,6 @@ fileprivate extension BetaNewAPIVC {
             .bind(to: viewModel.inputs.uiFlowsTapped)
             .disposed(by: disposeBag)
 
-        btnReportReason.rx.tap
-            .bind(to: viewModel.inputs.reportReasonTapped)
-            .disposed(by: disposeBag)
-
         viewModel.outputs.openUIFlows
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
@@ -396,29 +377,6 @@ fileprivate extension BetaNewAPIVC {
                 let settingsVM = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
                 let settingsVC = SettingsVC(viewModel: settingsVM)
                 self.navigationController?.pushViewController(settingsVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.openReportReason
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let manager = OpenWeb.manager
-                let flows = manager.ui.flows
-
-                flows.reportReason(commentId: "sp_ANQXRpqH_urn$3Auri$3Abase64$3Ac28b405d-5b04-5dc9-85c3-af3941dc713d_c_2PTPfsw4jUsBIBbbhDoCV7qpyS2_r_2PTS1KzPePcK8j6eQhyd9OfYFx4",
-                                   presentationalMode: .present(viewController: self, style: .fullScreen),
-                                   additionalSettings: nil,
-                                   callbacks: nil,
-                                   completion: { result in
-                    switch result {
-                    case .success(_):
-                        // All good
-                        break
-                    case .failure(let error):
-                        let message = error.description
-                        DLog("Calling flows.commentCreation error: \(message)")
-                    }
-                })
             })
             .disposed(by: disposeBag)
 
