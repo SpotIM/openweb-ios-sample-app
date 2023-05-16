@@ -81,6 +81,7 @@ public enum OWError: Error, Codable {
 enum OWError: Error, Codable {
     case reportReasonSubmitError(title: String, description: String)
     case missingSpotId
+    case missingPostId
     case castingError(description: String)
     case preConversationFlow
     case conversationFlow
@@ -104,6 +105,8 @@ enum OWError: Error, Codable {
             return "Error - submitting report reason failed"
         case .missingSpotId:
             return "Error - spotId must be set first under `OpenWeb.manager`"
+        case .missingPostId:
+            return "Error - postId must be set first via any of the APIs calls"
         case .castingError(let des):
             return des
         case .preConversationFlow:
