@@ -443,7 +443,10 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         let loadMoreRepliesReadObservable = _loadMoreReplies
-            .flatMap { [weak self] commentPresentationData -> Observable<(OWCommentPresentationData, OWConversationReadRM?)> in
+            .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
+                return (commentPresentationData, sortOption)
+            }
+            .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, OWConversationReadRM?)> in
                 guard let self = self else { return .empty() }
 
                 let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
@@ -459,7 +462,7 @@ fileprivate extension OWConversationViewViewModel {
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
-                    .conversationRead(mode: .best, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
+                    .conversationRead(mode: sortOption, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
                     .map { (commentPresentationData, $0) }
             }
