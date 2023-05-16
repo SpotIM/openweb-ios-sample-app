@@ -17,7 +17,7 @@ class UILoggerView: UIView {
         static let loggerTextViewIdentifier = "logger_text_view_id"
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 15
-        static let verticalPaddingForAutoScrollToBottom: CGFloat = 60
+        static let verticalPaddingForAutoScrollToBottom: CGFloat = -60
         static let delayScrollToBottom = 100 // Time in ms
     }
 
@@ -99,7 +99,7 @@ fileprivate extension UILoggerView {
     func scrollTextViewToBottom(textView: UITextView) {
         if textView.text.count > 0,
            !textView.isDragging,
-           textView.contentOffset.y + textView.frame.size.height >= textView.contentSize.height - Metrics.verticalPaddingForAutoScrollToBottom {
+           textView.contentOffset.y + textView.frame.size.height <= textView.contentSize.height - Metrics.verticalPaddingForAutoScrollToBottom {
             let location = textView.text.count - 1
             let bottom = NSRange(location: location, length: 1)
             textView.scrollRangeToVisible(bottom)

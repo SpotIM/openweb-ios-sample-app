@@ -22,6 +22,8 @@ class OWPreConversationCompactContentView: UIView {
         static let skelatonLinesTopPaddig: CGFloat = 5
         static let skelatonSpaceBetweenLines: CGFloat = 8
         static let skelatonLinesLeadingPaddig: CGFloat = 12
+        static let identifier = "pre_conversation_compact_content_view_id"
+        static let textLabelIdentifier = "pre_conversation_compact_text_label_id"
     }
 
     fileprivate lazy var avatarImageView: OWAvatarView = {
@@ -111,6 +113,7 @@ class OWPreConversationCompactContentView: UIView {
 
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -119,6 +122,11 @@ class OWPreConversationCompactContentView: UIView {
 }
 
 fileprivate extension OWPreConversationCompactContentView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        textLabel.accessibilityIdentifier = Metrics.textLabelIdentifier
+    }
+
     func setupViews() {
         self.enforceSemanticAttribute()
 
