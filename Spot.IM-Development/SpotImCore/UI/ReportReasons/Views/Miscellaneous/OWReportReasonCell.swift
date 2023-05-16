@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import Foundation
 
-#if NEW_API
-
 class OWReportReasonCell: UITableViewCell {
     fileprivate var disposeBag: DisposeBag!
 
@@ -143,5 +141,3 @@ fileprivate extension OWReportReasonCell {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

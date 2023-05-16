@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if NEW_API
-
 struct OWReportReason: Codable {
     let reportType: OWReportReasonType
     let requiredAdditionalInfo: Bool
@@ -19,5 +17,3 @@ struct OWNetworkReportReason: Codable {
     let reportType: OWNetworkReportReasonType
     let requiredAdditionalInfo: Bool
 }
-
-#endif

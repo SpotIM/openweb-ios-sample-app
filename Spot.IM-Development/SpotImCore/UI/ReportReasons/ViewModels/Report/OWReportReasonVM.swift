@@ -9,8 +9,6 @@
 import Foundation
 import RxSwift
 
-#if NEW_API
-
 protocol OWReportReasonViewModelingInputs {
     var viewDidLoad: PublishSubject<Void> { get }
 }
@@ -58,5 +56,3 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
         self.presentationalMode = presentMode
     }
 }
-
-#endif

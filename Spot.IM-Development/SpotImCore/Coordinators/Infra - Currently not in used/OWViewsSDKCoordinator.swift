@@ -57,8 +57,6 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             }
     }
 
-#if NEW_API
-
     func reportReasonView(commentId: OWCommentId,
                           callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
@@ -75,8 +73,6 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                     return reportReasonCoordinator.showableComponent()
                 }
     }
-
-#endif
 
 #if BETA
     func testingPlaygroundView(testingPlaygroundData: OWTestingPlaygroundRequiredData,

@@ -11,8 +11,6 @@ import RxCocoa
 import RxSwift
 import Foundation
 
-#if NEW_API
-
 class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "report_reason_view_id"
@@ -253,5 +251,3 @@ extension OWReportReasonView: UITableViewDelegate {
         return tableViewHeaderView
     }
 }
-
-#endif

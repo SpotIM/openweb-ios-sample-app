@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-#if NEW_API
-
 class OWReportReasonVC: UIViewController {
     fileprivate struct Metrics {
         static let navigationTitleFontSize: CGFloat = 18.0
@@ -123,5 +121,3 @@ fileprivate extension OWReportReasonVC {
             .disposed(by: disposeBag)
     }
 }
-
-#endif
