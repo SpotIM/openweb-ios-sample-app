@@ -90,7 +90,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
         case hideArticleHeader = "hideArticleHeader"
-        case showCommentCreationNewDesign = "showCommentCreationNewDesign"
+        case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case modalStyleIndex = "modalStyleIndex"
@@ -102,6 +102,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case commentCreationCustomStyleIndex = "commentCreationCustomStyleModeSelectedIndex"
         case languageStrategy = "languageStrategy"
         case localeStrategy = "localeStrategy"
+        case openCommentId = "openCommentId"
     }
 }
 
@@ -139,8 +140,6 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current spot id to be tested"
         case .hideArticleHeader:
             return "Key which stores if we should show/hide article header"
-        case .showCommentCreationNewDesign:
-            return "Key which stores if to show comment creation new design or old design"
         case .readOnlyModeIndex:
             return "Key which stores read only mode (default, enabled, disabled)"
         case .themeModeIndex:
@@ -163,6 +162,10 @@ fileprivate extension UserDefaultsProvider.UDKey {
                     return "Key which stores general setting's language strategy"
         case .localeStrategy:
                     return "Key which stores general setting's locale strategy"
+        case .openCommentId:
+                    return "Key which stores comment thread setting's comment id to open"
+        case .elementsCustomizationStyleIndex:
+                    return "Key which stores general setting's elements customization style index"
         }
     }
 }

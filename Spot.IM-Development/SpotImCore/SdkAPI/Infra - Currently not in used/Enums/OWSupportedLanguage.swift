@@ -14,7 +14,7 @@ public enum OWSupportedLanguage: String, Codable, CaseIterable {
     case english = "en"
     case arabic = "ar"
     case spanish = "es"
-    case portoguese = "pt"
+    case portuguese = "pt"
     case french = "fr"
 }
 #else
@@ -23,7 +23,7 @@ enum OWSupportedLanguage: String, Codable, CaseIterable {
     case english = "en"
     case arabic = "ar"
     case spanish = "es"
-    case portoguese = "pt"
+    case portuguese = "pt"
     case french = "fr"
 }
 #endif
