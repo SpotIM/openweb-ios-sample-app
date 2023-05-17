@@ -20,6 +20,10 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var urlClickedOutput: Observable<URL> { get }
+    var openProfile: Observable<URL> { get }
+    var openPublisherProfile: Observable<String> { get }
+    var highlightCellIndex: Observable<Int> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -76,6 +80,30 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
+    fileprivate var _highlightCellIndex = PublishSubject<Int>()
+    var highlightCellIndex: Observable<Int> {
+        return _highlightCellIndex
+            .asObserver()
+    }
+
+    fileprivate var _openProfile = PublishSubject<URL>()
+    var openProfile: Observable<URL> {
+        return _openProfile
+            .asObservable()
+    }
+
+    fileprivate var _openPublisherProfile = PublishSubject<String>()
+    var openPublisherProfile: Observable<String> {
+        return _openPublisherProfile
+            .asObservable()
+    }
+
+    fileprivate var _urlClick = PublishSubject<URL>()
+    var urlClickedOutput: Observable<URL> {
+        return _urlClick
+            .asObservable()
+    }
+
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
         return cellsViewModels
             .map { items in
@@ -89,7 +117,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var viewInitialized = PublishSubject<Void>()
     var pullToRefresh = PublishSubject<Void>()
-    fileprivate var _loadMoreComments = PublishSubject<Int>()
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
 
     var offset = 0
@@ -263,20 +290,15 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-        // Observable for the sort option
-        let sortOptionObservable = self.servicesProvider
-            .sortDictateService()
-            .sortOption(perPostId: self.postId)
-
         // Observable for the conversation network API
-        let initialConversationThreadReadObservable = Observable.combineLatest(_commentThreadData.unwrap(), sortOptionObservable)
-            .flatMap { [weak self] (_, sortOption) -> Observable<OWConversationReadRM> in
+        let initialConversationThreadReadObservable = _commentThreadData
+            .unwrap()
+            .flatMap { [weak self] data -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
-    //            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
+                .conversationRead(mode: .newest, page: OWPaginationPage.first, childCount: 5, messageId: data.commentId)
                 .response
         }
 
@@ -477,6 +499,68 @@ fileprivate extension OWCommentThreadViewViewModel {
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comment avatar click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openProfile
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+            .subscribe(onNext: { [weak self] url in
+                self?._openProfile.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<String> in
+                let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openPublisherProfile
+                }
+                return Observable.merge(commentOpenPublisherProfileOutput)
+            }
+            .subscribe(onNext: { [weak self] id in
+                self?._openPublisherProfile.onNext(id)
+            })
+            .disposed(by: disposeBag)
+
+        // Subscribe to URL click in comment text
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.urlClickedOutput
+                }
+                return Observable.merge(urlClickObservable)
+            }
+            .subscribe(onNext: { [weak self] url in
+                self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        cellsViewModels
+            .map { [weak self] cellsViewModels -> Int? in
+                guard let self = self else { return nil }
+                let commentIndex: Int? = cellsViewModels.firstIndex { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        return commentCellViewModel.outputs.id == self.commentThreadData.commentId
+                    } else {
+                        return false
+                    }
+                }
+                return commentIndex
+            }
+            .unwrap()
+            .delay(.seconds(1), scheduler: MainScheduler.asyncInstance)
+            .take(1)
+            .subscribe(onNext: { [weak self] index in
+                self?._highlightCellIndex.onNext(index)
             })
             .disposed(by: disposeBag)
     }
