@@ -50,6 +50,7 @@ internal final class SPMainConversationDataSource {
 
     private var repliesProviders = [String: SPConversationsDataProvider]()
     private var cellData = [[CommentViewModel]]()
+    private var existingCommentIds = Set<String>()
     private var hiddenData = [String: [CommentViewModel]]()
     private var users = [String: SPUser]()
     private var extractData: SPConversationExtraDataRM?
@@ -170,6 +171,8 @@ internal final class SPMainConversationDataSource {
 
                 self.messageCount = response?.conversation?.messagesCount ?? 0
                 self.messageCounterUpdated?(self.messageCount)
+
+                self.existingCommentIds.removeAll()
 
                 self.cellData = self.processed(response?.conversation?.comments)
                 if self.shouldShowBanner {
@@ -296,12 +299,6 @@ internal final class SPMainConversationDataSource {
                     }
                 }
         }
-
-    private func resetAllComments() {
-        cellData.removeAll()
-        hiddenData.removeAll()
-        repliesProviders.removeAll()
-    }
 
     internal func isTimeToLoadNextPage(forRowAt indexPath: IndexPath) -> Bool {
         return absoluteIndex(ofRowAt: indexPath) >= totalCellCount - 5
@@ -617,6 +614,11 @@ internal final class SPMainConversationDataSource {
                 return
             }
 
+            if checkIfCommentExist(commentId: viewModel.commentId) {
+                // Remove duplicate comments
+                return
+            }
+
             section.append(viewModel)
             allCommentsAndReplies.append(viewModel)
 
@@ -629,6 +631,12 @@ internal final class SPMainConversationDataSource {
 
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
+
+                if checkIfCommentExist(commentId: reply.commentId) {
+                    // Remove duplicate comments
+                    return
+                }
+
                 allCommentsAndReplies.append(reply)
                 if showReplies {
                     section.insert(reply, at: 1)
@@ -660,6 +668,14 @@ internal final class SPMainConversationDataSource {
         }
 
         return visibleComments
+    }
+
+    private func checkIfCommentExist(commentId: String?) -> Bool {
+        guard let commentId = commentId,
+                !existingCommentIds.contains(commentId) else {
+            return true }
+        existingCommentIds.insert(commentId)
+        return false
     }
 
     private func comment(with id: String?) -> CommentViewModel? {
