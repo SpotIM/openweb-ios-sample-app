@@ -25,7 +25,7 @@ extension OWSupportedLanguage {
             return "ar-001"
         case .spanish:
             return "es"
-        case .portoguese:
+        case .portuguese:
             return "pt-PT"
         case .french:
             return "fr"

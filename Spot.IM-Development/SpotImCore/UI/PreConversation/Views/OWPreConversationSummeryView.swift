@@ -15,7 +15,9 @@ class OWPreConversationSummeryView: UIView {
         static let counterLeading: CGFloat = 8
         static let nextArrowLeading: CGFloat = 10
         static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
-        static let identifier = "pre_conversation_header_view_id"
+        static let identifier = "pre_conversation_summery_view_id"
+        static let titleLabelIdentifier = "pre_conversation_title_label_id"
+        static let counterLabelIdentifier = "pre_conversation_counter_label_id"
     }
 
     private lazy var titleLabel: UILabel = {
@@ -55,9 +57,9 @@ class OWPreConversationSummeryView: UIView {
     init(viewModel: OWPreConversationSummaryViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -71,6 +73,12 @@ class OWPreConversationSummeryView: UIView {
 }
 
 fileprivate extension OWPreConversationSummeryView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+        counterLabel.accessibilityIdentifier = Metrics.counterLabelIdentifier
+    }
+
     func setupUI() {
         self.enforceSemanticAttribute()
 
