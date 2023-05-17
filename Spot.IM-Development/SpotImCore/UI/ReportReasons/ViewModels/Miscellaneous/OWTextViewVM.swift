@@ -53,19 +53,20 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
     var textViewCharectersCount = BehaviorSubject<Int>(value: 0)
     var textViewTextCount: Observable<Int> {
-        return textViewCharectersCount.asObservable()
+        return textViewCharectersCount
+                .asObservable()
     }
 
     var placeholderTextChange: BehaviorSubject<String>
     var placeholderText: Observable<String> {
         return placeholderTextChange
-                .asObserver()
+                .asObservable()
     }
 
     var textViewTextChange: BehaviorSubject<String>
     var textViewText: Observable<String> {
         return textViewTextChange
-                .asObserver()
+                .asObservable()
     }
 
     var hidePlaceholder: Observable<Bool> {
