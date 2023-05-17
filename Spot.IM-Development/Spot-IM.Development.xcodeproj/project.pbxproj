@@ -743,6 +743,8 @@
 		9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */; };
 		9E7D5B0C2A0A775800F1707C /* CommentThreadSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B0B2A0A775800F1707C /* CommentThreadSettingsView.swift */; };
 		9E7D5B0E2A0A777900F1707C /* CommentThreadSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B0D2A0A777900F1707C /* CommentThreadSettingsVM.swift */; };
+		9E7D5B102A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */; };
+		9E7D5B122A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7D5B112A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift */; };
 		9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283529B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift */; };
 		9E7F283829B8AACE007AD2D6 /* SettingsViewsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */; };
 		9E7F283C29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */; };
@@ -1583,6 +1585,8 @@
 		9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleIndependentViewsViewModel.swift; sourceTree = "<group>"; };
 		9E7D5B0B2A0A775800F1707C /* CommentThreadSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentThreadSettingsView.swift; sourceTree = "<group>"; };
 		9E7D5B0D2A0A777900F1707C /* CommentThreadSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentThreadSettingsVM.swift; sourceTree = "<group>"; };
+		9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsElementsCustomizationStyle+Extension.swift"; sourceTree = "<group>"; };
+		9E7D5B112A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsElementsCustomizationStyle.swift; sourceTree = "<group>"; };
 		9E7F283529B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGroupVMProtocol.swift; sourceTree = "<group>"; };
 		9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewsFactory.swift; sourceTree = "<group>"; };
 		9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLanguageStrategy+Extensions.swift"; sourceTree = "<group>"; };
@@ -1701,6 +1705,7 @@
 				3D3E3AC528B4F712003B4F05 /* Shadowable.swift */,
 				3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */,
 				3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */,
+				9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -4615,6 +4620,7 @@
 			children = (
 				9EA0F83829AB7AA8008FD7A6 /* SettingsGroupType.swift */,
 				9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */,
+				9E7D5B112A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5709,6 +5715,7 @@
 				9EA0F83F29ACBA9C008FD7A6 /* PreConversationSettingsView.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */,
+				9E7D5B102A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift in Sources */,
 				3DCAE3F629D31042005B9189 /* CommonCreatorService.swift in Sources */,
 				9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
@@ -5747,6 +5754,7 @@
 				3D3E3ABA28B3A28A003B4F05 /* ConversationCounterVC.swift in Sources */,
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleFlowsViewModel.swift in Sources */,
+				9E7D5B122A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift in Sources */,
 				9E53758E2978476900C85983 /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
