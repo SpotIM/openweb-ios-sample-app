@@ -36,6 +36,8 @@ protocol OWReportReasonViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var presentError: Observable<UIAlertController> { get }
     var callbackErrorSubmitting: Observable<OWError> { get }
+    var submitInProgress: Observable<Bool> { get }
+    var submitReportReasonTapped: Observable<Void> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -122,6 +124,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate let presentationalMode: OWPresentationalModeCompact
     fileprivate let commentId: OWCommentId
 
+    var setSubmitInProgress = PublishSubject<Bool>()
+    var submitInProgress: Observable<Bool> {
+        return setSubmitInProgress
+            .asObservable()
+    }
+
     var learnMoreTap = PublishSubject<Void>()
     var learnMoreTapped: Observable<URL?> {
         return learnMoreTap
@@ -142,7 +150,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var submitReportReasonTap = PublishSubject<Void>()
     var submitReportReasonTapped: Observable<Void> {
         return submitReportReasonTap
-                .asObservable()
+            .asObservable()
     }
 
     var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
@@ -167,31 +175,34 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return viewableMode == .independent
     }
 
-    lazy var reportReasons: Observable<[OWReportReason]> =
-        self.servicesProvider.spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId)
-            .map { $0.shared?.reportReasonsOptions?.reasonsList }
-            .unwrap()
-            .asObservable()
+    lazy var reportReasonOptions: Observable<[OWReportReason]> =
+    self.servicesProvider.spotConfigurationService()
+        .config(spotId: OWManager.manager.spotId)
+        .map { $0.shared?.reportReasonsOptions?.reasonsList }
+        .unwrap()
+        .asObservable()
+        .debug("*** Refael reportReasonOptions")
+        .share(replay: 1)
 
     lazy var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> =
-        reportReasons
-            .map { reasons in
-                var viewModels: [OWReportReasonCellViewModeling] = []
-                for reason in reasons {
-                    viewModels.append(OWReportReasonCellViewModel(reason: reason))
-                }
-                return viewModels
+    reportReasonOptions
+        .map { reasons in
+            var viewModels: [OWReportReasonCellViewModeling] = []
+            for reason in reasons {
+                viewModels.append(OWReportReasonCellViewModel(reason: reason))
             }
-            .asObservable()
+            return viewModels
+        }
+        .asObservable()
 
-    lazy var selectedReason: Observable<OWReportReason?> =
-        Observable.combineLatest(reportReasons, reasonIndexSelect)
+    lazy var selectedReason: Observable<OWReportReason?> = {
+        Observable.combineLatest(reportReasonOptions, reasonIndexSelect)
             .map { (reasons, selectedIndex) in
                 guard let index = selectedIndex else { return nil }
                 return reasons[index]
             }
             .asObservable()
+    }()
 
     fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
@@ -210,24 +221,42 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }()
 
     // Observable for the RepertReason network API
-    lazy var submittedReportReasonObservable = submitReportReasonTapped
-        .withLatestFrom(selectedReason)
-        .withLatestFrom(textViewVM.outputs.textViewText) { [weak self] selectedReason, userDescription -> Observable<EmptyDecodable> in
-            guard let self = self,
-                  let selectedReason = selectedReason
-            else { return .empty() }
-            return self.servicesProvider
-                .netwokAPI()
-                .reportReason
-                .report(commentId: self.commentId,
-                        reasonMain: selectedReason.reportType.rawValue,
-                        reasonSub: "",
-                        userDescription: userDescription)
-                .response
-        }
-        .flatMap { observable -> Observable<EmptyDecodable> in
-            return observable
-        }
+    lazy var submittedReportReasonObservable = {
+        return submitReportReasonTapped
+            .withLatestFrom(selectedReason.take(1))
+            .withLatestFrom(textViewVM.outputs.textViewText.take(1)) { [weak self] selectedReason, userDescription ->
+                Observable<EmptyDecodable> in
+                guard let self = self,
+                      let selectedReason = selectedReason
+                else { return .empty() }
+                self.setSubmitInProgress.onNext(true)
+                return self.servicesProvider
+                    .netwokAPI()
+                    .reportReason
+                    .report(commentId: self.commentId,
+                            reasonMain: selectedReason.reportType.rawValue,
+                            reasonSub: "",
+                            userDescription: userDescription)
+                    .response
+            }
+            .materialize() // Required to keep the final subscriber even if errors arrived from the network
+            .map { event -> Observable<EmptyDecodable>? in
+                switch event {
+                case .next(let submit):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return submit
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .flatMap { observable -> Observable<EmptyDecodable> in
+                return observable
+            }
+    }()
 }
 
 fileprivate extension OWReportReasonViewViewModel {
@@ -245,8 +274,10 @@ fileprivate extension OWReportReasonViewViewModel {
 
         submittedReportReasonObservable
             .subscribe { [weak self] response in
+                guard let self = self else { return }
                 if response.error != nil {
-                    self?.errorSubmitting.onNext()
+                    self.setSubmitInProgress.onNext(false)
+                    self.errorSubmitting.onNext()
                 }
             }
             .disposed(by: disposeBag)

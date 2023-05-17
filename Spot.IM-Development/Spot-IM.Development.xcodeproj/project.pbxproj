@@ -728,6 +728,7 @@
 		8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F5229EBEBB800D3985C /* OWSpacerView.swift */; };
 		9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */; };
 		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
+		9E2857B22A14DBBD0066D726 /* OWLoaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */; };
 		9E36BFE929ED33CC00478D06 /* OWReportReasonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFE829ED33CC00478D06 /* OWReportReasonVC.swift */; };
 		9E36BFEB29ED353A00478D06 /* OWReportReasonVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */; };
 		9E36BFED29ED7E5F00478D06 /* OWRoundCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */; };
@@ -1600,6 +1601,7 @@
 		9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
+		9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWLoaderButton.swift; sourceTree = "<group>"; };
 		9E36BFE829ED33CC00478D06 /* OWReportReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonVC.swift; sourceTree = "<group>"; };
 		9E36BFEA29ED353A00478D06 /* OWReportReasonVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonVM.swift; sourceTree = "<group>"; };
 		9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRoundCheckBox.swift; sourceTree = "<group>"; };
@@ -2278,6 +2280,7 @@
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
+				9E2857B02A14DBA90066D726 /* Buttons */,
 				24D7C25329E53019001F148B /* AvatarView */,
 				24C9BD5629DD53FA00D74034 /* CommentCreationEntry */,
 				3DDA9A61290808E600FE3B86 /* SkeletonShimmering */,
@@ -4563,6 +4566,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		9E2857B02A14DBA90066D726 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
 		9E3B8B6E29FFBE4C006BB207 /* Report */ = {
 			isa = PBXGroup;
 			children = (
@@ -5521,6 +5532,7 @@
 				9ED2E58529EC011000B39A00 /* OWReportReasonCell.swift in Sources */,
 				3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */,
 				445418AC23685154001D0ED0 /* UIDevice+Extensions.swift in Sources */,
+				9E2857B22A14DBBD0066D726 /* OWLoaderButton.swift in Sources */,
 				3D263CF929C106040013C532 /* OWDefaultBlockerAction.swift in Sources */,
 				6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */,
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
