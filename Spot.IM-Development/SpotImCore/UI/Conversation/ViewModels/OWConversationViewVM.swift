@@ -404,7 +404,6 @@ fileprivate extension OWConversationViewViewModel {
         let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
             .flatMap { _ -> Observable<OWConversationReadRM> in
                 return conversationReadObservable
-                    .take(1)
             }
             .share()
 
@@ -710,6 +709,44 @@ fileprivate extension OWConversationViewViewModel {
                         case .selected(let action):
                             // TODO: handle selection
                             break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        // Open sort option menu
+        conversationSummaryViewModel.outputs.conversationSortVM.outputs.openSort
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                self.servicesProvider.presenterService()
+                    .showMenu(
+                        title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
+                        actions: [
+                            .init(title: sortDictateService.sortTextTitle(perOption: .best)),
+                            .init(title: sortDictateService.sortTextTitle(perOption: .newest)),
+                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest)),
+                            .init(title: "cancel", style: .cancel)
+                        ],
+                        viewableMode: self.viewableMode
+                    )
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            switch action.title {
+                            case sortDictateService.sortTextTitle(perOption: .best):
+                                sortDictateService.update(sortOption: .best, perPostId: self.postId)
+                            case sortDictateService.sortTextTitle(perOption: .newest):
+                                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+                            case sortDictateService.sortTextTitle(perOption: .oldest):
+                                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+                            default:
+                                break
+                            }
                         }
                     })
                     .disposed(by: self.disposeBag)
