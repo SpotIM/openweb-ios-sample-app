@@ -683,5 +683,37 @@ fileprivate extension OWConversationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        // Open menu for comment and handle actions
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(OWComment, [UIRxPresenterAction])> in
+                let openMenuClickObservable: [Observable<(OWComment, [UIRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [UIRxPresenterAction])> in
+                    let commentVm = commentCellVm.outputs.commentVM
+                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
+
+                    return commentHeaderVm.outputs.openMenu
+                        .map { (commentVm.outputs.comment, $0) }
+                }
+                return Observable.merge(openMenuClickObservable)
+            }
+            // swiftlint:disable unused_closure_parameter
+            .subscribe(onNext: { [weak self] comment, actions in
+            // swiftlint:enable unused_closure_parameter
+                guard let self = self else { return }
+                _ = self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, viewableMode: self.viewableMode)
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            // TODO: handle selection
+                            break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }
