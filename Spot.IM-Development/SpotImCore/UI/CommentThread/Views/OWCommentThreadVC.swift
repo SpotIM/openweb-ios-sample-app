@@ -49,5 +49,13 @@ fileprivate extension OWCommentThreadVC {
         commentThreadView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+
+        self.setupNavControllerUI()
+    }
+
+    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
+        let navController = self.navigationController
+
+        title = LocalizationManager.localizedString(key: "Replies")
     }
 }
