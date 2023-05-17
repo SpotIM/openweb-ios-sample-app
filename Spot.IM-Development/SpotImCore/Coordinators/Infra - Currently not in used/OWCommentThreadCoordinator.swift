@@ -90,7 +90,23 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 return Observable.never()
             }
 
-        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable, coordinateCommentCreationObservable)
+        // Coordinate to safari tab
+        let coordinateToSafariObservables = Observable.merge(
+            commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
+            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile
+        )
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   url: url,
+                                                                   actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
+        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable, coordinateCommentCreationObservable, coordinateToSafariObservables)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -117,5 +133,14 @@ fileprivate extension OWCommentThreadCoordinator {
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let openPublisherProfile = viewModel.outputs.openPublisherProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(openPublisherProfile)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 }

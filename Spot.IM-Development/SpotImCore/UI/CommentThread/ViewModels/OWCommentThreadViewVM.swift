@@ -20,6 +20,9 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var urlClickedOutput: Observable<URL> { get }
+    var openProfile: Observable<URL> { get }
+    var openPublisherProfile: Observable<String> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -73,6 +76,24 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
+            .asObservable()
+    }
+
+    fileprivate var _openProfile = PublishSubject<URL>()
+    var openProfile: Observable<URL> {
+        return _openProfile
+            .asObservable()
+    }
+
+    fileprivate var _openPublisherProfile = PublishSubject<String>()
+    var openPublisherProfile: Observable<String> {
+        return _openPublisherProfile
+            .asObservable()
+    }
+
+    fileprivate var _urlClick = PublishSubject<URL>()
+    var urlClickedOutput: Observable<URL> {
+        return _urlClick
             .asObservable()
     }
 
@@ -471,6 +492,48 @@ fileprivate extension OWCommentThreadViewViewModel {
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comment avatar click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openProfile
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+            .subscribe(onNext: { [weak self] url in
+                self?._openProfile.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<String> in
+                let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    return avatarVM.outputs.openPublisherProfile
+                }
+                return Observable.merge(commentOpenPublisherProfileOutput)
+            }
+            .subscribe(onNext: { [weak self] id in
+                self?._openPublisherProfile.onNext(id)
+            })
+            .disposed(by: disposeBag)
+
+        // Subscribe to URL click in comment text
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.urlClickedOutput
+                }
+                return Observable.merge(urlClickObservable)
+            }
+            .subscribe(onNext: { [weak self] url in
+                self?._urlClick.onNext(url)
             })
             .disposed(by: disposeBag)
     }
