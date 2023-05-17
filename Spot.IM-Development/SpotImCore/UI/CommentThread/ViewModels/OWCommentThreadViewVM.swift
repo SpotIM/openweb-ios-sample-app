@@ -23,6 +23,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var highlightCellIndex: Observable<Int> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -77,6 +78,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
+    }
+
+    fileprivate var _highlightCellIndex = PublishSubject<Int>()
+    var highlightCellIndex: Observable<Int> {
+        return _highlightCellIndex
+            .asObserver()
     }
 
     fileprivate var _openProfile = PublishSubject<URL>()
@@ -534,6 +541,26 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        cellsViewModels
+            .map { [weak self] cellsViewModels -> Int? in
+                guard let self = self else { return nil }
+                let commentIndex: Int? = cellsViewModels.firstIndex { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        return commentCellViewModel.outputs.id == self.commentThreadData.commentId
+                    } else {
+                        return false
+                    }
+                }
+                return commentIndex
+            }
+            .unwrap()
+            .delay(.seconds(1), scheduler: MainScheduler.asyncInstance)
+            .take(1)
+            .subscribe(onNext: { [weak self] index in
+                self?._highlightCellIndex.onNext(index)
             })
             .disposed(by: disposeBag)
     }
