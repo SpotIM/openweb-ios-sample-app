@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
+public struct OWCommentCreationSettingsBuilder {
     public var conversationSettings: OWConversationSettingsProtocol
     public var style: OWCommentCreationStyle
 
@@ -18,18 +18,22 @@ public struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtoco
         self.style = style
     }
 
-    @discardableResult public mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
+    @discardableResult public mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsBuilder {
         self.conversationSettings = settings
         return self
     }
 
-    @discardableResult public mutating func style(_ style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
+    @discardableResult public mutating func style(_ style: OWCommentCreationStyle) -> OWCommentCreationSettingsBuilder {
         self.style = style
         return self
     }
+
+    public func build() -> OWCommentCreationSettingsProtocol {
+        return OWCommentCreationSettings(conversationSettings: conversationSettings, style: style)
+    }
 }
 #else
-struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
+struct OWCommentCreationSettingsBuilder {
     var conversationSettings: OWConversationSettingsProtocol
     var style: OWCommentCreationStyle
 
@@ -38,14 +42,18 @@ struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
         self.style = style
     }
 
-    @discardableResult mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
+    @discardableResult mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsBuilder {
         self.conversationSettings = settings
         return self
     }
 
-    @discardableResult mutating func style(_ style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
+    @discardableResult mutating func style(_ style: OWCommentCreationStyle) -> OWCommentCreationSettingsBuilder {
         self.style = style
         return self
+    }
+
+    func build() -> OWCommentCreationSettingsProtocol {
+        return OWCommentCreationSettings(conversationSettings: conversationSettings, style: style)
     }
 }
 #endif

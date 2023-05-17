@@ -11,6 +11,7 @@ import RxSwift
 
 protocol UILoggerViewModelingInputs {
     func log(text: String)
+    func clear()
 }
 
 protocol UILoggerViewModelingOutputs {
@@ -50,5 +51,9 @@ class UILoggerViewModel: UILoggerViewModeling, UILoggerViewModelingInputs, UILog
                 guard let self = self else { return }
                 self._loggerText.onNext(lastText + "\n" + text)
             }
+    }
+
+    func clear() {
+        _loggerText.onNext("")
     }
 }

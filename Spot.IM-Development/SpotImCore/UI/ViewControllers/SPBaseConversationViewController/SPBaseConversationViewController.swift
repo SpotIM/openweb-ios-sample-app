@@ -11,6 +11,10 @@ import RxSwift
 
 internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
 
+    fileprivate struct Metrics {
+        static let tableViewBottomPadding: CGFloat = 78
+    }
+
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
 
@@ -459,11 +463,14 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
         typingViewCenterConstraint?.update(offset: currentCenterConstant > 0 ? view.bounds.width : -view.bounds.width)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
-        }, completion: { _ in
+        }, completion: { [ weak self] _ in
+            guard let self = self else { return }
             self.typingIndicationView?.removeFromSuperview()
             self.typingIndicationView = nil
             self.typingViewCenterCurrentOffset = 0
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         })
+
     }
 
     private func returnTypingViewToTheCenter() {
@@ -481,9 +488,11 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
                 self.typingIndicationView?.alpha = 0
                 self.view.layoutIfNeeded()
             },
-            completion: { _ in
+            completion: { [weak self] _ in
+                guard let self = self else { return }
                 self.typingIndicationView?.removeFromSuperview()
                 self.typingIndicationView = nil
+                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             }
         )
     }
@@ -511,6 +520,10 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             animations: {
                 self.typingIndicationView?.alpha = 1
                 self.view.layoutIfNeeded()
+            },
+            completion: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Metrics.tableViewBottomPadding, right: 0)
             }
         )
     }
@@ -785,7 +798,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             showActionSheet(actions: actions, sender: sender)
         } else {
             servicesProvider.logger().log(level: .verbose, "Showing the user a message because there are no available options to interact with a comment after pressing the 3 dots")
-            let actions = [UIRxAlertAction(title: LocalizationManager.localizedString(key: "OK"), style: .default)]
+            let actions = [UIRxPresenterAction(title: LocalizationManager.localizedString(key: "OK"))]
             _ = UIAlertController.rx.show(onViewController: self, title: "",
                                       message: LocalizationManager.localizedString(key: "No available options"),
                                       actions: actions)

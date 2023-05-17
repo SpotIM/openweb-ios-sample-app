@@ -19,6 +19,7 @@ class MockArticleIndependentViewsVC: UIViewController {
         static let horizontalMargin: CGFloat = 20
         static let loggerHeight: CGFloat = 0.3 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let identifier = "mock_article_independent_views_vc_id"
+        static let viewIdentifier = "mock_article_independent_views_view_id"
         static let settingsBarItemIdentifier = "settings_bar_item_id"
     }
 
@@ -30,7 +31,7 @@ class MockArticleIndependentViewsVC: UIViewController {
 
         article.addSubview(loggerView)
         loggerView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.verticalMargin)
+            make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.loggerHeight)
             make.bottom.equalToSuperview()
@@ -92,6 +93,7 @@ class MockArticleIndependentViewsVC: UIViewController {
 fileprivate extension MockArticleIndependentViewsVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
+        articleView.accessibilityIdentifier = Metrics.viewIdentifier
         settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
     }
 

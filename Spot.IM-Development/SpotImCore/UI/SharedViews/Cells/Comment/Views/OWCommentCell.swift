@@ -45,6 +45,7 @@ class OWCommentCell: UITableViewCell {
             }
         }
         self.setupObservers()
+        self.applyAccessibility()
     }
 
     override func prepareForReuse() {
@@ -54,6 +55,10 @@ class OWCommentCell: UITableViewCell {
 }
 
 fileprivate extension OWCommentCell {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = viewModel.outputs.viewAccessibilityIdentifier
+    }
+
     func setupUI() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
         self.contentView.addSubviews(commentView)

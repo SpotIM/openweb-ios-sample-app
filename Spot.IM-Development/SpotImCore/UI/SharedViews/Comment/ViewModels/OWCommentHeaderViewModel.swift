@@ -27,7 +27,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var hiddenCommentReasonText: Observable<String> { get }
 
     var userNameTapped: Observable<Void> { get }
-    var moreTapped: Observable<OWUISource> { get }
+    var openMenu: Observable<[UIRxPresenterAction]> { get }
 }
 
 protocol OWCommentHeaderViewModeling {
@@ -42,7 +42,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var inputs: OWCommentHeaderViewModelingInputs { return self }
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
 
-    fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let userBadgeService: OWUserBadgeServicing
 
@@ -94,8 +93,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .map({ user -> String? in
                 return user?.displayName
             })
-            .map({ displayName -> String in
-                guard let displayName = displayName, !displayName.isEmpty else {
+            .map({
+                guard let displayName = $0, !displayName.isEmpty else {
                     return ""
                 }
                 return LocalizationManager.localizedString(key: "To") + " \(displayName)"
@@ -158,7 +157,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             } else {
                 return ""
             }
-            return LocalizationManager.localizedString(key: localizationKey)
+            return OWLocalizationManager.shared.localizedString(key: localizationKey)
         }
     }
 
@@ -172,8 +171,21 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
-    var moreTapped: Observable<OWUISource> {
+    var openMenu: Observable<[UIRxPresenterAction]> {
         tapMore
+            .map { [weak self] _ in
+                guard let self = self else { return nil}
+                return self.optionsActions
+            }
+            .unwrap()
             .asObservable()
     }
+
+    // TODO: properly get the relevant actions
+    fileprivate lazy var optionsActions: [UIRxPresenterAction] = {
+        return [
+            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report")),
+            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), style: .cancel)
+        ]
+    }()
 }

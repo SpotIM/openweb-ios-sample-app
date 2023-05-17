@@ -24,6 +24,7 @@ class OWCommentHeaderView: UIView {
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
+        static let badgeTagContainerIdentifier = "comment_header_user_badge_tag_container_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
         static let dateLabelIdentifier = "comment_header_date_label_id"
@@ -278,7 +279,8 @@ fileprivate extension OWCommentHeaderView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
-        badgeTagContainer.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
+        badgeTagContainer.accessibilityIdentifier = Metrics.badgeTagContainerIdentifier
+        badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
