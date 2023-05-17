@@ -16,6 +16,7 @@ class OWSubscriberIconView: UIView {
     fileprivate struct Metrics {
         static let subscriberBadgeIconSize: CGFloat = 12
         static let identifier = "subscriber_badge_view_id"
+        static let imageViewIdentifier = "subscriber_badge_image_view_id"
     }
 
     fileprivate var viewModel: OWSubscriberIconViewModeling!
@@ -29,8 +30,8 @@ class OWSubscriberIconView: UIView {
 
     init() {
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         setupViews()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -45,6 +46,10 @@ class OWSubscriberIconView: UIView {
 }
 
 fileprivate extension OWSubscriberIconView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        imgViewIcon.accessibilityIdentifier = Metrics.imageViewIdentifier
+    }
 
     func setupViews() {
         self.addSubview(imgViewIcon)
