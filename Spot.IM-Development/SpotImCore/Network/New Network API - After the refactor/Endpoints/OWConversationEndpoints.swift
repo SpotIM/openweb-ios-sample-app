@@ -10,7 +10,7 @@ import Foundation
 
 enum OWConversationEndpoints: OWEndpoints {
     case conversationAsync(articleUrl: String)
-    case conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, parentId: String, messageId: String, offset: Int)
+    case conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int)
     case commentReport(id: String, parentId: String?)
     case commentPost(parameters: OWNetworkParameters)
     case commentShare(id: String, parentId: String?)
@@ -55,8 +55,8 @@ enum OWConversationEndpoints: OWEndpoints {
         switch self {
         case .conversationAsync(let articleUrl):
             return ["host_url": articleUrl]
-        case .conversationRead(let mode, let page, let count, let parentId, let messageId, let offset):
-            return [
+        case .conversationRead(let mode, let page, let count, let childCount, let parentId, let messageId, let offset):
+            var params: [String: Any] = [
                 "sort_by": mode.rawValue,
                 "offset": offset,
                 "count": count,
@@ -65,6 +65,10 @@ enum OWConversationEndpoints: OWEndpoints {
                 "extract_data": page == .first,
                 "depth": parentId.isEmpty ? 2 : 1
             ]
+            if let childCount = childCount {
+                params["child_count"] = childCount
+            }
+            return params
         case .commentReport(let id, let parentId):
             var params = ["message_id": id]
             if let parentId = parentId {
@@ -108,7 +112,7 @@ fileprivate struct OWConversationEndpointConst {
 
 protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM>
+    func conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
     func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
@@ -125,11 +129,12 @@ extension OWConversationAPI {
         mode: OWSortOption,
         page: OWPaginationPage = .next,
         count: Int = OWConversationEndpointConst.PAGE_SIZE,
+        childCount: Int? = nil,
         parentId: String = "",
         messageId: String = "",
         offset: Int = 0
     ) -> OWNetworkResponse<OWConversationReadRM> {
-        return conversationRead(mode: mode, page: page, count: count, parentId: parentId, messageId: messageId, offset: offset)
+        return conversationRead(mode: mode, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
     }
 }
 
@@ -143,8 +148,16 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM> {
-        let endpoint = OWConversationEndpoints.conversationRead(mode: mode, page: page, count: count, parentId: parentId, messageId: messageId, offset: offset)
+    func conversationRead(
+        mode: OWSortOption,
+        page: OWPaginationPage,
+        count: Int,
+        childCount: Int?,
+        parentId: String,
+        messageId: String,
+        offset: Int
+    ) -> OWNetworkResponse<OWConversationReadRM> {
+        let endpoint = OWConversationEndpoints.conversationRead(mode: mode, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

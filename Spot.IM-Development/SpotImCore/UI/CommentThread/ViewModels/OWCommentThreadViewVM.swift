@@ -8,14 +8,12 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 
 typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWCommentThreadCellOption>
 
 protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
-    var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -91,8 +89,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var viewInitialized = PublishSubject<Void>()
     var pullToRefresh = PublishSubject<Void>()
-    var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
-    fileprivate var _loadMoreComments = PublishSubject<Int>()
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
 
     var offset = 0
@@ -266,20 +262,15 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-        // Observable for the sort option
-        let sortOptionObservable = self.servicesProvider
-            .sortDictateService()
-            .sortOption(perPostId: self.postId)
-
         // Observable for the conversation network API
-        let initialConversationThreadReadObservable = Observable.combineLatest(_commentThreadData.unwrap(), sortOptionObservable)
-            .flatMap { [weak self] (_, sortOption) -> Observable<OWConversationReadRM> in
+        let initialConversationThreadReadObservable = _commentThreadData
+            .unwrap()
+            .flatMap { [weak self] data -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
-    //            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
+                .conversationRead(mode: .newest, page: OWPaginationPage.first, childCount: 5, messageId: data.commentId)
                 .response
         }
 
@@ -306,17 +297,6 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let loadMoreCommentsReadObservable = _loadMoreComments
-            .distinctUntilChanged()
-            .flatMap { [weak self] offset -> Observable<OWConversationReadRM> in
-                guard let self = self else { return .empty() }
-                return self.servicesProvider
-                .netwokAPI()
-                .conversation
-                .conversationRead(mode: .best, page: OWPaginationPage.next, parentId: "", offset: offset)
-                .response
-            }
-
         // first load comments or refresh comments
         commentThreadFetchedObservable
             .subscribe(onNext: { [weak self] response in
@@ -327,21 +307,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
-            })
-            .disposed(by: disposeBag)
-
-        // append new comments on load more
-        loadMoreCommentsReadObservable
-            .subscribe(onNext: { [weak self] response in
-                guard let self = self else { return }
-
-                self.cacheConversationRead(response: response)
-
-                var commentsPresentationData = self.getCommentsPresentationData(from: response)
-
-                commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
-
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
@@ -421,27 +386,6 @@ fileprivate extension OWCommentThreadViewViewModel {
             .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
-            })
-            .disposed(by: disposeBag)
-
-        // Observe tableview will display cell to load more comments
-        willDisplayCell
-            .map { willDisplayCellEvent -> Int in
-                return willDisplayCellEvent.indexPath.row
-            }
-            .withLatestFrom(_commentsPresentationData.rx_elements()) { rowIndex, presentationData -> Int? in
-                guard !presentationData.isEmpty else { return nil }
-                return rowIndex
-            }
-            .unwrap()
-            .throttle(.milliseconds(700), scheduler: MainScheduler.asyncInstance)
-            .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
-                return (rowIndex, cellsVMs.count)
-            }.subscribe(onNext: { [weak self] rowIndex, cellsCount in
-                guard let self = self else { return }
-                if (rowIndex > cellsCount - 5) {
-                    self._loadMoreComments.onNext(self.offset)
-                }
             })
             .disposed(by: disposeBag)
 
