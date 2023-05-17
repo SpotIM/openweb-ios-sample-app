@@ -58,8 +58,8 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
             .corner(radius: Metrics.buttonsRadius)
     }()
 
-    fileprivate lazy var submitButton: UIButton = {
-        return UIButton()
+    fileprivate lazy var submitButton: OWLoaderButton = {
+        return OWLoaderButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(.white)
             .setTitle(viewModel.outputs.submitButtonText, state: .normal)
@@ -196,7 +196,12 @@ fileprivate extension OWReportReasonView {
             .disposed(by: disposeBag)
 
         submitButton.rx.tap
+            .debug("*** Refael submitButton.rx.tap")
             .bind(to: viewModel.inputs.submitReportReasonTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.submitInProgress
+            .bind(to: submitButton.rx.isLoading)
             .disposed(by: disposeBag)
 
         Observable.combineLatest(viewModel.outputs.selectedReason, viewModel.outputs.textViewVM.outputs.textViewTextCount)
