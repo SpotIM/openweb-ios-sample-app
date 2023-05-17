@@ -46,9 +46,20 @@ extension Reactive where Base: UIAlertController {
     }
 }
 
+enum UIRxPresenterActionType {
+    case ok
+    case reportComment
+    case sortBest
+    case sortNewest
+    case sortOldest
+
+    case cancel
+}
+
 struct UIRxPresenterAction: Equatable {
     var uuid: String = UUID().uuidString
     let title: String
+    let type: UIRxPresenterActionType
     var style: UIAlertAction.Style = .default
 }
 

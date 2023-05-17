@@ -184,8 +184,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     // TODO: properly get the relevant actions
     fileprivate lazy var optionsActions: [UIRxPresenterAction] = {
         return [
-            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report")),
-            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), style: .cancel)
+            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: .reportComment),
+            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: .cancel, style: .cancel)
         ]
     }()
 }
