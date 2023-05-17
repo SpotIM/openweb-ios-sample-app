@@ -107,11 +107,6 @@ fileprivate extension OWCommentThreadView {
             .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
             .disposed(by: disposeBag)
 
-        tableView.rx.willDisplayCell
-            .observe(on: MainScheduler.instance)
-            .bind(to: viewModel.inputs.willDisplayCell)
-            .disposed(by: disposeBag)
-
         tableView.rx.didEndDecelerating
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
