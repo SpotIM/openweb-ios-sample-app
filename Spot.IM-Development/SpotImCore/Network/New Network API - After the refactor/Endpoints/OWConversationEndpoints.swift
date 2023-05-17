@@ -112,7 +112,15 @@ fileprivate struct OWConversationEndpointConst {
 
 protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
-    func conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int) -> OWNetworkResponse<OWConversationReadRM>
+    func conversationRead(
+        mode: OWSortOption,
+        page: OWPaginationPage,
+        count: Int,
+        childCount: Int?,
+        parentId: String,
+        messageId: String,
+        offset: Int
+    ) -> OWNetworkResponse<OWConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
     func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
