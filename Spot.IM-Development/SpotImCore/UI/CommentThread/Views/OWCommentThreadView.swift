@@ -15,6 +15,11 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         static let horizontalOffset: CGFloat = 16.0
         static let tableViewAnimationDuration: Double = 0.25
         static let identifier = "comment_thread_view_id"
+
+        static let highlightScrollAnimationDuration: Double = 1.0
+        static let highlightBackgroundColorAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDelay: Double = 1.0
+        static let highlightBackgroundColorAlpha: Double = 0.2
     }
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
@@ -101,8 +106,7 @@ fileprivate extension OWCommentThreadView {
         viewModel.outputs.commentThreadDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableViewRefreshControl.endRefreshing()
+                self?.tableViewRefreshControl.endRefreshing()
             })
             .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
             .disposed(by: disposeBag)
@@ -122,6 +126,29 @@ fileprivate extension OWCommentThreadView {
                     UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
+                    }
+                })
+                .disposed(by: disposeBag)
+
+        viewModel.outputs.highlightCellIndex
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] index in
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+                    guard let self = self, let cell = self.tableView.cellForRow(at: cellIndexPath) else { return }
+                    let prevBackgroundColor = cell.backgroundColor
+                    UIView.animate(withDuration: Metrics.highlightScrollAnimationDuration, animations: {
+                        self.tableView.scrollToRow(at: cellIndexPath, at: .middle, animated: false)
+                    }) { _ in
+                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
+                            cell.backgroundColor = OWColorPalette.shared.color(
+                                type: .brandColor,
+                                themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
+                            ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
+                        }) { _ in
+                            UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
+                                cell.backgroundColor = prevBackgroundColor
+                            }
+                        }
                     }
                 })
                 .disposed(by: disposeBag)
