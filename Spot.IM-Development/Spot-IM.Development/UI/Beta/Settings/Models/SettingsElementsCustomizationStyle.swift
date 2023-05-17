@@ -1,5 +1,5 @@
 //
-//  SettingsElementsCustomisationStyle.swift
+//  SettingsElementsCustomizationStyle.swift
 //  Spot-IM.Development
 //
 //  Created by Refael Sommer on 10/05/2023.
@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 
-public enum SettingsElementsCustomisationStyle: Int {
+public enum SettingsElementsCustomizationStyle: Int {
     case none
     case style1
     case style2

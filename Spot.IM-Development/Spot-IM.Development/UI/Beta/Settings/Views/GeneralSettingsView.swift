@@ -17,7 +17,7 @@ class GeneralSettingsView: UIView {
         static let identifier = "general_settings_view_id"
         static let switchHideArticleHeaderIdentifier = "hide_article_header"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
-        static let segmentedElementsCustomisationStyleIdentifier = "elements_customisation_style"
+        static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedModalStyleIdentifier = "modal_style"
         static let segmentedInitialSortIdentifier = "initial_sort"
@@ -45,12 +45,12 @@ class GeneralSettingsView: UIView {
         return titleLabel
     }()
 
-    fileprivate lazy var segmentedElementsCustomisationStyle: SegmentedControlSetting = {
-        let title = viewModel.outputs.elementsCustomisationStyleTitle
-        let items = viewModel.outputs.elementsCustomisationStyleSettings
+    fileprivate lazy var segmentedElementsCustomizationStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.elementsCustomizationStyleTitle
+        let items = viewModel.outputs.elementsCustomizationStyleSettings
 
         return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedElementsCustomisationStyleIdentifier,
+                                       accessibilityPrefixId: Metrics.segmentedElementsCustomizationStyleIdentifier,
                                        items: items)
     }()
 
@@ -179,7 +179,7 @@ fileprivate extension GeneralSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(switchHideArticleHeader)
-        stackView.addArrangedSubview(segmentedElementsCustomisationStyle)
+        stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
         stackView.addArrangedSubview(segmentedModalStyle)
@@ -198,8 +198,8 @@ fileprivate extension GeneralSettingsView {
             .bind(to: switchHideArticleHeader.rx.isOn)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.elementsCustomisationStyleIndex
-            .bind(to: segmentedElementsCustomisationStyle.rx.selectedSegmentIndex)
+        viewModel.outputs.elementsCustomizationStyleIndex
+            .bind(to: segmentedElementsCustomizationStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.readOnlyModeIndex
@@ -234,8 +234,8 @@ fileprivate extension GeneralSettingsView {
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
             .disposed(by: disposeBag)
 
-        segmentedElementsCustomisationStyle.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.elementsCustomisationStyleSelectedIndex)
+        segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.elementsCustomizationStyleSelectedIndex)
             .disposed(by: disposeBag)
 
         segmentedReadOnlyMode.rx.selectedSegmentIndex

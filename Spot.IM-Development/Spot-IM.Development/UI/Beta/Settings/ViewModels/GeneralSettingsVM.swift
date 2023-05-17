@@ -14,7 +14,7 @@ import SpotImCore
 
 protocol GeneralSettingsViewModelingInputs {
     var hideArticleHeaderToggled: PublishSubject<Bool> { get }
-    var elementsCustomisationStyleSelectedIndex: PublishSubject<Int> { get }
+    var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
     var modalStyleSelectedIndex: PublishSubject<Int> { get }
@@ -42,7 +42,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var fontGroupTypeSettings: [String] { get }
     var initialSortSettings: [String] { get }
     var shouldHideArticleHeader: Observable<Bool> { get }
-    var elementsCustomisationStyleIndex: Observable<Int> { get }
+    var elementsCustomizationStyleIndex: Observable<Int> { get }
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
     var modalStyleIndex: Observable<Int> { get }
@@ -64,8 +64,8 @@ protocol GeneralSettingsViewModelingOutputs {
     var localeStrategyTitle: String { get }
     var localeStrategySettings: [String] { get }
 
-    var elementsCustomisationStyleTitle: String { get }
-    var elementsCustomisationStyleSettings: [String] { get }
+    var elementsCustomizationStyleTitle: String { get }
+    var elementsCustomizationStyleSettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -78,7 +78,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var outputs: GeneralSettingsViewModelingOutputs { return self }
 
     var hideArticleHeaderToggled = PublishSubject<Bool>()
-    var elementsCustomisationStyleSelectedIndex = PublishSubject<Int>()
+    var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
@@ -119,8 +119,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
     }
 
-    var elementsCustomisationStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .elementsCustomisationStyleIndex, defaultValue: SettingsElementsCustomisationStyle.defaultIndex)
+    var elementsCustomizationStyleIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .elementsCustomizationStyleIndex, defaultValue: SettingsElementsCustomizationStyle.defaultIndex)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -241,8 +241,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("GeneralSettings", comment: "")
     }()
 
-    lazy var elementsCustomisationStyleTitle: String = {
-        return NSLocalizedString("ElementsCustomisationStyle", comment: "")
+    lazy var elementsCustomizationStyleTitle: String = {
+        return NSLocalizedString("ElementsCustomizationStyle", comment: "")
     }()
 
     lazy var hideArticleHeaderTitle: String = {
@@ -269,7 +269,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("ThemeMode", comment: "")
     }()
 
-    lazy var elementsCustomisationStyleSettings: [String] = {
+    lazy var elementsCustomizationStyleSettings: [String] = {
         let _none = NSLocalizedString("None", comment: "")
         let _style1 = NSLocalizedString("Style1", comment: "")
         let _style2 = NSLocalizedString("Style2", comment: "")
@@ -369,10 +369,10 @@ extension GeneralSettingsVM {
             .setValues(key: UserDefaultsProvider.UDKey<Bool>.hideArticleHeader))
             .disposed(by: disposeBag)
 
-        elementsCustomisationStyleSelectedIndex
+        elementsCustomizationStyleSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Int>.elementsCustomisationStyleIndex))
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.elementsCustomizationStyleIndex))
             .disposed(by: disposeBag)
 
         readOnlyModeSelectedIndex
