@@ -14,6 +14,7 @@ class OWCommunityQuestionCell: UITableViewCell {
 
     fileprivate struct Metrics {
         static let edgesPadding: CGFloat = 12
+        static let identifier = "community_question_cell_id"
     }
 
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
@@ -27,7 +28,8 @@ class OWCommunityQuestionCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        self.setupUI()
+        setupUI()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -52,6 +54,10 @@ fileprivate extension OWCommunityQuestionCell {
         communityQuestionView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview().inset(Metrics.edgesPadding)
         }
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
     }
 }
 
