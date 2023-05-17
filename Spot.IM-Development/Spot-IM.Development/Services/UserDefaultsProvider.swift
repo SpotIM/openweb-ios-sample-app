@@ -90,7 +90,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
         case hideArticleHeader = "hideArticleHeader"
-        case elementsCustomisationStyleIndex = "elementsCustomisationStyleIndex"
+        case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case modalStyleIndex = "modalStyleIndex"
@@ -164,8 +164,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
                     return "Key which stores general setting's locale strategy"
         case .openCommentId:
                     return "Key which stores comment thread setting's comment id to open"
-        case .elementsCustomisationStyleIndex:
-                    return "Key which stores general setting's elements customisation style index"
+        case .elementsCustomizationStyleIndex:
+                    return "Key which stores general setting's elements customization style index"
         }
     }
 }

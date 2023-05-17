@@ -1,5 +1,5 @@
 //
-//  SettingsElementsCustomisationStyle+Extension.swift
+//  SettingsElementsCustomizationStyle+Extension.swift
 //  Spot-IM.Development
 //
 //  Created by Refael Sommer on 10/05/2023.
@@ -11,7 +11,7 @@ import SpotImCore
 
 #if NEW_API
 
-extension SettingsElementsCustomisationStyle {
+extension SettingsElementsCustomizationStyle {
     static var defaultIndex: Int {
         return 0
     }
