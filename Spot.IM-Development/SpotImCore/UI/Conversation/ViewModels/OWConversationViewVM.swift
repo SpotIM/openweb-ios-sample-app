@@ -724,10 +724,10 @@ fileprivate extension OWConversationViewViewModel {
                     .showMenu(
                         title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
                         actions: [
-                            .init(title: sortDictateService.sortTextTitle(perOption: .best)),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .newest)),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest)),
-                            .init(title: "cancel", style: .cancel)
+                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: .sortBest),
+                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: .sortNewest),
+                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: .sortOldest),
+                            .init(title: "cancel", type: .cancel, style: .cancel)
                         ],
                         viewableMode: self.viewableMode
                     )
@@ -737,12 +737,12 @@ fileprivate extension OWConversationViewViewModel {
                             // Do nothing
                             break
                         case .selected(let action):
-                            switch action.title {
-                            case sortDictateService.sortTextTitle(perOption: .best):
+                            switch action.type {
+                            case .sortBest:
                                 sortDictateService.update(sortOption: .best, perPostId: self.postId)
-                            case sortDictateService.sortTextTitle(perOption: .newest):
+                            case .sortNewest:
                                 sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-                            case sortDictateService.sortTextTitle(perOption: .oldest):
+                            case .sortOldest:
                                 sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
                             default:
                                 break
