@@ -221,7 +221,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 .reportReason
                 .report(commentId: self.commentId,
                         reasonMain: selectedReason.reportType.rawValue,
-                        reasonSub: selectedReason.reportType.localizedSubtitle,
+                        reasonSub: "",
                         userDescription: userDescription)
                 .response
         }
