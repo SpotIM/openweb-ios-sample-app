@@ -16,7 +16,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         static let tableViewAnimationDuration: Double = 0.25
         static let identifier = "comment_thread_view_id"
 
-        static let highlightScrollAnimationDuration: Double = 1.0
+        static let highlightScrollAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDelay: Double = 1.0
         static let highlightBackgroundColorAlpha: Double = 0.2
