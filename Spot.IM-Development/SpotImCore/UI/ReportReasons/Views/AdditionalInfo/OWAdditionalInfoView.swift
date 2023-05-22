@@ -139,10 +139,9 @@ fileprivate extension OWAdditionalInfoView {
 
         footerView.addSubview(footerStackView)
         footerStackView.OWSnp.makeConstraints { make in
-            make.top.equalTo(textView.OWSnp.bottom).offset(Metrics.textViewPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.buttonsPadding)
             make.height.equalTo(Metrics.buttonsHeight)
-            make.bottom.equalToSuperview().inset(Metrics.buttonsPadding)
+            make.center.equalToSuperview()
         }
 
         footerStackView.addArrangedSubview(cancelButton)
@@ -189,7 +188,7 @@ fileprivate extension OWAdditionalInfoView {
             .disposed(by: disposeBag)
 
         titleView.outputs.closeTapped
-            .bind(to: viewModel.inputs.cancelAdditionalInfoTap)
+            .bind(to: viewModel.inputs.closeAdditionalInfoTap)
             .disposed(by: disposeBag)
 
         if viewModel.outputs.viewableMode == .partOfFlow {

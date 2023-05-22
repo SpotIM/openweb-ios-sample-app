@@ -11,12 +11,14 @@ import RxSwift
 
 protocol OWAdditionalInfoViewViewModelingInputs {
     var cancelAdditionalInfoTap: PublishSubject<Void> { get }
+    var closeAdditionalInfoTap: PublishSubject<Void> { get }
     var submitAdditionalInfoTap: PublishSubject<Void> { get }
     var additionalInfoTextChange: PublishSubject<String> { get }
     var submitInProgress: PublishSubject<Bool> { get }
 }
 
 protocol OWAdditionalInfoViewViewModelingOutputs {
+    var closeAdditionalInfoTapped: Observable<Void> { get }
     var closeReportReasonTapped: Observable<Void> { get }
     var cancelAdditionalInfoTapped: Observable<Void> { get }
     var submitAdditionalInfoTapped: Observable<Void> { get }
@@ -37,6 +39,7 @@ protocol OWAdditionalInfoViewViewModeling {
 }
 
 class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWAdditionalInfoViewViewModelingOutputs, OWAdditionalInfoViewViewModeling {
+
     fileprivate struct Metrics {
         static let titleKey = "AdditionalInfoTitle"
         static let cancelKey = "Cancel"
@@ -59,6 +62,12 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
 
     var submitButtonText: String {
         return LocalizationManager.localizedString(key: Metrics.submitKey)
+    }
+
+    var closeAdditionalInfoTap = PublishSubject<Void>()
+    var closeAdditionalInfoTapped: Observable<Void> {
+        return closeAdditionalInfoTap
+            .asObservable()
     }
 
     var submitInProgress = PublishSubject<Bool>()
