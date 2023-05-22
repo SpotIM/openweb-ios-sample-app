@@ -610,15 +610,10 @@ internal final class SPMainConversationDataSource {
                                                 replyingToCommentId: replyingToCommentId,
                                                 replyingToDisplayName: replyingToDisplayName)
 
-            if viewModel.isHiddenComment() && (comment.replies == nil || comment.replies?.isEmpty == true) {
-                // if comment is hidden without any replies - we filter out this comment
-                return
-            }
-
-            if isCommentAlreadyExist(commentId: viewModel.commentId) {
-                // Remove duplicate comments
-                return
-            }
+            // if comment is hidden without any replies or comment already exist - we filter out this comment
+            guard !viewModel.isHiddenComment(),
+                  (comment.replies != nil || comment.replies?.isEmpty == false),
+                  !isCommentAlreadyExist(commentId: viewModel.commentId) else { return }
 
             section.append(viewModel)
             allCommentsAndReplies.append(viewModel)
@@ -633,10 +628,8 @@ internal final class SPMainConversationDataSource {
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
 
-                if isCommentAlreadyExist(commentId: reply.commentId) {
-                    // Remove duplicate comments
-                    return
-                }
+                // if comment already exist - we filter out this comment
+                guard isCommentAlreadyExist(commentId: reply.commentId) else { return }
 
                 allCommentsAndReplies.append(reply)
                 if showReplies {
@@ -658,10 +651,9 @@ internal final class SPMainConversationDataSource {
                 hiddenData[id]?.reverse()
             }
 
-            if viewModel.isHiddenComment() && areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) {
-                // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
-                return
-            }
+            // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
+            guard !viewModel.isHiddenComment(),
+                  !areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) else { return }
 
             visibleComments.append(section)
 
