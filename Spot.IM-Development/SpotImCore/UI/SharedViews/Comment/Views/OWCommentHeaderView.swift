@@ -19,7 +19,7 @@ class OWCommentHeaderView: UIView {
         static let usernameFontSize: CGFloat = 13.0
         static let badgeLabelFontSize: CGFloat = 10.0
         static let subscriberVerticalPadding: CGFloat = 7
-        static let optionButtonSize: CGFloat = 28
+        static let optionButtonSize: CGFloat = 20
         static let badgeHorizontalInset: CGFloat = 4
 
         static let identifier = "comment_header_view_id"
@@ -79,7 +79,7 @@ class OWCommentHeaderView: UIView {
     }()
 
     fileprivate lazy var optionButton: UIButton = {
-        let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
+        let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
         return UIButton()
             .image(image, state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8))
@@ -258,7 +258,9 @@ fileprivate extension OWCommentHeaderView {
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+                self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
+            })
+            .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
             .subscribe(onNext: { [weak self] (style, colorMapper) -> Void in
