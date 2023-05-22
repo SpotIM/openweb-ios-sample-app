@@ -30,6 +30,11 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
     var inputs: OWConversationEmptyStateViewModelingInputs { return self }
     var outputs: OWConversationEmptyStateViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let emptyIcon: String = "emptyConversation-icon"
+        static let closedAndEmptyIcon: String = "closedAndEmptyConversation-icon"
+    }
+
     var conversationFetched = PublishSubject<SPConversationReadRM>()
     var isReadOnly = PublishSubject<Bool>()
     var isEmpty = PublishSubject<Bool>()
@@ -45,9 +50,9 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
             .map { type in
                 switch type {
                 case .empty:
-                    return "emptyConversation-icon"
+                    return Metrics.emptyIcon
                 case .closedAndEmpty:
-                    return "closedAndEmptyConversation-icon"
+                    return Metrics.closedAndEmptyIcon
                 }
             }
             .asObservable()

@@ -93,12 +93,6 @@ fileprivate extension OWConversationEmptyStateView {
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.iconName
-            .map { return UIImage(spNamed: $0) }
-            .unwrap()
-            .bind(to: iconImageView.rx.image)
-            .disposed(by: disposeBag)
-
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  viewModel.outputs.iconName)
         .observe(on: MainScheduler.instance)

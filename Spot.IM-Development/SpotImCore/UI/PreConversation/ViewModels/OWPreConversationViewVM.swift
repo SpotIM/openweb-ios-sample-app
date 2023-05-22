@@ -27,7 +27,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
-    var openCommentConversation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var summaryTopPadding: Observable<CGFloat> { get }
@@ -128,10 +128,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate lazy var isReadOnly: Bool = {
+    fileprivate lazy var isReadOnlyLocalSetting: Bool = {
         return preConversationData.article.additionalSettings.readOnlyMode == .enable
     }()
-    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: isReadOnly)
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: isReadOnlyLocalSetting)
     fileprivate lazy var isReadOnlyObservable: Observable<Bool> = {
         return _isReadOnly
             .share(replay: 1)
@@ -198,7 +198,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentConversation: Observable<OWCommentCreationType> {
+    var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
     }
