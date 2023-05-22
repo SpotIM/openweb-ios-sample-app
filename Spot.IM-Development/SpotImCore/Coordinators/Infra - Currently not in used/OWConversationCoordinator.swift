@@ -171,7 +171,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .urlClickedOutput
 
         // Coordinate to safari tab
-        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
+        let coordinateToSafariObservables = Observable.merge(
+            communityGuidelinesURLTapped,
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile,
+            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput,
+            conversationVM.outputs.conversationViewVM.outputs.openProfile
+        )
+
         let coordinateToSafariObservable = coordinateToSafariObservables
             .filter { [weak self] _ in
                 guard let self = self else { return false }
@@ -257,6 +263,18 @@ fileprivate extension OWConversationCoordinator {
             .map { OWViewActionCallbackType.closeConversationPressed }
 
         Observable.merge(closeConversationPressed)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
+
+        let openPublisherProfile = Observable.merge(
+            viewModel.outputs.openPublisherProfile,
+            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
+        )
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
