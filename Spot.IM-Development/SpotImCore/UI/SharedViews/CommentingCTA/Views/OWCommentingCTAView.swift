@@ -65,7 +65,7 @@ fileprivate extension OWCommentingCTAView {
                 guard let self = self else { return }
                 self.subviews.forEach { $0.removeFromSuperview() }
 
-                let view = self.getViewForStyle(style)
+                let view = self.view(forStyle: style)
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
@@ -74,7 +74,7 @@ fileprivate extension OWCommentingCTAView {
             .disposed(by: disposeBag)
     }
 
-    func getViewForStyle(_ style: OWCommentingCTAStyle) -> UIView {
+    func view(forStyle style: OWCommentingCTAStyle) -> UIView {
         switch style {
         case .cta:
             return self.commentCreationEntryView
