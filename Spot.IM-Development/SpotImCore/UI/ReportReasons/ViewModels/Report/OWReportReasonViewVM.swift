@@ -30,7 +30,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var shouldShowTitleView: Bool { get }
     var cancelReportReasonTapped: Observable<Void> { get }
     var closeReportReasonTapped: Observable<Void> { get }
-    var submittedReportReasonObservable: Observable<EmptyDecodable> { get }
+    var submittedReportReasonObservable: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var selectedReason: Observable<OWReportReason> { get }
     var learnMoreTapped: Observable<URL?> { get }
@@ -238,23 +238,21 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }()
 
     // Observable for the RepertReason network API
-    lazy var submittedReportReasonObservable = {
+    lazy var submittedReportReasonObservable: Observable<Void> = {
         return submitReportReasonTapped
-            .debug("*** submittedReportReasonObservable")
-            .flatMap { [weak self] _ -> Observable<OWReportReason> in
+            .flatMapLatest { [weak self] _ -> Observable<OWReportReason> in
                 guard let self = self else { return .empty() }
                 return self.selectedReason.take(1)
             }
-            .flatMap { [weak self] selectedReason -> Observable<(OWReportReason, String)> in
+            .flatMapLatest { [weak self] selectedReason -> Observable<(OWReportReason, String)> in
                 guard let self = self else { return .empty() }
                 return self.textViewVM.outputs.textViewText.take(1)
                     .map { return (selectedReason, $0) }
             }
-            .flatMap { [weak self]  result -> Observable<EmptyDecodable> in
+            .flatMapLatest { [weak self]  result -> Observable<Event<EmptyDecodable>> in
                 guard let self = self else { return .empty() }
                 let selectedReason = result.0
                 let userDescription = result.1
-
                 self.setSubmitInProgress.onNext(true)
                 return self.servicesProvider
                     .netwokAPI()
@@ -263,8 +261,8 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                             reasonMain: selectedReason.reportType.rawValue, reasonSub: "",
                             userDescription: userDescription)
                     .response
+                    .materialize()
             }
-            .materialize() // Required to keep the final subscriber even if errors arrived from the network
             .map { event -> EmptyDecodable? in
                 switch event {
                 case .next(let submit):
@@ -280,6 +278,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 }
             }
             .unwrap()
+            .voidify()
             .share()
     }()
 }
@@ -295,6 +294,12 @@ fileprivate extension OWReportReasonViewViewModel {
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)
+            .disposed(by: disposeBag)
+
+        selectedReason
+            .filter { $0.requiredAdditionalInfo == true }
+            .voidify()
+            .bind(to: textViewVM.inputs.textViewTap)
             .disposed(by: disposeBag)
 
         presentError
