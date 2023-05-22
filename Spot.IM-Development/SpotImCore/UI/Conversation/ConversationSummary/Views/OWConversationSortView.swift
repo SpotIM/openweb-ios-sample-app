@@ -16,6 +16,8 @@ class OWConversationSortView: UIView {
         static let buttonFontSize: CGFloat = 15.0
         static let insetTiny: CGFloat = 9.0
         static let verticalMarginBetweenSortLabel: CGFloat = 5.0
+        static let sortLabelIdentifier = "conversation_sort_label_id"
+        static let sortButtonIdentifier = "conversation_sort_button_id"
     }
 
     fileprivate var viewModel: OWConversationSortViewModeling
@@ -60,6 +62,7 @@ class OWConversationSortView: UIView {
         super.init(frame: .zero)
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -115,5 +118,10 @@ fileprivate extension OWConversationSortView {
                 self.sortButton.setImage(UIImage(spNamed: "sort", supportDarkMode: true), for: .normal)
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        sortLabel.accessibilityIdentifier = Metrics.sortLabelIdentifier
+        sortButton.accessibilityIdentifier = Metrics.sortButtonIdentifier
     }
 }
