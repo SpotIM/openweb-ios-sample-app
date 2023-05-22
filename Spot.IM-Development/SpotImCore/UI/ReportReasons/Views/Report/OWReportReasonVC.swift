@@ -48,6 +48,12 @@ class OWReportReasonVC: UIViewController {
         super.viewDidLoad()
         viewModel.inputs.viewDidLoad.onNext()
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // Enable navigation back by swipe
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
 }
 
 fileprivate extension OWReportReasonVC {
