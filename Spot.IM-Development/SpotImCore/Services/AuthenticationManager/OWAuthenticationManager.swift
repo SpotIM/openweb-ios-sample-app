@@ -422,6 +422,7 @@ fileprivate extension OWAuthenticationManager {
         let allowGuestsToLike = config.initialization?.policyAllowGuestsToLike ?? false
         let forceRegister = config.initialization?.policyForceRegister ?? true
         let levelAccordingToRegistration: OWAuthenticationLevel = forceRegister ? .loggedIn : .guest
+        let requiredRegisterForReport = config.moderation?.requiredRegisterForReport ?? false
 
         switch action {
         case .commenting:
@@ -431,7 +432,7 @@ fileprivate extension OWAuthenticationManager {
         case .votingComment:
             return allowGuestsToLike ? .guest : .loggedIn
         case .reportingComment:
-            return .loggedIn
+            return requiredRegisterForReport ? .loggedIn : .guest
         case .sharingComment:
             return .guest
         case .editingComment:
