@@ -17,11 +17,16 @@ protocol OWRoutering {
     func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
     func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func pop(popStyle: OWScreenPopStyle, animated: Bool)
-    func pop(animated: Bool)
     func pop(toViewController: UIViewController, animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
+}
+
+extension OWRoutering {
+    func pop(popStyle: OWScreenPopStyle = .regular, animated: Bool) {
+        pop(popStyle: popStyle, animated: animated)
+    }
 }
 
 class OWRouter: NSObject, OWRoutering {
@@ -90,10 +95,6 @@ class OWRouter: NSObject, OWRoutering {
             completions[module.toPresentable()] = completion
         }
         navigationController?.setViewControllers([module.toPresentable()], animated: animated)
-    }
-
-    func pop(animated: Bool) {
-        pop(popStyle: .regular, animated: animated)
     }
 
     func pop(popStyle: OWScreenPopStyle, animated: Bool) {
