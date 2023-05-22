@@ -13,7 +13,7 @@ import RxCocoa
 class OWCommunityGuidelinesView: UIView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
-        static let communityGuidelinesLabelIdentifier = "community_guidelines_guidelines_label_id"
+        static let communityGuidelinesTextViewIdentifier = "community_guidelines_text_view_id"
         static let containerCorderRadius: CGFloat = 8.0
         static let containerHeight: CGFloat = 44
         static let horizontalOffset: CGFloat = 16.0
@@ -95,7 +95,7 @@ class OWCommunityGuidelinesView: UIView {
 fileprivate extension OWCommunityGuidelinesView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesLabelIdentifier
+        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier
     }
 
     func setupUI() {
