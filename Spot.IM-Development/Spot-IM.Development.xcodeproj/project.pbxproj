@@ -766,6 +766,7 @@
 		9E7F283829B8AACE007AD2D6 /* SettingsViewsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */; };
 		9E7F283C29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */; };
 		9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */; };
+		9E8B92A42A1B91F3004480F5 /* OWScreenPopStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */; };
 		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
 		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
 		9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */; };
@@ -1637,6 +1638,7 @@
 		9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewsFactory.swift; sourceTree = "<group>"; };
 		9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLanguageStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWSupportedLanguage+Extensions.swift"; sourceTree = "<group>"; };
+		9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPopStyle.swift; sourceTree = "<group>"; };
 		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWThemeStyleEnforcement+Extensions.swift"; sourceTree = "<group>"; };
@@ -3407,6 +3409,7 @@
 				3D26B5BA28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift */,
 				3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */,
 				3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */,
+				9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */,
 			);
 			path = NavigationController;
 			sourceTree = "<group>";
@@ -5417,6 +5420,7 @@
 				3DB3B97B29F7DB1D00C50192 /* OWTestingBlueFirstLevelViewModel.swift in Sources */,
 				3D91578C29E4962D00215A48 /* OWViewActionsService.swift in Sources */,
 				3DA264752951E3B200688FFF /* OWNetworkRequestInterceptor.swift in Sources */,
+				9E8B92A42A1B91F3004480F5 /* OWScreenPopStyle.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
 				3DB3B98729FAD38E00C50192 /* OWTestingCellsGenerator.swift in Sources */,

@@ -24,7 +24,7 @@ enum OWReportReasonEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        case .report: return "/conversation/report/message"
+        case .report: return "/moderation/report/message"
         }
     }
 
@@ -52,7 +52,7 @@ extension OWNetworkAPI: OWReportReasonAPI {
     // Access by .conversation for readability
     var reportReason: OWReportReasonAPI { return self }
 
-    func report(commentId: String, reasonMain: String, reasonSub: String, userDescription: String = "") -> OWNetworkResponse<EmptyDecodable> {
+    func report(commentId: String, reasonMain: String, reasonSub: String = "", userDescription: String = "") -> OWNetworkResponse<EmptyDecodable> {
         let endpoint = OWReportReasonEndpoints.report(commentId: commentId,
                                                       reasonMain: reasonMain,
                                                       reasonSub: reasonSub,

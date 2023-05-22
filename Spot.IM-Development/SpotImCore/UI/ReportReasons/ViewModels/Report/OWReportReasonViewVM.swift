@@ -12,10 +12,11 @@ import RxSwift
 protocol OWReportReasonViewViewModelingInputs {
     var errorSubmitting: PublishSubject<Void> { get }
     var learnMoreTap: PublishSubject<Void> { get }
-    var closeReportReasonTap: PublishSubject<Void> { get }
     var cancelReportReasonTap: PublishSubject<Void> { get }
     var submitReportReasonTap: PublishSubject<Void> { get }
+    var textViewTextChange: PublishSubject<String> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
+    var isSubmitEnabledChange: PublishSubject<Bool> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
@@ -27,17 +28,17 @@ protocol OWReportReasonViewViewModelingOutputs {
     var tableViewHeaderTapText: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
     var shouldShowTitleView: Bool { get }
-    var closeReportReasonTapped: Observable<Void> { get }
     var cancelReportReasonTapped: Observable<Void> { get }
+    var closeReportReasonTapped: Observable<Void> { get }
     var submittedReportReasonObservable: Observable<EmptyDecodable> { get }
     var textViewVM: OWTextViewViewModeling { get }
-    var selectedReason: Observable<OWReportReason?> { get }
+    var selectedReason: Observable<OWReportReason> { get }
     var learnMoreTapped: Observable<URL?> { get }
     var viewableMode: OWViewableMode { get }
-    var presentError: Observable<UIAlertController> { get }
-    var callbackErrorSubmitting: Observable<OWError> { get }
+    var presentError: Observable<Void> { get }
     var submitInProgress: Observable<Bool> { get }
     var submitReportReasonTapped: Observable<Void> { get }
+    var isSubmitEnabled: Observable<Bool> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -62,27 +63,17 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }
 
     var errorSubmitting = PublishSubject<Void>()
-    var presentError: Observable<UIAlertController> {
+    var presentError: Observable<Void> {
         return errorSubmitting
-            .map { [weak self] in
-                let title = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitTitleKey)
-                let message = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitMessageKey)
-                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: self?.errorAlertActionText, style: .default, handler: nil))
-                return alert
-            }
-            .asObservable()
+                .asObservable()
     }
 
-    var callbackErrorSubmitting: Observable<OWError> {
-        return errorSubmitting
-            .map {
-                let title = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitTitleKey)
-                let message = LocalizationManager.localizedString(key: Metrics.errorAlertSubmitMessageKey)
-                let error: OWError = .reportReasonSubmitError(title: title, description: message)
-                return error
-            }
-            .asObservable()
+    var errorAlertTitleText: String {
+        return LocalizationManager.localizedString(key: Metrics.errorAlertSubmitTitleKey)
+    }
+
+    var errorAlertMessageText: String {
+        return LocalizationManager.localizedString(key: Metrics.errorAlertSubmitMessageKey)
     }
 
     var errorAlertActionText: String {
@@ -137,14 +128,28 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .asObservable()
     }
 
-    var closeReportReasonTap = PublishSubject<Void>()
-    var closeReportReasonTapped: Observable<Void> {
-        return closeReportReasonTap.asObservable()
-    }
-
     var cancelReportReasonTap = PublishSubject<Void>()
     var cancelReportReasonTapped: Observable<Void> {
-        return cancelReportReasonTap.asObservable()
+        return cancelReportReasonTap
+                .flatMap { [weak self] _ -> Observable<String> in
+                    guard let self = self else { return .empty() }
+                    return self.textViewVM.outputs.textViewText
+                        .take(1)
+                }
+                .filter { !$0.isEmpty }
+                .voidify()
+    }
+
+    var closeReportReasonTapped: Observable<Void> {
+        return cancelReportReasonTap
+                .flatMap { [weak self] _ -> Observable<String> in
+                    guard let self = self else { return .empty() }
+                    return self.textViewVM.outputs.textViewText
+                        .take(1)
+                }
+                .filter { $0.isEmpty }
+                .voidify()
+                .asObservable()
     }
 
     var submitReportReasonTap = PublishSubject<Void>()
@@ -152,6 +157,14 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return submitReportReasonTap
             .asObservable()
     }
+
+    var isSubmitEnabledChange = PublishSubject<Bool>()
+    var isSubmitEnabled: Observable<Bool> {
+        return isSubmitEnabledChange
+            .asObservable()
+    }
+
+    var textViewTextChange = PublishSubject<String>()
 
     var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
 
@@ -175,33 +188,37 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return viewableMode == .independent
     }
 
-    lazy var reportReasonOptions: Observable<[OWReportReason]> =
-    self.servicesProvider.spotConfigurationService()
-        .config(spotId: OWManager.manager.spotId)
-        .map { $0.shared?.reportReasonsOptions?.reasonsList }
-        .unwrap()
-        .asObservable()
-        .debug("*** Refael reportReasonOptions")
-        .share(replay: 1)
+    lazy var reportReasonOptions: Observable<[OWReportReason]> = {
+        self.servicesProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { $0.shared?.reportReasonsOptions?.reasonsList }
+            .unwrap()
+            .asObservable()
+            .share(replay: 1)
+    }()
 
-    lazy var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> =
-    reportReasonOptions
-        .map { reasons in
-            var viewModels: [OWReportReasonCellViewModeling] = []
-            for reason in reasons {
-                viewModels.append(OWReportReasonCellViewModel(reason: reason))
-            }
-            return viewModels
-        }
-        .asObservable()
-
-    lazy var selectedReason: Observable<OWReportReason?> = {
-        Observable.combineLatest(reportReasonOptions, reasonIndexSelect)
-            .map { (reasons, selectedIndex) in
-                guard let index = selectedIndex else { return nil }
-                return reasons[index]
+    lazy var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> = {
+        reportReasonOptions
+            .map { reasons in
+                var viewModels: [OWReportReasonCellViewModeling] = []
+                for reason in reasons {
+                    viewModels.append(OWReportReasonCellViewModel(reason: reason))
+                }
+                return viewModels
             }
             .asObservable()
+    }()
+
+    lazy var selectedReason: Observable<OWReportReason> = {
+        reasonIndexSelect
+            .skip(1)
+            .unwrap()
+            .flatMap { [weak self] index -> Observable<OWReportReason> in
+                guard let self = self else { return .empty() }
+                return reportReasonOptions
+                    .map { $0[index] }
+            }
+            .share(replay: 1)
     }()
 
     fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
@@ -223,39 +240,47 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     // Observable for the RepertReason network API
     lazy var submittedReportReasonObservable = {
         return submitReportReasonTapped
-            .withLatestFrom(selectedReason.take(1))
-            .withLatestFrom(textViewVM.outputs.textViewText.take(1)) { [weak self] selectedReason, userDescription ->
-                Observable<EmptyDecodable> in
-                guard let self = self,
-                      let selectedReason = selectedReason
-                else { return .empty() }
+            .debug("*** submittedReportReasonObservable")
+            .flatMap { [weak self] _ -> Observable<OWReportReason> in
+                guard let self = self else { return .empty() }
+                return self.selectedReason.take(1)
+            }
+            .flatMap { [weak self] selectedReason -> Observable<(OWReportReason, String)> in
+                guard let self = self else { return .empty() }
+                return self.textViewVM.outputs.textViewText.take(1)
+                    .map { return (selectedReason, $0) }
+            }
+            .flatMap { [weak self]  result -> Observable<EmptyDecodable> in
+                guard let self = self else { return .empty() }
+                let selectedReason = result.0
+                let userDescription = result.1
+
                 self.setSubmitInProgress.onNext(true)
                 return self.servicesProvider
                     .netwokAPI()
                     .reportReason
                     .report(commentId: self.commentId,
-                            reasonMain: selectedReason.reportType.rawValue,
-                            reasonSub: "",
+                            reasonMain: selectedReason.reportType.rawValue, reasonSub: "",
                             userDescription: userDescription)
                     .response
             }
             .materialize() // Required to keep the final subscriber even if errors arrived from the network
-            .map { event -> Observable<EmptyDecodable>? in
+            .map { event -> EmptyDecodable? in
                 switch event {
                 case .next(let submit):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return submit
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    self.setSubmitInProgress.onNext(false)
+                    self.errorSubmitting.onNext()
                     return nil
                 default:
                     return nil
                 }
             }
             .unwrap()
-            .flatMap { observable -> Observable<EmptyDecodable> in
-                return observable
-            }
+            .share()
     }()
 }
 
@@ -263,7 +288,7 @@ fileprivate extension OWReportReasonViewViewModel {
     func setupObservers() {
         selectedReason
             .map {
-                if $0 == nil || $0?.requiredAdditionalInfo == false {
+                if $0.requiredAdditionalInfo == false {
                     return LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey)
                 } else {
                     return LocalizationManager.localizedString(key: Metrics.textViewMandatoryPlaceholderKey)
@@ -272,14 +297,28 @@ fileprivate extension OWReportReasonViewViewModel {
             .bind(to: textViewVM.inputs.placeholderTextChange)
             .disposed(by: disposeBag)
 
-        submittedReportReasonObservable
-            .subscribe { [weak self] response in
-                guard let self = self else { return }
-                if response.error != nil {
-                    self.setSubmitInProgress.onNext(false)
-                    self.errorSubmitting.onNext()
-                }
+        presentError
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] _ -> Observable<UIRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                let action = UIRxPresenterAction.init(title: self.errorAlertActionText)
+                return self.servicesProvider.presenterService().showAlert(title: self.errorAlertTitleText,
+                                                                   message: self.errorAlertMessageText,
+                                                                   actions: [action],
+                                                                   viewableMode: self.viewableMode)
             }
+            .subscribe()
+            .disposed(by: disposeBag)
+
+        textViewTextChange
+            .bind(to: textViewVM.inputs.textViewTextChange)
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(selectedReason, textViewVM.outputs.textViewTextCount)
+            .map { reportReason, textCount -> Bool in
+                return !reportReason.requiredAdditionalInfo || textCount > 0
+            }
+            .bind(to: isSubmitEnabledChange)
             .disposed(by: disposeBag)
     }
 }
