@@ -12,7 +12,7 @@ struct SPSpotConfiguration: Decodable {
 
     enum CodingKeys: String, CodingKey {
 
-        case apm, conversation, realtime, spotlight, sso, reactions, shared
+        case apm, conversation, realtime, spotlight, sso, reactions, shared, moderation
         case initialization = "init"
         case mobileSdk = "mobile-sdk"
 
