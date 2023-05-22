@@ -43,7 +43,6 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
         return OWConversationSortViewModel()
     }()
 
-    fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
     lazy var commentsCount: Observable<String> = {
         guard let postId = OWManager.manager.postId else { return .empty() }
 

@@ -9,9 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol OWCommunityQuestionCellViewModelingInputs {
-//    var conversationFetched: PublishSubject<SPConversationReadRM> { get }
-}
+protocol OWCommunityQuestionCellViewModelingInputs { }
 
 protocol OWCommunityQuestionCellViewModelingOutputs {
     var id: String { get }

@@ -86,7 +86,9 @@ fileprivate extension OWCommentCreationEntryView {
 
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.height.equalTo(userAvatarView.OWSnp.height)
+            make.trailing.equalToSuperview()
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
 
