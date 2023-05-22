@@ -16,7 +16,9 @@ protocol OWRoutering {
     func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
     func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
+    func pop(popStyle: OWScreenPopStyle, animated: Bool)
     func pop(animated: Bool)
+    func pop(toViewController: UIViewController, animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
@@ -91,8 +93,33 @@ class OWRouter: NSObject, OWRoutering {
     }
 
     func pop(animated: Bool) {
-        if let controller = navigationController?.popViewController(animated: animated) {
-            runCompletion(for: controller)
+        pop(popStyle: .regular, animated: animated)
+    }
+
+    func pop(popStyle: OWScreenPopStyle, animated: Bool) {
+        switch popStyle {
+        case .regular:
+            if let controller = navigationController?.popViewController(animated: animated) {
+                runCompletion(for: controller)
+            }
+        case .dismissStyle:
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            transition.type = .reveal
+            transition.subtype = .fromBottom
+            navigationController?.view.layer.add(transition, forKey: kCATransition)
+            if let controller = navigationController?.popViewController(animated: false) {
+                runCompletion(for: controller)
+            }
+        }
+    }
+
+    func pop(toViewController: UIViewController, animated: Bool) {
+        if let controllers = navigationController?.popToViewController(toViewController, animated: animated) {
+            for controller in controllers {
+                runCompletion(for: controller)
+            }
         }
     }
 

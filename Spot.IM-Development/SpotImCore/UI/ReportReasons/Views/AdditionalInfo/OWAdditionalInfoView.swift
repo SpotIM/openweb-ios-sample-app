@@ -27,6 +27,7 @@ class OWAdditionalInfoView: UIView {
         static let becomeFirstResponderDelay: CGFloat = 0.5
         static let footerBottomToSuperviewPriority: CGFloat = 750
         static let footerBottomToKeyboardPriority: CGFloat = 1000
+        static let submitDisabledOpacity: CGFloat = 0.5
     }
 
     fileprivate let viewModel: OWAdditionalInfoViewViewModeling
@@ -64,12 +65,13 @@ class OWAdditionalInfoView: UIView {
                 .corner(radius: Metrics.buttonsRadius)
     }()
 
-    fileprivate lazy var submitButton: UIButton = {
-        return UIButton()
+    fileprivate lazy var submitButton: OWLoaderButton = {
+        return OWLoaderButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
                 .setTitle(viewModel.outputs.submitButtonText, state: .normal)
                 .corner(radius: Metrics.buttonsRadius)
+                .isEnabled(false)
     }()
 
     init(viewModel: OWAdditionalInfoViewViewModeling) {
@@ -165,11 +167,25 @@ fileprivate extension OWAdditionalInfoView {
             .bind(to: viewModel.inputs.cancelAdditionalInfoTap)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(submitButton.rx.tap, textView.viewModel.outputs.textViewText)
-            .subscribe(onNext: { [weak self] _, text in
-                guard let self = self else { return }
-                self.viewModel.inputs.submitAdditionalInfoTap.onNext(text)
-            })
+        submitButton.rx.tap
+            .bind(to: viewModel.inputs.submitAdditionalInfoTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isSubmitEnabled
+            .map { [weak self] isSubmitEnabled -> Bool in
+                guard let self = self else { return isSubmitEnabled }
+                self.submitButton.alpha = isSubmitEnabled ? 1 : Metrics.submitDisabledOpacity
+                return isSubmitEnabled
+            }
+            .bind(to: submitButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.submitInProgressChanged
+            .bind(to: submitButton.rx.isLoading)
+            .disposed(by: disposeBag)
+
+        textView.viewModel.outputs.textViewText
+            .bind(to: viewModel.inputs.additionalInfoTextChange)
             .disposed(by: disposeBag)
 
         titleView.outputs.closeTapped

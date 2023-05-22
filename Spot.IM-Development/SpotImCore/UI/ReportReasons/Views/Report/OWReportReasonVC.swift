@@ -116,7 +116,7 @@ fileprivate extension OWReportReasonVC {
             .disposed(by: disposeBag)
 
         closeButton.rx.tap
-            .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.closeReportReasonTap)
+            .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
             .disposed(by: disposeBag)
     }
 }

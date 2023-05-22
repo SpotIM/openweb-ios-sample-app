@@ -196,7 +196,6 @@ fileprivate extension OWReportReasonView {
             .disposed(by: disposeBag)
 
         submitButton.rx.tap
-            .debug("*** Refael submitButton.rx.tap")
             .bind(to: viewModel.inputs.submitReportReasonTap)
             .disposed(by: disposeBag)
 
@@ -204,19 +203,17 @@ fileprivate extension OWReportReasonView {
             .bind(to: submitButton.rx.isLoading)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(viewModel.outputs.selectedReason, viewModel.outputs.textViewVM.outputs.textViewTextCount)
-            .subscribe(onNext: { [weak self] reportReason, textCount in
-                guard let self = self,
-                      let reportReason = reportReason
-                else { return }
-                let canSubmit = !reportReason.requiredAdditionalInfo || textCount > 0
-                self.submitButton.isEnabled = canSubmit
-                self.submitButton.alpha = canSubmit ? 1 : Metrics.submitDisabledOpacity
-            })
+        viewModel.outputs.isSubmitEnabled
+            .map { [weak self] isSubmitEnabled -> Bool in
+                guard let self = self else { return isSubmitEnabled }
+                self.submitButton.alpha = isSubmitEnabled ? 1 : Metrics.submitDisabledOpacity
+                return isSubmitEnabled
+            }
+            .bind(to: submitButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
         titleView.outputs.closeTapped
-            .bind(to: viewModel.inputs.closeReportReasonTap)
+            .bind(to: viewModel.inputs.cancelReportReasonTap)
             .disposed(by: disposeBag)
     }
 
