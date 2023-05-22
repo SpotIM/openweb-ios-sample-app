@@ -289,6 +289,7 @@
 		3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC528B4F712003B4F05 /* Shadowable.swift */; };
 		3D3E3AC828B50CC9003B4F05 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */; };
 		3D3E3ACA28B50CF9003B4F05 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */; };
+		3D40CD982A1BC881006E7AD9 /* SPConfigurationModeration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D40CD972A1BC881006E7AD9 /* SPConfigurationModeration.swift */; };
 		3D451B7A29C788AF00CB3BE6 /* OWRouteringMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D451B7929C788AF00CB3BE6 /* OWRouteringMode.swift */; };
 		3D451B7B29C799AA00CB3BE6 /* OWAuthenticationLevelAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */; };
 		3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */; };
@@ -1100,6 +1101,7 @@
 		3D3E3AC528B4F712003B4F05 /* Shadowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shadowable.swift; sourceTree = "<group>"; };
 		3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Registration.swift"; sourceTree = "<group>"; };
 		3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
+		3D40CD972A1BC881006E7AD9 /* SPConfigurationModeration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationModeration.swift; sourceTree = "<group>"; };
 		3D451B7929C788AF00CB3BE6 /* OWRouteringMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouteringMode.swift; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRenewerService.swift; sourceTree = "<group>"; };
@@ -3806,6 +3808,7 @@
 				24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */,
 				24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */,
 				24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */,
+				3D40CD972A1BC881006E7AD9 /* SPConfigurationModeration.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -5527,6 +5530,7 @@
 				3D08E09B28770DEA00E6F1AC /* Array+Extensions.swift in Sources */,
 				3D08E063287599D200E6F1AC /* OWConversationVM.swift in Sources */,
 				3DB3B95D29F7D9A700C50192 /* OWTestingRxTableViewAnimationsView.swift in Sources */,
+				3D40CD982A1BC881006E7AD9 /* SPConfigurationModeration.swift in Sources */,
 				247C01812805A4D3006A3962 /* OWImageType.swift in Sources */,
 				3D31FB8A29AB62D8002B88E0 /* OWLocalizationManager.swift in Sources */,
 				3D08E0AF287721A400E6F1AC /* OWDifferentiatorError.swift in Sources */,

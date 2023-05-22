@@ -27,4 +27,5 @@ struct SPSpotConfiguration: Decodable {
     let sso: SPConfigurationSSO?
     let reactions: SPConfigurationReactions?
     let shared: SPConfigurationShared?
+    let moderation: SPConfigurationModeration?
 }
