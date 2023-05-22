@@ -105,71 +105,41 @@ fileprivate extension OWReportReasonCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWReportReasonViewViewModeling) {
     // swiftlint:enable function_body_length
         // Open Cancel - Independent
-        Observable.merge(viewModel.outputs.closeReportReasonTapped,
-                         viewModel.outputs.cancelReportReasonTapped)
-        .filter { viewModel.outputs.viewableMode == .independent }
-        .subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            let reportReasonCancelViewVM = OWReportReasonCancelViewViewModel()
-            let reportReasonCancelView = OWReportReasonCancelView(viewModel: reportReasonCancelViewVM)
+        viewModel.outputs.cancelReportReasonTapped
+            .filter { viewModel.outputs.viewableMode == .independent }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let reportReasonCancelViewVM = OWReportReasonCancelViewViewModel()
+                let reportReasonCancelView = OWReportReasonCancelView(viewModel: reportReasonCancelViewVM)
 
-            reportReasonCancelView.alpha = 0
-            self.reportReasonView?.addSubview(reportReasonCancelView)
-            UIView.animate(withDuration: Metrics.fadeDuration) {
-                reportReasonCancelView.alpha = 1
-            }
-            reportReasonCancelView.OWSnp.makeConstraints { make in
-                make.edges.equalToSuperview()
-            }
-
-            reportReasonCancelViewVM.closeReportReasonCancelTap
-                .subscribe(onNext: { _ in
-                    UIView.animate(withDuration: Metrics.fadeDuration) {
-                        reportReasonCancelView.alpha = 0
-                    } completion: { _ in
-                        reportReasonCancelView.removeFromSuperview()
-                    }
-                })
-                .disposed(by: self.disposeBag)
-
-            reportReasonCancelViewVM.cancelReportReasonCancelTap
-                .map { OWViewActionCallbackType.closeReportReason }
-                .subscribe { [weak self] viewActionType in
-                    guard let self = self else { return }
-                    self.viewActionsService.append(viewAction: viewActionType)
+                reportReasonCancelView.alpha = 0
+                self.reportReasonView?.addSubview(reportReasonCancelView)
+                UIView.animate(withDuration: Metrics.fadeDuration) {
+                    reportReasonCancelView.alpha = 1
                 }
-                .disposed(by: disposeBag)
-        })
-        .disposed(by: disposeBag)
+                reportReasonCancelView.OWSnp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
 
-        // Open Cancel - Flow
-        Observable.merge(viewModel.outputs.closeReportReasonTapped,
-                         viewModel.outputs.cancelReportReasonTapped)
-        .filter { viewModel.outputs.viewableMode == .partOfFlow }
-        .subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            guard let router = self.router else { return }
-            let reportReasonCancelViewVM = OWReportReasonCancelViewViewModel()
-            let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewViewModel: reportReasonCancelViewVM)
-            reportReasonCancelVC.modalPresentationStyle = .fullScreen
-            router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+                reportReasonCancelViewVM.closeReportReasonCancelTap
+                    .subscribe(onNext: { _ in
+                        UIView.animate(withDuration: Metrics.fadeDuration) {
+                            reportReasonCancelView.alpha = 0
+                        } completion: { _ in
+                            reportReasonCancelView.removeFromSuperview()
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
 
-            reportReasonCancelViewVM.closeReportReasonCancelTap
-                .subscribe(onNext: { _ in
-                    reportReasonCancelVC.dismiss(animated: true)
-                })
-                .disposed(by: self.disposeBag)
-
-            reportReasonCancelViewVM.cancelReportReasonCancelTap
-                .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
-                    guard let router = self.router else { return }
-                    reportReasonCancelVC.dismiss(animated: true)
-                    router.pop(animated: false)
-                })
-                .disposed(by: self.disposeBag)
-        })
-        .disposed(by: disposeBag)
+                reportReasonCancelViewVM.cancelReportReasonCancelTap
+                    .map { OWViewActionCallbackType.closeReportReason }
+                    .subscribe { [weak self] viewActionType in
+                        guard let self = self else { return }
+                        self.viewActionsService.append(viewAction: viewActionType)
+                    }
+                    .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
 
         // Submit - Open Thanks Screen - Independent
         viewModel.outputs.submittedReportReasonObservable
@@ -215,14 +185,14 @@ fileprivate extension OWReportReasonCoordinator {
                 reportReasonThanksVC.modalPresentationStyle = .fullScreen
                 router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
 
-                reportReasonThanksViewVM.closeReportReasonThanksTap
-                    .subscribe(onNext: { [weak self] _ in
-                        guard let self = self else { return }
-                        guard let router = self.router else { return }
-                        reportReasonThanksVC.dismiss(animated: true)
-                        router.pop(animated: false)
-                    })
-                    .disposed(by: self.disposeBag)
+//                reportReasonThanksViewVM.closeReportReasonThanksTap
+//                    .subscribe(onNext: { [weak self] _ in
+//                        guard let self = self else { return }
+//                        guard let router = self.router else { return }
+//                        reportReasonThanksVC.dismiss(animated: true)
+//                        router.pop(animated: false)
+//                    })
+//                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -243,7 +213,9 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let self = self else { return }
                 let additionalInfoViewVM = OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                                          placeholderText: placeholderText,
-                                                                         textViewText: textViewText)
+                                                                         textViewText: textViewText,
+                                                                         isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
+                                                                         submitInProgress: viewModel.outputs.submitInProgress)
                 let additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
 
                 additionalInfoView.alpha = 0
@@ -281,45 +253,134 @@ fileprivate extension OWReportReasonCoordinator {
             })
             .disposed(by: disposeBag)
 
-        // Open Additional information - Flow
-        reportTextViewVM.outputs.textViewTapped
-            .filter { _ in
-                viewModel.outputs.viewableMode == .partOfFlow
-            }
+        // Additional information observable
+        let additionalInformationObservable = reportTextViewVM.outputs.textViewTapped
             .flatMap { _ -> Observable<(String, String)> in
                 return Observable.combineLatest(reportTextViewVM.outputs.placeholderText,
                                                 reportTextViewVM.outputs.textViewText)
                 .take(1)
             }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] placeholderText, textViewText in
+            .map { placeholderText, textViewText -> OWAdditionalInfoViewViewModel in
+                return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
+                                                     placeholderText: placeholderText,
+                                                     textViewText: textViewText,
+                                                     isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
+                                                     submitInProgress: viewModel.outputs.submitInProgress)
+            }
+            .share()
+
+        // Open Additional information - Flow
+        additionalInformationObservable
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .subscribe(onNext: { [weak self] additionalInfoViewVM in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                let additionalInfoViewVM = OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
-                                                                         placeholderText: placeholderText,
-                                                                         textViewText: textViewText)
                 let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
                 router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+            })
+            .disposed(by: disposeBag)
 
-                additionalInfoViewVM.outputs.cancelAdditionalInfoTapped
-                    .take(1)
-                    .subscribe(onNext: { [weak self] _ in
-                        guard let self = self else { return }
-                        guard let router = self.router else { return }
-                        router.pop(animated: true)
-                    })
-                    .disposed(by: self.disposeBag)
+        // Additional information cancel
+        let additionalCancelObservable = additionalInformationObservable
+            .flatMap { additionalInfoViewVM -> Observable<Void> in
+                return additionalInfoViewVM.outputs.cancelAdditionalInfoTapped
+            }
 
-                additionalInfoViewVM.outputs.submitAdditionalInfoTapped
-                    .withLatestFrom(additionalInfoViewVM.outputs.textViewVM.outputs.textViewText)
-                    .take(1)
-                    .subscribe(onNext: { [weak self] textViewText in
-                        guard let self = self else { return }
-                        guard let router = self.router else { return }
-                        reportTextViewVM.inputs.textViewTextChange.onNext(textViewText)
-                        router.pop(animated: true)
-                    })
-                    .disposed(by: self.disposeBag)
+        // Additional information close
+        let additionalCloseObservable = additionalInformationObservable
+            .flatMap { additionalInfoViewVM -> Observable<Void> in
+                return additionalInfoViewVM.outputs.closeReportReasonTapped
+            }
+
+        // Additional information text changed
+        additionalInformationObservable
+            .flatMap { additionalInfoViewVM -> Observable<String> in
+                return additionalInfoViewVM.outputs.additionalInfoTextChanged
+            }
+            .bind(to: viewModel.inputs.textViewTextChange)
+            .disposed(by: disposeBag)
+
+        // Additional information submit
+        additionalInformationObservable
+            .flatMap { additionalInfoViewVM -> Observable<Void> in
+                return additionalInfoViewVM.outputs.submitAdditionalInfoTapped
+            }
+            .bind(to: viewModel.inputs.submitReportReasonTap)
+            .disposed(by: disposeBag)
+
+        // Open cancel observable
+        let cancelObservable = Observable.merge(viewModel.outputs.cancelReportReasonTapped,
+                                                additionalCancelObservable)
+        .map { _ -> OWReportReasonCancelViewViewModel in
+            return OWReportReasonCancelViewViewModel()
+        }
+        .share()
+
+        // Open cancel view - Flow
+        cancelObservable
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .subscribe(onNext: { [weak self] reportReasonCancelViewVM in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewViewModel: reportReasonCancelViewVM)
+                reportReasonCancelVC.modalPresentationStyle = .fullScreen
+                router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        cancelObservable
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .flatMap { reportReasonCancelViewVM -> Observable<Void> in
+                return reportReasonCancelViewVM.outputs.closeReportReasonCancelTapped
+            }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                router.navigationController?.visibleViewController?.dismiss(animated: true)
+            })
+            .disposed(by: self.disposeBag)
+
+        let cancelReportCancelTapped = cancelObservable
+            .flatMap { reportReasonCancelViewVM -> Observable<Void> in
+                return reportReasonCancelViewVM.outputs.cancelReportReasonCancelTapped
+            }
+
+        // Close ReportReason observable
+        let closeObservable = Observable.merge(viewModel.outputs.closeReportReasonTapped,
+                                               additionalCloseObservable,
+                                               cancelReportCancelTapped)
+        .map { _ -> OWReportReasonCancelViewViewModel in
+            return OWReportReasonCancelViewViewModel()
+        }
+        .share()
+
+        // Close Report Reason - Flow
+        closeObservable
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                guard let controllerToPopTo = router.navigationController?.viewControllers.first(where: {
+                    $0.isKind(of: OWReportReasonVC.self)
+                }) else { return }
+                let visableViewController = router.navigationController?.visibleViewController
+                let isReportReasonVC = visableViewController?.isKind(of: OWReportReasonVC.self) ?? false
+
+                if !isReportReasonVC {
+                    visableViewController?.dismiss(animated: true)
+                }
+
+                router.pop(toViewController: controllerToPopTo, animated: false)
+                router.pop(popStyle: .dismissStyle, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -350,29 +411,6 @@ fileprivate extension OWReportReasonCoordinator {
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
             .subscribe()
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.presentError
-            .filter { _ in
-                return viewModel.outputs.viewableMode == .partOfFlow
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] alert in
-                guard let self = self else { return }
-                guard let router = self.router else { return }
-                router.navigationController?.topViewController?.present(alert, animated: true, completion: nil)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.callbackErrorSubmitting
-            .filter { _ in
-                return viewModel.outputs.viewableMode == .independent
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] error in
-                guard let self = self else { return }
-                self.viewActionsService.append(viewAction: OWViewActionCallbackType.error(error))
-            })
             .disposed(by: disposeBag)
     }
 }
