@@ -162,11 +162,6 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
-        viewModel.outputs.shouldShowConversationEmptyState
-            .map { !$0 }
-            .bind(to: self.rx.isHidden)
-            .disposed(by: disposeBag)
-
         Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
                                  tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
             .filter { $0.0 }
