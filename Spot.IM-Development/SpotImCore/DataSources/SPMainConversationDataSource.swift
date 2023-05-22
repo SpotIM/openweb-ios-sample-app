@@ -574,10 +574,11 @@ internal final class SPMainConversationDataSource {
 
             makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
 
-            guard let id = comment.id, let replies = comment.replies, !replies.isEmpty else {
+            guard let id = comment.id, let replies = comment.replies, !replies.isEmpty, !isCommentAlreadyExist(commentId: id) else {
                 visibleComments.append(viewModel)
                 return
             }
+
             if hiddenData[id] == nil {
                 hiddenData[id] = [CommentViewModel]()
             }
@@ -614,7 +615,7 @@ internal final class SPMainConversationDataSource {
                 return
             }
 
-            if checkIfCommentExist(commentId: viewModel.commentId) {
+            if isCommentAlreadyExist(commentId: viewModel.commentId) {
                 // Remove duplicate comments
                 return
             }
@@ -632,7 +633,7 @@ internal final class SPMainConversationDataSource {
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
 
-                if checkIfCommentExist(commentId: reply.commentId) {
+                if isCommentAlreadyExist(commentId: reply.commentId) {
                     // Remove duplicate comments
                     return
                 }
@@ -670,10 +671,10 @@ internal final class SPMainConversationDataSource {
         return visibleComments
     }
 
-    private func checkIfCommentExist(commentId: String?) -> Bool {
+    private func isCommentAlreadyExist(commentId: String?) -> Bool {
         guard let commentId = commentId,
-                !existingCommentIds.contains(commentId) else {
-            return true }
+                !existingCommentIds.contains(commentId) else { return true }
+
         existingCommentIds.insert(commentId)
         return false
     }
