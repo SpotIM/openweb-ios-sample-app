@@ -124,7 +124,7 @@ fileprivate extension OWCommunityGuidelinesView {
         } else {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
-                make.top.bottom.leading.trailing.equalToSuperview()
+                make.edges.equalToSuperview()
                 heightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
             }
         }

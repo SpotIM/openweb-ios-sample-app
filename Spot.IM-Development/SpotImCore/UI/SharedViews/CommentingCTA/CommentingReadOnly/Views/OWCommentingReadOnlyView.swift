@@ -1,5 +1,5 @@
 //
-//  OWReadOnlyPlaceholderView.swift
+//  OWCommentingReadOnlyView.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 28/03/2023.
@@ -57,7 +57,7 @@ fileprivate extension OWCommentingReadOnlyView {
         label.OWSnp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.leading.equalTo(iconImageView.OWSnp.trailing).inset(-Metrics.labelLeadingOffset)
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.labelLeadingOffset)
         }
     }
 

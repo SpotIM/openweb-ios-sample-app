@@ -120,8 +120,7 @@ fileprivate extension OWCommentingCTAViewModel {
             })
             .disposed(by: disposeBag)
 
-        commentCreationEntryViewModel.outputs
-            .tapped
+        commentCreationEntryViewModel.outputs.tapped
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self._commentCreationTap.onNext()

@@ -18,7 +18,6 @@ protocol OWConversationViewModelingInputs {
 
 protocol OWConversationViewModelingOutputs {
     var conversationViewVM: OWConversationViewViewModeling { get }
-    var ctaCommentCreationTapped: Observable<Void> { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
     var shouldCustomizeNavigationBar: Bool { get }
@@ -47,11 +46,6 @@ class OWConversationViewModel: OWConversationViewModeling,
         return OWConversationViewViewModel(conversationData: conversationData,
                                            viewableMode: self.viewableMode)
     }()
-
-    var ctaCommentCreationTapped: Observable<Void> {
-        // TODO: Complete
-        return .never()
-    }
 
     var shouldCustomizeNavigationBar: Bool {
         guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,

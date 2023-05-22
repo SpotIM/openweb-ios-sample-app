@@ -162,20 +162,25 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
+        viewModel.outputs.shouldShowConversationEmptyState
+            .map { !$0 }
+            .bind(to: self.rx.isHidden)
+            .disposed(by: disposeBag)
+
         Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
-                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))) { shouldShowEmptyState, tableViewContentSize -> CGFloat? in
-            guard shouldShowEmptyState else { return nil }
-            return tableViewContentSize?.height
-        }
-                                 .unwrap()
-                                 .observe(on: MainScheduler.instance)
-                                 .subscribe(onNext: { [weak self] tableViewHeight in
-                                     guard let self = self else { return }
-                                     self.conversationEmptyStateView.OWSnp.updateConstraints { make in
-                                         make.top.equalTo(self.tableView.OWSnp.top).offset(tableViewHeight)
-                                     }
-                                 })
-                                 .disposed(by: disposeBag)
+                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
+            .filter { $0.0 }
+            .map { $0.1 }
+            .unwrap()
+            .map { $0.height }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
+                }
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
