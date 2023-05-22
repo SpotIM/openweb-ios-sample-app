@@ -259,28 +259,48 @@ fileprivate extension OWCommentRatingViewModel {
     }
 
     func updateChangeLocally(rankChange: SPRankChange, rankUp: Int, rankDown: Int) {
+        var rankedByUserCount: Int = 0
+        var rankUpCount: Int = rankUp
+        var rankDownCount: Int = rankDown
+
         switch (rankChange.from, rankChange.to) {
         case (.unrank, .up):
-            _rankedByUser.onNext(1)
-            _rankUp.onNext(rankUp + 1)
+            rankedByUserCount = 1
+            rankUpCount = rankUp + 1
         case (.unrank, .down):
-            _rankedByUser.onNext(-1)
-            _rankDown.onNext(rankDown + 1)
+            rankedByUserCount = -1
+            rankDownCount = rankDown + 1
         case (.up, .unrank):
-            _rankedByUser.onNext(0)
-            _rankUp.onNext(rankUp - 1)
+            rankedByUserCount = 0
+            rankUpCount = rankUp - 1
         case (.up, .down):
-            _rankedByUser.onNext(-1)
-            _rankUp.onNext(rankUp - 1)
-            _rankDown.onNext(rankDown + 1)
+            rankedByUserCount = -1
+            rankUpCount = rankUp - 1
+            rankDownCount = rankDown + 1
         case (.down, .unrank):
-            _rankedByUser.onNext(0)
-            _rankDown.onNext(rankDown - 1)
+            rankedByUserCount = 0
+            rankDownCount = rankDown - 1
         case (.down, .up):
-            _rankedByUser.onNext(1)
-            _rankUp.onNext(rankUp + 1)
-            _rankDown.onNext(rankDown - 1)
+            rankedByUserCount = 1
+            rankUpCount = rankUp + 1
+            rankDownCount = rankDown - 1
         default: break
         }
+
+        _rankedByUser.onNext(rankedByUserCount)
+        _rankUp.onNext(rankUpCount)
+        _rankDown.onNext(rankDownCount)
+
+        let newRank = OWComment.Rank(ranksUp: rankUpCount, ranksDown: rankDownCount, rankedByCurrentUser: rankedByUserCount)
+        updateRankChangeInCommentsService(rank: newRank)
+    }
+
+    func updateRankChangeInCommentsService(rank: OWComment.Rank) {
+        guard let postId = OWManager.manager.postId,
+        var comment = self.sharedServiceProvider.commentsService().getComment(with: self.commentId, postId: postId)
+        else { return }
+
+        comment.rank = rank
+        self.sharedServiceProvider.commentsService().setComments([comment], postId: postId)
     }
 }
