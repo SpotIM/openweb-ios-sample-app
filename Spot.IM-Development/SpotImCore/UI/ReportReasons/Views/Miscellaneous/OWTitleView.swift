@@ -24,7 +24,8 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
         static let closeButtonIdentifier = "_close_button_id"
         static let titleLeadingPadding: CGFloat = 16
         static let titleFontSize: CGFloat = 15
-        static let closeButtonTrailingPadding = 19
+        static let closeButtonTrailingPadding: CGFloat = 19
+        static let closeButtonPadding: CGFloat = 20
     }
 
     var outputs: OWTitleViewOutputs { return self }
@@ -48,6 +49,7 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .withPadding(Metrics.closeButtonPadding)
     }()
 
     init(title: String, prefixIdentifier: String) {
@@ -81,7 +83,7 @@ fileprivate extension OWTitleView {
 
         self.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(Metrics.closeButtonTrailingPadding)
+            make.trailing.equalToSuperview().inset(Metrics.closeButtonTrailingPadding - Metrics.closeButtonPadding)
             make.centerY.equalToSuperview()
         }
     }
