@@ -25,7 +25,12 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let textViewHeight: CGFloat = 62
         static let submitDisabledOpacity: CGFloat = 0.5
         static let headerTextPadding: CGFloat = 16
+        static let delayAnimateTextViewDuration: CGFloat = 0.15
+        static let animateTextViewHeightDuration: CGFloat = 0.3
+        static let animateTextViewAlphaDuration: CGFloat = 0.7
     }
+
+    fileprivate var textViewHeightConstraint: OWConstraint? = nil
 
     fileprivate lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,
@@ -41,6 +46,7 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var textView: OWTextView = {
         return OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
+                .alpha(0)
     }()
 
     fileprivate lazy var footerStackView: UIStackView = {
@@ -138,22 +144,27 @@ fileprivate extension OWReportReasonView {
         self.addSubviews(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(tableViewReasons.OWSnp.bottom)
-            make.leading.trailing.equalToSuperviewSafeArea()
+            make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperviewSafeArea()
         }
 
         footerView.addSubview(textView)
-        textView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview().inset(Metrics.textViewPadding)
-            make.height.equalTo(Metrics.textViewHeight)
-        }
-
         footerView.addSubview(footerStackView)
+
+        textView.OWSnp.makeConstraints { [weak self] make in
+            guard let self = self else { return }
+            make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewPadding)
+            // Low priority so that when the next line textViewHeightConstraint will be active it will take over this constraint
+            make.height.equalTo(0).priority(1)
+            self.textViewHeightConstraint = make.height.equalTo(Metrics.textViewHeight).constraint
+        }
+        self.textViewHeightConstraint?.isActive = false
+
         footerStackView.OWSnp.makeConstraints { make in
             make.top.equalTo(textView.OWSnp.bottom).offset(Metrics.textViewPadding)
-            make.leading.trailing.equalToSuperview().inset(Metrics.buttonsPadding)
-            make.height.equalTo(Metrics.buttonsHeight)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.buttonsPadding)
             make.bottom.equalToSuperview().inset(Metrics.buttonsPadding)
+            make.height.equalTo(Metrics.buttonsHeight)
         }
 
         footerStackView.addArrangedSubview(cancelButton)
@@ -214,6 +225,20 @@ fileprivate extension OWReportReasonView {
 
         titleView.outputs.closeTapped
             .bind(to: viewModel.inputs.cancelReportReasonTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.selectedReason
+            .subscribe(onNext: { [weak self] _ in
+                // Show textView after selection
+                guard let self = self else { return }
+                self.textViewHeightConstraint?.isActive = true
+                UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                    self.layoutIfNeeded()
+                }
+                UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                    self.textView.alpha = 1
+                }
+            })
             .disposed(by: disposeBag)
     }
 
