@@ -228,15 +228,22 @@ fileprivate extension OWReportReasonView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.selectedReason
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] selectedReason in
                 // Show textView after selection
                 guard let self = self else { return }
-                self.textViewHeightConstraint?.isActive = true
-                UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
-                    self.layoutIfNeeded()
-                }
-                UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
-                    self.textView.alpha = 1
+                if !(self.textViewHeightConstraint?.isActive ?? false) {
+                    self.textViewHeightConstraint?.isActive = true
+                    if selectedReason.requiredAdditionalInfo { // We do not animate textView if it is a requiredAdditionalInfo reason since we move to the additional info screen
+                        self.layoutIfNeeded()
+                        self.textView.alpha = 1
+                    } else {
+                        UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                            self.layoutIfNeeded()
+                        }
+                        UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                            self.textView.alpha = 1
+                        }
+                    }
                 }
             })
             .disposed(by: disposeBag)
