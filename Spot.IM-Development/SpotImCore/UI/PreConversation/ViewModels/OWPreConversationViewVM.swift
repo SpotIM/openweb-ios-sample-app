@@ -341,21 +341,21 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .flatMap { [weak self] sortOption -> Observable<SPConversationReadRM> in
+            .flatMapLatest { [weak self] sortOption -> Observable<Event<SPConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(postId: self.postId, mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
                 .response
+                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = viewInitialized
-            .flatMap { _ -> Observable<SPConversationReadRM> in
+            .flatMapLatest { _ -> Observable<Event<SPConversationReadRM>> in
                 return conversationReadObservable
                     .take(1)
             }
-            .materialize() // Required to keep the final subscriber even if errors arrived from the network
             .map { event -> SPConversationReadRM? in
                 switch event {
                 case .next(let conversationRead):
