@@ -73,6 +73,11 @@ extension UIView {
         self.clipsToBounds = clipsToBounds
         return self
     }
+
+    @discardableResult func alpha(_ alpha: CGFloat) -> Self {
+        self.alpha = alpha
+        return self
+    }
 }
 
 extension UILabel {
@@ -217,11 +222,6 @@ extension UIButton {
 
     @discardableResult func isEnabled(_ isEnabled: Bool) -> Self {
         self.isEnabled = isEnabled
-        return self
-    }
-
-    @discardableResult func alpha(_ alpha: CGFloat) -> Self {
-        self.alpha = alpha
         return self
     }
 }

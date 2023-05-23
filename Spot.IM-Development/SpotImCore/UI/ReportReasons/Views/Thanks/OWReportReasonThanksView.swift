@@ -22,11 +22,13 @@ class OWReportReasonThanksView: UIView {
         static let buttonHeight: CGFloat = 40
         static let bottomPadding: CGFloat = 20
         static let buttonFontSize: CGFloat = 15
+        static let closeButtonPadding: CGFloat = 20
     }
 
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .withPadding(Metrics.closeButtonPadding)
     }()
 
     fileprivate lazy var gotitButton: UIButton = {
@@ -64,8 +66,8 @@ fileprivate extension OWReportReasonThanksView {
     func setupViews() {
         self.addSubviews(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing)
-            make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing)
+            make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing - Metrics.closeButtonPadding)
+            make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing - Metrics.closeButtonPadding)
         }
 
         self.addSubviews(titleView)
