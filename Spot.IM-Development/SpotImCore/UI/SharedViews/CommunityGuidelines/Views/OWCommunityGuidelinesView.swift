@@ -54,8 +54,6 @@ class OWCommunityGuidelinesView: UIView {
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
     }()
 
-    fileprivate var heightConstraint: OWConstraint? = nil
-
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -65,13 +63,6 @@ class OWCommunityGuidelinesView: UIView {
         self.isUserInteractionEnabled = true
         setupUI()
         setupObservers()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard let viewModel = viewModel else { return }
-
-        viewModel.inputs.titleTextViewWidthChanged.onNext(self.titleTextView.textContainer.size.width)
     }
 
     required init?(coder: NSCoder) {
@@ -124,8 +115,7 @@ fileprivate extension OWCommunityGuidelinesView {
         } else {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
-                make.top.bottom.leading.trailing.equalToSuperview()
-                heightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
+                make.edges.equalToSuperview()
             }
         }
     }
@@ -135,20 +125,6 @@ fileprivate extension OWCommunityGuidelinesView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
-
-        if let heightConstraint = heightConstraint {
-            Observable.combineLatest(viewModel.outputs.shouldShowView,
-                                     viewModel.outputs.titleTextViewHeight)
-                .filter { $0.0 }
-                .map { $0.1 }
-                .subscribe(onNext: { [weak self] titleTextViewHeight in
-                    guard let self = self else { return }
-                    heightConstraint.update(offset: titleTextViewHeight)
-                    self.setNeedsLayout()
-                    self.layoutIfNeeded()
-                })
-                .disposed(by: disposeBag)
-        }
 
         viewModel.outputs.communityGuidelinesHtmlAttributedString
             .bind(to: titleTextView.rx.attributedText)
