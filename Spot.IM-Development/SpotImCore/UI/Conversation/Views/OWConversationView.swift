@@ -15,6 +15,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationTitleHeaderHeight: CGFloat = 56
         static let articleDescriptionHeight: CGFloat = 86
         static let conversationSummaryHeight: CGFloat = 44
+        static let commentingCTAHeight: CGFloat = 64
+        static let separatorHeight: CGFloat = 1
+        static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -29,6 +32,22 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var conversationSummaryView: OWConversationSummaryView = {
         return OWConversationSummaryView(viewModel: self.viewModel.outputs.conversationSummaryViewModel)
+            .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
+        return OWConversationEmptyStateView(viewModel: self.viewModel.outputs.conversationEmptyStateViewModel)
+            .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
+        return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .enforceSemanticAttribute()
     }()
 
@@ -115,11 +134,49 @@ fileprivate extension OWConversationView {
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom)
-            make.bottom.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
+
+        self.addSubview(self.conversationEmptyStateView)
+        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
+            make.top.equalTo(self.tableView.OWSnp.top)
+            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
+        }
+
+        // Setup bottom commentingCTA horizontal separator
+        self.addSubview(commentingCTATopHorizontalSeparator)
+        commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
+            make.top.equalTo(tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.separatorHeight)
+        }
+
+        self.addSubview(commentingCTAView)
+        commentingCTAView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.bottom.equalTo(self.safeAreaLayoutGuide)
+            make.height.equalTo(Metrics.commentingCTAHeight)
         }
     }
 
     func setupObservers() {
+        Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
+                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
+            .filter { $0.0 }
+            .map { $0.1 }
+            .unwrap()
+            .map { $0.height }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.conversationDataSourceSections
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
@@ -130,6 +187,7 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
 
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 

@@ -23,18 +23,17 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
-    var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
+    var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
-    var openCommentConversation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var summaryTopPadding: Observable<CGFloat> { get }
-    var shouldShowCommentCreationEntryView: Observable<Bool> { get }
+    var shouldShowCommentingCTAView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
-    var shouldShowCTA: Observable<Bool> { get }
-    var shouldShowReadOnlyPlaceholder: Observable<Bool> { get }
+    var shouldShowCTAButton: Observable<Bool> { get }
     var shouldShowFooter: Observable<Bool> { get }
     var shouldShowComapactView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
@@ -50,7 +49,9 @@ protocol OWPreConversationViewViewModeling: AnyObject {
     var outputs: OWPreConversationViewViewModelingOutputs { get }
 }
 
-class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
+class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
+                                      OWPreConversationViewViewModelingInputs,
+                                      OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
         static let delayForUICellUpdate: Int = 100
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
@@ -100,8 +101,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
     }()
 
-    lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
-        return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+    lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {
+        return OWCommentingCTAViewModel(imageProvider: imageProvider)
     }()
 
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
@@ -127,14 +128,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .share(replay: 1)
     }()
 
-    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
-    fileprivate lazy var isReadOnly: Observable<Bool> = {
+    fileprivate lazy var isReadOnlyLocalSetting: Bool = {
+        return preConversationData.article.additionalSettings.readOnlyMode == .enable
+    }()
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: isReadOnlyLocalSetting)
+    fileprivate lazy var isReadOnlyObservable: Observable<Bool> = {
         return _isReadOnly
             .share(replay: 1)
     }()
 
     lazy var compactCommentVM: OWPreConversationCompactContentViewModeling = {
-        return OWPreConversationCompactContentViewModel(imageProvider: self.imageProvider)
+        return OWPreConversationCompactContentViewModel(imageProvider: imageProvider)
     }()
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
@@ -151,7 +155,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     var conversationCTAButtonTitle: Observable<String> {
-        Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnly, isEmpty) { count, style, isReadOnly, isEmpty in
+        Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnlyObservable, isEmpty) { count, style, isReadOnly, isEmpty in
             switch(style) {
             case .regular:
                 return OWLocalizationManager.shared.localizedString(key: "Show more comments")
@@ -194,7 +198,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentConversation: Observable<OWCommentCreationType> {
+    var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
     }
@@ -227,17 +231,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
     }
 
-    var shouldShowCommentCreationEntryView: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnly) { style, isReadOnly in
-            switch (style) {
-            case .regular(_):
-                return !isReadOnly
-            case .ctaButtonOnly, .ctaWithSummary, .compact:
-                return false
-            }
-        }
-    }
-
     var shouldShowComments: Observable<Bool> {
         Observable.combineLatest(preConversationStyleObservable, isEmpty) { style, isEmpty in
             switch(style) {
@@ -253,8 +246,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return isCompactMode
     }
 
-    var shouldShowCTA: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnly, isEmpty) { style, isReadOnly, isEmpty in
+    var shouldShowCTAButton: Observable<Bool> {
+        Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
             var isVisible = true
             switch (style) {
             case .regular(_):
@@ -268,11 +261,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
     }
 
-    var shouldShowReadOnlyPlaceholder: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnly, isEmpty) { style, isReadOnly, isEmpty in
+    var shouldShowCommentingCTAView: Observable<Bool> {
+        Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
             switch (style) {
             case .regular:
-                return isReadOnly
+                return true
             case .compact:
                 return false
             case .ctaWithSummary, .ctaButtonOnly:
@@ -435,12 +428,17 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        isReadOnly
+        isReadOnlyObservable
             .bind(to: compactCommentVM.inputs.isReadOnly)
             .disposed(by: disposeBag)
 
-        _ = commentCreationEntryViewModel.outputs
-            .tapped
+        isReadOnlyObservable
+            .bind(to: commentingCTAViewModel.inputs.isReadOnly)
+            .disposed(by: disposeBag)
+
+        commentingCTAViewModel
+            .outputs
+            .commentCreationTapped
             .subscribe(onNext: { [weak self] in
                 self?.commentCreationTap.onNext(.comment)
             })
@@ -488,25 +486,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 return Observable.merge(avatarClickOutputObservable)
             }
 
-        // Responding to comment creation entry avatar click
-        let commentCreationAvatarClickObservable: Observable<URL> = commentCreationEntryViewModel
-            .outputs
-            .avatarViewVM
-            .outputs
-            .openProfile
-
-        Observable.merge(commentAvatarClickObservable, commentCreationAvatarClickObservable)
+        Observable.merge(commentAvatarClickObservable,
+                         commentingCTAViewModel.outputs.openProfile)
             .subscribe(onNext: { [weak self] url in
                 self?._openProfile.onNext(url)
             })
             .disposed(by: disposeBag)
-
-        // Responding to open publisher profile
-        let commentCreationOpenPublisherProfileObservable: Observable<String> = commentCreationEntryViewModel
-            .outputs
-            .avatarViewVM
-            .outputs
-            .openPublisherProfile
 
         let commentOpenPublisherProfileObservable: Observable<String> = commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<String> in
@@ -517,14 +502,15 @@ fileprivate extension OWPreConversationViewViewModel {
                 return Observable.merge(commentOpenPublisherProfileOutput)
             }
 
-        Observable.merge(commentOpenPublisherProfileObservable, commentCreationOpenPublisherProfileObservable)
+        Observable.merge(commentOpenPublisherProfileObservable,
+                         commentingCTAViewModel.outputs.openPublisherProfile)
             .subscribe(onNext: { [weak self] id in
                 self?._openPublisherProfile.onNext(id)
             })
             .disposed(by: disposeBag)
 
         // Update comments cells on ReadOnly mode
-        Observable.combineLatest(commentCellsVmsObservable, isReadOnly) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
+        Observable.combineLatest(commentCellsVmsObservable, isReadOnlyObservable) { commentCellsVms, isReadOnly -> ([OWCommentCellViewModeling], Bool) in
             return (commentCellsVms, isReadOnly)
         }
         .subscribe(onNext: { commentCellsVms, isReadOnly in
