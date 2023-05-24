@@ -30,6 +30,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
@@ -38,10 +39,14 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
 
-    init(router: OWRoutering! = nil, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil,
+         conversationData: OWConversationRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
         self.router = router
         self.conversationData = conversationData
         self.actionsCallbacks = actionsCallbacks
+        self.authenticationManager = authenticationManager
     }
 
     // swiftlint:disable function_body_length
@@ -89,16 +94,30 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         }
 
         // CTA tapped from conversation screen
-        let ctaCommentCreationTapped = conversationVM.outputs.ctaCommentCreationTapped
-            .map { [weak self] _ -> OWCommentCreationRequiredData? in
+        let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
+                    .map { _ in type }
+            }
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 2. Waiting for authentication required for commenting
+                // Can be immediately if anyone can comment in the active spotId, or the user already connected
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.waitForAuthentication(for: .commenting)
+                    .map { _ in type }
+            }
+            .observe(on: MainScheduler.instance)
+            .map { [weak self] type -> OWCommentCreationRequiredData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
                 guard let self = self else { return nil }
-                return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: .comment)
+                return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: type)
             }
             .unwrap()
 
         // Coordinate to comment creation
-        let coordinateCommentCreationObservable = Observable.merge(ctaCommentCreationTapped,
+        let coordinateCommentCreationObservable = Observable.merge(openCommentCreationObservable,
                                                          deepLinkToCommentCreation.unwrap().asObservable())
             .filter { [weak self] _ in
                 guard let self = self else { return false }

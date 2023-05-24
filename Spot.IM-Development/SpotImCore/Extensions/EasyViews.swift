@@ -303,6 +303,11 @@ extension UITextView {
         self.textColor = textColor
         return self
     }
+
+    @discardableResult func textContainerInset(_ textContainerInset: UIEdgeInsets) -> Self {
+        self.textContainerInset = textContainerInset
+        return self
+    }
 }
 
 extension UIStackView {
