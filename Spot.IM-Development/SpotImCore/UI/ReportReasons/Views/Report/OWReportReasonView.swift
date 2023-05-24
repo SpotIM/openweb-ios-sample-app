@@ -247,6 +247,10 @@ fileprivate extension OWReportReasonView {
                 UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
                     self.textView.alpha = 1
                 }
+
+                if let selectedIndex = self.tableViewReasons.indexPathForSelectedRow {
+                    self.tableViewReasons.selectRow(at: selectedIndex, animated: true, scrollPosition: .bottom)
+                }
             })
             .disposed(by: disposeBag)
     }

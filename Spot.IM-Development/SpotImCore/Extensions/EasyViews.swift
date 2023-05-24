@@ -224,6 +224,11 @@ extension UIButton {
         self.isEnabled = isEnabled
         return self
     }
+
+    @discardableResult func contentMode(_ mode: UIView.ContentMode) -> Self {
+        self.contentMode = mode
+        return self
+    }
 }
 
 extension UIImageView {
