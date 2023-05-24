@@ -13,6 +13,7 @@ import RxCocoa
 class OWReportReasonVC: UIViewController {
     fileprivate struct Metrics {
         static let navigationTitleFontSize: CGFloat = 18.0
+        static let closeButtonSize: CGFloat = 40
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
@@ -26,6 +27,7 @@ class OWReportReasonVC: UIViewController {
     fileprivate lazy var closeButton: UIButton = {
         let closeButton = UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .contentMode(.center)
         return closeButton
     }()
 
@@ -66,6 +68,10 @@ fileprivate extension OWReportReasonVC {
         }
 
         setupNavControllerUI()
+
+        closeButton.OWSnp.makeConstraints { make in
+            make.size.equalTo(Metrics.closeButtonSize)
+        }
     }
 
     func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
