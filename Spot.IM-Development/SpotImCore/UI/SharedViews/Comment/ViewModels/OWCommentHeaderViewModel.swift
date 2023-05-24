@@ -42,6 +42,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var inputs: OWCommentHeaderViewModelingInputs { return self }
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
 
+    fileprivate let disposedBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let userBadgeService: OWUserBadgeServicing
 
@@ -70,11 +71,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
+        setupObservers()
     }
 
     init() {
         servicesProvider = OWSharedServicesProvider.shared
         userBadgeService = OWUserBadgeService()
+        setupObservers()
     }
 
     var avatarVM: OWAvatarViewModeling = {
@@ -188,4 +191,12 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: .cancel, style: .cancel)
         ]
     }()
+}
+
+fileprivate extension OWCommentHeaderViewModel {
+    func setupObservers() {
+        shouldShowHiddenCommentMessage
+            .bind(to: avatarVM.inputs.shouldBlockAvatar)
+            .disposed(by: disposedBag)
+    }
 }
