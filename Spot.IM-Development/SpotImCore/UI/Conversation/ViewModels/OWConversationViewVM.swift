@@ -622,7 +622,7 @@ fileprivate extension OWConversationViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.communityGuidelines(let guidelinesCellViewModel) = vm {
                         let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowViewAfterHeightChanged
+                        return guidelinesVM.outputs.shouldShowView
                             .filter { $0 == true }
                             .voidify()
                     } else {

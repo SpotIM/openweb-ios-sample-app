@@ -178,22 +178,20 @@ fileprivate extension OWPreConversationView {
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
             make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.communityQuestionTopPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
         self.addSubview(communityQuestionBottomDevider)
         communityQuestionBottomDevider.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionView.OWSnp.bottom).offset(Metrics.communityQuestionDeviderPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.height.equalTo(Metrics.separatorHeight)
         }
 
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionBottomDevider.OWSnp.bottom).offset(Metrics.communityQuestionDeviderPadding)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
         self.addSubview(commentingCTAView)
@@ -219,8 +217,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(btnCTAConversation)
         btnCTAConversation.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
             ctaZeroHeightConstraint = make.height.equalTo(0).constraint
         }
@@ -228,15 +225,13 @@ fileprivate extension OWPreConversationView {
         self.addSubview(footerTopDevider)
         footerTopDevider.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.separatorHeight)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
 
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.equalTo(footerTopDevider.OWSnp.bottom).offset(Metrics.footerTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
