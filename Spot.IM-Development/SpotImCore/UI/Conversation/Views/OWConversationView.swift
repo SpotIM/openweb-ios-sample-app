@@ -189,6 +189,10 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                self?.tableViewRefreshControl.endRefreshing()
+            })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
