@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-// Should be changed to cell to support Views and small devices
+// TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 protocol OWConversationEmptyStateCellViewModelingInputs {
 
 }

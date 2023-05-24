@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-// Should be changed to cell to support Views and small devices
+// TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 class OWConversationEmptyStateCell: UITableViewCell {
 
     fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {

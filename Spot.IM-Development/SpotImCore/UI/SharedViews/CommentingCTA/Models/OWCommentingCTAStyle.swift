@@ -8,17 +8,8 @@
 
 import Foundation
 
-#if NEW_API
-public enum OWCommentingCTAStyle {
-    case cta
-    case conversationEnded
-    case skelaton
-}
-
-#else
 enum OWCommentingCTAStyle {
     case cta
     case conversationEnded
     case skelaton
 }
-#endif
