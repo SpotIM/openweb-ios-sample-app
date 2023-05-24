@@ -19,7 +19,6 @@ class OWCommunityGuidelinesView: UIView {
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 14.0
         static let horizontalPadding: CGFloat = 10.0
-
     }
 
     fileprivate lazy var titleTextView: UITextView = {

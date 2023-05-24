@@ -117,6 +117,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     @objc
     internal func reloadConversation(showLoader: Bool = true) {
         guard !model.dataSource.isLoading else { return }
+
+        hideTypingIndicationView()
+
         if showLoader {
             self.showLoader()
         }
