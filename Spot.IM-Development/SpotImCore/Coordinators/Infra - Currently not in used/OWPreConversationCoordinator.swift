@@ -88,7 +88,7 @@ fileprivate extension OWPreConversationCoordinator {
                 return nil
             }
 
-        let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
+        let openCommentCreationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentCreation
             .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
@@ -111,7 +111,7 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         // Coordinate to full conversation
-        Observable.merge(openFullConversationObservable, openCommentConversationObservable)
+        Observable.merge(openFullConversationObservable, openCommentCreationObservable)
             .filter { [weak self] _ in // TODO: change to viewable mode
                 guard let self = self else { return true }
                 return !self.isStandaloneMode

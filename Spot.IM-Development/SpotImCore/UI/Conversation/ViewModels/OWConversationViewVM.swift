@@ -17,6 +17,7 @@ protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
     var pullToRefresh: PublishSubject<Void> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -25,6 +26,7 @@ protocol OWConversationViewViewModelingOutputs {
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
+    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
     var shouldShowConversationEmptyState: Observable<Bool> { get }
@@ -58,6 +60,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
+    }
+
+    var commentCreationTap = PublishSubject<OWCommentCreationType>()
+    var openCommentCreation: Observable<OWCommentCreationType> {
+        return commentCreationTap
+            .asObservable()
     }
 
     var shouldShowTiTleHeader: Bool {
@@ -95,12 +103,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentCreation: Observable<OWCommentCreationType> {
-        return commentCreationTap
-            .asObservable()
-    }
-
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
     }()
@@ -125,6 +127,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
     }()
 
+    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
 //        return OWConversationEmptyStateCellViewModel()
 //    }()
@@ -224,6 +227,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
     }()
 
+    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    fileprivate lazy var conversationEmptyStateCellOption: OWConversationCellOption = {
 //        return OWConversationCellOption.conversationEmptyState(viewModel: conversationEmptyStateCellViewModel)
 //    }()
@@ -519,6 +523,14 @@ fileprivate extension OWConversationViewViewModel {
 
         isEmptyObservable
             .bind(to: conversationEmptyStateViewModel.inputs.isEmpty)
+            .disposed(by: disposeBag)
+
+        commentingCTAViewModel
+            .outputs
+            .commentCreationTapped
+            .subscribe(onNext: { [weak self] in
+                self?.commentCreationTap.onNext(.comment)
+            })
             .disposed(by: disposeBag)
 
         // Binding to community question component

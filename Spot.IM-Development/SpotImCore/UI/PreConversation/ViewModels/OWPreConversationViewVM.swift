@@ -27,7 +27,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
-    var openCommentConversation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var urlClickedOutput: Observable<URL> { get }
     var summaryTopPadding: Observable<CGFloat> { get }
@@ -129,10 +129,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate lazy var isReadOnly: Bool = {
+    fileprivate lazy var isReadOnlyLocalSetting: Bool = {
         return preConversationData.article.additionalSettings.readOnlyMode == .enable
     }()
-    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: isReadOnly)
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: isReadOnlyLocalSetting)
     fileprivate lazy var isReadOnlyObservable: Observable<Bool> = {
         return _isReadOnly
             .share(replay: 1)
@@ -199,7 +199,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentConversation: Observable<OWCommentCreationType> {
+    var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
     }
@@ -335,21 +335,21 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .flatMap { [weak self] sortOption -> Observable<OWConversationReadRM> in
+            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
+                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = viewInitialized
-            .flatMap { _ -> Observable<OWConversationReadRM> in
+            .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
                     .take(1)
             }
-            .materialize() // Required to keep the final subscriber even if errors arrived from the network
             .map { event -> OWConversationReadRM? in
                 switch event {
                 case .next(let conversationRead):
