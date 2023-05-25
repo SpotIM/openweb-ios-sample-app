@@ -82,7 +82,6 @@ extension OWManager {
         return _currentSpotId
             .unwrap()
             .asObservable()
-            .distinctUntilChanged()
     }
 
     var currentPostId: Observable<OWPostId> {
@@ -105,6 +104,7 @@ fileprivate extension OWManager {
             })
             .disposed(by: disposeBag)
 
+        // SpotId was re-set to another spotId
         currentSpotId
             .scan((false, ""), accumulator: { result, newSpotId in
                 guard !result.1.isEmpty else {
@@ -124,8 +124,40 @@ fileprivate extension OWManager {
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to another spotId
                 guard let self = self else { return }
+                self.reset()
                 self.servicesProvider.configure.change(spotId: spotId)
             })
             .disposed(by: disposeBag)
+
+        // SpotId was re-set to the same spotId
+        currentSpotId
+            .scan((false, ""), accumulator: { result, newSpotId in
+                guard !result.1.isEmpty else {
+                    // First time the scan called or a case in which spotId set to empty string by the publisher
+                    return (false, newSpotId)
+                }
+
+                if result.1 == newSpotId {
+                    return (true, newSpotId)
+                } else {
+                    // Same spotId, practically we should never arrived here as we added `distinctUntilChanged` to `currentSpotId` observable
+                    return (false, newSpotId)
+                }
+            })
+            .filter { $0.0 } // Continue only if scan return `true` in the first variable
+            .map { $0.1 } // Map back to the spotId
+            .subscribe(onNext: { [weak self] _ in
+                // SpotId was re-set to the same spotId
+                guard let self = self else { return }
+                self.reset()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    // Things to clear / reset each time the spotId reset (even if the same spotId set again - usually the use case will be from our Sample App).
+    func reset() {
+        guard let customizations = self.uiLayer.customizations as? OWCustomizationsInternalProtocol else { return }
+
+        customizations.clearCallbacks()
     }
 }
