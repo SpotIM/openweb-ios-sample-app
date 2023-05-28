@@ -91,6 +91,7 @@
 		16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */; };
 		16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */; };
 		16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */; };
+		16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
 		2414F82D27EC682000722D2B /* SPAvatarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414F82C27EC682000722D2B /* SPAvatarViewModel.swift */; };
 		241AF9EF295B215600A941C1 /* OWCommentTextLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9EE295B215600A941C1 /* OWCommentTextLabel.swift */; };
@@ -915,6 +916,7 @@
 		16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVM.swift; sourceTree = "<group>"; };
 		16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentViewModel.swift; sourceTree = "<group>"; };
 		16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentContentViewModel.swift; sourceTree = "<group>"; };
+		16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadSettings.swift; sourceTree = "<group>"; };
 		1A22EE731738D885057978C0 /* Pods-Shared-SpotImCore.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
@@ -1795,6 +1797,7 @@
 			children = (
 				161270D829ACD461001F9715 /* OWCommentThreadRequiredData.swift */,
 				16C42A5529F68D7000725F07 /* OWCommentThreadSettingsBuilder.swift */,
+				16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */,
 			);
 			path = CommentThread;
 			sourceTree = "<group>";
@@ -5267,6 +5270,7 @@
 				16D5A20829D457AA00914AD7 /* OWCommentThreadActionCell.swift in Sources */,
 				3D20A37F27B01C37003F8513 /* OWConstraintMakerFinalizable.swift in Sources */,
 				3D08E0AB28771DCB00E6F1AC /* OWDiff.swift in Sources */,
+				16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */,
 				3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				3D31FB9229AB743A002B88E0 /* OWLocaleStrategy+Extensions.swift in Sources */,
 				1628A75728EB0D8E0019B5EC /* OWReplyCellViewModel.swift in Sources */,
