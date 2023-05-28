@@ -9,6 +9,11 @@
 import Foundation
 
 enum OWConversationEndpoints: OWEndpoints {
+    fileprivate struct Metrics {
+        static let parentCommentDepth: Int = 2
+        static let replyCommentDepth: Int = 1
+    }
+
     case conversationAsync(articleUrl: String)
     case conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int)
     case commentReport(id: String, parentId: String?)
@@ -63,7 +68,7 @@ enum OWConversationEndpoints: OWEndpoints {
                 "parent_id": parentId,
                 "message_id": messageId,
                 "extract_data": page == .first,
-                "depth": parentId.isEmpty ? 2 : 1
+                "depth": parentId.isEmpty ? Metrics.parentCommentDepth : Metrics.replyCommentDepth
             ]
             if let childCount = childCount {
                 params["child_count"] = childCount
