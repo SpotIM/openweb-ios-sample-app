@@ -379,10 +379,10 @@ fileprivate extension OWPreConversationViewViewModel {
                 let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
 
                 // cache comments in comment service
-                self.servicesProvider.commentsService().setComments(responseComments, postId: self.postId)
+                self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
 
                 // cache users in users service
-                self.servicesProvider.usersService().setUsers(responseUsers)
+                self.servicesProvider.usersService().set(users: responseUsers)
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = responseUsers[comment.userId ?? ""] else { return }

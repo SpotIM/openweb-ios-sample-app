@@ -254,8 +254,8 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _sortDictateService.invalidateCache()
         _blockerService.invalidateAllBlockers()
         _spotConfigurationService.spotChanged(spotId: spotId)
-        _commentsService.cleanCachedComments()
-        _usersService.cleanCachedUsers()
+        _commentsService.cleanCache()
+        _usersService.cleanCache()
     }
 }
 
