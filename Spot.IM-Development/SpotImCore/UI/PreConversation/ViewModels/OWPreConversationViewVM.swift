@@ -53,8 +53,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                       OWPreConversationViewViewModelingInputs,
                                       OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
-        static let delayForPerformTableViewAnimation: Int = 10
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
     }
 
