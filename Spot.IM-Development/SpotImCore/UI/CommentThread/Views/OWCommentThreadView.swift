@@ -20,6 +20,8 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         static let highlightBackgroundColorAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDelay: Double = 1.0
         static let highlightBackgroundColorAlpha: Double = 0.2
+
+        static let tableViewRowEstimatedHeight: Double = 130.0
     }
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
@@ -48,7 +50,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         tableView.allowsSelection = false
 
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 130
+        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
 
         // Register cells
         for option in OWCommentThreadCellOption.allCases {
@@ -111,10 +113,16 @@ fileprivate extension OWCommentThreadView {
             .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
             .disposed(by: disposeBag)
 
-        tableView.rx.didEndDecelerating
+        tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndDecelerating
+                    .asObservable()
+                    .take(1)
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self, self.tableViewRefreshControl.isRefreshing else { return }
+                guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
             })
             .disposed(by: disposeBag)
