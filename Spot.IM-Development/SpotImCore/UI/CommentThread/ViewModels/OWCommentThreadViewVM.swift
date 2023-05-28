@@ -262,16 +262,16 @@ fileprivate extension OWCommentThreadViewViewModel {
     }
 
     func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
-        guard let comment = self.servicesProvider.commentsService().getComment(with: commentId, postId: self.postId),
+        guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
               let commentUserId = comment.userId,
-              let user = self.servicesProvider.usersService().getUser(with: commentUserId)
+              let user = self.servicesProvider.usersService().get(userId: commentUserId)
         else { return nil }
 
         var replyToUser: SPUser? = nil
         if let replyToCommentId = comment.parentId,
-           let replyToComment = self.servicesProvider.commentsService().getComment(with: replyToCommentId, postId: self.postId),
+           let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
            let replyToUserId = replyToComment.userId {
-            replyToUser = self.servicesProvider.usersService().getUser(with: replyToUserId)
+            replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
         }
 
         return OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: replyToUser, collapsableTextLineLimit: 4))
@@ -279,10 +279,10 @@ fileprivate extension OWCommentThreadViewViewModel {
 
     func cacheConversationRead(response: OWConversationReadRM) {
         if let responseComments = response.conversation?.comments {
-            self.servicesProvider.commentsService().setComments(responseComments, postId: self.postId)
+            self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
         }
         if let responseUsers = response.conversation?.users {
-            self.servicesProvider.usersService().setUsers(responseUsers)
+            self.servicesProvider.usersService().set(users: responseUsers)
         }
     }
 }
