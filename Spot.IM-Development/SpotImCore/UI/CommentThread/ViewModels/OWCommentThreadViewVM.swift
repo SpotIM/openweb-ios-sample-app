@@ -14,6 +14,7 @@ typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWComm
 protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
+    var scrolledToCellIndex: PublishSubject<Int> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -23,6 +24,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var scrollToCellIndex: Observable<Int> { get }
     var highlightCellIndex: Observable<Int> { get }
 }
 
@@ -39,6 +41,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let numberOfCommentsInSkeleton: Int = 4
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
+        static let delayForPerformHighlightAnimation: Int = 1 // second
     }
 
     fileprivate var postId: OWPostId {
@@ -88,9 +91,16 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    fileprivate var _highlightCellIndex = PublishSubject<Int>()
+    fileprivate var _performHighlightAnimationCellIndex = PublishSubject<Int>()
+    var scrolledToCellIndex = PublishSubject<Int>()
+
+    var scrollToCellIndex: Observable<Int> {
+        _performHighlightAnimationCellIndex
+            .asObserver()
+    }
+
     var highlightCellIndex: Observable<Int> {
-        return _highlightCellIndex
+        return scrolledToCellIndex
             .asObserver()
     }
 
@@ -545,6 +555,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // perform highlight animation for selected comment id
         cellsViewModels
             .map { [weak self] cellsViewModels -> Int? in
                 guard let self = self else { return nil }
@@ -558,10 +569,10 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return commentIndex
             }
             .unwrap()
-            .delay(.seconds(1), scheduler: MainScheduler.asyncInstance)
+            .delay(.seconds(Metrics.delayForPerformHighlightAnimation), scheduler: MainScheduler.asyncInstance)
             .take(1)
             .subscribe(onNext: { [weak self] index in
-                self?._highlightCellIndex.onNext(index)
+                self?._performHighlightAnimationCellIndex.onNext(index)
             })
             .disposed(by: disposeBag)
     }
