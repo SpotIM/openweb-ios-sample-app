@@ -482,11 +482,12 @@ fileprivate extension OWCommentThreadViewViewModel {
         // responding to thread action clicked
         commentThreadActionsCellsVmsObservable
             .flatMap { commentThreadActionsCellVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
-                let commentThreadActionClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentThreadActionsCellVms.map { commentThreadActionsCellVm in
-                    return commentThreadActionsCellVm.outputs.commentActionsVM
-                        .outputs.tapOutput
-                        .map { (commentThreadActionsCellVm.outputs.commentPresentationData, commentThreadActionsCellVm.outputs.mode) }
-                }
+                let commentThreadActionClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentThreadActionsCellVms
+                    .map { commentThreadActionsCellVm in
+                        return commentThreadActionsCellVm.outputs.commentActionsVM
+                            .outputs.tapOutput
+                            .map { (commentThreadActionsCellVm.outputs.commentPresentationData, commentThreadActionsCellVm.outputs.mode) }
+                    }
                 return Observable.merge(commentThreadActionClickObservable)
             }
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
