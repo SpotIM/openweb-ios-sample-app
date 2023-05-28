@@ -37,7 +37,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
-        static let delayForPerformTableViewAnimation: Int = 10
+        static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
     }
 
@@ -215,7 +215,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                     let replyPresentationData = OWCommentPresentationData(
                         id: replyId,
-                        repliesIds: reply.replies?.map { $0.id! } ?? [],
+                        repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                         totalRepliesCount: reply.repliesCount ?? 0,
                         repliesOffset: reply.offset ?? 0,
                         repliesPresentation: []
@@ -289,6 +289,7 @@ fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Observable for the conversation network API
+        // TODO: add materialize and handle errors
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
             .flatMap { [weak self] data -> Observable<OWConversationReadRM> in
@@ -350,6 +351,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let currentRepliesCount = commentPresentationData.repliesIds.count
                 let fetchCount = countAfterUpdate - currentRepliesCount
 
+                // TODO: add materialize and handle errors
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
@@ -358,40 +360,40 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .map { (commentPresentationData, $0) }
             }
 
-        loadMoreRepliesReadObservable.subscribe(onNext: { [weak self] (commentPresentationData, response) in
-            guard let self = self else { return }
+        loadMoreRepliesReadObservable
+            .subscribe(onNext: { [weak self] (commentPresentationData, response) in
+                guard let self = self else { return }
 
-            let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
+                let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
 
-            // add presentation data from response
-            var presentationDataFromResponse: [OWCommentPresentationData] = []
-            if let response = response {
-                self.cacheConversationRead(response: response)
+                // add presentation data from response
+                var presentationDataFromResponse: [OWCommentPresentationData] = []
+                if let response = response {
+                    self.cacheConversationRead(response: response)
 
-                presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                    presentationDataFromResponse = self.getCommentsPresentationData(from: response)
 
-                // filter existing comments
-                presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
+                    // filter existing comments
+                    presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
 
-                // filter existing reply ids
-                let newRepliesIds = (response.conversation?.comments?.map { $0.id! })?.filter { !commentPresentationData.repliesIds.contains($0) }
+                    // filter existing reply ids
+                    let newRepliesIds = (response.conversation?.comments?.map { $0.id }.unwrap())?.filter { !commentPresentationData.repliesIds.contains($0) }
 
-                // update commentPresentationData according to the response
-                commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
-                commentPresentationData.repliesOffset = response.conversation?.offset ?? 0
-            }
+                    // update commentPresentationData according to the response
+                    commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
+                    commentPresentationData.repliesOffset = response.conversation?.offset ?? 0
+                }
 
-            var repliesPresentation = existingRepliesPresentationData + presentationDataFromResponse
+                var repliesPresentation = existingRepliesPresentationData + presentationDataFromResponse
 
-            // take required count of replies
-            let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
-            repliesPresentation = Array(repliesPresentation.prefix(countAfterUpdate))
+                // take required count of replies
+                let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
+                repliesPresentation = Array(repliesPresentation.prefix(countAfterUpdate))
 
-            commentPresentationData.setRepliesPresentation(repliesPresentation)
-            commentPresentationData.update.onNext()
-
-        })
-        .disposed(by: disposeBag)
+                commentPresentationData.setRepliesPresentation(repliesPresentation)
+                commentPresentationData.update.onNext()
+            })
+            .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell)
         cellsViewModels
@@ -461,31 +463,31 @@ fileprivate extension OWCommentThreadViewViewModel {
         })
         .disposed(by: disposeBag)
 
-        // Observable of the comment collapse cell VMs
-        let commentCollapseCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
+        // Observable of the comment actions cell VMs
+        let commentThreadActionsCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
             .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
-                let commentThreadCollapseCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
-                    if case.commentThreadActions(let commentThreadCollapseCellViewModel) = vm {
-                        return commentThreadCollapseCellViewModel
+                let commentThreadActionsCellVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadActions(let commentThreadActionsCellViewModel) = vm {
+                        return commentThreadActionsCellViewModel
                     } else {
                         return nil
                     }
                 }
                     .unwrap()
 
-                return Observable.just(commentThreadCollapseCellsVms)
+                return Observable.just(commentThreadActionsCellVms)
             }
             .share()
 
         // responding to thread action clicked
-        commentCollapseCellsVmsObservable
-            .flatMap { commentCollapseCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
-                let collapseClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentCollapseCellsVms.map { commentCollapseCellsVm in
-                    return commentCollapseCellsVm.outputs.commentActionsVM
+        commentThreadActionsCellsVmsObservable
+            .flatMap { commentThreadActionsCellVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
+                let commentThreadActionClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentThreadActionsCellVms.map { commentThreadActionsCellVm in
+                    return commentThreadActionsCellVm.outputs.commentActionsVM
                         .outputs.tapOutput
-                        .map { (commentCollapseCellsVm.outputs.commentPresentationData, commentCollapseCellsVm.outputs.mode) }
+                        .map { (commentThreadActionsCellVm.outputs.commentPresentationData, commentThreadActionsCellVm.outputs.mode) }
                 }
-                return Observable.merge(collapseClickObservable)
+                return Observable.merge(commentThreadActionClickObservable)
             }
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
