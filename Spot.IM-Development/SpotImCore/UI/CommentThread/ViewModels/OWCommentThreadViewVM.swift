@@ -38,6 +38,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
         static let delayForPerformTableViewAnimation: Int = 10
+        static let commentCellCollapsableTextLineLimit: Int = 4
     }
 
     fileprivate var postId: OWPostId {
@@ -226,7 +227,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
             let commentPresentationData = OWCommentPresentationData(
                 id: commentId,
-                repliesIds: comment.replies?.map { $0.id! } ?? [],
+                repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
                 repliesPresentation: repliesPresentationData
@@ -266,7 +267,12 @@ fileprivate extension OWCommentThreadViewViewModel {
             replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
         }
 
-        return OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: replyToUser, collapsableTextLineLimit: 4))
+        return OWCommentCellViewModel(data: OWCommentRequiredData(
+            comment: comment,
+            user: user,
+            replyToUser: replyToUser,
+            collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit
+        ))
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
