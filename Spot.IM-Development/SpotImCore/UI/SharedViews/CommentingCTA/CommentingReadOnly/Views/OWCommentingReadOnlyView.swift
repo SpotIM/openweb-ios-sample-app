@@ -1,5 +1,5 @@
 //
-//  OWPreConversationClosedPlaceholderView.swift
+//  OWCommentingReadOnlyView.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 28/03/2023.
@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationClosedPlaceholderView: UIView {
+class OWCommentingReadOnlyView: UIView {
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 15
         static let labelLeadingOffset: CGFloat = 4
@@ -18,7 +18,7 @@ class OWPreConversationClosedPlaceholderView: UIView {
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
-       return UIImageView(image: UIImage(spNamed: "time-icon", supportDarkMode: true))
+       return UIImageView(image: UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true))
             .enforceSemanticAttribute()
     }()
 
@@ -43,19 +43,21 @@ class OWPreConversationClosedPlaceholderView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationClosedPlaceholderView {
+fileprivate extension OWCommentingReadOnlyView {
     func setupViews() {
         self.enforceSemanticAttribute()
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.iconSize)
         }
 
         self.addSubview(label)
         label.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(iconImageView.OWSnp.trailing).inset(-Metrics.labelLeadingOffset)
+            make.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.labelLeadingOffset)
         }
     }
 
@@ -66,7 +68,7 @@ fileprivate extension OWPreConversationClosedPlaceholderView {
                 guard let self = self else { return }
 
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
-                self.iconImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
+                self.iconImageView.image = UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true)
             })
             .disposed(by: disposeBag)
     }

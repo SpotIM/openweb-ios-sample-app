@@ -13,7 +13,7 @@ import RxCocoa
 class OWCommunityGuidelinesView: UIView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
-        static let communityGuidelinesLabelIdentifier = "community_guidelines_guidelines_label_id"
+        static let communityGuidelinesTextViewIdentifier = "community_guidelines_text_view_id"
         static let containerCorderRadius: CGFloat = 8.0
         static let containerHeight: CGFloat = 44
         static let horizontalOffset: CGFloat = 16.0
@@ -33,11 +33,11 @@ class OWCommunityGuidelinesView: UIView {
             .wrapContent(axis: .vertical)
             .hugContent(axis: .vertical)
             .dataDetectorTypes([.link])
+            .textContainerInset(.zero)
 
         textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
                                        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
         textView.textContainer.lineFragmentPadding = 0
-        textView.textContainerInset = .zero
         textView.sizeToFit()
         return textView
     }()
@@ -95,7 +95,7 @@ class OWCommunityGuidelinesView: UIView {
 fileprivate extension OWCommunityGuidelinesView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesLabelIdentifier
+        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier
     }
 
     func setupUI() {
@@ -111,8 +111,7 @@ fileprivate extension OWCommunityGuidelinesView {
 
             guidelinesContainer.addSubview(guidelinesIcon)
             guidelinesIcon.OWSnp.makeConstraints { make in
-                make.top.equalToSuperview().offset(Metrics.verticalOffset)
-                make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+                make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             }
 
@@ -125,17 +124,8 @@ fileprivate extension OWCommunityGuidelinesView {
         } else {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview()
+                make.edges.equalToSuperview()
                 heightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
-
-                // avoide device notch in landscape
-                if #available(iOS 11.0, *) {
-                    make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
-                    make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.horizontalOffset)
-                } else {
-                    make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-                    make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-                }
             }
         }
     }
