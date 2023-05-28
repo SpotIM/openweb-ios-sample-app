@@ -60,7 +60,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return _commentsPresentationData
             .rx_elements()
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWCommentThreadCellOption]> in
-                guard let self = self else { return Observable.never() }
+                guard let self = self else { return Observable.empty() }
 
                 if (commentsPresentationData.isEmpty) {
                     return Observable.just(self.getSkeletonCells())
@@ -69,8 +69,15 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
             .share()
-            .asObservable()
     }()
+
+    var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
+        return cellsViewModels
+            .map { items in
+                let section = CommentThreadDataSourceModel(model: self.postId, items: items)
+                return [section]
+            }
+    }
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
@@ -104,22 +111,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
-        return cellsViewModels
-            .map { items in
-                // TODO: We might decide to work with few sections in the future.
-                // Current implementation will be one section.
-                // The String can be the `postId` which we will add once the VM will be ready.
-                let section = CommentThreadDataSourceModel(model: "postId", items: items)
-                return [section]
-            }
-    }
-
     var viewInitialized = PublishSubject<Void>()
     var pullToRefresh = PublishSubject<Void>()
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
-
-    var offset = 0
 
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
@@ -207,8 +201,6 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         var commentsPresentationData = [OWCommentPresentationData]()
         var repliesPresentationData = [OWCommentPresentationData]()
-
-        self.offset = response.conversation?.offset ?? 0
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
