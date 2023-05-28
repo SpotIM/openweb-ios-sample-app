@@ -138,24 +138,33 @@ fileprivate extension OWCommentThreadView {
                 })
                 .disposed(by: disposeBag)
 
+        viewModel.outputs.scrollToCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                guard let self = self else { return }
+                UIView.animate(withDuration: Metrics.highlightScrollAnimationDuration, animations: {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .middle, animated: false)
+                }) { _ in
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.highlightCellIndex
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] index in
                     let cellIndexPath = IndexPath(row: index, section: 0)
                     guard let self = self, let cell = self.tableView.cellForRow(at: cellIndexPath) else { return }
                     let prevBackgroundColor = cell.backgroundColor
-                    UIView.animate(withDuration: Metrics.highlightScrollAnimationDuration, animations: {
-                        self.tableView.scrollToRow(at: cellIndexPath, at: .middle, animated: false)
+                    UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
+                        cell.backgroundColor = OWColorPalette.shared.color(
+                            type: .brandColor,
+                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
+                        ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
                     }) { _ in
-                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
-                            cell.backgroundColor = OWColorPalette.shared.color(
-                                type: .brandColor,
-                                themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
-                            ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
-                        }) { _ in
-                            UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
-                                cell.backgroundColor = prevBackgroundColor
-                            }
+                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
+                            cell.backgroundColor = prevBackgroundColor
                         }
                     }
                 })
