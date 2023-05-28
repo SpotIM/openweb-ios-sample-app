@@ -50,6 +50,7 @@ internal final class SPMainConversationDataSource {
 
     private var repliesProviders = [String: SPConversationsDataProvider]()
     private var cellData = [[CommentViewModel]]()
+    private var existingCommentIds = Set<String>()
     private var hiddenData = [String: [CommentViewModel]]()
     private var users = [String: SPUser]()
     private var extractData: SPConversationExtraDataRM?
@@ -170,6 +171,8 @@ internal final class SPMainConversationDataSource {
 
                 self.messageCount = response?.conversation?.messagesCount ?? 0
                 self.messageCounterUpdated?(self.messageCount)
+
+                self.existingCommentIds.removeAll()
 
                 self.cellData = self.processed(response?.conversation?.comments)
                 if self.shouldShowBanner {
@@ -296,12 +299,6 @@ internal final class SPMainConversationDataSource {
                     }
                 }
         }
-
-    private func resetAllComments() {
-        cellData.removeAll()
-        hiddenData.removeAll()
-        repliesProviders.removeAll()
-    }
 
     internal func isTimeToLoadNextPage(forRowAt indexPath: IndexPath) -> Bool {
         return absoluteIndex(ofRowAt: indexPath) >= totalCellCount - 5
@@ -577,10 +574,11 @@ internal final class SPMainConversationDataSource {
 
             makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
 
-            guard let id = comment.id, let replies = comment.replies, !replies.isEmpty else {
+            guard let id = comment.id, let replies = comment.replies, !replies.isEmpty, !isCommentAlreadyExist(commentId: id) else {
                 visibleComments.append(viewModel)
                 return
             }
+
             if hiddenData[id] == nil {
                 hiddenData[id] = [CommentViewModel]()
             }
@@ -612,10 +610,10 @@ internal final class SPMainConversationDataSource {
                                                 replyingToCommentId: replyingToCommentId,
                                                 replyingToDisplayName: replyingToDisplayName)
 
-            if viewModel.isHiddenComment() && (comment.replies == nil || comment.replies?.isEmpty == true) {
-                // if comment is hidden without any replies - we filter out this comment
-                return
-            }
+            // if comment is hidden without any replies or comment already exist - we filter out this comment
+            guard !viewModel.isHiddenComment(),
+                  (comment.replies != nil || comment.replies?.isEmpty == false),
+                  !isCommentAlreadyExist(commentId: viewModel.commentId) else { return }
 
             section.append(viewModel)
             allCommentsAndReplies.append(viewModel)
@@ -629,6 +627,10 @@ internal final class SPMainConversationDataSource {
 
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
+
+                // if comment already exist - we filter out this comment
+                guard isCommentAlreadyExist(commentId: reply.commentId) else { return }
+
                 allCommentsAndReplies.append(reply)
                 if showReplies {
                     section.insert(reply, at: 1)
@@ -649,10 +651,9 @@ internal final class SPMainConversationDataSource {
                 hiddenData[id]?.reverse()
             }
 
-            if viewModel.isHiddenComment() && areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) {
-                // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
-                return
-            }
+            // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
+            guard !viewModel.isHiddenComment(),
+                  !areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) else { return }
 
             visibleComments.append(section)
 
@@ -660,6 +661,14 @@ internal final class SPMainConversationDataSource {
         }
 
         return visibleComments
+    }
+
+    private func isCommentAlreadyExist(commentId: String?) -> Bool {
+        guard let commentId = commentId,
+                !existingCommentIds.contains(commentId) else { return true }
+
+        existingCommentIds.insert(commentId)
+        return false
     }
 
     private func comment(with id: String?) -> CommentViewModel? {

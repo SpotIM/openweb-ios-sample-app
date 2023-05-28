@@ -23,6 +23,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 20
         static let depthOffset: CGFloat = 23
+        static let skeletonViewIdentifier = "comment_skeleton_view_id"
     }
 
     fileprivate var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
@@ -130,8 +131,8 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
         self.setupUI()
+        self.applyAccessibility()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -169,4 +170,7 @@ fileprivate extension OWCommentSkeletonShimmeringCell {
         }
     }
 
+    func applyAccessibility() {
+        mainSkeletonShimmeringView.accessibilityIdentifier = Metrics.skeletonViewIdentifier
+    }
 }

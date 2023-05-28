@@ -14,6 +14,7 @@ typealias ConversationDataSourceModel = OWAnimatableSectionModel<String, OWConve
 
 protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -22,9 +23,14 @@ protocol OWConversationViewViewModelingOutputs {
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
+    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
+//    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
+    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
+    var shouldShowConversationEmptyState: Observable<Bool> { get }
+    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
-    var initialDataLoaded: Observable<Bool> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -42,10 +48,17 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForCellSizeChanges: Int = 100
     }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let viewableMode: OWViewableMode
-    fileprivate let disposeBag = DisposeBag()
+    var viewInitialized = PublishSubject<Void>()
+
+    var commentCreationTap = PublishSubject<OWCommentCreationType>()
+    var openCommentCreation: Observable<OWCommentCreationType> {
+        return commentCreationTap
+            .asObservable()
+    }
+
+    var shouldShowTiTleHeader: Bool {
+        return viewableMode == .independent
+    }
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -59,52 +72,28 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWConversationSummaryViewModel()
     }()
 
-    lazy var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling = {
-        return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle)
-    }()
-
-    lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
-        return OWSpacerCellViewModel(style: .none)
-    }()
-
-    lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
-        return OWSpacerCellViewModel(style: .community)
-    }()
-
     lazy var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling = {
         return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
     }()
 
-    fileprivate lazy var communityQuestionCellOptions: OWConversationCellOption = {
-        return OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
+    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
+//    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
+//        return OWConversationEmptyStateCellViewModel()
+//    }()
+
+    lazy var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling = {
+        return OWConversationEmptyStateViewModel()
     }()
 
-    fileprivate lazy var communityGuidelinesCellOption: OWConversationCellOption = {
-        return OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
-    }()
-
-    fileprivate lazy var communitySpacerCellOption: OWConversationCellOption = {
-        return OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
-    }()
-
-    var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
-        return _cellsViewModels
-            .rx_elements()
+    fileprivate let _shouldShowConversationEmptyState = BehaviorSubject<Bool>(value: false)
+    var shouldShowConversationEmptyState: Observable<Bool> {
+        return _shouldShowConversationEmptyState
             .asObservable()
     }
 
-    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var updateCellSizeAtIndex: Observable<Int> {
-        return _changeSizeAtIndex
-            .asObservable()
-    }
-
-    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
-    var initialDataLoaded: Observable<Bool> {
-        return _initialDataLoaded
-            .asObservable()
-    }
+    lazy var commentingCTAViewModel: OWCommentingCTAViewModel = {
+        return OWCommentingCTAViewModel(imageProvider: imageProvider)
+    }()
 
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels
@@ -117,24 +106,83 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             }
     }
 
+    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
+    var updateCellSizeAtIndex: Observable<Int> {
+        return _changeSizeAtIndex
+            .asObservable()
+    }
+
+    fileprivate var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
+    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
+        return _cellsViewModels
+            .rx_elements()
+            .asObservable()
+    }
+
+    fileprivate lazy var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling = {
+        return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle)
+    }()
+
+    fileprivate lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
+        return OWSpacerCellViewModel(style: .none)
+    }()
+
+    fileprivate lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
+        return OWSpacerCellViewModel(style: .community)
+    }()
+
+    fileprivate lazy var communityQuestionCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.communityQuestion(viewModel: communityQuestionCellViewModel)
+    }()
+
+    fileprivate lazy var communityGuidelinesCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
+    }()
+
+    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
+//    fileprivate lazy var conversationEmptyStateCellOption: OWConversationCellOption = {
+//        return OWConversationCellOption.conversationEmptyState(viewModel: conversationEmptyStateCellViewModel)
+//    }()
+
+    fileprivate lazy var communitySpacerCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
+    }()
+
     fileprivate lazy var conversationStyle: OWConversationStyle = {
         return self.conversationData.settings?.style ?? OWConversationStyle.regular
     }()
 
-    var shouldShowTiTleHeader: Bool {
-        return viewableMode == .independent
-    }
+    fileprivate lazy var isReadOnly: Bool = {
+        return conversationData.article.additionalSettings.readOnlyMode == .enable
+    }()
+    fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: isReadOnly)
+    fileprivate lazy var isReadOnlyObservable: Observable<Bool> = {
+        return _isReadOnly
+            .share(replay: 1)
+    }()
 
-    var viewInitialized = PublishSubject<Void>()
+    fileprivate var _isEmpty = BehaviorSubject<Bool>(value: false)
+    fileprivate lazy var isEmptyObservable: Observable<Bool> = {
+        return _isEmpty
+            .share(replay: 1)
+    }()
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
 
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let imageProvider: OWImageProviding
+    fileprivate let conversationData: OWConversationRequiredData
+    fileprivate let viewableMode: OWViewableMode
+    fileprivate let disposeBag = DisposeBag()
+
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
           conversationData: OWConversationRequiredData,
           viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
+        self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
         setupObservers()
@@ -143,6 +191,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 }
 
 fileprivate extension OWConversationViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // Subscribing to start realtime service
         viewInitialized
@@ -175,6 +224,55 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
             }
             .share()
+
+        // Set isEmpty
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] conversation in
+                guard let self = self else { return }
+                if let messageCount = conversation.conversation?.messagesCount, messageCount > 0 {
+                    self._isEmpty.onNext(false)
+                } else {
+                    self._isEmpty.onNext(true)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // Set read only mode
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+                switch self.conversationData.article.additionalSettings.readOnlyMode {
+                case .disable:
+                    isReadOnly = false
+                case .enable:
+                    isReadOnly = true
+                case .default:
+                    break
+                }
+                self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
+
+        isReadOnlyObservable
+            .bind(to: commentingCTAViewModel.inputs.isReadOnly)
+            .disposed(by: disposeBag)
+
+        isReadOnlyObservable
+            .bind(to: conversationEmptyStateViewModel.inputs.isReadOnly)
+            .disposed(by: disposeBag)
+
+        isEmptyObservable
+            .bind(to: conversationEmptyStateViewModel.inputs.isEmpty)
+            .disposed(by: disposeBag)
+
+        commentingCTAViewModel
+            .outputs
+            .commentCreationTapped
+            .subscribe(onNext: { [weak self] in
+                self?.commentCreationTap.onNext(.comment)
+            })
+            .disposed(by: disposeBag)
 
         // Binding to community question component
         conversationFetchedObservable
@@ -213,8 +311,9 @@ fileprivate extension OWConversationViewViewModel {
 
         Observable.combineLatest(conversationFetchedObservable,
                                  shouldShowCommunityQuestion,
-                                 shouldShowCommunityGuidelines)
-            .subscribe(onNext: { [weak self] (_, shouldShowCommunityQuestion, shouldShowCommunityGuidelines) -> Void in
+                                 shouldShowCommunityGuidelines,
+                                 isEmptyObservable)
+            .subscribe(onNext: { [weak self] (_, shouldShowCommunityQuestion, shouldShowCommunityGuidelines, isEmpty) -> Void in
             guard let self = self else { return }
                 self._cellsViewModels.removeAll()
 
@@ -222,25 +321,30 @@ fileprivate extension OWConversationViewViewModel {
 
                 switch (shouldShowCommunityQuestion, shouldShowCommunityGuidelines) {
                 case (true, true):
-                    cellsToApped.append(contentsOf: [self.communityQuestionCellOptions,
+                    cellsToApped.append(contentsOf: [self.communityQuestionCellOption,
                                                      self.communitySpacerCellOption,
                                                      self.communityGuidelinesCellOption])
                 case (true, false):
-                    cellsToApped.append(self.communityQuestionCellOptions)
+                    cellsToApped.append(self.communityQuestionCellOption)
                 case (false, true):
                     cellsToApped.append(self.communityGuidelinesCellOption)
                 default:
                     break
                 }
 
-                let skeletonsCellsModels = self.getSkeletonsCellsModels()
-                cellsToApped.append(contentsOf: skeletonsCellsModels)
+                if !isEmpty {
+                    // Should be removed when adding comments
+                    let skeletonsCellsModels = self.getSkeletonsCellsModels()
+                    cellsToApped.append(contentsOf: skeletonsCellsModels)
+                }
 
                 self._cellsViewModels.append(contentsOf: cellsToApped)
-                self._initialDataLoaded.onNext(true)
+
+                self._shouldShowConversationEmptyState.onNext(isEmpty)
         })
         .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 
     func getSkeletonsCellsModels() -> [OWConversationCellOption] {
         // TODO: Delete once working on the conversation view UI
