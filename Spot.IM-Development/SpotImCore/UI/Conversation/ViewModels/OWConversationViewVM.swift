@@ -401,6 +401,7 @@ fileprivate extension OWConversationViewViewModel {
             existingRepliesPresentationData.append(
                 OWCommentPresentationData(
                     id: replyId,
+                    repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0)
             )
