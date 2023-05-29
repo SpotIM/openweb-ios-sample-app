@@ -100,7 +100,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 guard let displayName = $0, !displayName.isEmpty else {
                     return ""
                 }
-                return LocalizationManager.localizedString(key: "To") + " \(displayName)"
+                return OWLocalizationManager.shared.localizedString(key: "To") + " \(displayName)"
             })
     }
 

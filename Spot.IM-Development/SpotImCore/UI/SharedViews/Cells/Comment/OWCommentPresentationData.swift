@@ -18,7 +18,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
     var repliesIds: [String]
     let totalRepliesCount: Int
     var repliesOffset: Int
-    private(set) var repliesPresentation: [OWCommentPresentationData]
+    fileprivate(set) var repliesPresentation: [OWCommentPresentationData]
 
     init(
         id: String,

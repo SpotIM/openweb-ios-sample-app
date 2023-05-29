@@ -8,36 +8,42 @@
 
 import Foundation
 
-internal protocol OWUsersServicing {
-    func getUser(with id: String) -> SPUser?
-    func setUsers(_ users: [String: SPUser])
-    func setUsers(_ users: [SPUser])
+typealias OWUsersMapper = [String: SPUser]
 
-    func cleanCachedUsers()
+protocol OWUsersServicing {
+    func get(userId id: String) -> SPUser?
+    func set(users: OWUsersMapper)
+    func set(users: [SPUser])
+
+    func cleanCache()
 }
 
 class OWUsersService: OWUsersServicing {
 
-    private var _users = [String: SPUser]()
+    fileprivate var _users = OWUsersMapper()
 
-    func getUser(with id: String) -> SPUser? {
+    func get(userId id: String) -> SPUser? {
         guard let user = _users[id] else { return nil }
         return user
     }
 
-    func setUsers(_ users: [SPUser]) {
-        let userIdsToUser: [String: SPUser] = Dictionary(uniqueKeysWithValues: users.map { ($0.id!, $0) })
+    func set(users: [SPUser]) {
+        let userIdToUserTupples: [(String, SPUser)] = users.map {
+            guard let id = $0.id else { return nil }
+            return (id, $0)
+        }.unwrap()
+        let userIdsToUser: OWUsersMapper = Dictionary(uniqueKeysWithValues: userIdToUserTupples)
 
         // merge and replacing current users
         _users.merge(userIdsToUser, uniquingKeysWith: {(_, new) in new })
     }
 
-    func setUsers(_ users: [String: SPUser]) {
+    func set(users: OWUsersMapper) {
         // merge and replacing current users
         _users.merge(users, uniquingKeysWith: {(_, new) in new })
     }
 
-    func cleanCachedUsers() {
+    func cleanCache() {
         _users.removeAll()
     }
 }
