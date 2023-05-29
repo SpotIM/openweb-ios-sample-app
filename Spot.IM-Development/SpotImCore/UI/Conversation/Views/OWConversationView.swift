@@ -222,10 +222,16 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.willDisplayCell)
             .disposed(by: disposeBag)
 
-        tableView.rx.didEndDecelerating
+        tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndDecelerating
+                    .asObservable()
+                    .take(1)
+            }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self, self.tableViewRefreshControl.isRefreshing else { return }
+                guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
             })
             .disposed(by: disposeBag)
