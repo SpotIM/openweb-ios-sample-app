@@ -39,11 +39,11 @@ class OWCommentCell: UITableViewCell {
         self.viewModel = vm
         self.commentView.configure(with: self.viewModel.outputs.commentVM)
 
-        if let depth = self.viewModel.outputs.commentVM.outputs.comment.depth {
-            commentView.OWSnp.updateConstraints { make in
-                make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
-            }
+        let depth = self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0
+        commentView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
         }
+
         self.setupObservers()
         self.applyAccessibility()
     }

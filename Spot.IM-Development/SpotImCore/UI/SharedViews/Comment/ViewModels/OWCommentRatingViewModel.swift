@@ -297,10 +297,10 @@ fileprivate extension OWCommentRatingViewModel {
 
     func updateRankChangeInCommentsService(rank: OWComment.Rank) {
         guard let postId = OWManager.manager.postId,
-        var comment = self.sharedServiceProvider.commentsService().getComment(with: self.commentId, postId: postId)
+        var comment = self.sharedServiceProvider.commentsService().get(commentId: self.commentId, postId: postId)
         else { return }
 
         comment.rank = rank
-        self.sharedServiceProvider.commentsService().setComments([comment], postId: postId)
+        self.sharedServiceProvider.commentsService().set(comments: [comment], postId: postId)
     }
 }

@@ -8,26 +8,32 @@
 
 import Foundation
 
-internal protocol OWCommentsServicing {
-    func getComment(with id: String, postId: String) -> OWComment?
-    func setComments(_ comments: [OWComment], postId: String)
+protocol OWCommentsServicing {
+    func get(commentId id: String, postId: String) -> OWComment?
+    func set(comments: [OWComment], postId: String)
 
-    func cleanCachedComments()
+    func cleanCache()
 }
+
+typealias OWCommentsMapper = [String: OWComment]
 
 class OWCommentsService: OWCommentsServicing {
 
-    private var _mapPostIdToComments = [OWPostId: [String: OWComment]]()
+    fileprivate var _mapPostIdToComments = [OWPostId: OWCommentsMapper]()
 
-    func getComment(with id: String, postId: String) -> OWComment? {
+    func get(commentId id: String, postId: String) -> OWComment? {
         guard let comments = _mapPostIdToComments[postId],
               let comment = comments[id]
         else { return nil }
         return comment
     }
 
-    func setComments(_ comments: [OWComment], postId: String) {
-        let commentIdsToComment: [String: OWComment] = Dictionary(uniqueKeysWithValues: comments.map { ($0.id!, $0) })
+    func set(comments: [OWComment], postId: String) {
+        let commentIdToCommentTupples: [(String, OWComment)] = comments.map {
+            guard let id = $0.id else { return nil }
+            return (id, $0)
+        }.unwrap()
+        let commentIdsToComment: OWCommentsMapper = Dictionary(uniqueKeysWithValues: commentIdToCommentTupples)
 
         if let existingCommentsForPostId = _mapPostIdToComments[postId] {
             // merge and replacing current comments
@@ -39,12 +45,12 @@ class OWCommentsService: OWCommentsServicing {
         // add each comment replies as well
         comments.forEach {
             if let commentReplies = $0.replies {
-                setComments(commentReplies, postId: postId)
+                set(comments: commentReplies, postId: postId)
             }
         }
     }
 
-    func cleanCachedComments() {
+    func cleanCache() {
         _mapPostIdToComments.removeAll()
     }
 }
