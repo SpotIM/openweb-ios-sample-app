@@ -53,9 +53,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
-        static let delayForPerformGuidelinesViewAnimation: Int = 500
-        static let delayForPerformTableViewAnimation: Int = 10
-        static let willDisplayCellThrottle: Int = 700
+        static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
+        static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let willDisplayCellThrottle: Int = 700 // ms
+        static let tableViewPaginationCellsOffset: Int = 5
     }
 
     fileprivate var postId: OWPostId {
@@ -72,7 +73,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return viewableMode == .independent
     }
 
-    fileprivate var offset = 0
+    fileprivate var paginationOffset = 0
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
@@ -207,10 +208,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels
             .map { items in
-                // TODO: We might decide to work with few sections in the future.
-                // Current implementation will be one section.
-                // The String can be the `postId` which we will add once the VM will be ready.
-                let section = ConversationDataSourceModel(model: "postId", items: items)
+                let section = ConversationDataSourceModel(model: self.postId, items: items)
                 return [section]
             }
     }
@@ -357,7 +355,7 @@ fileprivate extension OWConversationViewViewModel {
         var commentsPresentationData = [OWCommentPresentationData]()
         var repliesPresentationData = [OWCommentPresentationData]()
 
-        self.offset = response.conversation?.offset ?? 0
+        self.paginationOffset = response.conversation?.offset ?? 0
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
@@ -371,7 +369,7 @@ fileprivate extension OWConversationViewViewModel {
 
                     let replyPresentationData = OWCommentPresentationData(
                         id: replyId,
-                        repliesIds: reply.replies?.map { $0.id! } ?? [],
+                        repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                         totalRepliesCount: reply.repliesCount ?? 0,
                         repliesOffset: reply.offset ?? 0,
                         repliesPresentation: []
@@ -383,7 +381,7 @@ fileprivate extension OWConversationViewViewModel {
 
             let commentPresentationData = OWCommentPresentationData(
                 id: commentId,
-                repliesIds: comment.replies?.map { $0.id! } ?? [],
+                repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
                 repliesPresentation: repliesPresentationData
@@ -579,7 +577,7 @@ fileprivate extension OWConversationViewViewModel {
                 presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
 
                 // filter existing reply ids
-                let newRepliesIds = (response.conversation?.comments?.map { $0.id! })?.filter { !commentPresentationData.repliesIds.contains($0) }
+                let newRepliesIds = (response.conversation?.comments?.map { $0.id })?.unwrap().filter { !commentPresentationData.repliesIds.contains($0) }
 
                 // update commentPresentationData according to the response
                 commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
@@ -772,8 +770,8 @@ fileprivate extension OWConversationViewViewModel {
                 return (rowIndex, cellsVMs.count)
             }.subscribe(onNext: { [weak self] rowIndex, cellsCount in
                 guard let self = self else { return }
-                if (rowIndex > cellsCount - 5) {
-                    self._loadMoreComments.onNext(self.offset)
+                if (rowIndex > cellsCount - Metrics.tableViewPaginationCellsOffset) {
+                    self._loadMoreComments.onNext(self.paginationOffset)
                 }
             })
             .disposed(by: disposeBag)
@@ -822,7 +820,7 @@ fileprivate extension OWConversationViewViewModel {
                             .init(title: sortDictateService.sortTextTitle(perOption: .best), type: .sortBest),
                             .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: .sortNewest),
                             .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: .sortOldest),
-                            .init(title: "cancel", type: .cancel, style: .cancel)
+                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: .cancel, style: .cancel)
                         ],
                         viewableMode: self.viewableMode
                     )
