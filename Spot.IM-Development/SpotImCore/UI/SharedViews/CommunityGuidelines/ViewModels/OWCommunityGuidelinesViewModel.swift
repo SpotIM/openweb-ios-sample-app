@@ -55,8 +55,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
-                                                      internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
+            .observe(on: MainScheduler.asyncInstance)
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
