@@ -19,6 +19,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let commentingCTAHeight: CGFloat = 64
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
+        static let tableViewRowEstimatedHeight: Double = 130.0
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -69,7 +70,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         }
 
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 130
+        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
 
         return tableView
     }()
