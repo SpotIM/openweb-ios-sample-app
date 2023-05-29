@@ -32,6 +32,10 @@ enum OWCommentThreadActionsCellMode {
 }
 
 class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModeling, OWCommentThreadActionsCellViewModelingInputs, OWCommentThreadActionsCellViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let expandCommentsCount: Int = 5
+    }
+
     var inputs: OWCommentThreadActionsCellViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsCellViewModelingOutputs { return self }
 
@@ -66,10 +70,10 @@ fileprivate extension OWCommentThreadActionsCellViewModel {
         let visibleRepliesCount = commentPresentationData.repliesPresentation.count
         let totalRepliesCount = commentPresentationData.totalRepliesCount
 
-        let extendedRepliesCount = min(visibleRepliesCount + 5, totalRepliesCount)
+        let extendedRepliesCount = min(visibleRepliesCount + Metrics.expandCommentsCount, totalRepliesCount)
 
         let commentThreadActionType: OWCommentThreadActionType
-        if (visibleRepliesCount == 0 && totalRepliesCount < 5) {
+        if (visibleRepliesCount == 0 && totalRepliesCount < Metrics.expandCommentsCount) {
             commentThreadActionType = .viewMoreReplies(count: extendedRepliesCount)
         } else {
             commentThreadActionType = .viewMoreRepliesRange(from: extendedRepliesCount, to: totalRepliesCount)

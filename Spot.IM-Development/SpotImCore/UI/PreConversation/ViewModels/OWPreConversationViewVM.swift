@@ -53,8 +53,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                       OWPreConversationViewViewModelingInputs,
                                       OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
-        static let delayForPerformTableViewAnimation: Int = 10
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
     }
 
@@ -379,10 +379,10 @@ fileprivate extension OWPreConversationViewViewModel {
                 let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
 
                 // cache comments in comment service
-                self.servicesProvider.commentsService().setComments(responseComments, postId: self.postId)
+                self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
 
                 // cache users in users service
-                self.servicesProvider.usersService().setUsers(responseUsers)
+                self.servicesProvider.usersService().set(users: responseUsers)
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = responseUsers[comment.userId ?? ""] else { return }

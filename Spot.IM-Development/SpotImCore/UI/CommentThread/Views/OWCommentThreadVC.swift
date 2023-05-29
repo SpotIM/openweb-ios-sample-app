@@ -56,6 +56,6 @@ fileprivate extension OWCommentThreadVC {
     func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
         let navController = self.navigationController
 
-        title = LocalizationManager.localizedString(key: "Replies")
+        title = OWLocalizationManager.shared.localizedString(key: "Replies")
     }
 }
