@@ -184,6 +184,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
+    var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
+        return cellsViewModels
+            .map { items in
+                let section = ConversationDataSourceModel(model: self.postId, items: items)
+                return [section]
+            }
+    }
+
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
@@ -204,14 +212,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     lazy var commentingCTAViewModel: OWCommentingCTAViewModel = {
         return OWCommentingCTAViewModel(imageProvider: imageProvider)
     }()
-
-    var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
-        return cellsViewModels
-            .map { items in
-                let section = ConversationDataSourceModel(model: self.postId, items: items)
-                return [section]
-            }
-    }
 
     fileprivate lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
         return OWSpacerCellViewModel(style: .none)
@@ -453,7 +453,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .flatMap { [weak self] sortOption -> Observable<OWConversationReadRM> in
+            .flatMapLatest { [weak self] sortOption -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
@@ -463,7 +463,7 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
-            .flatMap { _ -> Observable<OWConversationReadRM> in
+            .flatMapLatest { _ -> Observable<OWConversationReadRM> in
                 return conversationReadObservable
             }
             .share()
