@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public struct OWCommentThreadSettingsBuilder: OWCommentThreadSettingsProtocol {
+public struct OWCommentThreadSettingsBuilder {
     public var conversationSettings: OWConversationSettingsProtocol
 
     public init(conversationSettings: OWConversationSettingsProtocol) {
@@ -26,7 +26,7 @@ public struct OWCommentThreadSettingsBuilder: OWCommentThreadSettingsProtocol {
     }
 }
 #else
-struct OWCommentThreadSettingsBuilder: OWCommentThreadSettingsProtocol {
+struct OWCommentThreadSettingsBuilder {
     var conversationSettings: OWConversationSettingsProtocol
 
     init(conversationSettings: OWConversationSettingsProtocol) {

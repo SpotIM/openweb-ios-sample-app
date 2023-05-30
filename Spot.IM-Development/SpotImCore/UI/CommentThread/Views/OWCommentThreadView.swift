@@ -151,6 +151,7 @@ fileprivate extension OWCommentThreadView {
             })
             .disposed(by: disposeBag)
 
+        // TODO: perform this animation in the cell view layer
         viewModel.outputs.highlightCellIndex
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] index in
