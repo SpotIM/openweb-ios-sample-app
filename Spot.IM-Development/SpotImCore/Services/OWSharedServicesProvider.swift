@@ -36,6 +36,8 @@ protocol OWSharedServicesProviding: AnyObject {
     func sortDictateService() -> OWSortDictateServicing
     func authenticationManager() -> OWAuthenticationManagerProtocol
     func blockerServicing() -> OWBlockerServicing
+    func commentsService() -> OWCommentsServicing
+    func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
 }
 
@@ -128,6 +130,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWBlockerService()
     }()
 
+    fileprivate lazy var _commentsService: OWCommentsServicing = {
+        return OWCommentsService()
+    }()
+
+    fileprivate lazy var _usersService: OWUsersServicing = {
+        return OWUsersService()
+    }()
+
     fileprivate lazy var _presenterService: OWPresenterServicing = {
         return OWPresenterService()
     }()
@@ -204,6 +214,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _blockerService
     }
 
+    func commentsService() -> OWCommentsServicing {
+        return _commentsService
+    }
+
+    func usersService() -> OWUsersServicing {
+        return _usersService
+    }
+
     func presenterService() -> OWPresenterServicing {
         return _presenterService
     }
@@ -236,6 +254,8 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _sortDictateService.invalidateCache()
         _blockerService.invalidateAllBlockers()
         _spotConfigurationService.spotChanged(spotId: spotId)
+        _commentsService.cleanCache()
+        _usersService.cleanCache()
     }
 }
 

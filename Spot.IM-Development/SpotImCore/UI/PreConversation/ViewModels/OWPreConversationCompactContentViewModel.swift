@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWPreConversationCompactContentViewModelingInputs {
-    var conversationFetched: PublishSubject<SPConversationReadRM> { get }
+    var conversationFetched: PublishSubject<OWConversationReadRM> { get }
     var isReadOnly: PublishSubject<Bool> { get }
 }
 
@@ -37,10 +37,10 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
-    var conversationFetched = PublishSubject<SPConversationReadRM>()
+    var conversationFetched = PublishSubject<OWConversationReadRM>()
     var isReadOnly = PublishSubject<Bool>()
     fileprivate var emptyConversation = PublishSubject<Void>()
-    fileprivate var comment = PublishSubject<SPComment>()
+    fileprivate var comment = PublishSubject<OWComment>()
 
     fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skelaton)
     lazy var contentType: Observable<OWCompactContentType> = {

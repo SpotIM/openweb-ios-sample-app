@@ -28,9 +28,10 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     var outputs: OWCommentThreadViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentThreadData: OWCommentThreadRequiredData
 
     lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
-        return OWCommentThreadViewViewModel(servicesProvider: self.servicesProvider,
+        return OWCommentThreadViewViewModel(commentThreadData: commentThreadData, servicesProvider: self.servicesProvider,
                                             viewableMode: .partOfFlow)
     }()
 
@@ -39,8 +40,9 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
         return viewDidLoad.asObservable()
     }
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.commentThreadData = commentThreadData
         setupObservers()
     }
 }
