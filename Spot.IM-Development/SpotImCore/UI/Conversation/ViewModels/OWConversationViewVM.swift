@@ -180,7 +180,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 }
                 return Observable.just(topCellsOptions + commentCellsOptions)
             })
-            .share()
+            .share(replay: 1)
             .asObservable()
     }()
 
