@@ -169,7 +169,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    // TODO - Check why when it is not lazy we are not observing cells
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(topCellsOptions, commentCellsOptions, isEmptyObservable)
             .startWith(([], [], false))
