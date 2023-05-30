@@ -61,7 +61,13 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
     }
 
     init() {
-        self.commentPresentationData = OWCommentPresentationData(id: "", totalRepliesCount: 0, repliesOffset: 0)
+        self.commentPresentationData = OWCommentPresentationData(
+            id: "",
+            repliesIds: [],
+            totalRepliesCount: 0,
+            repliesOffset: 0,
+            repliesPresentation: []
+        )
     }
 }
 

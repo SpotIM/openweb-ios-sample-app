@@ -22,10 +22,10 @@ class OWCommentPresentationData: OWUpdaterProtocol {
 
     init(
         id: String,
-        repliesIds: [String] = [],
+        repliesIds: [String],
         totalRepliesCount: Int,
         repliesOffset: Int,
-        repliesPresentation: [OWCommentPresentationData] = []) {
+        repliesPresentation: [OWCommentPresentationData]) {
 
         self.id = id
         self.repliesIds = repliesIds
