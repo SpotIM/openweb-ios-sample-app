@@ -27,8 +27,8 @@ protocol OWPreConversationViewViewModelingOutputs {
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
+    var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationType> { get }
-    var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var summaryTopPadding: Observable<CGFloat> { get }
     var shouldShowCommentingCTAView: Observable<Bool> { get }
@@ -53,7 +53,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                       OWPreConversationViewViewModelingInputs,
                                       OWPreConversationViewViewModelingOutputs {
     fileprivate struct Metrics {
-        static let delayForUICellUpdate: Int = 100
+        static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
     }
 
@@ -203,9 +204,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var updateCellSizeAtIndex: Observable<Int> {
-        return _changeSizeAtIndex
+    fileprivate var _performTableViewAnimation = PublishSubject<Void>()
+    var performTableViewAnimation: Observable<Void> {
+        return _performTableViewAnimation
             .asObservable()
     }
 
@@ -334,22 +335,22 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .flatMapLatest { [weak self] sortOption -> Observable<Event<SPConversationReadRM>> in
+            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
-                .conversationRead(postId: self.postId, mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = viewInitialized
-            .flatMapLatest { _ -> Observable<Event<SPConversationReadRM>> in
+            .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
                     .take(1)
             }
-            .map { event -> SPConversationReadRM? in
+            .map { event -> OWConversationReadRM? in
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldDhowError).
@@ -367,14 +368,24 @@ fileprivate extension OWPreConversationViewViewModel {
         // Creating the cells VMs for the pre conversation
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
-                guard let self = self, let responseComments = response.conversation?.comments else { return }
+                guard
+                    let self = self,
+                    let responseComments = response.conversation?.comments,
+                    let responseUsers = response.conversation?.users
+                else { return }
                 var viewModels = [OWPreConversationCellOption]()
 
                 let numOfComments = self.preConversationStyle.numberOfComments
-                let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+                let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
+
+                // cache comments in comment service
+                self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
+
+                // cache users in users service
+                self.servicesProvider.usersService().set(users: responseUsers)
 
                 for (index, comment) in comments.enumerated() {
-                    guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+                    guard let user = responseUsers[comment.userId ?? ""] else { return }
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
                         comment: comment,
                         user: user,
@@ -462,8 +473,8 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<SPComment> in
-                let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
+            .flatMap { commentCellsVms -> Observable<OWComment> in
+                let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.replyClickedOutput
@@ -525,13 +536,13 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to comment height change (for updating cell)
         cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Int> in
-                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
                         return commentVM.outputs.contentVM
                             .outputs.collapsableLabelViewModel.outputs.height
-                            .map { _ in index }
+                            .voidify()
                     } else {
                         return nil
                     }
@@ -539,9 +550,9 @@ fileprivate extension OWPreConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForUICellUpdate), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] commentIndex in
-                self?._changeSizeAtIndex.onNext(commentIndex)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 
@@ -562,8 +573,8 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(SPComment, [UIRxPresenterAction])> in
-                let openMenuClickObservable: [Observable<(SPComment, [UIRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(SPComment, [UIRxPresenterAction])> in
+            .flatMap { commentCellsVms -> Observable<(OWComment, [UIRxPresenterAction])> in
+                let openMenuClickObservable: [Observable<(OWComment, [UIRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [UIRxPresenterAction])> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 

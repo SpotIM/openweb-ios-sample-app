@@ -15,10 +15,16 @@ protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func preConversationSettings() -> OWPreConversationSettingsProtocol
     func conversationSettings() -> OWConversationSettingsProtocol
+    func commentThreadCommentId() -> String
     func mockArticle() -> OWArticleProtocol
 }
 
 class CommonCreatorService: CommonCreatorServicing {
+    fileprivate struct Metrics {
+        // some default comment id for now
+        static let defaultCommentId = "sp_eCIlROSD_sdk1_c_2LE7TOJIGuzxgkRhyByPUFA73oq_r_2N0Kd6WueGMtK5LYvjTcm4hEMom"
+    }
+
     fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
@@ -37,6 +43,10 @@ class CommonCreatorService: CommonCreatorServicing {
         let additionalSettings = OWConversationSettingsBuilder(style: styleFromPersistence)
             .build()
         return additionalSettings
+    }
+
+    func commentThreadCommentId() -> String {
+        return self.userDefaultsProvider.get(key: .openCommentId, defaultValue: Metrics.defaultCommentId)
     }
 
     func mockArticle() -> OWArticleProtocol {
