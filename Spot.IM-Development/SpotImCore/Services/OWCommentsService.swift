@@ -8,14 +8,14 @@
 
 import Foundation
 
+typealias OWCommentsMapper = [String: OWComment]
+
 protocol OWCommentsServicing {
     func get(commentId id: String, postId: String) -> OWComment?
     func set(comments: [OWComment], postId: String)
 
     func cleanCache()
 }
-
-typealias OWCommentsMapper = [String: OWComment]
 
 class OWCommentsService: OWCommentsServicing {
 
