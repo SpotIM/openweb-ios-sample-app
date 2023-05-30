@@ -259,7 +259,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                     id: replyId,
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
-                    repliesOffset: reply.offset ?? 0)
+                    repliesOffset: reply.offset ?? 0,
+                    repliesPresentation: []
+                )
             )
         }
         return existingRepliesPresentationData
