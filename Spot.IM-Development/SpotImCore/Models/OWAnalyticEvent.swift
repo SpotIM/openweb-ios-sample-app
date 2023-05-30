@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct OWAnalyticEvent {
+struct OWAnalyticEvent: OWUpdaterProtocol {
     let type: OWAnalyticEventType
     let timestamp: TimeInterval
 }

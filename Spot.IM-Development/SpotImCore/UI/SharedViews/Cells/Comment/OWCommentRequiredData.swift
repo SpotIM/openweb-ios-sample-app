@@ -9,7 +9,7 @@
 import Foundation
 
 struct OWCommentRequiredData {
-    let comment: SPComment
+    let comment: OWComment
     let user: SPUser
     let replyToUser: SPUser?
     let collapsableTextLineLimit: Int

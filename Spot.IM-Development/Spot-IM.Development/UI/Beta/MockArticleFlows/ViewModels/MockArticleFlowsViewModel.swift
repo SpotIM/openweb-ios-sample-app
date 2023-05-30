@@ -304,7 +304,7 @@ fileprivate extension MockArticleFlowsViewModel {
 
                 flows.commentThread(postId: postId,
                                     article: article,
-                                    commentId: "TODO - Comment ID",
+                                    commentId: self.commonCreatorService.commentThreadCommentId(),
                                     presentationalMode: presentationalMode,
                                     additionalSettings: nil,
                                     callbacks: nil,

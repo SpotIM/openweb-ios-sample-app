@@ -45,8 +45,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let userBadgeService: OWUserBadgeServicing
 
-    fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
-    fileprivate var _unwrappedModel: Observable<SPComment> {
+    fileprivate let _model = BehaviorSubject<OWComment?>(value: nil)
+    fileprivate var _unwrappedModel: Observable<OWComment> {
         _model.unwrap()
     }
 
@@ -90,13 +90,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var subtitleText: Observable<String> {
         _replyToUser
-            .unwrap()
             .map({ user -> String? in
-                return user.displayName
+                return user?.displayName
             })
-            .unwrap()
-            .map({ $0.isEmpty ? ""
-                : OWLocalizationManager.shared.localizedString(key: "To") + " \($0)"
+            .map({
+                guard let displayName = $0, !displayName.isEmpty else {
+                    return ""
+                }
+                return OWLocalizationManager.shared.localizedString(key: "To") + " \(displayName)"
             })
     }
 

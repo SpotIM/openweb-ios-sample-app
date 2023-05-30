@@ -42,13 +42,13 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var inputs: OWCommentContentViewModelingInputs { return self }
     var outputs: OWCommentContentViewModelingOutputs { return self }
 
-    fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
+    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
     fileprivate let lineLimit: Int
     fileprivate let imageProvider: OWImageProviding
 
     var collapsableLabelViewModel: OWCommentTextViewModeling
 
-    init(comment: SPComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init(comment: OWComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, collapsableTextLineLimit: lineLimit)
         self.imageProvider = imageProvider
@@ -57,7 +57,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
 
     init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         lineLimit = 0
-        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), collapsableTextLineLimit: lineLimit)
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: OWComment(), collapsableTextLineLimit: lineLimit)
         self.imageProvider = imageProvider
     }
 

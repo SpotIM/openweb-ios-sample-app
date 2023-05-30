@@ -44,7 +44,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
-        let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel()
+        let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData)
         let commentThreadVC = OWCommentThreadVC(viewModel: commentThreadVM)
 
         let commentThreadPopped = PublishSubject<Void>()
@@ -65,11 +65,52 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             .map { OWCommentThreadCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable)
+        let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
+            .flatMap { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article, commentCreationType: commentCreationType)
+                let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
+                                                                              commentCreationData: commentCreationData,
+                                                                              actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: commentCreationCoordinator)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .commentCreated(_):
+                    // TODO: We will probably would like to push this comment to the table view with a nice highlight animation
+                    break
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
+        // Coordinate to safari tab
+        let coordinateToSafariObservables = Observable.merge(
+            commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
+            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile
+        )
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   url: url,
+                                                                   actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
+        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable, coordinateCommentCreationObservable, coordinateToSafariObservables)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(viewableMode: .independent)
+        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: .independent)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
         setupObservers(forViewModel: commentThreadViewVM)
         setupViewActionsCallbacks(forViewModel: commentThreadViewVM)
@@ -92,5 +133,14 @@ fileprivate extension OWCommentThreadCoordinator {
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let openPublisherProfile = viewModel.outputs.openPublisherProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(openPublisherProfile)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
     }
 }

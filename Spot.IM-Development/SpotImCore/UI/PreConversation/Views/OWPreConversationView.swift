@@ -29,6 +29,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let compactCornerRadius: CGFloat = 8
         static let tableDeviderTopPadding: CGFloat = 64
         static let communityQuestionDeviderPadding: CGFloat = 12
+        static let readOnlyTopPadding: CGFloat = 40
+        static let tableViewAnimationDuration: Double = 0.25
         static let compactContentTopPedding: CGFloat = 8
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
@@ -183,8 +185,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(communityQuestionBottomDevider)
         communityQuestionBottomDevider.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionView.OWSnp.bottom).offset(Metrics.communityQuestionDeviderPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.height.equalTo(Metrics.separatorHeight)
         }
 
@@ -204,8 +205,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentingCTAView.OWSnp.bottom)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview()
             make.height.equalTo(0)
         }
 
@@ -218,8 +218,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(btnCTAConversation)
         btnCTAConversation.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.equalTo(tableBottomDivider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
             ctaZeroHeightConstraint = make.height.equalTo(0).constraint
         }
@@ -227,15 +226,13 @@ fileprivate extension OWPreConversationView {
         self.addSubview(footerTopDevider)
         footerTopDevider.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.separatorHeight)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
 
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.equalTo(footerTopDevider.OWSnp.bottom).offset(Metrics.footerTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
@@ -316,12 +313,13 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateCellSizeAtIndex
+        viewModel.outputs.performTableViewAnimation
                 .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] index in
+                .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
-                    UIView.performWithoutAnimation {
-                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
                     }
                 })
                 .disposed(by: disposeBag)

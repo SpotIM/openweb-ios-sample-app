@@ -1,22 +1,25 @@
 //
-//  OWSpacerCell.swift
+//  OWCommentThreadCollapseCell.swift
 //  SpotImCore
 //
-//  Created by  Nogah Melamed on 28/12/2022.
-//  Copyright © 2022 Spot.IM. All rights reserved.
+//  Created by Alon Shprung on 29/03/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import RxSwift
 
-class OWSpacerCell: UITableViewCell {
+class OWCommentThreadActionCell: UITableViewCell {
+    fileprivate struct Metrics {
+        static let depthOffset: CGFloat = 23
+    }
 
-    fileprivate lazy var spacerView: OWSpacerView = {
-        return OWSpacerView()
+    fileprivate lazy var commentThreadActionsView: OWCommentThreadActionsView = {
+       return OWCommentThreadActionsView()
     }()
 
-    fileprivate var viewModel: OWSpacerCellViewModeling!
+    fileprivate var viewModel: OWCommentThreadActionsCellViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -29,24 +32,28 @@ class OWSpacerCell: UITableViewCell {
     }
 
     override func configure(with viewModel: OWCellViewModel) {
-        guard let vm = viewModel as? OWSpacerCellViewModel else { return }
+        guard let vm = viewModel as? OWCommentThreadActionsCellViewModeling else { return }
         self.disposeBag = DisposeBag()
         self.viewModel = vm
 
-        spacerView.configure(with: self.viewModel.outputs.spacerViewModel)
+        commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
+
+        commentThreadActionsView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
+        }
 
         self.setupObservers()
     }
 }
 
-fileprivate extension OWSpacerCell {
+fileprivate extension OWCommentThreadActionCell {
     func setupUI() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
-        self.selectionStyle = .none
+        self.contentView.addSubviews(commentThreadActionsView)
 
-        self.addSubview(spacerView)
-        spacerView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        commentThreadActionsView.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
     }
 

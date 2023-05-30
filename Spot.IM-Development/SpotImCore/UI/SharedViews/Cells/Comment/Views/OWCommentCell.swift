@@ -8,12 +8,20 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class OWCommentCell: UITableViewCell {
+    fileprivate struct Metrics {
+        static let horizontalOffset: CGFloat = 16
+        static let depthOffset: CGFloat = 23
+    }
+
     fileprivate lazy var commentView: OWCommentView = {
        return OWCommentView()
     }()
+
     fileprivate var viewModel: OWCommentCellViewModeling!
+    fileprivate var disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,8 +35,16 @@ class OWCommentCell: UITableViewCell {
     override func configure(with viewModel: OWCellViewModel) {
         guard let vm = viewModel as? OWCommentCellViewModeling else { return }
 
+        self.disposeBag = DisposeBag()
         self.viewModel = vm
         self.commentView.configure(with: self.viewModel.outputs.commentVM)
+
+        let depth = self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0
+        commentView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
+        }
+
+        self.setupObservers()
         self.applyAccessibility()
     }
 
@@ -44,12 +60,23 @@ fileprivate extension OWCommentCell {
     }
 
     func setupUI() {
-        self.backgroundColor = .clear
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
         self.contentView.addSubviews(commentView)
         self.selectionStyle = .none
 
         commentView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }

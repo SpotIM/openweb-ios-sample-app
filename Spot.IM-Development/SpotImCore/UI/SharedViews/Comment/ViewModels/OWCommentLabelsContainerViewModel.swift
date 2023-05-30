@@ -30,13 +30,13 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     var inputs: OWCommentLabelsContainerViewModelingInputs { return self }
     var outputs: OWCommentLabelsContainerViewModelingOutputs { return self }
 
-    fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
+    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
 
     fileprivate let _maxVisibleCommentLabels = 3 // TODO: do we want to keep it that way?
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(comment: SPComment, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(comment: OWComment, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         _comment.onNext(comment)
     }
@@ -93,7 +93,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 }
 
 fileprivate extension OWCommentLabelsContainerViewModel {
-    func getCommentLabels(comment: SPComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> [OWCommentLabelSettings]? {
+    func getCommentLabels(comment: OWComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> [OWCommentLabelSettings]? {
         guard let commentLabelsConfig = getCommentLabelsFromConfig(comment: comment, commentLabelsSectionsConfig: commentLabelsSectionsConfig) else { return nil }
 
         let labelsSettings: [OWCommentLabelSettings] = commentLabelsConfig.map { commentLabelConfig in
@@ -110,7 +110,7 @@ fileprivate extension OWCommentLabelsContainerViewModel {
         return Array(labelsSettings.prefix(_maxVisibleCommentLabels))
     }
 
-    func getCommentLabelsFromConfig(comment: SPComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> [SPLabelConfiguration]? {
+    func getCommentLabelsFromConfig(comment: OWComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> [SPLabelConfiguration]? {
         // cross given commentLabels to appConfig labels
         if let commentLabels = comment.additionalData?.labels,
            let labelIds = commentLabels.ids, labelIds.count > 0,
