@@ -158,6 +158,12 @@ fileprivate extension OWAvatarViewModel {
         // Create URL for user profie with token
         let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
             .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                // Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
+            }
+            .filter { !$0 } // Do not continue if needed to authenticate
             .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()
