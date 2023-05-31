@@ -95,31 +95,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         // CTA tapped from conversation screen
         let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
-            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
-                    .map { _ in type }
-            }
-            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
-                // 2. Waiting for authentication required for commenting
-                // Can be immediately if anyone can comment in the active spotId, or the user already connected
-                guard let self = self else { return .empty() }
-                return self.authenticationManager.waitForAuthentication(for: .commenting)
-                    .map { _ in type }
-            }
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCommentCreationRequiredData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
                 guard let self = self else { return nil }
                 return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: type)
-            }
-            .unwrap()
-
-        let replyToCommentTap = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
-            .map { [weak self] commentCreationType -> OWCommentCreationRequiredData? in
-                guard let self = self else { return nil }
-                return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: commentCreationType)
             }
             .unwrap()
 
