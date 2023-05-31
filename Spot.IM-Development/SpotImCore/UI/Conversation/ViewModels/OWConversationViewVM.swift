@@ -744,6 +744,7 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(threadActionsClickObservable)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
                 switch mode {
