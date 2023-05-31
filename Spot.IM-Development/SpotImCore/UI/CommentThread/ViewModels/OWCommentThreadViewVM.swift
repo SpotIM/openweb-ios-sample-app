@@ -38,7 +38,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let numberOfCommentsInSkeleton: Int = 4
+        static let numberOfCommentsInSkeleton: Int = 10
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
@@ -63,6 +63,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
+            .startWith([])
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.empty() }
 
@@ -72,7 +73,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
-            .share()
+            .share(replay: 1)
     }()
 
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
