@@ -111,7 +111,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
-        return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
+        return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular
     }()
 
     fileprivate lazy var isCompactMode: Bool = {
@@ -158,7 +158,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var conversationCTAButtonTitle: Observable<String> {
         Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnlyObservable, isEmpty) { count, style, isReadOnly, isEmpty in
             switch(style) {
-            case .regular:
+            case .regular, .custom:
                 return OWLocalizationManager.shared.localizedString(key: "Show more comments")
             case .compact:
                 return nil
@@ -226,7 +226,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                     return 0
                 case .compact:
                     return OWPreConversationView.Metrics.compactSummaryTopPadding
-                case .ctaWithSummary, .regular:
+                case .ctaWithSummary, .regular, .custom:
                     return OWPreConversationView.Metrics.summaryTopPadding
                 }
             }
@@ -235,7 +235,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var shouldShowComments: Observable<Bool> {
         Observable.combineLatest(preConversationStyleObservable, isEmpty) { style, isEmpty in
             switch(style) {
-            case .regular:
+            case .regular, .custom:
                 return !isEmpty
             case .compact, .ctaWithSummary, .ctaButtonOnly:
                 return false
@@ -251,7 +251,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
             var isVisible = true
             switch (style) {
-            case .regular(_):
+            case .regular, .custom:
                 isVisible = !isEmpty
             case .ctaButtonOnly, .ctaWithSummary:
                 isVisible = !isEmpty || !isReadOnly
@@ -265,7 +265,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var shouldShowCommentingCTAView: Observable<Bool> {
         Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
             switch (style) {
-            case .regular:
+            case .regular, .custom:
                 return true
             case .compact:
                 return false
