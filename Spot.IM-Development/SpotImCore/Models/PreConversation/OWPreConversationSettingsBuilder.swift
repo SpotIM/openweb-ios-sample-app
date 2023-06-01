@@ -11,9 +11,12 @@ import Foundation
 #if NEW_API
 public struct OWPreConversationSettingsBuilder {
     public var style: OWPreConversationStyle
+    public var fullConversationSettings: OWConversationSettingsProtocol
 
-    public init(style: OWPreConversationStyle = .regular()) {
+    public init(style: OWPreConversationStyle = .regular,
+                fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettingsBuilder().build()) {
         self.style = style.validate()
+        self.fullConversationSettings = fullConversationSettings
     }
 
     @discardableResult public mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
@@ -22,15 +25,19 @@ public struct OWPreConversationSettingsBuilder {
     }
 
     public func build() -> OWPreConversationSettingsProtocol {
-        return OWPreConversationSettings(style: style)
+        return OWPreConversationSettings(style: style,
+                                         fullConversationSettings: fullConversationSettings)
     }
 }
 #else
 struct OWPreConversationSettingsBuilder {
     var style: OWPreConversationStyle
+    var fullConversationSettings: OWConversationSettingsProtocol
 
-    init(style: OWPreConversationStyle = .regular()) {
+    init(style: OWPreConversationStyle = .regular,
+         fullConversationSettings: fullConversationSettings = OWConversationSettingsBuilder().build()) {
         self.style = style.validate()
+        self.fullConversationSettings = fullConversationSettings
     }
 
     @discardableResult mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
@@ -39,7 +46,7 @@ struct OWPreConversationSettingsBuilder {
     }
 
     func build() -> OWPreConversationSettingsProtocol {
-        return OWPreConversationSettings(style: style)
+        return OWPreConversationSettings(style: style, fullConversationSettings: fullConversationSettings)
     }
 }
 #endif

@@ -17,6 +17,8 @@ class PreConversationSettingsView: UIView {
         static let identifier = "pre_conversation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
         static let pickerCustomStyleNumberOfCommentsIdentifier = "custom_style_number_of_comments"
+        static let segmentedCommunityGuidelinesStyleModeIdentifier = "community_guidelines_style_mode"
+        static let segmentedCommunityQuestionsStyleModeIdentifier = "community_questions_style_mode"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -50,6 +52,24 @@ class PreConversationSettingsView: UIView {
                                    accessibilityPrefixId: Metrics.pickerCustomStyleNumberOfCommentsIdentifier,
                                    items: viewModel.outputs.customStyleNumberOfCommentsSettings)
         return picker
+    }()
+
+    fileprivate lazy var segmentedCommunityGuidelinesStyleMode: SegmentedControlSetting = {
+        let title = viewModel.outputs.communityGuidelinesStyleModeTitle
+        let items = viewModel.outputs.communityGuidelinesModeSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedCommunityGuidelinesStyleModeIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedCommunityQuestionsStyleMode: SegmentedControlSetting = {
+        let title = viewModel.outputs.communityQuestionsStyleModeTitle
+        let items = viewModel.outputs.communityQuestionsStyleModeSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedCommunityQuestionsStyleModeIdentifier,
+                                       items: items)
     }()
 
     fileprivate let viewModel: PreConversationSettingsViewModeling
@@ -87,6 +107,8 @@ fileprivate extension PreConversationSettingsView {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedStyleMode)
         stackView.addArrangedSubview(pickerCustomStyleNumberOfComments)
+        stackView.addArrangedSubview(segmentedCommunityGuidelinesStyleMode)
+        stackView.addArrangedSubview(segmentedCommunityQuestionsStyleMode)
     }
 
     func setupObservers() {
@@ -118,9 +140,27 @@ fileprivate extension PreConversationSettingsView {
             .bind(to: viewModel.inputs.customStyleModeSelectedNumberOfComments)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showCustomStyleNumberOfComments
+        viewModel.outputs.showCustomStyleOptions
             .map { !$0 }
-            .bind(to: pickerCustomStyleNumberOfComments.rx.isHidden)
+            .bind(to: pickerCustomStyleNumberOfComments.rx.isHidden,
+                  segmentedCommunityGuidelinesStyleMode.rx.isHidden,
+                  segmentedCommunityQuestionsStyleMode.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.communityGuidelinesStyleModeIndex
+            .bind(to: segmentedCommunityGuidelinesStyleMode.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        segmentedCommunityGuidelinesStyleMode.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.communityGuidelinesStyleSelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.communityQuestionsStyleModeIndex
+            .bind(to: segmentedCommunityQuestionsStyleMode.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        segmentedCommunityQuestionsStyleMode.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.communityQuestionsStyleModeSelectedIndex)
             .disposed(by: disposeBag)
     }
 }
