@@ -38,7 +38,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let numberOfCommentsInSkeleton: Int = 10
+        static let numberOfSkeletonComments: Int = 10
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
@@ -196,7 +196,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
     func getSkeletonCells() -> [OWCommentThreadCellOption] {
         var cellOptions = [OWCommentThreadCellOption]()
-        let numberOfComments = Metrics.numberOfCommentsInSkeleton
+        let numberOfComments = Metrics.numberOfSkeletonComments
         let skeletonCellVMs = (0 ..< numberOfComments).map { index in
             OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
         }
