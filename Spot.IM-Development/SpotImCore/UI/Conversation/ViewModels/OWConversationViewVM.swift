@@ -790,8 +790,8 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [UIRxPresenterAction])> in
-                let openMenuClickObservable: [Observable<(OWComment, [UIRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [UIRxPresenterAction])> in
+            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction])> in
+                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction])> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
@@ -829,10 +829,10 @@ fileprivate extension OWConversationViewViewModel {
                     .showMenu(
                         title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
                         actions: [
-                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: .sortBest),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: .sortNewest),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: .sortOldest),
-                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: .cancel, style: .cancel)
+                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest),
+                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWSortMenu.cancel, style: .cancel)
                         ],
                         viewableMode: self.viewableMode
                     )
@@ -843,11 +843,11 @@ fileprivate extension OWConversationViewViewModel {
                             break
                         case .selected(let action):
                             switch action.type {
-                            case .sortBest:
+                            case OWSortMenu.sortBest:
                                 sortDictateService.update(sortOption: .best, perPostId: self.postId)
-                            case .sortNewest:
+                            case OWSortMenu.sortNewest:
                                 sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-                            case .sortOldest:
+                            case OWSortMenu.sortOldest:
                                 sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
                             default:
                                 break
