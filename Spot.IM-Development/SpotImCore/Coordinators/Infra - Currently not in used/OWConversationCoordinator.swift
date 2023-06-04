@@ -95,19 +95,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         // CTA tapped from conversation screen
         let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
-            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
-                    .map { _ in type }
-            }
-            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
-                // 2. Waiting for authentication required for commenting
-                // Can be immediately if anyone can comment in the active spotId, or the user already connected
-                guard let self = self else { return .empty() }
-                return self.authenticationManager.waitForAuthentication(for: .commenting)
-                    .map { _ in type }
-            }
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCommentCreationRequiredData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
@@ -117,8 +104,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .unwrap()
 
         // Coordinate to comment creation
-        let coordinateCommentCreationObservable = Observable.merge(openCommentCreationObservable,
-                                                         deepLinkToCommentCreation.unwrap().asObservable())
+        // TODO - handle read only mode
+        let coordinateCommentCreationObservable = Observable.merge(
+            openCommentCreationObservable,
+            deepLinkToCommentCreation.unwrap().asObservable())
+
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
@@ -180,7 +170,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .urlClickedOutput
 
         // Coordinate to safari tab
-        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
+        let coordinateToSafariObservables = Observable.merge(
+            communityGuidelinesURLTapped,
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile,
+            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput,
+            conversationVM.outputs.conversationViewVM.outputs.openProfile
+        )
+
         let coordinateToSafariObservable = coordinateToSafariObservables
             .filter { [weak self] _ in
                 guard let self = self else { return false }
@@ -265,7 +261,13 @@ fileprivate extension OWConversationCoordinator {
             .outputs.closeConversation
             .map { OWViewActionCallbackType.closeConversationPressed }
 
-        Observable.merge(closeConversationPressed)
+        let openPublisherProfile = Observable.merge(
+            viewModel.outputs.openPublisherProfile,
+            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
+        )
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(closeConversationPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

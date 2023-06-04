@@ -19,7 +19,6 @@ class OWCommunityGuidelinesView: UIView {
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 14.0
         static let horizontalPadding: CGFloat = 10.0
-
     }
 
     fileprivate lazy var titleTextView: UITextView = {
@@ -54,8 +53,6 @@ class OWCommunityGuidelinesView: UIView {
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
     }()
 
-    fileprivate var heightConstraint: OWConstraint? = nil
-
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -65,13 +62,6 @@ class OWCommunityGuidelinesView: UIView {
         self.isUserInteractionEnabled = true
         setupUI()
         setupObservers()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard let viewModel = viewModel else { return }
-
-        viewModel.inputs.titleTextViewWidthChanged.onNext(self.titleTextView.textContainer.size.width)
     }
 
     required init?(coder: NSCoder) {
@@ -125,7 +115,6 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
-                heightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
             }
         }
     }
@@ -135,20 +124,6 @@ fileprivate extension OWCommunityGuidelinesView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
-
-        if let heightConstraint = heightConstraint {
-            Observable.combineLatest(viewModel.outputs.shouldShowView,
-                                     viewModel.outputs.titleTextViewHeight)
-                .filter { $0.0 }
-                .map { $0.1 }
-                .subscribe(onNext: { [weak self] titleTextViewHeight in
-                    guard let self = self else { return }
-                    heightConstraint.update(offset: titleTextViewHeight)
-                    self.setNeedsLayout()
-                    self.layoutIfNeeded()
-                })
-                .disposed(by: disposeBag)
-        }
 
         viewModel.outputs.communityGuidelinesHtmlAttributedString
             .bind(to: titleTextView.rx.attributedText)

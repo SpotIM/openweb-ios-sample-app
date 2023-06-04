@@ -38,7 +38,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let numberOfCommentsInSkeleton: Int = 4
+        static let numberOfSkeletonComments: Int = 10
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
@@ -63,6 +63,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
+            .startWith([])
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.empty() }
 
@@ -72,7 +73,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
-            .share()
+            .share(replay: 1)
     }()
 
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
@@ -195,7 +196,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
     func getSkeletonCells() -> [OWCommentThreadCellOption] {
         var cellOptions = [OWCommentThreadCellOption]()
-        let numberOfComments = Metrics.numberOfCommentsInSkeleton
+        let numberOfComments = Metrics.numberOfSkeletonComments
         let skeletonCellVMs = (0 ..< numberOfComments).map { index in
             OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
         }
@@ -476,10 +477,10 @@ fileprivate extension OWCommentThreadViewViewModel {
         })
         .disposed(by: disposeBag)
 
-        // Observable of the comment actions cell VMs
+        // Observable of the comment action cell VMs
         let commentThreadActionsCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
             .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
-                let commentThreadActionsCellVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
+                let commentThreadActionsCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
                     if case.commentThreadActions(let commentThreadActionsCellViewModel) = vm {
                         return commentThreadActionsCellViewModel
                     } else {
@@ -487,21 +488,19 @@ fileprivate extension OWCommentThreadViewViewModel {
                     }
                 }
                     .unwrap()
-
-                return Observable.just(commentThreadActionsCellVms)
+                return Observable.just(commentThreadActionsCellsVms)
             }
             .share()
 
         // responding to thread action clicked
         commentThreadActionsCellsVmsObservable
-            .flatMap { commentThreadActionsCellVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
-                let commentThreadActionClickObservable: [Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)>] = commentThreadActionsCellVms
-                    .map { commentThreadActionsCellVm in
-                        return commentThreadActionsCellVm.outputs.commentActionsVM
-                            .outputs.tapOutput
-                            .map { (commentThreadActionsCellVm.outputs.commentPresentationData, commentThreadActionsCellVm.outputs.mode) }
-                    }
-                return Observable.merge(commentThreadActionClickObservable)
+            .flatMap { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
+                let threadActionsClickObservable = commentThreadActionsCellsVms.map { commentThreadActionsCellsVm in
+                    return commentThreadActionsCellsVm.outputs.commentActionsVM
+                        .outputs.tapOutput
+                        .map { (commentThreadActionsCellsVm.outputs.commentPresentationData, commentThreadActionsCellsVm.outputs.mode) }
+                }
+                return Observable.merge(threadActionsClickObservable)
             }
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }

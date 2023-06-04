@@ -91,6 +91,7 @@ class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.preferred(style: .italic, of: 17))
             .lineSpacing(3.5)
+            .enforceSemanticAttribute()
     }()
 
     override init(frame: CGRect) {
