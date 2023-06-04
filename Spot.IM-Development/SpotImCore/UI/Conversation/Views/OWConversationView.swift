@@ -15,9 +15,11 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationTitleHeaderHeight: CGFloat = 56
         static let articleDescriptionHeight: CGFloat = 86
         static let conversationSummaryHeight: CGFloat = 44
+        static let tableViewAnimationDuration: Double = 0.25
         static let commentingCTAHeight: CGFloat = 64
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
+        static let tableViewRowEstimatedHeight: Double = 130.0
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -38,6 +40,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
         return OWConversationEmptyStateView(viewModel: self.viewModel.outputs.conversationEmptyStateViewModel)
             .enforceSemanticAttribute()
+            .userInteractionEnabled(false)
     }()
 
     fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
@@ -57,7 +60,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
 
-        tableView.isScrollEnabled = false
+        tableView.refreshControl = tableViewRefreshControl
+
         tableView.allowsSelection = false
 
         // Register cells
@@ -65,7 +69,15 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             tableView.register(cellClass: option.cellClass)
         }
 
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
+
         return tableView
+    }()
+
+    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        return refresh
     }()
 
     fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
@@ -178,6 +190,10 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                self?.tableViewRefreshControl.endRefreshing()
+            })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
@@ -191,11 +207,33 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateCellSizeAtIndex
+        viewModel.outputs.performTableViewAnimation
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                    }
+                })
+                .disposed(by: disposeBag)
+
+        tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
+            .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
+
+        tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndDecelerating
+                    .asObservable()
+                    .take(1)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                self.viewModel.inputs.pullToRefresh.onNext()
             })
             .disposed(by: disposeBag)
     }
