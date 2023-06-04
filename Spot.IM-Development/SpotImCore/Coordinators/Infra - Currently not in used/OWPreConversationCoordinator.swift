@@ -89,19 +89,6 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         let openCommentCreationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentCreation
-            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
-                    .map { _ in type }
-            }
-            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
-                // 2. Waiting for authentication required for commenting
-                // Can be immediately if anyone can comment in the active spotId, or the user already connected
-                guard let self = self else { return .empty() }
-                return self.authenticationManager.waitForAuthentication(for: .commenting)
-                    .map { _ in type }
-            }
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWDeepLinkOptions? in
                 // 3. Perform deeplink to comment creation screen

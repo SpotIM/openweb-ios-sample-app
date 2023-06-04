@@ -11,12 +11,12 @@ import UIKit
 class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     fileprivate struct Metrics {
-        static let avatarSize: CGFloat = 60
+        static let avatarSize: CGFloat = 36.0
         static let userNameWidthRatio: CGFloat = 1/6
-        static let userNameHeight: CGFloat = 15
+        static let userNameHeight: CGFloat = 13
         static let timeWidthRatio: CGFloat = 1/4
-        static let timeHeight: CGFloat = 10
-        static let spaceBetweenUserNameAndTime: CGFloat = 10
+        static let timeHeight: CGFloat = 12
+        static let spaceBetweenUserNameAndTime: CGFloat = 5
         static let messageHeight: CGFloat = 10
         static let messageLineNumbers: Int = 3
         static let spaceBetweenMessageLines: CGFloat = 5
