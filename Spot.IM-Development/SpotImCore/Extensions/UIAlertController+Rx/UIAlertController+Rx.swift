@@ -9,18 +9,13 @@
 import UIKit
 import RxSwift
 
-enum UIRxPresenterResponseType {
-    case completion
-    case selected(action: UIRxPresenterAction)
-}
-
 extension Reactive where Base: UIAlertController {
     static func show(onViewController viewController: UIViewController,
                      animated: Bool = true,
                      preferredStyle: UIAlertController.Style = .alert,
                      title: String?,
                      message: String?,
-                     actions: [UIRxPresenterAction]) -> Observable<UIRxPresenterResponseType> {
+                     actions: [OWRxPresenterAction]) -> Observable<OWRxPresenterResponseType> {
 
         return Observable.create { observer in
             // Map to regular UIAlertAction
@@ -43,28 +38,5 @@ extension Reactive where Base: UIAlertController {
 
             return Disposables.create()
         }
-    }
-}
-
-enum UIRxPresenterActionType {
-    case ok
-    case reportComment
-    case sortBest
-    case sortNewest
-    case sortOldest
-
-    case cancel
-}
-
-struct UIRxPresenterAction: Equatable {
-    var uuid: String = UUID().uuidString
-    let title: String
-    let type: UIRxPresenterActionType
-    var style: UIAlertAction.Style = .default
-}
-
-extension UIRxPresenterAction {
-    static func == (lhs: UIRxPresenterAction, rhs: UIRxPresenterAction) -> Bool {
-        return lhs.uuid == rhs.uuid
     }
 }
