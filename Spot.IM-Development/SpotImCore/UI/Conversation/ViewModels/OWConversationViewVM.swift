@@ -52,11 +52,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let numberOfCommentsInSkeleton: Int = 4
+        static let numberOfSkeletonComments: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let willDisplayCellThrottle: Int = 700 // ms
         static let tableViewPaginationCellsOffset: Int = 5
+        static let collapsableTextLineLimit: Int = 4
     }
 
     fileprivate var postId: OWPostId {
@@ -160,24 +161,24 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var topCellsOptions: Observable<[OWConversationCellOption]> {
+    fileprivate var communityCellsOptions: Observable<[OWConversationCellOption]> {
         return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
             .flatMapLatest({ [weak self] showCommunityQuestion, showCommunityGuidlines -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-                return Observable.just(self.getTopCells(shouldShowCommunityQuestion: showCommunityQuestion, shouldShowCommunityGuidelines: showCommunityGuidlines))
+                return Observable.just(self.getCommunityCells(shouldShowCommunityQuestion: showCommunityQuestion, shouldShowCommunityGuidelines: showCommunityGuidlines))
             })
             .asObservable()
     }
 
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(topCellsOptions, commentCellsOptions, isEmptyObservable)
+        return Observable.combineLatest(communityCellsOptions, commentCellsOptions, isEmptyObservable)
             .startWith(([], [], false))
-            .flatMapLatest({ [weak self] topCellsOptions, commentCellsOptions, isEmptyConversation -> Observable<[OWConversationCellOption]> in
+            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isEmptyConversation -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
                 if commentCellsOptions.isEmpty && !isEmptyConversation {
                     return Observable.just(self.getSkeletonCells())
                 }
-                return Observable.just(topCellsOptions + commentCellsOptions)
+                return Observable.just(communityCellsOptions + commentCellsOptions)
             })
             .share(replay: 1)
             .asObservable()
@@ -318,7 +319,7 @@ fileprivate extension OWConversationViewViewModel {
         return cellOptions
     }
 
-    func getTopCells(shouldShowCommunityQuestion: Bool, shouldShowCommunityGuidelines: Bool) -> [OWConversationCellOption] {
+    func getCommunityCells(shouldShowCommunityQuestion: Bool, shouldShowCommunityGuidelines: Bool) -> [OWConversationCellOption] {
         var cells = [OWConversationCellOption]()
 
         switch (shouldShowCommunityQuestion, shouldShowCommunityGuidelines) {
@@ -338,7 +339,7 @@ fileprivate extension OWConversationViewViewModel {
     }
 
     func getSkeletonCells() -> [OWConversationCellOption] {
-        let skeletonCellVMs = (0 ..< Metrics.numberOfCommentsInSkeleton).map { _ in
+        let skeletonCellVMs = (0 ..< Metrics.numberOfSkeletonComments).map { _ in
             OWCommentSkeletonShimmeringCellViewModel()
         }
         let skeletonCells = skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
@@ -423,7 +424,12 @@ fileprivate extension OWConversationViewViewModel {
             replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
         }
 
-        return OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: replyToUser, collapsableTextLineLimit: 4))
+        return OWCommentCellViewModel(data: OWCommentRequiredData(
+            comment: comment,
+            user: user,
+            replyToUser: replyToUser,
+            collapsableTextLineLimit: Metrics.collapsableTextLineLimit
+        ))
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
@@ -555,6 +561,7 @@ fileprivate extension OWConversationViewViewModel {
                 let currentRepliesCount = commentPresentationData.repliesIds.count
                 let fetchCount = countAfterUpdate - currentRepliesCount
 
+                // TODO: Use materialize
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
@@ -599,6 +606,7 @@ fileprivate extension OWConversationViewViewModel {
         .disposed(by: disposeBag)
 
         // fetch more comments
+        // TODO: Use materialize
         let loadMoreCommentsReadObservable = _loadMoreComments
             .distinctUntilChanged()
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
@@ -771,7 +779,8 @@ fileprivate extension OWConversationViewViewModel {
             .throttle(.milliseconds(Metrics.willDisplayCellThrottle), scheduler: MainScheduler.asyncInstance)
             .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
                 return (rowIndex, cellsVMs.count)
-            }.subscribe(onNext: { [weak self] rowIndex, cellsCount in
+            }
+            .subscribe(onNext: { [weak self] rowIndex, cellsCount in
                 guard let self = self else { return }
                 if (rowIndex > cellsCount - Metrics.tableViewPaginationCellsOffset) {
                     self._loadMoreComments.onNext(self.paginationOffset)
