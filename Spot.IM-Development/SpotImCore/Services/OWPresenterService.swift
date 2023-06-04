@@ -10,19 +10,19 @@ import Foundation
 import RxSwift
 
 protocol OWPresenterServicing {
-    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType>
-    func showMenu(title: String?, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType>
+    func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
 }
 
 extension OWPresenterServicing {
-    func showMenu(title: String? = nil, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType> {
+    func showMenu(title: String? = nil, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         return showMenu(title: title, actions: actions, viewableMode: viewableMode)
     }
 }
 
 class OWPresenterService: OWPresenterServicing {
 
-    func showAlert(title: String, message: String, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType> {
+    func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
 
@@ -33,7 +33,7 @@ class OWPresenterService: OWPresenterServicing {
                                          actions: actions)
     }
 
-    func showMenu(title: String?, actions: [UIRxPresenterAction], viewableMode: OWViewableMode) -> Observable<UIRxPresenterResponseType> {
+    func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         // TODO: show proper menu instead of actionSheet
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
