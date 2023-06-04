@@ -76,7 +76,7 @@ fileprivate extension OWCommentView {
         }
     }
 
-    func setupCommentDetailsUI() {
+    func setupCommentContentUI() {
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
@@ -100,7 +100,7 @@ fileprivate extension OWCommentView {
     }
 
     func setupObservers() {
-        viewModel.outputs.shouldHideCommentDetails
+        viewModel.outputs.shouldHideCommentContent
             .subscribe(onNext: { [weak self] shouldBlockComment in
                 guard let self = self else { return }
                 if (shouldBlockComment) {
@@ -108,12 +108,12 @@ fileprivate extension OWCommentView {
                     self.commentContentView.removeFromSuperview()
                     self.commentEngagementView.removeFromSuperview()
                 } else if (self.commentLabelsContainerView.superview == nil) {
-                    self.setupCommentDetailsUI()
+                    self.setupCommentContentUI()
                 }
             }).disposed(by: disposedBag)
 
         if let commentHeaderBottomConstraint = commentHeaderBottomConstraint {
-            viewModel.outputs.shouldHideCommentDetails
+            viewModel.outputs.shouldHideCommentContent
                 .bind(to: commentHeaderBottomConstraint.rx.isActive)
                 .disposed(by: disposedBag)
         }

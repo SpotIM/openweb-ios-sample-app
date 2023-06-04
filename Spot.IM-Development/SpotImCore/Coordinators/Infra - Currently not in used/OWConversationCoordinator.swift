@@ -104,6 +104,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .unwrap()
 
         // Coordinate to comment creation
+        // TODO - handle read only mode
         let coordinateCommentCreationObservable = Observable.merge(
             openCommentCreationObservable,
             deepLinkToCommentCreation.unwrap().asObservable())
@@ -260,19 +261,13 @@ fileprivate extension OWConversationCoordinator {
             .outputs.closeConversation
             .map { OWViewActionCallbackType.closeConversationPressed }
 
-        Observable.merge(closeConversationPressed)
-            .subscribe { [weak self] viewActionType in
-                self?.viewActionsService.append(viewAction: viewActionType)
-            }
-            .disposed(by: disposeBag)
-
         let openPublisherProfile = Observable.merge(
             viewModel.outputs.openPublisherProfile,
             viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
         )
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
-        Observable.merge(openPublisherProfile)
+        Observable.merge(closeConversationPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

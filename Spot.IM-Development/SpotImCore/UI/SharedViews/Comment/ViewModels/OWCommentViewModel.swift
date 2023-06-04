@@ -22,7 +22,7 @@ protocol OWCommentViewModelingOutputs {
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
-    var shouldHideCommentDetails: Observable<Bool> { get }
+    var shouldHideCommentContent: Observable<Bool> { get }
 
     var comment: OWComment { get }
 }
@@ -53,9 +53,9 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentEngagementVM: OWCommentEngagementViewModeling
     var comment: OWComment
 
-    fileprivate let _shouldHideCommentDetails = BehaviorSubject<Bool>(value: false)
-    var shouldHideCommentDetails: Observable<Bool> {
-        _shouldHideCommentDetails
+    fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
+    var shouldHideCommentContent: Observable<Bool> {
+        _shouldHideCommentContent
             .asObserver()
     }
 
@@ -65,7 +65,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? OWComment.Rank(), commentId: data.comment.id ?? "")
         comment = data.comment
-        checkIfShouldHideCommentDetails(data: data)
+        dictateCommentContentVisibility(data: data)
     }
 
     init() {
@@ -78,13 +78,13 @@ class OWCommentViewModel: OWCommentViewModeling,
 }
 
 fileprivate extension OWCommentViewModel {
-    func checkIfShouldHideCommentDetails(data: OWCommentRequiredData) {
+    func dictateCommentContentVisibility(data: OWCommentRequiredData) {
         guard let commentId = data.comment.id else { return }
 
         let shouldHide = data.user.isMuted || // muted
             data.comment.deleted || // deleted
             SPUserSessionHolder.session.reportedComments[commentId] != nil // reported
 
-        self._shouldHideCommentDetails.onNext(shouldHide)
+        self._shouldHideCommentContent.onNext(shouldHide)
     }
 }
