@@ -51,6 +51,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
 
@@ -137,6 +138,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         self.servicesProvider = servicesProvider
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
+        self.viewableMode = viewableMode
         self.setupObservers()
     }
 }
@@ -575,6 +577,37 @@ fileprivate extension OWCommentThreadViewViewModel {
             .take(1)
             .subscribe(onNext: { [weak self] index in
                 self?._performHighlightAnimationCellIndex.onNext(index)
+            })
+            .disposed(by: disposeBag)
+
+        // Open menu for comment and handle actions
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction])> in
+                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction])> in
+                    let commentVm = commentCellVm.outputs.commentVM
+                    let commentHeaderVm = commentVm.outputs.commentHeaderVM
+
+                    return commentHeaderVm.outputs.openMenu
+                        .map { (commentVm.outputs.comment, $0) }
+                }
+                return Observable.merge(openMenuClickObservable)
+            }
+            // swiftlint:disable unused_closure_parameter
+            .subscribe(onNext: { [weak self] comment, actions in
+                guard let self = self else { return }
+                _ = self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, viewableMode: self.viewableMode)
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
+                            // TODO: handle selection
+                            break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
     }
