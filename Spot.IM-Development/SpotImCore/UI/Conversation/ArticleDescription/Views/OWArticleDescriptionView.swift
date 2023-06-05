@@ -143,16 +143,13 @@ fileprivate extension OWArticleDescriptionView {
             .subscribe(onNext: { [weak self] imageType in
                 switch imageType {
                 case .custom(let url):
-                    self?.setImage(with: url)
+                    guard let self = self else { return }
+                    self.setImage(with: url)
                 case .defaultImage:
                     self?.setNoImageConstraints()
                 }
             })
             .disposed(by: disposeBag)
-
-//        viewModel.outputs.conversationImage
-//            .bind(to: conversationImageView.rx.image)
-//            .disposed(by: disposeBag)
 
         viewModel.outputs.conversationTitle
             .bind(to: titleLabel.rx.text)
@@ -205,6 +202,9 @@ fileprivate extension OWArticleDescriptionView {
                 self.setNoImageConstraints()
             } else if let image = image {
                 self.conversationImageView.image = image
+
+                // Only when we have an imgae from article url, we can replace it with customize element
+                self.viewModel.inputs.triggerCustomizeImageViewUI.onNext(self.conversationImageView)
             }
         }
     }
