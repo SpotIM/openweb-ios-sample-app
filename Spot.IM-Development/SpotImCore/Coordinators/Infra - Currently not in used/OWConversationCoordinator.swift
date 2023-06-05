@@ -257,7 +257,7 @@ fileprivate extension OWConversationCoordinator {
     }
 
     func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {
-        //TODO: need to complete all the customize elements
+        // TODO: need to complete all the customize elements
 
         let communityGuidelinesCustomizeTitle = viewModel.outputs.communityGuidelinesCellViewModel
             .outputs.communityGuidelinesViewModel

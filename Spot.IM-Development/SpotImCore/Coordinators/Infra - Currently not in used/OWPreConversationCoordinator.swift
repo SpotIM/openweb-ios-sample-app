@@ -159,8 +159,8 @@ fileprivate extension OWPreConversationCoordinator {
     }
 
     func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
-        //TODO: need to complete all the customize elements
-        
+        // TODO: need to complete all the customize elements
+
         let customizationElementsObservables = Observable.merge(
             viewModel.outputs.preConversationSummaryVM
                 .outputs.customizeTitleLabelUI
