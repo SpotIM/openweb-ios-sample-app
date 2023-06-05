@@ -101,7 +101,13 @@ fileprivate extension OWConversationEmptyStateView {
 
             self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             self.iconImageView.image = UIImage(spNamed: iconName, supportDarkMode: true)
+            self.updateCustomUI()
         })
         .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(iconImageView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
     }
 }

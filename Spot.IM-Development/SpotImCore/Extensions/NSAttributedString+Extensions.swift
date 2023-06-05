@@ -146,6 +146,13 @@ extension NSAttributedString {
         return ceil(boundingBox.width)
     }
 
+    func isEmpty() -> Bool {
+        let range = NSRange(location: 0, length: self.length)
+        let trimmedString = self.string.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return trimmedString.isEmpty
+    }
+
 }
 
 // MARK: - Trimming

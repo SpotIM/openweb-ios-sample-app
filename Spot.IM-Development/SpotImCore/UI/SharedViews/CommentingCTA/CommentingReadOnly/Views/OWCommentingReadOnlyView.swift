@@ -30,12 +30,15 @@ class OWCommentingReadOnlyView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    fileprivate var viewModel: OWCommentingReadOnlyViewModeling!
+    fileprivate var disposeBag = DisposeBag()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
+    init(with viewModel: OWCommentingReadOnlyViewModeling) {
+        super.init(frame: .zero)
+        disposeBag = DisposeBag()
+        self.viewModel = viewModel
         setupObservers()
+        setupUI()
     }
 
     required init?(coder: NSCoder) {
@@ -44,7 +47,7 @@ class OWCommentingReadOnlyView: UIView {
 }
 
 fileprivate extension OWCommentingReadOnlyView {
-    func setupViews() {
+    func setupUI() {
         self.enforceSemanticAttribute()
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
@@ -69,7 +72,13 @@ fileprivate extension OWCommentingReadOnlyView {
 
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.iconImageView.image = UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true)
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(iconImageView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(label)
     }
 }

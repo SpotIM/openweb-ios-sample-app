@@ -15,6 +15,7 @@ protocol OWCommentingCTAViewModelingInputs {
 
 protocol OWCommentingCTAViewModelingOutputs {
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
+    var commentingReadOnlyViewModel: OWCommentingReadOnlyViewModeling { get }
     var shouldShowSkelaton: Observable<Bool> { get }
     var style: Observable<OWCommentingCTAStyle> { get }
     var shouldShowCommentCreationEntry: Observable<Bool> { get }
@@ -46,6 +47,10 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
 
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
         return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+    }()
+
+    lazy var commentingReadOnlyViewModel: OWCommentingReadOnlyViewModeling = {
+        return OWCommentingReadOnlyViewModel()
     }()
 
     lazy var shouldShowSkelaton: Observable<Bool> = {
