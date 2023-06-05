@@ -332,7 +332,6 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                                                          belowCommunityGuidelines: OWConversationSpacing.validateSpacing(belowCommunityGuidelinesSpace),
                                                          belowCommunityQuestions: OWConversationSpacing.validateSpacing(belowCommunityQuestionsGuidelinesSpace))
         }
-                                        .skip(1)
                                         .asObservable()
     }()
     // swiftlint:enable closure_parameter_position
@@ -347,7 +346,7 @@ extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
-            .skip(1)
+            .distinctUntilChanged()
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .disposed(by: disposeBag)

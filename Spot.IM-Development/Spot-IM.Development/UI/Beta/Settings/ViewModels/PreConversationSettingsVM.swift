@@ -205,7 +205,6 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                                                                communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
                                                                communityQuestionsStyleIndex: questionStyleIndex)
         }
-                                        .skip(1)
                                         .asObservable()
     }()
     // swiftlint:enable closure_parameter_position
@@ -219,6 +218,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
 extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
+            .distinctUntilChanged()
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
             .disposed(by: disposeBag)
