@@ -14,7 +14,7 @@ public enum OWCommunityQuestionCustomizableElement {
     case compact(containerView: UIView, label: UILabel)
 }
 #else
-enum OWCommunityGuidelinesCustomizableElement {
+enum OWCommunityQuestionCustomizableElement {
     case regular(textView: UITextView)
     case compact(containerView: UIView, label: UILabel)
 }

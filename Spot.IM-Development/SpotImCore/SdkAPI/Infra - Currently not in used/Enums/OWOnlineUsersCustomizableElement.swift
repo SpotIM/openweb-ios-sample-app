@@ -14,7 +14,7 @@ public enum OWOnlineUsersCustomizableElement {
     case counter(label: UILabel)
 }
 #else
-enum OWNavigationBarCustomizableElement {
+enum OWOnlineUsersCustomizableElement {
     case icon(image: UIImageView)
     case counter(label: UILabel)
 }

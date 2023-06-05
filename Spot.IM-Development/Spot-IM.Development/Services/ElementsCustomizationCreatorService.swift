@@ -9,6 +9,7 @@
 import UIKit
 import SpotImCore
 
+#if NEW_API
 protocol ElementsCustomizationCreatorServicing {
     static func addElementsCustomization()
 }
@@ -223,3 +224,4 @@ fileprivate extension ElementsCustomizationCreatorService {
     }
     // swiftlint:enable function_body_length
 }
+#endif
