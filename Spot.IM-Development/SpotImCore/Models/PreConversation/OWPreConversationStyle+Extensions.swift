@@ -18,7 +18,7 @@ extension OWPreConversationStyle {
     func validate() -> OWPreConversationStyle {
         guard case let .custom(numberOfComments, communityGuidelines, communityQuestion) = self else { return self }
         if (numberOfComments > Metrics.maxNumberOfComments) || (numberOfComments < Metrics.minNumberOfComments) {
-            return .custom(numberOfComments: numberOfComments,
+            return .custom(numberOfComments: Metrics.defaultRegularNumberOfComments,
                            communityGuidelinesStyle: communityGuidelines,
                            communityQuestionsStyle: communityQuestion)
         } else {
@@ -112,8 +112,11 @@ extension OWPreConversationStyle: Equatable {
             return true
         case (.regular, .regular):
             return true
-        case (.custom(let lhsNumberOfComments, _, _), .custom(let rhsNumberOfComments, _, _)):
-            return lhsNumberOfComments == rhsNumberOfComments
+        case (.custom(let lhsNumberOfComments, let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle),
+              .custom(let rhsNumberOfComments, let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle)):
+            return lhsNumberOfComments == rhsNumberOfComments &&
+            lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
         default:
             return false
         }
@@ -131,8 +134,11 @@ extension OWPreConversationStyle: Equatable {
             return true
         case (.regular, .regular):
             return true
-        case (.custom(let lhsNumberOfComments, _, _), .custom(let rhsNumberOfComments, _, _)):
-            return lhsNumberOfComments == rhsNumberOfComments
+        case (.custom(let lhsNumberOfComments, let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle),
+              .custom(let rhsNumberOfComments, let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle)):
+            return lhsNumberOfComments == rhsNumberOfComments &&
+            lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
         default:
             return false
         }

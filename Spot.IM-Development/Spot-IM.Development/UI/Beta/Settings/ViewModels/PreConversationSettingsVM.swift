@@ -56,7 +56,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
 
     var showCustomStyleOptions: Observable<Bool> {
         return styleModeIndex
-            .map { $0 == OWPreConversationStyle.customIndex } // Custom Style
+            .map { $0 == OWPreConversationStyleIndexer.custom.index } // Custom Style
             .asObservable()
     }
 
@@ -65,17 +65,17 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
             .map { preConversationStyle in
                 switch preConversationStyle {
                 case .regular:
-                    return 0
+                    return OWPreConversationStyleIndexer.regular.index
                 case .compact:
-                    return 1
+                    return OWPreConversationStyleIndexer.compact.index
                 case .ctaButtonOnly:
-                    return 2
+                    return OWPreConversationStyleIndexer.ctaButtonOnly.index
                 case .ctaWithSummary:
-                    return 3
+                    return OWPreConversationStyleIndexer.ctaWithSummary.index
                 case .custom:
-                    return 4
+                    return OWPreConversationStyleIndexer.custom.index
                 default:
-                    return 0
+                    return OWPreConversationStyleIndexer.regular.index
                 }
             }
             .asObservable()
@@ -190,23 +190,24 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     }()
 
     // swiftlint:disable closure_parameter_position
-    fileprivate lazy var customStyleModeObservable =
-    Observable.combineLatest(customStyleModeSelectedIndex,
-                             customStyleModeSelectedNumberOfComments,
-                             communityGuidelinesStyleSelectedIndex,
-                             communityQuestionsStyleModeSelectedIndex) {
-        styleIndex,
-        numberOfComments,
-        communityGuidelinesStyleIndex,
-        questionStyleIndex -> OWPreConversationStyle in
+    fileprivate lazy var customStyleModeObservable: Observable<OWPreConversationStyle> = {
+        return Observable.combineLatest(customStyleModeSelectedIndex,
+                                        customStyleModeSelectedNumberOfComments,
+                                        communityGuidelinesStyleSelectedIndex,
+                                        communityQuestionsStyleModeSelectedIndex) {
+            styleIndex,
+            numberOfComments,
+            communityGuidelinesStyleIndex,
+            questionStyleIndex -> OWPreConversationStyle in
 
-        return OWPreConversationStyle.preConversationStyle(fromIndex: styleIndex,
-                                                           numberOfComments: numberOfComments,
-                                                           communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
-                                                           communityQuestionsStyleIndex: questionStyleIndex)
-    }
-                             .skip(2)
-                             .asObservable()
+            return OWPreConversationStyle.preConversationStyle(fromIndex: styleIndex,
+                                                               numberOfComments: numberOfComments,
+                                                               communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
+                                                               communityQuestionsStyleIndex: questionStyleIndex)
+        }
+                                        .skip(2)
+                                        .asObservable()
+    }()
     // swiftlint:enable closure_parameter_position
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
