@@ -10,12 +10,32 @@ import UIKit
 
 #if NEW_API
 public enum OWCustomizableElement {
-    case headerTitle(label: UILabel)
-    case headerCounter(label: UILabel)
+    case navigationTitle(label: UILabel)
+    case navigationBar(element: OWNavigationBarCustomizableElement)
+    case articleDescription(element: OWArticleDescriptionCustomizableElement) // TODO image
+    case summery(element: OWSummeryCustomizableElement) // Done
+    case summeryHeader(element: OWSummeryHeaderCustomizableElement) // Done
+    case onlineUsers(element: OWOnlineUsersCustomizableElement) // Done
+    case commentCreationCTA(element: OWCommentCreationCTACustomizableElement)
+    case communityQuestion(element: OWCommunityQuestionCustomizableElement) // TODO regular
+    case communityGuidelines(element: OWCommunityGuidelinesCustomizableElement) // Done
+    case emptyState(element: OWEmptyStateCustomizableElement) // Done
+    case emptyStateCommentingEnded(element: OWEmptyStateCommentingEndedCustomizableElement)
+    case commentingEnded(element: OWCommentingEndedCustomizableElement)
 }
 #else
 enum OWCustomizableElement {
-    case headerTitle(label: UILabel)
-    case headerCounter(label: UILabel)
+    case navigationTitle(label: UILabel)
+    case navigationBar(element: OWNavigationBarCustomizableElement)
+    case articleDescription(element: OWArticleDescriptionCustomizableElement) // TODO image
+    case summery(element: OWSummeryCustomizableElement) // Done
+    case summeryHeader(element: OWSummeryHeaderCustomizableElement) // Done
+    case onlineUsers(element: OWOnlineUsersCustomizableElement) // Done
+    case commentCreationCTA(element: OWCommentCreationCTACustomizableElement)
+    case communityQuestion(element: OWCommunityQuestionCustomizableElement) // TODO regular
+    case communityGuidelines(element: OWCommunityGuidelinesCustomizableElement) // Done
+    case emptyState(element: OWEmptyStateCustomizableElement) // Done
+    case emptyStateCommentingEnded(element: OWEmptyStateCommentingEndedCustomizableElement)
+    case commentingEnded(element: OWCommentingEndedCustomizableElement)
 }
 #endif

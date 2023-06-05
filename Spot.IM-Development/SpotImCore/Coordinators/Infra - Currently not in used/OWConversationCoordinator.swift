@@ -251,6 +251,100 @@ fileprivate extension OWConversationCoordinator {
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+
+        // Set customization elements
+        setupCustomizationElements(forViewModel: viewModel)
+    }
+
+    func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {
+        let communityGuidelinesCustomizeTitle = viewModel.outputs.communityGuidelinesCellViewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.customizeTitleTextViewUI
+
+        let communityGuidelinesCustomizeIcon = viewModel.outputs.communityGuidelinesCellViewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.customizeIconImageViewUI
+
+        let customizationElementsObservables = Observable.merge(
+
+            viewModel.outputs.articleDescriptionViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.articleDescription(element: .title(label: $0)) },
+
+            viewModel.outputs.articleDescriptionViewModel
+                .outputs.customizeAuthorLabelUI
+                .map { OWCustomizableElement.articleDescription(element: .author(label: $0)) },
+
+            viewModel.outputs.articleDescriptionViewModel
+                .outputs.customizeImageViewUI
+                .map { OWCustomizableElement.articleDescription(element: .image(imageView: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.summery(element: .commentsTitle(label: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.onlineViewingUsersVM
+                .outputs.customizeIconImageUI
+                .map { OWCustomizableElement.onlineUsers(element: .icon(image: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.onlineViewingUsersVM
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.onlineUsers(element: .counter(label: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.conversationSortVM
+                .outputs.customizeSortByLabelUI
+                .map { OWCustomizableElement.summery(element: .sortByTitle(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentCreationEntryViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.commentCreationCTA(element: .placeholder(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentCreationEntryViewModel
+                .outputs.customizeContainerViewUI
+                .map { OWCustomizableElement.commentCreationCTA(element: .container(view: $0)) },
+
+//            viewModel.outputs.communityQuestionCellViewModel
+//                .outputs.communityQuestionViewModel
+//                .outputs.customizeQuestionLabelUI
+//                .map { OWCustomizableElement.communityQuestionTitle(label: $0) },
+
+            Observable.combineLatest(communityGuidelinesCustomizeIcon,
+                                     communityGuidelinesCustomizeTitle)
+                .flatMap { icon, title in
+                    Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(icon: icon, textView: title))) },
+
+            communityGuidelinesCustomizeTitle
+                .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) },
+
+            viewModel.outputs.conversationEmptyStateViewModel
+                .outputs.customizeIconImageViewUI
+                .map { OWCustomizableElement.emptyState(element: .icon(image: $0)) },
+
+            viewModel.outputs.conversationEmptyStateViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.emptyState(element: .title(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentingReadOnlyViewModel
+                .outputs.customizeIconImageViewUI
+                .map { OWCustomizableElement.commentingEnded(element: .icon(image: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentingReadOnlyViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.commentingEnded(element: .title(label: $0)) }
+        )
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {

@@ -116,8 +116,13 @@ fileprivate extension OWConversationSortView {
                 self.sortButton.setTitleColor(OWColorPalette.shared.color(type: .textColor3,
                                                                           themeStyle: currentStyle), state: .normal)
                 self.sortButton.setImage(UIImage(spNamed: "sort", supportDarkMode: true), for: .normal)
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeSortByLabelUI.onNext(sortLabel)
     }
 
     func applyAccessibility() {

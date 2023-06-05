@@ -150,6 +150,10 @@ fileprivate extension OWArticleDescriptionView {
             })
             .disposed(by: disposeBag)
 
+//        viewModel.outputs.conversationImage
+//            .bind(to: conversationImageView.rx.image)
+//            .disposed(by: disposeBag)
+
         viewModel.outputs.conversationTitle
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
@@ -176,6 +180,7 @@ fileprivate extension OWArticleDescriptionView {
                                                                         themeStyle: currentStyle)
                 self.authorLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
 
@@ -184,6 +189,12 @@ fileprivate extension OWArticleDescriptionView {
         conversationImageView.accessibilityIdentifier = Metrics.conversationImageIdentifier
         titleLabel.accessibilityIdentifier = Metrics.conversationTitleIdentifier
         authorLabel.accessibilityIdentifier = Metrics.conversationAuthorIdentifier
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeAuthorLabelUI.onNext(authorLabel)
+        viewModel.inputs.triggerCustomizeImageViewUI.onNext(conversationImageView)
     }
 
     func setImage(with url: URL) {

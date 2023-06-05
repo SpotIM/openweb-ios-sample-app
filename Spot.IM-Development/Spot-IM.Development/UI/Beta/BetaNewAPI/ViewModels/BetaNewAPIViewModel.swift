@@ -46,7 +46,9 @@ protocol BetaNewAPIViewModeling {
     var outputs: BetaNewAPIViewModelingOutputs { get }
 }
 
-class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs, BetaNewAPIViewModelingOutputs {
+class BetaNewAPIViewModel: BetaNewAPIViewModeling,
+                           BetaNewAPIViewModelingInputs,
+                           BetaNewAPIViewModelingOutputs {
     var inputs: BetaNewAPIViewModelingInputs { return self }
     var outputs: BetaNewAPIViewModelingOutputs { return self }
 
@@ -250,6 +252,7 @@ fileprivate extension BetaNewAPIViewModel {
         var helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
         helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
+        ElementsCustomizationCreatorService.addElementsCustomization()
     }
 }
 
