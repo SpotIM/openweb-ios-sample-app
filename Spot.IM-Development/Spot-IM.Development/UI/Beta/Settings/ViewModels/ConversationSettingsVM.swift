@@ -332,7 +332,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                                                          belowCommunityGuidelines: OWConversationSpacing.validateSpacing(belowCommunityGuidelinesSpace),
                                                          belowCommunityQuestions: OWConversationSpacing.validateSpacing(belowCommunityQuestionsGuidelinesSpace))
         }
-                                        .skip(8)
+                                        .skip(1)
                                         .asObservable()
     }()
     // swiftlint:enable closure_parameter_position
