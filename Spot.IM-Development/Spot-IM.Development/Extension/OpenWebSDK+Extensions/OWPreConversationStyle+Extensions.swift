@@ -12,18 +12,26 @@ import SpotImCore
 #if NEW_API
 
 extension OWPreConversationStyle {
-    static func preConversationStyle(fromIndex index: Int, numberOfComments: Int = OWPreConversationStyle.Metrics.defaultRegularNumberOfComments) -> OWPreConversationStyle {
+    static func preConversationStyle(fromIndex index: Int,
+                                     numberOfComments: Int = OWPreConversationStyle.Metrics.defaultRegularNumberOfComments,
+                                     communityGuidelinesStyleIndex: Int,
+                                     communityQuestionsStyleIndex: Int) -> OWPreConversationStyle {
+
         switch index {
-        case 0: return .regular(numberOfComments: numberOfComments)
-        case 1: return .compact
-        case 2: return .ctaButtonOnly
-        case 3: return .ctaWithSummary
+        case OWPreConversationStyleIndexer.regular.index: return .regular
+        case OWPreConversationStyleIndexer.compact.index: return .compact
+        case OWPreConversationStyleIndexer.ctaButtonOnly.index: return .ctaButtonOnly
+        case OWPreConversationStyleIndexer.ctaWithSummary.index: return .ctaWithSummary(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+                                                                                        communityQuestionsStyle: OWCommunityQuestionsStyle(index: communityQuestionsStyleIndex))
+        case OWPreConversationStyleIndexer.custom.index: return .custom(numberOfComments: numberOfComments,
+                                       communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+                                       communityQuestionsStyle: OWCommunityQuestionsStyle(index: communityQuestionsStyleIndex))
         default: return `default`
         }
     }
 
     static var `default`: OWPreConversationStyle {
-        return .regular()
+        return .regular
     }
 
     enum CodingKeys: String, CodingKey {
@@ -31,6 +39,7 @@ extension OWPreConversationStyle {
         case compact
         case ctaButtonOnly
         case ctaWithSummary
+        case custom
     }
 }
 

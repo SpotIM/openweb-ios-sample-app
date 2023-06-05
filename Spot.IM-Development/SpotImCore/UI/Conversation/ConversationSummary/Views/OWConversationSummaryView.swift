@@ -139,7 +139,7 @@ fileprivate extension OWConversationSummaryView {
     }
 
     func updateCustomUI() {
-        viewModel.inputs.customizeCounterLabelUI.onNext(commentsCountLabel)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(commentsCountLabel)
     }
 
     func applyAccessibility() {

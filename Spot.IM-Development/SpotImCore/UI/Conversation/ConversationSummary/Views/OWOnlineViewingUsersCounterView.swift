@@ -18,27 +18,24 @@ class OWOnlineViewingUsersCounterView: UIView {
         static let identifier = "online_viewing_users_counter_id"
         static let imgViewIconIdentifier = "online_viewing_users_img_view_icon_id"
         static let lblViewersNumberIdentifier = "online_viewing_users_lbl_viewers_number_id"
+        static let iconSize: CGFloat = 16.0
     }
 
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate lazy var imgViewIcon: UIImageView = {
-        let img = UIImageView()
+    fileprivate lazy var iconImageView: UIImageView = {
+        return UIImageView()
             .image(UIImage(spNamed: "onlineViewingUsers", supportDarkMode: false)!)
             .contentMode(.scaleAspectFit)
-
-        return img
     }()
 
-    fileprivate lazy var lblViewersNumber: UILabel = {
-        let lbl = UILabel()
+    fileprivate lazy var counterLabel: UILabel = {
+        return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.viewersFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-
-        return lbl
     }()
 
     required init?(coder aDecoder: NSCoder) {
@@ -55,29 +52,30 @@ class OWOnlineViewingUsersCounterView: UIView {
 
 fileprivate extension OWOnlineViewingUsersCounterView {
     func setupUI() {
-        self.addSubview(imgViewIcon)
-        imgViewIcon.OWSnp.makeConstraints { make in
+        self.addSubview(iconImageView)
+        iconImageView.OWSnp.makeConstraints { make in
             make.top.leading.bottom.equalToSuperview()
+            make.size.equalTo(Metrics.iconSize)
         }
 
-        self.addSubview(lblViewersNumber)
-        lblViewersNumber.OWSnp.makeConstraints { make in
+        self.addSubview(counterLabel)
+        counterLabel.OWSnp.makeConstraints { make in
             make.centerY.trailing.equalToSuperview()
-            make.leading.equalTo(imgViewIcon.OWSnp.trailing).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.horizontalMargin)
         }
         applyAccessibility()
     }
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        imgViewIcon.accessibilityIdentifier = Metrics.imgViewIconIdentifier
-        lblViewersNumber.accessibilityIdentifier = Metrics.lblViewersNumberIdentifier
+        iconImageView.accessibilityIdentifier = Metrics.imgViewIconIdentifier
+        counterLabel.accessibilityIdentifier = Metrics.lblViewersNumberIdentifier
     }
 
     func setupObservers() {
         viewModel.outputs.viewingCount
             .startWith("1")
-            .bind(to: lblViewersNumber.rx.text)
+            .bind(to: counterLabel.rx.text)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
@@ -85,10 +83,16 @@ fileprivate extension OWOnlineViewingUsersCounterView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.lblViewersNumber.textColor = OWColorPalette.shared.color(type: .textColor2,
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(iconImageView)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
     }
 }
 

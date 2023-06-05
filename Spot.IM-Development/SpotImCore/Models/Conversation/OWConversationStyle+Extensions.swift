@@ -26,10 +26,45 @@ extension OWConversationStyle {
         case .regular:
             return .regular
         case .compact:
-            return .regular
+            return .compact
         case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: let communityQuestionsStyle, spacing: _):
             return communityQuestionsStyle
         }
     }
 
 }
+
+#if NEW_API
+extension OWConversationStyle: Equatable {
+    public static func == (lhs: OWConversationStyle, rhs: OWConversationStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.compact, .compact):
+            return true
+        case (.regular, .regular):
+            return true
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, _),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, _)):
+            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle && lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
+        default:
+            return false
+        }
+    }
+}
+#else
+extension OWConversationStyle: Equatable {
+    static func == (lhs: OWConversationStyle, rhs: OWConversationStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.compact, .compact):
+            return true
+            return true
+        case (.regular, .regular):
+            return true
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, _),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, _)):
+            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle && lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
+        default:
+            return false
+        }
+    }
+}
+#endif

@@ -13,11 +13,13 @@ protocol OWConversationSortViewModelingInputs {
     var changeSelectedSortOption: PublishSubject<OWSortOption> { get }
     var sortTapped: PublishSubject<Void> { get }
     var sortSelected: PublishSubject<OWSortOption> { get }
+    var triggerCustomizeSortByLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWConversationSortViewModelingOutputs {
     var selectedSortOption: Observable<OWSortOption> { get }
     var openSort: Observable<Void> { get }
+    var customizeSortByLabelUI: Observable<UILabel> { get }
 }
 
 protocol OWConversationSortViewModeling {
@@ -31,9 +33,19 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     var inputs: OWConversationSortViewModelingInputs { return self }
     var outputs: OWConversationSortViewModelingOutputs { return self }
 
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeSortByLabelUI = BehaviorSubject<UILabel?>(value: nil)
+
+    var triggerCustomizeSortByLabelUI = PublishSubject<UILabel>()
     var changeSelectedSortOption = PublishSubject<OWSortOption>()
     var sortTapped = PublishSubject<Void>()
     var sortSelected = PublishSubject<OWSortOption>()
+
+    var customizeSortByLabelUI: Observable<UILabel> {
+        return _triggerCustomizeSortByLabelUI
+            .unwrap()
+            .asObservable()
+    }
 
     fileprivate let _selectedSortOption = BehaviorSubject<OWSortOption?>(value: nil)
     var selectedSortOption: Observable<OWSortOption> {
@@ -81,6 +93,10 @@ fileprivate extension OWConversationSortViewModel {
             self.servicesProvider.sortDictateService().update(sortOption: sortOption, perPostId: self.postId)
         })
         .disposed(by: disposeBag)
+
+        triggerCustomizeSortByLabelUI
+            .bind(to: _triggerCustomizeSortByLabelUI)
+            .disposed(by: disposeBag)
     }
 }
 

@@ -10,9 +10,14 @@ import Foundation
 import UIKit
 import RxSwift
 
-protocol OWOnlineViewingUsersCounterViewModelingInputs { }
+protocol OWOnlineViewingUsersCounterViewModelingInputs {
+    var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
+    var triggerCustomizeCounterLabelUI: PublishSubject<UILabel> { get }
+}
 
 protocol OWOnlineViewingUsersCounterViewModelingOutputs {
+    var customizeIconImageUI: Observable<UIImageView> { get }
+    var customizeCounterLabelUI: Observable<UILabel> { get }
     var viewingCount: Observable<String> { get }
 }
 
@@ -27,12 +32,23 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     var inputs: OWOnlineViewingUsersCounterViewModelingInputs { return self }
     var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var model = BehaviorSubject<RealTimeOnlineViewingUsersModel?>(value: nil)
-    fileprivate let disposeBag = DisposeBag()
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    fileprivate let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.servicesProvider = servicesProvider
+    var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
+    var triggerCustomizeCounterLabelUI = PublishSubject<UILabel>()
+
+    var customizeIconImageUI: Observable<UIImageView> {
+        return _triggerCustomizeIconImageViewUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeCounterLabelUI: Observable<UILabel> {
+        return _triggerCustomizeCounterLabelUI
+            .unwrap()
+            .asObservable()
     }
 
     lazy var viewingCount: Observable<String> = {
@@ -50,5 +66,26 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
             }
             .asObservable()
     }()
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate var model = BehaviorSubject<RealTimeOnlineViewingUsersModel?>(value: nil)
+    fileprivate let disposeBag = DisposeBag()
+
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+        setupObservers()
+    }
+}
+
+fileprivate extension OWOnlineViewingUsersCounterViewModel {
+    func setupObservers() {
+        triggerCustomizeIconImageViewUI
+            .bind(to: _triggerCustomizeIconImageViewUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeCounterLabelUI
+            .bind(to: _triggerCustomizeCounterLabelUI)
+            .disposed(by: disposeBag)
+    }
 }
 

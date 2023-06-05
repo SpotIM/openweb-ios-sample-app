@@ -25,7 +25,7 @@ class OWCommentingCTAView: UIView {
     }()
 
     fileprivate lazy var commentingReadOnlyView: OWCommentingReadOnlyView = {
-       return OWCommentingReadOnlyView()
+        return OWCommentingReadOnlyView(with: self.viewModel.outputs.commentingReadOnlyViewModel)
     }()
 
     fileprivate var viewModel: OWCommentingCTAViewModeling!
