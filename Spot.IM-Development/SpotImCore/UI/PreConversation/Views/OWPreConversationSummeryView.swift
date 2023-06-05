@@ -44,7 +44,7 @@ class OWPreConversationSummeryView: UIView {
 
     fileprivate lazy var nextArrow: UIImageView = {
         return UIImageView()
-            .image(UIImage(spNamed: "nextArrow", supportDarkMode: true))
+            .image(UIImage(spNamed: "nextArrow", supportDarkMode: true)!)
             .enforceSemanticAttribute()
     }()
 

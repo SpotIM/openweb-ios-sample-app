@@ -18,7 +18,6 @@ protocol OWArticleDescriptionViewModelingInputs {
 
 protocol OWArticleDescriptionViewModelingOutputs {
     var conversationImageType: Observable<OWImageType> { get }
-    var conversationImage: Observable<UIImage> { get }
     var conversationTitle: Observable<String> { get }
     var conversationAuthor: Observable<String> { get }
     var headerTapped: Observable<Void> { get }
@@ -82,10 +81,6 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
             }
     }
 
-    var conversationImage: Observable<UIImage> {
-        return Observable.empty()
-    }
-
     var conversationTitle: Observable<String> {
         self.article
             .map { $0.title }
@@ -121,15 +116,6 @@ fileprivate extension OWArticleDescriptionViewModel {
             .disposed(by: disposeBag)
 
         triggerCustomizeImageViewUI
-            .bind(to: _triggerCustomizeImageViewUI)
-            .disposed(by: disposeBag)
-
-        triggerCustomizeImageViewUI
-            .flatMapLatest { [weak self] image -> Observable<UIImageView> in
-                guard let self = self else { return .empty() }
-                return self.conversationImage
-                    .map { _ in return image }
-            }
             .bind(to: _triggerCustomizeImageViewUI)
             .disposed(by: disposeBag)
     }

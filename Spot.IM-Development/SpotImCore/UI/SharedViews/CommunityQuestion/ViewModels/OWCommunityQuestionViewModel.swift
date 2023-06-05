@@ -17,8 +17,6 @@ protocol OWCommunityQuestionViewModelingInputs {
 protocol OWCommunityQuestionViewModelingOutputs {
     var communityQuestion: Observable<String> { get }
     var attributedCommunityQuestion: Observable<NSAttributedString> { get }
-    var titleTextViewHeight: Observable<CGFloat> { get }
-    var titleTextViewHeightNoneRX: CGFloat { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
     var customizeQuestionLabelUI: Observable<UILabel> { get }
@@ -70,25 +68,6 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
             }
     }()
 
-    var titleTextViewHeightNoneRX: CGFloat = 0
-
-    var titleTextViewWidthChanged = BehaviorSubject<CGFloat>(value: 0)
-    fileprivate var widthObservable: Observable<CGFloat> {
-        titleTextViewWidthChanged
-            .distinctUntilChanged()
-            .asObservable()
-    }
-
-    var titleTextViewHeight: Observable<CGFloat> {
-        return Observable.combineLatest(communityQuestion,
-                                        widthObservable) { string, viewWidth in
-            return string.height(withConstrainedWidth: viewWidth,
-                                     font: Metrics.communityQuestionFont)
-        }
-        .asObservable()
-        .share(replay: 1)
-    }
-
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         _shouldShowView
@@ -135,13 +114,6 @@ fileprivate extension OWCommunityQuestionViewModel {
             .subscribe(onNext: { [weak self] question in
                 guard let self = self else { return }
                 self._communityQuestion.onNext(question)
-            })
-            .disposed(by: disposeBag)
-
-        titleTextViewHeight
-            .subscribe(onNext: { [weak self] titleTextViewHeight in
-                guard let self = self else { return }
-                self.titleTextViewHeightNoneRX = titleTextViewHeight
             })
             .disposed(by: disposeBag)
 
