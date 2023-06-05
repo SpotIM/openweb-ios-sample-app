@@ -462,19 +462,33 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .flatMapLatest { [weak self] sortOption -> Observable<OWConversationReadRM> in
+            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
                 .response
+                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
-            .flatMapLatest { _ -> Observable<OWConversationReadRM> in
+            .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
             }
+            .map { event -> OWConversationReadRM? in
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return conversationRead
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
             .share()
 
         // first load comments or refresh comments
@@ -549,7 +563,7 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
-            .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, OWConversationReadRM?)> in
+            .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
                 let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
@@ -562,16 +576,37 @@ fileprivate extension OWConversationViewViewModel {
                 let currentRepliesCount = commentPresentationData.repliesIds.count
                 let fetchCount = countAfterUpdate - currentRepliesCount
 
-                // TODO: Use materialize
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
                     .conversationRead(mode: sortOption, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
+                    .materialize()
                     .map { (commentPresentationData, $0) }
             }
 
-        loadMoreRepliesReadObservable.subscribe(onNext: { [weak self] (commentPresentationData, response) in
+        let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
+            .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?)? in
+                guard event != nil else {
+                    // We didn't have to fetch new data - the event is nil
+                    return (commentPresentationData, nil)
+                }
+
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return (commentPresentationData, conversationRead)
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+
+        loadMoreRepliesReadUpdated
+            .subscribe(onNext: { [weak self] (commentPresentationData, response) in
             guard let self = self else { return }
 
             let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
@@ -607,23 +642,38 @@ fileprivate extension OWConversationViewViewModel {
         .disposed(by: disposeBag)
 
         // fetch more comments
-        // TODO: Use materialize
         let loadMoreCommentsReadObservable = _loadMoreComments
             .distinctUntilChanged()
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
-            .flatMap { [weak self] (sortOption, offset) -> Observable<OWConversationReadRM> in
+            .flatMap { [weak self] (sortOption, offset) -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.next, parentId: "", offset: offset)
                 .response
+                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
+        let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
+            .map { event -> OWConversationReadRM? in
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return conversationRead
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+
         // append new comments on load more
-        loadMoreCommentsReadObservable
+        loadMoreCommentsReadFetched
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
