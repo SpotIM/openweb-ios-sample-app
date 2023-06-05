@@ -305,35 +305,36 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
 
     // swiftlint:disable closure_parameter_position
     // Observer for all conversation style parameters to data
-    fileprivate lazy var styleModeObservable =
-    Observable.combineLatest(styleModeSelectedIndex,
-                             communityGuidelinesStyleSelectedIndex,
-                             communityQuestionsStyleModeSelectedIndex,
-                             conversationSpacingSelectedIndex,
-                             betweenCommentsSpacingSelected,
-                             belowHeaderSpacingSelected,
-                             belowCommunityGuidelinesSpacingSelected,
-                             belowCommunityQuestionsGuidelinesSpacingSelected) {
-        styleIndex,
-        communityGuidelinesStyleIndex,
-        questionsStyleIndex,
-        conversationSpacingIndex,
-        betweenCommentsSpace,
-        belowHeaderSpace,
-        belowCommunityGuidelinesSpace,
-        belowCommunityQuestionsGuidelinesSpace -> OWConversationStyle in
+    fileprivate lazy var styleModeObservable: Observable<OWConversationStyle> = {
+        return Observable.combineLatest(styleModeSelectedIndex,
+                                        communityGuidelinesStyleSelectedIndex,
+                                        communityQuestionsStyleModeSelectedIndex,
+                                        conversationSpacingSelectedIndex,
+                                        betweenCommentsSpacingSelected,
+                                        belowHeaderSpacingSelected,
+                                        belowCommunityGuidelinesSpacingSelected,
+                                        belowCommunityQuestionsGuidelinesSpacingSelected) {
+            styleIndex,
+            communityGuidelinesStyleIndex,
+            questionsStyleIndex,
+            conversationSpacingIndex,
+            betweenCommentsSpace,
+            belowHeaderSpace,
+            belowCommunityGuidelinesSpace,
+            belowCommunityQuestionsGuidelinesSpace -> OWConversationStyle in
 
-        return OWConversationStyle.conversationStyle(fromIndex: styleIndex,
-                                                     communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
-                                                     communityQuestionsStyleIndex: questionsStyleIndex,
-                                                     spacingIndex: conversationSpacingIndex,
-                                                     betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
-                                                     belowHeader: OWConversationSpacing.validateSpacing(belowHeaderSpace),
-                                                     belowCommunityGuidelines: OWConversationSpacing.validateSpacing(belowCommunityGuidelinesSpace),
-                                                     belowCommunityQuestions: OWConversationSpacing.validateSpacing(belowCommunityQuestionsGuidelinesSpace))
-    }
-    .skip(8)
-    .asObservable()
+            return OWConversationStyle.conversationStyle(fromIndex: styleIndex,
+                                                         communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
+                                                         communityQuestionsStyleIndex: questionsStyleIndex,
+                                                         spacingIndex: conversationSpacingIndex,
+                                                         betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
+                                                         belowHeader: OWConversationSpacing.validateSpacing(belowHeaderSpace),
+                                                         belowCommunityGuidelines: OWConversationSpacing.validateSpacing(belowCommunityGuidelinesSpace),
+                                                         belowCommunityQuestions: OWConversationSpacing.validateSpacing(belowCommunityQuestionsGuidelinesSpace))
+        }
+                                        .skip(8)
+                                        .asObservable()
+    }()
     // swiftlint:enable closure_parameter_position
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
