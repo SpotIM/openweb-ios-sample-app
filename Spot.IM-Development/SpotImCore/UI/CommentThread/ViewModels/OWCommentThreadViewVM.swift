@@ -303,22 +303,35 @@ fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Observable for the conversation network API
-        // TODO: add materialize and handle errors
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
-            .flatMap { [weak self] data -> Observable<OWConversationReadRM> in
+            .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(mode: .newest, page: OWPaginationPage.first, childCount: 5, messageId: data.commentId)
                 .response
+                .materialize()
         }
 
         let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
-            .flatMap { _ -> Observable<OWConversationReadRM> in
+            .flatMap { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
+            .map { event -> OWConversationReadRM? in
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return conversationRead
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
             .share()
 
         // Set read only mode
@@ -352,7 +365,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         let loadMoreRepliesReadObservable = _loadMoreReplies
-            .flatMap { [weak self] commentPresentationData -> Observable<(OWCommentPresentationData, OWConversationReadRM?)> in
+            .flatMap { [weak self] commentPresentationData -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
                 let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
@@ -365,16 +378,36 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let currentRepliesCount = commentPresentationData.repliesIds.count
                 let fetchCount = countAfterUpdate - currentRepliesCount
 
-                // TODO: add materialize and handle errors
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
                     .conversationRead(mode: .best, page: .next, count: fetchCount, parentId: commentPresentationData.id, offset: commentPresentationData.repliesOffset)
                     .response
+                    .materialize()
                     .map { (commentPresentationData, $0) }
             }
 
-        loadMoreRepliesReadObservable
+        let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
+            .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?)? in
+                guard event != nil else {
+                    // We didn't have to fetch new data - the event is nil
+                    return (commentPresentationData, nil)
+                }
+
+                switch event {
+                case .next(let conversationRead):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return (commentPresentationData, conversationRead)
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+
+        loadMoreRepliesReadUpdated
             .subscribe(onNext: { [weak self] (commentPresentationData, response) in
                 guard let self = self else { return }
 
