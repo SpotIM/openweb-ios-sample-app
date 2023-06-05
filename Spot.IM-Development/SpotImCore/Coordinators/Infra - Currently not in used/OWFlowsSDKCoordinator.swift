@@ -31,7 +31,8 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                     guard let self = self else { return .empty() }
                     let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
                                                                                   preConversationData: preConversationData,
-                                                                                  actionsCallbacks: callbacks)
+                                                                                  actionsCallbacks: callbacks,
+                                                                                  viewableMode: .partOfFlow)
 
                     self.store(coordinator: preConversationCoordinator)
 

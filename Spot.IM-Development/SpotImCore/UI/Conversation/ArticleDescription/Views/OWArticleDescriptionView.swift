@@ -143,7 +143,8 @@ fileprivate extension OWArticleDescriptionView {
             .subscribe(onNext: { [weak self] imageType in
                 switch imageType {
                 case .custom(let url):
-                    self?.setImage(with: url)
+                    guard let self = self else { return }
+                    self.setImage(with: url)
                 case .defaultImage:
                     self?.setNoImageConstraints()
                 }
@@ -176,6 +177,7 @@ fileprivate extension OWArticleDescriptionView {
                                                                         themeStyle: currentStyle)
                 self.authorLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
 
@@ -186,6 +188,12 @@ fileprivate extension OWArticleDescriptionView {
         authorLabel.accessibilityIdentifier = Metrics.conversationAuthorIdentifier
     }
 
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeAuthorLabelUI.onNext(authorLabel)
+        viewModel.inputs.triggerCustomizeImageViewUI.onNext(conversationImageView)
+    }
+
     func setImage(with url: URL) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
             guard let self = self else { return }
@@ -194,6 +202,9 @@ fileprivate extension OWArticleDescriptionView {
                 self.setNoImageConstraints()
             } else if let image = image {
                 self.conversationImageView.image = image
+
+                // Only when we have an imgae from article url, we can replace it with customize element
+                self.viewModel.inputs.triggerCustomizeImageViewUI.onNext(self.conversationImageView)
             }
         }
     }
