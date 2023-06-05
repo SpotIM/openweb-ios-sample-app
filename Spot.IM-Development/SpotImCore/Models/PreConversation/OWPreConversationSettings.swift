@@ -11,17 +11,23 @@ import Foundation
 #if NEW_API
 public struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
     public let style: OWPreConversationStyle
+    public let fullConversationSettings: OWConversationSettingsProtocol
 
-    public init(style: OWPreConversationStyle = .regular()) {
+    public init(style: OWPreConversationStyle = .regular,
+                fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings()) {
         self.style = style.validate()
+        self.fullConversationSettings = fullConversationSettings
     }
 }
 #else
 struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
     let style: OWPreConversationStyle
+    let fullConversationSettings: OWConversationSettingsProtocol
 
-    init(style: OWPreConversationStyle = .regular()) {
+    init(style: OWPreConversationStyle = .regular,
+         fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings()) {
         self.style = style.validate()
+        self.fullConversationSettings = fullConversationSettings
     }
 }
 #endif
