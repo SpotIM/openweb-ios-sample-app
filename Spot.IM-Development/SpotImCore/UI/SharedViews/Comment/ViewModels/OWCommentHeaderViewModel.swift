@@ -27,7 +27,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var hiddenCommentReasonText: Observable<String> { get }
 
     var userNameTapped: Observable<Void> { get }
-    var openMenu: Observable<[UIRxPresenterAction]> { get }
+    var openMenu: Observable<[OWRxPresenterAction]> { get }
 }
 
 protocol OWCommentHeaderViewModeling {
@@ -42,6 +42,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var inputs: OWCommentHeaderViewModelingInputs { return self }
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
 
+    fileprivate let disposedBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let userBadgeService: OWUserBadgeServicing
 
@@ -70,11 +71,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
+        setupObservers()
     }
 
     init() {
         servicesProvider = OWSharedServicesProvider.shared
         userBadgeService = OWUserBadgeService()
+        setupObservers()
     }
 
     var avatarVM: OWAvatarViewModeling = {
@@ -171,7 +174,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
-    var openMenu: Observable<[UIRxPresenterAction]> {
+    var openMenu: Observable<[OWRxPresenterAction]> {
         tapMore
             .map { [weak self] _ in
                 guard let self = self else { return nil}
@@ -182,10 +185,18 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     // TODO: properly get the relevant actions
-    fileprivate lazy var optionsActions: [UIRxPresenterAction] = {
+    fileprivate lazy var optionsActions: [OWRxPresenterAction] = {
         return [
-            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report")),
-            UIRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), style: .cancel)
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentOptionsMenu.cancel, style: .cancel)
         ]
     }()
+}
+
+fileprivate extension OWCommentHeaderViewModel {
+    func setupObservers() {
+        shouldShowHiddenCommentMessage
+            .bind(to: avatarVM.inputs.shouldBlockAvatar)
+            .disposed(by: disposedBag)
+    }
 }
