@@ -12,11 +12,15 @@ import RxSwift
 protocol OWConversationEmptyStateViewModelingInputs {
     var isEmpty: PublishSubject<Bool> { get }
     var isReadOnly: PublishSubject<Bool> { get }
+    var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
+    var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWConversationEmptyStateViewModelingOutputs {
     var iconName: Observable<String> { get }
     var text: Observable<String> { get }
+    var customizeIconImageViewUI: Observable<UIImageView> { get }
+    var customizeTitleLabelUI: Observable<UILabel> { get }
 }
 
 protocol OWConversationEmptyStateViewModeling {
@@ -33,6 +37,25 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
     fileprivate struct Metrics {
         static let emptyIcon: String = "emptyConversation-icon"
         static let closedAndEmptyIcon: String = "closedAndEmptyConversation-icon"
+    }
+
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+
+    var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
+    var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
+
+    var customizeIconImageViewUI: Observable<UIImageView> {
+        return _triggerCustomizeIconImageViewUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeTitleLabelUI
+            .unwrap()
+            .asObservable()
     }
 
     var conversationFetched = PublishSubject<SPConversationReadRM>()
@@ -93,5 +116,22 @@ fileprivate extension OWConversationEmptyStateViewModel {
             self._contentType.onNext(contentType)
         })
         .disposed(by: disposeBag)
+
+//        triggerCustomizeTitleLabelUI
+//            .bind(to: _triggerCustomizeTitleLabelUI)
+//            .disposed(by: disposeBag)
+
+        triggerCustomizeTitleLabelUI
+            .flatMapLatest { [weak self] label -> Observable<UILabel> in
+                guard let self = self else { return .empty() }
+                return self.text
+                    .map { _ in return label }
+            }
+            .bind(to: _triggerCustomizeTitleLabelUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeIconImageViewUI
+            .bind(to: _triggerCustomizeIconImageViewUI)
+            .disposed(by: disposeBag)
     }
 }

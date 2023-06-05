@@ -28,6 +28,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate var router: OWRoutering!
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate var viewableMode: OWViewableMode!
     fileprivate let authenticationManager: OWAuthenticationManagerProtocol
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
@@ -36,27 +37,20 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         return OWCustomizationsService(viewSourceType: .preConversation)
     }()
 
-    // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
-    fileprivate var isStandaloneMode: Bool
-
     init(router: OWRoutering! = nil,
          preConversationData: OWPreConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
-         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
+         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager(),
+         viewableMode: OWViewableMode) {
         self.router = router
-
-        // TODO: An easy soultion just to prevent crashes in standalone mode until Revital will merge the `ViewableMode` enum in the branch she's working on
-        isStandaloneMode = router == nil
-
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
         self.authenticationManager = authenticationManager
+        self.viewableMode = viewableMode
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWPreConversationCoordinatorResult> {
-        // TODO: complete the flow
-//        let conversationVM: OWConversationViewModeling = OWConversationViewModel()
-//        let conversationVC = OWConversationVC(viewModel: conversationVM)
+        // Pre conversation never will be a full screen
         return .empty()
     }
 
@@ -65,10 +59,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
                                                                                                       viewableMode: .independent)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
-        // TODO: Remove this temporarily easy soultion once Revital merge her PR with `ViewableMode`
-//        if !isStandaloneMode {
-            setupObservers(forViewModel: preConversationViewVM)
-//        }
+        setupObservers(forViewModel: preConversationViewVM)
 
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
@@ -99,14 +90,14 @@ fileprivate extension OWPreConversationCoordinator {
 
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable, openCommentCreationObservable)
-            .filter { [weak self] _ in // TODO: change to viewable mode
+            .filter { [weak self] _ in
                 guard let self = self else { return true }
-                return !self.isStandaloneMode
+                return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
-                                                                  settings: nil,
+                                                                  settings: self.preConversationData.settings?.fullConversationSettings,
                                                                   presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                            conversationData: conversationData,
@@ -134,9 +125,9 @@ fileprivate extension OWPreConversationCoordinator {
         )
 
         coordinateToSafariObservables
-            .filter { [weak self] _ in // TODO: change to viewable mode
+            .filter { [weak self] _ in
                 guard let self = self else { return true }
-                return !self.isStandaloneMode
+                return self.viewableMode == .partOfFlow
             }
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
@@ -148,20 +139,7 @@ fileprivate extension OWPreConversationCoordinator {
             .subscribe()
             .disposed(by: disposeBag)
 
-        let customizationElementsObservables = Observable.merge(
-            viewModel.outputs.preConversationSummaryVM
-                .outputs.customizeTitleLabelUI
-                .map { OWCustomizableElement.headerTitle(label: $0) },
-            viewModel.outputs.preConversationSummaryVM
-                .outputs.customizeCounterLabelUI
-                .map { OWCustomizableElement.headerCounter(label: $0) }
-        )
-
-        customizationElementsObservables
-            .subscribe { [weak self] element in
-                self?.customizationsService.trigger(customizableElement: element)
-            }
-            .disposed(by: disposeBag)
+        setupCustomizationElements(forViewModel: viewModel)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
@@ -176,6 +154,55 @@ fileprivate extension OWPreConversationCoordinator {
         Observable.merge(contentPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
+    }
+
+    func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
+        // TODO: need to complete all the customize elements
+
+        let customizationElementsObservables = Observable.merge(
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.summeryHeader(element: .title(label: $0)) },
+
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.summeryHeader(element: .counter(label: $0)) },
+
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.onlineViewingUsersVM
+                .outputs.customizeIconImageUI
+                .map { OWCustomizableElement.onlineUsers(element: .icon(image: $0)) },
+
+            viewModel.outputs.preConversationSummaryVM
+                .outputs.onlineViewingUsersVM
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.onlineUsers(element: .counter(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentCreationEntryViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.commentCreationCTA(element: .placeholder(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentCreationEntryViewModel
+                .outputs.customizeContainerViewUI
+                .map { OWCustomizableElement.commentCreationCTA(element: .container(view: $0)) },
+
+//            viewModel.outputs.communityQuestionViewModel
+//                .outputs.customizeQuestionLabelUI
+//                .map { OWCustomizableElement.communityQuestionTitle(label: $0) },
+
+            viewModel.outputs.communityGuidelinesViewModel
+                .outputs.customizeTitleTextViewUI
+                .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) }
+
+        )
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
             }
             .disposed(by: disposeBag)
     }

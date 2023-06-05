@@ -26,6 +26,7 @@ protocol OWConversationViewViewModelingOutputs {
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
+    var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
@@ -888,7 +889,7 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                let actions = [OWRxPresenterAction(title: LocalizationManager.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
+                let actions = [OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
                 self.servicesProvider.presenterService()
                     .showAlert(
                         title: OWLocalizationManager.shared.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),

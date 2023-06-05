@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol OWConversationSummaryViewModelingInputs {
-    var customizeCounterLabelUI: PublishSubject<UILabel> { get }
-    var customizeSortLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeCounterLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWConversationSummaryViewModelingOutputs {
+    var customizeCounterLabelUI: Observable<UILabel> { get }
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
     var conversationSortVM: OWConversationSortViewModeling { get }
     var commentsCount: Observable<String> { get }
@@ -32,8 +32,16 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     var inputs: OWConversationSummaryViewModelingInputs { return self }
     var outputs: OWConversationSummaryViewModelingOutputs { return self }
 
-    var customizeCounterLabelUI = PublishSubject<UILabel>()
-    var customizeSortLabelUI = PublishSubject<UILabel>()
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeCounterLabelUI = BehaviorSubject<UILabel?>(value: nil)
+
+    var triggerCustomizeCounterLabelUI = PublishSubject<UILabel>()
+
+    var customizeCounterLabelUI: Observable<UILabel> {
+        return _triggerCustomizeCounterLabelUI
+            .unwrap()
+            .asObservable()
+    }
 
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
         return OWOnlineViewingUsersCounterViewModel()
@@ -71,5 +79,19 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        setupObservers()
+    }
+}
+
+fileprivate extension OWConversationSummaryViewModel {
+    func setupObservers() {
+        triggerCustomizeCounterLabelUI
+            .flatMapLatest { [weak self] label -> Observable<UILabel> in
+                guard let self = self else { return .empty() }
+                return self.commentsCount
+                    .map { _ in return label }
+            }
+            .bind(to: _triggerCustomizeCounterLabelUI)
+            .disposed(by: disposeBag)
     }
 }
