@@ -9,11 +9,15 @@
 import Foundation
 
 #if NEW_API
-
 public enum SettingsElementsCustomizationStyle: Int {
     case none
     case style1
     case style2
 }
-
+#else
+enum SettingsElementsCustomizationStyle: Int {
+    case none
+    case style1
+    case style2
+}
 #endif

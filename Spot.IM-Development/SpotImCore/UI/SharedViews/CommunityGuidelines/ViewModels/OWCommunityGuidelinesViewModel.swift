@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
+    var triggerCustomizeTitleTextViewUI: PublishSubject<UITextView> { get }
+    var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
     var urlClicked: PublishSubject<URL> { get }
 }
 
@@ -18,6 +20,8 @@ protocol OWCommunityGuidelinesViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
+    var customizeTitleTextViewUI: Observable<UITextView> { get }
+    var customizeIconImageViewUI: Observable<UIImageView> { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -37,10 +41,28 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
 
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
+    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+
+    var triggerCustomizeTitleTextViewUI = PublishSubject<UITextView>()
+    var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     let urlClicked = PublishSubject<URL>()
 
     var urlClickedOutput: Observable<URL> {
         urlClicked.asObservable()
+    }
+
+    var customizeTitleTextViewUI: Observable<UITextView> {
+        return _triggerCustomizeTitleTextViewUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeIconImageViewUI: Observable<UIImageView> {
+        return _triggerCustomizeIconImageViewUI
+            .unwrap()
+            .asObservable()
     }
 
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
@@ -95,6 +117,19 @@ fileprivate extension OWCommunityGuidelinesViewModel {
                 guard let self = self else { return }
                 self._shouldShowView.onNext(htmlString !== nil)
             })
+            .disposed(by: disposeBag)
+
+        triggerCustomizeIconImageViewUI
+            .bind(to: _triggerCustomizeIconImageViewUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeTitleTextViewUI
+            .flatMapLatest { [weak self] textView -> Observable<UITextView> in
+                guard let self = self else { return .empty() }
+                return self.communityGuidelinesHtmlAttributedString
+                    .map { _ in return textView }
+            }
+            .bind(to: _triggerCustomizeTitleTextViewUI)
             .disposed(by: disposeBag)
     }
 

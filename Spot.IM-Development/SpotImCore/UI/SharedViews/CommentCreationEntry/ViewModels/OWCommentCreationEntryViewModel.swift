@@ -10,12 +10,16 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationEntryViewModelingInputs {
+    var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeContainerViewUI: PublishSubject<UIView> { get }
     var tap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationEntryViewModelingOutputs {
     var avatarViewVM: OWAvatarViewModeling { get }
     var tapped: Observable<Void> { get }
+    var customizeTitleLabelUI: Observable<UILabel> { get }
+    var customizeContainerViewUI: Observable<UIView> { get }
 }
 
 protocol OWCommentCreationEntryViewModeling {
@@ -23,17 +27,39 @@ protocol OWCommentCreationEntryViewModeling {
     var outputs: OWCommentCreationEntryViewModelingOutputs { get }
 }
 
-class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
+class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling,
+                                       OWCommentCreationEntryViewModelingInputs,
+                                       OWCommentCreationEntryViewModelingOutputs {
 
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
     var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
+
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
+
+    var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
+    var triggerCustomizeContainerViewUI = PublishSubject<UIView>()
+
+    var customizeTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeTitleLabelUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeContainerViewUI: Observable<UIView> {
+        return _triggerCustomizeContainerViewUI
+            .unwrap()
+            .asObservable()
+    }
 
     fileprivate let disposeBag = DisposeBag()
 
     var imageURLProvider: OWImageProviding
     var sharedServiceProvider: OWSharedServicesProviding
 
-    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(), sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
+          sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
         setupObservers()
