@@ -16,9 +16,11 @@ extension OWPreConversationStyle {
     }
 
     func validate() -> OWPreConversationStyle {
-        guard case let .regular(numberOfComments) = self else { return self }
+        guard case let .custom(numberOfComments, communityGuidelines, communityQuestion) = self else { return self }
         if (numberOfComments > Metrics.maxNumberOfComments) || (numberOfComments < Metrics.minNumberOfComments) {
-            return .regular()
+            return .custom(numberOfComments: Metrics.defaultRegularNumberOfComments,
+                           communityGuidelinesStyle: communityGuidelines,
+                           communityQuestionsStyle: communityQuestion)
         } else {
             return self
         }
@@ -26,7 +28,7 @@ extension OWPreConversationStyle {
 
     var styleIdentifier: String {
         switch self {
-        case .regular(numberOfComments: _):
+        case .regular:
             return "regular"
         case .compact:
             return "compact"
@@ -34,15 +36,19 @@ extension OWPreConversationStyle {
             return "button_only"
         case .ctaWithSummary:
             return "summary"
+        case .custom:
+            return "custom"
         }
     }
 
     var numberOfComments: Int {
         switch self {
-        case .regular(let numOfComments):
-            return numOfComments
+        case .regular:
+            return Metrics.defaultRegularNumberOfComments
         case .compact:
             return InternalMetrics.numberOfCommentsForCompactStyle
+        case .custom(let numberOfComments, _, _):
+            return numberOfComments
         default:
             return 0
         }
@@ -50,7 +56,7 @@ extension OWPreConversationStyle {
 
     var collapsableTextLineLimit: Int {
         switch self {
-        case .regular:
+        case .regular, .custom:
             return InternalMetrics.collapsableTextLineLimit
         case .compact:
             return InternalMetrics.collapsableTextLineLimitCompactMode
@@ -63,7 +69,7 @@ extension OWPreConversationStyle {
         switch self {
         case .compact:
             return .compact
-        case .regular, .ctaWithSummary:
+        case .regular, .ctaWithSummary, .custom:
             return .regular
         case .ctaButtonOnly:
             return .none
@@ -72,8 +78,10 @@ extension OWPreConversationStyle {
 
     var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
         switch self {
-        case .regular, .ctaWithSummary:
-            return .regular // TODO - support guidelines regular/compact modes configuration
+        case .regular:
+            return .regular
+        case .custom(_, let communityGuidelinesStyle, _), .ctaWithSummary(let communityGuidelinesStyle, _):
+            return communityGuidelinesStyle
         case .compact, .ctaButtonOnly:
             return .none
         }
@@ -81,8 +89,10 @@ extension OWPreConversationStyle {
 
     var communityQuestionStyle: OWCommunityQuestionsStyle {
         switch self {
-        case .regular, .ctaWithSummary:
+        case .regular:
             return .regular
+        case .custom(_, _, let communityQuestionStyle), .ctaWithSummary(_, let communityQuestionStyle):
+            return communityQuestionStyle
         case .compact, .ctaButtonOnly:
             return .none
         }
@@ -100,8 +110,13 @@ extension OWPreConversationStyle: Equatable {
             return true
         case (.ctaWithSummary, .ctaWithSummary):
             return true
-        case (.regular(let lhsNumOfComments), .regular(let rhsNumOfComments)):
-            return lhsNumOfComments == rhsNumOfComments
+        case (.regular, .regular):
+            return true
+        case (.custom(let lhsNumberOfComments, let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle),
+              .custom(let rhsNumberOfComments, let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle)):
+            return lhsNumberOfComments == rhsNumberOfComments &&
+            lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
         default:
             return false
         }
@@ -117,8 +132,13 @@ extension OWPreConversationStyle: Equatable {
             return true
         case (.ctaWithSummary, .ctaWithSummary):
             return true
-        case (.regular(let lhsNumOfComments), .regular(let rhsNumOfComments)):
-            return lhsNumOfComments == rhsNumOfComments
+        case (.regular, .regular):
+            return true
+        case (.custom(let lhsNumberOfComments, let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle),
+              .custom(let rhsNumberOfComments, let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle)):
+            return lhsNumberOfComments == rhsNumberOfComments &&
+            lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
         default:
             return false
         }
