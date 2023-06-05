@@ -178,8 +178,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
             make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.communityQuestionTopPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
         self.addSubview(communityQuestionBottomDevider)

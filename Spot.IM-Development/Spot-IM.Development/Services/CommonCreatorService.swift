@@ -20,11 +20,6 @@ protocol CommonCreatorServicing {
 }
 
 class CommonCreatorService: CommonCreatorServicing {
-    fileprivate struct Metrics {
-        // some default comment id for now
-        static let defaultCommentId = "sp_eCIlROSD_sdk1_c_2LE7TOJIGuzxgkRhyByPUFA73oq_r_2N0Kd6WueGMtK5LYvjTcm4hEMom"
-    }
-
     fileprivate let userDefaultsProvider: UserDefaultsProviderProtocol
 
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
@@ -47,7 +42,7 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func commentThreadCommentId() -> String {
-        return self.userDefaultsProvider.get(key: .openCommentId, defaultValue: Metrics.defaultCommentId)
+        return self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
     }
 
     func mockArticle() -> OWArticleProtocol {

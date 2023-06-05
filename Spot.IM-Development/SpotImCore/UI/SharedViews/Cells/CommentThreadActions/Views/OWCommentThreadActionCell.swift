@@ -44,6 +44,11 @@ class OWCommentThreadActionCell: UITableViewCell {
 
         self.setupObservers()
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.commentThreadActionsView.prepareForReuse()
+    }
 }
 
 fileprivate extension OWCommentThreadActionCell {
