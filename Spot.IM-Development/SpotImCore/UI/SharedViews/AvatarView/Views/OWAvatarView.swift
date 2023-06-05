@@ -16,6 +16,8 @@ class OWAvatarView: UIView {
         static let avatarButtonIdentifier = "avatar_button_id"
         static let onlineIndicatorIdentifier = "online_indicator_id"
 
+        static let defaultAvatarImageName = "defaultAvatar"
+
         static let onlineIndicatorSize: CGFloat = 10
         static let innerIndicatorSize: CGFloat = 8
         static let onlineIndicatorBlurStyle: String = "CIGaussianBlur"
@@ -25,10 +27,12 @@ class OWAvatarView: UIView {
     fileprivate lazy var avatarButton: UIButton = {
         return UIButton()
     }()
+
     fileprivate lazy var avatarImageView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFill)
     }()
+
     fileprivate lazy var onlineIndicatorView: UIView = {
         let view = UIView()
             .corner(radius: Metrics.onlineIndicatorSize / 2)
@@ -51,9 +55,8 @@ class OWAvatarView: UIView {
         return view
     }()
 
-    fileprivate lazy var defaultAvatar: UIImage = {
-        let image = UIImage(spNamed: "defaultAvatar", supportDarkMode: true)!
-        return image
+    fileprivate lazy var defaultAvatar: UIImage? = {
+        return UIImage(spNamed: Metrics.defaultAvatarImageName, supportDarkMode: true)
     }()
 
     fileprivate var viewModel: OWAvatarViewModeling!

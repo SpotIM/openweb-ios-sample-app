@@ -19,6 +19,7 @@ class OWCommunityGuidelinesView: UIView {
         static let horizontalOffset: CGFloat = 16.0
         static let verticalOffset: CGFloat = 14.0
         static let horizontalPadding: CGFloat = 10.0
+        static let iconSize: CGFloat = 16.0
     }
 
     fileprivate lazy var titleTextView: UITextView = {
@@ -62,6 +63,7 @@ class OWCommunityGuidelinesView: UIView {
         self.isUserInteractionEnabled = true
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -76,18 +78,12 @@ class OWCommunityGuidelinesView: UIView {
     func configure(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        self.setupUI()
-        self.setupObservers()
-        self.applyAccessibility()
+        setupUI()
+        setupObservers()
     }
 }
 
 fileprivate extension OWCommunityGuidelinesView {
-    func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
-        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier
-    }
-
     func setupUI() {
         self.backgroundColor = .clear
         self.isHidden = true
@@ -101,6 +97,7 @@ fileprivate extension OWCommunityGuidelinesView {
 
             guidelinesContainer.addSubview(guidelinesIcon)
             guidelinesIcon.OWSnp.makeConstraints { make in
+                make.size.equalTo(Metrics.iconSize)
                 make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             }
@@ -140,14 +137,22 @@ fileprivate extension OWCommunityGuidelinesView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                 guard let self = self else { return }
-
+                guard let self = self else { return }
                 self.guidelinesContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
                 self.titleTextView.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-
-                // TODO: custom UI
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeTitleTextViewUI.onNext(titleTextView)
+        viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(guidelinesIcon)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier
     }
 }
 
