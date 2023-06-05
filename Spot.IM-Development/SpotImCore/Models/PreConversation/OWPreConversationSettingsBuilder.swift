@@ -24,6 +24,11 @@ public struct OWPreConversationSettingsBuilder {
         return self
     }
 
+    @discardableResult public mutating func conversationSettings(_ conversationSettings: OWConversationSettingsProtocol) -> OWPreConversationSettingsBuilder {
+        self.fullConversationSettings = conversationSettings
+        return self
+    }
+
     public func build() -> OWPreConversationSettingsProtocol {
         return OWPreConversationSettings(style: style,
                                          fullConversationSettings: fullConversationSettings)

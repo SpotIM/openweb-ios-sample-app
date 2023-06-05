@@ -205,7 +205,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                                                                communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
                                                                communityQuestionsStyleIndex: questionStyleIndex)
         }
-                                        .skip(2)
+                                        .skip(1)
                                         .asObservable()
     }()
     // swiftlint:enable closure_parameter_position
