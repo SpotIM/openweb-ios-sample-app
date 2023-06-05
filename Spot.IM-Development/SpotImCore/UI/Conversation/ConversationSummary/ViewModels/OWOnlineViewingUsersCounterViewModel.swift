@@ -89,4 +89,3 @@ fileprivate extension OWOnlineViewingUsersCounterViewModel {
     }
 }
 
-

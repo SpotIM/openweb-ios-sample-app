@@ -20,5 +20,3 @@ enum OWEmptyStateCustomizableElement {
 }
 #endif
 
-
-
