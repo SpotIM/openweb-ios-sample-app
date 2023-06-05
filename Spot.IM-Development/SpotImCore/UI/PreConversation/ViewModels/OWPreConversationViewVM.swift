@@ -353,10 +353,10 @@ fileprivate extension OWPreConversationViewViewModel {
             .map { event -> OWConversationReadRM? in
                 switch event {
                 case .next(let conversationRead):
-                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldDhowError).
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return conversationRead
                 case .error(_):
-                    // TODO: handle error - update something like _shouldDhowError RX variable which affect the UI state for showing error in the View layer
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     return nil
                 default:
                     return nil
