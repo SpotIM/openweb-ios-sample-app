@@ -26,7 +26,7 @@ extension OWConversationStyle {
         case .regular:
             return .regular
         case .compact:
-            return .regular
+            return .compact
         case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: let communityQuestionsStyle, spacing: _):
             return communityQuestionsStyle
         }
