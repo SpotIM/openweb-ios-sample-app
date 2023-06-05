@@ -622,6 +622,13 @@ workflows:
               only:
                 - /^release/tag14.3/.*/
           xcode: "14.3.0"
+          
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/tag14.3.1/.*/
+          xcode: "14.3.1"
 
       - release_app_job:
           context: mobile-automation
@@ -682,12 +689,17 @@ workflows:
       - release_tag:
           requires:
             - "release_sdk_job"
-          xcode: "14.3.0"
+          xcode: "14.2.0"
 
       - release_tag:
           requires:
             - "release_sdk_job"
           xcode: "14.3.0"
+          
+      - release_tag:
+          requires:
+            - "release_sdk_job"
+          xcode: "14.3.1"
 
   upload_app_to_s3_workflow:
     jobs:
@@ -751,6 +763,7 @@ workflows:
               only:
                 - /^validate/cocoapods/sdk/.*/
           xcode: "14.3.0"
+      
       - validate_spm_job:
           filters:
             branches:
