@@ -39,6 +39,7 @@ protocol OWConversationViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var shouldShowError: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -63,6 +64,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
+    }
+
+    var _shouldShowError = PublishSubject<Void>()
+    var shouldShowError: Observable<Void> {
+        return _shouldShowError
+            .asObservable()
     }
 
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
@@ -476,13 +483,15 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
             }
-            .map { event -> OWConversationReadRM? in
+            .map { [weak self] event -> OWConversationReadRM? in
+                guard let self = self else { return nil }
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return conversationRead
                 case .error(_):
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    // TODO: handle error - update the UI state for showing error in the View layer
+                    self._shouldShowError.onNext()
                     return nil
                 default:
                     return nil
@@ -586,7 +595,8 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
-            .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?)? in
+            .map { [weak self] (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?)? in
+                guard let self = self else { return nil }
                 guard event != nil else {
                     // We didn't have to fetch new data - the event is nil
                     return (commentPresentationData, nil)
@@ -597,7 +607,8 @@ fileprivate extension OWConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return (commentPresentationData, conversationRead)
                 case .error(_):
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    // TODO: handle error - update the UI state for showing error in the View layer
+                    self._shouldShowError.onNext()
                     return nil
                 default:
                     return nil
@@ -658,13 +669,15 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
-            .map { event -> OWConversationReadRM? in
+            .map { [weak self] event -> OWConversationReadRM? in
+                guard let self = self else { return nil }
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return conversationRead
                 case .error(_):
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    // TODO: handle error - update the UI state for showing error in the View layer
+                    self._shouldShowError.onNext()
                     return nil
                 default:
                     return nil
@@ -864,6 +877,32 @@ fileprivate extension OWConversationViewViewModel {
                             break
                         case .selected(let action):
                             // TODO: handle selection
+                            break
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        // error alert
+        shouldShowError
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let actions = [OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
+                self.servicesProvider.presenterService()
+                    .showAlert(
+                        title: OWLocalizationManager.shared.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
+                        message: "",
+                        actions: actions,
+                        viewableMode: self.viewableMode
+                    )
+                    .subscribe(onNext: { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected(let action):
                             break
                         }
                     })
