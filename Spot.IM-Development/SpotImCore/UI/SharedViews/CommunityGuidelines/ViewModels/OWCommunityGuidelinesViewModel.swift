@@ -11,17 +11,13 @@ import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
     var urlClicked: PublishSubject<URL> { get }
-    var titleTextViewWidthChanged: BehaviorSubject<CGFloat> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowViewAfterHeightChanged: Observable<Bool> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
-    var titleTextViewHeight: Observable<CGFloat> { get }
-    var titleTextViewHeightNoneRX: CGFloat { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -47,30 +43,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         urlClicked.asObservable()
     }
 
-    var titleTextViewHeightNoneRX: CGFloat = 0
-
-    var titleTextViewWidthChanged = BehaviorSubject<CGFloat>(value: 0)
-    fileprivate var widthObservable: Observable<CGFloat> {
-        titleTextViewWidthChanged
-            .distinctUntilChanged()
-            .asObservable()
-    }
-
-    var titleTextViewHeight: Observable<CGFloat> {
-        return Observable.combineLatest(communityGuidelinesHtmlAttributedString.unwrap(),
-                                        widthObservable) { htmlString, viewWidth in
-            return htmlString.height(withConstrainedWidth: viewWidth)
-        }
-        .asObservable()
-        .share(replay: 1)
-    }
-
-    var shouldShowViewAfterHeightChanged: Observable<Bool> {
-        return Observable.combineLatest(shouldShowView, titleTextViewHeight)
-            .map { $0.0 }
-            .share()
-    }
-
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         return _shouldShowView
@@ -83,8 +55,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
-                                                      internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
+            .observe(on: MainScheduler.asyncInstance)
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
@@ -123,13 +94,6 @@ fileprivate extension OWCommunityGuidelinesViewModel {
             .subscribe(onNext: { [weak self] htmlString in
                 guard let self = self else { return }
                 self._shouldShowView.onNext(htmlString !== nil)
-            })
-            .disposed(by: disposeBag)
-
-        titleTextViewHeight
-            .subscribe(onNext: { [weak self] titleTextViewHeight in
-                guard let self = self else { return }
-                self.titleTextViewHeightNoneRX = titleTextViewHeight
             })
             .disposed(by: disposeBag)
     }

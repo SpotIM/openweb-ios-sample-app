@@ -14,7 +14,7 @@ class OWCommentView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16.0
         static let bottomOffset: CGFloat = 16.0
-        static let topOffset: CGFloat = 12.0
+        static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let horizontalOffset: CGFloat = 16.0
         static let messageContainerTopOffset: CGFloat = 4.0
@@ -35,6 +35,9 @@ class OWCommentView: UIView {
     }()
 
     fileprivate var viewModel: OWCommentViewModeling!
+    fileprivate var disposedBag = DisposeBag()
+
+    fileprivate var commentHeaderBottomConstraint: OWConstraint? = nil
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -45,11 +48,13 @@ class OWCommentView: UIView {
     }
 
     func configure(with viewModel: OWCommentViewModeling) {
+        self.disposedBag = DisposeBag()
         self.viewModel = viewModel
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
         self.commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
         self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
+        self.setupObservers()
     }
 
     func prepareForReuse() {
@@ -66,9 +71,12 @@ fileprivate extension OWCommentView {
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.topOffset)
+            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+            commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
         }
+    }
 
+    func setupCommentContentUI() {
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
@@ -88,6 +96,26 @@ fileprivate extension OWCommentView {
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
+        }
+    }
+
+    func setupObservers() {
+        viewModel.outputs.shouldHideCommentContent
+            .subscribe(onNext: { [weak self] shouldBlockComment in
+                guard let self = self else { return }
+                if (shouldBlockComment) {
+                    self.commentLabelsContainerView.removeFromSuperview()
+                    self.commentContentView.removeFromSuperview()
+                    self.commentEngagementView.removeFromSuperview()
+                } else if (self.commentLabelsContainerView.superview == nil) {
+                    self.setupCommentContentUI()
+                }
+            }).disposed(by: disposedBag)
+
+        if let commentHeaderBottomConstraint = commentHeaderBottomConstraint {
+            viewModel.outputs.shouldHideCommentContent
+                .bind(to: commentHeaderBottomConstraint.rx.isActive)
+                .disposed(by: disposedBag)
         }
     }
 }

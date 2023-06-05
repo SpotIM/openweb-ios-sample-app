@@ -39,6 +39,11 @@ class OWCommentThreadActionsView: UIView {
         self.setupObservers()
     }
 
+    func prepareForReuse() {
+        self.activityIndicator.isHidden = true
+        self.disclosureImageView.isHidden = false
+    }
+
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
@@ -61,6 +66,12 @@ class OWCommentThreadActionsView: UIView {
             make.centerY.equalTo(actionLabel.OWSnp.centerY)
         }
 
+        view.addSubview(activityIndicator)
+        activityIndicator.OWSnp.makeConstraints { make in
+            make.leading.equalTo(actionLabel.OWSnp.trailing).offset(Metrics.textToImageSpacing)
+            make.centerY.equalTo(actionLabel.OWSnp.centerY)
+        }
+
         return view
     }()
 
@@ -75,6 +86,11 @@ class OWCommentThreadActionsView: UIView {
         let image = UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: false)!
         return UIImageView(image: image.withRenderingMode(.alwaysTemplate))
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+    }()
+
+    fileprivate lazy var activityIndicator: UIActivityIndicatorView = {
+        return UIActivityIndicatorView(style: .gray)
+            .isHidden(true)
     }()
 }
 
@@ -98,6 +114,7 @@ fileprivate extension OWCommentThreadActionsView {
                     let brandColor = owBrandColor.color(forThemeStyle: style)
                     self.actionLabel.textColor = brandColor
                     self.disclosureImageView.tintColor = brandColor
+                    self.activityIndicator.color = brandColor
                 }
             })
             .disposed(by: disposeBag)
@@ -111,6 +128,13 @@ fileprivate extension OWCommentThreadActionsView {
             .disposed(by: disposeBag)
 
         tapGesture.rx.event.voidify()
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.disclosureImageView.isHidden = true
+                self.activityIndicator.isHidden = false
+                self.activityIndicator.startAnimating()
+            })
             .bind(to: viewModel.inputs.tap)
             .disposed(by: disposeBag)
     }
