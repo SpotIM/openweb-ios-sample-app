@@ -40,13 +40,18 @@ struct OWPreConversationSettingsBuilder {
     var fullConversationSettings: OWConversationSettingsProtocol
 
     init(style: OWPreConversationStyle = .regular,
-         fullConversationSettings: fullConversationSettings = OWConversationSettingsBuilder().build()) {
+         fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettingsBuilder().build()) {
         self.style = style.validate()
         self.fullConversationSettings = fullConversationSettings
     }
 
     @discardableResult mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
         self.style = style.validate()
+        return self
+    }
+
+    @discardableResult mutating func conversationSettings(_ conversationSettings: OWConversationSettingsProtocol) -> OWPreConversationSettingsBuilder {
+        self.fullConversationSettings = conversationSettings
         return self
     }
 
