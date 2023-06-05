@@ -53,8 +53,6 @@ class OWCommunityQuestionView: UIView {
             .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate var labelHeightConstraint: OWConstraint?
-    fileprivate var textViewHeightConstraint: OWConstraint?
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -100,7 +98,6 @@ fileprivate extension OWCommunityQuestionView {
             self.addSubview(questionContainer)
             questionContainer.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
-                labelHeightConstraint = make.height.equalTo(0).constraint
             }
 
             questionContainer.addSubview(questionLabel)
@@ -114,7 +111,6 @@ fileprivate extension OWCommunityQuestionView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
-                textViewHeightConstraint = make.height.equalTo(viewModel.outputs.titleTextViewHeightNoneRX).constraint
             }
         }
     }
@@ -132,28 +128,6 @@ fileprivate extension OWCommunityQuestionView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
-
-        if let labelHeightConstraint = labelHeightConstraint {
-            viewModel.outputs.shouldShowView
-                .map { !$0 }
-                .bind(to: labelHeightConstraint.rx.isActive)
-                .disposed(by: disposeBag)
-        }
-
-        if let textViewHeightConstraint = textViewHeightConstraint {
-            Observable.combineLatest(viewModel.outputs.shouldShowView,
-                                     viewModel.outputs.titleTextViewHeight)
-                .filter { $0.0 }
-                .map { $0.1 }
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] titleTextViewHeight in
-                    guard let self = self else { return }
-                    textViewHeightConstraint.update(offset: titleTextViewHeight)
-                    self.setNeedsLayout()
-                    self.layoutIfNeeded()
-                })
-                .disposed(by: disposeBag)
-        }
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
