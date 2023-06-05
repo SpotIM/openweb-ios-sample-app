@@ -34,8 +34,8 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
 
 fileprivate extension ElementsCustomizationCreatorService {
 
+    // swiftlint:disable function_body_length
     static func getRevitalStyle(element: OWCustomizableElement, source: OWViewSourceType, themeStyle: OWThemeStyle) {
-
 
 //        switch source {
 //        case .preConversation:
@@ -221,4 +221,5 @@ fileprivate extension ElementsCustomizationCreatorService {
             break
         }
     }
+    // swiftlint:enable function_body_length
 }
