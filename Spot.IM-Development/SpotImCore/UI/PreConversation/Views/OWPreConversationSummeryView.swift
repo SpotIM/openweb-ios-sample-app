@@ -21,22 +21,20 @@ class OWPreConversationSummeryView: UIView {
     }
 
     private lazy var titleLabel: UILabel = {
-        let lbl = UILabel()
+        return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .bold, size: viewModel.outputs.titleFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor1,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
-        return lbl
     }()
 
     private lazy var counterLabel: UILabel = {
-        let lbl = UILabel()
+        return UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular, size: viewModel.outputs.counterFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-        return lbl
     }()
 
     private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
@@ -45,10 +43,9 @@ class OWPreConversationSummeryView: UIView {
     }()
 
     fileprivate lazy var nextArrow: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
-        imageView.enforceSemanticAttribute()
-        return imageView
+        return UIImageView()
+            .image(UIImage(spNamed: "nextArrow", supportDarkMode: true))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate var viewModel: OWPreConversationSummaryViewModeling
@@ -65,11 +62,6 @@ class OWPreConversationSummeryView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    private func updateCustomUI() {
-        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
-        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
-    }
 }
 
 fileprivate extension OWPreConversationSummeryView {
@@ -77,6 +69,11 @@ fileprivate extension OWPreConversationSummeryView {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
         counterLabel.accessibilityIdentifier = Metrics.counterLabelIdentifier
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(counterLabel)
     }
 
     func setupUI() {
