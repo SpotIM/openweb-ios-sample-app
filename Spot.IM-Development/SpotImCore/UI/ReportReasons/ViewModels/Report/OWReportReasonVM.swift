@@ -47,7 +47,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     }()
 
     var title: String {
-        return LocalizationManager.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
     }
 
     init (commentId: OWCommentId, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {

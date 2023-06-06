@@ -107,10 +107,15 @@
 "Mute" = "Mute";
 "Mute User" = "Mute User";
 "MuteUserMessage" = "After muting this user, you will no longer see their activity. To manage your muted users, go to your profile > Privacy settings";
+"Read our" = "Read our";
+"Start the conversation and share your thoughts and ideas with the community." = "Start the conversation and share your thoughts and ideas with the community.";
+"Image" = "Image";
+"This conversation has ended and comments are no longer being accepted." = "This conversation has ended and comments are no longer being accepted.";
+
 "identity_attack_title" = "Identity Attack";
 "identity_attack_subtitle" = "Harassment, bullying, personal attacks or direct threats.";
 "hate_speech_title" = "Hate Speech";
-"hate_speech_subtitle" = "Prejudice, stereotypes, white supremacy, slurs.";
+"hate_speech_subtitle" = "An attack on any individual or group solely based on religion, race, gender or creed.";
 "inappropriate_language_title" = "Inappropriate Language";
 "inappropriate_language_subtitle" = "Excessive profanity, obscenity, vulgarity, or slurs.";
 "spam_title" = "Spam";
@@ -120,7 +125,7 @@
 "sexual_activity_title" = "Sexual Activity";
 "sexual_activity_subtitle" = "Sexually explicit, pornographic, flirtatious, or sexually aggressive.";
 "profile_title" = "Profile";
-"profile_subtitle" = "Disinformation, misinformation, conspiracy theories or additional misleading information.";
+"profile_subtitle" = "Inappropriate username, avatar, bio, impersonation";
 "child_abuse_title" = "Child Abuse";
 "child_abuse_subtitle" = "Child sexual abuse material, grooming or cyberbullying of minors";
 "terrorism_title" = "Terrorism";
@@ -136,18 +141,13 @@
 "ReportReasonCancelCancelButton" = "Cancel Report";
 "ReportReasonThanksTitle" = "Thank You for Your Feedback!";
 "ReportReasonThanksSubtitle" = "You will be notified via email about the moderation decision";
-"ReportReasonThanksContinueButton" = "Got it";
 "ReportReasonTextViewPlaceholder" = "You can add additional information here";
 "ReportReasonTextViewMandatoryPlaceholder" = "Please provide additional information";
-"AdditionalInfoTitle" = "Additional information";
-"ReportReasonHelpUsTitle" = "To help us understand the problem, please choose which of these options best describe the violation (learn more):";
-"ReportReasonHelpUsClickText" = "(learn more)";
-"Submit" = "Submit";
-"GotIt" = "Got it";
-"Image" = "Image";
-"This conversation has ended and comments are no longer being accepted." = "This conversation has ended and comments are no longer being accepted.";
-"Start the conversation and share your thoughts and ideas with the community." = "Start the conversation and share your thoughts and ideas with the community.";
+"ReportReasonHelpUsTitle" = "To help us understand the problem, please choose which of these options best describe the violation (learn more)";
+"ReportReasonHelpUsClickText" = "learn more";
 "Community Guidelines" = "Community Guidelines";
-"Read our" = "Read our";
+"Submit" = "Submit";
+
+"AdditionalInfoTitle" = "Additional information";
 "ReportSubmissionFailedTitle" = "Report Submission Failed";
 "ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";

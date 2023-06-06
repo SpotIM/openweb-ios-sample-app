@@ -47,11 +47,11 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     fileprivate let disposeBag = DisposeBag()
 
     var title: String {
-        return LocalizationManager.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
     }
 
     var subtitle: String {
-        return LocalizationManager.localizedString(key: Metrics.subtitleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.subtitleKey)
     }
 
     var titleIconName: String {
@@ -63,11 +63,11 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     }
 
     var continueButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.continueButtonKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.continueButtonKey)
     }
 
     var cancelButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.cancelButtonKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelButtonKey)
     }
 
     var closeReportReasonCancelTap = PublishSubject<Void>()

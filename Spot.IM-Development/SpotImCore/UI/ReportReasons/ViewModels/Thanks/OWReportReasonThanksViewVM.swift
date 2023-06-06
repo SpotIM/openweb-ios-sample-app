@@ -33,8 +33,8 @@ class OWReportReasonThanksViewViewModel: OWReportReasonThanksViewViewModelingInp
         static let titleKey = "ReportReasonThanksTitle"
         static let subtitleKey = "ReportReasonThanksSubtitle"
         static let titleIconName = "ReportReasonThanksIcon"
-        static let continueButtonKey = "ReportReasonThanksContinueButton"
-        static let gotitKey = "GotIt"
+        static let continueButtonKey = "Got it"
+        static let gotitKey = "Got it"
     }
 
     var inputs: OWReportReasonThanksViewViewModelingInputs { return self }
@@ -43,11 +43,11 @@ class OWReportReasonThanksViewViewModel: OWReportReasonThanksViewViewModelingInp
     fileprivate let disposeBag = DisposeBag()
 
     var title: String {
-        return LocalizationManager.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
     }
 
     var subtitle: String {
-        return LocalizationManager.localizedString(key: Metrics.subtitleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.subtitleKey)
     }
 
     var titleIconName: String {
@@ -55,11 +55,11 @@ class OWReportReasonThanksViewViewModel: OWReportReasonThanksViewViewModelingInp
     }
 
     var continueButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.continueButtonKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.continueButtonKey)
     }
 
     var gotitButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.gotitKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.gotitKey)
     }
 
     var closeReportReasonThanksTap = PublishSubject<Void>()
