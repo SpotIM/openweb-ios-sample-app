@@ -37,6 +37,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var presentError: Observable<Void> { get }
     var submitInProgress: Observable<Bool> { get }
+    var shouldShowLearnMore: Bool { get }
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
 }
@@ -53,7 +54,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         static let textViewMandatoryPlaceholderKey = "ReportReasonTextViewMandatoryPlaceholder"
         static let cancelKey = "Cancel"
         static let submitKey = "Submit"
-        static let errorAlertActionKey = "GotIt"
+        static let errorAlertActionKey = "Got it"
         static let errorAlertSubmitTitleKey = "ReportSubmissionFailedTitle"
         static let errorAlertSubmitMessageKey = "ReportSubmissionFailedMessage"
         static let tableViewHeaderKey = "ReportReasonHelpUsTitle"
@@ -69,40 +70,42 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }
 
     var errorAlertTitleText: String {
-        return LocalizationManager.localizedString(key: Metrics.errorAlertSubmitTitleKey)
+
+        return OWLocalizationManager.shared.localizedString(key: Metrics.errorAlertSubmitTitleKey)
     }
 
     var errorAlertMessageText: String {
-        return LocalizationManager.localizedString(key: Metrics.errorAlertSubmitMessageKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.errorAlertSubmitMessageKey)
     }
 
     var errorAlertActionText: String {
-        return LocalizationManager.localizedString(key: Metrics.errorAlertActionKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.errorAlertActionKey)
     }
 
     var titleText: String {
-        return LocalizationManager.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
     }
 
     var cancelButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.cancelKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelKey)
     }
 
     var submitButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.submitKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.submitKey)
     }
 
     var tableViewHeaderTapText: String {
-        return LocalizationManager.localizedString(key: Metrics.tableViewHeaderTapKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderTapKey)
     }
 
     var tableViewHeaderAttributedText: NSAttributedString {
-        return LocalizationManager.localizedString(key: Metrics.tableViewHeaderKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderKey)
+            .replacingOccurrences(of: tableViewHeaderTapText, with: shouldShowLearnMore ? tableViewHeaderTapText : "")
             .attributedString
             .fontForText(OWFontBook.shared.font(style: .regular,
                                                 size: Metrics.headerTextFontSize))
             .colorForText(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                          text: tableViewHeaderTapText)
+                          text: shouldShowLearnMore ? tableViewHeaderTapText : "")
     }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
@@ -120,6 +123,8 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return setSubmitInProgress
             .asObservable()
     }
+
+    var shouldShowLearnMore: Bool = false
 
     var learnMoreTap = PublishSubject<Void>()
     var learnMoreTapped: Observable<URL?> {
@@ -179,7 +184,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
         self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.textViewMaxCharecters,
-                                              placeholderText: LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey),
+                                              placeholderText: OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey),
                                               isEditable: false)
         setupObservers()
     }
@@ -225,9 +230,14 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .map { config -> String? in
+            .map { [weak self] config -> String? in
+                guard let self = self else { return nil }
                 guard let conversationConfig = config.conversation,
-                      conversationConfig.communityGuidelinesEnabled == true else { return nil }
+                          conversationConfig.communityGuidelinesEnabled == true else {
+                        self.shouldShowLearnMore = false
+                        return nil
+                }
+                self.shouldShowLearnMore = true
                 return config.conversation?.communityGuidelinesTitle?.value
             }
             .unwrap()
@@ -288,9 +298,9 @@ fileprivate extension OWReportReasonViewViewModel {
         selectedReason
             .map {
                 if $0.requiredAdditionalInfo == false {
-                    return LocalizationManager.localizedString(key: Metrics.textViewPlaceholderKey)
+                    return OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey)
                 } else {
-                    return LocalizationManager.localizedString(key: Metrics.textViewMandatoryPlaceholderKey)
+                    return OWLocalizationManager.shared.localizedString(key: Metrics.textViewMandatoryPlaceholderKey)
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)

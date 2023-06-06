@@ -53,15 +53,15 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var outputs: OWAdditionalInfoViewViewModelingOutputs { return self }
 
     var titleText: String {
-        return LocalizationManager.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
     }
 
     var cancelButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.cancelKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelKey)
     }
 
     var submitButtonText: String {
-        return LocalizationManager.localizedString(key: Metrics.submitKey)
+        return OWLocalizationManager.shared.localizedString(key: Metrics.submitKey)
     }
 
     var closeAdditionalInfoTap = PublishSubject<Void>()
