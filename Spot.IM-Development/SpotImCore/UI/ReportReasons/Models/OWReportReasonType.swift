@@ -62,10 +62,10 @@ enum OWReportReasonType: String, Codable {
 
 extension OWReportReasonType {
     var localizedTitle: String {
-        return LocalizationManager.localizedString(key: "\(self.rawValue)_title")
+        return OWLocalizationManager.shared.localizedString(key: "\(self.rawValue)_title")
     }
 
     var localizedSubtitle: String {
-        return LocalizationManager.localizedString(key: "\(self.rawValue)_subtitle")
+        return OWLocalizationManager.shared.localizedString(key: "\(self.rawValue)_subtitle")
     }
 }

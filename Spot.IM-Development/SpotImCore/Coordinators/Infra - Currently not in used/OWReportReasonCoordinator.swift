@@ -27,7 +27,7 @@ enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
 class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult> {
     fileprivate struct Metrics {
         static let fadeDuration: CGFloat = 0.3
-        static let errorAlertActionKey = "GotIt"
+        static let errorAlertActionKey = "Got it"
     }
 
     fileprivate let commentId: OWCommentId
