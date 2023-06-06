@@ -243,7 +243,11 @@ fileprivate extension OWLocalizationManager {
                         locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
                     }
                 case .useDevice:
-                    locale = Locale.current
+                    if let preferredIdentifier = Locale.preferredLanguages.first {
+                        locale = Locale(identifier: preferredIdentifier)
+                    } else {
+                        locale = Locale.current
+                    }
                 case .use(locale: let localeToUse):
                     locale = localeToUse
                 }
