@@ -60,7 +60,7 @@ platform :ios do
     )
   end
 
-  # Excpect parameter `version`
+  # Excpect parameters `version` and `configuration`
   desc "Build a release version of the SDK"
   lane :build_release_sdk do |options|
     set_version(version:options[:version]) # Set a specific version number
@@ -68,7 +68,7 @@ platform :ios do
     cocoapods(use_bundle_exec: false)
     xcodebuild(
       scheme: "Package SpotImCoreSDK",
-      configuration: "Release",
+      configuration: options[:configuration],
       destination: "generic/platform=iOS",
       clean: true,
       build: true
