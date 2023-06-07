@@ -13,12 +13,14 @@ import UIKit
 
 protocol OWCommentEngagementViewModelingInputs {
     var replyClicked: PublishSubject<Void> { get }
+    var shareClicked: PublishSubject<Void> { get }
     var isReadOnly: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentEngagementViewModelingOutputs {
     var votingVM: OWCommentRatingViewModeling { get }
     var replyClickedOutput: Observable<Void> { get }
+    var shareClickedOutput: Observable<Void> { get }
     var showReplyButton: Observable<Bool> { get }
 }
 
@@ -43,6 +45,12 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }
 
+    var shareClicked = PublishSubject<Void>()
+    var shareClickedOutput: Observable<Void> {
+        shareClicked
+            .asObservable()
+    }
+
     var isReadOnly = BehaviorSubject(value: true)
     var showReplyButton: Observable<Bool> {
         isReadOnly
@@ -50,15 +58,17 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }
 
-    fileprivate var _replies = BehaviorSubject<Int>(value: 0)
+    fileprivate var _repliesCount = BehaviorSubject<Int>(value: 0)
 
-    init(replies: Int, rank: OWComment.Rank, commentId: String) {
-        _replies.onNext(replies)
-        votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0,
-                                                                        rankDownCount: rank.ranksDown ?? 0,
-                                                                        rankedByUserValue: rank.rankedByCurrentUser ?? 0),
-                                            commentId: commentId
-        )
+    init(comment: OWComment) {
+        _repliesCount.onNext(comment.repliesCount ?? 0)
+        let rank = comment.rank ?? OWComment.Rank()
+        let commentId = comment.id ?? ""
+        votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(
+            rankUpCount: rank.ranksUp ?? 0,
+            rankDownCount: rank.ranksDown ?? 0,
+            rankedByUserValue: rank.rankedByCurrentUser ?? 0
+        ), commentId: commentId)
     }
 
     init() {
