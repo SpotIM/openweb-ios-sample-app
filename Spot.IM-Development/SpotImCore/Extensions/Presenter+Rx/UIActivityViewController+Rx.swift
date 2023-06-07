@@ -16,7 +16,7 @@ extension Reactive where Base: UIActivityViewController {
         animated: Bool = true,
         activityItems: [Any],
         applicationActivities: [UIActivity]? = nil
-    ) -> Observable<OWRxPresenterResponseType>  {
+    ) -> Observable<OWRxPresenterResponseType> {
 
         return Observable.create { observer in
             // Create UIActivityViewController
