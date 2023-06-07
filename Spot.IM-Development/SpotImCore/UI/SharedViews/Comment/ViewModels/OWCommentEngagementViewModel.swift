@@ -20,7 +20,7 @@ protocol OWCommentEngagementViewModelingInputs {
 protocol OWCommentEngagementViewModelingOutputs {
     var votingVM: OWCommentRatingViewModeling { get }
     var replyClickedOutput: Observable<Void> { get }
-    var shareClickedOutput: Observable<Void> { get }
+    var shareCommentUrl: Observable<URL> { get }
     var showReplyButton: Observable<Bool> { get }
 }
 
@@ -37,7 +37,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var outputs: OWCommentEngagementViewModelingOutputs { return self }
 
     let votingVM: OWCommentRatingViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    fileprivate let sharedServiceProvider: OWSharedServicesProviding
+
+    fileprivate let commentId: String
+    fileprivate let parentCommentId: String?
 
     var replyClicked = PublishSubject<Void>()
     var replyClickedOutput: Observable<Void> {
@@ -46,8 +49,18 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     }
 
     var shareClicked = PublishSubject<Void>()
-    var shareClickedOutput: Observable<Void> {
+    var shareCommentUrl: Observable<URL> {
         shareClicked
+            .flatMap({ [weak self] _ -> Observable<OWShareLink> in
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.netwokAPI()
+                    .conversation
+                    .commentShare(id: self.commentId, parentId: self.parentCommentId)
+                    .response
+
+            })
+            .map { shareLink -> URL? in shareLink.reference }
+            .unwrap()
             .asObservable()
     }
 
@@ -60,10 +73,12 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
 
     fileprivate var _repliesCount = BehaviorSubject<Int>(value: 0)
 
-    init(comment: OWComment) {
+    init(comment: OWComment, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServiceProvider = sharedServiceProvider
         _repliesCount.onNext(comment.repliesCount ?? 0)
         let rank = comment.rank ?? OWComment.Rank()
-        let commentId = comment.id ?? ""
+        self.commentId = comment.id ?? ""
+        self.parentCommentId = comment.parentId
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(
             rankUpCount: rank.ranksUp ?? 0,
             rankDownCount: rank.ranksDown ?? 0,
@@ -71,8 +86,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
         ), commentId: commentId)
     }
 
-    init() {
+    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServiceProvider = sharedServiceProvider
         self.votingVM = OWCommentRatingViewModel()
+        self.commentId = ""
+        self.parentCommentId = nil
     }
-
 }
