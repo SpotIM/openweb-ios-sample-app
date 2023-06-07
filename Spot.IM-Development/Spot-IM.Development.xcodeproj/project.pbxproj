@@ -5219,7 +5219,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "bash -x ./create_xcframework_script.sh    \n\n";
+			shellScript = "bash -x ./create_xcframework_script.sh \"${CONFIGURATION}\"\n";
 		};
 		8D455ADB296C13CA0091A027 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
