@@ -14,7 +14,7 @@ class OWConversationSortView: UIView {
     fileprivate struct Metrics {
         static let titleFontSize: CGFloat = 15.0
         static let buttonFontSize: CGFloat = 15.0
-        static let insetTiny: CGFloat = 9.0
+        static let insetTiny: CGFloat = 10.0
         static let verticalMarginBetweenSortLabel: CGFloat = 5.0
         static let sortLabelIdentifier = "conversation_sort_label_id"
         static let sortButtonIdentifier = "conversation_sort_button_id"
@@ -35,26 +35,17 @@ class OWConversationSortView: UIView {
     }()
 
     fileprivate lazy var sortButton: UIButton = {
-        let btn = UIButton()
-        btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.buttonFontSize)
-        let spacing: CGFloat = Metrics.insetTiny
-        var inset: CGFloat = spacing / 2
-
-        // Update insets in order to make additional space begween title and image
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
-            inset = -inset
-        }
-
-        btn.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
-        btn.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
-        btn.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)
+        let button = UIButton()
+            .font(UIFont.preferred(style: .bold, of: Metrics.buttonFontSize))
+            .adjustTextAndImageAlignment(Metrics.insetTiny)
+            .enforceSemanticAttribute()
 
         // Transform Button in order to put image to the right
-        btn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        btn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        btn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        if OWLocalizationManager.shared.semanticAttribute == .forceLeftToRight {
+            button.reverseTransform()
+        }
 
-        return btn
+        return button
     }()
 
     init(viewModel: OWConversationSortViewModeling) {
@@ -75,7 +66,7 @@ fileprivate extension OWConversationSortView {
         // Setup sort button
         self.addSubview(sortButton)
         sortButton.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.trailing.equalToSuperview()
         }
 
         // Setup sort label

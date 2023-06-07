@@ -39,10 +39,12 @@ class OWConversationSummaryView: UIView {
 
     fileprivate lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var conversationSortView: OWConversationSortView = {
         return OWConversationSortView(viewModel: viewModel.outputs.conversationSortVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var bottomHorizontalSeparator: UIView = {

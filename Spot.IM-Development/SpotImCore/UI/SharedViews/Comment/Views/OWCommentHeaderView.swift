@@ -76,6 +76,7 @@ class OWCommentHeaderView: UIView {
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var optionButton: UIButton = {
