@@ -51,6 +51,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
 
@@ -135,6 +136,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
+        self.viewableMode = viewableMode
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
         self.setupObservers()
@@ -460,6 +462,35 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .subscribe(onNext: { [weak self] comment in
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to share url from comment cells VMs
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
+                let replyClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.shareCommentUrl
+                }
+                return Observable.merge(replyClickOutputObservable)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] shareUrl in
+                guard let self = self else { return }
+                self.servicesProvider.presenterService()
+                    .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
+                    .subscribe { result in
+                        switch result {
+                        case .completion:
+                            // Do nothing
+                            break
+                        case .selected:
+                            // Do nothing
+                            break
+                        }
+                    }
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
