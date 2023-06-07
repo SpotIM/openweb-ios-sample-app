@@ -31,3 +31,15 @@ extension UILabel {
         return self
     }
 }
+
+extension UIButton {
+
+    @objc @discardableResult override func enforceSemanticAttribute() -> Self {
+        super.enforceSemanticAttribute()
+        self.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute ?? self.semanticContentAttribute
+        self.titleLabel?.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute ?? self.semanticContentAttribute
+        self.titleLabel?.textAlignment = OWLocalizationManager.shared.textAlignment
+
+        return self
+    }
+}
