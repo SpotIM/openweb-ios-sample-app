@@ -23,7 +23,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var errorAlertActionText: String { get }
     var titleText: String { get }
     var cancelButtonText: String { get }
-    var submitButtonText: String { get }
+    var submitButtonText: Observable<String> { get }
     var tableViewHeaderAttributedText: NSAttributedString { get }
     var tableViewHeaderTapText: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
@@ -40,6 +40,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var shouldShowLearnMore: Bool { get }
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
+    var shouldShowReportReasonsCounter: Observable<Bool> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -54,6 +55,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         static let textViewMandatoryPlaceholderKey = "ReportReasonTextViewMandatoryPlaceholder"
         static let cancelKey = "Cancel"
         static let submitKey = "Submit"
+        static let tryAgainKey = "TryAgain"
         static let errorAlertActionKey = "Got it"
         static let errorAlertSubmitTitleKey = "ReportSubmissionFailedTitle"
         static let errorAlertSubmitMessageKey = "ReportSubmissionFailedMessage"
@@ -90,8 +92,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return OWLocalizationManager.shared.localizedString(key: Metrics.cancelKey)
     }
 
-    var submitButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.submitKey)
+    var changeSubmitButtonText = BehaviorSubject<Bool>(value: false)
+    var submitButtonText: Observable<String> {
+        return changeSubmitButtonText
+            .map { changeText in
+                return OWLocalizationManager.shared.localizedString(key: changeText ? Metrics.tryAgainKey : Metrics.submitKey)
+            }
     }
 
     var tableViewHeaderTapText: String {
@@ -185,6 +191,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.servicesProvider = servicesProvider
         self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.textViewMaxCharecters,
                                               placeholderText: OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey),
+                                              shouldShowCharectersLimit: false,
                                               isEditable: false)
         setupObservers()
     }
@@ -247,6 +254,30 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .asObservable()
     }()
 
+    lazy var shouldShowReportReasonsCounter: Observable<Bool> = {
+        let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> Bool in
+                guard let self = self else { return false }
+                return config.mobileSdk.shouldShowReportReasonsCounter
+            }
+            .unwrap()
+            .asObservable()
+    }()
+
+    lazy var reportReasonsCounterMaxLength: Observable<Int> = {
+        let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> Int in
+                guard let self = self else { return Metrics.textViewMaxCharecters }
+                return config.mobileSdk.reportReasonsCounterMaxLength
+            }
+            .unwrap()
+            .asObservable()
+    }()
+
     // Observable for the RepertReason network API
     lazy var submittedReportReasonObservable: Observable<Void> = {
         return submitReportReasonTapped
@@ -282,6 +313,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     self.setSubmitInProgress.onNext(false)
                     self.errorSubmitting.onNext()
+                    self.changeSubmitButtonText.onNext(true)
                     return nil
                 default:
                     return nil
@@ -304,6 +336,20 @@ fileprivate extension OWReportReasonViewViewModel {
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)
+            .disposed(by: disposeBag)
+
+        reportReasonsCounterMaxLength
+            .subscribe(onNext: { [weak self] limit in
+                guard let self = self else { return }
+                self.textViewVM.inputs.textViewMaxCharectersChange.onNext(limit)
+            })
+            .disposed(by: disposeBag)
+
+        shouldShowReportReasonsCounter
+            .subscribe(onNext: { [weak self] show in
+                guard let self = self else { return }
+                self.textViewVM.inputs.shouldShowCharectersLimitChange.onNext(show)
+            })
             .disposed(by: disposeBag)
 
         selectedReason
