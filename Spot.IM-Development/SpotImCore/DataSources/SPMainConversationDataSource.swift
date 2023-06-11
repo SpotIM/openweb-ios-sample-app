@@ -647,8 +647,6 @@ internal final class SPMainConversationDataSource {
                 hiddenData[id]?.reverse()
             }
 
-            print("RIVI \(allCommentsAndReplies)")
-
             // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
             guard !areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) else { return }
 
