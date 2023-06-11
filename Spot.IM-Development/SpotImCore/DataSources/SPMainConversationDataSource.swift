@@ -624,6 +624,15 @@ internal final class SPMainConversationDataSource {
 
             minVisibleReplies = replies.count > minVisibleReplies ? replies.count : minVisibleReplies
 
+            if showReplies {
+                if let commentId = viewModel.commentId,
+                   let provider = repliesProviders[commentId],
+                   let commentRepliesOffset = comment.offset {
+                    // we update the offset of this comment repliesProviders
+                    provider.setOffset(commentRepliesOffset)
+                }
+            }
+
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
 

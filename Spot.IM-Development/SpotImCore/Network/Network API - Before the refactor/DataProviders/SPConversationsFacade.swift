@@ -29,6 +29,7 @@ internal protocol SPConversationsDataProvider {
     var imageURLProvider: SPImageProvider? { get set }
 
     func resetOffset()
+    func setOffset(_ offset: Int)
 
     /// fetch conversation for id
     func conversation(_ id: String,
@@ -71,6 +72,12 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
     internal func resetOffset() {
         self.offset = SPConversationsFacade.defaultOffset
     }
+
+    internal func setOffset(_ offset: Int) {
+        self.offset = offset
+    }
+
+
 
     internal func conversation(
         _ id: String,
