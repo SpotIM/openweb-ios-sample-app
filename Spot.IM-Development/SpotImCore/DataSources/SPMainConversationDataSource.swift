@@ -610,9 +610,8 @@ internal final class SPMainConversationDataSource {
                                                 replyingToCommentId: replyingToCommentId,
                                                 replyingToDisplayName: replyingToDisplayName)
 
-            // if comment is hidden without any replies or comment already exist - we filter out this comment
-            guard !viewModel.isHiddenComment(),
-                  (comment.replies != nil || comment.replies?.isEmpty == false),
+            // if comment is hidden without any replies - we filter out this comment
+            guard !(viewModel.isHiddenComment() && (comment.replies == nil || comment.replies?.isEmpty == true)),
                   !isCommentAlreadyExist(commentId: viewModel.commentId) else { return }
 
             section.append(viewModel)
@@ -627,9 +626,6 @@ internal final class SPMainConversationDataSource {
 
             replies.forEach { reply in
                 let reply = replyViewModel(from: reply, with: comment)
-
-                // if comment already exist - we filter out this comment
-                guard isCommentAlreadyExist(commentId: reply.commentId) else { return }
 
                 allCommentsAndReplies.append(reply)
                 if showReplies {
@@ -651,9 +647,10 @@ internal final class SPMainConversationDataSource {
                 hiddenData[id]?.reverse()
             }
 
+            print("RIVI \(allCommentsAndReplies)")
+
             // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
-            guard !viewModel.isHiddenComment(),
-                  !areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) else { return }
+            guard !areAllCommentAndRepliesHidden(atCommentVMs: allCommentsAndReplies) else { return }
 
             visibleComments.append(section)
 
