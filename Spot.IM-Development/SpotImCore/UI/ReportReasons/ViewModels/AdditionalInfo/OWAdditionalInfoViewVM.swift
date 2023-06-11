@@ -15,6 +15,7 @@ protocol OWAdditionalInfoViewViewModelingInputs {
     var submitAdditionalInfoTap: PublishSubject<Void> { get }
     var additionalInfoTextChange: PublishSubject<String> { get }
     var submitInProgress: PublishSubject<Bool> { get }
+    var submitButtonTextChanged: BehaviorSubject<String> { get }
 }
 
 protocol OWAdditionalInfoViewViewModelingOutputs {
@@ -25,7 +26,7 @@ protocol OWAdditionalInfoViewViewModelingOutputs {
     var additionalInfoTextChanged: Observable<String> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var cancelButtonText: String { get }
-    var submitButtonText: String { get }
+    var submitButtonText: Observable<String> { get }
     var titleText: String { get }
     var shouldShowTitleView: Bool { get }
     var viewableMode: OWViewableMode { get }
@@ -39,11 +40,9 @@ protocol OWAdditionalInfoViewViewModeling {
 }
 
 class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWAdditionalInfoViewViewModelingOutputs, OWAdditionalInfoViewViewModeling {
-
     fileprivate struct Metrics {
         static let titleKey = "AdditionalInfoTitle"
         static let cancelKey = "Cancel"
-        static let submitKey = "Submit"
         static let textViewMaxCharecters = 280
     }
 
@@ -60,10 +59,6 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
         return OWLocalizationManager.shared.localizedString(key: Metrics.cancelKey)
     }
 
-    var submitButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.submitKey)
-    }
-
     var closeAdditionalInfoTap = PublishSubject<Void>()
     var closeAdditionalInfoTapped: Observable<Void> {
         return closeAdditionalInfoTap
@@ -73,6 +68,12 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var submitInProgress = PublishSubject<Bool>()
     var submitInProgressChanged: Observable<Bool> {
         return submitInProgress
+            .asObservable()
+    }
+
+    var submitButtonTextChanged = BehaviorSubject<String>(value: "")
+    var submitButtonText: Observable<String> {
+        return submitButtonTextChanged
             .asObservable()
     }
 
@@ -128,19 +129,22 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
          placeholderText: String,
          textViewText: String,
          textViewMaxCharecters: Int = Metrics.textViewMaxCharecters,
+         shouldShowCharectersLimit: Bool,
          isTextRequired: Observable<Bool>,
-         submitInProgress: Observable<Bool>) {
+         submitInProgress: Observable<Bool>,
+         submitText: Observable<String>) {
         self.viewableMode = viewableMode
         self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: textViewMaxCharecters,
                                               placeholderText: placeholderText,
                                               textViewText: textViewText,
+                                              shouldShowCharectersLimit: shouldShowCharectersLimit,
                                               isEditable: true)
-        setupObservers(submitInProgress: submitInProgress, isTextRequired: isTextRequired)
+        setupObservers(isTextRequired: isTextRequired, submitInProgress: submitInProgress, submitText: submitText)
     }
 }
 
 fileprivate extension OWAdditionalInfoViewViewModel {
-    func setupObservers(submitInProgress: Observable<Bool>, isTextRequired: Observable<Bool>) {
+    func setupObservers(isTextRequired: Observable<Bool>, submitInProgress: Observable<Bool>, submitText: Observable<String>) {
         submitInProgress
             .bind(to: self.inputs.submitInProgress)
             .disposed(by: disposeBag)
@@ -153,6 +157,10 @@ fileprivate extension OWAdditionalInfoViewViewModel {
                 }
             }
             .bind(to: isSubmitEnabledChange)
+            .disposed(by: disposeBag)
+
+        submitText
+            .bind(to: self.inputs.submitButtonTextChanged)
             .disposed(by: disposeBag)
     }
 }

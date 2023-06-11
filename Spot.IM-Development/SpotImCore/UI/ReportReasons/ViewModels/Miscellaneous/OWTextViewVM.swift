@@ -15,6 +15,8 @@ protocol OWTextViewViewModelingInputs {
     var placeholderTextChange: BehaviorSubject<String> { get }
     var textViewTextChange: BehaviorSubject<String> { get }
     var textViewCharectersCount: BehaviorSubject<Int> { get }
+    var textViewMaxCharectersChange: PublishSubject<Int> { get }
+    var shouldShowCharectersLimitChange: PublishSubject<Bool> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -26,6 +28,7 @@ protocol OWTextViewViewModelingOutputs {
     var textViewTextCount: Observable<Int> { get }
     var hidePlaceholder: Observable<Bool> { get }
     var textViewText: Observable<String> { get }
+    var charectersLimitEnabled: Bool { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -39,7 +42,11 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     fileprivate let disposeBag = DisposeBag()
 
     let isEditable: Bool
-    let textViewMaxCharecters: Int
+    var textViewMaxCharecters: Int
+    var textViewMaxCharectersChange = PublishSubject<Int>()
+
+    var charectersLimitEnabled = true
+    var shouldShowCharectersLimitChange = PublishSubject<Bool>()
 
     var becomeFirstResponderCall = PublishSubject<Void>()
     var becomeFirstResponderCalled: Observable<Void> {
@@ -74,10 +81,34 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
             .map { $0 > 0 }
     }
 
-    init(textViewMaxCharecters: Int, placeholderText: String, textViewText: String = "", isEditable: Bool) {
+    init(textViewMaxCharecters: Int,
+         placeholderText: String,
+         textViewText: String = "",
+         shouldShowCharectersLimit: Bool,
+         isEditable: Bool) {
         self.textViewMaxCharecters = textViewMaxCharecters
         self.placeholderTextChange = BehaviorSubject(value: placeholderText)
         self.textViewTextChange = BehaviorSubject(value: textViewText)
         self.isEditable = isEditable
+        self.charectersLimitEnabled = shouldShowCharectersLimit
+        self.setupObservers()
+    }
+}
+
+fileprivate extension OWTextViewViewModel {
+    func setupObservers() {
+        textViewMaxCharectersChange
+            .subscribe(onNext: { [weak self] limit in
+                guard let self = self else { return }
+                self.textViewMaxCharecters = limit
+            })
+            .disposed(by: disposeBag)
+
+        shouldShowCharectersLimitChange
+            .subscribe(onNext: { [weak self] show in
+                guard let self = self else { return }
+                self.charectersLimitEnabled = show && self.isEditable
+            })
+            .disposed(by: disposeBag)
     }
 }

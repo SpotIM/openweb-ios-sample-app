@@ -68,7 +68,6 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         return OWLoaderButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(.white)
-            .setTitle(viewModel.outputs.submitButtonText, state: .normal)
             .corner(radius: Metrics.buttonsRadius)
             .isEnabled(false)
             .alpha(Metrics.submitDisabledOpacity)
@@ -200,6 +199,10 @@ fileprivate extension OWReportReasonView {
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.submitButtonText
+            .bind(to: submitButton.rx.title(for: .normal))
             .disposed(by: disposeBag)
 
         cancelButton.rx.tap
