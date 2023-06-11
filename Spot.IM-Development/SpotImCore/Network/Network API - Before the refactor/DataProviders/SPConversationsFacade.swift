@@ -77,8 +77,6 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         self.offset = offset
     }
 
-
-
     internal func conversation(
         _ id: String,
         _ mode: SPCommentSortMode,
