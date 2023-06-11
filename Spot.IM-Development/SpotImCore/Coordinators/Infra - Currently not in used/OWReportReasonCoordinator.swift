@@ -111,18 +111,22 @@ fileprivate extension OWReportReasonCoordinator {
         let reportTextViewVM = viewModel.outputs.textViewVM
         // Additional information observable - General
         let additionalInformationObservable = reportTextViewVM.outputs.textViewTapped
-            .flatMap { _ -> Observable<(String, String)> in
+            .flatMap { _ -> Observable<(String, String, Bool)> in
                 return Observable.combineLatest(reportTextViewVM.outputs.placeholderText,
-                                                reportTextViewVM.outputs.textViewText)
+                                                reportTextViewVM.outputs.textViewText,
+                                                viewModel.outputs.shouldShowReportReasonsCounter)
                 .take(1)
             }
             .observe(on: MainScheduler.instance)
-            .map { placeholderText, textViewText -> OWAdditionalInfoViewViewModel in
+            .map { placeholderText, textViewText, shouldShowCounter -> OWAdditionalInfoViewViewModel in
                 return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                      placeholderText: placeholderText,
                                                      textViewText: textViewText,
+                                                     textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
+                                                     shouldShowCharectersLimit: shouldShowCounter,
                                                      isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
-                                                     submitInProgress: viewModel.outputs.submitInProgress)
+                                                     submitInProgress: viewModel.outputs.submitInProgress,
+                                                     submitText: viewModel.outputs.submitButtonText)
             }
             .share()
 

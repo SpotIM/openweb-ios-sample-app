@@ -83,7 +83,7 @@ fileprivate extension OWTextView {
         self.layer.borderWidth = Metrics.borderWidth
         self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
 
-        if viewModel.outputs.isEditable {
+        if viewModel.outputs.charectersLimitEnabled {
             self.addSubviews(charectersCountView)
             charectersCountView.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
@@ -93,7 +93,7 @@ fileprivate extension OWTextView {
 
         self.addSubviews(textView)
         textView.OWSnp.makeConstraints { make in
-            if viewModel.outputs.isEditable {
+            if viewModel.outputs.charectersLimitEnabled {
                 make.top.leading.trailing.equalToSuperview()
                 make.bottom.equalTo(charectersCountView.OWSnp.top)
             } else {
@@ -114,7 +114,9 @@ fileprivate extension OWTextView {
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.textView.text = String(self.textView.text.prefix(self.viewModel.outputs.textViewMaxCharecters))
+                if self.viewModel.outputs.charectersLimitEnabled {
+                    self.textView.text = String(self.textView.text.prefix(self.viewModel.outputs.textViewMaxCharecters))
+                }
                 self.viewModel.inputs.textViewCharectersCount.onNext(self.textView.text.count)
                 self.charectersCountView.text = "\(self.textView.text.count)/" + "\(self.viewModel.outputs.textViewMaxCharecters)"
                 self.viewModel.inputs.textViewTextChange.onNext(self.textView.text ?? "")
