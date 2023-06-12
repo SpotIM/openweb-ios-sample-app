@@ -24,7 +24,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var titleText: String { get }
     var cancelButtonText: String { get }
     var submitButtonText: Observable<String> { get }
-    var tableViewHeaderAttributedText: NSAttributedString { get }
+    var tableViewHeaderAttributedText: Observable<NSAttributedString> { get }
     var tableViewHeaderTapText: String { get }
     var reportReasonCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
     var shouldShowTitleView: Bool { get }
@@ -37,7 +37,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var presentError: Observable<Void> { get }
     var submitInProgress: Observable<Bool> { get }
-    var shouldShowLearnMore: Bool { get }
+    var shouldShowLearnMore: Observable<Bool> { get }
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var shouldShowReportReasonsCounter: Observable<Bool> { get }
@@ -49,6 +49,7 @@ protocol OWReportReasonViewViewModeling {
 }
 
 class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWReportReasonViewViewModelingOutputs, OWReportReasonViewViewModeling {
+
     fileprivate struct Metrics {
         static let titleKey = "ReportReasonTitle"
         static let textViewPlaceholderKey = "ReportReasonTextViewPlaceholder"
@@ -104,14 +105,19 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderTapKey)
     }
 
-    var tableViewHeaderAttributedText: NSAttributedString {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderKey)
-            .replacingOccurrences(of: tableViewHeaderTapText, with: shouldShowLearnMore ? tableViewHeaderTapText : "")
-            .attributedString
-            .fontForText(OWFontBook.shared.font(style: .regular,
-                                                size: Metrics.headerTextFontSize))
-            .colorForText(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                          text: shouldShowLearnMore ? tableViewHeaderTapText : "")
+    var tableViewHeaderAttributedText: Observable<NSAttributedString> {
+        shouldShowLearnMore
+            .map { [weak self] shouldShowLearnMore in
+                guard let self = self else { return nil }
+                return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderKey)
+                    .replacingOccurrences(of: tableViewHeaderTapText, with: shouldShowLearnMore ? tableViewHeaderTapText : "")
+                    .attributedString
+                    .fontForText(OWFontBook.shared.font(style: .regular,
+                                                        size: Metrics.headerTextFontSize))
+                    .colorForText(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
+                                  text: shouldShowLearnMore ? tableViewHeaderTapText : "")
+            }
+            .unwrap()
     }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
@@ -130,7 +136,11 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .asObservable()
     }
 
-    var shouldShowLearnMore: Bool = false
+    var shouldShowLearnMoreChanged = BehaviorSubject<Bool>(value: false)
+    var shouldShowLearnMore: Observable<Bool> {
+        return shouldShowLearnMoreChanged
+            .asObservable()
+    }
 
     var learnMoreTap = PublishSubject<Void>()
     var learnMoreTapped: Observable<URL?> {
@@ -241,10 +251,10 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 guard let self = self else { return nil }
                 guard let conversationConfig = config.conversation,
                           conversationConfig.communityGuidelinesEnabled == true else {
-                        self.shouldShowLearnMore = false
+                        self.shouldShowLearnMoreChanged.onNext(false)
                         return nil
                 }
-                self.shouldShowLearnMore = true
+                self.shouldShowLearnMoreChanged.onNext(true)
                 return config.conversation?.communityGuidelinesTitle?.value
             }
             .unwrap()
@@ -257,24 +267,24 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     lazy var shouldShowReportReasonsCounter: Observable<Bool> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
-            .take(1)
             .map { [weak self] config -> Bool? in
                 guard let self = self else { return false }
                 return config.mobileSdk.shouldShowReportReasonsCounter
             }
             .unwrap()
+            .take(1)
             .asObservable()
     }()
 
     lazy var reportReasonsCounterMaxLength: Observable<Int> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
-            .take(1)
             .map { [weak self] config -> Int? in
                 guard let self = self else { return Metrics.textViewMaxCharecters }
                 return config.mobileSdk.reportReasonsCounterMaxLength
             }
             .unwrap()
+            .take(1)
             .asObservable()
     }()
 

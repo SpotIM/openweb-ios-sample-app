@@ -121,7 +121,7 @@
 "ReportReasonThanksTitle" = "شكراً لك على ملاحظاتك!";
 "Community Guidelines" = "إرشادات المجتمع";
 "ReportReasonHelpUsTitle" = "لمساعدتنا في فهم المشكلة, يرجى اختيار أي من هذه الخيارات يصف الانتهاك على أفضل نحو (معرفة المزيد)";
-"ReportReasonHelpUsClickText" = "معرفة المزيد";
+"ReportReasonHelpUsClickText" = "(معرفة المزيد)";
 "false_information_subtitle" = "معلومات مضللة، أو معلومات كاذبة، أو نظرية مؤامرة، أو أي نوع من المعلومات المضللة";
 "false_information_title" = "معلومات خاطئة";
 "hate_speech_subtitle" = "عنصرية، أو كراهية النساء، أو هجوم إيديولوجي وجنساني، أو أي نوع من أنواع الهجمات الجماعية";
