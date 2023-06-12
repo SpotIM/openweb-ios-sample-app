@@ -43,6 +43,7 @@ class OWMenuSelection: UIView, OWThemeStyleInjectorProtocol {
         super.init(frame: .zero)
         setupViews()
         setupObservers()
+        applyIdentifiers()
     }
 
     required init?(coder: NSCoder) {
@@ -56,7 +57,7 @@ fileprivate extension OWMenuSelection {
         self.layer.borderWidth = 1
         self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light).cgColor
         self.layer.cornerRadius = Metrics.cornerRadius
-//        self.layer.masksToBounds = true
+
         applyShadow()
         self.useAsThemeStyleInjector()
 
@@ -116,5 +117,9 @@ fileprivate extension OWMenuSelection {
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle) // TODO: background color
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyIdentifiers() {
+        self.accessibilityIdentifier = Metrics.identifier
     }
 }
