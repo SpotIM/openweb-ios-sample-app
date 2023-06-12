@@ -57,7 +57,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                                                                                  presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
 
-        router.start()
+        // router.start()
 
         if router.isEmpty() {
             router.setRoot(reportReasonVC, animated: false, dismissCompletion: reportReasonPopped)
@@ -111,12 +111,20 @@ fileprivate extension OWReportReasonCoordinator {
         let reportTextViewVM = viewModel.outputs.textViewVM
         // Additional information observable - General
         let additionalInformationObservable = reportTextViewVM.outputs.textViewTapped
-            .flatMap { _ -> Observable<(String, String, Bool)> in
-                return Observable.combineLatest(reportTextViewVM.outputs.placeholderText,
-                                                reportTextViewVM.outputs.textViewText,
-                                                viewModel.outputs.shouldShowReportReasonsCounter)
-                .take(1)
+            .flatMap { _ -> Observable<String> in
+                return reportTextViewVM.outputs.placeholderText
+                    .take(1)
             }
+            .flatMap({ placeholderText -> Observable<(String, String)> in
+                return reportTextViewVM.outputs.textViewText
+                    .map { (placeholderText, $0) }
+                    .take(1)
+            })
+            .flatMap({ placeholderText, textViewText -> Observable<(String, String, Bool)> in
+                return viewModel.outputs.shouldShowReportReasonsCounter
+                    .map { (placeholderText, textViewText, $0) }
+                    .take(1)
+            })
             .observe(on: MainScheduler.instance)
             .map { placeholderText, textViewText, shouldShowCounter -> OWAdditionalInfoViewViewModel in
                 return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
@@ -183,7 +191,14 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let router = self.router else { return .empty() }
                 let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
                 let reportReasonThanksVC = OWReportReasonThanksVC(reportReasonThanksViewViewModel: reportReasonThanksViewVM)
-                reportReasonThanksVC.modalPresentationStyle = .fullScreen
+                switch self.presentationalMode {
+                case .present(style: .fullScreen):
+                    reportReasonThanksVC.modalPresentationStyle = .fullScreen
+                case .present(style: .pageSheet):
+                    reportReasonThanksVC.modalPresentationStyle = .pageSheet
+                default:
+                    reportReasonThanksVC.modalPresentationStyle = .fullScreen
+                }
                 router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
                 return reportReasonThanksViewVM.outputs.closeReportReasonThanksTapped
             }
@@ -220,7 +235,14 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let self = self else { return }
                 guard let router = self.router else { return }
                 let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewViewModel: reportReasonCancelViewVM)
-                reportReasonCancelVC.modalPresentationStyle = .fullScreen
+                switch self.presentationalMode {
+                case .present(style: .fullScreen):
+                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
+                case .present(style: .pageSheet):
+                    reportReasonCancelVC.modalPresentationStyle = .pageSheet
+                default:
+                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
+                }
                 router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
             })
             .disposed(by: disposeBag)

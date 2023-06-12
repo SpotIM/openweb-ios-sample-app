@@ -258,7 +258,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .map { [weak self] config -> Bool in
+            .map { [weak self] config -> Bool? in
                 guard let self = self else { return false }
                 return config.mobileSdk.shouldShowReportReasonsCounter
             }
@@ -270,7 +270,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .map { [weak self] config -> Int in
+            .map { [weak self] config -> Int? in
                 guard let self = self else { return Metrics.textViewMaxCharecters }
                 return config.mobileSdk.reportReasonsCounterMaxLength
             }

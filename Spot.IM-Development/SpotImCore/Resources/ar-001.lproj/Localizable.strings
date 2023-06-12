@@ -146,6 +146,7 @@
 "copyright_infringement_subtitle" = "استخدام عملك المحمي بحقوق الطبع والنشر دون إذن";
 "copyright_infringement_title" = "انتهاك حقوق الملكية";
 
+"TryAgain" = "Try again";
 "AdditionalInfoTitle" = "Additional information";
 "ReportSubmissionFailedTitle" = "Report Submission Failed";
 "ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";
