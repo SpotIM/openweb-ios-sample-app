@@ -57,7 +57,7 @@ fileprivate extension OWMenuSelection {
         self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light).cgColor
         self.layer.cornerRadius = Metrics.cornerRadius
 //        self.layer.masksToBounds = true
-//        applyShadow()
+        applyShadow()
         self.useAsThemeStyleInjector()
 
         self.OWSnp.makeConstraints { make in
@@ -112,7 +112,6 @@ fileprivate extension OWMenuSelection {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
-
                 self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle) // TODO: background color
             })
