@@ -145,8 +145,7 @@
 "terrorism_title" = "Terrorismo";
 "copyright_infringement_subtitle" = "Uso não autorizado de conteúdos protegidos por direitos de autor";
 "copyright_infringement_title" = "Violação de direitos de autor";
-
-"TryAgain" = "Try again";
-"AdditionalInfoTitle" = "Additional information";
-"ReportSubmissionFailedTitle" = "Report Submission Failed";
-"ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";
+"TryAgain" = "Tentar novamente";
+"AdditionalInfoTitle" = "Informação adicional";
+"ReportSubmissionFailedTitle" = "Falha na submissão de relatório";
+"ReportSubmissionFailedMessage" = "Não foi possível submeter o seu relatório. Verifique a sua ligação e tente novamente mais tarde.";

@@ -145,8 +145,7 @@
 "terrorism_title" = "الإرهاب";
 "copyright_infringement_subtitle" = "استخدام عملك المحمي بحقوق الطبع والنشر دون إذن";
 "copyright_infringement_title" = "انتهاك حقوق الملكية";
-
-"TryAgain" = "Try again";
-"AdditionalInfoTitle" = "Additional information";
-"ReportSubmissionFailedTitle" = "Report Submission Failed";
-"ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";
+"TryAgain" = "المحاولة مرة أخرى";
+"AdditionalInfoTitle" = "معلومات إضافية";
+"ReportSubmissionFailedTitle" = "فشل تقديم البلاغ";
+"ReportSubmissionFailedMessage" = "تعذّر تقديم البلاغ الخاص بك. يُرجى التحقق من الاتصال الخاص بك والمحاولة مرة أخرى في وقت لاحق.";
