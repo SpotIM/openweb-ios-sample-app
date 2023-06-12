@@ -9,8 +9,13 @@
 import Foundation
 
 enum OWConversationEndpoints: OWEndpoints {
+    fileprivate struct Metrics {
+        static let parentCommentDepth: Int = 2
+        static let replyCommentDepth: Int = 1
+    }
+
     case conversationAsync(articleUrl: String)
-    case conversationRead(id: String, mode: OWSortOption, page: OWPaginationPage, parentId: String, offset: Int)
+    case conversationRead(mode: OWSortOption, page: OWPaginationPage, count: Int, childCount: Int?, parentId: String, messageId: String, offset: Int)
     case commentReport(id: String, parentId: String?)
     case commentPost(parameters: OWNetworkParameters)
     case commentShare(id: String, parentId: String?)
@@ -55,17 +60,20 @@ enum OWConversationEndpoints: OWEndpoints {
         switch self {
         case .conversationAsync(let articleUrl):
             return ["host_url": articleUrl]
-        case .conversationRead(let id, let mode, let page, let parentId, let offset):
-            let spotKey = SPClientSettings.main.spotKey
-            return [
-                "conversation_id": "\(spotKey)_\(id)",
+        case .conversationRead(let mode, let page, let count, let childCount, let parentId, let messageId, let offset):
+            var params: [String: Any] = [
                 "sort_by": mode.rawValue,
                 "offset": offset,
-                "count": OWConversationEndpointConst.PAGE_SIZE,
+                "count": count,
                 "parent_id": parentId,
+                "message_id": messageId,
                 "extract_data": page == .first,
-                "depth": parentId.isEmpty ? 2 : 1
+                "depth": parentId.isEmpty ? Metrics.parentCommentDepth : Metrics.replyCommentDepth
             ]
+            if let childCount = childCount {
+                params["child_count"] = childCount
+            }
+            return params
         case .commentReport(let id, let parentId):
             var params = ["message_id": id]
             if let parentId = parentId {
@@ -109,15 +117,38 @@ fileprivate struct OWConversationEndpointConst {
 
 protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
-    func conversationRead(postId: OWPostId, mode: OWSortOption, page: OWPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM>
+    func conversationRead(
+        mode: OWSortOption,
+        page: OWPaginationPage,
+        count: Int,
+        childCount: Int?,
+        parentId: String,
+        messageId: String,
+        offset: Int
+    ) -> OWNetworkResponse<OWConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
-    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment>
+    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
-    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment>
+    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete>
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<EmptyDecodable>
     func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse>
     func commentStatus(commentId: String) -> OWNetworkResponse<OWCommentStatusResponse>
+}
+
+extension OWConversationAPI {
+    // Better accesability to conversationRead
+    func conversationRead(
+        mode: OWSortOption,
+        page: OWPaginationPage = .next,
+        count: Int = OWConversationEndpointConst.PAGE_SIZE,
+        childCount: Int? = nil,
+        parentId: String = "",
+        messageId: String = "",
+        offset: Int = 0
+    ) -> OWNetworkResponse<OWConversationReadRM> {
+        return conversationRead(mode: mode, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
+    }
 }
 
 extension OWNetworkAPI: OWConversationAPI {
@@ -130,8 +161,16 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func conversationRead(postId: OWPostId, mode: OWSortOption, page: OWPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM> {
-        let endpoint = OWConversationEndpoints.conversationRead(id: postId, mode: mode, page: page, parentId: parentId, offset: offset)
+    func conversationRead(
+        mode: OWSortOption,
+        page: OWPaginationPage,
+        count: Int,
+        childCount: Int?,
+        parentId: String,
+        messageId: String,
+        offset: Int
+    ) -> OWNetworkResponse<OWConversationReadRM> {
+        let endpoint = OWConversationEndpoints.conversationRead(mode: mode, page: page, count: count, childCount: childCount, parentId: parentId, messageId: messageId, offset: offset)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
@@ -142,7 +181,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment> {
+    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment> {
         let endpoint = OWConversationEndpoints.commentPost(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
@@ -154,7 +193,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment> {
+    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment> {
         let endpoint = OWConversationEndpoints.commentUpdate(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

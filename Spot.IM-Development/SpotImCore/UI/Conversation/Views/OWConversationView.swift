@@ -15,6 +15,11 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationTitleHeaderHeight: CGFloat = 56
         static let articleDescriptionHeight: CGFloat = 86
         static let conversationSummaryHeight: CGFloat = 44
+        static let tableViewAnimationDuration: Double = 0.25
+        static let commentingCTAHeight: CGFloat = 64
+        static let separatorHeight: CGFloat = 1
+        static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
+        static let tableViewRowEstimatedHeight: Double = 130.0
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -32,13 +37,31 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
+    fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
+        return OWConversationEmptyStateView(viewModel: self.viewModel.outputs.conversationEmptyStateViewModel)
+            .enforceSemanticAttribute()
+            .userInteractionEnabled(false)
+    }()
+
+    fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
+        return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
+            .enforceSemanticAttribute()
+    }()
+
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
 
-        tableView.isScrollEnabled = false
+        tableView.refreshControl = tableViewRefreshControl
+
         tableView.allowsSelection = false
 
         // Register cells
@@ -46,7 +69,15 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             tableView.register(cellClass: option.cellClass)
         }
 
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
+
         return tableView
+    }()
+
+    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        return refresh
     }()
 
     fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
@@ -115,12 +146,54 @@ fileprivate extension OWConversationView {
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom)
-            make.bottom.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
+
+        self.addSubview(self.conversationEmptyStateView)
+        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
+            make.top.equalTo(self.tableView.OWSnp.top)
+            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
+        }
+
+        // Setup bottom commentingCTA horizontal separator
+        self.addSubview(commentingCTATopHorizontalSeparator)
+        commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
+            make.top.equalTo(tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.separatorHeight)
+        }
+
+        self.addSubview(commentingCTAView)
+        commentingCTAView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.bottom.equalTo(self.safeAreaLayoutGuide)
+            make.height.equalTo(Metrics.commentingCTAHeight)
         }
     }
 
     func setupObservers() {
+        Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
+                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
+            .filter { $0.0 }
+            .map { $0.1 }
+            .unwrap()
+            .map { $0.height }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.conversationDataSourceSections
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                self?.tableViewRefreshControl.endRefreshing()
+            })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
@@ -130,14 +203,37 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
 
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateCellSizeAtIndex
+        viewModel.outputs.performTableViewAnimation
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                    }
+                })
+                .disposed(by: disposeBag)
+
+        tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
+            .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
+
+        tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndDecelerating
+                    .asObservable()
+                    .take(1)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                self.viewModel.inputs.pullToRefresh.onNext()
             })
             .disposed(by: disposeBag)
     }

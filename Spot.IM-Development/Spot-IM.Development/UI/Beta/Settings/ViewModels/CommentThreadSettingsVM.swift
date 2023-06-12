@@ -33,7 +33,7 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
 
     var openCommentIdSelected = PublishSubject<String>()
     var openCommentId: Observable<String> {
-        return userDefaultsProvider.values(key: .openCommentId)
+        return userDefaultsProvider.values(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
     }
 
     lazy var openCommentIdTitle: String = {

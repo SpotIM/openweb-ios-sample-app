@@ -34,7 +34,8 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let preConversationCoordinator = OWPreConversationCoordinator(preConversationData: preConversationData,
-                                                                              actionsCallbacks: callbacks)
+                                                                              actionsCallbacks: callbacks,
+                                                                              viewableMode: .independent)
                 self.store(coordinator: preConversationCoordinator)
                 return preConversationCoordinator.showableComponent()
             }

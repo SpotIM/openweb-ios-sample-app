@@ -114,6 +114,10 @@ fileprivate extension OWConversationVC {
             .disposed(by: disposeBag)
     }
 
+    func updateCustomUI() {
+        // TODO
+    }
+
     @objc func closeConversationTapped(_ sender: UIBarButtonItem) {
         viewModel.inputs.closeConversationTapped.onNext()
     }

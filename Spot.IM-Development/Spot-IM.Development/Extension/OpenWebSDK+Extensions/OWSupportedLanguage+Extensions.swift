@@ -26,7 +26,7 @@ extension OWSupportedLanguage {
             return "Arabic"
         case .spanish:
             return "Spanish"
-        case .portoguese:
+        case .portuguese:
             return "Portoguese"
         case .french:
             return "French"
@@ -45,8 +45,8 @@ extension OWSupportedLanguage {
             self = OWSupportedLanguage.arabic
         case OWSupportedLanguage.spanish.languageName:
             self = OWSupportedLanguage.spanish
-        case OWSupportedLanguage.portoguese.languageName:
-            self = OWSupportedLanguage.portoguese
+        case OWSupportedLanguage.portuguese.languageName:
+            self = OWSupportedLanguage.portuguese
         case OWSupportedLanguage.french.languageName:
             self = OWSupportedLanguage.french
         default:
@@ -59,7 +59,7 @@ extension OWSupportedLanguage {
         case english
         case arabic
         case spanish
-        case portoguese
+        case portuguese
         case french
     }
 }

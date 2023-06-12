@@ -10,12 +10,16 @@ import Foundation
 import RxSwift
 
 protocol OWCommunityQuestionViewModelingInputs {
-    var conversationFetched: PublishSubject<SPConversationReadRM> { get }
+    var conversationFetched: PublishSubject<OWConversationReadRM> { get }
+    var triggerCustomizeQuestionLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
     var communityQuestion: Observable<String> { get }
+    var attributedCommunityQuestion: Observable<NSAttributedString> { get }
     var shouldShowView: Observable<Bool> { get }
+    var showContainer: Bool { get }
+    var customizeQuestionLabelUI: Observable<UILabel> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -29,15 +33,40 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
-    var conversationFetched = PublishSubject<SPConversationReadRM>()
-    var textChanged = PublishSubject<String>()
-    var _textChanged = BehaviorSubject<String?>(value: nil)
+    struct Metrics {
+        static let communityQuestionFontSize = 15.0
+        static let communityQuestionFont = OWFontBook.shared.font(style: .regular, size: Metrics.communityQuestionFontSize)
+    }
+
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeQuestionLabelUI = BehaviorSubject<UILabel?>(value: nil)
+
+    var triggerCustomizeQuestionLabelUI = PublishSubject<UILabel>()
+    var conversationFetched = PublishSubject<OWConversationReadRM>()
 
     let _communityQuestion = BehaviorSubject<String?>(value: nil)
     var communityQuestion: Observable<String> {
         _communityQuestion
             .unwrap()
     }
+
+    lazy var attributedCommunityQuestion: Observable<NSAttributedString> = {
+        communityQuestion
+            .distinctUntilChanged()
+            .map { question in
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
+
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .paragraphStyle: paragraphStyle,
+                    .font: Metrics.communityQuestionFont,
+                    .foregroundColor: OWColorPalette.shared.color(type: .textColor2,
+                                                                  themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+                ]
+
+                return NSAttributedString(string: question, attributes: attributes)
+            }
+    }()
 
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
@@ -46,6 +75,16 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
             .asObservable()
             .share(replay: 0)
     }
+
+    var customizeQuestionLabelUI: Observable<UILabel> {
+        return _triggerCustomizeQuestionLabelUI
+            .unwrap()
+            .asObservable()
+    }
+
+    lazy var showContainer: Bool = {
+        return style == .compact
+    }()
 
     fileprivate let style: OWCommunityQuestionsStyle
     fileprivate let disposeBag = DisposeBag()
@@ -76,6 +115,10 @@ fileprivate extension OWCommunityQuestionViewModel {
                 guard let self = self else { return }
                 self._communityQuestion.onNext(question)
             })
+            .disposed(by: disposeBag)
+
+        triggerCustomizeQuestionLabelUI
+            .bind(to: _triggerCustomizeQuestionLabelUI)
             .disposed(by: disposeBag)
 
     }
