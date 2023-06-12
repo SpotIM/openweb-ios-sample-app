@@ -22,7 +22,7 @@ protocol OWCommentCreationRegularViewViewModeling {
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { get }
 }
 
-class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewModeling, OWCommentCreationRegularViewViewModelingInputs, OWCommentCreationViewViewModelingOutputs {
+class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewModeling, OWCommentCreationRegularViewViewModelingInputs, OWCommentCreationRegularViewViewModelingOutputs {
     var inputs: OWCommentCreationRegularViewViewModelingInputs { return self }
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
@@ -41,7 +41,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }
 }
 
-fileprivate extension OWCommentCreationViewViewModel {
+fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
 
     }
