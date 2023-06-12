@@ -135,7 +135,7 @@ extension OWUILayer {
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings?.conversationSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentCreationData = OWCommentCreationRequiredData(article: article, commentCreationType: .comment)
+        let commentCreationData = OWCommentCreationRequiredData(article: article, settings: additionalSettings, commentCreationType: .comment)
 
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
