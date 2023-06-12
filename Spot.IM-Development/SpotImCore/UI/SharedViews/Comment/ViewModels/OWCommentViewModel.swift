@@ -22,8 +22,9 @@ protocol OWCommentViewModelingOutputs {
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
+    var shouldHideCommentContent: Observable<Bool> { get }
 
-    var comment: SPComment { get }
+    var comment: OWComment { get }
 }
 
 protocol OWCommentViewModeling {
@@ -50,14 +51,21 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
     var commentEngagementVM: OWCommentEngagementViewModeling
-    var comment: SPComment
+    var comment: OWComment
+
+    fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
+    var shouldHideCommentContent: Observable<Bool> {
+        _shouldHideCommentContent
+            .asObserver()
+    }
 
     init(data: OWCommentRequiredData) {
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
-        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? SPComment.Rank(), commentId: data.comment.id ?? "")
+        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? OWComment.Rank(), commentId: data.comment.id ?? "")
         comment = data.comment
+        dictateCommentContentVisibility(data: data)
     }
 
     init() {
@@ -65,6 +73,18 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
-        comment = SPComment()
+        comment = OWComment()
+    }
+}
+
+fileprivate extension OWCommentViewModel {
+    func dictateCommentContentVisibility(data: OWCommentRequiredData) {
+        guard let commentId = data.comment.id else { return }
+
+        let shouldHide = data.user.isMuted || // muted
+            data.comment.deleted || // deleted
+            SPUserSessionHolder.session.reportedComments[commentId] != nil // reported
+
+        self._shouldHideCommentContent.onNext(shouldHide)
     }
 }

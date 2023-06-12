@@ -9,43 +9,38 @@
 import Foundation
 
 #if NEW_API
-public struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
-    public var selectedCommentId: String?
+public struct OWConversationSettingsBuilder {
     public var style: OWConversationStyle
 
-    public init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
-        self.selectedCommentId = selectedCommentId
+    public init(style: OWConversationStyle = .regular) {
         self.style = style
-    }
-
-    @discardableResult public mutating func selectedCommentId(_ id: String?) -> OWConversationSettingsBuilder {
-        self.selectedCommentId = id
-        return self
     }
 
     @discardableResult public mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
         self.style = style
         return self
     }
+
+    public func build() -> OWConversationSettingsProtocol {
+        return OWConversationSettings(style: style)
+    }
 }
 #else
-struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
-    var selectedCommentId: String?
+struct OWConversationSettingsBuilder {
     var style: OWConversationStyle
 
-    init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
-        self.selectedCommentId = selectedCommentId
+    init(style: OWConversationStyle = .regular) {
         self.style = style
-    }
-
-    @discardableResult mutating func selectedCommentId(_ id: String?) -> OWConversationSettingsBuilder {
-        self.selectedCommentId = id
-        return self
     }
 
     @discardableResult mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
         self.style = style
         return self
     }
+
+    func build() -> OWConversationSettingsProtocol {
+        return OWConversationSettings(style: style)
+    }
 }
+
 #endif

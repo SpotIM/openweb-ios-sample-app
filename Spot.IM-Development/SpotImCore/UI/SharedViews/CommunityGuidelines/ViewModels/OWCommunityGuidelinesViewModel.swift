@@ -10,18 +10,18 @@ import Foundation
 import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
+    var triggerCustomizeTitleTextViewUI: PublishSubject<UITextView> { get }
+    var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
     var urlClicked: PublishSubject<URL> { get }
-    var titleTextViewWidthChanged: BehaviorSubject<CGFloat> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowViewAfterHeightChanged: Observable<Bool> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
-    var titleTextViewHeight: Observable<CGFloat> { get }
-    var titleTextViewHeightNoneRX: CGFloat { get }
+    var customizeTitleTextViewUI: Observable<UITextView> { get }
+    var customizeIconImageViewUI: Observable<UIImageView> { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -35,40 +35,34 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     struct Metrics {
         static let communityGuidelinesFontSize = 15.0
         static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "Read our")
-        static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "Community Guidelines")
+        static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "Community Guidelines").lowercased()
     }
 
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
 
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
+    fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+
+    var triggerCustomizeTitleTextViewUI = PublishSubject<UITextView>()
+    var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     let urlClicked = PublishSubject<URL>()
 
     var urlClickedOutput: Observable<URL> {
         urlClicked.asObservable()
     }
 
-    var titleTextViewHeightNoneRX: CGFloat = 0
-
-    var titleTextViewWidthChanged = BehaviorSubject<CGFloat>(value: 0)
-    fileprivate var widthObservable: Observable<CGFloat> {
-        titleTextViewWidthChanged
-            .distinctUntilChanged()
+    var customizeTitleTextViewUI: Observable<UITextView> {
+        return _triggerCustomizeTitleTextViewUI
+            .unwrap()
             .asObservable()
     }
 
-    var titleTextViewHeight: Observable<CGFloat> {
-        return Observable.combineLatest(communityGuidelinesHtmlAttributedString.unwrap(),
-                                        widthObservable) { htmlString, viewWidth in
-            return htmlString.height(withConstrainedWidth: viewWidth)
-        }
-        .asObservable()
-        .share(replay: 1)
-    }
-
-    var shouldShowViewAfterHeightChanged: Observable<Bool> {
-        return Observable.combineLatest(shouldShowView, titleTextViewHeight)
-            .map { $0.0 }
-            .share()
+    var customizeIconImageViewUI: Observable<UIImageView> {
+        return _triggerCustomizeIconImageViewUI
+            .unwrap()
+            .asObservable()
     }
 
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
@@ -83,8 +77,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive,
-                                                      internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
+            .observe(on: MainScheduler.asyncInstance)
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
@@ -126,11 +119,17 @@ fileprivate extension OWCommunityGuidelinesViewModel {
             })
             .disposed(by: disposeBag)
 
-        titleTextViewHeight
-            .subscribe(onNext: { [weak self] titleTextViewHeight in
-                guard let self = self else { return }
-                self.titleTextViewHeightNoneRX = titleTextViewHeight
-            })
+        triggerCustomizeIconImageViewUI
+            .bind(to: _triggerCustomizeIconImageViewUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeTitleTextViewUI
+            .flatMapLatest { [weak self] textView -> Observable<UITextView> in
+                guard let self = self else { return .empty() }
+                return self.communityGuidelinesHtmlAttributedString
+                    .map { _ in return textView }
+            }
+            .bind(to: _triggerCustomizeTitleTextViewUI)
             .disposed(by: disposeBag)
     }
 

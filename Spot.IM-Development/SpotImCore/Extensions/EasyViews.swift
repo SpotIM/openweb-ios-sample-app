@@ -334,8 +334,8 @@ extension UITextView {
         return self
     }
 
-    @discardableResult func textContainerInset(_ insets: UIEdgeInsets) -> Self {
-        self.textContainerInset = insets
+    @discardableResult func textContainerInset(_ textContainerInset: UIEdgeInsets) -> Self {
+        self.textContainerInset = textContainerInset
         return self
     }
 }

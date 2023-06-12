@@ -11,17 +11,19 @@ import UIKit
 class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     fileprivate struct Metrics {
-        static let avatarSize: CGFloat = 60
+        static let avatarSize: CGFloat = 36.0
         static let userNameWidthRatio: CGFloat = 1/6
-        static let userNameHeight: CGFloat = 15
+        static let userNameHeight: CGFloat = 13
         static let timeWidthRatio: CGFloat = 1/4
-        static let timeHeight: CGFloat = 10
-        static let spaceBetweenUserNameAndTime: CGFloat = 10
+        static let timeHeight: CGFloat = 12
+        static let spaceBetweenUserNameAndTime: CGFloat = 5
         static let messageHeight: CGFloat = 10
         static let messageLineNumbers: Int = 3
         static let spaceBetweenMessageLines: CGFloat = 5
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 20
+        static let depthOffset: CGFloat = 23
+        static let skeletonViewIdentifier = "comment_skeleton_view_id"
     }
 
     fileprivate var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
@@ -130,6 +132,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupUI()
+        self.applyAccessibility()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -138,8 +141,11 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     override func configure(with viewModel: OWCellViewModel) {
         guard let vm = viewModel as? OWCommentSkeletonShimmeringCellViewModeling else { return }
-        // In this skeleton shimmering cell we will probably won't do anything with view model, but still let's save it
         self.viewModel = vm
+
+        mainSkeletonShimmeringView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().inset(Metrics.horizontalOffset + CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
+        }
 
         // Start shimmering effect
         mainSkeletonShimmeringView.addSkeletonShimmering()
@@ -164,4 +170,7 @@ fileprivate extension OWCommentSkeletonShimmeringCell {
         }
     }
 
+    func applyAccessibility() {
+        mainSkeletonShimmeringView.accessibilityIdentifier = Metrics.skeletonViewIdentifier
+    }
 }

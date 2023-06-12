@@ -30,6 +30,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
@@ -38,10 +39,14 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
 
-    init(router: OWRoutering! = nil, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil,
+         conversationData: OWConversationRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
         self.router = router
         self.conversationData = conversationData
         self.actionsCallbacks = actionsCallbacks
+        self.authenticationManager = authenticationManager
     }
 
     // swiftlint:disable function_body_length
@@ -89,17 +94,21 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         }
 
         // CTA tapped from conversation screen
-        let ctaCommentCreationTapped = conversationVM.outputs.ctaCommentCreationTapped
-            .map { [weak self] _ -> OWCommentCreationRequiredData? in
+        let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
+            .observe(on: MainScheduler.instance)
+            .map { [weak self] type -> OWCommentCreationRequiredData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
                 guard let self = self else { return nil }
-                return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: .comment)
+                return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: type)
             }
             .unwrap()
 
         // Coordinate to comment creation
-        let coordinateCommentCreationObservable = Observable.merge(ctaCommentCreationTapped,
-                                                         deepLinkToCommentCreation.unwrap().asObservable())
+        // TODO - handle read only mode
+        let coordinateCommentCreationObservable = Observable.merge(
+            openCommentCreationObservable,
+            deepLinkToCommentCreation.unwrap().asObservable())
+
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
@@ -161,7 +170,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .urlClickedOutput
 
         // Coordinate to safari tab
-        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
+        let coordinateToSafariObservables = Observable.merge(
+            communityGuidelinesURLTapped,
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile,
+            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput,
+            conversationVM.outputs.conversationViewVM.outputs.openProfile
+        )
+
         let coordinateToSafariObservable = coordinateToSafariObservables
             .filter { [weak self] _ in
                 guard let self = self else { return false }
@@ -236,6 +251,102 @@ fileprivate extension OWConversationCoordinator {
 
     func setupObservers(forViewModel viewModel: OWConversationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+
+        // Set customization elements
+        setupCustomizationElements(forViewModel: viewModel)
+    }
+
+    func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {
+        // TODO: need to complete all the customize elements
+
+        let communityGuidelinesCustomizeTitle = viewModel.outputs.communityGuidelinesCellViewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.customizeTitleTextViewUI
+
+        let communityGuidelinesCustomizeIcon = viewModel.outputs.communityGuidelinesCellViewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.customizeIconImageViewUI
+
+        let customizationElementsObservables = Observable.merge(
+
+            viewModel.outputs.articleDescriptionViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.articleDescription(element: .title(label: $0)) },
+
+            viewModel.outputs.articleDescriptionViewModel
+                .outputs.customizeAuthorLabelUI
+                .map { OWCustomizableElement.articleDescription(element: .author(label: $0)) },
+
+            viewModel.outputs.articleDescriptionViewModel
+                .outputs.customizeImageViewUI
+                .map { OWCustomizableElement.articleDescription(element: .image(imageView: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.summery(element: .commentsTitle(label: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.onlineViewingUsersVM
+                .outputs.customizeIconImageUI
+                .map { OWCustomizableElement.onlineUsers(element: .icon(image: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.onlineViewingUsersVM
+                .outputs.customizeCounterLabelUI
+                .map { OWCustomizableElement.onlineUsers(element: .counter(label: $0)) },
+
+            viewModel.outputs.conversationSummaryViewModel
+                .outputs.conversationSortVM
+                .outputs.customizeSortByLabelUI
+                .map { OWCustomizableElement.summery(element: .sortByTitle(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentCreationEntryViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.commentCreationCTA(element: .placeholder(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentCreationEntryViewModel
+                .outputs.customizeContainerViewUI
+                .map { OWCustomizableElement.commentCreationCTA(element: .container(view: $0)) },
+
+//            viewModel.outputs.communityQuestionCellViewModel
+//                .outputs.communityQuestionViewModel
+//                .outputs.customizeQuestionLabelUI
+//                .map { OWCustomizableElement.communityQuestionTitle(label: $0) },
+
+            Observable.combineLatest(communityGuidelinesCustomizeIcon,
+                                     communityGuidelinesCustomizeTitle)
+                .flatMap { icon, title in
+                    Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(icon: icon, textView: title))) },
+
+            communityGuidelinesCustomizeTitle
+                .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) },
+
+            viewModel.outputs.conversationEmptyStateViewModel
+                .outputs.customizeIconImageViewUI
+                .map { OWCustomizableElement.emptyState(element: .icon(image: $0)) },
+
+            viewModel.outputs.conversationEmptyStateViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.emptyState(element: .title(label: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentingReadOnlyViewModel
+                .outputs.customizeIconImageViewUI
+                .map { OWCustomizableElement.commentingEnded(element: .icon(image: $0)) },
+
+            viewModel.outputs.commentingCTAViewModel
+                .outputs.commentingReadOnlyViewModel
+                .outputs.customizeTitleLabelUI
+                .map { OWCustomizableElement.commentingEnded(element: .title(label: $0)) }
+        )
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
@@ -246,7 +357,13 @@ fileprivate extension OWConversationCoordinator {
             .outputs.closeConversation
             .map { OWViewActionCallbackType.closeConversationPressed }
 
-        Observable.merge(closeConversationPressed)
+        let openPublisherProfile = Observable.merge(
+            viewModel.outputs.openPublisherProfile,
+            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
+        )
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(closeConversationPressed, openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

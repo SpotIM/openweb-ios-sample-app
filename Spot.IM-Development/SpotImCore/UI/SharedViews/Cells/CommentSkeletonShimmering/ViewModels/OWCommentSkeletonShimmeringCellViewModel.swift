@@ -15,6 +15,7 @@ protocol OWCommentSkeletonShimmeringCellViewModelingInputs {
 
 protocol OWCommentSkeletonShimmeringCellViewModelingOutputs {
     var id: String { get }
+    var depth: Int { get }
 }
 
 protocol OWCommentSkeletonShimmeringCellViewModeling: OWCellViewModel {
@@ -30,6 +31,12 @@ class OWCommentSkeletonShimmeringCellViewModel: OWCommentSkeletonShimmeringCellV
 
     // Unique identifier
     let id: String = UUID().uuidString
+
+    let depth: Int
+
+    init(depth: Int = 0) {
+        self.depth = depth
+    }
 }
 
 extension OWCommentSkeletonShimmeringCellViewModel {

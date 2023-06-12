@@ -66,7 +66,7 @@ class OWCommentCreationEntryView: UIView {
         self.viewModel = viewModel
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
         setupObservers()
-        setupViews()
+        setupUI()
     }
 
     private func applyAccessibility() {
@@ -76,7 +76,12 @@ class OWCommentCreationEntryView: UIView {
 }
 
 fileprivate extension OWCommentCreationEntryView {
-    func setupViews() {
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(label)
+        viewModel.inputs.triggerCustomizeContainerViewUI.onNext(labelContainer)
+    }
+
+    func setupUI() {
         applyAccessibility()
         addSubview(userAvatarView)
         userAvatarView.OWSnp.makeConstraints { make in
@@ -86,7 +91,9 @@ fileprivate extension OWCommentCreationEntryView {
 
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.height.equalTo(userAvatarView.OWSnp.height)
+            make.trailing.equalToSuperview()
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
 
@@ -109,7 +116,7 @@ fileprivate extension OWCommentCreationEntryView {
                 self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
                 self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                // TODO: custon UI
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
 }

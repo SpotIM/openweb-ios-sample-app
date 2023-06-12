@@ -19,6 +19,7 @@ class OWConversationSummaryView: UIView {
         static let separatorHeight: CGFloat = 1.0
         static let separatorWidth: CGFloat = 1.0
         static let identifier = "conversation_header_view_id"
+        static let commentsCountLabelIdentifier = "comments_count_label_id"
     }
 
     fileprivate lazy var commentsCountLabel: UILabel = {
@@ -58,6 +59,7 @@ class OWConversationSummaryView: UIView {
         self.accessibilityIdentifier = Metrics.identifier
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -137,7 +139,11 @@ fileprivate extension OWConversationSummaryView {
     }
 
     func updateCustomUI() {
-        viewModel.inputs.customizeCounterLabelUI.onNext(commentsCountLabel)
+        viewModel.inputs.triggerCustomizeCounterLabelUI.onNext(commentsCountLabel)
+    }
+
+    func applyAccessibility() {
+        commentsCountLabel.accessibilityIdentifier = Metrics.commentsCountLabelIdentifier
     }
 }
 
