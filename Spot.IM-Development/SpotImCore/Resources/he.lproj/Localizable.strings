@@ -147,8 +147,7 @@
 "ReportReasonHelpUsTitle" = "כדי לעזור לנו להבין את הבעיה, אנא בחר איזו מהאפשרויות הבאות מתארת את ההפרה בצורה הטובה ביותר (למידע נוסף)";
 "ReportReasonHelpUsClickText" = "(למידע נוסף)";
 "Community Guidelines" = "הנחיות הקהילה";
-
-"TryAgain" = "Try again";
-"AdditionalInfoTitle" = "Additional information";
-"ReportSubmissionFailedTitle" = "Report Submission Failed";
-"ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";
+"TryAgain" = "נסה שנית";
+"AdditionalInfoTitle" = "מידע נוסף";
+"ReportSubmissionFailedTitle" = "הגשת הדוח נכשלה";
+"ReportSubmissionFailedMessage" = "לא ניתן היה להגיש את הדוח שלך. אנא בדוק את חיבור האינטרנט שלך ונסה שוב מאוחר יותר.";
