@@ -28,6 +28,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     fileprivate struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let errorAlertActionKey = "Got it"
+        static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
     fileprivate let commentId: OWCommentId
@@ -124,6 +125,7 @@ fileprivate extension OWReportReasonCoordinator {
                     .map { (placeholderText, textViewText, $0) }
                     .take(1)
             })
+            .delay(.milliseconds(Metrics.delayTapForOpenAdditionalInfo), scheduler: MainScheduler.asyncInstance)
             .observe(on: MainScheduler.instance)
             .map { placeholderText, textViewText, shouldShowCounter -> OWAdditionalInfoViewViewModel in
                 return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
@@ -273,15 +275,17 @@ fileprivate extension OWReportReasonCoordinator {
                 let visableViewController = router.navigationController?.visibleViewController
                 let isReportReasonVC = visableViewController?.isKind(of: OWReportReasonVC.self) ?? false
 
+                // For dismissing cancel and thanks screens
                 if !isReportReasonVC {
                     visableViewController?.dismiss(animated: true)
                 }
 
-                if router.navigationController?.viewControllers.count ?? 1 > 1 {
+                let isRouterContainOnlyReportReason = router.navigationController?.viewControllers.count ?? 1 == 1
+                if isRouterContainOnlyReportReason {
+                    router.dismiss(animated: true, completion: self.reportReasonPopped)
+                } else {
                     router.pop(toViewController: controllerToPopTo, animated: false)
                     router.pop(popStyle: .dismissStyle, animated: true)
-                } else {
-                    router.dismiss(animated: true, completion: self.reportReasonPopped)
                 }
             })
             .disposed(by: disposeBag)
