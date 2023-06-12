@@ -89,11 +89,6 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         return UILabel()
             .backgroundColor(.clear)
             .numberOfLines(0)
-            .attributedText(viewModel.outputs.tableViewHeaderAttributedText)
-            .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
-                guard let self = self else { return }
-                self.viewModel.inputs.learnMoreTap.onNext()
-            }
     }()
 
     fileprivate let viewModel: OWReportReasonViewViewModeling
@@ -198,6 +193,18 @@ fileprivate extension OWReportReasonView {
                 self.tableViewHeaderView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.tableViewHeaderAttributedText
+            .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self else { return }
+                self.tableViewHeaderLabel
+                    .attributedText(attributedText)
+                    .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
+                        guard let self = self else { return }
+                        self.viewModel.inputs.learnMoreTap.onNext()
+                    }
             })
             .disposed(by: disposeBag)
 

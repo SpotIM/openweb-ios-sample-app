@@ -145,7 +145,7 @@
 "ReportReasonThanksTitle" = "תודה על המשוב!";
 "ReportReasonThanksSubtitle" = "תישלח לך הודעת דוא\"ל עם החלטת ההנהלה";
 "ReportReasonHelpUsTitle" = "כדי לעזור לנו להבין את הבעיה, אנא בחר איזו מהאפשרויות הבאות מתארת את ההפרה בצורה הטובה ביותר (למידע נוסף)";
-"ReportReasonHelpUsClickText" = "למידע נוסף";
+"ReportReasonHelpUsClickText" = "(למידע נוסף)";
 "Community Guidelines" = "הנחיות הקהילה";
 
 "TryAgain" = "Try again";

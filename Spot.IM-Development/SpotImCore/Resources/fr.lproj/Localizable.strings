@@ -122,7 +122,7 @@
 "ReportReasonThanksTitle" = "Merci pour vos commentaires!";
 "Community Guidelines" = "Règlement de la communauté";
 "ReportReasonHelpUsTitle" = "Pour nous aider à comprendre le problème, veuillez choisir parmi les options suivantes celle qui décrit le mieux l'infraction (en savoir plus)";
-"ReportReasonHelpUsClickText" = "en savoir plus";
+"ReportReasonHelpUsClickText" = "(en savoir plus)";
 "false_information_subtitle" = "Désinformation, informations erronées, théorie de la conspiration ou tout autre type d'information trompeuse";
 "false_information_title" = "Fausse information";
 "hate_speech_subtitle" = "Racisme, misogynie, idéologie et attaque contre le sexe ou tout type d'attaque de groupe";
