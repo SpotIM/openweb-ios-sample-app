@@ -51,15 +51,24 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var shareClicked = PublishSubject<Void>()
     var shareCommentUrl: Observable<URL> {
         shareClicked
-            .flatMap({ [weak self] _ -> Observable<OWShareLink> in
+            .flatMap({ [weak self] _ -> Observable<Event<OWShareLink>> in
                 guard let self = self else { return .empty() }
                 return self.sharedServiceProvider.netwokAPI()
                     .conversation
                     .commentShare(id: self.commentId, parentId: self.parentCommentId)
                     .response
-
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
             })
-            .map { shareLink -> URL? in shareLink.reference }
+            .map { event -> URL? in
+                switch event {
+                case .next(let shareLink):
+                    return shareLink.reference
+                case .error(_):
+                    return nil
+                default:
+                    return nil
+                }
+            }
             .unwrap()
             .asObservable()
     }

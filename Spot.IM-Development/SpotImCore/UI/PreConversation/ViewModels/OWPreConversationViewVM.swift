@@ -490,30 +490,30 @@ fileprivate extension OWPreConversationViewViewModel {
         // Responding to share url from comment cells VMs
         commentCellsVmsObservable
             .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let replyClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.shareCommentUrl
                 }
-                return Observable.merge(replyClickOutputObservable)
+                return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shareUrl in
-                guard let self = self else { return }
-                self.servicesProvider.presenterService()
+            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
-                    .subscribe { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected:
-                            // Do nothing
-                            break
-                        }
-                    }
-                    .disposed(by: self.disposeBag)
-            })
+
+            }
+            .subscribe { result in
+                switch result {
+                case .completion:
+                    // Do nothing
+                    break
+                case .selected:
+                    // Do nothing
+                    break
+                }
+            }
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
