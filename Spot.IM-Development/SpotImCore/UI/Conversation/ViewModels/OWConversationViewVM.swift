@@ -40,6 +40,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var shouldShowError: Observable<Void> { get }
+    var openReportReason: Observable<String> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -60,6 +61,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let willDisplayCellThrottle: Int = 700 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
+        static let reportActionKey = "Report"
+        static let cancelActionKey = "Cancel"
     }
 
     fileprivate var postId: OWPostId {
@@ -255,6 +258,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return _isEmpty
             .share(replay: 1)
     }()
+
+    fileprivate var _openReportReason = PublishSubject<String>()
+    var openReportReason: Observable<String> {
+        return _openReportReason
+            .asObservable()
+    }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
@@ -876,8 +885,12 @@ fileprivate extension OWConversationViewViewModel {
                             // Do nothing
                             break
                         case .selected(let action):
-                            // TODO: handle selection
-                            break
+                            switch action.title {
+                            case OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey):
+                                guard let commentId = comment.id else { return }
+                                self._openReportReason.onNext(commentId)
+                            default: break
+                            }
                         }
                     })
                     .disposed(by: self.disposeBag)

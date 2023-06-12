@@ -147,6 +147,7 @@
 "copyright_infringement_subtitle" = "Utilisation de votre travail protégé par le droit d'auteur sans autorisation";
 "copyright_infringement_title" = "Violation des droits d'auteur";
 
+"TryAgain" = "Try again";
 "AdditionalInfoTitle" = "Additional information";
 "ReportSubmissionFailedTitle" = "Report Submission Failed";
 "ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";

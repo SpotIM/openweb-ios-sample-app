@@ -25,6 +25,6 @@ struct SPConfigurationSDKStatus: Decodable {
     let fetchImageBaseUrl: String
     let shouldShowCommentCounter: Bool
     let commentCounterCharactersLimit: Int
-    let shouldShowReportReasonsCounter: Bool
-    let reportReasonsCounterMaxLength: Int
+    let shouldShowReportReasonsCounter: Bool?
+    let reportReasonsCounterMaxLength: Int?
 }
