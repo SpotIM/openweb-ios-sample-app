@@ -329,10 +329,10 @@ fileprivate extension OWReportReasonCoordinator {
         // Close Report reason from Thanks Screen - Independent
         closeThanksViewTapped
             .map { OWViewActionCallbackType.closeReportReason }
-            .subscribe { [weak self] viewActionType in
+            .subscribe(onNext: { [weak self] viewActionType in
                 guard let self = self else { return }
                 self.viewActionsService.append(viewAction: viewActionType)
-            }
+            })
             .disposed(by: disposeBag)
 
         // Open Additional information - Independent
@@ -384,10 +384,10 @@ fileprivate extension OWReportReasonCoordinator {
             }
             .voidify()
             .map { OWViewActionCallbackType.closeReportReason }
-            .subscribe { [weak self] viewActionType in
+            .subscribe(onNext: { [weak self] viewActionType in
                 guard let self = self else { return }
                 self.viewActionsService.append(viewAction: viewActionType)
-            }
+            })
             .disposed(by: disposeBag)
 
         // Open cancel view - Independent
