@@ -12,8 +12,58 @@ import RxCocoa
 
 class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
+        static let horizontalOffset: CGFloat = 16.0
+        static let tableViewAnimationDuration: Double = 0.25
         static let identifier = "comment_thread_view_id"
+
+        static let highlightScrollAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDelay: Double = 1.0
+        static let highlightBackgroundColorAlpha: Double = 0.2
+
+        static let tableViewRowEstimatedHeight: Double = 130.0
     }
+
+    fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+            guard let self = self else { return UITableViewCell() }
+
+            let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
+            cell.configure(with: item.viewModel)
+
+            return cell
+        })
+
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
+        dataSource.animationConfiguration = animationConfiguration
+        return dataSource
+    }()
+
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+            .enforceSemanticAttribute()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
+            .separatorStyle(.none)
+
+        tableView.refreshControl = tableViewRefreshControl
+
+        tableView.allowsSelection = false
+
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
+
+        // Register cells
+        for option in OWCommentThreadCellOption.allCases {
+            tableView.register(cellClass: option.cellClass)
+        }
+
+        return tableView
+    }()
+
+    fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        return refresh
+    }()
 
     fileprivate let viewModel: OWCommentThreadViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -25,6 +75,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentThreadViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
         applyAccessibility()
@@ -39,11 +90,85 @@ fileprivate extension OWCommentThreadView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        // TODO: Remove the ugly green when actually starting to work on the UI, this is only for integration purposes at the moment
-        self.backgroundColor = .green
+        self.addSubview(tableView)
+        tableView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
 
+        viewModel.outputs.commentThreadDataSourceSections
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                self?.tableViewRefreshControl.endRefreshing()
+            })
+            .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
+            .disposed(by: disposeBag)
+
+        tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndDecelerating
+                    .asObservable()
+                    .take(1)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.inputs.pullToRefresh.onNext()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.performTableViewAnimation
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                    }
+                })
+                .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                guard let self = self else { return }
+                UIView.animate(withDuration: Metrics.highlightScrollAnimationDuration, animations: {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .middle, animated: false)
+                }) { _ in
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // TODO: perform this animation in the cell view layer
+        viewModel.outputs.highlightCellIndex
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] index in
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+                    guard let self = self, let cell = self.tableView.cellForRow(at: cellIndexPath) else { return }
+                    let prevBackgroundColor = cell.backgroundColor
+                    UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
+                        cell.backgroundColor = OWColorPalette.shared.color(
+                            type: .brandColor,
+                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
+                        ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
+                    }) { _ in
+                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
+                            cell.backgroundColor = prevBackgroundColor
+                        }
+                    }
+                })
+                .disposed(by: disposeBag)
     }
 }

@@ -9,24 +9,27 @@
 import Foundation
 import UIKit
 
-enum OWConversationCellOption: CaseIterable {
+enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
     static var allCases: [OWConversationCellOption] {
         return [.comment(viewModel: OWCommentCellViewModel.stub()),
                 .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
-                .reply(viewModel: OWReplyCellViewModel.stub()),
+                .commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel.stub()),
                 .ad(viewModel: OWAdCellViewModel.stub()),
                 .spacer(viewModel: OWSpacerCellViewModel.stub()),
                 .communityQuestion(viewModel: OWCommunityQuestionCellViewModel.stub()),
-                .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub())]
+                .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub()),
+                // TODO: Decide if we need an OWConversationEmptyState cell/cellVM after final design in all orientations
+                .conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModel.stub())]
     }
 
     case comment(viewModel: OWCommentCellViewModeling)
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
-    case reply(viewModel: OWReplyCellViewModeling)
+    case commentThreadActions(viewModel: OWCommentThreadActionsCellViewModeling)
     case ad(viewModel: OWAdCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
     case communityQuestion(viewModel: OWCommunityQuestionCellViewModeling)
     case communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModeling)
+    case conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModeling)
 }
 
 extension OWConversationCellOption {
@@ -36,7 +39,7 @@ extension OWConversationCellOption {
             return viewModel
         case .commentSkeletonShimmering(let viewModel):
             return viewModel
-        case .reply(let viewModel):
+        case .commentThreadActions(let viewModel):
             return viewModel
         case .ad(let viewModel):
             return viewModel
@@ -46,6 +49,8 @@ extension OWConversationCellOption {
             return viewModel
         case .communityGuidelines(let viewModel):
             return viewModel
+        case .conversationEmptyState(viewModel: let viewModel):
+            return viewModel
         }
     }
 
@@ -53,11 +58,11 @@ extension OWConversationCellOption {
         // TODO: Return the actual cell type once developed
         switch self {
         case .comment:
-            return UITableViewCell.self
+            return OWCommentCell.self
         case .commentSkeletonShimmering:
             return OWCommentSkeletonShimmeringCell.self
-        case .reply:
-            return UITableViewCell.self
+        case .commentThreadActions:
+            return OWCommentThreadActionCell.self
         case .ad:
             return UITableViewCell.self
         case .spacer:
@@ -66,6 +71,8 @@ extension OWConversationCellOption {
             return OWCommunityQuestionCell.self
         case .communityGuidelines:
             return OWCommunityGuidelinesCell.self
+        case .conversationEmptyState:
+            return OWConversationEmptyStateCell.self
         }
     }
 }
@@ -77,13 +84,11 @@ extension OWConversationCellOption: Equatable {
         // This is necessary so we won't have UI animations/flickering when loading the same data.
         switch self {
         case .comment(let viewModel):
-            return ""
-//            return viewModel.outputs.id
+            return viewModel.outputs.id
         case .commentSkeletonShimmering(let viewModel):
             return viewModel.outputs.id
-        case .reply(let viewModel):
-            return ""
-//            return viewModel.outputs.id
+        case .commentThreadActions(let viewModel):
+            return viewModel.outputs.id
         case .ad(let viewModel):
             return ""
 //            return viewModel.outputs.id
@@ -92,6 +97,8 @@ extension OWConversationCellOption: Equatable {
         case .communityQuestion(let viewModel):
             return viewModel.outputs.id
         case .communityGuidelines(let viewModel):
+            return viewModel.outputs.id
+        case .conversationEmptyState(viewModel: let viewModel):
             return viewModel.outputs.id
         }
     }
@@ -102,7 +109,7 @@ extension OWConversationCellOption: Equatable {
             return lhs.identifier == rhs.identifier
         case (.commentSkeletonShimmering(_), .commentSkeletonShimmering(_)):
             return lhs.identifier == rhs.identifier
-        case (.reply(_), .reply(_)):
+        case (.commentThreadActions(_), .commentThreadActions(_)):
             return lhs.identifier == rhs.identifier
         case (.ad(_), .ad(_)):
             return lhs.identifier == rhs.identifier

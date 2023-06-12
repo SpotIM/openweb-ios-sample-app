@@ -1,5 +1,5 @@
 //
-//  OWPreConversationClosedPlaceholderView.swift
+//  OWCommentingReadOnlyView.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 28/03/2023.
@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationClosedPlaceholderView: UIView {
+class OWCommentingReadOnlyView: UIView {
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 15
         static let labelLeadingOffset: CGFloat = 4
@@ -18,7 +18,7 @@ class OWPreConversationClosedPlaceholderView: UIView {
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
-       return UIImageView(image: UIImage(spNamed: "time-icon", supportDarkMode: true))
+       return UIImageView(image: UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true))
             .enforceSemanticAttribute()
     }()
 
@@ -30,12 +30,15 @@ class OWPreConversationClosedPlaceholderView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate let disposeBag = DisposeBag()
+    fileprivate var viewModel: OWCommentingReadOnlyViewModeling!
+    fileprivate var disposeBag = DisposeBag()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
+    init(with viewModel: OWCommentingReadOnlyViewModeling) {
+        super.init(frame: .zero)
+        disposeBag = DisposeBag()
+        self.viewModel = viewModel
         setupObservers()
+        setupUI()
     }
 
     required init?(coder: NSCoder) {
@@ -43,19 +46,21 @@ class OWPreConversationClosedPlaceholderView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationClosedPlaceholderView {
-    func setupViews() {
+fileprivate extension OWCommentingReadOnlyView {
+    func setupUI() {
         self.enforceSemanticAttribute()
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.iconSize)
         }
 
         self.addSubview(label)
         label.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(iconImageView.OWSnp.trailing).inset(-Metrics.labelLeadingOffset)
+            make.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.labelLeadingOffset)
         }
     }
 
@@ -66,8 +71,14 @@ fileprivate extension OWPreConversationClosedPlaceholderView {
                 guard let self = self else { return }
 
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
-                self.iconImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
+                self.iconImageView.image = UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true)
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(iconImageView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(label)
     }
 }

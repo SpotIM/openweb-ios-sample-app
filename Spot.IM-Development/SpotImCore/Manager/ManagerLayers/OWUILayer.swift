@@ -178,7 +178,7 @@ extension OWUILayer {
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings?.conversationSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentThreadData = OWCommentThreadRequiredData(commentId: commentId)
+        let commentThreadData = OWCommentThreadRequiredData(article: article, commentId: commentId)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,

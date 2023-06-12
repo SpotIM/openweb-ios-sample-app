@@ -51,7 +51,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate var readMoreRange: NSRange? = nil
     fileprivate var availableUrlsRange: OWRangeURLsMapper
 
-    init(comment: SPComment, collapsableTextLineLimit: Int) {
+    init(comment: OWComment, collapsableTextLineLimit: Int) {
         self.collapsableTextLineLimit = collapsableTextLineLimit
         self.availableUrlsRange = [:]
         _comment.onNext(comment)
@@ -62,8 +62,8 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         OWSharedServicesProvider.shared.themeStyleService().style
     }()
 
-    fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
-    fileprivate var comment: Observable<SPComment> {
+    fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
+    fileprivate var comment: Observable<OWComment> {
         _comment.unwrap()
     }
 

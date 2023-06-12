@@ -13,7 +13,8 @@ class OWSpacerView: UIView {
     fileprivate struct Metrics {
         static let height: CGFloat = 1.0
         static let verticalPadding: CGFloat = 16
-        static let horizontalPadding: CGFloat = 12
+        static let horizontalPadding: CGFloat = 16
+        static let horizontalCommunityPadding: CGFloat = 12
     }
 
     fileprivate lazy var seperatorView: UIView = {
@@ -55,15 +56,16 @@ extension OWSpacerView {
 
         if viewModel.outputs.shouldShowCommentStyle {
             seperatorView.OWSnp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
+                make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
+                make.trailing.equalToSuperview().offset(-Metrics.horizontalPadding)
                 make.top.equalToSuperview().offset(Metrics.verticalPadding)
                 make.bottom.equalToSuperview().offset(-Metrics.verticalPadding)
                 make.height.equalTo(Metrics.height)
             }
         } else if viewModel.outputs.shouldShowCommunityStyle {
             seperatorView.OWSnp.makeConstraints { make in
-                make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
-                make.trailing.equalToSuperview().offset(-Metrics.horizontalPadding)
+                make.leading.equalToSuperview().offset(Metrics.horizontalCommunityPadding)
+                make.trailing.equalToSuperview().offset(-Metrics.horizontalCommunityPadding)
                 make.bottom.top.equalToSuperview()
                 make.height.equalTo(Metrics.height)
             }

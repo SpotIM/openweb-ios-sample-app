@@ -10,7 +10,7 @@
 
 import UIKit
 
-enum OWTestingRxTableViewCellOption: CaseIterable {
+enum OWTestingRxTableViewCellOption: CaseIterable, OWUpdaterProtocol {
     static var allCases: [OWTestingRxTableViewCellOption] {
         return [.red(viewModel: OWTestingRedCellViewModel()),
                 .blue(viewModel: OWTestingBlueCellViewModel()),

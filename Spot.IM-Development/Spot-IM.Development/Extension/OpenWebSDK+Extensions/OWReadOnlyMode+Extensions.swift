@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 import SpotImCore
 
 #if NEW_API

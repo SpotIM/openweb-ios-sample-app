@@ -200,7 +200,8 @@ fileprivate extension OWLocalizationManager {
                     let languageCode = serverLocale.languageCode ?? OWSupportedLanguage.english.rawValue
                     supportedLanguage = OWSupportedLanguage(rawValue: languageCode) ?? OWSupportedLanguage.english
                 case .useDevice:
-                    if let languageCode = Locale.current.languageCode,
+                    if let preferredIdentifier = Locale.preferredLanguages.first,
+                       let languageCode = Locale(identifier: preferredIdentifier).languageCode,
                        let language = OWSupportedLanguage(rawValue: languageCode) {
                         supportedLanguage = language
                     } else {
@@ -242,7 +243,11 @@ fileprivate extension OWLocalizationManager {
                         locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
                     }
                 case .useDevice:
-                    locale = Locale.current
+                    if let preferredIdentifier = Locale.preferredLanguages.first {
+                        locale = Locale(identifier: preferredIdentifier)
+                    } else {
+                        locale = Locale.current
+                    }
                 case .use(locale: let localeToUse):
                     locale = localeToUse
                 }

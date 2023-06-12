@@ -13,6 +13,7 @@ import UIKit
 protocol OWAvatarViewModelingInputs {
     var tapAvatar: PublishSubject<Void> { get }
     var userInput: BehaviorSubject<SPUser?> { get }
+    var shouldBlockAvatar: BehaviorSubject<Bool> { get } // showing default avatar image and disable tap
 }
 
 protocol OWAvatarViewModelingOutputs {
@@ -36,7 +37,14 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     var userInput = BehaviorSubject<SPUser?>(value: nil)
 
+    var shouldBlockAvatar = BehaviorSubject<Bool>(value: false)
+
     var tapAvatar = PublishSubject<Void>()
+    var avatarTapped: Observable<Void> {
+        Observable.combineLatest(tapAvatar, shouldBlockAvatar)
+            .filter { !$1 }
+            .voidify()
+    }
 
     fileprivate let imageURLProvider: OWImageProviding
     fileprivate let sharedServicesProvider: OWSharedServicesProviding
@@ -61,11 +69,11 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }()
 
     var imageType: Observable<OWImageType> {
-        self.user
-            .flatMap { [weak self] user -> Observable<URL?> in
+        Observable.combineLatest(self.user, self.shouldBlockAvatar.asObserver())
+            .flatMap { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
                 guard let self = self,
                       let imageId = user.imageId,
-                      !user.isMuted
+                      !shouldBlockAvatar
                 else { return .empty() }
 
                 return self.imageURLProvider.imageURL(with: imageId, size: nil)
@@ -116,7 +124,7 @@ fileprivate extension OWAvatarViewModel {
         let profileOptionToUse = profileOptionToUse()
 
         // Check if sdk profile should be opened
-        let shouldOpenSDKProfile: Observable<Void> = tapAvatar
+        let shouldOpenSDKProfile: Observable<Void> = avatarTapped
             .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> Bool in
                 if case .SDKProfile = profileOptionToUse {
                     return true
@@ -150,6 +158,12 @@ fileprivate extension OWAvatarViewModel {
         // Create URL for user profie with token
         let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
             .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                // Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
+            }
+            .filter { !$0 } // Do not continue if needed to authenticate
             .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()
@@ -186,7 +200,7 @@ fileprivate extension OWAvatarViewModel {
             .disposed(by: disposeBag)
 
         // Open publisher profile if needed
-        tapAvatar
+        avatarTapped
             .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> String? in
                 switch (profileOptionToUse) {
                 case .publisherProfile(let ssoPublisherId):
