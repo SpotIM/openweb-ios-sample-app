@@ -57,9 +57,8 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                                                                                  presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
 
-        // router.start()
-
         if router.isEmpty() {
+            router.start()
             router.setRoot(reportReasonVC, animated: false, dismissCompletion: reportReasonPopped)
         } else {
             router.push(reportReasonVC,
@@ -192,12 +191,10 @@ fileprivate extension OWReportReasonCoordinator {
                 let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
                 let reportReasonThanksVC = OWReportReasonThanksVC(reportReasonThanksViewViewModel: reportReasonThanksViewVM)
                 switch self.presentationalMode {
-                case .present(style: .fullScreen):
-                    reportReasonThanksVC.modalPresentationStyle = .fullScreen
-                case .present(style: .pageSheet):
-                    reportReasonThanksVC.modalPresentationStyle = .pageSheet
+                case .present(let style):
+                    reportReasonThanksVC.modalPresentationStyle = style.toOSModalPresentationStyle
                 default:
-                    reportReasonThanksVC.modalPresentationStyle = .fullScreen
+                    reportReasonThanksVC.modalPresentationStyle = .none
                 }
                 router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
                 return reportReasonThanksViewVM.outputs.closeReportReasonThanksTapped
@@ -280,8 +277,12 @@ fileprivate extension OWReportReasonCoordinator {
                     visableViewController?.dismiss(animated: true)
                 }
 
-                router.pop(toViewController: controllerToPopTo, animated: false)
-                router.pop(popStyle: .dismissStyle, animated: true)
+                if router.navigationController?.viewControllers.count ?? 1 > 1 {
+                    router.pop(toViewController: controllerToPopTo, animated: false)
+                    router.pop(popStyle: .dismissStyle, animated: true)
+                } else {
+                    router.dismiss(animated: true, completion: self.reportReasonPopped)
+                }
             })
             .disposed(by: disposeBag)
 
