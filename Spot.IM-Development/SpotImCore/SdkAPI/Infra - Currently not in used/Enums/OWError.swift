@@ -86,6 +86,7 @@ enum OWError: Error, Codable {
     case preConversationFlow
     case conversationFlow
     case commentCreationFlow
+    case reportReasonFlow
     case commentThreadFlow
     case preConversationView
     case conversationView
@@ -137,6 +138,8 @@ enum OWError: Error, Codable {
             return "Error - a user is already logged in"
         case .missingImplementation:
             return "Error - Not implemented yet."
+        case .reportReasonFlow:
+            return "Error in the process of starting report reason flow"
         }
     }
 }
