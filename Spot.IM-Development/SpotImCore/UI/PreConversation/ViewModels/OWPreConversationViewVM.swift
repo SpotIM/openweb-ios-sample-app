@@ -59,7 +59,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
         static let reportActionKey = "Report"
-        static let cancelActionKey = "Cancel"
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }

@@ -62,7 +62,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
         static let reportActionKey = "Report"
-        static let cancelActionKey = "Cancel"
     }
 
     fileprivate var postId: OWPostId {
