@@ -14,6 +14,9 @@ protocol OWCommentCreationViewViewModelingInputs {
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {
+    var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling { get }
+    var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling { get }
+    var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling { get }
     var commentType: OWCommentCreationType { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
 }
@@ -29,6 +32,18 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
+        return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData)
+    }()
+
+    lazy var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling = {
+        return OWCommentCreationLightViewViewModel(commentCreationData: self.commentCreationData)
+    }()
+
+    lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
+        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData)
+    }()
 
     lazy var commentType: OWCommentCreationType = {
         return self.commentCreationData.commentCreationType

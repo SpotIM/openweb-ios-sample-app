@@ -15,6 +15,7 @@ protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func preConversationSettings() -> OWPreConversationSettingsProtocol
     func conversationSettings() -> OWConversationSettingsProtocol
+    func commentCreationSettings() -> OWCommentCreationSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle() -> OWArticleProtocol
 }
@@ -37,6 +38,13 @@ class CommonCreatorService: CommonCreatorServicing {
     func conversationSettings() -> OWConversationSettingsProtocol {
         let styleFromPersistence = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
         let additionalSettings = OWConversationSettingsBuilder(style: styleFromPersistence)
+            .build()
+        return additionalSettings
+    }
+
+    func commentCreationSettings() -> OWCommentCreationSettingsProtocol {
+        let styleFromPersistence = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        let additionalSettings = OWCommentCreationSettingsBuilder(conversationSettings: conversationSettings(), style: styleFromPersistence)
             .build()
         return additionalSettings
     }

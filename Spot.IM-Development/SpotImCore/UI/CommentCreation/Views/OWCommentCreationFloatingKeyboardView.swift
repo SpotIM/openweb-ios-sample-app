@@ -55,7 +55,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         self.useAsThemeStyleInjector()
 
         // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
-        self.backgroundColor = .red
+        self.backgroundColor = .blue
         self.addSubviews(replyToLabel)
         replyToLabel.OWSnp.makeConstraints { make in
             make.center.equalToSuperview()

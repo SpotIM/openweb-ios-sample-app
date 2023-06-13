@@ -54,7 +54,7 @@ fileprivate extension OWCommentCreationRegularView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
+        // TODO: Remove the ugly red when actually starting to work on the UI, this is only for integration purposes at the moment
         self.backgroundColor = .red
         self.addSubviews(replyToLabel)
         replyToLabel.OWSnp.makeConstraints { make in
