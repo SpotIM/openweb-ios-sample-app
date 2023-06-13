@@ -60,7 +60,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
     fileprivate lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
         return Observable.combineLatest(customStyleModeSelectedIndex, customStyleModeSelectedIndex) {
-            customStyleModeIndex, customStyleModeIndexx -> OWCommentCreationStyle in
+            customStyleModeIndex, _ -> OWCommentCreationStyle in
 
             return OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
         }
