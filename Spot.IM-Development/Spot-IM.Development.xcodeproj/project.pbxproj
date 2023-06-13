@@ -525,6 +525,7 @@
 		3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */; };
 		3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */; };
 		3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4427D75A9E0097B17B /* OWShowable.swift */; };
+		3DE330992A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */; };
 		3DEAA57829A23B5C0043D73E /* OWFontGroupFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */; };
 		3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57929A23D310043D73E /* OWFontBook.swift */; };
 		3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57E29A240670043D73E /* OWFontStyle.swift */; };
@@ -793,8 +794,8 @@
 		9E4163BF29F6C9C700819BC2 /* OWReportReasonCancelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */; };
 		9E4163C329F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C229F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift */; };
 		9E4163C529F6CEC700819BC2 /* OWReportReasonThanksViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C429F6CEC700819BC2 /* OWReportReasonThanksViewVM.swift */; };
-		9E53758C297841C000C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
@@ -850,8 +851,8 @@
 		9ED2E58D29EC01AD00B39A00 /* OWReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58C29EC01AD00B39A00 /* OWReportReasonView.swift */; };
 		9ED2E58F29EC01E900B39A00 /* OWReportReasonThanksVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58E29EC01E900B39A00 /* OWReportReasonThanksVC.swift */; };
 		9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E59029EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift */; };
-		9EE2CDED29798919000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
 		9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77C297E84F100814648 /* PickerSetting.swift */; };
@@ -1414,6 +1415,7 @@
 		3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCacheService.swift; sourceTree = "<group>"; };
 		3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleService.swift; sourceTree = "<group>"; };
 		3DE0FE4427D75A9E0097B17B /* OWShowable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWShowable.swift; sourceTree = "<group>"; };
+		3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWUserAuthenticationStatus+Extenstions.swift"; sourceTree = "<group>"; };
 		3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontGroupFamily.swift; sourceTree = "<group>"; };
 		3DEAA57929A23D310043D73E /* OWFontBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontBook.swift; sourceTree = "<group>"; };
 		3DEAA57E29A240670043D73E /* OWFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontStyle.swift; sourceTree = "<group>"; };
@@ -2720,6 +2722,7 @@
 			isa = PBXGroup;
 			children = (
 				3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */,
+				3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */,
 				3D263CE529BDE59A0013C532 /* OWUserAction.swift */,
 				3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */,
 				3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */,
@@ -5619,6 +5622,7 @@
 				3D263CFF29C377690013C532 /* OWUserAvailability.swift in Sources */,
 				E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */,
 				73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */,
+				3DE330992A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift in Sources */,
 				3D08E0832876FFC500E6F1AC /* OWAnimationConfiguration.swift in Sources */,
 				4454181223685144001D0ED0 /* SPMainConversationModel.swift in Sources */,
 				3DD72C69280EF13100117946 /* OWURLRequestConfigure.swift in Sources */,
@@ -6249,11 +6253,11 @@
 				9EBE5C2429AE0304001150DA /* CommentCreationSettingsVM.swift in Sources */,
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
-				9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
-				9EE2CDED29798919000C0E38 /* BuildFile in Sources */,
+				9EE2CDED29798919000C0E38 /* (null) in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
 				9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
@@ -6269,7 +6273,7 @@
 				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
-				9E53758C297841C000C85983 /* BuildFile in Sources */,
+				9E53758C297841C000C85983 /* (null) in Sources */,
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
 				9E73DAE029C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift in Sources */,
@@ -6344,7 +6348,7 @@
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleFlowsViewModel.swift in Sources */,
 				9E7D5B122A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift in Sources */,
-				9E53758E2978476900C85983 /* BuildFile in Sources */,
+				9E53758E2978476900C85983 /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6479,7 +6483,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -6506,7 +6510,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6545,7 +6549,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6656,7 +6660,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -6683,7 +6687,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6722,7 +6726,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6826,7 +6830,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -6854,7 +6858,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6893,7 +6897,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6997,7 +7001,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -7025,7 +7029,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -7064,7 +7068,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -7116,7 +7120,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -7157,7 +7161,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -7318,7 +7322,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -7349,7 +7353,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -7376,7 +7380,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -7401,7 +7405,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
