@@ -205,9 +205,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _openReportReason = PublishSubject<String>()
+    fileprivate var openReportReasonChange = PublishSubject<String>()
     var openReportReason: Observable<String> {
-        return _openReportReason
+        return openReportReasonChange
             .asObservable()
     }
 
@@ -613,7 +613,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             switch action.title {
                             case OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey):
                                 guard let commentId = comment.id else { return }
-                                self._openReportReason.onNext(commentId)
+                                self.openReportReasonChange.onNext(commentId)
                             default: break
                             }
                         }
