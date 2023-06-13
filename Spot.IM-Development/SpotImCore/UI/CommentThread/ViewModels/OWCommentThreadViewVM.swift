@@ -660,8 +660,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction], UIView)> in
-                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction], UIView)> in
+            .flatMap { commentCellsVms -> Observable<(OWComment, [OWMenuSelectionItem], UIView)> in
+                let openMenuClickObservable: [Observable<(OWComment, [OWMenuSelectionItem], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWMenuSelectionItem], UIView)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 

@@ -11,14 +11,14 @@ import RxSwift
 
 protocol OWConversationSortViewModelingInputs {
     var changeSelectedSortOption: PublishSubject<OWSortOption> { get }
-    var sortTapped: PublishSubject<Void> { get }
+    var sortTapped: PublishSubject<UIView> { get }
     var sortSelected: PublishSubject<OWSortOption> { get }
     var triggerCustomizeSortByLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWConversationSortViewModelingOutputs {
     var selectedSortOption: Observable<OWSortOption> { get }
-    var openSort: Observable<Void> { get }
+    var openSort: Observable<UIView> { get }
     var customizeSortByLabelUI: Observable<UILabel> { get }
 }
 
@@ -38,7 +38,7 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
 
     var triggerCustomizeSortByLabelUI = PublishSubject<UILabel>()
     var changeSelectedSortOption = PublishSubject<OWSortOption>()
-    var sortTapped = PublishSubject<Void>()
+    var sortTapped = PublishSubject<UIView>()
     var sortSelected = PublishSubject<OWSortOption>()
 
     var customizeSortByLabelUI: Observable<UILabel> {
@@ -54,7 +54,7 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
             .map { $0 }
     }
 
-    var openSort: Observable<Void> {
+    var openSort: Observable<UIView> {
         sortTapped.asObservable()
     }
 

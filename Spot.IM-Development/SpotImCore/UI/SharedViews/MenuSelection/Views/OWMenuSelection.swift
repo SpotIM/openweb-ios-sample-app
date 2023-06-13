@@ -98,6 +98,13 @@ fileprivate extension OWMenuSelection {
             }
             .disposed(by: disposeBag)
 
+        tableView.rx.itemSelected
+            .debug("Nogah: row selected")
+            .subscribe(onNext: { [weak self] index in
+                self?.viewModel.inputs.cellSelected.onNext(index.row)
+            })
+            .disposed(by: disposeBag)
+
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
             .subscribe(onNext: { [weak self] height in
