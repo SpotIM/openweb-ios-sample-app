@@ -37,6 +37,9 @@ protocol OWTextViewViewModeling {
 }
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
+    fileprivate struct Metrics {
+        static let becomeFirstResponderDelay = 500
+    }
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
@@ -50,7 +53,9 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
     var becomeFirstResponderCall = PublishSubject<Void>()
     var becomeFirstResponderCalled: Observable<Void> {
-        return becomeFirstResponderCall.asObservable()
+        return becomeFirstResponderCall
+            .delay(.milliseconds(Metrics.becomeFirstResponderDelay), scheduler: MainScheduler.instance)
+            .asObservable()
     }
 
     var textViewTap = PublishSubject<Void>()

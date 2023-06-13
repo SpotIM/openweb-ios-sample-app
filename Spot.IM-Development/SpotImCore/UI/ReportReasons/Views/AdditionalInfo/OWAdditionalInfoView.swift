@@ -24,7 +24,6 @@ class OWAdditionalInfoView: UIView {
         static let textViewPadding: CGFloat = 10
         static let footerViewHeight: CGFloat = 72
         static let keyboardAnimationDuration: CGFloat = 0.25
-        static let becomeFirstResponderDelay: CGFloat = 0.5
         static let footerBottomToSuperviewPriority: CGFloat = 750
         static let footerBottomToKeyboardPriority: CGFloat = 1000
         static let submitDisabledOpacity: CGFloat = 0.5
@@ -83,10 +82,7 @@ class OWAdditionalInfoView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Metrics.becomeFirstResponderDelay) { [weak self] in
-            guard let self = self else { return }
-            self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext()
-        }
+        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext()
     }
 
     required init?(coder: NSCoder) {
