@@ -165,35 +165,32 @@ extension OWAuthenticationManager {
         }
     }
 
-    fileprivate func obtainNetworkUser(forSpotId spotId: OWSpotId) {
-        _ = self.retrieveNetworkUser(networkMaxAttempts: Metrics.maxAttemptsToObtainNewUser)
-            .flatMap { [weak self] user -> Observable<(SPUser, OWInternalUserAuthenticationStatus)> in
-                guard let self = self else { return .empty() }
-                return self._userAuthenticationStatus
-                    .take(1)
-                    .map { (user, $0) }
-            }
-            .subscribe(onNext: { [weak self] tuple in
-                guard let self = self else { return }
-                let user = tuple.0
-                // For other statuses which related to SSO, our `OWAuthorizationRecoveryService` class will take care
-                if let status = tuple.1.toOWUserAuthenticationStatus(), (status == .notAutenticated || status == .guest) {
-                    let authenticationRecoveryResult: OWAuthenticationRecoveryResult = .newAuthentication(user: user)
-                    self.finishAuthenticationRecovery(with: authenticationRecoveryResult)
+    fileprivate func obtainNetworkUserIfNeeded(forSpotId spotId: OWSpotId) {
+        _ = self._userAuthenticationStatus
+            .take(1)
+            .map { internalStatus -> Bool in
+                guard let status = internalStatus.toOWUserAuthenticationStatus() else {
+                    // Recovering status or something which related to SSO
+                    return false
                 }
-            })
+
+                let shouldObtainUser = (status == .notAutenticated || status == .guest)
+                return shouldObtainUser
+            }
+            .filter { $0 } // We would like to obtain user only in non SSO related statuses, otherwise `OWAuthorizationRecoveryService` class will take care for the rest
+            .flatMap { [weak self] _ -> Observable<SPUser> in
+                guard let self = self else { return .empty() }
+                return self.retrieveNetworkNewUser()
+            }
+            .subscribe()
     }
 
     fileprivate func triggerNetworkNewUser(forSpotId spotId: OWSpotId) {
-        _ = self.retrieveNetworkUser(networkMaxAttempts: Metrics.maxAttemptsToObtainNewUser)
-            .subscribe(onNext: { [weak self] newUser in
-                guard let self = self else { return }
-                let authenticationRecoveryResult: OWAuthenticationRecoveryResult = .newAuthentication(user: newUser)
-                self.finishAuthenticationRecovery(with: authenticationRecoveryResult)
-            })
+        _ = self.retrieveNetworkNewUser()
+            .subscribe()
     }
 
-    fileprivate func retrieveNetworkUser(networkMaxAttempts: Int = 0) -> Observable<SPUser> {
+    fileprivate func retrieveNetworkNewUser() -> Observable<SPUser> {
         let configurationService = servicesProvider.spotConfigurationService()
 
         return configurationService.config(spotId: OpenWeb.manager.spotId)
@@ -206,9 +203,14 @@ extension OWAuthenticationManager {
                     .user()
                     .response
                     .observe(on: self.scheduler)
-                    .exponentialRetry(maxAttempts: networkMaxAttempts, millisecondsDelay: Metrics.delayToObtainUser) // Adding retry as it is critical we will succeed here
+                    .exponentialRetry(maxAttempts: Metrics.maxAttemptsToObtainNewUser, millisecondsDelay: Metrics.delayToObtainUser) // Adding retry as it is critical we will succeed here
                     .take(1) // No need to dispose
             }
+            .do(onNext: { [weak self] newUser in
+                guard let self = self else { return }
+                let authenticationRecoveryResult: OWAuthenticationRecoveryResult = .newAuthentication(user: newUser)
+                self.finishAuthenticationRecovery(with: authenticationRecoveryResult)
+            })
     }
 
 }
@@ -348,7 +350,7 @@ extension OWAuthenticationManager {
 extension OWAuthenticationManager {
     func prepare(forSpotId spotId: OWSpotId) {
         loadPersistence(forSpotId: spotId)
-        obtainNetworkUser(forSpotId: spotId)
+        obtainNetworkUserIfNeeded(forSpotId: spotId)
     }
 
     func change(newSpotId spotId: OWSpotId) {
