@@ -58,6 +58,15 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return [_regular, _light, _floatingKeyboard]
     }()
 
+    fileprivate lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
+        return Observable.combineLatest(customStyleModeSelectedIndex, customStyleModeSelectedIndex) {
+            customStyleModeIndex, customStyleModeIndexx -> OWCommentCreationStyle in
+
+            return OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
+        }
+        .asObservable()
+    }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
@@ -66,10 +75,9 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
 extension CommentCreationSettingsVM {
     func setupObservers() {
-        customStyleModeSelectedIndex
-            .skip(1)
+        styleModeObservable
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Int>.commentCreationCustomStyleIndex))
+            .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .disposed(by: disposeBag)
     }
 }
