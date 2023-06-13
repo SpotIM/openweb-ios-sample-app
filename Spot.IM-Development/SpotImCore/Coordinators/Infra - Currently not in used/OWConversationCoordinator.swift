@@ -380,7 +380,10 @@ fileprivate extension OWConversationCoordinator {
         )
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
-        Observable.merge(closeConversationPressed, openPublisherProfile)
+        let openReportReason = viewModel.outputs.openReportReason
+            .map { OWViewActionCallbackType.openReportReason(commentId: $0) }
+
+        Observable.merge(closeConversationPressed, openPublisherProfile, openReportReason)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
