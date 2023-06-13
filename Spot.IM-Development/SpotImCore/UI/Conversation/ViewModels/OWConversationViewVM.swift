@@ -256,6 +256,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
+    fileprivate var sortBestTap = PublishSubject<Void>()
+    fileprivate var sortNewestTap = PublishSubject<Void>()
+    fileprivate var sortOldestTap = PublishSubject<Void>()
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let conversationData: OWConversationRequiredData
@@ -854,8 +858,8 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction], UIView)> in
-                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction], UIView)> in
+            .flatMap { commentCellsVms -> Observable<(OWComment, [OWMenuSelectionItem], UIView)> in
+                let openMenuClickObservable: [Observable<(OWComment, [OWMenuSelectionItem], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWMenuSelectionItem], UIView)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
@@ -914,39 +918,73 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open sort option menu
         conversationSummaryViewModel.outputs.conversationSortVM.outputs.openSort
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] sender in
                 guard let self = self else { return }
                 let sortDictateService = self.servicesProvider.sortDictateService()
                 self.servicesProvider.presenterService()
-                    .showMenu(
-                        title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
-                        actions: [
-                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest),
-                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWSortMenu.cancel, style: .cancel)
-                        ],
-                        viewableMode: self.viewableMode
-                    )
-                    .subscribe(onNext: { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(let action):
-                            switch action.type {
-                            case OWSortMenu.sortBest:
-                                sortDictateService.update(sortOption: .best, perPostId: self.postId)
-                            case OWSortMenu.sortNewest:
-                                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-                            case OWSortMenu.sortOldest:
-                                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
-                            default:
-                                break
-                            }
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+                    .showMenu(actions: [
+                        .init(title: sortDictateService.sortTextTitle(perOption: .best), onClick: self.sortBestTap),
+                        .init(title: sortDictateService.sortTextTitle(perOption: .newest), onClick: self.sortNewestTap),
+                        .init(title: sortDictateService.sortTextTitle(perOption: .oldest), onClick: self.sortOldestTap)
+                    ], sender: sender, viewableMode: self.viewableMode)
+
+//                self.servicesProvider.presenterService()
+//                    .showMenu(
+//                        title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
+//                        actions: [
+//                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+//                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+//                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest),
+//                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWSortMenu.cancel, style: .cancel)
+//                        ],
+//                        viewableMode: self.viewableMode
+//                    )
+//                    .subscribe(onNext: { result in
+//                        switch result {
+//                        case .completion:
+//                            // Do nothing
+//                            break
+//                        case .selected(let action):
+//                            switch action.type {
+//                            case OWSortMenu.sortBest:
+//                                sortDictateService.update(sortOption: .best, perPostId: self.postId)
+//                            case OWSortMenu.sortNewest:
+//                                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+//                            case OWSortMenu.sortOldest:
+//                                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+//                            default:
+//                                break
+//                            }
+//                        }
+//                    })
+//                    .disposed(by: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        sortBestTap
+            .asObserver()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                sortDictateService.update(sortOption: .best, perPostId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
+        sortNewestTap
+            .asObserver()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
+        sortOldestTap
+            .asObserver()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
             })
             .disposed(by: disposeBag)
 

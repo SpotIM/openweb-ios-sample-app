@@ -13,7 +13,7 @@ import UIKit
 protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
-    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode)
+    func showMenu(actions: [OWMenuSelectionItem], sender: UIView, viewableMode: OWViewableMode)
 }
 
 extension OWPresenterServicing {
@@ -49,7 +49,7 @@ class OWPresenterService: OWPresenterServicing {
 //                                         actions: actions)
     }
 
-    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode) {
+    func showMenu(actions: [OWMenuSelectionItem], sender: UIView, viewableMode: OWViewableMode) {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
         let menuVM = OWMenuSelectionViewModel(items: actions.map {
             OWMenuSelectionItem(title: $0.title, onClick: PublishSubject()) // TODO: publish subject
