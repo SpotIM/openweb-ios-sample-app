@@ -266,22 +266,27 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 viewModel.outputs.viewableMode == .partOfFlow
             }
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                guard let router = self.router else { return }
-                guard let controllerToPopTo = router.navigationController?.viewControllers.first(where: {
-                    $0.isKind(of: OWReportReasonVC.self)
-                }) else { return }
+            // Step 1 - Dismiss OWReportReasonThanksVC or OWReportReasonCancelVC
+            .flatMap { [weak self] _ -> Observable<OWRoutering> in
+                guard let self = self,
+                      let router = self.router else { return .empty() }
                 let visableViewController = router.navigationController?.visibleViewController
                 let isReportReasonVC = visableViewController?.isKind(of: OWReportReasonVC.self) ?? false
 
-                // For dismissing cancel and thanks screens
+                // For dismissing OWReportReasonThanksVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
                     visableViewController?.dismiss(animated: true)
                 }
+                return .just(router)
+            }
+            // Step 2 - Dismiss report reason screen if it is the only one in the router or Pop if router has previous VCs
+            .subscribe(onNext: { [weak self] router in
+                guard let self = self,
+                      let controllerToPopTo = router.navigationController?.viewControllers.first(where: {
+                    $0.isKind(of: OWReportReasonVC.self)
+                }) else { return }
 
-                let isRouterContainOnlyReportReason = router.navigationController?.viewControllers.count ?? 1 == 1
-                if isRouterContainOnlyReportReason {
+                if router.hasOnlyOneViewController {
                     router.dismiss(animated: true, completion: self.reportReasonPopped)
                 } else {
                     router.pop(toViewController: controllerToPopTo, animated: false)
