@@ -121,7 +121,7 @@ fileprivate extension OWReportReasonCoordinator {
                     .take(1)
             })
             .flatMap({ placeholderText, textViewText -> Observable<(String, String, Bool)> in
-                return viewModel.outputs.shouldShowReportReasonsCounter
+                return viewModel.outputs.reportReasonsCharectersLimitEnabled
                     .map { (placeholderText, textViewText, $0) }
                     .take(1)
             })
@@ -132,7 +132,7 @@ fileprivate extension OWReportReasonCoordinator {
                                                      placeholderText: placeholderText,
                                                      textViewText: textViewText,
                                                      textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
-                                                     shouldShowCharectersLimit: shouldShowCounter,
+                                                     charectersLimitEnabled: shouldShowCounter,
                                                      isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
                                                      submitInProgress: viewModel.outputs.submitInProgress,
                                                      submitText: viewModel.outputs.submitButtonText)

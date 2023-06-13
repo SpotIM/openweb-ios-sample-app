@@ -16,7 +16,7 @@ protocol OWTextViewViewModelingInputs {
     var textViewTextChange: BehaviorSubject<String> { get }
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
-    var shouldShowCharectersLimitChange: PublishSubject<Bool> { get }
+    var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -46,7 +46,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var textViewMaxCharectersChange = PublishSubject<Int>()
 
     var charectersLimitEnabled = true
-    var shouldShowCharectersLimitChange = PublishSubject<Bool>()
+    var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     var becomeFirstResponderCall = PublishSubject<Void>()
     var becomeFirstResponderCalled: Observable<Void> {
@@ -84,13 +84,13 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     init(textViewMaxCharecters: Int,
          placeholderText: String,
          textViewText: String = "",
-         shouldShowCharectersLimit: Bool,
+         charectersLimitEnabled: Bool,
          isEditable: Bool) {
         self.textViewMaxCharecters = textViewMaxCharecters
         self.placeholderTextChange = BehaviorSubject(value: placeholderText)
         self.textViewTextChange = BehaviorSubject(value: textViewText)
         self.isEditable = isEditable
-        self.charectersLimitEnabled = shouldShowCharectersLimit
+        self.charectersLimitEnabled = charectersLimitEnabled
         self.setupObservers()
     }
 }
@@ -104,7 +104,7 @@ fileprivate extension OWTextViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        shouldShowCharectersLimitChange
+        charectarsLimitEnabledChange
             .subscribe(onNext: { [weak self] show in
                 guard let self = self else { return }
                 self.charectersLimitEnabled = show && self.isEditable

@@ -40,7 +40,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var shouldShowLearnMore: Observable<Bool> { get }
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
-    var shouldShowReportReasonsCounter: Observable<Bool> { get }
+    var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -201,7 +201,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.servicesProvider = servicesProvider
         self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.textViewMaxCharecters,
                                               placeholderText: OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey),
-                                              shouldShowCharectersLimit: false,
+                                              charectersLimitEnabled: false,
                                               isEditable: false)
         setupObservers()
     }
@@ -264,7 +264,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .asObservable()
     }()
 
-    lazy var shouldShowReportReasonsCounter: Observable<Bool> = {
+    lazy var reportReasonsCharectersLimitEnabled: Observable<Bool> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .map { [weak self] config -> Bool? in
@@ -355,10 +355,10 @@ fileprivate extension OWReportReasonViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        shouldShowReportReasonsCounter
+        reportReasonsCharectersLimitEnabled
             .subscribe(onNext: { [weak self] show in
                 guard let self = self else { return }
-                self.textViewVM.inputs.shouldShowCharectersLimitChange.onNext(show)
+                self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(show)
             })
             .disposed(by: disposeBag)
 
