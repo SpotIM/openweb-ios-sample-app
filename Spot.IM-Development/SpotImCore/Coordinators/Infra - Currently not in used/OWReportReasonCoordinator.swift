@@ -275,7 +275,7 @@ fileprivate extension OWReportReasonCoordinator {
 
                 // For dismissing OWReportReasonThanksVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
-                    visableViewController?.dismiss(animated: true)
+                    visableViewController?.dismiss(animated: !router.hasOnlyOneViewController)
                 }
                 return .just(router)
             }
@@ -286,10 +286,12 @@ fileprivate extension OWReportReasonCoordinator {
                     $0.isKind(of: OWReportReasonVC.self)
                 }) else { return }
 
+                // Pop AdditionaInfo screen or any other screens after ReportReasonVC
+                router.pop(toViewController: controllerToPopTo, animated: false)
+
                 if router.hasOnlyOneViewController {
                     router.dismiss(animated: true, completion: self.reportReasonPopped)
                 } else {
-                    router.pop(toViewController: controllerToPopTo, animated: false)
                     router.pop(popStyle: .dismissStyle, animated: true)
                 }
             })
