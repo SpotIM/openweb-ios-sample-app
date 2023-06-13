@@ -43,7 +43,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     fileprivate struct Metrics {
         static let titleKey = "AdditionalInfoTitle"
         static let cancelKey = "Cancel"
-        static let textViewMaxCharecters = 280
+        static let defaultTextViewMaxCharecters = 280
     }
 
     fileprivate var disposeBag = DisposeBag()
@@ -128,7 +128,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     init(viewableMode: OWViewableMode,
          placeholderText: String,
          textViewText: String,
-         textViewMaxCharecters: Int = Metrics.textViewMaxCharecters,
+         textViewMaxCharecters: Int = Metrics.defaultTextViewMaxCharecters,
          charectersLimitEnabled: Bool,
          isTextRequired: Observable<Bool>,
          submitInProgress: Observable<Bool>,

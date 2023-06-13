@@ -62,7 +62,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         static let errorAlertSubmitMessageKey = "ReportSubmissionFailedMessage"
         static let tableViewHeaderKey = "ReportReasonHelpUsTitle"
         static let tableViewHeaderTapKey = "ReportReasonHelpUsClickText"
-        static let textViewMaxCharecters = 280
+        static let defaultTextViewMaxCharecters = 280
         static let headerTextFontSize: CGFloat = 15
     }
 
@@ -199,7 +199,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
-        self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.textViewMaxCharecters,
+        self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                               placeholderText: OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey),
                                               charectersLimitEnabled: false,
                                               isEditable: false)
@@ -280,7 +280,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .map { [weak self] config -> Int? in
-                guard let self = self else { return Metrics.textViewMaxCharecters }
+                guard let self = self else { return Metrics.defaultTextViewMaxCharecters }
                 return config.mobileSdk.reportReasonsCounterMaxLength
             }
             .unwrap()
