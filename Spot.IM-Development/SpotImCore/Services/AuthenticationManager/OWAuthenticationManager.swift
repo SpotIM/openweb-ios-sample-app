@@ -27,8 +27,8 @@ protocol OWAuthenticationManagerProtocol {
     func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel>
 
     // Those methods exposed since we are testing multiple SpotIds inside our SampleApp - therefore we must considered the "current" spotId
-    func loadPersistence(forSpotId spotId: OWSpotId)
-    func resetPersistence()
+    func prepare(forSpotId spotId: OWSpotId)
+    func change(newSpotId spotId: OWSpotId)
 }
 
 extension OWAuthenticationManagerProtocol {
@@ -42,15 +42,20 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
     fileprivate typealias OWUserAvailabilityMapper = [OWSpotId: OWUserAvailability]
     fileprivate unowned let manager: OWManagerProtocol & OWManagerInternalProtocol
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    fileprivate let scheduler: SchedulerType
 
     fileprivate struct Metrics {
         static let maxSSORecoveryTime: Int = 30 // In seconds
+        static let maxAttemptsToObtainNewUser: Int = 3
+        static let delayToObtainUser: Int = 1000 // In ms
     }
 
     init (manager: OWManagerProtocol & OWManagerInternalProtocol = OWManager.manager,
-          servicesProvider: OWSharedServicesProviding) {
+          servicesProvider: OWSharedServicesProviding,
+          scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKAuthenticationManagerQueue")) {
         self.manager = manager
         self.servicesProvider = servicesProvider
+        self.scheduler = scheduler
 
         loadGeneralPersistence()
     }
@@ -159,6 +164,53 @@ extension OWAuthenticationManager {
             update(credentials: newCredentials)
         }
     }
+
+    fileprivate func obtainNetworkUser(forSpotId spotId: OWSpotId) {
+        _ = self.retrieveNetworkUser(networkMaxAttempts: Metrics.maxAttemptsToObtainNewUser)
+            .flatMap { [weak self] user -> Observable<(SPUser, OWInternalUserAuthenticationStatus)> in
+                guard let self = self else { return .empty() }
+                return self._userAuthenticationStatus
+                    .take(1)
+                    .map { (user, $0) }
+            }
+            .subscribe(onNext: { [weak self] tuple in
+                guard let self = self else { return }
+                let user = tuple.0
+                // For other statuses which related to SSO, our `OWAuthorizationRecoveryService` class will take care
+                if let status = tuple.1.toOWUserAuthenticationStatus(), (status == .notAutenticated || status == .guest) {
+                    let authenticationRecoveryResult: OWAuthenticationRecoveryResult = .newAuthentication(user: user)
+                    self.finishAuthenticationRecovery(with: authenticationRecoveryResult)
+                }
+            })
+    }
+
+    fileprivate func triggerNetworkNewUser(forSpotId spotId: OWSpotId) {
+        _ = self.retrieveNetworkUser(networkMaxAttempts: Metrics.maxAttemptsToObtainNewUser)
+            .subscribe(onNext: { [weak self] newUser in
+                guard let self = self else { return }
+                let authenticationRecoveryResult: OWAuthenticationRecoveryResult = .newAuthentication(user: newUser)
+                self.finishAuthenticationRecovery(with: authenticationRecoveryResult)
+            })
+    }
+
+    func retrieveNetworkUser(networkMaxAttempts: Int = 0) -> Observable<SPUser> {
+        let configurationService = servicesProvider.spotConfigurationService()
+
+        return configurationService.config(spotId: OpenWeb.manager.spotId)
+            .observe(on: scheduler)
+            .take(1) // Here we are simply waiting for the config first / ensuring such exist for the specific spotId
+            .flatMap { [weak self] _ -> Observable<SPUser> in
+                guard let self = self else { return .empty() }
+                let authentication = self.servicesProvider.netwokAPI().authentication
+                return authentication
+                    .user()
+                    .response
+                    .observe(on: self.scheduler)
+                    .exponentialRetry(maxAttempts: networkMaxAttempts, millisecondsDelay: Metrics.delayToObtainUser) // Adding retry as it is critical we will succeed here
+                    .take(1) // No need to dispose
+            }
+    }
+
 }
 
 // Authentication SSO related methods
@@ -294,6 +346,37 @@ extension OWAuthenticationManager {
 
 // Persistence related methods
 extension OWAuthenticationManager {
+    func prepare(forSpotId spotId: OWSpotId) {
+        self.loadPersistence(forSpotId: spotId)
+        obtainNetworkUser(forSpotId: spotId)
+    }
+
+    func change(newSpotId spotId: OWSpotId) {
+        resetPersistence()
+        triggerNetworkNewUser(forSpotId: spotId)
+    }
+}
+
+fileprivate extension OWAuthenticationManager {
+    func resetPersistence() {
+        let keychain = servicesProvider.keychain()
+
+        // Remove persistence to the user availability and also "RAM" references
+        let userAvailabilityMapper: OWUserAvailabilityMapper = [:]
+        keychain.save(value: userAvailabilityMapper, forKey: OWKeychain.OWKey<OWUserAvailabilityMapper>.activeUser)
+        self._activeUserAvailability.onNext(.notAvailable)
+        self._userAuthenticationStatus.onNext(.notAutenticated)
+
+        // Remove authorization if exist from before as this field associated to an active user
+        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
+            let newCredentials = OWNetworkSessionCredentials(guid: credentials.guid,
+                                                          openwebToken: credentials.openwebToken,
+                                                             authorization: nil)
+            keychain.save(value: newCredentials, forKey: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials)
+            self._networkCredentials = newCredentials
+        }
+    }
+
     func loadPersistence(forSpotId spotId: OWSpotId) {
         let keychain = servicesProvider.keychain()
 
@@ -315,26 +398,6 @@ extension OWAuthenticationManager {
         }
     }
 
-    func resetPersistence() {
-        let keychain = servicesProvider.keychain()
-
-        // Remove persistence to the user availability and also "RAM" references
-        let userAvailabilityMapper: OWUserAvailabilityMapper = [:]
-        keychain.save(value: userAvailabilityMapper, forKey: OWKeychain.OWKey<OWUserAvailabilityMapper>.activeUser)
-        self._activeUserAvailability.onNext(.notAvailable)
-        self._userAuthenticationStatus.onNext(.notAutenticated)
-
-        // Remove authorization if exist from before as this field associated to an active user
-        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
-            let newCredentials = OWNetworkSessionCredentials(guid: credentials.guid,
-                                                          openwebToken: credentials.openwebToken,
-                                                             authorization: nil)
-            keychain.save(value: newCredentials, forKey: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials)
-            self._networkCredentials = newCredentials
-        }
-    }
-}
-fileprivate extension OWAuthenticationManager {
     func loadGeneralPersistence() {
         let keychain = servicesProvider.keychain()
 
