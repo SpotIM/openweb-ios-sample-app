@@ -8,10 +8,12 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showMenu(actions: [OWRxPresenterAction], sender: UIView, base: UIView, viewableMode: OWViewableMode)
 }
 
 extension OWPresenterServicing {
@@ -21,6 +23,8 @@ extension OWPresenterServicing {
 }
 
 class OWPresenterService: OWPresenterServicing {
+
+    var disposeBag = DisposeBag()
 
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
@@ -37,11 +41,57 @@ class OWPresenterService: OWPresenterServicing {
         // TODO: show proper menu instead of actionSheet
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
-        return UIAlertController.rx.show(onViewController: presenterVC,
-                                         preferredStyle: .actionSheet,
-                                         title: title,
-                                         message: nil,
-                                         actions: actions)
+        return .empty()
+//        return UIAlertController.rx.show(onViewController: presenterVC,
+//                                         preferredStyle: .actionSheet,
+//                                         title: title,
+//                                         message: nil,
+//                                         actions: actions)
+    }
+
+    func showMenu(actions: [OWRxPresenterAction], sender: UIView, base: UIView, viewableMode: OWViewableMode) {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
+        let menuVM = OWMenuSelectionViewModel(items: actions.map {
+            OWMenuSelectionItem(title: $0.title, onClick: PublishSubject()) // TODO: publish subject
+        })
+        let menuView = OWMenuSelection(viewModel: menuVM)
+
+        let wrapperView = UIView().backgroundColor(.clear)
+        presenterVC.view.addSubview(wrapperView)
+        wrapperView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        wrapperView.addSubview(menuView)
+        // TODO: calculate where to put view
+        var zeroSizeConstraint: OWConstraint? = nil
+        menuView.OWSnp.makeConstraints { make in
+            make.top.equalTo(sender.OWSnp.centerY)
+            make.trailing.equalTo(sender.OWSnp.centerX)
+            zeroSizeConstraint = make.size.equalTo(0).constraint
+            zeroSizeConstraint?.isActive = true
+        }
+
+        let tapGesture: UITapGestureRecognizer = {
+            let tap = UITapGestureRecognizer()
+            tap.numberOfTapsRequired = 1
+            return tap
+        }()
+
+        wrapperView.addGestureRecognizer(tapGesture)
+        tapGesture.rx.event
+            .voidify()
+            .subscribe(onNext: { _ in
+                wrapperView.removeFromSuperview()
+            })
+            .disposed(by: disposeBag)
+
+        // TODO: propper animation
+        UIView.animate(withDuration: 0.3, delay: 0, options: UIView.AnimationOptions.transitionCurlDown, animations: {
+            zeroSizeConstraint?.isActive = false
+            menuView.setNeedsLayout()
+            menuView.layoutIfNeeded()
+        })
     }
 }
 
