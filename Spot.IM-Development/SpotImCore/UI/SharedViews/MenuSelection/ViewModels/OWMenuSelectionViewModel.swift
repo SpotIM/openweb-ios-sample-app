@@ -8,7 +8,9 @@
 
 import RxSwift
 
-protocol OWMenuSelectionViewModelingInputs {}
+protocol OWMenuSelectionViewModelingInputs {
+    var cellSelected: PublishSubject<Int> { get }
+}
 
 protocol OWMenuSelectionViewModelingOutputs {
     var cellsViewModels: Observable<[OWMenuSelectionCellViewModeling]> { get }
@@ -30,9 +32,21 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
             .share(replay: 1)
     }
 
+    var cellSelected = PublishSubject<Int>()
+    var disposeBag = DisposeBag()
+
     init(items: [OWMenuSelectionItem]) {
         let vms = items.map { OWMenuSelectionCellViewModel(title: $0.title) }
         _cellsViewModels.onNext(vms)
+
+        cellSelected
+            .asObserver()
+            .debug("Nogah: VM cell selected")
+            .subscribe(onNext: { index in
+                items[index].onClick.onNext()
+            })
+            .disposed(by: disposeBag)
+
     }
 }
 

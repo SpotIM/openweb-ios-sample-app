@@ -27,7 +27,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var hiddenCommentReasonText: Observable<String> { get }
 
     var userNameTapped: Observable<Void> { get }
-    var openMenu: Observable<([OWRxPresenterAction], UIView)> { get }
+    var openMenu: Observable<([OWMenuSelectionItem], UIView)> { get }
 }
 
 protocol OWCommentHeaderViewModeling {
@@ -174,7 +174,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
-    var openMenu: Observable<([OWRxPresenterAction], UIView)> {
+    var openMenu: Observable<([OWMenuSelectionItem], UIView)> {
         tapMore
             .map { [weak self] view in
                 guard let self = self else { return nil}
@@ -185,11 +185,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
+    // TODO: observe and handle clickes
+    fileprivate var reportTap: PublishSubject<Void> = PublishSubject()
+    fileprivate var editTap: PublishSubject<Void> = PublishSubject()
     // TODO: properly get the relevant actions
-    fileprivate lazy var optionsActions: [OWRxPresenterAction] = {
+    fileprivate lazy var optionsActions: [OWMenuSelectionItem] = {
         return [
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentOptionsMenu.cancel, style: .cancel)
+            OWMenuSelectionItem(title: OWLocalizationManager.shared.localizedString(key: "Report"), onClick: reportTap),
+            OWMenuSelectionItem(title: OWLocalizationManager.shared.localizedString(key: "Edit"), onClick: editTap)
         ]
     }()
 }
