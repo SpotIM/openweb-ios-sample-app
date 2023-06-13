@@ -34,9 +34,9 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
         let vms = items.map { OWMenuSelectionCellViewModel(title: $0.title) }
         _cellsViewModels.onNext(vms)
     }
-
 }
 
 struct OWMenuSelectionItem {
     var title: String
+    var onClick: PublishSubject<Void>
 }
