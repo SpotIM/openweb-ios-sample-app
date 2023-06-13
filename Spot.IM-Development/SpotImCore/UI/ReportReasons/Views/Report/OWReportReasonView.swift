@@ -245,17 +245,17 @@ fileprivate extension OWReportReasonView {
                 else { return }
 
                 self.textViewHeightConstraint?.isActive = true
-                guard !selectedReason.requiredAdditionalInfo else { // We do not animate textView if it is a requiredAdditionalInfo reason since we move to the additional info screen
-                    self.layoutIfNeeded()
-                    self.textView.alpha = 1
-                    return
-                }
 
-                UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                if selectedReason.requiredAdditionalInfo { // We do not animate textView if it is a requiredAdditionalInfo reason since we move to the additional info screen
                     self.layoutIfNeeded()
-                }
-                UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
                     self.textView.alpha = 1
+                } else {
+                    UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                        self.layoutIfNeeded()
+                    }
+                    UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                        self.textView.alpha = 1
+                    }
                 }
 
                 if let selectedIndex = self.tableViewReasons.indexPathForSelectedRow {
