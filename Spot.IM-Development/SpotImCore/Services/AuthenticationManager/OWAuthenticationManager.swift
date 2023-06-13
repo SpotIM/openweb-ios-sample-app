@@ -193,7 +193,7 @@ extension OWAuthenticationManager {
             })
     }
 
-    func retrieveNetworkUser(networkMaxAttempts: Int = 0) -> Observable<SPUser> {
+    fileprivate func retrieveNetworkUser(networkMaxAttempts: Int = 0) -> Observable<SPUser> {
         let configurationService = servicesProvider.spotConfigurationService()
 
         return configurationService.config(spotId: OpenWeb.manager.spotId)
@@ -347,7 +347,7 @@ extension OWAuthenticationManager {
 // Persistence related methods
 extension OWAuthenticationManager {
     func prepare(forSpotId spotId: OWSpotId) {
-        self.loadPersistence(forSpotId: spotId)
+        loadPersistence(forSpotId: spotId)
         obtainNetworkUser(forSpotId: spotId)
     }
 
