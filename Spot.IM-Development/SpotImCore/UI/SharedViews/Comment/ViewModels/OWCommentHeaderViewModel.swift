@@ -176,8 +176,9 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var openMenu: Observable<[OWRxPresenterAction]> {
         tapMore
-            .map { [weak self] _ in
+            .map { [weak self] view in
                 guard let self = self else { return nil}
+                self.servicesProvider.presenterService().showMenu(actions: self.optionsActions, sender: view, base: UIView(), viewableMode: .partOfFlow)
                 return self.optionsActions
             }
             .unwrap()
