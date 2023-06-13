@@ -20,7 +20,6 @@ protocol OWPreConversationViewViewModelingInputs {
 
 protocol OWPreConversationViewViewModelingOutputs {
     var reportActionTitle: String { get }
-    var cancelActionTitle: String { get }
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
@@ -92,10 +91,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var reportActionTitle: String = {
         return OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey)
-    }()
-
-    lazy var cancelActionTitle: String = {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelActionKey)
     }()
 
     lazy var viewAccessibilityIdentifier: String = {
