@@ -11,8 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWReportReasonThanksVC: UIViewController {
-    fileprivate struct Metrics {
-    }
+    fileprivate struct Metrics { }
 
     let reportReasonThanksViewViewModel: OWReportReasonThanksViewViewModeling
 

@@ -11,8 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWReportReasonCancelVC: UIViewController {
-    fileprivate struct Metrics {
-    }
+    fileprivate struct Metrics { }
 
     let reportReasonCancelViewViewModel: OWReportReasonCancelViewViewModeling
 
