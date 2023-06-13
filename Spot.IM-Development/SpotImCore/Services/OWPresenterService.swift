@@ -13,7 +13,7 @@ import UIKit
 protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
-    func showMenu(actions: [OWRxPresenterAction], sender: UIView, base: UIView, viewableMode: OWViewableMode)
+    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode)
 }
 
 extension OWPresenterServicing {
@@ -49,7 +49,7 @@ class OWPresenterService: OWPresenterServicing {
 //                                         actions: actions)
     }
 
-    func showMenu(actions: [OWRxPresenterAction], sender: UIView, base: UIView, viewableMode: OWViewableMode) {
+    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode) {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
         let menuVM = OWMenuSelectionViewModel(items: actions.map {
             OWMenuSelectionItem(title: $0.title, onClick: PublishSubject()) // TODO: publish subject
@@ -63,11 +63,23 @@ class OWPresenterService: OWPresenterServicing {
         }
 
         wrapperView.addSubview(menuView)
-        // TODO: calculate where to put view
+
         var zeroSizeConstraint: OWConstraint? = nil
+        let senderLocationFrame = sender.convert(CGPoint.zero, to: presenterVC.view)
+        let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
+        let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
         menuView.OWSnp.makeConstraints { make in
-            make.top.equalTo(sender.OWSnp.centerY)
-            make.trailing.equalTo(sender.OWSnp.centerX)
+            if (isTopSection) {
+                make.top.equalTo(sender.OWSnp.centerY)
+            } else {
+                make.bottom.equalTo(sender.OWSnp.centerY)
+            }
+            if (isLeftSection) {
+                make.left.equalTo(sender.OWSnp.centerX)
+            } else {
+                make.right.equalTo(sender.OWSnp.centerX)
+            }
+
             zeroSizeConstraint = make.size.equalTo(0).constraint
             zeroSizeConstraint?.isActive = true
         }
