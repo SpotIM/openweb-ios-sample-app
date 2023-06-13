@@ -9,9 +9,7 @@
 import Foundation
 
 #if NEW_API
-public protocol OWReportReasonSettingsProtocol {
-}
+public protocol OWReportReasonSettingsProtocol { }
 #else
-protocol OWReportReasonSettingsProtocol {
-}
+protocol OWReportReasonSettingsProtocol { }
 #endif
