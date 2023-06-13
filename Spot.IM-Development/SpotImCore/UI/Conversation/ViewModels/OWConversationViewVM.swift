@@ -854,33 +854,35 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction])> in
-                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction])> in
+            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction], UIView)> in
+                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction], UIView)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
-                        .map { (commentVm.outputs.comment, $0) }
+                        .map { (commentVm.outputs.comment, $0.0, $0.1) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
             // swiftlint:disable unused_closure_parameter
-            .subscribe(onNext: { [weak self] comment, actions in
+            .subscribe(onNext: { [weak self] comment, actions, sender in
             // swiftlint:enable unused_closure_parameter
                 guard let self = self else { return }
-                _ = self.servicesProvider.presenterService()
-                    .showMenu(actions: actions, viewableMode: self.viewableMode)
-                    .subscribe(onNext: { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(let action):
-                            // TODO: handle selection
-                            break
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+                self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+//                _ = self.servicesProvider.presenterService()
+//                    .showMenu(actions: actions, viewableMode: self.viewableMode)
+//                    .subscribe(onNext: { result in
+//                        switch result {
+//                        case .completion:
+//                            // Do nothing
+//                            break
+//                        case .selected(let action):
+//                            // TODO: handle selection
+//                            break
+//                        }
+//                    })
+//                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
