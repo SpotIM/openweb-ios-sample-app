@@ -54,8 +54,8 @@ fileprivate extension OWCommentCreationLightView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
-        self.backgroundColor = .red
+        // TODO: Remove the ugly green when actually starting to work on the UI, this is only for integration purposes at the moment
+        self.backgroundColor = .green
         self.addSubviews(replyToLabel)
         replyToLabel.OWSnp.makeConstraints { make in
             make.center.equalToSuperview()
