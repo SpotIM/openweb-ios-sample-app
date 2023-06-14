@@ -34,9 +34,9 @@ struct OWAdditionalSettings: OWAdditionalSettingsProtocol {
     let commentThreadSettings: OWCommentThreadSettingsProtocol
 
     init(preConversationSettings: OWPreConversationSettingsProtocol = OWPreConversationSettings(),
-                fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings(),
-                commentCreationSettings: OWCommentCreationSettingsProtocol = OWCommentCreationSettings(),
-                commentThreadSettings: OWCommentThreadSettingsProtocol = OWCommentThreadSettings()
+         fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings(),
+         commentCreationSettings: OWCommentCreationSettingsProtocol = OWCommentCreationSettings(),
+         commentThreadSettings: OWCommentThreadSettingsProtocol = OWCommentThreadSettings()
     ) {
         self.preConversationSettings = preConversationSettings
         self.fullConversationSettings = fullConversationSettings
