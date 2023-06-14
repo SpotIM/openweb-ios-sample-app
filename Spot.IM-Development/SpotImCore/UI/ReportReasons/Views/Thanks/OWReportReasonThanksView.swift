@@ -13,6 +13,8 @@ import RxSwift
 class OWReportReasonThanksView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_thanks_view_id"
+        static let closeButtonIdentifier = "report_reason_thanks_close_button_id"
+        static let gotitButtonIdentifier = "report_reason_thanks_gotit_button_id"
         static let titleViewPrefixIdentifier = "report_reason_thanks"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
@@ -55,6 +57,7 @@ class OWReportReasonThanksView: UIView {
         super.init(frame: .zero)
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -98,5 +101,10 @@ fileprivate extension OWReportReasonThanksView {
                 self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        gotitButton.accessibilityIdentifier = Metrics.gotitButtonIdentifier
     }
 }
