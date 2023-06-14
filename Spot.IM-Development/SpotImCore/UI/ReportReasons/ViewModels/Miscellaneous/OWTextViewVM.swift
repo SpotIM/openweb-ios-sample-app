@@ -38,7 +38,7 @@ protocol OWTextViewViewModeling {
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
     fileprivate struct Metrics {
-        static let becomeFirstResponderDelay = 500
+        static let becomeFirstResponderDelay = 550
     }
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }

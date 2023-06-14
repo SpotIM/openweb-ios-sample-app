@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class OWAdditionalInfoView: UIView {
+class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "additional_info_view_id"
         static let cancelButtonIdentifier = "additional_info_cancel_button_id"
@@ -100,6 +100,8 @@ fileprivate extension OWAdditionalInfoView {
     }
 
     func setupViews() {
+        self.useAsThemeStyleInjector()
+
         backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         let shouldShowTitleView = viewModel.outputs.shouldShowTitleView

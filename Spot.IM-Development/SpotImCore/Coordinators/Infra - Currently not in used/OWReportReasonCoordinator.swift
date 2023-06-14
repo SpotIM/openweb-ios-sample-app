@@ -196,7 +196,7 @@ fileprivate extension OWReportReasonCoordinator {
                 case .present(let style):
                     reportReasonThanksVC.modalPresentationStyle = style.toOSModalPresentationStyle
                 default:
-                    reportReasonThanksVC.modalPresentationStyle = .none
+                    reportReasonThanksVC.modalPresentationStyle = .fullScreen
                 }
                 router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
                 return reportReasonThanksViewVM.outputs.closeReportReasonThanksTapped
