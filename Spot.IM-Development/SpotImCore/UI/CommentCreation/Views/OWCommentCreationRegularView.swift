@@ -52,6 +52,15 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
+    fileprivate lazy var textInput: UITextView = {
+        return UITextView()
+    }()
+
+    fileprivate lazy var footerView: UIView = {
+        return UIView()
+            .backgroundColor(.blue)
+    }()
+
     fileprivate let viewModel: OWCommentCreationRegularViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -88,8 +97,7 @@ fileprivate extension OWCommentCreationRegularView {
 
         self.addSubview(topContainerView)
         topContainerView.OWSnp.makeConstraints { make in
-            make.top.equalTo(self.safeAreaLayoutGuide)
-            make.leading.trailing.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(68.0)
         }
 
@@ -97,6 +105,19 @@ fileprivate extension OWCommentCreationRegularView {
         articleDescriptionView.OWSnp.makeConstraints { make in
             make.top.equalTo(topContainerView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
+        }
+
+        self.addSubview(footerView)
+        footerView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(72.0)
+        }
+
+        self.addSubview(textInput)
+        textInput.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(12.0)
+            make.bottom.equalTo(footerView.OWSnp.top)
         }
     }
 
