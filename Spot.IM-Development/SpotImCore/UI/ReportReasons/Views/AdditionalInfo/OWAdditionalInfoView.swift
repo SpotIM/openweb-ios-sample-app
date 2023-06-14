@@ -15,6 +15,7 @@ class OWAdditionalInfoView: UIView {
         static let identifier = "additional_info_view_id"
         static let cancelButtonIdentifier = "additional_info_cancel_button_id"
         static let submitButtonIdentifier = "additional_info_submit_button_id"
+        static let footerViewIdentifier = "additional_info_footer_view_id"
         static let prefixIdentifier = "additional_info"
         static let titleViewHeight: CGFloat = 56
         static let titleLeadingPadding: CGFloat = 16
@@ -95,6 +96,7 @@ fileprivate extension OWAdditionalInfoView {
         self.accessibilityIdentifier = Metrics.identifier
         cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier
         submitButton.accessibilityIdentifier = Metrics.submitButtonIdentifier
+        footerView.accessibilityIdentifier = Metrics.footerViewIdentifier
     }
 
     func setupViews() {

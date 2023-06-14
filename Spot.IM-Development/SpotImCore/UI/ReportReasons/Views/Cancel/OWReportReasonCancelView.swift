@@ -13,6 +13,9 @@ import RxSwift
 class OWReportReasonCancelView: UIView {
     fileprivate struct Metrics {
         static let identifier = "report_reason_cancel_view_id"
+        static let closeButtonIdentifier = "report_reason_cancel_close_button_id"
+        static let continueButtonIdentifier = "report_reason_cancel_continue_button_id"
+        static let cancelButtonIdentifier = "report_reason_cancel_cancel_button_id"
         static let titleViewPrefixIdentifier = "report_reason_cancel"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
@@ -76,6 +79,7 @@ class OWReportReasonCancelView: UIView {
         super.init(frame: .zero)
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -138,5 +142,11 @@ fileprivate extension OWReportReasonCancelView {
                     .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        continueButton.accessibilityIdentifier = Metrics.continueButtonIdentifier
+        cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier
     }
 }

@@ -19,9 +19,9 @@ protocol OWTitleViewProtocol {
 
 class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
     fileprivate struct Metrics {
-        static let identifier = "_title_view_id"
-        static let titleLabelIdentifier = "_title_label_id"
-        static let closeButtonIdentifier = "_close_button_id"
+        static let suffixIdentifier = "_title_view_id"
+        static let titleLabelSuffixIdentifier = "_title_label_id"
+        static let closeButtonSuffixIdentifier = "_close_button_id"
         static let titleLeadingPadding: CGFloat = 16
         static let titleFontSize: CGFloat = 15
         static let closeButtonTrailingPadding: CGFloat = 19
@@ -67,9 +67,9 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
 
 fileprivate extension OWTitleView {
     func applyAccessibility(prefixId: String) {
-        self.accessibilityIdentifier = prefixId + Metrics.identifier
-        titleLabel.accessibilityIdentifier = prefixId + Metrics.titleLabelIdentifier
-        closeButton.accessibilityIdentifier = prefixId + Metrics.closeButtonIdentifier
+        self.accessibilityIdentifier = prefixId + Metrics.suffixIdentifier
+        titleLabel.accessibilityIdentifier = prefixId + Metrics.titleLabelSuffixIdentifier
+        closeButton.accessibilityIdentifier = prefixId + Metrics.closeButtonSuffixIdentifier
     }
 
     func setupViews() {

@@ -20,6 +20,9 @@ class OWTitleSubtitleIconView: UIView, OWTitleSubtitleIconViewInputs {
         static let titleFontSize: CGFloat = 20
         static let subtitleFontSize: CGFloat = 15
         static let verticalSpacing: CGFloat = 10
+        static let titleIconSuffixIdentifier = "_title_icon_id"
+        static let titleLabelSuffixIdentifier = "_title_label_id"
+        static let subtitleLabelSuffixIdentifier = "_subtitle_label_id"
     }
     var inputs: OWTitleSubtitleIconViewInputs { return self }
     fileprivate let disposeBag = DisposeBag()
@@ -62,9 +65,9 @@ class OWTitleSubtitleIconView: UIView, OWTitleSubtitleIconViewInputs {
 
 fileprivate extension OWTitleSubtitleIconView {
     func applyAccessibility(prefixId: String) {
-        titleIcon.accessibilityIdentifier = prefixId + "_title_icon_id"
-        titleLabel.accessibilityIdentifier = prefixId + "_title_label_id"
-        subtitleLabel.accessibilityIdentifier = prefixId + "_subtitle_label_id"
+        titleIcon.accessibilityIdentifier = prefixId + Metrics.titleIconSuffixIdentifier
+        titleLabel.accessibilityIdentifier = prefixId + Metrics.titleLabelSuffixIdentifier
+        subtitleLabel.accessibilityIdentifier = prefixId + Metrics.subtitleLabelSuffixIdentifier
     }
 
     func setupViews(iconName: String, title: String, subtitle: String) {
