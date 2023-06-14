@@ -86,7 +86,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     lazy var viewAccessibilityIdentifier: String = {
-        let styleId = (preConversationData.settings?.style ?? .compact).styleIdentifier
+        let styleId = (preConversationData.settings?.preConversationSettings.style ?? .compact).styleIdentifier
         return Metrics.viewAccessibilityIdentifier.replacingOccurrences(of: "@", with: styleId)
     }()
 
@@ -111,7 +111,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
-        return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular
+        return self.preConversationData.settings?.preConversationSettings.style ?? OWPreConversationStyle.regular
     }()
 
     fileprivate lazy var isCompactMode: Bool = {

@@ -13,8 +13,8 @@ import SpotImCore
 
 protocol CommonCreatorServicing {
     // Create the following things according to the persistence
-    func preConversationSettings() -> OWPreConversationSettingsProtocol
-    func conversationSettings() -> OWConversationSettingsProtocol
+    func preConversationSettings() -> OWAdditionalSettingsProtocol
+    func conversationSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle() -> OWArticleProtocol
 }
@@ -26,18 +26,22 @@ class CommonCreatorService: CommonCreatorServicing {
         self.userDefaultsProvider = userDefaultsProvider
     }
 
-    func preConversationSettings() -> OWPreConversationSettingsProtocol {
+    func preConversationSettings() -> OWAdditionalSettingsProtocol {
         let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-        let additionalConversationSettings = self.conversationSettings()
-        let additionalSettings = OWPreConversationSettingsBuilder(style: preConversationStyle, fullConversationSettings: additionalConversationSettings)
+        let preConversationSettings = OWPreConversationSettingsBuilder(style: preConversationStyle).build()
+
+        let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
+
+        let additionalSettings = OWAdditionalSettingsBuilder(preConversationSettings: preConversationSettings, fullConversationSettings: conversationSettings)
             .build()
         return additionalSettings
     }
 
-    func conversationSettings() -> OWConversationSettingsProtocol {
+    func conversationSettings() -> OWAdditionalSettingsProtocol {
         let styleFromPersistence = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let additionalSettings = OWConversationSettingsBuilder(style: styleFromPersistence)
-            .build()
+        let conversationSettings = OWConversationSettingsBuilder(style: styleFromPersistence).build()
+        let additionalSettings = OWAdditionalSettingsBuilder(fullConversationSettings: conversationSettings).build()
         return additionalSettings
     }
 
