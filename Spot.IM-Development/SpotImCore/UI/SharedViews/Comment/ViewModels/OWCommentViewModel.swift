@@ -39,13 +39,13 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
 
-    var statusIndicationVM: OWCommentStatusIndicationViewModeling {
+    lazy var statusIndicationVM: OWCommentStatusIndicationViewModeling = {
         return OWCommentStatusIndicationViewModel()
-    }
+    }()
 
-    var commentActionsVM: OWCommentActionsViewModeling {
+    lazy var commentActionsVM: OWCommentActionsViewModeling = {
         return OWCommentActionsViewModel()
-    }
+    }()
 
     var commentHeaderVM: OWCommentHeaderViewModeling
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
@@ -56,7 +56,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
-            .asObserver()
+            .asObservable()
     }
 
     init(data: OWCommentRequiredData) {

@@ -48,6 +48,8 @@ class OWMenuSelectionCell: UITableViewCell {
 fileprivate extension OWMenuSelectionCell {
     func setupUI() {
         self.backgroundColor = UIColor.clear
+        self.selectionStyle = .none
+//        self.selectedBackgroundView = UIView().backgroundColor(.green)
 
         self.addSubview(label)
         label.OWSnp.makeConstraints { make in
