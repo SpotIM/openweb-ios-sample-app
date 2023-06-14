@@ -55,9 +55,7 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     }
 
     var openSort: Observable<Void> {
-        sortTapped
-            .debug("RIVI")
-            .asObservable()
+        sortTapped.asObservable()
     }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
