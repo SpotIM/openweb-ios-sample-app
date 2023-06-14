@@ -58,9 +58,9 @@ struct OWAdditionalSettingsBuilder {
     var commentThreadSettings: OWCommentThreadSettingsProtocol
 
     init(preConversationSettings: OWPreConversationSettingsProtocol = OWPreConversationSettingsBuilder().build(),
-                fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettingsBuilder().build(),
-                commentCreationSettings: OWCommentCreationSettingsProtocol = OWCommentCreationSettingsBuilder().build(),
-                commentThreadSettings: OWCommentThreadSettingsProtocol = OWCommentThreadSettingsBuilder().build()
+         fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettingsBuilder().build(),
+         commentCreationSettings: OWCommentCreationSettingsProtocol = OWCommentCreationSettingsBuilder().build(),
+         commentThreadSettings: OWCommentThreadSettingsProtocol = OWCommentThreadSettingsBuilder().build()
     ) {
         self.preConversationSettings = preConversationSettings
         self.fullConversationSettings = fullConversationSettings
