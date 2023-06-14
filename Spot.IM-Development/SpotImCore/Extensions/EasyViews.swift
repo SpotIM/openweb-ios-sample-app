@@ -205,6 +205,11 @@ extension UIButton {
         return self
     }
 
+    @discardableResult func setSemanticContentAttribute(_ semanticAttribute: UISemanticContentAttribute) -> Self {
+        self.semanticContentAttribute = semanticAttribute
+        return self
+    }
+
     @discardableResult func adjustTextAndImageAlignment(_ spacing: CGFloat) -> Self {
         var inset = spacing / 2
 
