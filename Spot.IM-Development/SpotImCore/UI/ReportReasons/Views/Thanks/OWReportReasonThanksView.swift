@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWReportReasonThanksView: UIView {
+class OWReportReasonThanksView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "report_reason_thanks_view_id"
         static let closeButtonIdentifier = "report_reason_thanks_close_button_id"
@@ -67,6 +67,8 @@ class OWReportReasonThanksView: UIView {
 
 fileprivate extension OWReportReasonThanksView {
     func setupViews() {
+        self.useAsThemeStyleInjector()
+
         self.addSubviews(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing - Metrics.closeButtonPadding)
