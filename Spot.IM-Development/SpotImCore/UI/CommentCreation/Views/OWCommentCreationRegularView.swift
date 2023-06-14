@@ -101,5 +101,8 @@ fileprivate extension OWCommentCreationRegularView {
     }
 
     func setupObservers() {
+        closeButton.rx.tap
+            .bind(to: viewModel.inputs.closeButtonTap)
+            .disposed(by: disposeBag)
     }
 }

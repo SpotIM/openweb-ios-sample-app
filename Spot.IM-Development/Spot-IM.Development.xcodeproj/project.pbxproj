@@ -478,7 +478,7 @@
 		3DD72C7D280F053A00117946 /* OWSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7C280F053A00117946 /* OWSession.swift */; };
 		3DD72C7F28159B2E00117946 /* OWAnalyticsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7E28159B2E00117946 /* OWAnalyticsEndpoints.swift */; };
 		3DD72C812818297500117946 /* OWLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C802818297500117946 /* OWLogger.swift */; };
-		3DDA9A2E28E49E3900FE3B86 /* OWScreenPushStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */; };
+		3DDA9A2E28E49E3900FE3B86 /* OWScreenPresentationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A2D28E49E3900FE3B86 /* OWScreenPresentationStyle.swift */; };
 		3DDA9A3428F5897C00FE3B86 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A2F28F5897C00FE3B86 /* OpenSans-Light.ttf */; };
 		3DDA9A3528F5897C00FE3B86 /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3028F5897C00FE3B86 /* OpenSans-Italic.ttf */; };
 		3DDA9A3628F5897C00FE3B86 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3128F5897C00FE3B86 /* OpenSans-Bold.ttf */; };
@@ -1340,7 +1340,7 @@
 		3DD72C7C280F053A00117946 /* OWSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSession.swift; sourceTree = "<group>"; };
 		3DD72C7E28159B2E00117946 /* OWAnalyticsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsEndpoints.swift; sourceTree = "<group>"; };
 		3DD72C802818297500117946 /* OWLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLogger.swift; sourceTree = "<group>"; };
-		3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWScreenPushStyle.swift; sourceTree = "<group>"; };
+		3DDA9A2D28E49E3900FE3B86 /* OWScreenPresentationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWScreenPresentationStyle.swift; sourceTree = "<group>"; };
 		3DDA9A2F28F5897C00FE3B86 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		3DDA9A3028F5897C00FE3B86 /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Italic.ttf"; sourceTree = "<group>"; };
 		3DDA9A3128F5897C00FE3B86 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -3521,7 +3521,7 @@
 				3DEDF61528C9D48800F87056 /* OWNavigationController.swift */,
 				3D26B5BA28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift */,
 				3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */,
-				3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */,
+				3DDA9A2D28E49E3900FE3B86 /* OWScreenPresentationStyle.swift */,
 			);
 			path = NavigationController;
 			sourceTree = "<group>";
@@ -5352,7 +5352,7 @@
 				161270D629ACCB38001F9715 /* OWCommentThreadCoordinator.swift in Sources */,
 				4454181323685144001D0ED0 /* SPEmptyConversationActionView.swift in Sources */,
 				3DCAE3F029D2FAA7005B9189 /* OWCompactRouteringCompatible.swift in Sources */,
-				3DDA9A2E28E49E3900FE3B86 /* OWScreenPushStyle.swift in Sources */,
+				3DDA9A2E28E49E3900FE3B86 /* OWScreenPresentationStyle.swift in Sources */,
 				445418AD23685154001D0ED0 /* UIImage+SPExtensions.swift in Sources */,
 				8D99C6962A1E4CFD00DAB542 /* OWSummeryHeaderCustomizableElement.swift in Sources */,
 				441165A12375BBC100B781F3 /* OWApiManager.swift in Sources */,
