@@ -46,7 +46,7 @@ fileprivate extension OWMenuSelectionWrapperView {
         let senderLocationFrame = senderView.convert(CGPoint.zero, to: presenterVC.view)
         let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
         let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
-
+        print("NOGAH - senderLocationFrame: \(senderLocationFrame), senderView.frame: \(senderView.frame)")
         self.addSubview(menuView)
         menuView.OWSnp.makeConstraints { make in
             if (isTopSection) {
@@ -69,12 +69,15 @@ fileprivate extension OWMenuSelectionWrapperView {
             self.zeroSizeConstraint?.isActive = false
             self.menuView.setNeedsLayout()
             self.menuView.layoutIfNeeded()
+        }, completion: { _ in
+            print("NOGAH - menuViewLocationFrame: \(self.menuView.convert(CGPoint.zero, to: self))")
         })
     }
 
     func setupObservers() {
         tapGesture.rx.event
-            .subscribe(onNext: { _ in
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.dismissMenu()
             })
             .disposed(by: disposeBag)
@@ -91,8 +94,10 @@ extension OWMenuSelectionWrapperView: UIGestureRecognizerDelegate {
         let tapLocation = gestureRecognizer.location(in: menuView)
         // Enable interaction inside menu view - but also dismiss menu
         if menuView.bounds.contains(tapLocation) {
-            // Tap occurred inside the menuView
-            self.dismissMenu()
+            // Make sure that menu is dismissed only after click is done
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.dismissMenu()
+            }
             return false
         }
         return true

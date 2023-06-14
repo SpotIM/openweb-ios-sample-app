@@ -944,7 +944,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
@@ -958,7 +958,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Subscribe to URL click in comment text
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
                     let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
 
