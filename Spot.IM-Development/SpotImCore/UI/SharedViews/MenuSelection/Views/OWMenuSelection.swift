@@ -99,7 +99,6 @@ fileprivate extension OWMenuSelection {
             .disposed(by: disposeBag)
 
         tableView.rx.itemSelected
-            .debug("Nogah: row selected")
             .subscribe(onNext: { [weak self] index in
                 self?.viewModel.inputs.cellSelected.onNext(index.row)
             })

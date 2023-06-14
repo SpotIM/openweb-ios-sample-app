@@ -41,7 +41,6 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
 
         cellSelected
             .asObserver()
-            .debug("Nogah: VM cell selected")
             .subscribe(onNext: { index in
                 items[index].onClick.onNext()
             })

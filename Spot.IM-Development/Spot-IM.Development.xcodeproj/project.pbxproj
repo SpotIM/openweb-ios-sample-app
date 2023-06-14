@@ -47,7 +47,6 @@
 		1628A75428EB0D8E0019B5EC /* OWAdCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A74A28EB0D8E0019B5EC /* OWAdCellViewModel.swift */; };
 		1628A75528EB0D8E0019B5EC /* OWCommentCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A74D28EB0D8E0019B5EC /* OWCommentCellViewModel.swift */; };
 		1628A75628EB0D8E0019B5EC /* OWSpacerCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75028EB0D8E0019B5EC /* OWSpacerCellViewModel.swift */; };
-		1628A75728EB0D8E0019B5EC /* OWReplyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75328EB0D8E0019B5EC /* OWReplyCellViewModel.swift */; };
 		1628A75928EB0E220019B5EC /* OWCommentContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75828EB0E220019B5EC /* OWCommentContentView.swift */; };
 		1628A75D28EB0E770019B5EC /* OWCommentCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75B28EB0E770019B5EC /* OWCommentCreationView.swift */; };
 		1628A75E28EB0E770019B5EC /* OWCommentCreationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75C28EB0E770019B5EC /* OWCommentCreationVC.swift */; };
@@ -898,7 +897,6 @@
 		1628A74A28EB0D8E0019B5EC /* OWAdCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWAdCellViewModel.swift; sourceTree = "<group>"; };
 		1628A74D28EB0D8E0019B5EC /* OWCommentCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentCellViewModel.swift; sourceTree = "<group>"; };
 		1628A75028EB0D8E0019B5EC /* OWSpacerCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWSpacerCellViewModel.swift; sourceTree = "<group>"; };
-		1628A75328EB0D8E0019B5EC /* OWReplyCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWReplyCellViewModel.swift; sourceTree = "<group>"; };
 		1628A75828EB0E220019B5EC /* OWCommentContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentContentView.swift; sourceTree = "<group>"; };
 		1628A75B28EB0E770019B5EC /* OWCommentCreationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentCreationView.swift; sourceTree = "<group>"; };
 		1628A75C28EB0E770019B5EC /* OWCommentCreationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVC.swift; sourceTree = "<group>"; };
@@ -1871,7 +1869,6 @@
 				16D5A20629D4576700914AD7 /* CommentThreadActions */,
 				3DDA9A5A2906CFBC00FE3B86 /* CommentSkeletonShimmering */,
 				1628A74E28EB0D8E0019B5EC /* Spacer */,
-				1628A75128EB0D8E0019B5EC /* Reply */,
 				8D358D5429C9F81E00E229A3 /* communityQuestion */,
 				8D358D5529C9F97700E229A3 /* communityGuidelines */,
 			);
@@ -1926,22 +1923,6 @@
 			isa = PBXGroup;
 			children = (
 				1628A75028EB0D8E0019B5EC /* OWSpacerCellViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		1628A75128EB0D8E0019B5EC /* Reply */ = {
-			isa = PBXGroup;
-			children = (
-				1628A75228EB0D8E0019B5EC /* ViewModels */,
-			);
-			path = Reply;
-			sourceTree = "<group>";
-		};
-		1628A75228EB0D8E0019B5EC /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				1628A75328EB0D8E0019B5EC /* OWReplyCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5393,7 +5374,6 @@
 				3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				3D31FB9229AB743A002B88E0 /* OWLocaleStrategy+Extensions.swift in Sources */,
 				8D99C6982A1E533D00DAB542 /* OWEmptyStateCustomizableElement.swift in Sources */,
-				1628A75728EB0D8E0019B5EC /* OWReplyCellViewModel.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
 				3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
