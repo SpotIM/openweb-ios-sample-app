@@ -39,12 +39,13 @@ class OWCommunityGuidelinesCell: UITableViewCell {
         disposeBag = DisposeBag()
 
         communityGuidelinesView.configure(with: self.viewModel.outputs.communityGuidelinesViewModel)
+        self.setupObservers()
     }
 }
 
 fileprivate extension OWCommunityGuidelinesCell {
     func setupUI() {
-        self.backgroundColor = .clear
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
         self.contentView.isUserInteractionEnabled = false
 
         self.addSubview(communityGuidelinesView)
@@ -57,5 +58,15 @@ fileprivate extension OWCommunityGuidelinesCell {
                 make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
             }
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }

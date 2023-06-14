@@ -525,6 +525,7 @@
 		3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */; };
 		3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */; };
 		3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4427D75A9E0097B17B /* OWShowable.swift */; };
+		3DE330992A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */; };
 		3DEAA57829A23B5C0043D73E /* OWFontGroupFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */; };
 		3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57929A23D310043D73E /* OWFontBook.swift */; };
 		3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57E29A240670043D73E /* OWFontStyle.swift */; };
@@ -1381,6 +1382,7 @@
 		3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCacheService.swift; sourceTree = "<group>"; };
 		3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleService.swift; sourceTree = "<group>"; };
 		3DE0FE4427D75A9E0097B17B /* OWShowable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWShowable.swift; sourceTree = "<group>"; };
+		3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWUserAuthenticationStatus+Extenstions.swift"; sourceTree = "<group>"; };
 		3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontGroupFamily.swift; sourceTree = "<group>"; };
 		3DEAA57929A23D310043D73E /* OWFontBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontBook.swift; sourceTree = "<group>"; };
 		3DEAA57E29A240670043D73E /* OWFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontStyle.swift; sourceTree = "<group>"; };
@@ -2653,6 +2655,7 @@
 			isa = PBXGroup;
 			children = (
 				3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */,
+				3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */,
 				3D263CE529BDE59A0013C532 /* OWUserAction.swift */,
 				3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */,
 				3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */,
@@ -5392,6 +5395,7 @@
 				3D263CFF29C377690013C532 /* OWUserAvailability.swift in Sources */,
 				E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */,
 				73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */,
+				3DE330992A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift in Sources */,
 				3D08E0832876FFC500E6F1AC /* OWAnimationConfiguration.swift in Sources */,
 				4454181223685144001D0ED0 /* SPMainConversationModel.swift in Sources */,
 				3DD72C69280EF13100117946 /* OWURLRequestConfigure.swift in Sources */,
@@ -6227,7 +6231,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -6254,7 +6258,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6293,7 +6297,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6404,7 +6408,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -6431,7 +6435,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6470,7 +6474,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6574,7 +6578,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -6602,7 +6606,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6641,7 +6645,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6745,7 +6749,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -6773,7 +6777,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -6812,7 +6816,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6864,7 +6868,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6905,7 +6909,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -7066,7 +7070,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -7097,7 +7101,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -7124,7 +7128,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -7149,7 +7153,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.4;
+				MARKETING_VERSION = 1.18.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
