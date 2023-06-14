@@ -194,7 +194,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels
-            .map { items in
+            .map { [weak self] items in
+                guard let self = self else { return [] }
                 let section = ConversationDataSourceModel(model: self.postId, items: items)
                 return [section]
             }
@@ -858,35 +859,19 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [OWMenuSelectionItem], UIView)> in
-                let openMenuClickObservable: [Observable<(OWComment, [OWMenuSelectionItem], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWMenuSelectionItem], UIView)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWMenuSelectionItem], UIView)> in
+                let openMenuClickObservable: [Observable<([OWMenuSelectionItem], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<([OWMenuSelectionItem], UIView)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
-                        .map { (commentVm.outputs.comment, $0.0, $0.1) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            // swiftlint:disable unused_closure_parameter
-            .subscribe(onNext: { [weak self] comment, actions, sender in
-            // swiftlint:enable unused_closure_parameter
+            .subscribe(onNext: { [weak self] actions, sender in
                 guard let self = self else { return }
                 self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
-//                _ = self.servicesProvider.presenterService()
-//                    .showMenu(actions: actions, viewableMode: self.viewableMode)
-//                    .subscribe(onNext: { result in
-//                        switch result {
-//                        case .completion:
-//                            // Do nothing
-//                            break
-//                        case .selected(let action):
-//                            // TODO: handle selection
-//                            break
-//                        }
-//                    })
-//                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -927,37 +912,6 @@ fileprivate extension OWConversationViewViewModel {
                         .init(title: sortDictateService.sortTextTitle(perOption: .newest), onClick: self.sortNewestTap),
                         .init(title: sortDictateService.sortTextTitle(perOption: .oldest), onClick: self.sortOldestTap)
                     ], sender: sender, viewableMode: self.viewableMode)
-
-//                self.servicesProvider.presenterService()
-//                    .showMenu(
-//                        title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
-//                        actions: [
-//                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
-//                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
-//                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest),
-//                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWSortMenu.cancel, style: .cancel)
-//                        ],
-//                        viewableMode: self.viewableMode
-//                    )
-//                    .subscribe(onNext: { result in
-//                        switch result {
-//                        case .completion:
-//                            // Do nothing
-//                            break
-//                        case .selected(let action):
-//                            switch action.type {
-//                            case OWSortMenu.sortBest:
-//                                sortDictateService.update(sortOption: .best, perPostId: self.postId)
-//                            case OWSortMenu.sortNewest:
-//                                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-//                            case OWSortMenu.sortOldest:
-//                                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
-//                            default:
-//                                break
-//                            }
-//                        }
-//                    })
-//                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 

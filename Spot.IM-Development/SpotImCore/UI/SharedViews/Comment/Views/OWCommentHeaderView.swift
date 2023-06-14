@@ -214,11 +214,13 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
 
-        optionButton.rx.tap.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.inputs.tapMore.onNext(self.optionButton)
-            // TODO: handle tap!
-        }).disposed(by: disposeBag)
+        optionButton.rx.tap
+            .map { [weak self] in
+                return self?.optionButton
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tapMore)
+            .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
             .bind(to: hiddenCommentReasonLabel.rx.text)
