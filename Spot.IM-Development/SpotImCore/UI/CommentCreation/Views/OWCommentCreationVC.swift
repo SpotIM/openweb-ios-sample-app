@@ -41,6 +41,10 @@ class OWCommentCreationVC: UIViewController {
         super.viewDidLoad()
         viewModel.inputs.viewDidLoad.onNext()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
 }
 
 fileprivate extension OWCommentCreationVC {
