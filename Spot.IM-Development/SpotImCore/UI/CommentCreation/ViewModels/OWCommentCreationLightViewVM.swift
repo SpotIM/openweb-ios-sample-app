@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationLightViewViewModelingInputs {
-
+    var closeButtonTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationLightViewViewModelingOutputs {
@@ -30,6 +30,8 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
     var commentType: OWCommentCreationType
+
+    var closeButtonTap = PublishSubject<Void>()
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,

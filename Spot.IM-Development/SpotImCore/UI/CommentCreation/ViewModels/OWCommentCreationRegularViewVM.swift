@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationRegularViewViewModelingInputs {
-
+    var closeButtonTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
@@ -31,6 +31,8 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     var commentType: OWCommentCreationType
+
+    var closeButtonTap = PublishSubject<Void>()
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
         return OWArticleDescriptionViewModel(article: commentCreationData.article)

@@ -19,6 +19,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling { get }
     var commentType: OWCommentCreationType { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
+    var closeButtonTapped: Observable<Void> { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -32,6 +33,15 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    lazy var closeButtonTapped: Observable<Void> = {
+        return Observable.merge(
+            commentCreationRegularViewVm.inputs.closeButtonTap,
+            commentCreationLightViewVm.inputs.closeButtonTap,
+            commentCreationFloatingKeyboardViewVm.inputs.closeButtonTap
+        )
+        .asObservable()
+    }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
         return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData)

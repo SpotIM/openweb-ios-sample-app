@@ -14,9 +14,9 @@ protocol OWRoutering {
     var rootViewController: UIViewController? { get }
     func start()
     func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
-    func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
+    func push(_ module: OWPresentable, pushStyle: OWScreenPresentationStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
     func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
-    func pop(animated: Bool)
+    func pop(popStyle: OWScreenPresentationStyle, animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
@@ -64,7 +64,7 @@ class OWRouter: NSObject, OWRoutering {
                                      completion: nil)
     }
 
-    func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle = .regular, animated: Bool, popCompletion: PublishSubject<Void>?) {
+    func push(_ module: OWPresentable, pushStyle: OWScreenPresentationStyle = .regular, animated: Bool, popCompletion: PublishSubject<Void>?) {
         if let completion = popCompletion {
             completions[module.toPresentable()] = completion
         }
@@ -90,9 +90,22 @@ class OWRouter: NSObject, OWRoutering {
         navigationController?.setViewControllers([module.toPresentable()], animated: animated)
     }
 
-    func pop(animated: Bool) {
-        if let controller = navigationController?.popViewController(animated: animated) {
-            runCompletion(for: controller)
+    func pop(popStyle: OWScreenPresentationStyle = .regular, animated: Bool) {
+        switch popStyle {
+        case .regular:
+            if let controller = navigationController?.popViewController(animated: animated) {
+                runCompletion(for: controller)
+            }
+        case .presentStyle:
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            transition.type = .reveal
+            transition.subtype = .fromBottom
+            navigationController?.view.layer.add(transition, forKey: nil)
+            if let controller = navigationController?.popViewController(animated: false) {
+                runCompletion(for: controller)
+            }
         }
     }
 
