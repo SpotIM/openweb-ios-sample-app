@@ -14,7 +14,7 @@ public struct OWAdditionalSettings: OWAdditionalSettingsProtocol {
     public let fullConversationSettings: OWConversationSettingsProtocol
     public let commentCreationSettings: OWCommentCreationSettingsProtocol
     public let commentThreadSettings: OWCommentThreadSettingsProtocol
-    
+
     public init(preConversationSettings: OWPreConversationSettingsProtocol = OWPreConversationSettings(),
                 fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings(),
                 commentCreationSettings: OWCommentCreationSettingsProtocol = OWCommentCreationSettings(),
