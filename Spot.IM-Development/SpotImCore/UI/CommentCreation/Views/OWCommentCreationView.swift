@@ -50,6 +50,7 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWCommentCreationView {
     func setupViews() {
         self.useAsThemeStyleInjector()
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
 
         let commentCreationView: UIView
         switch viewModel.outputs.commentCreationStyle {
@@ -68,6 +69,12 @@ fileprivate extension OWCommentCreationView {
     }
 
     func setupObservers() {
-
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }
