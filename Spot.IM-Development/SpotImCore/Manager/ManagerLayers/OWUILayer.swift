@@ -44,7 +44,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible, OWCompactRou
 extension OWUILayer {
     func preConversation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWPreConversationSettingsProtocol? = nil,
+                         additionalSettings: OWAdditionalSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWViewCompletion) {
         prepareForNewFlow()
@@ -78,7 +78,7 @@ extension OWUILayer {
 
     func conversation(postId: OWPostId, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWConversationSettingsProtocol? = nil,
+                      additionalSettings: OWAdditionalSettingsProtocol? = nil,
                       callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -117,7 +117,7 @@ extension OWUILayer {
 
     func commentCreation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWCommentCreationSettingsProtocol? = nil,
+                         additionalSettings: OWAdditionalSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -133,7 +133,7 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings,
+                                                          settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
         let commentCreationData = OWCommentCreationRequiredData(article: article, commentCreationType: .comment)
 
@@ -160,7 +160,7 @@ extension OWUILayer {
                        article: OWArticleProtocol,
                        commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
-                       additionalSettings: OWCommentThreadSettingsProtocol? = nil,
+                       additionalSettings: OWAdditionalSettingsProtocol? = nil,
                        callbacks: OWViewActionsCallbacks? = nil,
                        completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -176,7 +176,7 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings,
+                                                          settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
         let commentThreadData = OWCommentThreadRequiredData(article: article, commentId: commentId)
 
@@ -243,7 +243,7 @@ extension OWUILayer {
 extension OWUILayer {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
-                         additionalSettings: OWPreConversationSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
 
@@ -275,7 +275,7 @@ extension OWUILayer {
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
-                      additionalSettings: OWConversationSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 

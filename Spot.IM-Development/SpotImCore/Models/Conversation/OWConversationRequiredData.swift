@@ -10,6 +10,6 @@ import Foundation
 
 struct OWConversationRequiredData {
     let article: OWArticleProtocol
-    let settings: OWConversationSettingsProtocol?
+    let settings: OWAdditionalSettingsProtocol?
     let presentationalStyle: OWPresentationalModeCompact
 }
