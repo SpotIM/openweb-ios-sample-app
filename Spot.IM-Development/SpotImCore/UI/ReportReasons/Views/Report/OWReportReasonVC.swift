@@ -14,6 +14,7 @@ class OWReportReasonVC: UIViewController {
     fileprivate struct Metrics {
         static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonSize: CGFloat = 40
+        static let closeButtonIdentidier = "report_reason_close_button_id"
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
@@ -44,6 +45,7 @@ class OWReportReasonVC: UIViewController {
         super.loadView()
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -130,5 +132,9 @@ fileprivate extension OWReportReasonVC {
         closeButton.rx.tap
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentidier
     }
 }

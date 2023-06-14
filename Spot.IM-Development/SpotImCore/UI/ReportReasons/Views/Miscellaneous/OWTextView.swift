@@ -13,10 +13,10 @@ import RxCocoa
 
 class OWTextView: UIView {
     fileprivate struct Metrics {
-        static let identifier = "_text_view_view_id"
-        static let textViewIdentifier = "_textview_id"
-        static let placeholderLabelIdentifier = "_placeholder_label_id"
-        static let charectersCounterLabelIdentifier = "_charecters_counter_label_id"
+        static let suffixIdentifier = "_text_view_view_id"
+        static let textViewSuffixIdentifier = "_textview_id"
+        static let placeholderLabelSuffixIdentifier = "_placeholder_label_id"
+        static let charectersCounterLabelSuffixIdentifier = "_charecters_counter_label_id"
         static let cornerRadius: CGFloat = 6
         static let borderWidth: CGFloat = 1
         static let textViewBottomPadding: CGFloat = 16
@@ -43,7 +43,7 @@ class OWTextView: UIView {
                                           right: Metrics.textViewLeadingTrailingPadding))
     }()
 
-    fileprivate lazy var charectersCountView: UILabel = {
+    fileprivate lazy var charectersCountLabel: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(style: .regular, size: Metrics.charectersFontSize))
                 .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -72,10 +72,10 @@ class OWTextView: UIView {
 
 fileprivate extension OWTextView {
     func applyAccessibility(prefixId: String) {
-        self.accessibilityIdentifier = prefixId + Metrics.identifier
-        textView.accessibilityIdentifier = prefixId + Metrics.textViewIdentifier
-        textViewPlaceholder.accessibilityIdentifier = prefixId + Metrics.placeholderLabelIdentifier
-        charectersCountView.accessibilityIdentifier = prefixId + Metrics.charectersCounterLabelIdentifier
+        self.accessibilityIdentifier = prefixId + Metrics.suffixIdentifier
+        textView.accessibilityIdentifier = prefixId + Metrics.textViewSuffixIdentifier
+        textViewPlaceholder.accessibilityIdentifier = prefixId + Metrics.placeholderLabelSuffixIdentifier
+        charectersCountLabel.accessibilityIdentifier = prefixId + Metrics.charectersCounterLabelSuffixIdentifier
     }
 
     func setupViews() {
@@ -84,8 +84,8 @@ fileprivate extension OWTextView {
         self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
 
         if viewModel.outputs.charectersLimitEnabled {
-            self.addSubviews(charectersCountView)
-            charectersCountView.OWSnp.makeConstraints { make in
+            self.addSubviews(charectersCountLabel)
+            charectersCountLabel.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
                 make.bottom.equalToSuperview().inset(Metrics.charectersBottomPadding)
             }
@@ -95,7 +95,7 @@ fileprivate extension OWTextView {
         textView.OWSnp.makeConstraints { make in
             if viewModel.outputs.charectersLimitEnabled {
                 make.top.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(charectersCountView.OWSnp.top)
+                make.bottom.equalTo(charectersCountLabel.OWSnp.top)
             } else {
                 make.edges.equalToSuperview()
             }
@@ -118,7 +118,7 @@ fileprivate extension OWTextView {
                     self.textView.text = String(self.textView.text.prefix(self.viewModel.outputs.textViewMaxCharecters))
                 }
                 self.viewModel.inputs.textViewCharectersCount.onNext(self.textView.text.count)
-                self.charectersCountView.text = "\(self.textView.text.count)/" + "\(self.viewModel.outputs.textViewMaxCharecters)"
+                self.charectersCountLabel.text = "\(self.textView.text.count)/" + "\(self.viewModel.outputs.textViewMaxCharecters)"
                 self.viewModel.inputs.textViewTextChange.onNext(self.textView.text ?? "")
             })
             .disposed(by: disposeBag)

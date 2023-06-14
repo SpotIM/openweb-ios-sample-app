@@ -14,6 +14,12 @@ import Foundation
 class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "report_reason_view_id"
+        static let cancelButtonIdentifier = "report_reason_cancel_button_id"
+        static let submitButtonIdentifier = "report_reason_submit_button_id"
+        static let tableViewIdentifier = "report_reason_table_view_id"
+        static let tableHeaderViewIdentifier = "report_reason_table_header_view_id"
+        static let tableViewHeaderLabelIdentifier = "report_reason_table_header_label_id"
+        static let footerViewIdentifier = "report_reason_footer_view_id"
         static let cellReuseIdentifier = "reportReasonCell"
         static let prefixIdentifier = "report_reason"
         static let cellHeight: CGFloat = 68
@@ -80,12 +86,12 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tableViewHeaderView: UIView = {
+    fileprivate lazy var tableHeaderView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var tableViewHeaderLabel: UILabel = {
+    fileprivate lazy var tableHeaderLabel: UILabel = {
         return UILabel()
             .backgroundColor(.clear)
             .numberOfLines(0)
@@ -110,6 +116,12 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWReportReasonView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier
+        submitButton.accessibilityIdentifier = Metrics.submitButtonIdentifier
+        tableViewReasons.accessibilityIdentifier = Metrics.tableViewIdentifier
+        tableHeaderView.accessibilityIdentifier = Metrics.tableHeaderViewIdentifier
+        tableHeaderLabel.accessibilityIdentifier = Metrics.tableViewHeaderLabelIdentifier
+        footerView.accessibilityIdentifier = Metrics.footerViewIdentifier
     }
 
     func setupViews() {
@@ -164,8 +176,8 @@ fileprivate extension OWReportReasonView {
         footerStackView.addArrangedSubview(cancelButton)
         footerStackView.addArrangedSubview(submitButton)
 
-        tableViewHeaderView.addSubview(tableViewHeaderLabel)
-        tableViewHeaderLabel.OWSnp.makeConstraints { make in
+        tableHeaderView.addSubview(tableHeaderLabel)
+        tableHeaderLabel.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview().inset(Metrics.headerTextPadding)
         }
     }
@@ -190,7 +202,7 @@ fileprivate extension OWReportReasonView {
                     .setBackgroundColor(color: OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), forState: .normal)
                 self.cancelButton
                     .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
-                self.tableViewHeaderView
+                self.tableHeaderView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
             })
@@ -199,7 +211,7 @@ fileprivate extension OWReportReasonView {
         viewModel.outputs.tableViewHeaderAttributedText
             .subscribe(onNext: { [weak self] attributedText in
                 guard let self = self else { return }
-                self.tableViewHeaderLabel
+                self.tableHeaderLabel
                     .attributedText(attributedText)
                     .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
                         guard let self = self else { return }
@@ -298,6 +310,6 @@ extension OWReportReasonView: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return tableViewHeaderView
+        return tableHeaderView
     }
 }
