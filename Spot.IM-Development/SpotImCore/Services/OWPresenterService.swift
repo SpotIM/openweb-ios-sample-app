@@ -51,59 +51,10 @@ class OWPresenterService: OWPresenterServicing {
 
     func showMenu(actions: [OWMenuSelectionItem], sender: UIView, viewableMode: OWViewableMode) {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
-        let menuVM = OWMenuSelectionViewModel(items: actions.map {
-            OWMenuSelectionItem(title: $0.title, onClick: PublishSubject()) // TODO: publish subject
-        })
-        let menuView = OWMenuSelection(viewModel: menuVM)
-
-        let wrapperView = UIView().backgroundColor(.clear)
-        presenterVC.view.addSubview(wrapperView)
-        wrapperView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
-        wrapperView.addSubview(menuView)
-
-        var zeroSizeConstraint: OWConstraint? = nil
-        let senderLocationFrame = sender.convert(CGPoint.zero, to: presenterVC.view)
-        let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
-        let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
-        menuView.OWSnp.makeConstraints { make in
-            if (isTopSection) {
-                make.top.equalTo(sender.OWSnp.centerY)
-            } else {
-                make.bottom.equalTo(sender.OWSnp.centerY)
-            }
-            if (isLeftSection) {
-                make.left.equalTo(sender.OWSnp.centerX)
-            } else {
-                make.right.equalTo(sender.OWSnp.centerX)
-            }
-
-            zeroSizeConstraint = make.size.equalTo(0).constraint
-            zeroSizeConstraint?.isActive = true
-        }
-
-        let tapGesture: UITapGestureRecognizer = {
-            let tap = UITapGestureRecognizer()
-            tap.numberOfTapsRequired = 1
-            return tap
-        }()
-
-        wrapperView.addGestureRecognizer(tapGesture)
-        tapGesture.rx.event
-            .voidify()
-            .subscribe(onNext: { _ in
-                wrapperView.removeFromSuperview()
-            })
-            .disposed(by: disposeBag)
-
-        // TODO: propper animation
-        UIView.animate(withDuration: 0.3, delay: 0, options: UIView.AnimationOptions.transitionCurlDown, animations: {
-            zeroSizeConstraint?.isActive = false
-            menuView.setNeedsLayout()
-            menuView.layoutIfNeeded()
-        })
+        print("NOGAH - open menu")
+        let menuVM = OWMenuSelectionViewModel(items: actions)
+        // OWMenuSelectionWrapperView is addind himself to the presenterVC with propper constraints
+        let wrapperView = OWMenuSelectionWrapperView(menuVM: menuVM, senderView: sender, presenterVC: presenterVC)
     }
 }
 
