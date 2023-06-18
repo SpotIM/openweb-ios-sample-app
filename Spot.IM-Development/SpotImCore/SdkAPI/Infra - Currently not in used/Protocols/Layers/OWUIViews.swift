@@ -12,13 +12,13 @@ import Foundation
 public protocol OWUIViews {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
-                         additionalSettings: OWAdditionalSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
@@ -33,13 +33,13 @@ public protocol OWUIViews {
 protocol OWUIViews {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
-                         additionalSettings: OWAdditionalSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 }
