@@ -1,5 +1,5 @@
 //
-//  OWScreenPresentationStyle.swift
+//  OWScreenPushStyle.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 28/09/2022.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWScreenPresentationStyle {
+enum OWScreenPushStyle {
     case regular
     case presentStyle
 }
