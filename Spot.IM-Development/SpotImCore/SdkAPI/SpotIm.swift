@@ -146,7 +146,7 @@ public class SpotIm {
             SpotIm.spotId = nil
             SPUserSessionHolder.resetUserSession()
             configuration = nil
-            LocalizationManager.reset()
+            SPLocalizationManager.reset()
         }
 
         if SpotIm.spotId == nil {

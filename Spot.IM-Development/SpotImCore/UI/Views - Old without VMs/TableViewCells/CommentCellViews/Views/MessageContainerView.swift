@@ -8,14 +8,14 @@
 
 import UIKit
 
-final class MessageContainerView: OWBaseView {
+final class MessageContainerView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "message_container_id"
         static let mainTextLabelIdentifier = "message_container_main_text_label_id"
     }
 
     weak var delegate: MessageContainerViewDelegate?
-    private let mainTextLabel: OWBaseLabel = .init()
+    private let mainTextLabel: SPBaseLabel = .init()
     private var activeURLs: [NSRange: URL] = [:]
 
     override init(frame: CGRect) {
@@ -60,8 +60,8 @@ final class MessageContainerView: OWBaseView {
 
     @objc
     private func handleTap(gesture: UITapGestureRecognizer) {
-        let readMoreString = LocalizationManager.localizedString(key: "Read More")
-        let readLessString = LocalizationManager.localizedString(key: "Read Less")
+        let readMoreString = SPLocalizationManager.localizedString(key: "Read More")
+        let readLessString = SPLocalizationManager.localizedString(key: "Read Less")
 
         if isTarget(substring: readMoreString, destinationOf: gesture) {
             handleReadMoreTap()
@@ -109,8 +109,8 @@ final class MessageContainerView: OWBaseView {
     }
 
     private func didHitCustomTarget(with recognizer: UIGestureRecognizer) -> Bool {
-        let readMoreString = LocalizationManager.localizedString(key: "Read More")
-        let readLessString = LocalizationManager.localizedString(key: "Read Less")
+        let readMoreString = SPLocalizationManager.localizedString(key: "Read More")
+        let readLessString = SPLocalizationManager.localizedString(key: "Read Less")
 
         if isTarget(substring: readMoreString, destinationOf: recognizer) ||
             isTarget(substring: readLessString, destinationOf: recognizer) ||

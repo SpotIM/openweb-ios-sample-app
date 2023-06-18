@@ -1,6 +1,6 @@
 //
-//  BaseTextField.swift
-//  SpotImCore
+//  BaseStackView.swift
+//  Spot-IM.Development
 //
 //  Created by Andriy Fedin on 04/12/19.
 //  Copyright © 2019 Spot.IM. All rights reserved.
@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-class OWBaseTextField: UITextField {
+internal class SPBaseStackView: UIStackView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
+        semanticContentAttribute = SPLocalizationManager.currentLanguage?.customSemanticAttribute
             ?? semanticContentAttribute
-        textAlignment = (semanticContentAttribute == .forceRightToLeft) ? .right : .left
+        backgroundColor = .spBackground0
     }
 
     @available(*,
@@ -24,7 +24,7 @@ class OWBaseTextField: UITextField {
     message: "Loading this view from a nib is unsupported in this project"
     )
     required
-    public init?(coder aDecoder: NSCoder) {
+    public init(coder aDecoder: NSCoder) {
         fatalError("Loading this view from a nib is unsupported in this project")
     }
 

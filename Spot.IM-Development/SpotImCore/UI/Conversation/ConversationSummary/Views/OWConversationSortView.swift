@@ -41,7 +41,7 @@ class OWConversationSortView: UIView {
         var inset: CGFloat = spacing / 2
 
         // Update insets in order to make additional space begween title and image
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+        if OWLocalizationManager.shared.semanticAttribute == .forceRightToLeft {
             inset = -inset
         }
 

@@ -120,7 +120,7 @@ class SpotImAuthenticationProvider {
     private func getCodeA(withGuest ssoParams: SPCodeAParameters?,
                           completion: @escaping AuthStratCompleteionHandler) {
         guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+            let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(.failure(SPNetworkError.custom(message)))
             return
         }
@@ -172,17 +172,17 @@ class SpotImAuthenticationProvider {
     func completeSSO(with codeB: String?,
                      completion: @escaping AuthCompletionHandler) {
         guard SPUserSessionHolder.isRegister() == false else {
-            let message = LocalizationManager.localizedString(key: "User is already logged in.")
+            let message = SPLocalizationManager.localizedString(key: "User is already logged in.")
             completion(.failure(SpotImError.internalError(message)))
             return
         }
         guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+            let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(.failure(SPNetworkError.custom(message)))
             return
         }
         guard let codeB = codeB else {
-            let message = LocalizationManager.localizedString(key: "Please provide Code B")
+            let message = SPLocalizationManager.localizedString(key: "Please provide Code B")
             completion(.failure(SPNetworkError.custom(message)))
             return
         }
@@ -205,7 +205,7 @@ class SpotImAuthenticationProvider {
                     let token = response.response?.allHeaderFields.authorizationHeader
                     SPUserSessionHolder.session.token = token ?? SPUserSessionHolder.session.token
                     guard let user = ssoResponse.user, let userId = user.id else {
-                        let message = LocalizationManager.localizedString(key: "Failed to get user in SSO complete")
+                        let message = SPLocalizationManager.localizedString(key: "Failed to get user in SSO complete")
                         let error = SpotImError.internalError(message)
                         self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
                         completion(.failure(error))
@@ -216,7 +216,7 @@ class SpotImAuthenticationProvider {
                     self.ssoAuthDelegate?.ssoFlowDidSucceed()
                     completion(.success(userId))
                 } else {
-                    let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
+                    let errorMessage = SPLocalizationManager.localizedString(key: "Authentication error")
                     let error = SPNetworkError.custom(errorMessage)
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,

@@ -38,7 +38,7 @@ internal enum SPCommentSortMode: String, CaseIterable, Decodable {
         case .oldest:
             title = "Oldest"
         }
-        return LocalizationManager.localizedString(key: title)
+        return SPLocalizationManager.localizedString(key: title)
     }
 
     private func getCustomSortByModeTitleIfExists() -> String? {

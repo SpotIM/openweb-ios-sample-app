@@ -23,7 +23,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let commentMediaView: CommentMediaView = .init()
-    private let opacityView: OWBaseView = .init()
+    private let opacityView: SPBaseView = .init()
 
     private var commentId: String?
     private var replyingToId: String?
@@ -136,11 +136,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
         if let repliesCount = repliesCount, repliesCount == 1 {
-            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Reply")
-            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Reply")
+            moreRepliesView.collapsedTitle = SPLocalizationManager.localizedString(key: "View Reply")
+            moreRepliesView.expandedTitle = SPLocalizationManager.localizedString(key: "Hide Reply")
         } else {
-            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Replies")
-            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
+            moreRepliesView.collapsedTitle = SPLocalizationManager.localizedString(key: "View Replies")
+            moreRepliesView.expandedTitle = SPLocalizationManager.localizedString(key: "Hide Replies")
         }
     }
 

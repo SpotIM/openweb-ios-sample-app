@@ -14,14 +14,14 @@ internal protocol SPCommunityGuidelinesViewDelegate {
     func customizeTextView(textView: UITextView, source: SPViewSourceType)
 }
 
-internal final class SPCommunityGuidelinesView: OWBaseView {
+internal final class SPCommunityGuidelinesView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
         static let titleTextIdentifier = "community_guidelines_title_text_id"
     }
 
-    private lazy var titleTextView: OWBaseTextView = .init()
-    private lazy var separatorView: OWBaseView = .init()
+    private lazy var titleTextView: SPBaseTextView = .init()
+    private lazy var separatorView: SPBaseView = .init()
 
     private var titleBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?

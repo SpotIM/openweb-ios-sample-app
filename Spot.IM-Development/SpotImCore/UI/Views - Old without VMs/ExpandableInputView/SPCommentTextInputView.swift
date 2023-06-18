@@ -20,7 +20,7 @@ internal protocol SPTextInputViewDelegate: AnyObject {
     func validateInput(lenght: Int) -> Bool
 }
 
-final class SPCommentTextInputView: OWBaseView, SPTextInputView {
+final class SPCommentTextInputView: SPBaseView, SPTextInputView {
     fileprivate struct Metrics {
         static let identifier = "comment_text_input_view_id"
         static let textInputViewIdentifier = "comment_text_input_view_text_input_view_id"
@@ -34,7 +34,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     var text: String? { get { textInputView.text }
                         set { textInputView.text = newValue } }
 
-    private let textInputView: OWInputTextView = OWInputTextView()
+    private let textInputView: SPInputTextView = SPInputTextView()
     private lazy var avatarUserView: SPAvatarView = SPAvatarView()
 
     private var textToAvatarConstraint: OWConstraint?
@@ -77,10 +77,10 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     func configureCommentType(_ type: CommentType, avatar: URL? = nil, showAvatar: Bool = false) {
         switch type {
         case .comment:
-            textInputView.placeholder = LocalizationManager.localizedString(key: "What do you think?")
+            textInputView.placeholder = SPLocalizationManager.localizedString(key: "What do you think?")
 
         case .reply:
-            textInputView.placeholder = LocalizationManager.localizedString(key: "Type your reply…")
+            textInputView.placeholder = SPLocalizationManager.localizedString(key: "Type your reply…")
         }
 
         setShowAvatar(showAvatar: showAvatar)
@@ -130,7 +130,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
 
         textInputView.delegate = self
         textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
-        textInputView.textAlignment = LocalizationManager.getTextAlignment()
+        textInputView.textAlignment = SPLocalizationManager.getTextAlignment()
         textInputView.isScrollEnabled = false
     }
 

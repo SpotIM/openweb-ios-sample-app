@@ -288,7 +288,7 @@ fileprivate extension OWCommentHeaderView {
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
         optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+        optionButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "Options menu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
     }
 }

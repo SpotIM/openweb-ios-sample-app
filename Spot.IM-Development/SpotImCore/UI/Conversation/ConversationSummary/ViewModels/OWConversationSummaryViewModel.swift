@@ -63,8 +63,8 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
             .unwrap()
             .map { count in
                 let commentsText: String = count > 1 ?
-                LocalizationManager.localizedString(key: "Comments") :
-                LocalizationManager.localizedString(key: "Comment")
+                SPLocalizationManager.localizedString(key: "Comments") :
+                SPLocalizationManager.localizedString(key: "Comment")
                 return count.kmFormatted + " " + commentsText
             }
             .asObservable()

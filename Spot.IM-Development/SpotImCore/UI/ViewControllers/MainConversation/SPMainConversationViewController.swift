@@ -30,7 +30,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var articleHeader = SPArticleHeader()
     private lazy var loginPromptView = SPLoginPromptView()
-    private lazy var collapsableContainer = OWBaseView()
+    private lazy var collapsableContainer = SPBaseView()
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
@@ -272,7 +272,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 self.presentErrorView(error: error)
             } else {
                 self.showAlert(
-                    title: LocalizationManager.localizedString(key: "Oops..."),
+                    title: SPLocalizationManager.localizedString(key: "Oops..."),
                     message: error.localizedDescription
                 )
             }
@@ -358,7 +358,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             completion: { [weak logger, weak self] (success, _, error) in
                 if let error = error {
                     self?.showAlert(
-                        title: LocalizationManager.localizedString(key: "Oops..."),
+                        title: SPLocalizationManager.localizedString(key: "Oops..."),
                         message: error.localizedDescription
                     )
                 } else if success == false {
@@ -755,7 +755,7 @@ extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
         showActionSheet(
-            title: LocalizationManager.localizedString(key: "Sort by").uppercased(),
+            title: SPLocalizationManager.localizedString(key: "Sort by").uppercased(),
             message: nil,
             actions: model.sortActions(),
             sender: sender)

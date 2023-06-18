@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-internal final class SPCommunityQuestionView: OWBaseView {
+internal final class SPCommunityQuestionView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "community_question_id"
     }
 
-    private lazy var questionTextView: OWBaseTextView = .init()
-    private lazy var separatorView: OWBaseView = .init()
+    private lazy var questionTextView: SPBaseTextView = .init()
+    private lazy var separatorView: SPBaseView = .init()
 
     private var questionBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
