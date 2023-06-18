@@ -36,7 +36,7 @@ fileprivate extension OWCommentCreationFooterView {
     }
 
     func setupObservers() {
-        
+
     }
 
     func applyAccessibility() {
