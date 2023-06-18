@@ -137,11 +137,11 @@
 "copyright_infringement_subtitle" = "שימוש ביצירה שלך המוגנת בזכויות יוצרים ללא אישור";
 "other_title" = "סיבה אחרת";
 "other_subtitle" = "";
-"ReportReasonTitle" = "שליחת דוח";
-"ReportReasonCancelTitle" = "בטל דוח";
-"ReportReasonCancelSubtitle" = "האם אתה בטוח שברצונך לבטל את הדוח שלך ולמחוק את הסיבה שסיפקת?";
-"ReportReasonCancelContinueButton" = "המשך את הדוח";
-"ReportReasonCancelCancelButton" = "בטל דוח";
+"ReportReasonTitle" = "שליחת דיווח";
+"ReportReasonCancelTitle" = "בטל דיווח";
+"ReportReasonCancelSubtitle" = "האם אתה בטוח שברצונך לבטל את הדיווח שלך ולמחוק את הסיבה שסיפקת?";
+"ReportReasonCancelContinueButton" = "המשך את הדיווח";
+"ReportReasonCancelCancelButton" = "בטל דיווח";
 "ReportReasonThanksTitle" = "תודה על המשוב!";
 "ReportReasonThanksSubtitle" = "תישלח לך הודעת דוא\"ל עם החלטת ההנהלה";
 "ReportReasonHelpUsTitle" = "כדי לעזור לנו להבין את הבעיה, אנא בחר איזו מהאפשרויות הבאות מתארת את ההפרה בצורה הטובה ביותר (למידע נוסף)";
@@ -149,5 +149,5 @@
 "Community Guidelines" = "הנחיות הקהילה";
 "TryAgain" = "נסה שנית";
 "AdditionalInfoTitle" = "מידע נוסף";
-"ReportSubmissionFailedTitle" = "הגשת הדוח נכשלה";
-"ReportSubmissionFailedMessage" = "לא ניתן היה להגיש את הדוח שלך. אנא בדוק את חיבור האינטרנט שלך ונסה שוב מאוחר יותר.";
+"ReportSubmissionFailedTitle" = "הגשת הדיווח נכשלה";
+"ReportSubmissionFailedMessage" = "לא ניתן היה להגיש את הדיווח שלך. אנא בדוק את חיבור האינטרנט שלך ונסה שוב מאוחר יותר.";
