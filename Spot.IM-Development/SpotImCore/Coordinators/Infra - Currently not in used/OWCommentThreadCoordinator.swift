@@ -70,7 +70,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 guard let self = self else { return .empty() }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article,
                                                                         settings: self.commentThreadData.settings,
-                                                                        commentCreationType: commentCreationType)
+                                                                        commentCreationType: commentCreationType,
+                                                                        presentationalStyle: self.commentThreadData.presentationalStyle)
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
                                                                               actionsCallbacks: self.actionsCallbacks)
