@@ -13,7 +13,7 @@ import SpotImCore
 #if NEW_API
 
 protocol CommentCreationSettingsViewModelingInputs {
-    var customStyleModeSelectedIndex: PublishSubject<Int> { get }
+    var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
@@ -32,7 +32,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = PublishSubject<Int>()
+    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
