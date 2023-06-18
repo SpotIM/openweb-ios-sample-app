@@ -13,21 +13,21 @@ public protocol OWUIFlows {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWAdditionalSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
 
     func commentCreation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWAdditionalSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
 
@@ -35,7 +35,7 @@ public protocol OWUIFlows {
                        article: OWArticleProtocol,
                        commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
-                       additionalSettings: OWAdditionalSettingsProtocol?,
+                       additionalSettings: OWAdditionalSettingsProtocol,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
 
@@ -52,20 +52,20 @@ protocol OWUIFlows {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWAdditionalSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
 
     func commentCreation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWAdditionalSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
 
@@ -73,7 +73,7 @@ protocol OWUIFlows {
                        article: OWArticleProtocol,
                        commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
-                       additionalSettings: OWAdditionalSettingsProtocol?,
+                       additionalSettings: OWAdditionalSettingsProtocol,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
 }
