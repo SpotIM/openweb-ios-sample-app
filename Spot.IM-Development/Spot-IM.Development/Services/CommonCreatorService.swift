@@ -13,9 +13,7 @@ import SpotImCore
 
 protocol CommonCreatorServicing {
     // Create the following things according to the persistence
-    func preConversationSettings() -> OWPreConversationSettingsProtocol
-    func conversationSettings() -> OWConversationSettingsProtocol
-    func commentCreationSettings() -> OWCommentCreationSettingsProtocol
+    func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle() -> OWArticleProtocol
 }
@@ -27,25 +25,24 @@ class CommonCreatorService: CommonCreatorServicing {
         self.userDefaultsProvider = userDefaultsProvider
     }
 
-    func preConversationSettings() -> OWPreConversationSettingsProtocol {
+    func additionalSettings() -> OWAdditionalSettingsProtocol {
         let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
-        let additionalConversationSettings = self.conversationSettings()
-        let additionalSettings = OWPreConversationSettingsBuilder(style: preConversationStyle, fullConversationSettings: additionalConversationSettings)
-            .build()
-        return additionalSettings
-    }
+        let preConversationSettings = OWPreConversationSettingsBuilder(style: preConversationStyle).build()
 
-    func conversationSettings() -> OWConversationSettingsProtocol {
-        let styleFromPersistence = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let additionalSettings = OWConversationSettingsBuilder(style: styleFromPersistence)
-            .build()
-        return additionalSettings
-    }
+        let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+        let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
 
-    func commentCreationSettings() -> OWCommentCreationSettingsProtocol {
-        let styleFromPersistence = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
-        let additionalSettings = OWCommentCreationSettingsBuilder(conversationSettings: conversationSettings(), style: styleFromPersistence)
-            .build()
+        let commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        let commentCreationSettings = OWCommentCreationSettingsBuilder(style: commentCreationStyle).build()
+
+        let commentThreadSettings = OWCommentThreadSettingsBuilder().build()
+
+        let additionalSettings = OWAdditionalSettingsBuilder(
+            preConversationSettings: preConversationSettings,
+            fullConversationSettings: conversationSettings,
+            commentCreationSettings: commentCreationSettings,
+            commentThreadSettings: commentThreadSettings
+        ).build()
         return additionalSettings
     }
 

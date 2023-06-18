@@ -44,7 +44,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible, OWCompactRou
 extension OWUILayer {
     func preConversation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWPreConversationSettingsProtocol? = nil,
+                         additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWViewCompletion) {
         prepareForNewFlow()
@@ -78,7 +78,7 @@ extension OWUILayer {
 
     func conversation(postId: OWPostId, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWConversationSettingsProtocol? = nil,
+                      additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -117,7 +117,7 @@ extension OWUILayer {
 
     func commentCreation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWCommentCreationSettingsProtocol? = nil,
+                         additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -133,9 +133,11 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings,
+                                                          settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentCreationData = OWCommentCreationRequiredData(article: article, settings: additionalSettings, commentCreationType: .comment)
+        let commentCreationData = OWCommentCreationRequiredData(article: article,
+                                                                settings: additionalSettings,
+                                                                commentCreationType: .comment)
 
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
@@ -160,7 +162,7 @@ extension OWUILayer {
                        article: OWArticleProtocol,
                        commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
-                       additionalSettings: OWCommentThreadSettingsProtocol? = nil,
+                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                        callbacks: OWViewActionsCallbacks? = nil,
                        completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -176,9 +178,9 @@ extension OWUILayer {
         }
 
         let conversationData = OWConversationRequiredData(article: article,
-                                                          settings: additionalSettings?.conversationSettings,
+                                                          settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentThreadData = OWCommentThreadRequiredData(article: article, commentId: commentId)
+        let commentThreadData = OWCommentThreadRequiredData(article: article, settings: additionalSettings, commentId: commentId)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
@@ -243,7 +245,7 @@ extension OWUILayer {
 extension OWUILayer {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
-                         additionalSettings: OWPreConversationSettingsProtocol?,
+                         additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
 
@@ -275,7 +277,7 @@ extension OWUILayer {
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
-                      additionalSettings: OWConversationSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 

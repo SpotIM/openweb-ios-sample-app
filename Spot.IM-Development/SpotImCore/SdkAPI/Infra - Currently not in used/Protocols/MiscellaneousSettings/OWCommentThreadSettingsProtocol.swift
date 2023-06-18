@@ -10,10 +10,10 @@ import Foundation
 
 #if NEW_API
 public protocol OWCommentThreadSettingsProtocol {
-    var conversationSettings: OWConversationSettingsProtocol { get }
+
 }
 #else
 protocol OWCommentThreadSettingsProtocol {
-    var conversationSettings: OWConversationSettingsProtocol { get }
+
 }
 #endif

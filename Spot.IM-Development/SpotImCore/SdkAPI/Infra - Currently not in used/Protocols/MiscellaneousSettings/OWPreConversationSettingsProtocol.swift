@@ -10,12 +10,10 @@ import Foundation
 
 #if NEW_API
 public protocol OWPreConversationSettingsProtocol {
-    var fullConversationSettings: OWConversationSettingsProtocol { get }
     var style: OWPreConversationStyle { get }
 }
 #else
 protocol OWPreConversationSettingsProtocol {
-    var fullConversationSettings: OWConversationSettingsProtocol { get }
     var style: OWPreConversationStyle { get }
 }
 #endif

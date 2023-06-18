@@ -10,18 +10,14 @@ import Foundation
 
 #if NEW_API
 public struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
-    public let conversationSettings: OWConversationSettingsProtocol
 
-    public init(conversationSettings: OWConversationSettingsProtocol) {
-        self.conversationSettings = conversationSettings
+    public init() {
     }
 }
 #else
 struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
-    let conversationSettings: OWConversationSettingsProtocol
 
-    init(conversationSettings: OWConversationSettingsProtocol) {
-        self.conversationSettings = conversationSettings
+    init() {
     }
 }
 #endif

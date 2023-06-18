@@ -10,6 +10,6 @@ import Foundation
 
 struct OWCommentCreationRequiredData {
     let article: OWArticleProtocol
-    let settings: OWCommentCreationSettingsProtocol?
+    let settings: OWAdditionalSettingsProtocol
     let commentCreationType: OWCommentCreationType
 }
