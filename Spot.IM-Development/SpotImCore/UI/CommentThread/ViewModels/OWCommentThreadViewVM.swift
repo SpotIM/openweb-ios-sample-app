@@ -146,7 +146,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         self.viewableMode = viewableMode
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
-        self.viewableMode = viewableMode
         self.setupObservers()
     }
 }
