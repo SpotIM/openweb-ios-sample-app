@@ -137,7 +137,8 @@ extension OWUILayer {
                                                           presentationalStyle: presentationalMode.style)
         let commentCreationData = OWCommentCreationRequiredData(article: article,
                                                                 settings: additionalSettings,
-                                                                commentCreationType: .comment)
+                                                                commentCreationType: .comment,
+                                                                presentationalStyle: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
@@ -180,7 +181,10 @@ extension OWUILayer {
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentThreadData = OWCommentThreadRequiredData(article: article, settings: additionalSettings, commentId: commentId)
+        let commentThreadData = OWCommentThreadRequiredData(article: article,
+                                                            settings: additionalSettings,
+                                                            commentId: commentId,
+                                                            presentationalStyle: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
