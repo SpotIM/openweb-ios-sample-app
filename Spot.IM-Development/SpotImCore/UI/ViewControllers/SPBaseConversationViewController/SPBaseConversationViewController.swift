@@ -228,9 +228,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         let errorAction = configureErrorAction()
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
-                actionMessage: LocalizationManager.localizedString(key: "We are unable to load comments\nright now."),
+                actionMessage: SPLocalizationManager.localizedString(key: "We are unable to load comments\nright now."),
                 actionIcon: UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!,
-                actionButtonTitle: LocalizationManager.localizedString(key: "Retry"),
+                actionButtonTitle: SPLocalizationManager.localizedString(key: "Retry"),
                 action: errorAction)
         )
     }
@@ -247,12 +247,12 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         var actionButtonTitle: String? = nil
         var action: EmptyActionDataModel.Action? = nil
         if (isReadOnlyModeEnabled()) {
-            actionMessage = LocalizationManager.localizedString(key: "Commenting on this article has ended")
+            actionMessage = SPLocalizationManager.localizedString(key: "Commenting on this article has ended")
             actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon", supportDarkMode: true)!
         } else {
-            actionMessage = LocalizationManager.localizedString(key: "Be the first to comment")
+            actionMessage = SPLocalizationManager.localizedString(key: "Be the first to comment")
             actionIcon = UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!
-            actionButtonTitle = LocalizationManager.localizedString(key: "Write a Comment")
+            actionButtonTitle = SPLocalizationManager.localizedString(key: "Write a Comment")
             action = { [weak self] in
                 guard let self = self, let delegate = self.delegate else { return }
                 self.logCreationOpen(with: .comment)
@@ -304,9 +304,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         let noInternetAction = configureNoInternetAction()
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
-                actionMessage: LocalizationManager.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
+                actionMessage: SPLocalizationManager.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
                 actionIcon: UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!,
-                actionButtonTitle: LocalizationManager.localizedString(key: "Retry"),
+                actionButtonTitle: SPLocalizationManager.localizedString(key: "Retry"),
                 action: noInternetAction
             )
         )
@@ -394,7 +394,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
 
         model.copyCommentText(at: indexPath)
 
-        showToast(message: LocalizationManager.localizedString(key: "Text copied to clipboard"),
+        showToast(message: SPLocalizationManager.localizedString(key: "Text copied to clipboard"),
                   hideAfter: 0.7)
 
     }
@@ -748,14 +748,14 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 
             if let error = error {
                 self.showAlert(
-                    title: LocalizationManager.localizedString(key: "Oops..."),
+                    title: SPLocalizationManager.localizedString(key: "Oops..."),
                     message: error.localizedDescription
                 )
                 self.model.dataSource.updateRank(with: change.reversed, inCellWith: commentId)
             } else if success == false {
                 self.showAlert(
-                    title: LocalizationManager.localizedString(key: "Oops..."),
-                    message: LocalizationManager.localizedString(key:
+                    title: SPLocalizationManager.localizedString(key: "Oops..."),
+                    message: SPLocalizationManager.localizedString(key:
                         "It seems we are experiencing technical issues. Please try again")
                 )
                 self.model.dataSource.updateRank(with: change.reversed, inCellWith: commentId)
@@ -801,9 +801,9 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             showActionSheet(actions: actions, sender: sender)
         } else {
             servicesProvider.logger().log(level: .verbose, "Showing the user a message because there are no available options to interact with a comment after pressing the 3 dots")
-            let actions = [OWRxPresenterAction(title: LocalizationManager.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
+            let actions = [OWRxPresenterAction(title: SPLocalizationManager.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
             _ = UIAlertController.rx.show(onViewController: self, title: "",
-                                      message: LocalizationManager.localizedString(key: "No available options"),
+                                      message: SPLocalizationManager.localizedString(key: "No available options"),
                                       actions: actions)
                 .take(2) // Taking 2 cause the first one is the completion. No need to dispose cause the whole subscription will finish when the user select an option
                 .subscribe(onNext: { [weak self] result in
@@ -936,7 +936,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
 
     private func showCommentDeletionFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Delete"),
+            title: SPLocalizationManager.localizedString(key: "Delete"),
             style: .destructive) { [weak self] _ in
                 self?.showLoader()
                 self?.model.deleteComment(with: commentId) { error in
@@ -944,7 +944,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                     SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
                     if let error = error {
                         self?.showAlert(
-                            title: LocalizationManager.localizedString(key: "Oops..."),
+                            title: SPLocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
                     }
@@ -955,47 +955,47 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 }
         }
 
-        let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
+        let noAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
-            title: LocalizationManager.localizedString(key: "Delete Comment"),
-            message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
+            title: SPLocalizationManager.localizedString(key: "Delete Comment"),
+            message: SPLocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
     }
 
     private func showCommentReportFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Report"),
+            title: SPLocalizationManager.localizedString(key: "Report"),
             style: .destructive) { [weak self] _ in
                 self?.showLoader()
                 self?.model.reportComment(with: commentId) { error in
                     self?.hideLoader()
                     if let error = error {
                         self?.showAlert(
-                            title: LocalizationManager.localizedString(key: "Oops..."),
+                            title: SPLocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
                     } else {
                         self?.showAlert(
-                            title: LocalizationManager.localizedString(key: "Report Comment"),
-                            message: LocalizationManager.localizedString(key: "Comment reported successfully")
+                            title: SPLocalizationManager.localizedString(key: "Report Comment"),
+                            message: SPLocalizationManager.localizedString(key: "Comment reported successfully")
                         )
                     }
                 }
         }
 
-        let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
+        let noAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
-            title: LocalizationManager.localizedString(key: "Report Comment"),
-            message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
+            title: SPLocalizationManager.localizedString(key: "Report Comment"),
+            message: SPLocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
         SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
 
     private func showCommentMuteFlow(_ commentId: String, replyingToID: String?, userId: String) {
         let muteAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Mute"),
+            title: SPLocalizationManager.localizedString(key: "Mute"),
             style: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 self.showLoader()
@@ -1003,7 +1003,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                     self.hideLoader()
                     if let error = error {
                         self.showAlert(
-                            title: LocalizationManager.localizedString(key: "Oops..."),
+                            title: SPLocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
                     }
@@ -1011,12 +1011,12 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 SPAnalyticsHolder.default.log(event: .commentMuteClicked(messageId: commentId, relatedMessageId: replyingToID, muteUserId: userId), source: .conversation)
         }
 
-        let cancelAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
+        let cancelAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
 
         showAlert(
-            title: LocalizationManager.localizedString(key: "Mute User"),
-            message: LocalizationManager.localizedString(key: "MuteUserMessage"),
+            title: SPLocalizationManager.localizedString(key: "Mute User"),
+            message: SPLocalizationManager.localizedString(key: "MuteUserMessage"),
             actions: [muteAction, cancelAction])
     }
 
@@ -1028,7 +1028,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             self.hideLoader()
             if let error = error {
                 self.showAlert(
-                    title: LocalizationManager.localizedString(key: "Oops..."),
+                    title: SPLocalizationManager.localizedString(key: "Oops..."),
                     message: error.localizedDescription
                 )
             } else if let url = url {
@@ -1046,15 +1046,15 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
 
     private func presentMessageBlockedAlert(with messageText: String?) {
         let copyAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Copy Comment to Clipboard"),
+            title: SPLocalizationManager.localizedString(key: "Copy Comment to Clipboard"),
             style: .default) { _ in
                 UIPasteboard.general.string = messageText
         }
-        let gotItAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Got it"),
+        let gotItAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Got it"),
                                         style: .default)
         showAlert(
-            title: LocalizationManager.localizedString(key: "This comment violated our policy."),
-            message: LocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
+            title: SPLocalizationManager.localizedString(key: "This comment violated our policy."),
+            message: SPLocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
             actions: [copyAction, gotItAction]
         )
     }

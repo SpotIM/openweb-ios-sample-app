@@ -8,12 +8,12 @@
 
 import UIKit
 
-public class OWBaseButton: UIButton {
+public class SPBaseButton: UIButton {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
+        semanticContentAttribute = SPLocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
     }
 

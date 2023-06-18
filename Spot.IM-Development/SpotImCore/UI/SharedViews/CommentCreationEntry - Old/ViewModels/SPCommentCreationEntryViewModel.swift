@@ -46,7 +46,7 @@ class SPCommentCreationEntryViewModel: SPCommentCreationEntryViewModeling, SPCom
         setupObservers()
     }
 
-    fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
+    fileprivate let _actionText = BehaviorSubject<String>(value: SPLocalizationManager.localizedString(key: "What do you think?"))
 
     func configure(delegate: SPCommentCreationEntryViewDelegate?) {
         self.delegate = delegate

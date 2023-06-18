@@ -28,7 +28,7 @@ final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProv
         isFetching = true
         currentRequest?.cancel()
         guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+            let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
         }

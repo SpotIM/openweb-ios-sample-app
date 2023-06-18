@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final class LocalizationManager {
+final class SPLocalizationManager {
 
     static private(set) var currentLanguage: SupportedLanguage?
     static private(set) var locale: Locale?

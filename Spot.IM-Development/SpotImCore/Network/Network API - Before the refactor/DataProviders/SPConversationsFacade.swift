@@ -96,7 +96,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                            completion: @escaping (SPConversationReadRM?, SPNetworkError?) -> Void) {
         let spRequest = SPConversationRequest.conversationRead
         guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+            let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
         }
@@ -158,7 +158,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
     internal func commnetsCounters(conversationIds: [String]) -> Observable<[String: SPConversationCounters]> {
         return Observable.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
-                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+                let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }

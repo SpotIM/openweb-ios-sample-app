@@ -8,14 +8,14 @@
 
 import UIKit
 
-internal final class CommentLabelView: OWBaseView {
+internal final class CommentLabelView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_label_id"
     }
 
-    private let labelContainer: OWBaseView = .init()
-    private let iconImageView: OWBaseUIImageView = .init()
-    private let label: OWBaseLabel = .init()
+    private let labelContainer: SPBaseView = .init()
+    private let iconImageView: SPBaseUIImageView = .init()
+    private let label: SPBaseLabel = .init()
 
     private var commentLabelColor: UIColor = .clear
     private var state: OWLabelState = .readOnly

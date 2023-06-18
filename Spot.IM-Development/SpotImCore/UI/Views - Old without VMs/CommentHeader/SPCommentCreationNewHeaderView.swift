@@ -18,9 +18,9 @@ enum HeaderMode {
     var title: String {
         switch(self) {
         case .add:
-            return LocalizationManager.localizedString(key: "Add a comment")
+            return SPLocalizationManager.localizedString(key: "Add a comment")
         case .edit:
-            return LocalizationManager.localizedString(key: "Edit a comment")
+            return SPLocalizationManager.localizedString(key: "Edit a comment")
         }
     }
 }
@@ -29,7 +29,7 @@ protocol SPCommentCreationNewHeaderViewDelegate: AnyObject {
     func customizeHeaderTitle(label: UILabel)
 }
 
-final class SPCommentCreationNewHeaderView: OWBaseView {
+final class SPCommentCreationNewHeaderView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_new_header_view_id"
         static let closeButtonIdentifier = "comment_creation_new_header_view_close_button_id"
@@ -40,13 +40,13 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     weak var delegate: SPCommentCreationNewHeaderViewDelegate?
 
-    let closeButton: OWBaseButton = .init()
+    let closeButton: SPBaseButton = .init()
 
-    private let headerTitleLabel: OWBaseLabel = .init()
-    private let replyingLabel: OWBaseLabel = .init()
-    private let commentAuthorLabel: OWBaseLabel = .init()
-    private let commentLabel: OWBaseLabel = .init()
-    private let separatorView: OWBaseView = .init()
+    private let headerTitleLabel: SPBaseLabel = .init()
+    private let replyingLabel: SPBaseLabel = .init()
+    private let commentAuthorLabel: SPBaseLabel = .init()
+    private let commentLabel: SPBaseLabel = .init()
+    private let separatorView: SPBaseView = .init()
 
     private var replyingLabelTopConstraint: OWConstraint? = nil
     private var commentLabelTopConstraint: OWConstraint? = nil
@@ -163,7 +163,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
 
     private func setupReplyingLabel() {
-        replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
+        replyingLabel.text = SPLocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.replyingToFontSize)
         replyingLabel.OWSnp.makeConstraints { make in
             replyingLabelTopConstraint = make.top.equalTo(separatorView.OWSnp.bottom).offset(Theme.replyingTopOffset).constraint

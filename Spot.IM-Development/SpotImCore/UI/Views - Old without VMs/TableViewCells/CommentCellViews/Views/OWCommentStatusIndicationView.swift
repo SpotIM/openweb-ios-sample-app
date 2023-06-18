@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWCommentStatusIndicationView: OWBaseView {
+class OWCommentStatusIndicationView: SPBaseView {
     struct Metrics {
         static let iconSize: CGFloat = 14
 
@@ -24,14 +24,14 @@ class OWCommentStatusIndicationView: OWBaseView {
         static let identifier = "comment_status_indication_view_id"
     }
 
-    private let iconImageView: OWBaseUIImageView = {
-        let imageView = OWBaseUIImageView()
+    private let iconImageView: SPBaseUIImageView = {
+        let imageView = SPBaseUIImageView()
         imageView.image = UIImage(spNamed: "pendingIcon")
         return imageView
     }()
 
-    private let statusTextLabel: OWBaseLabel = {
-        let label = OWBaseLabel()
+    private let statusTextLabel: SPBaseLabel = {
+        let label = SPBaseLabel()
         label.numberOfLines = 0
         label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
         return label

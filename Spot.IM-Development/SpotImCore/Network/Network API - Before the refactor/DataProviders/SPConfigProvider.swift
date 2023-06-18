@@ -24,7 +24,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
     /// app and ads configurations
     func fetchConfigs() -> Observable<SpotConfig> {
         guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+            let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
             return Observable.error(SPNetworkError.custom(message))
         }
 

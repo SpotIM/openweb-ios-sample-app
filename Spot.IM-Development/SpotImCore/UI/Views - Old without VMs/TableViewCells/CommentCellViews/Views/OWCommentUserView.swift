@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class OWCommentUserView: OWBaseView {
+final class OWCommentUserView: SPBaseView {
 
     fileprivate struct Metrics {
         static let topOffset: CGFloat = 14.0

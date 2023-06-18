@@ -71,7 +71,7 @@ fileprivate extension OWConversationVC {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
 
-        title = LocalizationManager.localizedString(key: "Conversation")
+        title = SPLocalizationManager.localizedString(key: "Conversation")
 
         if viewModel.outputs.shouldCustomizeNavigationBar {
             navController?.navigationBar.isTranslucent = false

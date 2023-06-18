@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-internal final class SPUserNameView: OWBaseView {
+internal final class SPUserNameView: SPBaseView {
 
     enum ContentType {
         case comment, reply
@@ -36,17 +36,17 @@ internal final class SPUserNameView: OWBaseView {
     fileprivate var viewModel: SPUserNameViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    private let userNameLabel: OWBaseLabel = .init()
-    private let badgeTagLabel: OWBaseLabel = .init()
+    private let userNameLabel: SPBaseLabel = .init()
+    private let badgeTagLabel: SPBaseLabel = .init()
     private let nameAndBadgeStackview = UIStackView()
-    private let subtitleLabel: OWBaseLabel = .init()
-    private let dateLabel: OWBaseLabel = .init()
-    private lazy var moreButton: OWBaseButton = {
-        let btn = OWBaseButton()
+    private let subtitleLabel: SPBaseLabel = .init()
+    private let dateLabel: SPBaseLabel = .init()
+    private lazy var moreButton: SPBaseButton = {
+        let btn = SPBaseButton()
         return btn
     }()
-    private lazy var hiddenCommentReasonLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var hiddenCommentReasonLabel: SPBaseLabel = {
+        let lbl = SPBaseLabel()
         return lbl
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
@@ -283,6 +283,6 @@ extension SPUserNameView {
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
 
         moreButton.accessibilityTraits = .button
-        moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+        moreButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "Options menu")
     }
 }
