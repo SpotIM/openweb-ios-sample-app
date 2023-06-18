@@ -32,8 +32,17 @@ class CommonCreatorService: CommonCreatorServicing {
         let conversationStyle = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
         let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
 
-        let additionalSettings = OWAdditionalSettingsBuilder(preConversationSettings: preConversationSettings, fullConversationSettings: conversationSettings)
-            .build()
+        let commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        let commentCreationSettings = OWCommentCreationSettingsBuilder(style: commentCreationStyle).build()
+
+        let commentThreadSettings = OWCommentThreadSettingsBuilder().build()
+
+        let additionalSettings = OWAdditionalSettingsBuilder(
+            preConversationSettings: preConversationSettings,
+            fullConversationSettings: conversationSettings,
+            commentCreationSettings: commentCreationSettings,
+            commentThreadSettings: commentThreadSettings
+        ).build()
         return additionalSettings
     }
 
