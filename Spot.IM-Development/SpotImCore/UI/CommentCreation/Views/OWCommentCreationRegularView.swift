@@ -56,9 +56,8 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         return UITextView()
     }()
 
-    fileprivate lazy var footerView: UIView = {
-        return UIView()
-            .backgroundColor(.blue)
+    fileprivate lazy var footerView: OWCommentCreationFooterView = {
+        return OWCommentCreationFooterView(with: self.viewModel.outputs.footerViewModel)
     }()
 
     fileprivate let viewModel: OWCommentCreationRegularViewViewModeling
