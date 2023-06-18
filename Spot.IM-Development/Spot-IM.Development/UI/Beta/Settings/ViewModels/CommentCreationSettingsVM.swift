@@ -32,7 +32,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     fileprivate struct Metrics {
         static let delayInsertDataToPersistense = 100
     }
-    
+
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
