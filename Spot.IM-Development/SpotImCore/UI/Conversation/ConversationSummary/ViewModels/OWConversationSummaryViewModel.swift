@@ -61,12 +61,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
                 return count
             }
             .unwrap()
-            .map { count in
-                let commentsText: String = count > 1 ?
-                LocalizationManager.localizedString(key: "Comments") :
-                LocalizationManager.localizedString(key: "Comment")
-                return count.kmFormatted + " " + commentsText
-            }
+            .map { self.getCommentsText(for: $0) }
             .asObservable()
     }()
 
@@ -93,5 +88,15 @@ fileprivate extension OWConversationSummaryViewModel {
             }
             .bind(to: _triggerCustomizeCounterLabelUI)
             .disposed(by: disposeBag)
+    }
+
+    func getCommentsText(for count: Int) -> String {
+        let commentsString: String = count > 1 ?
+        OWLocalizationManager.shared.localizedString(key: "Comments") :
+        OWLocalizationManager.shared.localizedString(key: "Comment")
+
+        let RTLcommentsText: String = String(count) + " " + commentsString
+        let LTRcommentsText: String = count.kmFormatted + " " + commentsString
+        return OWLocalizationManager.shared.semanticAttribute == .forceLeftToRight ? LTRcommentsText : RTLcommentsText
     }
 }

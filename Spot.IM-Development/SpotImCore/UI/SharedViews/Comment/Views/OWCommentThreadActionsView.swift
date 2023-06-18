@@ -73,6 +73,7 @@ class OWCommentThreadActionsView: UIView {
         }
 
         return view
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var actionLabel: UILabel = {

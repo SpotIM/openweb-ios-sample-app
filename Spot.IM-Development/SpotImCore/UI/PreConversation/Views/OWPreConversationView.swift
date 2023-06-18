@@ -36,8 +36,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
-    fileprivate lazy var preConversationSummary: OWPreConversationSummeryView = {
-        return OWPreConversationSummeryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
+    fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
+        return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
     }()
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
@@ -191,7 +191,12 @@ fileprivate extension OWPreConversationView {
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionBottomDevider.OWSnp.bottom).offset(Metrics.communityQuestionDeviderPadding)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            // avoide device notch in landscape
+            if #available(iOS 11.0, *) {
+                make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+            } else {
+                make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            }
         }
 
         self.addSubview(commentingCTAView)
