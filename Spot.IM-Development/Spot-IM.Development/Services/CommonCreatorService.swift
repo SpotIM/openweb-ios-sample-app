@@ -13,8 +13,7 @@ import SpotImCore
 
 protocol CommonCreatorServicing {
     // Create the following things according to the persistence
-    func preConversationSettings() -> OWAdditionalSettingsProtocol
-    func conversationSettings() -> OWAdditionalSettingsProtocol
+    func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle() -> OWArticleProtocol
 }
@@ -26,7 +25,7 @@ class CommonCreatorService: CommonCreatorServicing {
         self.userDefaultsProvider = userDefaultsProvider
     }
 
-    func preConversationSettings() -> OWAdditionalSettingsProtocol {
+    func additionalSettings() -> OWAdditionalSettingsProtocol {
         let preConversationStyle = self.userDefaultsProvider.get(key: .preConversationStyle, defaultValue: OWPreConversationStyle.default)
         let preConversationSettings = OWPreConversationSettingsBuilder(style: preConversationStyle).build()
 
@@ -35,13 +34,6 @@ class CommonCreatorService: CommonCreatorServicing {
 
         let additionalSettings = OWAdditionalSettingsBuilder(preConversationSettings: preConversationSettings, fullConversationSettings: conversationSettings)
             .build()
-        return additionalSettings
-    }
-
-    func conversationSettings() -> OWAdditionalSettingsProtocol {
-        let styleFromPersistence = self.userDefaultsProvider.get(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-        let conversationSettings = OWConversationSettingsBuilder(style: styleFromPersistence).build()
-        let additionalSettings = OWAdditionalSettingsBuilder(fullConversationSettings: conversationSettings).build()
         return additionalSettings
     }
 
