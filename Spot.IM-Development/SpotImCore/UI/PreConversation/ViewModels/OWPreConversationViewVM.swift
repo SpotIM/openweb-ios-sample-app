@@ -487,6 +487,35 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Responding to share url from comment cells VMs
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
+                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.shareCommentUrl
+                }
+                return Observable.merge(shareClickOutputObservable)
+            }
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.presenterService()
+                    .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
+
+            }
+            .subscribe { result in
+                switch result {
+                case .completion:
+                    // Do nothing
+                    break
+                case .selected:
+                    // Do nothing
+                    break
+                }
+            }
+            .disposed(by: disposeBag)
+
         // Responding to comment avatar click
         let commentAvatarClickObservable: Observable<URL> = commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<URL> in
