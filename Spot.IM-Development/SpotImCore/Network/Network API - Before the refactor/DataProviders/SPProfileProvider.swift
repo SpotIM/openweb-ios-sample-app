@@ -14,7 +14,7 @@ internal final class SPProfileProvider: NetworkDataProvider {
     func getSingleUseToken() -> Observable<String?> {
         return Observable.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
-                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+                let message = SPLocalizationManager.localizedString(key: "Please provide Spot Key")
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }

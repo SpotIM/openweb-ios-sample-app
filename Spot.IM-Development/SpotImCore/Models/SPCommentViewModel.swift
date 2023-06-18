@@ -395,7 +395,7 @@ internal struct CommentViewModel {
 
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
-           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()] {
+           let currentTranslation = SPLocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[SPLocalizationManager.getLanguageCode()] {
             if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
                 return adminBadge
             } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {

@@ -8,13 +8,13 @@
 
 import UIKit
 
-internal final class SPNameInputView: OWBaseView, SPTextInputView {
+internal final class SPNameInputView: SPBaseView, SPTextInputView {
     fileprivate struct Metrics {
         static let identifier = "name_input_view_id"
         static let usernameIdentifier = "name_input_view_username_id"
     }
     private lazy var avatarUserView: SPAvatarView = .init()
-    private lazy var usernameTextView: OWInputTextView = .init()
+    private lazy var usernameTextView: SPInputTextView = .init()
     private lazy var separatorView: UIView = .init()
 
     internal weak var delegate: SPTextInputViewDelegate?
@@ -88,13 +88,13 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
 
     private func setupUsernameTextField() {
         usernameTextView.textColor = .spForeground1
-        usernameTextView.textAlignment = LocalizationManager.getTextAlignment()
+        usernameTextView.textAlignment = SPLocalizationManager.getTextAlignment()
         usernameTextView.backgroundColor = .spBackground0
         usernameTextView.font = usernameTextView.isEditable ? font : boldFont
         usernameTextView.delegate = self
         usernameTextView.textContainer.maximumNumberOfLines = 1
 
-        usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your Username")
+        usernameTextView.placeholder = SPLocalizationManager.localizedString(key: "Your Username")
         usernameTextView.OWSnp.makeConstraints { make in
             make.leading.equalTo(avatarUserView.OWSnp.trailing).offset(Theme.usernameLeading)
             make.centerY.equalTo(avatarUserView).offset(usernameTextView.textContainer.lineFragmentPadding)

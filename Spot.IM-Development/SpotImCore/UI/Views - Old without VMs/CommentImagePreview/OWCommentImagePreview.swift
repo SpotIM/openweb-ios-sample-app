@@ -12,17 +12,17 @@ protocol OWCommentImagePreviewDelegate: AnyObject {
     func clickedOnRemoveButton()
 }
 
-final class OWCommentImagePreview: OWBaseView {
+final class OWCommentImagePreview: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_image_preview_id"
         static let imageViewIdentifier = "comment_image_preview_image_view_id"
         static let loaderViewIdentifier = "comment_image_preview_loader_view_id"
         static let removeButtonIdentifier = "comment_image_preview_remove_button_id"
     }
-    private let imageView: OWBaseUIImageView = .init()
+    private let imageView: SPBaseUIImageView = .init()
     private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
 
-    private lazy var removeButton: OWBaseButton = .init(type: .custom)
+    private lazy var removeButton: SPBaseButton = .init(type: .custom)
 
     weak var delegate: OWCommentImagePreviewDelegate?
 

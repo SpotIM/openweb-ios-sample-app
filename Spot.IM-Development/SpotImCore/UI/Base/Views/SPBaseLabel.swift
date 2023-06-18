@@ -8,14 +8,14 @@
 
 import UIKit
 
-public class OWBaseLabel: UILabel {
+public class SPBaseLabel: UILabel {
     // edge inset can be set to label (padding), default is no padding (insets = 0)
     var insets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
+        semanticContentAttribute = SPLocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
     }
 

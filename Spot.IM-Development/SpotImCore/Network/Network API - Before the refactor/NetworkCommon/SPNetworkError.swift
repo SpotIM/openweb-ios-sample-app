@@ -35,22 +35,22 @@ extension SPNetworkError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .default:
-            return LocalizationManager.localizedString(key: "It seems we are experiencing technical issues. Please try again")
+            return SPLocalizationManager.localizedString(key: "It seems we are experiencing technical issues. Please try again")
 
         case .emptyResponse:
-            return LocalizationManager.localizedString(key: "Empty response")
+            return SPLocalizationManager.localizedString(key: "Empty response")
 
         case .custom(let description):
             return description
 
         case .noInternet:
-            return LocalizationManager.localizedString(key: "The Internet connection appears to be offline.")
+            return SPLocalizationManager.localizedString(key: "The Internet connection appears to be offline.")
 
         case .requestFailed:
-            return LocalizationManager.localizedString(key: "Load conversation request failed")
+            return SPLocalizationManager.localizedString(key: "Load conversation request failed")
 
         case .missingStatusCode:
-            return LocalizationManager.localizedString(key: "Missing status code")
+            return SPLocalizationManager.localizedString(key: "Missing status code")
         }
     }
 }

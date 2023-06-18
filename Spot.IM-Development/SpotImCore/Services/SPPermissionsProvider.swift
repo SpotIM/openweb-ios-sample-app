@@ -35,14 +35,14 @@ internal final class SPPermissionsProvider {
     private static func getPermissionDeniedMessage(for type: SPPermissionType) -> String {
         switch type {
         case .camera:
-            return LocalizationManager.localizedString(key: "Camera permissions are needed")
+            return SPLocalizationManager.localizedString(key: "Camera permissions are needed")
         }
     }
 
     private static func handlePermissionDenied(for type: SPPermissionType) {
         let alert = UIAlertController(title: nil, message: getPermissionDeniedMessage(for: type), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"), style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Open settings"), style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: SPLocalizationManager.localizedString(key: "Open settings"), style: .default, handler: { _ in
             openAppSettings()
         }))
 

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-internal class CommentMediaView: OWBaseView {
+internal class CommentMediaView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_media_view_id"
         static let gifIdentifier = "comment_gif_webview_id"
@@ -17,7 +17,7 @@ internal class CommentMediaView: OWBaseView {
     }
 
     private let gifWebView: GifWebView = .init()
-    private let imageView: OWBaseUIImageView = .init()
+    private let imageView: SPBaseUIImageView = .init()
 
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var imageViewWidthConstraint: NSLayoutConstraint?
