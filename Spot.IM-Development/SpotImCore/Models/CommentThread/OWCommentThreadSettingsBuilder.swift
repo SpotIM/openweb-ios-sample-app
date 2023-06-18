@@ -10,36 +10,24 @@ import Foundation
 
 #if NEW_API
 public struct OWCommentThreadSettingsBuilder {
-    public var conversationSettings: OWConversationSettingsProtocol
 
-    public init(conversationSettings: OWConversationSettingsProtocol) {
-        self.conversationSettings = conversationSettings
-    }
+    public init() {
 
-    @discardableResult public mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentThreadSettingsBuilder {
-        self.conversationSettings = settings
-        return self
     }
 
     public func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings(conversationSettings: conversationSettings)
+        return OWCommentThreadSettings()
     }
 }
 #else
 struct OWCommentThreadSettingsBuilder {
-    var conversationSettings: OWConversationSettingsProtocol
 
-    init(conversationSettings: OWConversationSettingsProtocol) {
-        self.conversationSettings = conversationSettings
-    }
+    init() {
 
-    @discardableResult mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentThreadSettingsBuilder {
-        self.conversationSettings = settings
-        return self
     }
 
     func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings(conversationSettings: conversationSettings)
+        return OWCommentThreadSettings()
     }
 }
 #endif

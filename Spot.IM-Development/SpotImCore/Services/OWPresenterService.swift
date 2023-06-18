@@ -12,6 +12,7 @@ import RxSwift
 protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
 }
 
 extension OWPresenterServicing {
@@ -42,6 +43,12 @@ class OWPresenterService: OWPresenterServicing {
                                          title: title,
                                          message: nil,
                                          actions: actions)
+    }
+
+    func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
+        guard let presenterVC = getPresenterVC(for: viewableMode)
+        else { return .empty() }
+        return UIActivityViewController.rx.show(onViewController: presenterVC, activityItems: activityItems, applicationActivities: applicationActivities)
     }
 }
 
