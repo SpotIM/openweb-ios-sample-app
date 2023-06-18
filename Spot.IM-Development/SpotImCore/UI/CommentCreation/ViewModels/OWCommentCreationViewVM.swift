@@ -50,7 +50,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     lazy var commentCreationStyle: OWCommentCreationStyle = {
-        return self.commentCreationData.settings?.style ?? .regular
+        return self.commentCreationData.settings.commentCreationSettings.style
     }()
 
     init (commentCreationData: OWCommentCreationRequiredData,

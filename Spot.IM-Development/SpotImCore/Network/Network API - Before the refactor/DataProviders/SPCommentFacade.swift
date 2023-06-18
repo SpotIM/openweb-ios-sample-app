@@ -234,7 +234,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: OWDecodableParser<SPShareLink>(),
+                           parser: OWDecodableParser<OWShareLink>(),
                            headers: headers) { (result, _) in
                             switch result {
                             case .success(let link):

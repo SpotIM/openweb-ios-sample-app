@@ -10,5 +10,6 @@ import Foundation
 
 struct OWCommentThreadRequiredData {
     let article: OWArticleProtocol
+    let settings: OWAdditionalSettingsProtocol
     let commentId: OWCommentId
 }
