@@ -243,7 +243,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var conversationStyle: OWConversationStyle = {
-        return self.conversationData.settings?.style ?? OWConversationStyle.regular
+        return self.conversationData.settings.fullConversationSettings.style
     }()
 
     var viewInitialized = PublishSubject<Void>()
