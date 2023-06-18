@@ -41,11 +41,6 @@ class OWCommentCreationVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.inputs.viewDidLoad.onNext()
-        registerForKeyboardNotifications()
-    }
-
-    deinit {
-        unregisterFromKeyboardNotifications()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -76,33 +71,42 @@ fileprivate extension OWCommentCreationVC {
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
-    }
-}
 
-extension OWCommentCreationVC: OWKeyboardHandable {
-    func keyboardWillShow(_ notification: Notification) {
-        guard
-            let expandedKeyboardHeight = notification.keyboardSize?.height,
-            let animationDuration = notification.keyboardAnimationDuration
-            else { return }
-        let bottomPadding: CGFloat
-        if #available(iOS 11.0, *) {
-            bottomPadding = tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows[0].safeAreaInsets.bottom
-        } else {
-            bottomPadding = 0
-        }
-        self.commentCreationView.OWSnp.updateConstraints { make in
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
-        }
-        UIView.animate(withDuration: animationDuration) { [weak self] in
-            guard let self = self else { return }
-            self.view.layoutIfNeeded()
-        }
-    }
+        // keyboard will show
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .subscribe(onNext: { [weak self] notification in
+                guard
+                    let self = self,
+                    let expandedKeyboardHeight = notification.keyboardSize?.height,
+                    let animationDuration = notification.keyboardAnimationDuration
+                    else { return }
+                let bottomPadding: CGFloat
+                if #available(iOS 11.0, *) {
+                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows[0].safeAreaInsets.bottom
+                } else {
+                    bottomPadding = 0
+                }
+                self.commentCreationView.OWSnp.updateConstraints { make in
+                    make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
+                }
+                UIView.animate(withDuration: animationDuration) { [weak self] in
+                    guard let self = self else { return }
+                    self.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
 
-    func keyboardWillHide(_ notification: Notification) {
-        commentCreationView.OWSnp.updateConstraints { make in
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-        }
+        // keyboard will hide
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .voidify()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.commentCreationView.OWSnp.updateConstraints { make in
+                    make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }

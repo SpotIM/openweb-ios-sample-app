@@ -14,9 +14,9 @@ protocol OWRoutering {
     var rootViewController: UIViewController? { get }
     func start()
     func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
-    func push(_ module: OWPresentable, pushStyle: OWScreenPresentationStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
+    func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
     func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
-    func pop(popStyle: OWScreenPresentationStyle, animated: Bool)
+    func pop(popStyle: OWScreenPushStyle, animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
@@ -64,7 +64,7 @@ class OWRouter: NSObject, OWRoutering {
                                      completion: nil)
     }
 
-    func push(_ module: OWPresentable, pushStyle: OWScreenPresentationStyle = .regular, animated: Bool, popCompletion: PublishSubject<Void>?) {
+    func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle = .regular, animated: Bool, popCompletion: PublishSubject<Void>?) {
         if let completion = popCompletion {
             completions[module.toPresentable()] = completion
         }
@@ -90,12 +90,11 @@ class OWRouter: NSObject, OWRoutering {
         navigationController?.setViewControllers([module.toPresentable()], animated: animated)
     }
 
-    func pop(popStyle: OWScreenPresentationStyle = .regular, animated: Bool) {
+    func pop(popStyle: OWScreenPushStyle = .regular, animated: Bool) {
+        let shouldAnimate: Bool
         switch popStyle {
         case .regular:
-            if let controller = navigationController?.popViewController(animated: animated) {
-                runCompletion(for: controller)
-            }
+            shouldAnimate = animated
         case .presentStyle:
             let transition = CATransition()
             transition.duration = 0.5
@@ -103,9 +102,11 @@ class OWRouter: NSObject, OWRoutering {
             transition.type = .reveal
             transition.subtype = .fromBottom
             navigationController?.view.layer.add(transition, forKey: nil)
-            if let controller = navigationController?.popViewController(animated: false) {
-                runCompletion(for: controller)
-            }
+            shouldAnimate = false
+        }
+
+        if let controller = navigationController?.popViewController(animated: shouldAnimate) {
+            runCompletion(for: controller)
         }
     }
 
