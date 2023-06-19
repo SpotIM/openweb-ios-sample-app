@@ -47,7 +47,12 @@ public struct OWAdditionalSettingsBuilder {
     }
 
     public func build() -> OWAdditionalSettingsProtocol {
-        return OWAdditionalSettings()
+        return OWAdditionalSettings(
+            preConversationSettings: self.preConversationSettings,
+            fullConversationSettings: self.fullConversationSettings,
+            commentCreationSettings: self.commentCreationSettings,
+            commentThreadSettings: self.commentThreadSettings
+        )
     }
 }
 #else
@@ -89,7 +94,12 @@ struct OWAdditionalSettingsBuilder {
     }
 
     func build() -> OWAdditionalSettingsProtocol {
-        return OWAdditionalSettings()
+        return OWAdditionalSettings(
+            preConversationSettings: self.preConversationSettings,
+            fullConversationSettings: self.fullConversationSettings,
+            commentCreationSettings: self.commentCreationSettings,
+            commentThreadSettings: self.commentThreadSettings
+        )
     }
 }
 #endif
