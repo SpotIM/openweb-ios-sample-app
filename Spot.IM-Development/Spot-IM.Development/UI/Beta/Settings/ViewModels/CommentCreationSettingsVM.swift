@@ -13,7 +13,7 @@ import SpotImCore
 #if NEW_API
 
 protocol CommentCreationSettingsViewModelingInputs {
-    var customStyleModeSelectedIndex: PublishSubject<Int> { get }
+    var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
@@ -29,15 +29,32 @@ protocol CommentCreationSettingsViewModeling {
 }
 
 class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCreationSettingsViewModelingInputs, CommentCreationSettingsViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let delayInsertDataToPersistense = 100
+    }
+
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = PublishSubject<Int>()
+    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
     var styleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .commentCreationCustomStyleIndex, defaultValue: 0)
+        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+            .map { commentCreationStyle in
+                switch commentCreationStyle {
+                case .regular:
+                    return 0
+                case .light:
+                    return 1
+                case .floatingKeyboard:
+                    return 2
+                @unknown default:
+                    return 0
+                }
+            }
+            .asObservable()
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -75,6 +92,8 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 extension CommentCreationSettingsVM {
     func setupObservers() {
         styleModeObservable
+            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .disposed(by: disposeBag)
