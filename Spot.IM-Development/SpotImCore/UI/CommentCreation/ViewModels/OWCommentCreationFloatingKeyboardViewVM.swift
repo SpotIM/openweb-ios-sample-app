@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
-
+    var closeButtonTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -34,6 +34,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
     var commentType: OWCommentCreationType
+
+    var closeButtonTap = PublishSubject<Void>()
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,

@@ -10,11 +10,13 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationRegularViewViewModelingInputs {
-
+    var closeButtonTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
+    var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
+    var footerViewModel: OWCommentCreationFooterViewModeling { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -27,15 +29,25 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
+    fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     var commentType: OWCommentCreationType
+
+    var closeButtonTap = PublishSubject<Void>()
+
+    lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
+        return OWArticleDescriptionViewModel(article: commentCreationData.article)
+    }()
+
+    lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
+        return OWCommentCreationFooterViewModel()
+    }()
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
-        self._commentCreationData.onNext(commentCreationData)
+        self.commentCreationData = commentCreationData
         commentType = commentCreationData.commentCreationType
         setupObservers()
     }

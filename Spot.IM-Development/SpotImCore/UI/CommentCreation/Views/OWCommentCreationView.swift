@@ -27,6 +27,12 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
         return OWCommentCreationFloatingKeyboardView(viewModel: self.viewModel.outputs.commentCreationFloatingKeyboardViewVm)
     }()
 
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        tap.numberOfTapsRequired = 1
+        return tap
+    }()
+
     fileprivate let viewModel: OWCommentCreationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -51,6 +57,9 @@ fileprivate extension OWCommentCreationView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        self.addGestureRecognizer(tapGesture)
+
         let commentCreationView: UIView
         switch viewModel.outputs.commentCreationStyle {
         case .regular:
@@ -68,6 +77,20 @@ fileprivate extension OWCommentCreationView {
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
 
+        tapGesture.rx.event
+            .voidify()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.endEditing(true)
+            })
+            .disposed(by: disposeBag)
     }
 }
