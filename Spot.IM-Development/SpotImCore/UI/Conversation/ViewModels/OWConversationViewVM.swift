@@ -22,24 +22,27 @@ protocol OWConversationViewViewModelingInputs {
 
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTiTleHeader: Bool { get }
+    var shouldShowArticleDescription: Bool { get }
+    var shouldShowError: Observable<Void> { get }
+    var shouldShowConversationEmptyState: Observable<Bool> { get }
+
     var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
+    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
+    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
+
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
-    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
-    var shouldShowConversationEmptyState: Observable<Bool> { get }
-    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
-    var initialDataLoaded: Observable<Bool> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+
     var urlClickedOutput: Observable<URL> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
-    var shouldShowError: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -65,6 +68,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
+
+    lazy var shouldShowArticleDescription: Bool = {
+        return conversationData.article.additionalSettings.headerStyle == .regular
+    }()
 
     var _shouldShowError = PublishSubject<Void>()
     var shouldShowError: Observable<Void> {
@@ -203,12 +210,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
-            .asObservable()
-    }
-
-    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
-    var initialDataLoaded: Observable<Bool> {
-        return _initialDataLoaded
             .asObservable()
     }
 
@@ -536,7 +537,7 @@ fileprivate extension OWConversationViewViewModel {
                     isReadOnly = false
                 case .enable:
                     isReadOnly = true
-                case .default:
+                case .server:
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
