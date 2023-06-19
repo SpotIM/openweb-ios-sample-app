@@ -115,14 +115,6 @@ fileprivate extension OWConversationSortView {
             .bind(to: viewModel.inputs.sortTapped)
             .disposed(by: disposeBag)
 
-        // Setup sort option selected
-        viewModel.outputs.openSort
-            .subscribe(onNext: { [weak self] _ in
-                guard let _ = self else { return }
-                // TODO: open sort
-            })
-            .disposed(by: disposeBag)
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
