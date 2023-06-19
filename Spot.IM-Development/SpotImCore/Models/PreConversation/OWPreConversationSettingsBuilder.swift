@@ -11,12 +11,9 @@ import Foundation
 #if NEW_API
 public struct OWPreConversationSettingsBuilder {
     public var style: OWPreConversationStyle
-    public var fullConversationSettings: OWConversationSettingsProtocol
 
-    public init(style: OWPreConversationStyle = .regular,
-                fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettingsBuilder().build()) {
+    public init(style: OWPreConversationStyle = .regular) {
         self.style = style.validate()
-        self.fullConversationSettings = fullConversationSettings
     }
 
     @discardableResult public mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
@@ -24,25 +21,16 @@ public struct OWPreConversationSettingsBuilder {
         return self
     }
 
-    @discardableResult public mutating func conversationSettings(_ conversationSettings: OWConversationSettingsProtocol) -> OWPreConversationSettingsBuilder {
-        self.fullConversationSettings = conversationSettings
-        return self
-    }
-
     public func build() -> OWPreConversationSettingsProtocol {
-        return OWPreConversationSettings(style: style,
-                                         fullConversationSettings: fullConversationSettings)
+        return OWPreConversationSettings(style: style)
     }
 }
 #else
 struct OWPreConversationSettingsBuilder {
     var style: OWPreConversationStyle
-    var fullConversationSettings: OWConversationSettingsProtocol
 
-    init(style: OWPreConversationStyle = .regular,
-         fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettingsBuilder().build()) {
+    init(style: OWPreConversationStyle = .regular) {
         self.style = style.validate()
-        self.fullConversationSettings = fullConversationSettings
     }
 
     @discardableResult mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
@@ -50,13 +38,8 @@ struct OWPreConversationSettingsBuilder {
         return self
     }
 
-    @discardableResult mutating func conversationSettings(_ conversationSettings: OWConversationSettingsProtocol) -> OWPreConversationSettingsBuilder {
-        self.fullConversationSettings = conversationSettings
-        return self
-    }
-
     func build() -> OWPreConversationSettingsProtocol {
-        return OWPreConversationSettings(style: style, fullConversationSettings: fullConversationSettings)
+        return OWPreConversationSettings(style: style)
     }
 }
 #endif
