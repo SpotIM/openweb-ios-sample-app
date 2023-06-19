@@ -30,7 +30,7 @@ struct OWArticleSettings: OWArticleSettingsProtocol {
 
     init(section: String,
          headerStyle: OWArticleHeaderStyle = .regular,
-         readOnlyMode: OWReadOnlyMode = .default) {
+         readOnlyMode: OWReadOnlyMode = .server) {
         self.section = section
         self.headerStyle = headerStyle
         self.readOnlyMode = readOnlyMode
