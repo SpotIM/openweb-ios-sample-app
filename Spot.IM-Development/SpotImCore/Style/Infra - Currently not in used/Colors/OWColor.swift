@@ -98,7 +98,8 @@ struct OWColor {
                 return OWColor(lightThemeColor: OWDesignColors.G3,
                                darkThemeColor: OWDesignColors.G3)
             case .brandColor:
-                return OWColor(lightThemeColor: .black, darkThemeColor: .white)
+                return OWColor(lightThemeColor: UIColor(red: 39.0/255, green: 120.0/255, blue: 206.0/255, alpha: 1.0),
+                               darkThemeColor: UIColor(red: 39.0/255, green: 120.0/255, blue: 206.0/255, alpha: 1.0))
             }
         }
 
