@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWMenuSelection: UIView, OWThemeStyleInjectorProtocol {
+class OWMenuSelectionView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "menu_selection_view_id"
 
@@ -51,7 +51,7 @@ class OWMenuSelection: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWMenuSelection {
+fileprivate extension OWMenuSelectionView {
     func setupViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
         self.layer.borderWidth = 1
