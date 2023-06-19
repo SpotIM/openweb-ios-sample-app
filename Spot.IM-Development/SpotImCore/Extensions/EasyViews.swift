@@ -229,6 +229,31 @@ extension UIButton {
         self.contentMode = mode
         return self
     }
+
+    @discardableResult func adjustTextAndImageAlignment(_ spacing: CGFloat) -> Self {
+        var inset = spacing / 2
+
+        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+            inset = -inset
+        }
+
+        imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
+        titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
+        contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)
+
+        return self
+    }
+
+    @discardableResult func reverseTransform() -> Self {
+        let currentTransform = transform
+        let currentScaleX = currentTransform.a
+
+        transform = CGAffineTransform(scaleX: -currentScaleX, y: currentScaleX)
+        titleLabel?.transform = CGAffineTransform(scaleX: -currentScaleX, y: currentScaleX)
+        transform = CGAffineTransform(scaleX: -currentScaleX, y: currentScaleX)
+
+        return self
+    }
 }
 
 extension UIImageView {

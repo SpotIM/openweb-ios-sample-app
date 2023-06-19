@@ -149,3 +149,7 @@
 "AdditionalInfoTitle" = "Informação adicional";
 "ReportSubmissionFailedTitle" = "Falha na submissão de relatório";
 "ReportSubmissionFailedMessage" = "Não foi possível submeter o seu relatório. Verifique a sua ligação e tente novamente mais tarde.";
+"Collapse thread" = "Fechar conversa";
+"View x replies" = "Ver %d respostas";
+"View x reply" = "Ver %d resposta";
+"View x of x replies" = "Ver %d de %d respostas";

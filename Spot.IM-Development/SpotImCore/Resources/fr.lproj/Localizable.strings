@@ -150,3 +150,7 @@
 "AdditionalInfoTitle" = "Informations complémentaires";
 "ReportSubmissionFailedTitle" = "Échec de l'envoi du rapport";
 "ReportSubmissionFailedMessage" = "Votre rapport n’a pas pu être envoyé. Veuillez vérifier votre connexion et réessayer plus tard.";
+"Collapse thread" = "Réduire le fil";
+"View x replies" = "Afficher %d réponses";
+"View x reply" = "Afficher une réponse";
+"View x of x replies" = "Afficher %d sur %d réponses";
