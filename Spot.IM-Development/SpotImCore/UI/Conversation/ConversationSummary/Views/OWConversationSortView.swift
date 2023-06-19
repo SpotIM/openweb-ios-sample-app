@@ -94,12 +94,6 @@ fileprivate extension OWConversationSortView {
             .disposed(by: disposeBag)
 
         // Setup sort button tapped
-//        sortButton.rx.tap
-//            .map { [weak self] in
-//                self?.sortButton
-//            }
-//            .bind(to: viewModel.inputs.sortTapped)
-//            .disposed(by: disposeBag)
         sortButton.rx.tap
             .map { [weak self] _ in
                 self?.sortButton

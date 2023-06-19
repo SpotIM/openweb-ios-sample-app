@@ -41,7 +41,6 @@ class OWMenuSelectionCell: UITableViewCell {
         self.viewModel = viewModel
 
         self.setupObservers()
-        self.applyAccessibility()
     }
 }
 
@@ -70,9 +69,5 @@ fileprivate extension OWMenuSelectionCell {
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
-    }
-
-    func applyAccessibility() {
-        // TODO:
     }
 }

@@ -46,7 +46,7 @@ fileprivate extension OWMenuSelectionWrapperView {
         let senderLocationFrame = senderView.convert(CGPoint.zero, to: presenterVC.view)
         let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
         let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
-        print("NOGAH - senderLocationFrame: \(senderLocationFrame), senderView.frame: \(senderView.frame)")
+
         self.addSubview(menuView)
         menuView.OWSnp.makeConstraints { make in
             if (isTopSection) {
@@ -69,8 +69,6 @@ fileprivate extension OWMenuSelectionWrapperView {
             self.zeroSizeConstraint?.isActive = false
             self.menuView.setNeedsLayout()
             self.menuView.layoutIfNeeded()
-        }, completion: { _ in
-            print("NOGAH - menuViewLocationFrame: \(self.menuView.convert(CGPoint.zero, to: self))")
         })
     }
 

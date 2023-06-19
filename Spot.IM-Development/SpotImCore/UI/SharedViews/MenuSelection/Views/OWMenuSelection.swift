@@ -53,7 +53,7 @@ class OWMenuSelection: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWMenuSelection {
     func setupViews() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light) // TODO: background color
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
         self.layer.borderWidth = 1
         self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light).cgColor
         self.layer.cornerRadius = Metrics.cornerRadius
@@ -118,7 +118,7 @@ fileprivate extension OWMenuSelection {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle) // TODO: background color
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.tableView.separatorColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle)
                 self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
             })
