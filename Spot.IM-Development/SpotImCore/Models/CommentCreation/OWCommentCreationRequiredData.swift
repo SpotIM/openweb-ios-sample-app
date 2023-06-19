@@ -12,4 +12,5 @@ struct OWCommentCreationRequiredData {
     let article: OWArticleProtocol
     let settings: OWAdditionalSettingsProtocol
     let commentCreationType: OWCommentCreationType
+    let presentationalStyle: OWPresentationalModeCompact
 }
