@@ -83,7 +83,7 @@ fileprivate extension OWCommentCreationVC {
                     else { return }
                 let bottomPadding: CGFloat
                 if #available(iOS 11.0, *) {
-                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows[0].safeAreaInsets.bottom
+                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
                 } else {
                     bottomPadding = 0
                 }
