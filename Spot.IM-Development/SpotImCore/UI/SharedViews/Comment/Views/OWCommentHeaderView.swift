@@ -71,11 +71,20 @@ class OWCommentHeaderView: UIView {
             .userInteractionEnabled(false)
     }()
 
+    fileprivate lazy var seperatorBetweenSubtitleAndDateLabel: UILabel = {
+        return UILabel()
+            .text(" · ")
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .userInteractionEnabled(false)
+    }()
+
     fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var optionButton: UIButton = {
@@ -115,6 +124,7 @@ class OWCommentHeaderView: UIView {
     }
 
     func prepareForReuse() {
+        self.seperatorBetweenSubtitleAndDateLabel.isHidden = false
         self.dateLabel.isHidden = false
         self.optionButton.isHidden = false
         self.userNameLabel.isHidden = false
@@ -177,10 +187,16 @@ fileprivate extension OWCommentHeaderView {
             make.bottom.equalToSuperview()
         }
 
+        addSubview(seperatorBetweenSubtitleAndDateLabel)
+        seperatorBetweenSubtitleAndDateLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.equalTo(subtitleLabel)
+            make.leading.equalTo(subtitleLabel.OWSnp.trailing)
+        }
+
         addSubview(dateLabel)
         dateLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalTo(subtitleLabel)
-            make.leading.equalTo(subtitleLabel.OWSnp.trailing)
+            make.leading.equalTo(seperatorBetweenSubtitleAndDateLabel.OWSnp.trailing)
             make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
         }
 
@@ -222,6 +238,11 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: viewModel.inputs.tapMore)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.shouldShowSubtitleSeperator
+            .map { !$0 }
+            .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.hiddenCommentReasonText
             .bind(to: hiddenCommentReasonLabel.rx.text)
             .disposed(by: disposeBag)
@@ -238,6 +259,7 @@ fileprivate extension OWCommentHeaderView {
                 self.userNameLabel.isHidden = isHiddenMessage
                 self.badgeTagContainer.isHidden = isHiddenMessage
                 self.subtitleLabel.isHidden = isHiddenMessage
+                self.seperatorBetweenSubtitleAndDateLabel.isHidden = isHiddenMessage
 
                 self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
             }).disposed(by: disposeBag)
@@ -259,6 +281,7 @@ fileprivate extension OWCommentHeaderView {
                 guard let self = self else { return }
                 self.userNameLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.seperatorBetweenSubtitleAndDateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.optionButton.image(UIImage(spNamed: "optionsIcon", supportDarkMode: true), state: .normal)
