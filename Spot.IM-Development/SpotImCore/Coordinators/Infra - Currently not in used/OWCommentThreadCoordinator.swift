@@ -68,8 +68,10 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
             .flatMap { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                // TODO - Settings should not be null
-                let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article, settings: nil, commentCreationType: commentCreationType)
+                let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article,
+                                                                        settings: self.commentThreadData.settings,
+                                                                        commentCreationType: commentCreationType,
+                                                                        presentationalStyle: self.commentThreadData.presentationalStyle)
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
                                                                               actionsCallbacks: self.actionsCallbacks)

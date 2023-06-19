@@ -128,7 +128,7 @@ protocol OWConversationAPI {
     ) -> OWNetworkResponse<OWConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
     func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
-    func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
+    func commentShare(id: String, parentId: String?) -> OWNetworkResponse<OWShareLink>
     func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete>
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<EmptyDecodable>
@@ -187,7 +187,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink> {
+    func commentShare(id: String, parentId: String?) -> OWNetworkResponse<OWShareLink> {
         let endpoint = OWConversationEndpoints.commentShare(id: id, parentId: parentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
