@@ -19,8 +19,6 @@ class OWMenuSelectionWrapperView: UIView {
         return tap
     }()
 
-    fileprivate var zeroSizeConstraint: OWConstraint? = nil
-
     fileprivate var menuView: OWMenuSelection
     fileprivate let disposeBag = DisposeBag()
 
@@ -59,17 +57,7 @@ fileprivate extension OWMenuSelectionWrapperView {
             } else {
                 make.right.equalTo(senderView.OWSnp.centerX)
             }
-
-            zeroSizeConstraint = make.size.equalTo(0).constraint
-            zeroSizeConstraint?.isActive = true
         }
-
-        // TODO: propper animation
-        UIView.animate(withDuration: 0.3, animations: {
-            self.zeroSizeConstraint?.isActive = false
-            self.menuView.setNeedsLayout()
-            self.menuView.layoutIfNeeded()
-        })
     }
 
     func setupObservers() {
@@ -82,7 +70,6 @@ fileprivate extension OWMenuSelectionWrapperView {
     }
 
     func dismissMenu() {
-        // TODO: propper animation
         self.removeFromSuperview()
     }
 }
