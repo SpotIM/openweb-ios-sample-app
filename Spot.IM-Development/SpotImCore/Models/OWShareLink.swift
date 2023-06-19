@@ -1,5 +1,5 @@
 //
-//  SPShareLink.swift
+//  OWShareLink.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/27/19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SPShareLink: Decodable {
+struct OWShareLink: Decodable {
 
     let reference: URL?
 

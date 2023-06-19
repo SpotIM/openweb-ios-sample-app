@@ -13,7 +13,7 @@ import SpotImCore
 #if NEW_API
 
 protocol CommentCreationSettingsViewModelingInputs {
-    var customStyleModeSelectedIndex: PublishSubject<Int> { get }
+    var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
@@ -32,7 +32,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var inputs: CommentCreationSettingsViewModelingInputs { return self }
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = PublishSubject<Int>()
+    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
@@ -58,6 +58,14 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return [_regular, _light, _floatingKeyboard]
     }()
 
+    fileprivate lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
+            return customStyleModeSelectedIndex
+                .map { customStyleModeIndex -> OWCommentCreationStyle in
+                    return OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
+                }
+                .asObservable()
+        }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
@@ -66,10 +74,9 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
 
 extension CommentCreationSettingsVM {
     func setupObservers() {
-        customStyleModeSelectedIndex
-            .skip(1)
+        styleModeObservable
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Int>.commentCreationCustomStyleIndex))
+            .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .disposed(by: disposeBag)
     }
 }

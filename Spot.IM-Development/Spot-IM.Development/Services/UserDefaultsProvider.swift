@@ -99,6 +99,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case articleAssociatedURL = "articleAssociatedURL"
         case preConversationStyle = "preConversationCustomStyle"
         case conversationStyle = "conversationCustomStyleModeSelected"
+        case commentCreationStyle = "commentCreationCustomStyleModeSelected"
         case commentCreationCustomStyleIndex = "commentCreationCustomStyleModeSelectedIndex"
         case languageStrategy = "languageStrategy"
         case localeStrategy = "localeStrategy"
@@ -154,6 +155,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores pre conversation's style"
         case .conversationStyle:
             return "Key which stores conversation's style"
+        case .commentCreationStyle:
+                    return "Key which stores comment creation style"
         case .commentCreationCustomStyleIndex:
             return "Key which stores comment creation's custom style index"
         case .fontGroupType:

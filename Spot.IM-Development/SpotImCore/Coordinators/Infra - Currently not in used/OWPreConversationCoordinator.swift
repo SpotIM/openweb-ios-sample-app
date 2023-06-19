@@ -85,7 +85,7 @@ fileprivate extension OWPreConversationCoordinator {
             .map { [weak self] type -> OWDeepLinkOptions? in
                 // 3. Perform deeplink to comment creation screen
                 guard let self = self else { return nil }
-                let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, commentCreationType: type)
+                let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, settings: self.preConversationData.settings, commentCreationType: type)
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
 
@@ -98,7 +98,7 @@ fileprivate extension OWPreConversationCoordinator {
             .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
-                                                                  settings: self.preConversationData.settings?.fullConversationSettings,
+                                                                  settings: self.preConversationData.settings,
                                                                   presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                            conversationData: conversationData,

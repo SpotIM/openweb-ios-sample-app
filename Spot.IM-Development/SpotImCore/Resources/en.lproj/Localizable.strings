@@ -151,3 +151,7 @@
 "AdditionalInfoTitle" = "Additional information";
 "ReportSubmissionFailedTitle" = "Report Submission Failed";
 "ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";
+"Collapse thread" = "Collapse thread";
+"View x replies" = "View %d replies";
+"View x reply" = "View %d reply";
+"View x of x replies" = "View %d of %d replies";
