@@ -10,9 +10,13 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationFooterViewModelingInputs {
+    var tapCta: PublishSubject<Void> { get }
+    var tapAction: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFooterViewModelingOutputs {
+    var ctaTitleText: Observable<String> { get }
+    var showAddImageButton: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationFooterViewModeling {
@@ -26,4 +30,17 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     var inputs: OWCommentCreationFooterViewModelingInputs { return self }
     var outputs: OWCommentCreationFooterViewModelingOutputs { return self }
+
+    var tapCta = PublishSubject<Void>()
+    var tapAction = PublishSubject<Void>()
+
+    var ctaTitleText: Observable<String> {
+        // TODO
+        return Observable.just("Post")
+    }
+
+    var showAddImageButton: Observable<Bool> {
+        // TODO - Support adding an image
+        return Observable.just(false)
+    }
 }
