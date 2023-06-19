@@ -44,7 +44,7 @@ class OWPresenterService: OWPresenterServicing {
 
             let menuVM = OWMenuSelectionViewModel(items: menuItems)
             // OWMenuSelectionWrapperView is addind himself to the presenterVC with propper constraints
-            _ = OWMenuSelectionWrapperView(menuVM: menuVM, senderView: sender, presenterVC: presenterVC)
+            _ = OWMenuSelectionEncapsulationView(menuVM: menuVM, senderView: sender, presenterVC: presenterVC)
             return Disposables.create()
         }
     }
