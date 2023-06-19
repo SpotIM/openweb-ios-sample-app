@@ -15,19 +15,16 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "comment_creation_view_id"
     }
 
-    // TODO: this label is only to show the origin comment user when creating a reply. Should be removed
-    fileprivate lazy var replyToLabel: UILabel = {
-        let text: String? = {
-            switch viewModel.outputs.commentType {
-            case .comment:
-                return nil
-            case .replyToComment(let originComment):
-                return "Reply to user: \(originComment.userId ?? "missing userId")"
-            }
-        }()
-        return UILabel()
-            .textColor(.black)
-            .text(text)
+    fileprivate lazy var commentCreationRegularView = {
+        return OWCommentCreationRegularView(viewModel: self.viewModel.outputs.commentCreationRegularViewVm)
+    }()
+
+    fileprivate lazy var commentCreationLightView = {
+        return OWCommentCreationLightView(viewModel: self.viewModel.outputs.commentCreationLightViewVm)
+    }()
+
+    fileprivate lazy var commentCreationFloatingKeyboardView = {
+        return OWCommentCreationFloatingKeyboardView(viewModel: self.viewModel.outputs.commentCreationFloatingKeyboardViewVm)
     }()
 
     fileprivate let viewModel: OWCommentCreationViewViewModeling
@@ -54,11 +51,19 @@ fileprivate extension OWCommentCreationView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
-        self.backgroundColor = .blue
-        self.addSubviews(replyToLabel)
-        replyToLabel.OWSnp.makeConstraints { make in
-            make.center.equalToSuperview()
+        let commentCreationView: UIView
+        switch viewModel.outputs.commentCreationStyle {
+        case .regular:
+            commentCreationView = commentCreationRegularView
+        case .light:
+            commentCreationView = commentCreationLightView
+        case .floatingKeyboard:
+            commentCreationView = commentCreationFloatingKeyboardView
+        }
+
+        self.addSubview(commentCreationView)
+        commentCreationView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 
