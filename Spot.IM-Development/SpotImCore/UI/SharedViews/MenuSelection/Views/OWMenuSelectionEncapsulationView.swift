@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWMenuSelectionWrapperView: UIView {
+class OWMenuSelectionEncapsulationView: UIView {
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         tap.delegate = self
@@ -19,11 +19,11 @@ class OWMenuSelectionWrapperView: UIView {
         return tap
     }()
 
-    fileprivate var menuView: OWMenuSelection
+    fileprivate var menuView: OWMenuSelectionView
     fileprivate let disposeBag = DisposeBag()
 
     init(menuVM: OWMenuSelectionViewModel, senderView: UIView, presenterVC: UIViewController) {
-        menuView = OWMenuSelection.init(viewModel: menuVM)
+        menuView = OWMenuSelectionView.init(viewModel: menuVM)
         super.init(frame: .zero)
         setupViews(senderView: senderView, presenterVC: presenterVC)
         setupObservers()
@@ -34,7 +34,7 @@ class OWMenuSelectionWrapperView: UIView {
     }
 }
 
-fileprivate extension OWMenuSelectionWrapperView {
+fileprivate extension OWMenuSelectionEncapsulationView {
     func setupViews(senderView: UIView, presenterVC: UIViewController) {
         presenterVC.view.addSubview(self)
         self.OWSnp.makeConstraints { make in
@@ -74,7 +74,7 @@ fileprivate extension OWMenuSelectionWrapperView {
     }
 }
 
-extension OWMenuSelectionWrapperView: UIGestureRecognizerDelegate {
+extension OWMenuSelectionEncapsulationView: UIGestureRecognizerDelegate {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         let tapLocation = gestureRecognizer.location(in: menuView)
         // Enable interaction inside menu view - but also dismiss menu
