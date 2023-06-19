@@ -27,7 +27,7 @@ public struct OWArticleSettingsBuilder {
         return self
     }
 
-    @discardableResult public mutating func showHeader(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
+    @discardableResult public mutating func headerStyle(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
         self.headerStyle = headerStyle
         return self
     }
@@ -53,7 +53,7 @@ struct OWArticleSettingsBuilder {
          headerStyle: OWArticleHeaderStyle = .regular,
          readOnlyMode: OWReadOnlyMode = .server) {
         self.section = section
-        self.showHeader = showHeader
+        self.headerStyle = headerStyle
         self.readOnlyMode = readOnlyMode
     }
 
@@ -62,7 +62,7 @@ struct OWArticleSettingsBuilder {
         return self
     }
 
-    @discardableResult mutating func showHeader(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
+    @discardableResult mutating func headerStyle(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
         self.headerStyle = headerStyle
         return self
     }
