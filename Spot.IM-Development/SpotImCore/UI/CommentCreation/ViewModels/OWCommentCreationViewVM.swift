@@ -14,7 +14,12 @@ protocol OWCommentCreationViewViewModelingInputs {
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {
+    var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling { get }
+    var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling { get }
+    var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling { get }
     var commentType: OWCommentCreationType { get }
+    var commentCreationStyle: OWCommentCreationStyle { get }
+    var closeButtonTapped: Observable<Void> { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -27,16 +32,42 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
+    fileprivate let commentCreationData: OWCommentCreationRequiredData
 
-    var commentType: OWCommentCreationType
+    lazy var closeButtonTapped: Observable<Void> = {
+        return Observable.merge(
+            commentCreationRegularViewVm.inputs.closeButtonTap,
+            commentCreationLightViewVm.inputs.closeButtonTap,
+            commentCreationFloatingKeyboardViewVm.inputs.closeButtonTap
+        )
+        .asObservable()
+    }()
+
+    lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
+        return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData)
+    }()
+
+    lazy var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling = {
+        return OWCommentCreationLightViewViewModel(commentCreationData: self.commentCreationData)
+    }()
+
+    lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
+        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData)
+    }()
+
+    lazy var commentType: OWCommentCreationType = {
+        return self.commentCreationData.commentCreationType
+    }()
+
+    lazy var commentCreationStyle: OWCommentCreationStyle = {
+        return self.commentCreationData.settings.commentCreationSettings.style
+    }()
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
-        self._commentCreationData.onNext(commentCreationData)
-        commentType = commentCreationData.commentCreationType
+        self.commentCreationData = commentCreationData
         setupObservers()
     }
 }
