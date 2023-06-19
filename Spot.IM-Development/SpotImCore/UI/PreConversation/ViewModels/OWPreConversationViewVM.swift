@@ -602,8 +602,8 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<([OWMenuSelectionItem], UIView)> in
-                let openMenuClickObservable: [Observable<([OWMenuSelectionItem], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<([OWMenuSelectionItem], UIView)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], UIView)> in
+                let openMenuClickObservable: [Observable<([OWRxPresenterAction], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], UIView)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
@@ -615,6 +615,10 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+                    .subscribe(onNext: {_ in 
+                        // TODO: handle
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
     }

@@ -42,7 +42,7 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
         cellSelected
             .asObserver()
             .subscribe(onNext: { index in
-                items[index].onClick.onNext()
+                items[index].handler()
             })
             .disposed(by: disposeBag)
 
@@ -51,5 +51,5 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
 
 struct OWMenuSelectionItem {
     var title: String
-    var onClick: PublishSubject<Void>
+    var handler: (() -> Void)
 }

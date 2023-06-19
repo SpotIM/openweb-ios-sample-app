@@ -257,10 +257,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var sortBestTap = PublishSubject<Void>()
-    fileprivate var sortNewestTap = PublishSubject<Void>()
-    fileprivate var sortOldestTap = PublishSubject<Void>()
-
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let conversationData: OWConversationRequiredData
@@ -888,8 +884,8 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<([OWMenuSelectionItem], UIView)> in
-                let openMenuClickObservable: [Observable<([OWMenuSelectionItem], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<([OWMenuSelectionItem], UIView)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], UIView)> in
+                let openMenuClickObservable: [Observable<([OWRxPresenterAction], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], UIView)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
@@ -901,6 +897,10 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+                    .subscribe(onNext: { _ in
+                        // TODO: handle
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -937,37 +937,27 @@ fileprivate extension OWConversationViewViewModel {
                 let sortDictateService = self.servicesProvider.sortDictateService()
                 self.servicesProvider.presenterService()
                     .showMenu(actions: [
-                        .init(title: sortDictateService.sortTextTitle(perOption: .best), onClick: self.sortBestTap),
-                        .init(title: sortDictateService.sortTextTitle(perOption: .newest), onClick: self.sortNewestTap),
-                        .init(title: sortDictateService.sortTextTitle(perOption: .oldest), onClick: self.sortOldestTap)
+                        .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+                        .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+                        .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
                     ], sender: sender, viewableMode: self.viewableMode)
-            })
-            .disposed(by: disposeBag)
-
-        sortBestTap
-            .asObserver()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let sortDictateService = self.servicesProvider.sortDictateService()
-                sortDictateService.update(sortOption: .best, perPostId: self.postId)
-            })
-            .disposed(by: disposeBag)
-
-        sortNewestTap
-            .asObserver()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let sortDictateService = self.servicesProvider.sortDictateService()
-                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-            })
-            .disposed(by: disposeBag)
-
-        sortOldestTap
-            .asObserver()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                let sortDictateService = self.servicesProvider.sortDictateService()
-                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+                    .subscribe(onNext: { [weak self] typy in
+                        guard let self = self else { return }
+                        switch (typy) {
+                        case .completion:
+                            return
+                        case .selected(action: let action):
+                            let sortDictateService = self.servicesProvider.sortDictateService()
+                            switch (action.type) {
+                            case OWSortMenu.sortBest: sortDictateService.update(sortOption: .best, perPostId: self.postId)
+                            case OWSortMenu.sortNewest: sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+                            case OWSortMenu.sortOldest: sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+                            default:
+                                return
+                            }
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
