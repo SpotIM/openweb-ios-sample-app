@@ -36,23 +36,23 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
 
     var tap = PublishSubject<Void>()
     var tapOutput: Observable<Void> {
-        tap
-            .asObservable()
+        tap.asObservable()
     }
 
     init(with type: OWCommentThreadActionType) {
         switch type {
         case .collapseThread:
-            // TODO - localization
-            _actionLabelText.onNext("Collapse thread")
+            _actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))
             _disclosureTransform.onNext(.identity)
+
         case .viewMoreReplies(count: let count):
-            // TODO - localization + logic
-            _actionLabelText.onNext("View \(count) \(count > 1 ? "replies" : "reply")")
+            let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
+            _actionLabelText.onNext(String(format: repliesString, count))
             _disclosureTransform.onNext(.init(rotationAngle: .pi))
+
         case .viewMoreRepliesRange(from: let from, to: let to):
-            // TODO - localization + logic
-            _actionLabelText.onNext("View \(from) of \(to) replies")
+            let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
+            _actionLabelText.onNext(String(format: repliesString, from, to))
             _disclosureTransform.onNext(.init(rotationAngle: .pi))
         }
     }

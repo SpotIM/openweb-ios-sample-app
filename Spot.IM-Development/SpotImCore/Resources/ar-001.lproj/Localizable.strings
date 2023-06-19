@@ -149,3 +149,7 @@
 "AdditionalInfoTitle" = "معلومات إضافية";
 "ReportSubmissionFailedTitle" = "فشل تقديم البلاغ";
 "ReportSubmissionFailedMessage" = "تعذّر تقديم البلاغ الخاص بك. يُرجى التحقق من الاتصال الخاص بك والمحاولة مرة أخرى في وقت لاحق.";
+"Collapse thread" = "طي الموضوع";
+"View x replies" = "عرض %d ردود";
+"View x reply" = "عرض %d رد";
+"View x of x replies" = "عرض %d من %d ردود";

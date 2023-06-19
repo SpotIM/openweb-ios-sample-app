@@ -150,3 +150,7 @@
 "AdditionalInfoTitle" = "Información adicional";
 "ReportSubmissionFailedTitle" = "No se ha podido enviar el informe";
 "ReportSubmissionFailedMessage" = "No se ha podido enviar el informe. Comprueba tu conexión y vuelve a intentarlo más tarde.";
+"Collapse thread" = "Plegar hilo";
+"View x replies" = "Ver %d respuestas";
+"View x reply" = "Ver %d respuesta";
+"View x of x replies" = "Ver %d de %d respuestas";

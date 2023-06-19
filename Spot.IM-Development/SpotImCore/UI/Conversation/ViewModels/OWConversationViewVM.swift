@@ -245,7 +245,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var conversationStyle: OWConversationStyle = {
-        return self.conversationData.settings?.style ?? OWConversationStyle.regular
+        return self.conversationData.settings.fullConversationSettings.style
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -782,6 +782,35 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment in
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
+            .disposed(by: disposeBag)
+
+        // Responding to share url from comment cells VMs
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
+                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.shareCommentUrl
+                }
+                return Observable.merge(shareClickOutputObservable)
+            }
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.presenterService()
+                    .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
+
+            }
+            .subscribe { result in
+                switch result {
+                case .completion:
+                    // Do nothing
+                    break
+                case .selected:
+                    // Do nothing
+                    break
+                }
+            }
             .disposed(by: disposeBag)
 
         // Update comments cells on ReadOnly mode
