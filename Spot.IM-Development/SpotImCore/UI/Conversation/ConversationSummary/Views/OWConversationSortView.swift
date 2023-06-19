@@ -109,7 +109,7 @@ fileprivate extension OWConversationSortView {
         // Setup sort button tapped
         tapGesture.rx.event
             .map { [weak self] _ in
-                self?.sortView
+                self?.sortIcon
             }
             .unwrap()
             .bind(to: viewModel.inputs.sortTapped)
