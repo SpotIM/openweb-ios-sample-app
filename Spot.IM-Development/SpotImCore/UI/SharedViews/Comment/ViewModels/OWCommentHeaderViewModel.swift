@@ -19,6 +19,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var subscriberBadgeVM: OWSubscriberIconViewModeling { get }
     var avatarVM: OWAvatarViewModeling { get }
 
+    var shouldShowSubtitleSeperator: Observable<Bool> { get }
     var shouldShowHiddenCommentMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
     var subtitleText: Observable<String> { get }
@@ -104,12 +105,17 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
+    var shouldShowSubtitleSeperator: Observable<Bool> {
+        _unwrappedModel
+            .map { $0.isReply }
+    }
+
     var dateText: Observable<String> {
         _unwrappedModel
             .map({ model in
                 guard let writtenAt = model.writtenAt else { return "" }
                 let timestamp = Date(timeIntervalSince1970: writtenAt).owTimeAgo()
-                return model.isReply ? " · ".appending(timestamp) : timestamp
+                return timestamp
             })
     }
 
