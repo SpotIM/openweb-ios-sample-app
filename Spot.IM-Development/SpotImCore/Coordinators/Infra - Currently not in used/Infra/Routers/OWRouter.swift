@@ -16,7 +16,7 @@ protocol OWRoutering {
     func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
     func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
-    func pop(animated: Bool)
+    func pop(popStyle: OWScreenPushStyle, animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
@@ -90,8 +90,22 @@ class OWRouter: NSObject, OWRoutering {
         navigationController?.setViewControllers([module.toPresentable()], animated: animated)
     }
 
-    func pop(animated: Bool) {
-        if let controller = navigationController?.popViewController(animated: animated) {
+    func pop(popStyle: OWScreenPushStyle = .regular, animated: Bool) {
+        let shouldAnimate: Bool
+        switch popStyle {
+        case .regular:
+            shouldAnimate = animated
+        case .presentStyle:
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            transition.type = .reveal
+            transition.subtype = .fromBottom
+            navigationController?.view.layer.add(transition, forKey: nil)
+            shouldAnimate = false
+        }
+
+        if let controller = navigationController?.popViewController(animated: shouldAnimate) {
             runCompletion(for: controller)
         }
     }
