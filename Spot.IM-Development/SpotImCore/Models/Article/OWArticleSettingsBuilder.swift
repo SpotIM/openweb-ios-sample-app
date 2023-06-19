@@ -11,14 +11,14 @@ import Foundation
 #if NEW_API
 public struct OWArticleSettingsBuilder {
     public var section: String
-    public var showHeader: Bool
+    public var headerStyle: OWArticleHeaderStyle
     public var readOnlyMode: OWReadOnlyMode
 
     public init(section: String,
-                showHeader: Bool = true,
-                readOnlyMode: OWReadOnlyMode = .default) {
+                headerStyle: OWArticleHeaderStyle = .regular,
+                readOnlyMode: OWReadOnlyMode = .server) {
         self.section = section
-        self.showHeader = showHeader
+        self.headerStyle = headerStyle
         self.readOnlyMode = readOnlyMode
     }
 
@@ -27,8 +27,8 @@ public struct OWArticleSettingsBuilder {
         return self
     }
 
-    @discardableResult public mutating func showHeader(_ showHeader: Bool) -> OWArticleSettingsBuilder {
-        self.showHeader = showHeader
+    @discardableResult public mutating func showHeader(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
+        self.headerStyle = headerStyle
         return self
     }
 
@@ -39,19 +39,19 @@ public struct OWArticleSettingsBuilder {
 
     public func build() -> OWArticleSettingsProtocol {
         return OWArticleSettings(section: section,
-                                 showHeader: showHeader,
+                                 headerStyle: headerStyle,
                                  readOnlyMode: readOnlyMode)
     }
 }
 #else
 struct OWArticleSettingsBuilder {
     var section: String
-    var showHeader: Bool
+    var headerStyle: OWArticleHeaderStyle
     var readOnlyMode: OWReadOnlyMode
 
     init(section: String,
-         showHeader: Bool = true,
-         readOnlyMode: OWReadOnlyMode = .default) {
+         headerStyle: OWArticleHeaderStyle = .regular,
+         readOnlyMode: OWReadOnlyMode = .server) {
         self.section = section
         self.showHeader = showHeader
         self.readOnlyMode = readOnlyMode
@@ -62,8 +62,8 @@ struct OWArticleSettingsBuilder {
         return self
     }
 
-    @discardableResult mutating func showHeader(_ showHeader: Bool) -> OWArticleSettingsBuilder {
-        self.showHeader = showHeader
+    @discardableResult mutating func showHeader(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
+        self.headerStyle = headerStyle
         return self
     }
 
@@ -74,7 +74,7 @@ struct OWArticleSettingsBuilder {
 
     func build() -> OWArticleSettingsProtocol {
         return OWArticleSettings(section: section,
-                                 showHeader: showHeader,
+                                 headerStyle: headerStyle,
                                  readOnlyMode: readOnlyMode)
     }
 }

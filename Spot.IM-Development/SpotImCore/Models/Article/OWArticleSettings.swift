@@ -11,28 +11,28 @@ import Foundation
 #if NEW_API
 public struct OWArticleSettings: OWArticleSettingsProtocol {
     public let section: String
-    public let showHeader: Bool
+    public let headerStyle: OWArticleHeaderStyle
     public let readOnlyMode: OWReadOnlyMode
 
     public init(section: String,
-                showHeader: Bool = true,
-                readOnlyMode: OWReadOnlyMode = .default) {
+                headerStyle: OWArticleHeaderStyle = .regular,
+                readOnlyMode: OWReadOnlyMode = .server) {
         self.section = section
-        self.showHeader = showHeader
+        self.headerStyle = headerStyle
         self.readOnlyMode = readOnlyMode
     }
 }
 #else
 struct OWArticleSettings: OWArticleSettingsProtocol {
     let section: String
-    let showHeader: Bool
+    let headerStyle: OWArticleHeaderStyle
     let readOnlyMode: OWReadOnlyMode
 
     init(section: String,
-         showHeader: Bool = true,
+         headerStyle: OWArticleHeaderStyle = .regular,
          readOnlyMode: OWReadOnlyMode = .default) {
         self.section = section
-        self.showHeader = showHeader
+        self.headerStyle = headerStyle
         self.readOnlyMode = readOnlyMode
     }
 }
