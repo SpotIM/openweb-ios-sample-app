@@ -432,7 +432,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     isReadOnly = false
                 case .enable:
                     isReadOnly = true
-                case .default:
+                case .server:
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)

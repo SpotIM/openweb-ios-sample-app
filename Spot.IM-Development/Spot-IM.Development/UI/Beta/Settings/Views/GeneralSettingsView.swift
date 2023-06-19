@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import SpotImCore
 
 #if NEW_API
 
@@ -15,8 +16,8 @@ class GeneralSettingsView: UIView {
 
     fileprivate struct Metrics {
         static let identifier = "general_settings_view_id"
-        static let switchHideArticleHeaderIdentifier = "hide_article_header"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
+        static let segmentedArticleHeaderStyleIdentifier = "article_header_style"
         static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedModalStyleIdentifier = "modal_style"
@@ -45,6 +46,15 @@ class GeneralSettingsView: UIView {
         return titleLabel
     }()
 
+    fileprivate lazy var segmentedArticleHeaderStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.articleHeaderStyleTitle
+        let items = viewModel.outputs.articleHeaderStyleSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedArticleHeaderStyleIdentifier,
+                                       items: items)
+    }()
+
     fileprivate lazy var segmentedElementsCustomizationStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.elementsCustomizationStyleTitle
         let items = viewModel.outputs.elementsCustomizationStyleSettings
@@ -52,11 +62,6 @@ class GeneralSettingsView: UIView {
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedElementsCustomizationStyleIdentifier,
                                        items: items)
-    }()
-
-    fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle,
-                             accessibilityPrefixId: Metrics.switchHideArticleHeaderIdentifier)
     }()
 
     fileprivate lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
@@ -178,7 +183,7 @@ fileprivate extension GeneralSettingsView {
         }
 
         stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(switchHideArticleHeader)
+        stackView.addArrangedSubview(segmentedArticleHeaderStyle)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
@@ -194,8 +199,9 @@ fileprivate extension GeneralSettingsView {
 
     func setupObservers() {
 
-        viewModel.outputs.shouldHideArticleHeader
-            .bind(to: switchHideArticleHeader.rx.isOn)
+        viewModel.outputs.articleHeaderStyle
+            .map { $0.index }
+            .bind(to: segmentedArticleHeaderStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.elementsCustomizationStyleIndex
@@ -230,8 +236,9 @@ fileprivate extension GeneralSettingsView {
             .bind(to: textFieldArticleURL.rx.textFieldText)
             .disposed(by: disposeBag)
 
-        switchHideArticleHeader.rx.isOn
-            .bind(to: viewModel.inputs.hideArticleHeaderToggled)
+        segmentedArticleHeaderStyle.rx.selectedSegmentIndex
+            .map { OWArticleHeaderStyle.articleHeaderStyle(fromIndex: $0) }
+            .bind(to: viewModel.inputs.articleHeaderSelectedStyle)
             .disposed(by: disposeBag)
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex

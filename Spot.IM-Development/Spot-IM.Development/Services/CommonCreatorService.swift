@@ -53,10 +53,13 @@ class CommonCreatorService: CommonCreatorServicing {
     func mockArticle() -> OWArticleProtocol {
         let articleStub = OWArticle.stub()
 
-        // swiftlint:disable line_length
-        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex))
-        // swiftlint:enable line_length
+        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
+                                                                                                           defaultValue: OWReadOnlyMode.defaultIndex))
+        let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
+                                                                          defaultValue: OWArticleHeaderStyle.default)
+
         let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
+                                         headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
         var url = articleStub.url

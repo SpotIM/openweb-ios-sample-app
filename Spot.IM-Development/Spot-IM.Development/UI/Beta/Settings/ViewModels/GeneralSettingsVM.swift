@@ -13,7 +13,7 @@ import SpotImCore
 #if NEW_API
 
 protocol GeneralSettingsViewModelingInputs {
-    var hideArticleHeaderToggled: PublishSubject<Bool> { get }
+    var articleHeaderSelectedStyle: BehaviorSubject<OWArticleHeaderStyle> { get }
     var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
@@ -29,7 +29,6 @@ protocol GeneralSettingsViewModelingInputs {
 
 protocol GeneralSettingsViewModelingOutputs {
     var title: String { get }
-    var hideArticleHeaderTitle: String { get }
     var articleURLTitle: String { get }
     var readOnlyTitle: String { get }
     var readOnlySettings: [String] { get }
@@ -41,7 +40,6 @@ protocol GeneralSettingsViewModelingOutputs {
     var fontGroupTypeTitle: String { get }
     var fontGroupTypeSettings: [String] { get }
     var initialSortSettings: [String] { get }
-    var shouldHideArticleHeader: Observable<Bool> { get }
     var elementsCustomizationStyleIndex: Observable<Int> { get }
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
@@ -66,6 +64,10 @@ protocol GeneralSettingsViewModelingOutputs {
 
     var elementsCustomizationStyleTitle: String { get }
     var elementsCustomizationStyleSettings: [String] { get }
+
+    var articleHeaderStyle: Observable<OWArticleHeaderStyle> { get }
+    var articleHeaderStyleTitle: String { get }
+    var articleHeaderStyleSettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -77,7 +79,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var inputs: GeneralSettingsViewModelingInputs { return self }
     var outputs: GeneralSettingsViewModelingOutputs { return self }
 
-    var hideArticleHeaderToggled = PublishSubject<Bool>()
+    var articleHeaderSelectedStyle = BehaviorSubject<OWArticleHeaderStyle>(value: OWArticleHeaderStyle.default)
     var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
@@ -115,12 +117,12 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         .skip(1)
         .asObservable()
 
-    var shouldHideArticleHeader: Observable<Bool> {
-        return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
-    }
-
     var elementsCustomizationStyleIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .elementsCustomizationStyleIndex, defaultValue: SettingsElementsCustomizationStyle.defaultIndex)
+    }
+
+    var articleHeaderStyle: Observable<OWArticleHeaderStyle> {
+        return userDefaultsProvider.values(key: .articleHeaderStyle, defaultValue: OWArticleHeaderStyle.default)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -241,12 +243,12 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("GeneralSettings", comment: "")
     }()
 
-    lazy var elementsCustomizationStyleTitle: String = {
-        return NSLocalizedString("ElementsCustomizationStyle", comment: "")
+    lazy var articleHeaderStyleTitle: String = {
+        return NSLocalizedString("ArticleHeaderStyle", comment: "")
     }()
 
-    lazy var hideArticleHeaderTitle: String = {
-        return NSLocalizedString("HideArticleHeader", comment: "")
+    lazy var elementsCustomizationStyleTitle: String = {
+        return NSLocalizedString("ElementsCustomizationStyle", comment: "")
     }()
 
     lazy var readOnlyTitle: String = {
@@ -267,6 +269,13 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var themeModeTitle: String = {
         return NSLocalizedString("ThemeMode", comment: "")
+    }()
+
+    lazy var articleHeaderStyleSettings: [String] = {
+        let _none = NSLocalizedString("None", comment: "")
+        let _regular = NSLocalizedString("Regular", comment: "")
+
+        return [_none, _regular]
     }()
 
     lazy var elementsCustomizationStyleSettings: [String] = {
@@ -363,10 +372,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
 extension GeneralSettingsVM {
     func setupObservers() {
-        hideArticleHeaderToggled
+        articleHeaderSelectedStyle
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
-            .setValues(key: UserDefaultsProvider.UDKey<Bool>.hideArticleHeader))
+            .setValues(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle))
             .disposed(by: disposeBag)
 
         elementsCustomizationStyleSelectedIndex

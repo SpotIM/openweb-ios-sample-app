@@ -51,7 +51,6 @@
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
 "Settings" = "Settings";
-"HideArticleHeader" = "Hide article header";
 "CommentCreationNewDesign" = "Comment creation new design";
 "ReadOnlyMode" = "Read only mode";
 "Default" = "Default";
@@ -108,3 +107,4 @@
 "ElementsCustomizationStyle" = "Elements customization style:";
 "Style1" = "Style 1";
 "Style2" = "Style 2";
+"ArticleHeaderStyle" = "Article header style";
