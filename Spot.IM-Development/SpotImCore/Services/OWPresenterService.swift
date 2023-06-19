@@ -12,7 +12,7 @@ import UIKit
 
 protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
-    func showMenu(actions: [OWMenuSelectionItem], sender: UIView, viewableMode: OWViewableMode)
+    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
 }
 
@@ -31,11 +31,22 @@ class OWPresenterService: OWPresenterServicing {
                                          actions: actions)
     }
 
-    func showMenu(actions: [OWMenuSelectionItem], sender: UIView, viewableMode: OWViewableMode) {
-        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
-        let menuVM = OWMenuSelectionViewModel(items: actions)
-        // OWMenuSelectionWrapperView is addind himself to the presenterVC with propper constraints
-        _ = OWMenuSelectionWrapperView(menuVM: menuVM, senderView: sender, presenterVC: presenterVC)
+    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
+        return Observable.create { observer in
+            // Map to regular UIAlertAction
+            let menuItems = actions.map { rxAction in
+                OWMenuSelectionItem(title: rxAction.title) {
+                    observer.onNext(.selected(action: rxAction))
+                    observer.onCompleted()
+                }
+            }
+
+            let menuVM = OWMenuSelectionViewModel(items: menuItems)
+            // OWMenuSelectionWrapperView is addind himself to the presenterVC with propper constraints
+            _ = OWMenuSelectionWrapperView(menuVM: menuVM, senderView: sender, presenterVC: presenterVC)
+            return Disposables.create()
+        }
     }
 
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
