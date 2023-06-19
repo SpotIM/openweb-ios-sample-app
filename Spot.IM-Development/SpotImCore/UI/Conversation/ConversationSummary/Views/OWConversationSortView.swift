@@ -103,7 +103,7 @@ fileprivate extension OWConversationSortView {
         // Setup sort title
         viewModel.outputs.selectedSortOption
             .map { $0.title }
-            .bind(to: sortByLabel.rx.text)
+            .bind(to: sortLabel.rx.text)
             .disposed(by: disposeBag)
 
         // Setup sort button tapped
