@@ -63,8 +63,6 @@ fileprivate extension OWMenuSelectionCell {
             .bind(to: label.rx.text)
             .disposed(by: disposeBag)
 
-        
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
