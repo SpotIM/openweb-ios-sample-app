@@ -13,9 +13,12 @@ import RxCocoa
 class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_floating_keyboard_view_id"
+        static let prefixIdentifier = "comment_creation_floating_keyboard"
         static let userAvatarLeadingPadding: CGFloat = 16
         static let userAvatarBottomPadding: CGFloat = 12
         static let userAvatarSize: CGFloat = 40
+        static let textViewHorizontalPadding: CGFloat = 10
+        static let textViewVerticalPadding: CGFloat = 12
     }
 
     fileprivate lazy var footerView: UIView = {
@@ -26,6 +29,11 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     fileprivate lazy var footerSafeAreaView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var textView: OWTextView = {
+        return OWTextView(viewModel: viewModel.outputs.textViewVM,
+                          prefixIdentifier: Metrics.prefixIdentifier)
     }()
 
     fileprivate lazy var userAvatarView: OWAvatarView = {
@@ -74,7 +82,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(self.safeAreaLayoutGuide)
-            make.height.equalTo(100) // will be removed once textView is added
         }
 
         self.addSubview(footerSafeAreaView)
@@ -89,6 +96,14 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.leading.equalToSuperview().inset(Metrics.userAvatarLeadingPadding)
             make.bottom.equalToSuperview().inset(Metrics.userAvatarBottomPadding)
             make.size.equalTo(Metrics.userAvatarSize)
+        }
+
+        footerView.addSubview(textView)
+        textView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
+            make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
+            make.bottom.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+            make.height.equalTo(50) // Will be removed after expandable capability added
         }
     }
 
