@@ -264,7 +264,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
-        paragraphStyle.updateAlignment()
+        paragraphStyle.spUpdateAlignment()
 
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {
