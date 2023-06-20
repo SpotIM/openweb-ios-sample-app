@@ -237,7 +237,7 @@ extension UIImageView {
         return self
     }
 
-    @discardableResult func image(_ image: UIImage) -> Self {
+    @discardableResult func image(_ image: UIImage?) -> Self {
         self.image = image
         return self
     }
