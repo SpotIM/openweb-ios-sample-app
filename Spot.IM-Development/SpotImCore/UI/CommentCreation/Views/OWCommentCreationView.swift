@@ -81,7 +81,15 @@ fileprivate extension OWCommentCreationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                let backgroundColor: UIColor = {
+                    switch self.viewModel.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                    case .floatingKeyboard:
+                        return .clear
+                    }
+                }()
+                self.backgroundColor = backgroundColor
             })
             .disposed(by: disposeBag)
 
