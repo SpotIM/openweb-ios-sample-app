@@ -16,6 +16,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
     var avatarViewVM: OWAvatarViewModeling { get }
+    var textViewVM: OWTextViewViewModeling { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -27,7 +28,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     OWCommentCreationFloatingKeyboardViewViewModeling,
     OWCommentCreationFloatingKeyboardViewViewModelingInputs,
     OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
-
+    fileprivate struct Metrics {
+        static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "What do you think?")
+    }
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
     var outputs: OWCommentCreationFloatingKeyboardViewViewModelingOutputs { return self }
 
@@ -46,6 +49,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         return OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
+    let textViewVM: OWTextViewViewModeling
+
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode = .independent,
@@ -55,6 +60,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         self._commentCreationData.onNext(commentCreationData)
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
+        self.textViewVM = OWTextViewViewModel(placeholderText: Metrics.textViewPlaceholderText,
+                                              textViewText: "",
+                                              charectersLimitEnabled: false,
+                                              isEditable: true)
         commentType = commentCreationData.commentCreationType
         setupObservers()
     }

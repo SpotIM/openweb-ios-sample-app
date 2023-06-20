@@ -793,6 +793,8 @@
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
 		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
 		9E5A13BD2A40912300C0FFED /* OWScreenPresentStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A13BC2A40912300C0FFED /* OWScreenPresentStyle.swift */; };
+		9E5A13C32A41A32E00C0FFED /* OWTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A13C12A41A32E00C0FFED /* OWTextView.swift */; };
+		9E5A13C42A41A32E00C0FFED /* OWTextViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A13C22A41A32E00C0FFED /* OWTextViewVM.swift */; };
 		9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */; };
 		9E73DAD529C85E640098EEC1 /* UILoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */; };
 		9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewType.swift */; };
@@ -1693,6 +1695,8 @@
 		9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
 		9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		9E5A13BC2A40912300C0FFED /* OWScreenPresentStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPresentStyle.swift; sourceTree = "<group>"; };
+		9E5A13C12A41A32E00C0FFED /* OWTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWTextView.swift; sourceTree = "<group>"; };
+		9E5A13C22A41A32E00C0FFED /* OWTextViewVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWTextViewVM.swift; sourceTree = "<group>"; };
 		9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerView.swift; sourceTree = "<group>"; };
 		9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerViewModel.swift; sourceTree = "<group>"; };
 		9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKUIIndependentViewType.swift; sourceTree = "<group>"; };
@@ -2434,6 +2438,7 @@
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
+				9E5A13C02A41A31E00C0FFED /* OWTextView */,
 				164AE1AA2A3F20B50005D498 /* CommentCreationFooter */,
 				8D99C6732A07D89400DAB542 /* CommentingCTA */,
 				24D7C25329E53019001F148B /* AvatarView */,
@@ -4890,6 +4895,15 @@
 			path = "Spot-IM.Development/UI/Beta/AuthenticationPlaygroundNew/ViewModels";
 			sourceTree = SOURCE_ROOT;
 		};
+		9E5A13C02A41A31E00C0FFED /* OWTextView */ = {
+			isa = PBXGroup;
+			children = (
+				9E5A13C12A41A32E00C0FFED /* OWTextView.swift */,
+				9E5A13C22A41A32E00C0FFED /* OWTextViewVM.swift */,
+			);
+			path = OWTextView;
+			sourceTree = "<group>";
+		};
 		9E73DACF29C85E270098EEC1 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
@@ -5501,6 +5515,7 @@
 				8DD33B1D2A24C203001E0A2E /* OWEmptyStateCommentingEndedCustomizableElement.swift in Sources */,
 				24D7C25929E533BF001F148B /* OWAvatarViewModel.swift in Sources */,
 				3DF68720285B387C00A67230 /* UIAlertController+Rx.swift in Sources */,
+				9E5A13C42A41A32E00C0FFED /* OWTextViewVM.swift in Sources */,
 				3DF116412921801B0064BD41 /* OWManager+Layers.swift in Sources */,
 				4454189B23685154001D0ED0 /* SPCommentRankUpdateRM.swift in Sources */,
 				3D263D0629C37D7E0013C532 /* OWHeaderExtractor.swift in Sources */,
@@ -5917,6 +5932,7 @@
 				3DDA9A8A291A5E6100FE3B86 /* OWThemeStyleEnforcement.swift in Sources */,
 				8D7FC65E299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift in Sources */,
 				3D20A39727B022D7003F8513 /* UIView+Extensions.swift in Sources */,
+				9E5A13C32A41A32E00C0FFED /* OWTextView.swift in Sources */,
 				4454188F23685154001D0ED0 /* SPNetworkExtensions.swift in Sources */,
 				24EF864629C9ED0A00327394 /* OWCompactCommentType.swift in Sources */,
 				4454189123685154001D0ED0 /* SPPaginationPage.swift in Sources */,
