@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentCreationVC: UIViewController {
     fileprivate struct Metrics {
-
+        static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
     }
 
     fileprivate let viewModel: OWCommentCreationViewModeling
@@ -54,12 +54,25 @@ class OWCommentCreationVC: UIViewController {
 
 fileprivate extension OWCommentCreationVC {
     func setupViews() {
-        self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        let backgroundColor: UIColor = {
+            switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            case .regular, .light:
+                return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+            case .floatingKeyboard:
+                return Metrics.floatingBackgroungColor
+            }
+        }()
+        self.view.backgroundColor = backgroundColor
 
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            case .regular, .light:
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            case .floatingKeyboard:
+                make.top.bottom.equalToSuperview()
+            }
         }
     }
 
@@ -68,7 +81,15 @@ fileprivate extension OWCommentCreationVC {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                let backgroundColor: UIColor = {
+                    switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                    case .floatingKeyboard:
+                        return Metrics.floatingBackgroungColor
+                    }
+                }()
+                self.view.backgroundColor = backgroundColor
             })
             .disposed(by: disposeBag)
 

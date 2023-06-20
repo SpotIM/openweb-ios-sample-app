@@ -51,10 +51,25 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
         let commentCreationPopped = PublishSubject<Void>()
 
-        router.push(commentCreationVC,
-                    pushStyle: .presentStyle,
-                    animated: true,
-                    popCompletion: commentCreationPopped)
+        let present: Bool = {
+            switch commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            case .regular:
+                return false
+            case .light:
+                return false
+            case .floatingKeyboard:
+                return true
+            }
+        }()
+
+        if present {
+            router.present(commentCreationVC, presentStyle: .fade, dismissCompletion: commentCreationPopped)
+        } else {
+            router.push(commentCreationVC,
+                        pushStyle: .presentStyle,
+                        animated: true,
+                        popCompletion: commentCreationPopped)
+        }
 
         setupObservers(forViewModel: commentCreationVM)
         setupViewActionsCallbacks(forViewModel: commentCreationVM)
@@ -90,7 +105,23 @@ fileprivate extension OWCommentCreationCoordinator {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
             .subscribe { [weak self] _ in
-                self?.router.pop(popStyle: .presentStyle, animated: false)
+                guard let self = self else { return }
+                let dismiss: Bool = {
+                    switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    case .regular:
+                        return false
+                    case .light:
+                        return false
+                    case .floatingKeyboard:
+                        return true
+                    }
+                }()
+
+                if dismiss {
+                    self.router.dismiss(dismissStyle: .fade, completion: nil)
+                } else {
+                    self.router.pop(popStyle: .presentStyle, animated: true)
+                }
             }
             .disposed(by: disposeBag)
     }

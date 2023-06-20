@@ -22,6 +22,29 @@ protocol OWRoutering {
     func isEmpty() -> Bool
 }
 
+extension OWRoutering {
+    func present(_ module: OWPresentable, presentStyle: OWScreenPresentStyle = .regular, animated: Bool = false, dismissCompletion: PublishSubject<Void>?) {
+        switch presentStyle {
+        case .regular:
+            present(module, animated: animated, dismissCompletion: dismissCompletion)
+        case .fade:
+            let viewController = module.toPresentable()
+            viewController.modalTransitionStyle = .crossDissolve
+            viewController.modalPresentationStyle = .overFullScreen
+            present(module, animated: true, dismissCompletion: dismissCompletion)
+        }
+    }
+
+    func dismiss(animated: Bool = false, dismissStyle: OWScreenPresentStyle = .regular, completion: PublishSubject<Void>?) {
+        switch dismissStyle {
+        case .regular:
+            dismiss(animated: animated, completion: completion)
+        case .fade:
+            dismiss(animated: true, completion: completion)
+        }
+    }
+}
+
 class OWRouter: NSObject, OWRoutering {
 
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
@@ -91,7 +114,7 @@ class OWRouter: NSObject, OWRoutering {
     }
 
     func pop(popStyle: OWScreenPushStyle = .regular, animated: Bool) {
-        let shouldAnimate: Bool
+        var shouldAnimate = false
         switch popStyle {
         case .regular:
             shouldAnimate = animated
@@ -102,7 +125,6 @@ class OWRouter: NSObject, OWRoutering {
             transition.type = .reveal
             transition.subtype = .fromBottom
             navigationController?.view.layer.add(transition, forKey: nil)
-            shouldAnimate = false
         }
 
         if let controller = navigationController?.popViewController(animated: shouldAnimate) {
