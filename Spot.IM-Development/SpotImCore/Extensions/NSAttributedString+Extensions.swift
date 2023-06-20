@@ -147,7 +147,6 @@ extension NSAttributedString {
     }
 
     func isEmpty() -> Bool {
-        let range = NSRange(location: 0, length: self.length)
         let trimmedString = self.string.trimmingCharacters(in: .whitespacesAndNewlines)
 
         return trimmedString.isEmpty
@@ -190,7 +189,7 @@ internal extension NSMutableAttributedString {
 
 extension NSMutableParagraphStyle {
 
-    func updateAlignment() {
+    func spUpdateAlignment() {
         if SPLocalizationManager.currentLanguage?.isRightToLeft ?? false {
             alignment = .right
         } else {
