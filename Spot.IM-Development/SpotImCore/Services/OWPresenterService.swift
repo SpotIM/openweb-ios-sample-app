@@ -18,8 +18,6 @@ protocol OWPresenterServicing {
 
 class OWPresenterService: OWPresenterServicing {
 
-    var disposeBag = DisposeBag()
-
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
