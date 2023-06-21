@@ -616,7 +616,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
             }
-            .subscribe(onNext: { [weak self] response in
+            .subscribe(onNext: { [weak self] _ in
                 // TODO: handle
             })
             .disposed(by: disposeBag)
