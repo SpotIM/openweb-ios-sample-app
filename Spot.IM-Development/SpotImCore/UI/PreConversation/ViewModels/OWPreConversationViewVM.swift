@@ -390,7 +390,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         comment: comment,
                         user: user,
                         replyToUser: nil,
-                        collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
+                        collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
+                        section: self.preConversationData.article.additionalSettings.section))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))

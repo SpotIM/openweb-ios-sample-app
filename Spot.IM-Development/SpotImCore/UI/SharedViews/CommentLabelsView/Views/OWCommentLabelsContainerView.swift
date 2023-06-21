@@ -19,7 +19,9 @@ class OWCommentLabelsContainerView: UIView {
 
     fileprivate lazy var labelsContainerStackView: UIStackView = {
         return UIStackView()
+            .axis(.horizontal)
             .spacing(Metrics.labelsContainerStackViewSpacing)
+            .distribution(.equalSpacing)
     }()
     fileprivate var heightConstraint: OWConstraint?
 
