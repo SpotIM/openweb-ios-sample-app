@@ -934,10 +934,10 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest { [weak self] sender -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
                 let sortDictateService = self.servicesProvider.sortDictateService()
-                let actions: [OWRxPresenterAction] = [
-                    .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
-                    .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
-                    .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
+                let actions = [
+                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
                     ]
 
                 return self.servicesProvider.presenterService()
