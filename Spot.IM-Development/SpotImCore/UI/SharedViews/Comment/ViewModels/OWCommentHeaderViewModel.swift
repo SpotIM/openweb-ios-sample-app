@@ -28,7 +28,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var hiddenCommentReasonText: Observable<String> { get }
 
     var userNameTapped: Observable<Void> { get }
-    var openMenu: Observable<([OWRxPresenterAction], UIView)> { get }
+    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> { get }
 }
 
 protocol OWCommentHeaderViewModeling {
@@ -180,7 +180,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
-    var openMenu: Observable<([OWRxPresenterAction], UIView)> {
+    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapMore
             .map { [weak self] view in
                 guard let self = self else { return nil}

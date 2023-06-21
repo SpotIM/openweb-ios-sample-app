@@ -12,7 +12,7 @@ import UIKit
 
 protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
-    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
 }
 
@@ -29,7 +29,7 @@ class OWPresenterService: OWPresenterServicing {
                                          actions: actions)
     }
 
-    func showMenu(actions: [OWRxPresenterAction], sender: UIView, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
+    func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
         return Observable.create { observer in
             // Map to regular UIAlertAction
