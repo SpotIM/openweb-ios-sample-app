@@ -99,7 +99,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .map { [weak self] type -> OWCommentCreationRequiredData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
                 guard let self = self else { return nil }
-                return OWCommentCreationRequiredData(article: self.conversationData.article, settings: self.conversationData.settings, commentCreationType: type)
+                return OWCommentCreationRequiredData(article: self.conversationData.article,
+                                                     settings: self.conversationData.settings,
+                                                     commentCreationType: type,
+                                                     presentationalStyle: self.conversationData.presentationalStyle)
             }
             .unwrap()
 
