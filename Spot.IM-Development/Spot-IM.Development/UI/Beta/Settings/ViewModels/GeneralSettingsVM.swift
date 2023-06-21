@@ -260,7 +260,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }()
 
     lazy var readOnlySettings: [String] = {
-        let _default = NSLocalizedString("Default", comment: "")
+        let _default = NSLocalizedString("Server", comment: "")
         let _enabled = NSLocalizedString("Enabled", comment: "")
         let _disabled = NSLocalizedString("Disabled", comment: "")
 
