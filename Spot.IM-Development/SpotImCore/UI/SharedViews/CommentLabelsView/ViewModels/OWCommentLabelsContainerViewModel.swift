@@ -15,6 +15,7 @@ protocol OWCommentLabelsContainerViewModelingInputs {
 }
 
 protocol OWCommentLabelsContainerViewModelingOutputs {
+    var commentLabelsTitle: Observable<String?> { get }
     var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> { get }
 }
 
@@ -83,6 +84,18 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                     OWCommentLabelViewModel(commentLabelSettings: commentLabelSetting)
                 }
             }
+            .asObservable()
+    }
+
+    fileprivate var _commentLabelsTitle: Observable<String?> {
+        Observable.combineLatest(_comment, _commentLabelsSection) { comment, commentLabelsSection in
+            guard comment == nil else { return nil }
+            return commentLabelsSection.guidelineText
+        }
+    }
+
+    var commentLabelsTitle: Observable<String?> {
+        _commentLabelsTitle
             .asObservable()
     }
 

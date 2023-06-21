@@ -13,9 +13,20 @@ class OWCommentLabelsContainerView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_labels_container_id"
 
+        static let titleLabelFontSize: CGFloat = 13.0
+        static let titleLabelSpacing: CGFloat = 10.0
+
         static let labelsContainerStackViewSpacing: CGFloat = 10.0
         static let commentLabelViewHeight: CGFloat = 28.0
     }
+
+    fileprivate lazy var titleLabel: UILabel = {
+        return UILabel()
+            .numberOfLines(1)
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.titleLabelFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
 
     fileprivate lazy var labelsContainerStackView: UIStackView = {
         return UIStackView()
@@ -23,7 +34,10 @@ class OWCommentLabelsContainerView: UIView {
             .spacing(Metrics.labelsContainerStackViewSpacing)
             .distribution(.equalSpacing)
     }()
-    fileprivate var heightConstraint: OWConstraint?
+
+    fileprivate var titleZeroHeightConstraint: OWConstraint?
+    fileprivate var labelsHeightConstraint: OWConstraint?
+    fileprivate var labelsTopConstraint: OWConstraint?
 
     fileprivate var viewModel: OWCommentLabelsContainerViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -49,20 +63,35 @@ class OWCommentLabelsContainerView: UIView {
         self.labelsContainerStackView.subviews.forEach { view in
             view.removeFromSuperview()
         }
-        self.heightConstraint?.update(offset: 0)
+        self.labelsHeightConstraint?.update(offset: 0)
     }
 }
 
 fileprivate extension OWCommentLabelsContainerView {
     func setupUI() {
+        addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            titleZeroHeightConstraint = make.height.equalTo(0).constraint
+        }
+
         addSubview(labelsContainerStackView)
         labelsContainerStackView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            heightConstraint = make.height.equalTo(0).constraint
+            labelsTopConstraint = make.top.equalTo(titleLabel.OWSnp.bottom).constraint
+            make.leading.trailing.bottom.equalToSuperview()
+            labelsHeightConstraint = make.height.equalTo(0).constraint
         }
     }
 
     func setupObservers() {
+        viewModel.outputs.commentLabelsTitle
+            .subscribe(onNext: { [weak self] title in
+                guard let self = self else { return }
+                self.titleLabel.text = title
+                self.titleZeroHeightConstraint?.isActive = title == nil
+                self.labelsTopConstraint?.update(offset: title == nil ? 0 : Metrics.titleLabelSpacing)
+            }).disposed(by: disposeBag)
+
         viewModel.outputs.commentLabelsViewModels
             .subscribe(onNext: { [weak self] viewModels in
                 guard let self = self else { return }
@@ -70,7 +99,7 @@ fileprivate extension OWCommentLabelsContainerView {
                 self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
 
                 if viewModels.count > 0 {
-                    self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
+                    self.labelsHeightConstraint?.update(offset: Metrics.commentLabelViewHeight)
                 }
 
                 let commentLabelsViews: [OWCommentLabelView] = viewModels.map { vm in
