@@ -156,7 +156,7 @@ fileprivate extension UserDefaultsProvider.UDKey {
         case .conversationStyle:
             return "Key which stores conversation's style"
         case .commentCreationStyle:
-                    return "Key which stores comment creation style"
+            return "Key which stores comment creation style"
         case .commentCreationCustomStyleIndex:
             return "Key which stores comment creation's custom style index"
         case .fontGroupType:
