@@ -70,7 +70,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     lazy var shouldShowArticleDescription: Bool = {
-        return conversationData.article.additionalSettings.headerStyle == .regular
+        return conversationData.article.additionalSettings.headerStyle != .none
     }()
 
     var _shouldShowError = PublishSubject<Void>()
