@@ -260,11 +260,11 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }()
 
     lazy var readOnlySettings: [String] = {
-        let _default = NSLocalizedString("Server", comment: "")
+        let _server = NSLocalizedString("Server", comment: "")
         let _enabled = NSLocalizedString("Enabled", comment: "")
         let _disabled = NSLocalizedString("Disabled", comment: "")
 
-        return [_default, _enabled, _disabled]
+        return [_server, _enabled, _disabled]
     }()
 
     lazy var themeModeTitle: String = {
