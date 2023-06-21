@@ -40,7 +40,7 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
         _cellsViewModels.onNext(vms)
 
         cellSelected
-            .asObserver()
+            .asObservable()
             .subscribe(onNext: { index in
                 items[index].handler()
             })
