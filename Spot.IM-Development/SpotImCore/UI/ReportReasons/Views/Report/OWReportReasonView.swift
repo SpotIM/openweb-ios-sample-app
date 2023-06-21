@@ -213,7 +213,7 @@ fileprivate extension OWReportReasonView {
                 guard let self = self else { return }
                 self.tableHeaderLabel
                     .attributedText(attributedText)
-                    .addRangeGesture(stringRange: viewModel.outputs.tableViewHeaderTapText) { [weak self] in
+                    .addRangeGesture(stringRange: self.viewModel.outputs.tableViewHeaderTapText) { [weak self] in
                         guard let self = self else { return }
                         self.viewModel.inputs.learnMoreTap.onNext()
                     }
