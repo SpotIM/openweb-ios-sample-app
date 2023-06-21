@@ -193,8 +193,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     // TODO: properly get the relevant actions
     fileprivate lazy var optionsActions: [OWRxPresenterAction] = {
         return [
-            .init(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
-            .init(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment)
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment)
         ]
     }()
 }
