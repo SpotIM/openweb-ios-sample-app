@@ -17,6 +17,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var footerViewModel: OWCommentCreationFooterViewModeling { get }
+    var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -41,6 +42,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
         return OWCommentCreationFooterViewModel()
+    }()
+
+    lazy var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling = {
+        return OWCommentLabelsContainerViewModel(section: commentCreationData.article.additionalSettings.section)
     }()
 
     init (commentCreationData: OWCommentCreationRequiredData,
