@@ -884,8 +884,8 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], UIView)> in
-                let openMenuClickObservable: [Observable<([OWRxPresenterAction], UIView)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], UIView)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource)> in
+                let openMenuClickObservable: [Observable<([OWRxPresenterAction], OWUISource)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 

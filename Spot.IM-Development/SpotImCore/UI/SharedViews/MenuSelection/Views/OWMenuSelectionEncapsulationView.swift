@@ -22,7 +22,7 @@ class OWMenuSelectionEncapsulationView: UIView {
     fileprivate var menuView: OWMenuSelectionView
     fileprivate let disposeBag = DisposeBag()
 
-    init(menuVM: OWMenuSelectionViewModel, senderView: UIView, presenterVC: UIViewController) {
+    init(menuVM: OWMenuSelectionViewModel, senderView: OWUISource, presenterVC: UIViewController) {
         menuView = OWMenuSelectionView.init(viewModel: menuVM)
         super.init(frame: .zero)
         setupViews(senderView: senderView, presenterVC: presenterVC)
@@ -35,7 +35,7 @@ class OWMenuSelectionEncapsulationView: UIView {
 }
 
 fileprivate extension OWMenuSelectionEncapsulationView {
-    func setupViews(senderView: UIView, presenterVC: UIViewController) {
+    func setupViews(senderView: OWUISource, presenterVC: UIViewController) {
         presenterVC.view.addSubview(self)
         self.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
