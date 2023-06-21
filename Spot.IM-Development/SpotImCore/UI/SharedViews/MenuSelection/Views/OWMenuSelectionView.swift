@@ -57,8 +57,8 @@ fileprivate extension OWMenuSelectionView {
         self.layer.borderWidth = 1
         self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light).cgColor
         self.layer.cornerRadius = Metrics.cornerRadius
+        self.apply(shadow: .standard)
 
-        applyShadow()
         self.useAsThemeStyleInjector()
 
         self.OWSnp.makeConstraints { make in
@@ -70,15 +70,6 @@ fileprivate extension OWMenuSelectionView {
             make.edges.equalToSuperview().inset(Metrics.tableInset)
             make.height.equalTo(0)
         }
-
-    }
-
-    func applyShadow() {
-        layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.07).cgColor
-        layer.shadowRadius = 20
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.masksToBounds = false
     }
 
     func setupObservers() {
