@@ -14,6 +14,8 @@ protocol OWToastViewModelingInputs {
 protocol OWToastViewModelingOutputs {
     var iconImage: UIImage { get }
     var title: String { get }
+    var toastActionViewModel: OWToastActionViewModeling { get }
+    var showAction: Bool { get }
 }
 
 protocol OWToastViewModeling {
@@ -26,11 +28,14 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     var outputs: OWToastViewModelingOutputs { return self }
 
     var iconImage: UIImage = UIImage()
-
     var title: String
+    var toastActionViewModel: OWToastActionViewModeling
+    var showAction: Bool
 
     init(requiredData: OWToastRequiredData) {
         title = requiredData.title
+        toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
+        showAction = requiredData.action != .none
         iconImage = self.iconForType(type: requiredData.type)
     }
 }
@@ -40,7 +45,7 @@ fileprivate extension OWToastViewModel {
         var image: UIImage? = nil
         switch(type) {
         case .information: image = UIImage(spNamed: "informationToast", supportDarkMode: false)
-        case .success: image = UIImage(spNamed: "sucessToast", supportDarkMode: false)
+        case .success: image = UIImage(spNamed: "successToast", supportDarkMode: false)
         case .error: image = UIImage(spNamed: "errorToast", supportDarkMode: false)
         }
 

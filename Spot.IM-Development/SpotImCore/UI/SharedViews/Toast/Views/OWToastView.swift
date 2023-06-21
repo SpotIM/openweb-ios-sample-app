@@ -21,16 +21,23 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
         static let iconSize: CGFloat = 24
         static let textSize: CGFloat = 15
         static let messageLeadingPadding: CGFloat = 8
+        static let actionLeadingPadding: CGFloat = 12
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
         return UIImageView()
+            .image(viewModel.outputs.iconImage)
     }()
 
     fileprivate lazy var messageLabel: UILabel = {
         return UILabel()
+            .text(viewModel.outputs.title)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.textSize))
+    }()
+
+    fileprivate lazy var actionView: OWToastActionView = {
+        return OWToastActionView(viewModel: viewModel.outputs.toastActionViewModel)
     }()
 
     fileprivate var viewModel: OWToastViewModeling
@@ -59,7 +66,6 @@ fileprivate extension OWToastView {
         self.layer.cornerRadius = Metrics.cornerRadius
         self.applyShadow()
 
-        iconImageView.image = viewModel.outputs.iconImage
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().inset(Metrics.horizontalPadding)
@@ -67,12 +73,20 @@ fileprivate extension OWToastView {
             make.size.equalTo(Metrics.iconSize)
         }
 
-        messageLabel.text = viewModel.outputs.title
         self.addSubview(messageLabel)
         messageLabel.OWSnp.makeConstraints { make in
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.messageLeadingPadding)
             make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
+        }
+
+        self.addSubview(actionView)
+        actionView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(messageLabel.OWSnp.trailing).offset(Metrics.actionLeadingPadding)
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(viewModel.outputs.showAction ? Metrics.horizontalPadding : 0)
+            if (!viewModel.outputs.showAction) {
+                make.width.equalTo(0)
+            }
         }
     }
 
