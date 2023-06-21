@@ -15,22 +15,28 @@ class OWToastActionView: UIView {
     fileprivate struct Metrics {
         static let identifier = "toast_action_view_id"
 
-        static let iconSize: CGFloat = 14
         static let textSize: CGFloat = 15
-        static let iconLeadingPadding: CGFloat = 2
+        static let iconLeadingPadding: CGFloat = 4
     }
 
     fileprivate lazy var titleLabel: UILabel = {
-        return UILabel()
+        let attributedString = NSAttributedString(
+            string: viewModel.outputs.title,
+            attributes: [
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+                NSAttributedString.Key.font: OWFontBook.shared.font(style: .medium, size: Metrics.textSize)
+                        ]
+        )
+        var label = UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.textSize))
-            .text(viewModel.outputs.title)
-            // TODO: underline
+        label.attributedText = attributedString
+        return label
     }()
 
     fileprivate lazy var iconImageView: UIImageView = {
         return UIImageView()
-            .image(viewModel.outputs.icon)
+            .image(viewModel.outputs.icon?.withRenderingMode(.alwaysTemplate))
+            .tintAdjustmentMode(.normal)
             .tintColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
     }()
 
@@ -60,7 +66,7 @@ fileprivate extension OWToastActionView {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.leading.equalTo(titleLabel.OWSnp.trailing).offset(Metrics.iconLeadingPadding)
-            make.top.bottom.trailing.equalToSuperview()
+            make.centerY.trailing.equalToSuperview()
         }
     }
 
