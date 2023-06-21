@@ -33,18 +33,25 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     fileprivate let _comment = BehaviorSubject<OWComment?>(value: nil)
 
     fileprivate let _maxVisibleCommentLabels = 3 // TODO: do we want to keep it that way?
+
+    fileprivate let section: String
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(comment: OWComment, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(comment: OWComment? = nil, section: String, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
-        _comment.onNext(comment)
+        self.section = section
+        if let comment = comment {
+            _comment.onNext(comment)
+        }
     }
     init(servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
+        self.section = ""
     }
 
-    fileprivate var _commentLabelsSectionsConfig: Observable<CommentLabelsSectionsConfig> {
+    fileprivate var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration> {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> CommentLabelsSectionsConfig? in
@@ -55,14 +62,17 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 return sharedConfig.commentLabels
             }
             .unwrap()
+            .map { [weak self] commentLabelsSectionsConfig in
+                guard let self = self else { return nil }
+                return commentLabelsSectionsConfig[self.section]
+            }
+            .unwrap()
     }
 
     fileprivate var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> {
-        Observable.combineLatest(_comment, _commentLabelsSectionsConfig) { [weak self] comment, commentLabelsSectionsConfig in
-            guard let self = self,
-                  let comment = comment
-            else { return nil }
-            return self.getCommentLabels(comment: comment, commentLabelsSectionsConfig: commentLabelsSectionsConfig)
+        Observable.combineLatest(_comment, _commentLabelsSection) { [weak self] comment, commentLabelsSection in
+            guard let self = self else { return nil }
+            return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
         }.unwrap()
     }
 
@@ -93,8 +103,13 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 }
 
 fileprivate extension OWCommentLabelsContainerViewModel {
-    func getCommentLabels(comment: OWComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> [OWCommentLabelSettings]? {
-        guard let commentLabelsConfig = getCommentLabelsFromConfig(comment: comment, commentLabelsSectionsConfig: commentLabelsSectionsConfig) else { return nil }
+    func getCommentLabels(comment: OWComment?, commentLabelsSection: SPCommentLabelsSectionConfiguration) -> [OWCommentLabelSettings] {
+        var commentLabelsConfig: [SPLabelConfiguration]
+        if let comment = comment {
+            commentLabelsConfig = getCommentLabelsOfComment(comment: comment, commentLabelsSection: commentLabelsSection)
+        } else {
+            commentLabelsConfig = commentLabelsSection.labels
+        }
 
         let labelsSettings: [OWCommentLabelSettings] = commentLabelsConfig.map { commentLabelConfig in
             guard let color = UIColor.color(rgb: commentLabelConfig.color),
@@ -110,22 +125,18 @@ fileprivate extension OWCommentLabelsContainerViewModel {
         return Array(labelsSettings.prefix(_maxVisibleCommentLabels))
     }
 
-    func getCommentLabelsFromConfig(comment: OWComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> [SPLabelConfiguration]? {
-        // cross given commentLabels to appConfig labels
+    func getCommentLabelsOfComment(comment: OWComment, commentLabelsSection: SPCommentLabelsSectionConfiguration) -> [SPLabelConfiguration] {
+        var selectedCommentLabelsConfiguration: [SPLabelConfiguration] = []
+
         if let commentLabels = comment.additionalData?.labels,
-           let labelIds = commentLabels.ids, labelIds.count > 0,
-           let section = commentLabels.section,
-           let sectionLabels = commentLabelsSectionsConfig[section] {
-            var selectedCommentLabelsConfiguration: [SPLabelConfiguration] = []
+           let labelIds = commentLabels.ids, labelIds.count > 0 {
             for labelId in labelIds {
-                if let selectedCommentLabelConfiguration = sectionLabels.getLabelById(labelId: labelId) {
+                if let selectedCommentLabelConfiguration = commentLabelsSection.getLabelById(labelId: labelId) {
                     selectedCommentLabelsConfiguration.append(selectedCommentLabelConfiguration)
                 }
             }
-
-            return selectedCommentLabelsConfiguration
         }
 
-        return nil
+        return selectedCommentLabelsConfiguration
     }
 }

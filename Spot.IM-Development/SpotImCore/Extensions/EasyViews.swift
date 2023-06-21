@@ -346,6 +346,11 @@ extension UIStackView {
         return self
     }
 
+    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
+        self.distribution = distribution
+        return self
+    }
+
     @discardableResult func spacing(_ spacing: CGFloat) -> Self {
         self.spacing = spacing
         return self

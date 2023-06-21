@@ -56,6 +56,10 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         return UITextView()
     }()
 
+    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+        return OWCommentLabelsContainerView()
+    }()
+
     fileprivate lazy var footerView: OWCommentCreationFooterView = {
         return OWCommentCreationFooterView(with: self.viewModel.outputs.footerViewModel)
     }()
@@ -70,6 +74,9 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentCreationRegularViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+
+        commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
+
         setupViews()
         setupObservers()
         applyAccessibility()
@@ -112,11 +119,18 @@ fileprivate extension OWCommentCreationRegularView {
             make.height.equalTo(72.0)
         }
 
+        self.addSubview(commentLabelsContainerView)
+        commentLabelsContainerView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(footerView.OWSnp.top).offset(-15.0)
+            make.leading.equalToSuperview().offset(15.0)
+            make.trailing.lessThanOrEqualToSuperview()
+        }
+
         self.addSubview(textInput)
         textInput.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(12.0)
-            make.bottom.equalTo(footerView.OWSnp.top)
+            make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
         }
     }
 
