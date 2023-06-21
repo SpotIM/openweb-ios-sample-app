@@ -61,6 +61,7 @@
 		164AE1AE2A3F21130005D498 /* OWCommentCreationFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164AE1AD2A3F21130005D498 /* OWCommentCreationFooterView.swift */; };
 		164AE1B02A3F21200005D498 /* OWCommentCreationFooterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164AE1AF2A3F21200005D498 /* OWCommentCreationFooterViewModel.swift */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
+		166CCCA42A2E362F00C7143F /* UIActivityViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */; };
 		166CCCA62A30CD5000C7143F /* OWCommentCreationRegularView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA52A30CD5000C7143F /* OWCommentCreationRegularView.swift */; };
 		166CCCA82A30CD6300C7143F /* OWCommentCreationLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA72A30CD6300C7143F /* OWCommentCreationLightView.swift */; };
 		166CCCAA2A30CD7100C7143F /* OWCommentCreationFloatingKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA92A30CD7100C7143F /* OWCommentCreationFloatingKeyboardView.swift */; };
@@ -70,7 +71,6 @@
 		166CCCB22A3A0FC300C7143F /* OWAdditionalSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB12A3A0FC300C7143F /* OWAdditionalSettingsProtocol.swift */; };
 		166CCCB42A3A10FB00C7143F /* OWAdditionalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB32A3A10FB00C7143F /* OWAdditionalSettings.swift */; };
 		166CCCB72A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB62A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift */; };
-		166CCCA42A2E362F00C7143F /* UIActivityViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */; };
 		166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166F796C281012BE009F45CE /* SPViewActionsCallbacks.swift */; };
 		1679DB1429B88DD400604A3D /* OWCommentThreadCellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DB1329B88DD400604A3D /* OWCommentThreadCellOption.swift */; };
 		168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168DC7D22873243E009A88B6 /* OWTypealiasesInternal.swift */; };
@@ -834,6 +834,8 @@
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
+		9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */; };
+		9EEBF66E2A431E3900315EB0 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEBF66D2A431E3900315EB0 /* UIView+Extensions.swift */; };
 		9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77C297E84F100814648 /* PickerSetting.swift */; };
 		9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77D297E84F100814648 /* TextFieldSetting.swift */; };
 		9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE780297E851400814648 /* UIColor+Extensions.swift */; };
@@ -920,6 +922,7 @@
 		164AE1AD2A3F21130005D498 /* OWCommentCreationFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationFooterView.swift; sourceTree = "<group>"; };
 		164AE1AF2A3F21200005D498 /* OWCommentCreationFooterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationFooterViewModel.swift; sourceTree = "<group>"; };
 		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
+		166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIActivityViewController+Rx.swift"; sourceTree = "<group>"; };
 		166CCCA52A30CD5000C7143F /* OWCommentCreationRegularView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationRegularView.swift; sourceTree = "<group>"; };
 		166CCCA72A30CD6300C7143F /* OWCommentCreationLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationLightView.swift; sourceTree = "<group>"; };
 		166CCCA92A30CD7100C7143F /* OWCommentCreationFloatingKeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationFloatingKeyboardView.swift; sourceTree = "<group>"; };
@@ -929,7 +932,6 @@
 		166CCCB12A3A0FC300C7143F /* OWAdditionalSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalSettingsProtocol.swift; sourceTree = "<group>"; };
 		166CCCB32A3A10FB00C7143F /* OWAdditionalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalSettings.swift; sourceTree = "<group>"; };
 		166CCCB62A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalSettingsBuilder.swift; sourceTree = "<group>"; };
-		166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIActivityViewController+Rx.swift"; sourceTree = "<group>"; };
 		166F796C281012BE009F45CE /* SPViewActionsCallbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPViewActionsCallbacks.swift; sourceTree = "<group>"; };
 		1679DB1329B88DD400604A3D /* OWCommentThreadCellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OWCommentThreadCellOption.swift; path = "SpotImCore/SdkAPI/Infra - Currently not in used/Protocols/MiscellaneousSettings/OWCommentThreadCellOption.swift"; sourceTree = SOURCE_ROOT; };
 		168DC7D22873243E009A88B6 /* OWTypealiasesInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTypealiasesInternal.swift; sourceTree = "<group>"; };
@@ -1731,6 +1733,8 @@
 		9ED2E57E29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLocaleStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9EE9F79929D6DC99005FFC8A /* OWQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueue.swift; sourceTree = "<group>"; };
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
+		9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+Keyboard.swift"; sourceTree = "<group>"; };
+		9EEBF66D2A431E3900315EB0 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
 		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
 		9EFFE780297E851400814648 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
@@ -1807,6 +1811,7 @@
 			isa = PBXGroup;
 			children = (
 				9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */,
+				9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */,
 				9EFFE780297E851400814648 /* UIColor+Extensions.swift */,
 				0E1125D72304BC29006B1489 /* Date+extensions.swift */,
 				0E1125DD2304C127006B1489 /* String+Extensions.swift */,
@@ -1820,6 +1825,7 @@
 				3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */,
 				3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */,
 				9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */,
+				9EEBF66D2A431E3900315EB0 /* UIView+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -6062,6 +6068,7 @@
 				3DB3D19D282C0433008654CF /* AuthenticationError.swift in Sources */,
 				443B328D236997F00000BB60 /* SettingsViewController.swift in Sources */,
 				8DCBE87D2950594A00C8677C /* SettingsVC.swift in Sources */,
+				9EEBF66E2A431E3900315EB0 /* UIView+Extensions.swift in Sources */,
 				8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */,
 				9EA0F83D29ABEF41008FD7A6 /* GeneralSettingsVM.swift in Sources */,
 				9EBE5C2E29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift in Sources */,
@@ -6109,6 +6116,7 @@
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
 				9EBE5C2A29AE141E001150DA /* OWPreConversationStyle+Extensions.swift in Sources */,
 				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,
+				9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
 				3DA8DBF629F151D900783BA5 /* TestingPlaygroundViewModel.swift in Sources */,
 				3D611B8828C4D94F003960CE /* SDKUIFlowActionType.swift in Sources */,
