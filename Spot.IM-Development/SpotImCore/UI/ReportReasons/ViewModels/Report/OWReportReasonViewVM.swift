@@ -110,12 +110,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .map { [weak self] shouldShowLearnMore in
                 guard let self = self else { return nil }
                 return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderKey)
-                    .replacingOccurrences(of: tableViewHeaderTapText, with: shouldShowLearnMore ? tableViewHeaderTapText : "")
+                    .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
                     .fontForText(OWFontBook.shared.font(style: .regular,
                                                         size: Metrics.headerTextFontSize))
                     .colorForText(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                                  text: shouldShowLearnMore ? tableViewHeaderTapText : "")
+                                  text: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
             }
             .unwrap()
     }
@@ -237,7 +237,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .unwrap()
             .flatMap { [weak self] index -> Observable<OWReportReason> in
                 guard let self = self else { return .empty() }
-                return reportReasonOptions
+                return self.reportReasonOptions
                     .map { $0[index] }
             }
             .share(replay: 1)
