@@ -698,14 +698,13 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .subscribe(onNext: { [weak self] actions, sender in
-                guard let self = self else { return }
-                self.servicesProvider.presenterService()
+            .flatMapLatest { [weak self] actions, sender -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty()}
+                return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
-                    .subscribe(onNext: { _ in
-                        // TODO: handle
-                    })
-                    .disposed(by: self.disposeBag)
+            }
+            .subscribe(onNext: { [weak self] response in
+                // TODO: handle
             })
             .disposed(by: disposeBag)
     }
