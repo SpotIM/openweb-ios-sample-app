@@ -21,6 +21,9 @@ class OWCommentCreationFooterView: UIView {
         static let ctaButtonTitleFontSize: CGFloat = 15.0
         static let ctaButtonHorizontalContentInset: CGFloat = 15.0
         static let ctaButtonHight: CGFloat = 40.0
+        static let ctaButtonEnabledAlpha: CGFloat = 1
+        static let ctaButtonDisabledAlpha: CGFloat = 0.5
+
         static let horizontalOffset: CGFloat = 16.0
 
         static let addImageButtonHeight: CGFloat = 16.0 + (6.0 * 2)
@@ -111,6 +114,15 @@ fileprivate extension OWCommentCreationFooterView {
 
         ctaButton.rx.tap
             .bind(to: viewModel.inputs.tapCta)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.ctaButtonEnabled
+            .bind(to: ctaButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.ctaButtonEnabled
+            .map { $0 ? Metrics.ctaButtonEnabledAlpha : Metrics.ctaButtonDisabledAlpha }
+            .bind(to: ctaButton.rx.alpha)
             .disposed(by: disposeBag)
 
         viewModel.outputs.ctaTitleText
