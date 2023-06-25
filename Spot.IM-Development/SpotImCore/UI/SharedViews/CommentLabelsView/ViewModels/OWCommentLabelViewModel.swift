@@ -55,6 +55,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
 
     var labelClicked = PublishSubject<Void>()
     var labelClickedOutput: Observable<Void> {
-        labelClicked.asObservable()
+        labelClicked
+            .asObservable()
     }
 }
