@@ -12,6 +12,4 @@ enum OWSortMenu: OWMenuTypeProtocol {
     case sortBest
     case sortNewest
     case sortOldest
-
-    case cancel
 }
