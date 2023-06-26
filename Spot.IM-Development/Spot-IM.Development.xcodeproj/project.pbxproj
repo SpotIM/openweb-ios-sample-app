@@ -775,7 +775,7 @@
 		8DD33B1F2A24C2CE001E0A2E /* OWSummaryCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B1E2A24C2CD001E0A2E /* OWSummaryCustomizableElement.swift */; };
 		8DD33B212A24C38A001E0A2E /* OWCommunityQuestionCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B202A24C38A001E0A2E /* OWCommunityQuestionCustomizableElement.swift */; };
 		8DD33B232A24C453001E0A2E /* OWArticleDescriptionCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B222A24C453001E0A2E /* OWArticleDescriptionCustomizableElement.swift */; };
-		8DD33B252A24C4F5001E0A2E /* OWNavigationHeaderCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B242A24C4F5001E0A2E /* OWNavigationHeaderCustomizableElement.swift */; };
+		8DD33B252A24C4F5001E0A2E /* OWHeaderCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B242A24C4F5001E0A2E /* OWHeaderCustomizableElement.swift */; };
 		8DD33B272A24D32F001E0A2E /* OWOnlineUsersCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B262A24D32F001E0A2E /* OWOnlineUsersCustomizableElement.swift */; };
 		8DD33B292A2D97AE001E0A2E /* OWPreConversationStyleIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD33B282A2D97AE001E0A2E /* OWPreConversationStyleIndexer.swift */; };
 		8DE52F4529D9957600D3985C /* OWCommunityQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F4429D9957600D3985C /* OWCommunityQuestionView.swift */; };
@@ -1674,7 +1674,7 @@
 		8DD33B1E2A24C2CD001E0A2E /* OWSummaryCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSummaryCustomizableElement.swift; sourceTree = "<group>"; };
 		8DD33B202A24C38A001E0A2E /* OWCommunityQuestionCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityQuestionCustomizableElement.swift; sourceTree = "<group>"; };
 		8DD33B222A24C453001E0A2E /* OWArticleDescriptionCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleDescriptionCustomizableElement.swift; sourceTree = "<group>"; };
-		8DD33B242A24C4F5001E0A2E /* OWNavigationHeaderCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationHeaderCustomizableElement.swift; sourceTree = "<group>"; };
+		8DD33B242A24C4F5001E0A2E /* OWHeaderCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWHeaderCustomizableElement.swift; sourceTree = "<group>"; };
 		8DD33B262A24D32F001E0A2E /* OWOnlineUsersCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOnlineUsersCustomizableElement.swift; sourceTree = "<group>"; };
 		8DD33B282A2D97AE001E0A2E /* OWPreConversationStyleIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationStyleIndexer.swift; sourceTree = "<group>"; };
 		8DE52F4429D9957600D3985C /* OWCommunityQuestionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommunityQuestionView.swift; sourceTree = "<group>"; };
@@ -2567,7 +2567,7 @@
 				8DD33B1E2A24C2CD001E0A2E /* OWSummaryCustomizableElement.swift */,
 				8DD33B202A24C38A001E0A2E /* OWCommunityQuestionCustomizableElement.swift */,
 				8DD33B222A24C453001E0A2E /* OWArticleDescriptionCustomizableElement.swift */,
-				8DD33B242A24C4F5001E0A2E /* OWNavigationHeaderCustomizableElement.swift */,
+				8DD33B242A24C4F5001E0A2E /* OWHeaderCustomizableElement.swift */,
 				8DD33B262A24D32F001E0A2E /* OWOnlineUsersCustomizableElement.swift */,
 			);
 			path = Enums;
@@ -5674,7 +5674,7 @@
 				9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */,
 				3DB3B96E29F7DA8D00C50192 /* OWTestingRedFirstLevel.swift in Sources */,
 				3D20A39527B022B8003F8513 /* OWConstraintViewDSL.swift in Sources */,
-				8DD33B252A24C4F5001E0A2E /* OWNavigationHeaderCustomizableElement.swift in Sources */,
+				8DD33B252A24C4F5001E0A2E /* OWHeaderCustomizableElement.swift in Sources */,
 				24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */,
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
