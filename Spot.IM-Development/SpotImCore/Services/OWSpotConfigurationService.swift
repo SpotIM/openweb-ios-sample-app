@@ -101,6 +101,8 @@ fileprivate extension OWSpotConfigurationService {
         }
         // Locale
         let locale = config.mobileSdk.locale ?? "en"
+
+        // Should be removed after removing Old API
         SPLocalizationManager.reset()
         SPLocalizationManager.setLocale(locale)
     }
