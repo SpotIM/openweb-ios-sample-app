@@ -36,8 +36,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
-    fileprivate lazy var preConversationSummary: OWPreConversationSummeryView = {
-        return OWPreConversationSummeryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
+    fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
+        return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
     }()
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {

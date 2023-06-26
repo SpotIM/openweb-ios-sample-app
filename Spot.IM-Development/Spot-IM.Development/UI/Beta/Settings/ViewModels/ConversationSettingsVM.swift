@@ -279,8 +279,9 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
     lazy var communityQuestionsStyleModeSettings: [String] = {
         let _none = NSLocalizedString("None", comment: "")
         let _regular = NSLocalizedString("Regular", comment: "")
+        let _compact = NSLocalizedString("Compact", comment: "")
 
-        return [_none, _regular]
+        return [_none, _regular, _compact]
     }()
 
     lazy var conversationSpacingSettings: [String] = {

@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWConversationViewModelingInputs {
+    var triggerCustomizeNavigationBarUI: PublishSubject<UINavigationBar> { get }
+    var triggerCustomizeNavigationItemTitleLabelUI: PublishSubject<UILabel> { get }
     // String is the commentId
     var highlightComment: PublishSubject<String> { get }
     var viewDidLoad: PublishSubject<Void> { get }
@@ -17,6 +19,9 @@ protocol OWConversationViewModelingInputs {
 }
 
 protocol OWConversationViewModelingOutputs {
+    var customizeNavigationBarUI: Observable<UINavigationBar> { get }
+    var customizeNavigationItemTitleLabelUI: Observable<UILabel> { get }
+    var shouldShowCustomizeNavigationItemLabel: Observable<Bool> { get }
     var conversationViewVM: OWConversationViewViewModeling { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
@@ -42,10 +47,36 @@ class OWConversationViewModel: OWConversationViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeNavigationBarUI = BehaviorSubject<UINavigationBar?>(value: nil)
+    fileprivate let _triggerCustomizeNavigationItemTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let _shouldShowCustomizeNavigationItemLabel = BehaviorSubject<Bool?>(value: nil)
+
+    var triggerCustomizeNavigationBarUI = PublishSubject<UINavigationBar>()
+    var triggerCustomizeNavigationItemTitleLabelUI = PublishSubject<UILabel>()
+
+    var customizeNavigationBarUI: Observable<UINavigationBar> {
+        return _triggerCustomizeNavigationBarUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeNavigationItemTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeNavigationItemTitleLabelUI
+            .unwrap()
+            .asObservable()
+    }
+
     lazy var conversationViewVM: OWConversationViewViewModeling = {
         return OWConversationViewViewModel(conversationData: conversationData,
                                            viewableMode: self.viewableMode)
     }()
+
+    var shouldShowCustomizeNavigationItemLabel: Observable<Bool> {
+        return _shouldShowCustomizeNavigationItemLabel
+            .unwrap()
+            .asObservable()
+    }
 
     var shouldCustomizeNavigationBar: Bool {
         guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
@@ -100,5 +131,29 @@ fileprivate extension OWConversationViewModel {
         viewDidLoad
             .bind(to: _viewDidLoad)
             .disposed(by: disposeBag)
+
+        triggerCustomizeNavigationBarUI
+            .bind(to: _triggerCustomizeNavigationBarUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeNavigationItemTitleLabelUI
+            .bind(to: _triggerCustomizeNavigationItemTitleLabelUI)
+            .disposed(by: disposeBag)
+
+        customizeNavigationItemTitleLabelUI
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._shouldShowCustomizeNavigationItemLabel.onNext(true)
+            })
+            .disposed(by: disposeBag)
+
+//        triggerCustomizeNavigationItemTitleLabelUI
+//            .flatMapLatest { [weak self] label -> Observable<UILabel> in
+//                guard let self = self else { return .empty() }
+//                return self.communityGuidelinesHtmlAttributedString
+//                    .map { _ in return label }
+//            }
+//            .bind(to: _triggerCustomizeNavigationItemTitleLabelUI)
+//            .disposed(by: disposeBag)
     }
 }
