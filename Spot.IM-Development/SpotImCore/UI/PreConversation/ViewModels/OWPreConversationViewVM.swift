@@ -86,7 +86,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     lazy var viewAccessibilityIdentifier: String = {
-        let styleId = (preConversationData.settings?.style ?? .compact).styleIdentifier
+        let styleId = (preConversationData.settings.preConversationSettings.style).styleIdentifier
         return Metrics.viewAccessibilityIdentifier.replacingOccurrences(of: "@", with: styleId)
     }()
 
@@ -111,7 +111,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
-        return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular
+        return self.preConversationData.settings.preConversationSettings.style
     }()
 
     fileprivate lazy var isCompactMode: Bool = {
@@ -485,6 +485,35 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment in
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
+            .disposed(by: disposeBag)
+
+        // Responding to share url from comment cells VMs
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
+                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.shareCommentUrl
+                }
+                return Observable.merge(shareClickOutputObservable)
+            }
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.presenterService()
+                    .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
+
+            }
+            .subscribe { result in
+                switch result {
+                case .completion:
+                    // Do nothing
+                    break
+                case .selected:
+                    // Do nothing
+                    break
+                }
+            }
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click

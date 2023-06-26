@@ -123,6 +123,10 @@ fileprivate extension OWCommentEngagementView {
             .bind(to: viewModel.inputs.replyClicked)
             .disposed(by: disposeBag)
 
+        shareButton.rx.tap
+            .bind(to: viewModel.inputs.shareClicked)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.showReplyButton
             .subscribe(onNext: { [weak self] showReply in
                 guard let self = self else { return }

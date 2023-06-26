@@ -43,17 +43,28 @@ class OWCommunityQuestionCell: UITableViewCell {
         disposeBag = DisposeBag()
 
         communityQuestionView.configure(with: self.viewModel.outputs.communityQuestionViewModel)
+        self.setupObservers()
     }
 }
 
 fileprivate extension OWCommunityQuestionCell {
     func setupUI() {
-        self.backgroundColor = .clear
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
 
         self.addSubviews(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview().inset(Metrics.edgesPadding)
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

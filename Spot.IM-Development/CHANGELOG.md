@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.5] - 2023-06-12
+### Fixed
+- Hotfix for a crash when trying to view previous replies in certain condtions
+
+## [1.18.4] - 2023-06-07
+### Features
+- Thread is hidden in case a comment and all its replies are muted or reported
+- Message status for comment rejection new text
+### Fixed
+- Fix duplication of comments for small scale articles
+- Fix disappeared replies to muted users
+
 ## [1.18.3] - 2023-03-15
 ### Fixed
 - An issue in which avatars sometimes changed after some delay
