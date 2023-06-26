@@ -22,24 +22,27 @@ protocol OWConversationViewViewModelingInputs {
 
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTiTleHeader: Bool { get }
+    var shouldShowArticleDescription: Bool { get }
+    var shouldShowError: Observable<Void> { get }
+    var shouldShowConversationEmptyState: Observable<Bool> { get }
+
     var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
+    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
+    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
+
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
-    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
-    var shouldShowConversationEmptyState: Observable<Bool> { get }
-    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
-    var initialDataLoaded: Observable<Bool> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+
     var urlClickedOutput: Observable<URL> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
-    var shouldShowError: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -65,6 +68,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
+
+    lazy var shouldShowArticleDescription: Bool = {
+        return conversationData.article.additionalSettings.headerStyle != .none
+    }()
 
     var _shouldShowError = PublishSubject<Void>()
     var shouldShowError: Observable<Void> {
@@ -206,12 +213,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
-    var initialDataLoaded: Observable<Bool> {
-        return _initialDataLoaded
-            .asObservable()
-    }
-
     var shouldShowConversationEmptyState: Observable<Bool> {
         return isEmptyObservable
             .asObservable()
@@ -243,7 +244,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var conversationStyle: OWConversationStyle = {
-        return self.conversationData.settings?.style ?? OWConversationStyle.regular
+        return self.conversationData.settings.fullConversationSettings.style
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -536,7 +537,7 @@ fileprivate extension OWConversationViewViewModel {
                     isReadOnly = false
                 case .enable:
                     isReadOnly = true
-                case .default:
+                case .server:
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
@@ -774,6 +775,35 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment in
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
+            .disposed(by: disposeBag)
+
+        // Responding to share url from comment cells VMs
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
+                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.shareCommentUrl
+                }
+                return Observable.merge(shareClickOutputObservable)
+            }
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.presenterService()
+                    .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
+
+            }
+            .subscribe { result in
+                switch result {
+                case .completion:
+                    // Do nothing
+                    break
+                case .selected:
+                    // Do nothing
+                    break
+                }
+            }
             .disposed(by: disposeBag)
 
         // Update comments cells on ReadOnly mode

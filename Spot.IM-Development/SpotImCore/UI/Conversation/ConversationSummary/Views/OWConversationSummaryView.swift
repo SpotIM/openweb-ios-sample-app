@@ -18,6 +18,7 @@ class OWConversationSummaryView: UIView {
         static let topMarginBetweenSeparator: CGFloat = 13.5
         static let separatorHeight: CGFloat = 1.0
         static let separatorWidth: CGFloat = 1.0
+        static let horizontalMarginBetweenOnlineUsersAndSort: CGFloat = 5.0
         static let identifier = "conversation_header_view_id"
         static let commentsCountLabelIdentifier = "comments_count_label_id"
     }
@@ -39,10 +40,12 @@ class OWConversationSummaryView: UIView {
 
     fileprivate lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var conversationSortView: OWConversationSortView = {
         return OWConversationSortView(viewModel: viewModel.outputs.conversationSortVM)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var bottomHorizontalSeparator: UIView = {
@@ -108,6 +111,7 @@ fileprivate extension OWConversationSummaryView {
             } else {
                 make.trailing.equalToSuperview().offset(-Metrics.sideOffset)
             }
+            make.leading.greaterThanOrEqualTo(onlineViewingUsersView.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenOnlineUsersAndSort)
             make.top.bottom.equalToSuperview()
         }
 

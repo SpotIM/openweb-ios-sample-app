@@ -67,7 +67,8 @@ fileprivate extension SettingsVC {
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
@@ -89,6 +90,50 @@ fileprivate extension SettingsVC {
                 }
                 previousView = settingsView
             }
+        }
+
+        // keyboard will show
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .subscribe(onNext: { [weak self] notification in
+                guard
+                    let self = self,
+                    let expandedKeyboardHeight = notification.keyboardSize?.height,
+                    let animationDuration = notification.keyboardAnimationDuration
+                    else { return }
+                self.scrollView.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-expandedKeyboardHeight)
+                }
+                UIView.animate(withDuration: animationDuration) { [weak self] in
+                    guard let self = self else { return }
+                    self.view.layoutIfNeeded()
+                } completion: { finished in
+                    if finished,
+                       let firstResponder = self.view.firstResponder {
+                        self.scrollToView(toView: firstResponder)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // keyboard will hide
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .voidify()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.scrollView.snp.updateConstraints { make in
+                    make.bottom.equalToSuperview()
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func scrollToView(toView: UIView) {
+        if let origin = toView.superview {
+            // Get the Y position of your child view
+            let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
+            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - self.view.frame.height / 3), animated: true)
         }
     }
 }
