@@ -11,14 +11,22 @@ import RxSwift
 
 class OWCommentReplyCounterView: UIView {
     fileprivate struct Metrics {
-
+        static let counterFontSize = 13.0
+        static let counterHeight = 24.0
     }
 
+    fileprivate lazy var counterLabel: UILabel = {
+        return UILabel()
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.counterFontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+    }()
+
+    fileprivate var viewHeightConstraint: OWConstraint?
+
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentCreationFooterViewModeling
+    fileprivate let viewModel: OWCommentReplyCounterViewModeling
 
-
-    init(with viewModel: OWCommentCreationFooterViewModeling) {
+    init(with viewModel: OWCommentReplyCounterViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
@@ -36,7 +44,14 @@ class OWCommentReplyCounterView: UIView {
 
 fileprivate extension OWCommentReplyCounterView {
     func setupUI() {
+        self.OWSnp.makeConstraints { make in
+            viewHeightConstraint = make.height.equalTo(0).constraint
+        }
 
+        addSubview(counterLabel)
+        counterLabel.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setupObservers() {
@@ -44,9 +59,21 @@ fileprivate extension OWCommentReplyCounterView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
+        viewModel.outputs.counterText
+            .bind(to: self.counterLabel.rx.text)
+            .disposed(by: disposeBag)
 
+        viewModel.outputs.showCounter
+            .subscribe(onNext: { [weak self] showCounter in
+                guard let self = self else { return }
+                if (showCounter) {
+                    self.viewHeightConstraint?.update(offset: Metrics.counterHeight)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

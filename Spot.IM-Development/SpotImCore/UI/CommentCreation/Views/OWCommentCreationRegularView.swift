@@ -13,6 +13,8 @@ import RxCocoa
 class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_regular_view_id"
+
+        static let replyCounterTrailingOffset = 16.0
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -54,6 +56,10 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var textInput: UITextView = {
         return UITextView()
+    }()
+
+    fileprivate lazy var commentReplyCounterView: OWCommentReplyCounterView = {
+        return OWCommentReplyCounterView(with: viewModel.outputs.commentCounterViewModel)
     }()
 
     fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
@@ -126,17 +132,29 @@ fileprivate extension OWCommentCreationRegularView {
             make.trailing.lessThanOrEqualToSuperview()
         }
 
+        self.addSubview(commentReplyCounterView)
+        commentReplyCounterView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
+            make.trailing.equalToSuperview().offset(-Metrics.replyCounterTrailingOffset)
+        }
+
         self.addSubview(textInput)
         textInput.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(12.0)
-            make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
+            make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
         }
     }
 
     func setupObservers() {
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
+            .disposed(by: disposeBag)
+
+        textInput.rx.text
+            .map { $0?.count }
+            .unwrap()
+            .bind(to: viewModel.outputs.commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
     }
 }
