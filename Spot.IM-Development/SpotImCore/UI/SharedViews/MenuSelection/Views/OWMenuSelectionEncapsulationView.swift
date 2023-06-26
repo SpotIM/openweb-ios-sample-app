@@ -36,8 +36,8 @@ class OWMenuSelectionEncapsulationView: UIView {
 
     func setupMenu() {
         self.addSubview(menuView)
-        constraintsMapper.forEach { option, constraintItem in
-            menuView.OWSnp.makeConstraints { make in
+        menuView.OWSnp.makeConstraints { make in
+            constraintsMapper.forEach { option, constraintItem in
                 switch(option) {
                 case .top: make.top.equalTo(constraintItem)
                 case .bottom: make.bottom.equalTo(constraintItem)
@@ -77,8 +77,4 @@ extension OWMenuSelectionEncapsulationView: UIGestureRecognizerDelegate {
         }
         return true
     }
-}
-
-enum OWMenuConstraintOption {
-    case top, bottom, left, right
 }
