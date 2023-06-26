@@ -20,6 +20,7 @@ class OWCommunityGuidelinesView: UIView {
         static let verticalOffset: CGFloat = 14.0
         static let horizontalPadding: CGFloat = 10.0
         static let iconSize: CGFloat = 16.0
+        static let sideOffset: CGFloat = 20.0
     }
 
     fileprivate lazy var titleTextView: UITextView = {
@@ -40,12 +41,14 @@ class OWCommunityGuidelinesView: UIView {
         textView.textContainer.lineFragmentPadding = 0
         textView.sizeToFit()
         return textView
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var guidelinesContainer: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .corner(radius: Metrics.containerCorderRadius)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var guidelinesIcon: UIImageView = {

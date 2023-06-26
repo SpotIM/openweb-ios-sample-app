@@ -55,6 +55,10 @@ protocol ConversationSettingsViewModeling {
 }
 
 class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSettingsViewModelingInputs, ConversationSettingsViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let delayInsertDataToPersistense = 100
+    }
+
     var inputs: ConversationSettingsViewModelingInputs { return self }
     var outputs: ConversationSettingsViewModelingOutputs { return self }
 
@@ -309,19 +313,19 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
         return Observable.combineLatest(styleModeSelectedIndex,
                                         communityGuidelinesStyleSelectedIndex,
                                         communityQuestionsStyleModeSelectedIndex,
-                                        conversationSpacingSelectedIndex,
                                         betweenCommentsSpacingSelected,
                                         belowHeaderSpacingSelected,
                                         belowCommunityGuidelinesSpacingSelected,
-                                        belowCommunityQuestionsGuidelinesSpacingSelected) {
+                                        belowCommunityQuestionsGuidelinesSpacingSelected,
+                                        conversationSpacingSelectedIndex) {
             styleIndex,
             communityGuidelinesStyleIndex,
             questionsStyleIndex,
-            conversationSpacingIndex,
             betweenCommentsSpace,
             belowHeaderSpace,
             belowCommunityGuidelinesSpace,
-            belowCommunityQuestionsGuidelinesSpace -> OWConversationStyle in
+            belowCommunityQuestionsGuidelinesSpace,
+            conversationSpacingIndex -> OWConversationStyle in
 
             return OWConversationStyle.conversationStyle(fromIndex: styleIndex,
                                                          communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
@@ -346,8 +350,9 @@ extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
-            .distinctUntilChanged()
-            .bind(to: userDefaultsProvider.rxProtocol
+            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
+            .skip(1)
+            .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWConversationStyle>.conversationStyle))
             .disposed(by: disposeBag)
     }

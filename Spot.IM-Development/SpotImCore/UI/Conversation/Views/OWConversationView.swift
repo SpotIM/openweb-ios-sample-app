@@ -124,20 +124,31 @@ fileprivate extension OWConversationView {
             }
         }
 
-        self.addSubview(articleDescriptionView)
-        articleDescriptionView.OWSnp.makeConstraints { make in
-            if shouldShowTiTleHeader {
-                make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
-            } else {
-                make.top.equalToSuperview()
+        let shouldShowArticleDescription = viewModel.outputs.shouldShowArticleDescription
+        if shouldShowArticleDescription {
+            self.addSubview(articleDescriptionView)
+            articleDescriptionView.OWSnp.makeConstraints { make in
+                if shouldShowTiTleHeader {
+                    make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+                } else {
+                    make.top.equalToSuperview()
+                }
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(Metrics.articleDescriptionHeight)
             }
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.articleDescriptionHeight)
         }
 
         self.addSubview(conversationSummaryView)
         conversationSummaryView.OWSnp.makeConstraints { make in
-            make.top.equalTo(articleDescriptionView.OWSnp.bottom)
+            if shouldShowArticleDescription {
+                make.top.equalTo(articleDescriptionView.OWSnp.bottom)
+            } else {
+                if shouldShowTiTleHeader {
+                    make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+                } else {
+                    make.top.equalToSuperview()
+                }
+            }
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.conversationSummaryHeight)
         }
