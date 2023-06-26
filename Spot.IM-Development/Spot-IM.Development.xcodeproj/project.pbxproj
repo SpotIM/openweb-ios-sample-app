@@ -1974,6 +1974,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		163E93312A49817D0091A6C4 /* CommentCreation */ = {
+			isa = PBXGroup;
+			children = (
+				164AE1AA2A3F20B50005D498 /* CommentCreationFooter */,
+			);
+			path = CommentCreation;
+			sourceTree = "<group>";
+		};
 		1640F2C128AD053600FB863B /* CommentCreationEntry - Old */ = {
 			isa = PBXGroup;
 			children = (
@@ -2455,8 +2463,8 @@
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
+				163E93312A49817D0091A6C4 /* CommentCreation */,
 				164AE1B12A42EE480005D498 /* CommentLabelsView */,
-				164AE1AA2A3F20B50005D498 /* CommentCreationFooter */,
 				8D99C6732A07D89400DAB542 /* CommentingCTA */,
 				24D7C25329E53019001F148B /* AvatarView */,
 				24C9BD5629DD53FA00D74034 /* CommentCreationEntry */,
