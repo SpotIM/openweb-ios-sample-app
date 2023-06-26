@@ -14,7 +14,7 @@ protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(title: String?, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
-    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode)
+    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
 }
 
 extension OWPresenterServicing {
@@ -53,39 +53,48 @@ class OWPresenterService: OWPresenterServicing {
         return UIActivityViewController.rx.show(onViewController: presenterVC, activityItems: activityItems, applicationActivities: applicationActivities)
     }
 
-    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) {
-        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
-        let toastVM = OWToastViewModel(requiredData: requiredData)
-        let toastView = OWToastView(viewModel: toastVM)
+    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>{
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
 
-        presenterVC.view.addSubview(toastView)
-        toastView.OWSnp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(50) // TODO: what insets?
-        }
-        presenterVC.view.setNeedsLayout()
-        presenterVC.view.layoutIfNeeded()
+        return Observable.create { observer in
+            let rxAction = OWRxPresenterAction(title: "", type: requiredData.action)
+            let toastVM = OWToastViewModel(requiredData: requiredData) {
+                observer.onNext(.selected(action: rxAction))
+                observer.onCompleted()
+            }
+            let toastView = OWToastView(viewModel: toastVM)
 
-        UIView.animate(withDuration: 0.5, animations: {
-            toastView.OWSnp.updateConstraints { make in
-                make.bottom.equalToSuperview().inset(30)
+            presenterVC.view.addSubview(toastView)
+            toastView.OWSnp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalToSuperview().offset(50) // TODO: what insets?
             }
             presenterVC.view.setNeedsLayout()
             presenterVC.view.layoutIfNeeded()
-        }, completion: { _ in
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                UIView.animate(withDuration: 0.5, animations: {
-                    toastView.OWSnp.updateConstraints { make in
-                        make.bottom.equalToSuperview().offset(50)
-                    }
-                    presenterVC.view.setNeedsLayout()
-                    presenterVC.view.layoutIfNeeded()
-                }, completion: { _ in
-                    toastView.removeFromSuperview()
-                })
-            }
 
-        })
+            UIView.animate(withDuration: 0.5, animations: {
+                toastView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().inset(30)
+                }
+                presenterVC.view.setNeedsLayout()
+                presenterVC.view.layoutIfNeeded()
+            }, completion: { _ in
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                    UIView.animate(withDuration: 0.5, animations: {
+                        toastView.OWSnp.updateConstraints { make in
+                            make.bottom.equalToSuperview().offset(50)
+                        }
+                        presenterVC.view.setNeedsLayout()
+                        presenterVC.view.layoutIfNeeded()
+                    }, completion: { _ in
+                        toastView.removeFromSuperview()
+                    })
+                }
+
+            })
+
+            return Disposables.create()
+        }
     }
 }
 
