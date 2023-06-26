@@ -41,8 +41,32 @@ class OWPresenterService: OWPresenterServicing {
             }
 
             let menuVM = OWMenuSelectionViewModel(items: menuItems)
-            // OWMenuSelectionWrapperView is addind himself to the presenterVC with propper constraints
-            _ = OWMenuSelectionEncapsulationView(menuVM: menuVM, senderView: sender, presenterVC: presenterVC)
+            
+            // calculate constraints for menu
+            let senderLocationFrame = sender.convert(CGPoint.zero, to: presenterVC.view)
+            let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
+            let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
+
+            var menuConstraintsMapper: [OWMenuConstraintOption: OWConstraintItem] = [:]
+            if (isTopSection) {
+                menuConstraintsMapper[.top] = sender.OWSnp.centerY
+            } else {
+                menuConstraintsMapper[.bottom] = sender.OWSnp.centerY
+            }
+            if (isLeftSection) {
+                menuConstraintsMapper[.left] = sender.OWSnp.centerX
+            } else {
+                menuConstraintsMapper[.right] = sender.OWSnp.centerX
+            }
+
+            // Create OWMenuSelectionEncapsulationView and align menu according to constraints
+            let menuEncapsulationView = OWMenuSelectionEncapsulationView(menuVM: menuVM, constraintsMapper: menuConstraintsMapper)
+            presenterVC.view.addSubview(menuEncapsulationView)
+            menuEncapsulationView.OWSnp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            menuEncapsulationView.setupMenu()
+
             return Disposables.create()
         }
     }

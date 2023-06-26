@@ -20,46 +20,36 @@ class OWMenuSelectionEncapsulationView: UIView {
     }()
 
     fileprivate var menuView: OWMenuSelectionView
+    fileprivate var constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]
     fileprivate let disposeBag = DisposeBag()
 
-    init(menuVM: OWMenuSelectionViewModel, senderView: OWUISource, presenterVC: UIViewController) {
+    init(menuVM: OWMenuSelectionViewModeling, constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]) {
         menuView = OWMenuSelectionView.init(viewModel: menuVM)
+        self.constraintsMapper = constraintsMapper
         super.init(frame: .zero)
-        setupViews(senderView: senderView, presenterVC: presenterVC)
         setupObservers()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
 
-fileprivate extension OWMenuSelectionEncapsulationView {
-    func setupViews(senderView: OWUISource, presenterVC: UIViewController) {
-        presenterVC.view.addSubview(self)
-        self.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
-        let senderLocationFrame = senderView.convert(CGPoint.zero, to: presenterVC.view)
-        let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
-        let isLeftSection = senderLocationFrame.x < (presenterVC.view.frame.width / 2)
-
+    func setupMenu() {
         self.addSubview(menuView)
-        menuView.OWSnp.makeConstraints { make in
-            if (isTopSection) {
-                make.top.equalTo(senderView.OWSnp.centerY)
-            } else {
-                make.bottom.equalTo(senderView.OWSnp.centerY)
-            }
-            if (isLeftSection) {
-                make.left.equalTo(senderView.OWSnp.centerX)
-            } else {
-                make.right.equalTo(senderView.OWSnp.centerX)
+        constraintsMapper.forEach { option, constraintItem in
+            menuView.OWSnp.makeConstraints { make in
+                switch(option) {
+                case .top: make.top.equalTo(constraintItem)
+                case .bottom: make.bottom.equalTo(constraintItem)
+                case .left: make.left.equalTo(constraintItem)
+                case .right: make.right.equalTo(constraintItem)
+                }
             }
         }
     }
+}
 
+fileprivate extension OWMenuSelectionEncapsulationView {
     func setupObservers() {
         tapGesture.rx.event
             .subscribe(onNext: { [weak self] _ in
@@ -87,4 +77,8 @@ extension OWMenuSelectionEncapsulationView: UIGestureRecognizerDelegate {
         }
         return true
     }
+}
+
+enum OWMenuConstraintOption {
+    case top, bottom, left, right
 }
