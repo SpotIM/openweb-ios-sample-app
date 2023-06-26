@@ -10,31 +10,33 @@ import UIKit
 
 #if NEW_API
 public enum OWCustomizableElement {
-    case navigationTitle(label: UILabel)
-    case navigationBar(element: OWNavigationBarCustomizableElement)
-    case articleDescription(element: OWArticleDescriptionCustomizableElement) // TODO image
-    case summery(element: OWSummeryCustomizableElement) // Done
-    case summeryHeader(element: OWSummeryHeaderCustomizableElement) // Done
-    case onlineUsers(element: OWOnlineUsersCustomizableElement) // Done
+    case navigationBarTitle(_ label: UILabel)
+    case navigationBar(_ title: UINavigationBar)
+    case navigationHeader(element: OWNavigationHeaderCustomizableElement)
+    case articleDescription(element: OWArticleDescriptionCustomizableElement)
+    case summary(element: OWSummaryCustomizableElement)
+    case summaryHeader(element: OWSummaryHeaderCustomizableElement)
+    case onlineUsers(element: OWOnlineUsersCustomizableElement)
     case commentCreationCTA(element: OWCommentCreationCTACustomizableElement)
-    case communityQuestion(element: OWCommunityQuestionCustomizableElement) // TODO regular
-    case communityGuidelines(element: OWCommunityGuidelinesCustomizableElement) // Done
-    case emptyState(element: OWEmptyStateCustomizableElement) // Done
+    case communityQuestion(element: OWCommunityQuestionCustomizableElement)
+    case communityGuidelines(element: OWCommunityGuidelinesCustomizableElement)
+    case emptyState(element: OWEmptyStateCustomizableElement)
     case emptyStateCommentingEnded(element: OWEmptyStateCommentingEndedCustomizableElement)
     case commentingEnded(element: OWCommentingEndedCustomizableElement)
 }
 #else
 enum OWCustomizableElement {
-    case navigationTitle(label: UILabel)
-    case navigationBar(element: OWNavigationBarCustomizableElement)
-    case articleDescription(element: OWArticleDescriptionCustomizableElement) // TODO image
-    case summery(element: OWSummeryCustomizableElement) // Done
-    case summeryHeader(element: OWSummeryHeaderCustomizableElement) // Done
-    case onlineUsers(element: OWOnlineUsersCustomizableElement) // Done
+    case navigationBarTitle(_ label: UILabel)
+    case navigationBar(_ navigationBar: UINavigationBar)
+    case navigationHeader(element: OWNavigationHeaderCustomizableElement)
+    case articleDescription(element: OWArticleDescriptionCustomizableElement)
+    case summary(element: OWSummaryCustomizableElement)
+    case summaryHeader(element: OWSummaryHeaderCustomizableElement)
+    case onlineUsers(element: OWOnlineUsersCustomizableElement)
     case commentCreationCTA(element: OWCommentCreationCTACustomizableElement)
-    case communityQuestion(element: OWCommunityQuestionCustomizableElement) // TODO regular
-    case communityGuidelines(element: OWCommunityGuidelinesCustomizableElement) // Done
-    case emptyState(element: OWEmptyStateCustomizableElement) // Done
+    case communityQuestion(element: OWCommunityQuestionCustomizableElement)
+    case communityGuidelines(element: OWCommunityGuidelinesCustomizableElement)
+    case emptyState(element: OWEmptyStateCustomizableElement)
     case emptyStateCommentingEnded(element: OWEmptyStateCommentingEndedCustomizableElement)
     case commentingEnded(element: OWCommentingEndedCustomizableElement)
 }

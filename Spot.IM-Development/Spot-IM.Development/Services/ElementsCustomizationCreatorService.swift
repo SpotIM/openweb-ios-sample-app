@@ -23,7 +23,7 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
         let customizableElement: OWCustomizableElementCallback = { element, source, themeStyle, _ in
             switch style {
             case 1:
-                getRevitalStyle(element: element, source: source, themeStyle: themeStyle)
+                getFirstStyle(element: element, source: source, themeStyle: themeStyle)
             default:
                 break
             }
@@ -36,7 +36,7 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
 fileprivate extension ElementsCustomizationCreatorService {
 
     // swiftlint:disable function_body_length
-    static func getRevitalStyle(element: OWCustomizableElement, source: OWViewSourceType, themeStyle: OWThemeStyle) {
+    static func getFirstStyle(element: OWCustomizableElement, source: OWViewSourceType, themeStyle: OWThemeStyle) {
 
 //        switch source {
 //        case .preConversation:
@@ -64,15 +64,41 @@ fileprivate extension ElementsCustomizationCreatorService {
 //        }
 
         switch element {
-        case .navigationTitle(label: let label):
-            label.text = "TestNavigation"
-            label.textColor = .green
+        case .navigationBarTitle(let label):
+            let attributedTitleText = NSMutableAttributedString(string: "TestNavigationTitle")
+            attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSRange(location: 0, length: attributedTitleText.length))
+            attributedTitleText.addAttribute(.foregroundColor, value: UIColor.blue, range: NSRange(location: 0, length: attributedTitleText.length))
+            label.attributedText = attributedTitleText
+
+        case .navigationBar(let navBar):
+            navBar.backgroundColor = .blue
+            navBar.tintColor = .green
+
+        case .navigationHeader(let element):
+            switch element {
+
+            case .title(let label):
+                label.text = "TestNavigation"
+                label.textColor = .green
+            case .close(let button):
+                switch themeStyle {
+                case .dark:
+                    button.setImage(UIImage(named: "testIcon-dark"), for: .normal)
+                case .light:
+                    button.setImage(UIImage(named: "testIcon"), for: .normal)
+                default:
+                    break
+                }
+            default:
+                break
+            }
 
         case .articleDescription(let element):
             switch element {
             case .title(let label):
                 label.text = "TestArticleTitle"
                 label.textColor = .green
+                label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
             case .author(let label):
                 label.text = "TestArticelAuthor"
                 label.textColor = .green
@@ -89,19 +115,19 @@ fileprivate extension ElementsCustomizationCreatorService {
                 break
             }
 
-        case .summeryHeader(element: let element):
+        case .summaryHeader(element: let element):
             switch element {
             case .counter(let label):
                 label.textColor = .blue
                 label.text = "TestCounter"
             case.title(let label):
-                label.text = "TestSummery"
+                label.text = "TestSummary"
                 label.textColor = .green
             default:
                 break
             }
 
-        case .summery(element: let element):
+        case .summary(element: let element):
             switch element {
             case .commentsTitle(let label):
                 label.text = "TestComments"
@@ -132,16 +158,13 @@ fileprivate extension ElementsCustomizationCreatorService {
                 break
             }
 
-//        case .footer(view: let view):
-//            view.backgroundColor = .green
-
         case .commentCreationCTA(element: let element):
             switch element {
             case .placeholder(let label):
                 label.text = "TestPlaceholder"
                 label.textColor = .green
             case .container(let view):
-                view.backgroundColor = .green
+                view.backgroundColor = .blue
             default:
                 break
             }
@@ -149,12 +172,17 @@ fileprivate extension ElementsCustomizationCreatorService {
         case .communityQuestion(let element):
             switch element {
             case .regular(let textView):
-                let attributedTitleText = NSMutableAttributedString(string: "TestCommunityGuidelines")
-                attributedTitleText.addAttribute(.foregroundColor, value: UIColor.green, range: NSRange(location: 0, length: attributedTitleText.length))
+                let attributedTitleText = NSMutableAttributedString(string: "TestCommunityQuestionRegular")
+                attributedTitleText.addAttribute(.foregroundColor,
+                                                 value: UIColor.green,
+                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                attributedTitleText.addAttribute(.font,
+                                                 value: UIFont.systemFont(ofSize: 15, weight: .bold),
+                                                 range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
             case .compact(let containerView, let label):
-                containerView.backgroundColor = .blue
                 label.text = "TestCommunityQuestionCompact"
+                containerView.backgroundColor = .blue
                 label.textColor = .red
             default:
                 break
@@ -163,16 +191,30 @@ fileprivate extension ElementsCustomizationCreatorService {
         case .communityGuidelines(let element):
             switch element {
             case .regular(let textView):
-                let attributedTitleText = NSMutableAttributedString(string: "TestCommunityGuidelines")
-                attributedTitleText.addAttribute(.foregroundColor, value: UIColor.green, range: NSRange(location: 0, length: attributedTitleText.length))
+                let attributedTitleText = NSMutableAttributedString(string: "TestCommunityGuidelinesRegular")
+                attributedTitleText.addAttribute(.foregroundColor,
+                                                 value: UIColor.blue,
+                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                attributedTitleText.addAttribute(.font,
+                                                 value: UIFont.systemFont(ofSize: 14, weight: .bold),
+                                                 range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
-            case .compact(let imageView, let textView):
-                textView.text = "TestCommunityGuidelinesCompact"
+            case .compact(let containerView, let imageView, let textView):
+                let attributedTitleText = NSMutableAttributedString(string: "TestCommunityGuidelinesCompact")
+                attributedTitleText.addAttribute(.foregroundColor,
+                                                 value: UIColor.green,
+                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                attributedTitleText.addAttribute(.font,
+                                                 value: UIFont.systemFont(ofSize: 16, weight: .bold),
+                                                 range: NSRange(location: 0, length: attributedTitleText.length))
+                textView.attributedText = attributedTitleText
                 textView.textColor = .green
                 switch themeStyle {
                 case .dark:
+                    containerView.backgroundColor = .gray
                     imageView.image = UIImage(named: "testIcon-dark")
                 case .light:
+                    containerView.backgroundColor = .darkGray
                     imageView.image = UIImage(named: "testIcon")
                 default:
                     break
@@ -195,6 +237,24 @@ fileprivate extension ElementsCustomizationCreatorService {
                 }
             case .title(let label):
                 label.text = "TestEmptyState"
+                label.textColor = .green
+            default:
+                break
+            }
+
+        case .emptyStateCommentingEnded(let element):
+            switch element {
+            case .icon(let imageView):
+                switch themeStyle {
+                case .dark:
+                    imageView.image = UIImage(named: "testIcon-dark")
+                case .light:
+                    imageView.image = UIImage(named: "testIcon")
+                default:
+                    break
+                }
+            case .title(let label):
+                label.text = "TestEmptyStateCommentingEnded"
                 label.textColor = .green
             default:
                 break

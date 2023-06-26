@@ -146,6 +146,7 @@ fileprivate extension OWCommunityGuidelinesView {
     }
 
     func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeContainerViewUI.onNext(guidelinesContainer)
         viewModel.inputs.triggerCustomizeTitleTextViewUI.onNext(titleTextView)
         viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(guidelinesIcon)
     }
