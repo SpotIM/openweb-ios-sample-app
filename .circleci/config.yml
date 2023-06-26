@@ -10,10 +10,13 @@ references:
     parameters:
       xcode:
         type: string
+      buildConfig:
+        type: string
+        default: "ReleaseInternal"
     macos:
       xcode: << parameters.xcode >>
     working_directory: ~/project/Spot.IM-Development
-
+    
   define_var_release_version: &define_var_release_version
     run:
       name: Export new version number to environment variable
@@ -29,54 +32,6 @@ references:
         echo $CORE_VERSION
 
 commands:
-  release_tag:
-    steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release tag build
-          command: |
-            echo "Start release tag build $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - "vendor/bundle"
-
-      - run:
-          name: Before Running Fastlane Build Release
-          command: |
-            git status
-
-      - run:
-          name: Run Fastlane Build Release
-          command: |
-            bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
-
-      - run:
-          name: After Running Fastlane Release
-          command: |
-            ls -l Release
-            git status
-
   swiftlint:
     steps:
       - run:
@@ -359,7 +314,7 @@ jobs:
       - run:
           name: Run Fastlane Release
           command: |
-            bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
+            bundle exec fastlane build_release_sdk version:$RELEASE_VERSION configuration:<< parameters.buildConfig >>
 
       - swiftlint
 
@@ -392,7 +347,51 @@ jobs:
   release_tag:
     <<: *ios_config_xcode
     steps:
-      - release_tag
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+
+      - run:
+          name: start release tag build
+          command: |
+            echo "Start release tag build $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - "vendor/bundle"
+
+      - run:
+          name: Before Running Fastlane Build Release
+          command: |
+            git status
+
+      - run:
+          name: Run Fastlane Build Release
+          command: |
+            bundle exec fastlane build_release_sdk version:$RELEASE_VERSION configuration:<< parameters.buildConfig >>
+
+      - run:
+          name: After Running Fastlane Release
+          command: |
+            ls -l Release
+            git status
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
@@ -606,13 +605,6 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/tag13.4/.*/
-          xcode: "13.4.0"
-
-      - release_tag:
-          filters:
-            branches:
-              only:
                 - /^release/tag14.2/.*/
           xcode: "14.2.0"
 
@@ -629,6 +621,39 @@ workflows:
               only:
                 - /^release/tag14.3.1/.*/
           xcode: "14.3.1"
+          
+      - release_sdk_job:
+          filters:
+            branches:
+              only:
+                - /^release/beta_sdk/.*/
+          xcode: "14.3.0"
+          buildConfig: "ReleaseBeta"
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag14.2/.*/
+          xcode: "14.2.0"
+          buildConfig: "ReleaseBeta"
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag14.3/.*/
+          xcode: "14.3.0"
+          buildConfig: "ReleaseBeta"
+          
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag14.3.1/.*/
+          xcode: "14.3.1"
+          buildConfig: "ReleaseBeta"
+          
 
       - release_app_job:
           context: mobile-automation
@@ -680,11 +705,6 @@ workflows:
               only:
                 - /^release/multi/.*/
           xcode: "14.3.0"
-
-      - release_tag:
-          requires:
-            - "release_sdk_job"
-          xcode: "13.4.0"
 
       - release_tag:
           requires:
