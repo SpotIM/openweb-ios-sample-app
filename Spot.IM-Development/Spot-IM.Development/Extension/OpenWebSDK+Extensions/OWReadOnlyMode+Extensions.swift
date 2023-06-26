@@ -14,10 +14,10 @@ import SpotImCore
 extension OWReadOnlyMode {
     static func readOnlyMode(fromIndex index: Int) -> OWReadOnlyMode {
         switch index {
-        case 0: return .`default`
+        case 0: return .server
         case 1: return .enable
         case 2: return .disable
-        default: return .`default`
+        default: return .server
         }
     }
 
