@@ -17,6 +17,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var footerViewModel: OWCommentCreationFooterViewModeling { get }
+    var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
 }
 
@@ -42,6 +43,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
         return OWCommentCreationFooterViewModel()
+    }()
+
+    lazy var commentCounterViewModel: OWCommentReplyCounterViewModeling = {
+        return OWCommentReplyCounterViewModel()
     }()
 
     lazy var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling = {
