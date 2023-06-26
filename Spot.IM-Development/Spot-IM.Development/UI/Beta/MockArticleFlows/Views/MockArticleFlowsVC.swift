@@ -74,6 +74,7 @@ class MockArticleFlowsVC: UIViewController {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
+            .corner(radius: 10)
     }()
 
     fileprivate lazy var lblArticleDescription: UILabel = {
@@ -83,7 +84,7 @@ class MockArticleFlowsVC: UIViewController {
             .label
             .numberOfLines(0)
             .font(FontBook.secondaryHeadingMedium)
-            .textColor(ColorPalette.shared.color(type: .blackish))
+            .textColor(ColorPalette.shared.color(type: .text))
     }()
 
     fileprivate lazy var btnFullConversation: UIButton = {
@@ -146,7 +147,8 @@ fileprivate extension MockArticleFlowsVC {
     }
 
     func setupViews() {
-        view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        articleScrollView.backgroundColor = ColorPalette.shared.color(type: .background)
 
         view.addSubview(articleScrollView)
         articleScrollView.snp.makeConstraints { make in

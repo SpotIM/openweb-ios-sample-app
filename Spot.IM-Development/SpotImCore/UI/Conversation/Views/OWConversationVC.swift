@@ -31,6 +31,15 @@ class OWConversationVC: UIViewController {
         return closeButton
     }()
 
+    fileprivate lazy var titleLabel: UILabel = {
+        return UILabel()
+            .enforceSemanticAttribute()
+            .font(OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
+            .backgroundColor(.clear)
+    }()
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -104,18 +113,32 @@ fileprivate extension OWConversationVC {
     }
 
     func setupObservers() {
+        viewModel.outputs.shouldShowCustomizeNavigationItemLabel
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                if shouldShow {
+                    self.navigationItem.titleView = self.titleLabel
+                    self.title = ""
+                }
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.closeButton.image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
                 self.setupNavControllerUI(currentStyle)
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {
-        // TODO
+        viewModel.inputs.triggerCustomizeNavigationItemTitleLabelUI.onNext(titleLabel)
+        if let navigationBar = navigationController?.navigationBar {
+            viewModel.inputs.triggerCustomizeNavigationBarUI.onNext(navigationBar)
+        }
     }
 
     @objc func closeConversationTapped(_ sender: UIBarButtonItem) {

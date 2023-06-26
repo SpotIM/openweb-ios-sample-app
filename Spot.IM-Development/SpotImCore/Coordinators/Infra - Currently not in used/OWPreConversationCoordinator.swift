@@ -159,46 +159,112 @@ fileprivate extension OWPreConversationCoordinator {
     }
 
     func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
-        // TODO: need to complete all the customize elements
+        // Set customized pre conversation summary header
+        let summaryHeaderCustomizeTitle = viewModel.outputs.preConversationSummaryVM
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.summaryHeader(element: .title(label: $0)) }
 
-        let customizationElementsObservables = Observable.merge(
-            viewModel.outputs.preConversationSummaryVM
-                .outputs.customizeTitleLabelUI
-                .map { OWCustomizableElement.summeryHeader(element: .title(label: $0)) },
+        let summaryHeaderCustomizeCounter = viewModel.outputs.preConversationSummaryVM
+            .outputs.customizeCounterLabelUI
+            .map { OWCustomizableElement.summaryHeader(element: .counter(label: $0)) }
 
-            viewModel.outputs.preConversationSummaryVM
-                .outputs.customizeCounterLabelUI
-                .map { OWCustomizableElement.summeryHeader(element: .counter(label: $0)) },
+        let summaryHeaderCustomizeOnlineUsersIcon = viewModel.outputs.preConversationSummaryVM
+            .outputs.onlineViewingUsersVM
+            .outputs.customizeIconImageUI
+            .map { OWCustomizableElement.onlineUsers(element: .icon(image: $0)) }
 
-            viewModel.outputs.preConversationSummaryVM
-                .outputs.onlineViewingUsersVM
-                .outputs.customizeIconImageUI
-                .map { OWCustomizableElement.onlineUsers(element: .icon(image: $0)) },
+        let summaryHeaderCustomizeOnlineUsersCounter = viewModel.outputs.preConversationSummaryVM
+            .outputs.onlineViewingUsersVM
+            .outputs.customizeCounterLabelUI
+            .map { OWCustomizableElement.onlineUsers(element: .counter(label: $0)) }
 
-            viewModel.outputs.preConversationSummaryVM
-                .outputs.onlineViewingUsersVM
-                .outputs.customizeCounterLabelUI
-                .map { OWCustomizableElement.onlineUsers(element: .counter(label: $0)) },
+        let summaryCustomizationElementsObservable = Observable.merge(summaryHeaderCustomizeTitle,
+                                                                      summaryHeaderCustomizeCounter,
+                                                                      summaryHeaderCustomizeOnlineUsersIcon,
+                                                                      summaryHeaderCustomizeOnlineUsersCounter)
 
-            viewModel.outputs.commentingCTAViewModel
-                .outputs.commentCreationEntryViewModel
-                .outputs.customizeTitleLabelUI
-                .map { OWCustomizableElement.commentCreationCTA(element: .placeholder(label: $0)) },
+        // Set customized community question
+        let communityQuestionCustomizeContainer = viewModel.outputs.communityQuestionViewModel
+            .outputs.customizeQuestionContainerViewUI
 
-            viewModel.outputs.commentingCTAViewModel
-                .outputs.commentCreationEntryViewModel
-                .outputs.customizeContainerViewUI
-                .map { OWCustomizableElement.commentCreationCTA(element: .container(view: $0)) },
+        let communityQuestionCustomizeTitle = viewModel.outputs.communityQuestionViewModel
+            .outputs.customizeQuestionTitleLabelUI
 
-//            viewModel.outputs.communityQuestionViewModel
-//                .outputs.customizeQuestionLabelUI
-//                .map { OWCustomizableElement.communityQuestionTitle(label: $0) },
+        let communityQuestionCompactCustomizationElement = Observable.combineLatest(communityQuestionCustomizeContainer,
+                                                                                    communityQuestionCustomizeTitle)
+            .flatMap { container, title in
+                Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: title)))
+            }
 
-            viewModel.outputs.communityGuidelinesViewModel
-                .outputs.customizeTitleTextViewUI
-                .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) }
+        let communityQuestionRegularCustomizationElement = viewModel.outputs.communityQuestionViewModel
+            .outputs.customizeQuestionTitleTextViewUI
+            .map { OWCustomizableElement.communityQuestion(element: .regular(textView: $0)) }
 
-        )
+        let communityQuestionCustomizationElementsObservable = Observable.merge(communityQuestionRegularCustomizationElement,
+                                                                                communityQuestionCompactCustomizationElement)
+
+        // Set customized community guidelines
+        let communityGuidelinesCustomizeContainer = viewModel.outputs.communityGuidelinesViewModel
+            .outputs.customizeContainerViewUI
+
+        let communityGuidelinesCustomizeTitle = viewModel.outputs.communityGuidelinesViewModel
+            .outputs.customizeTitleTextViewUI
+
+        let communityGuidelinesCustomizeIcon = viewModel.outputs.communityGuidelinesViewModel
+            .outputs.customizeIconImageViewUI
+
+        let communityGuidelinesCompactCustomizationElement = Observable.combineLatest(communityGuidelinesCustomizeContainer,
+                                                                                      communityGuidelinesCustomizeIcon,
+                                                                                      communityGuidelinesCustomizeTitle)
+            .flatMap { container, icon, title in
+                Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+            }
+
+        let communityGuidelinesRegularCustomizationElement = communityGuidelinesCustomizeTitle
+            .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) }
+
+        let communityGuidelinesCustomizationElementsObservable = Observable.merge(communityGuidelinesRegularCustomizationElement,
+                                                                                  communityGuidelinesCompactCustomizationElement)
+
+        // Commenting CTA
+
+        let commentingCTAViewModel = viewModel.outputs.commentingCTAViewModel
+
+        // Set customized comment creation
+
+        let commentCreationEntryCustomizeContainer = commentingCTAViewModel
+            .outputs.commentCreationEntryViewModel
+            .outputs.customizeContainerViewUI
+            .map { OWCustomizableElement.commentCreationCTA(element: .container(view: $0)) }
+
+        let commentCreationEntryCustomizeTitle = commentingCTAViewModel
+            .outputs.commentCreationEntryViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.commentCreationCTA(element: .placeholder(label: $0)) }
+
+        let commentCreationEntryCustomizationElementsObservable = Observable.merge(commentCreationEntryCustomizeContainer,
+                                                                                   commentCreationEntryCustomizeTitle)
+
+        // Set customized commenting read only
+
+        let commentingReadOnlyCustomizeIcon = commentingCTAViewModel
+            .outputs.commentingReadOnlyViewModel
+            .outputs.customizeIconImageViewUI
+            .map { OWCustomizableElement.commentingEnded(element: .icon(image: $0)) }
+
+        let commentingReadOnlyCustomizeTitle = commentingCTAViewModel
+            .outputs.commentingReadOnlyViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.commentingEnded(element: .title(label: $0)) }
+
+        let commentingReadOnlyCustomizationElementsObservable = Observable.merge(commentingReadOnlyCustomizeIcon,
+                                                                                 commentingReadOnlyCustomizeTitle)
+
+        let customizationElementsObservables = Observable.merge(summaryCustomizationElementsObservable,
+                                                                communityQuestionCustomizationElementsObservable,
+                                                                communityGuidelinesCustomizationElementsObservable,
+                                                                commentCreationEntryCustomizationElementsObservable,
+                                                                commentingReadOnlyCustomizationElementsObservable)
 
         customizationElementsObservables
             .subscribe { [weak self] element in
