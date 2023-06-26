@@ -83,16 +83,19 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .share(replay: 1)
     }
 
-    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
+    fileprivate var _communityGuidelinesTitle: Observable<String?> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .observe(on: MainScheduler.asyncInstance)
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
                 return config.conversation?.communityGuidelinesTitle?.value
             }
+    }
+
+    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
+        return _communityGuidelinesTitle
             .unwrap()
             .map { [weak self] communityGuidelines in
                 guard let self = self else { return nil }
@@ -122,10 +125,10 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
 
 fileprivate extension OWCommunityGuidelinesViewModel {
     func setupObservers() {
-        communityGuidelinesHtmlAttributedString
-            .subscribe(onNext: { [weak self] htmlString in
+        _communityGuidelinesTitle
+            .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                self._shouldShowView.onNext(htmlString !== nil)
+                self._shouldShowView.onNext(text != nil)
             })
             .disposed(by: disposeBag)
 

@@ -236,7 +236,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
 
     func set(spotId: OWSpotId) {
         configure(forSpotId: spotId)
-        _authenticationManager.loadPersistence(forSpotId: spotId)
+        _authenticationManager.prepare(forSpotId: spotId)
     }
 
     func change(spotId: OWSpotId) {
@@ -248,7 +248,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
          we are clearing any data relevant to the active user.
          This means that if afterwards we re-select the original spotId, we will need to re-login and other user relevant functionality.
         */
-        _authenticationManager.resetPersistence()
+        _authenticationManager.change(newSpotId: spotId)
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()
         _sortDictateService.invalidateCache()

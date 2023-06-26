@@ -234,7 +234,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create() }
 
-            let additionalSettings = self.commonCreatorService.preConversationSettings()
+            let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle()
 
             let manager = OpenWeb.manager
@@ -270,7 +270,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create() }
 
-            let additionalSettings = self.commonCreatorService.conversationSettings()
+            let additionalSettings = self.commonCreatorService.additionalSettings()
             let article = self.commonCreatorService.mockArticle()
 
             let manager = OpenWeb.manager
