@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentHeaderViewModelingInputs {
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
+    var shouldDeleteCommentLocally: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
@@ -59,6 +60,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
+
+    var shouldDeleteCommentLocally = BehaviorSubject<Bool>(value: false)
 
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
@@ -154,15 +157,15 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser) { model, user in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, shouldDeleteCommentLocally) { model, user, shouldDeleteCommentLocally in
             let localizationKey: String
-            if user.isMuted {
+            if model.deleted || shouldDeleteCommentLocally {
+                localizationKey = "This message was deleted."
+            } else if user.isMuted {
                 localizationKey = "This user is muted."
             } else if let id = model.id,
-                        SPUserSessionHolder.session.reportedComments[id] != nil { // TODO: is reported - should be in new infra?
+                      SPUserSessionHolder.session.reportedComments[id] != nil { // TODO: is reported - should be in new infra?
                 localizationKey = "This message was reported."
-            } else if model.deleted {
-                localizationKey = "This message was deleted."
             } else {
                 return ""
             }

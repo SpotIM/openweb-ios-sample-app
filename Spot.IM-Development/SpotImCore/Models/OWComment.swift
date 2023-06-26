@@ -49,6 +49,10 @@ internal struct OWComment: Decodable, Equatable {
         edited = editedStatus
     }
 
+    mutating func setIsDeleted(_ isDeleted: Bool) {
+        deleted = isDeleted
+    }
+
     var status: CommentStatus? {
         guard let rawStatus = rawStatus else { return nil }
         let status = CommentStatus(rawValue: rawStatus)
