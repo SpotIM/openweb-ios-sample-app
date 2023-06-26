@@ -885,23 +885,23 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource, OWComment)> in
-                let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWComment)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
+                let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
-                        .map { ($0.0, $0.1, commentVm.outputs.comment) }
+                        .map { ($0.0, $0.1, commentVm) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .flatMapLatest { [weak self] (actions, sender, comment) -> Observable<(OWRxPresenterResponseType, OWComment)> in
+            .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
-                    .map { ($0, comment) }
+                    .map { ($0, commentVm) }
             }
-            .subscribe(onNext: { [weak self] result, comment in
+            .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
                 case .completion:
@@ -911,9 +911,10 @@ fileprivate extension OWConversationViewViewModel {
                     case OWCommentOptionsMenu.reportComment:
                         break
                     case OWCommentOptionsMenu.deleteComment:
-                        break
+                        commentVm.inputs.deleteCommentLocally()
+                        self._performTableViewAnimation.onNext()
                     case OWCommentOptionsMenu.editComment:
-                        self.commentCreationTap.onNext(.edit(comment: comment))
+                        self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
                     default:
                         return
                     }
