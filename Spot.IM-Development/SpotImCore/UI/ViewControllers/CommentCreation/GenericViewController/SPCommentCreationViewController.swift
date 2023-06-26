@@ -913,7 +913,7 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
         }
     }
     private func scrollToTop() {
-        let scrollPoint = CGPoint.init(x: 0, y: 0)
+        let scrollPoint = CGPoint(x: 0, y: 0)
         self.scrollView.setContentOffset(scrollPoint, animated: true)
     }
 }

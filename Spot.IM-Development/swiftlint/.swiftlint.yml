@@ -59,6 +59,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - function_body_length
   - large_tuple
   - line_length
+  - explicit_init
 
 included: # paths to include during linting. `excluded` paths are still ignored.
   - ../Spot-IM.Development
