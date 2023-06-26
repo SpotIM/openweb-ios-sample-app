@@ -35,9 +35,11 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
     var outputs: OWCommentLabelViewModelingOutputs { return self }
 
     fileprivate let _setting = BehaviorSubject<OWCommentLabelSettings?>(value: nil)
+    fileprivate let _state = BehaviorSubject<OWLabelState>(value: .readOnly)
 
-    init(commentLabelSettings: OWCommentLabelSettings) {
+    init(commentLabelSettings: OWCommentLabelSettings, state: OWLabelState = .readOnly) {
         _setting.onNext(commentLabelSettings)
+        _state.onNext(state)
     }
 
     var commentLabelSettings: Observable<OWCommentLabelSettings> {
@@ -47,9 +49,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
     }
 
     var state: Observable<OWLabelState> {
-        _setting
-            // TODO: for now only implement read only mode for displaying label. When create comment is developed should add selected & not selected by clicks
-            .map { _ in return .readOnly }
+        _state
             .asObservable()
     }
 

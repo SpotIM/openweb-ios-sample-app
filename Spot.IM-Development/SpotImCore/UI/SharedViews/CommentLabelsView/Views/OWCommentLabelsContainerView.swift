@@ -84,6 +84,13 @@ fileprivate extension OWCommentLabelsContainerView {
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
+
         viewModel.outputs.commentLabelsTitle
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
