@@ -602,22 +602,39 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource)> in
-                let openMenuClickObservable: [Observable<([OWRxPresenterAction], OWUISource)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource, OWComment)> in
+                let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWComment)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
+                        .map { ($0.0, $0.1, commentVm.outputs.comment) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .flatMapLatest { [weak self] actions, sender -> Observable<OWRxPresenterResponseType> in
+            .flatMapLatest { [weak self] (actions, sender, comment) -> Observable<(OWRxPresenterResponseType, OWComment)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+                    .map { ($0, comment) }
             }
-            .subscribe(onNext: { [weak self] _ in
-                // TODO: handle
+            .subscribe(onNext: { [weak self] result, comment in
+                guard let self = self else { return }
+                switch result {
+                case .completion:
+                    break
+                case .selected(action: let action):
+                    switch (action.type) {
+                    case OWCommentOptionsMenu.reportComment:
+                        break
+                    case OWCommentOptionsMenu.deleteComment:
+                        break
+                    case OWCommentOptionsMenu.editComment:
+                        self.commentCreationTap.onNext(.edit(comment: comment))
+                    default:
+                        return
+                    }
+                }
             })
             .disposed(by: disposeBag)
     }

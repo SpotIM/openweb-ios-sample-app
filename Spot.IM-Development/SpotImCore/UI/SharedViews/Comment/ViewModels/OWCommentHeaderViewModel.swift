@@ -194,7 +194,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate lazy var optionsActions: [OWRxPresenterAction] = {
         return [
             OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment)
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment),
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentOptionsMenu.deleteComment)
         ]
     }()
 }
