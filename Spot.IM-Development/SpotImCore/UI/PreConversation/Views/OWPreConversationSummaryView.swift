@@ -10,12 +10,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationSummeryView: UIView {
+class OWPreConversationSummaryView: UIView {
     fileprivate struct Metrics {
         static let counterLeading: CGFloat = 8
         static let nextArrowLeading: CGFloat = 10
         static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
-        static let identifier = "pre_conversation_summery_view_id"
+        static let identifier = "pre_conversation_summary_view_id"
         static let titleLabelIdentifier = "pre_conversation_title_label_id"
         static let counterLabelIdentifier = "pre_conversation_counter_label_id"
     }
@@ -64,7 +64,7 @@ class OWPreConversationSummeryView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationSummeryView {
+fileprivate extension OWPreConversationSummaryView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier

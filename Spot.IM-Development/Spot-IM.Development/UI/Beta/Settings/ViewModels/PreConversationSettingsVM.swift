@@ -44,6 +44,10 @@ protocol PreConversationSettingsViewModeling {
 class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                                  PreConversationSettingsViewModelingInputs,
                                  PreConversationSettingsViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let delayInsertDataToPersistense = 100
+    }
+
     var inputs: PreConversationSettingsViewModelingInputs { return self }
     var outputs: PreConversationSettingsViewModelingOutputs { return self }
 
@@ -218,7 +222,8 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
 extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
-            .distinctUntilChanged()
+            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
+            .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
             .disposed(by: disposeBag)

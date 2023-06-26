@@ -183,7 +183,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.preConversationSettings()
+                let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle()
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
@@ -223,7 +223,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
-                let additionalSettings = self.commonCreatorService.conversationSettings()
+                let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle()
 
                 flows.conversation(postId: postId,
@@ -262,12 +262,13 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
+                let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle()
 
                 flows.commentCreation(postId: postId,
                                       article: article,
                                       presentationalMode: presentationalMode,
-                                      additionalSettings: nil,
+                                      additionalSettings: additionalSettings,
                                       callbacks: nil,
                                       completion: { [weak self] result in
                     guard let self = self else { return }
@@ -300,13 +301,14 @@ fileprivate extension MockArticleFlowsViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
+                let additionalSettings = self.commonCreatorService.additionalSettings()
                 let article = self.commonCreatorService.mockArticle()
 
                 flows.commentThread(postId: postId,
                                     article: article,
                                     commentId: self.commonCreatorService.commentThreadCommentId(),
                                     presentationalMode: presentationalMode,
-                                    additionalSettings: nil,
+                                    additionalSettings: additionalSettings,
                                     callbacks: nil,
                                     completion: { [weak self] result in
                     guard let self = self else { return }

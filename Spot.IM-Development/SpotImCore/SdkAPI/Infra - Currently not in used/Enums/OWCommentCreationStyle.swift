@@ -9,14 +9,14 @@
 import Foundation
 
 #if NEW_API
-public enum OWCommentCreationStyle {
+public enum OWCommentCreationStyle: Codable {
     case regular
     case light // Called new header before
     case floatingKeyboard
 }
 
 #else
-enum OWCommentCreationStyle {
+enum OWCommentCreationStyle: Codable {
     case regular
     case light // Called new header before
     case floatingKeyboard
