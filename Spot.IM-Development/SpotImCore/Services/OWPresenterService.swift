@@ -53,7 +53,7 @@ class OWPresenterService: OWPresenterServicing {
         return UIActivityViewController.rx.show(onViewController: presenterVC, activityItems: activityItems, applicationActivities: applicationActivities)
     }
 
-    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>{
+    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
 
         return Observable.create { observer in
