@@ -9,6 +9,7 @@
 import RxSwift
 
 protocol OWToastViewModelingInputs {
+    var actionClick: PublishSubject<Void> { get }
 }
 
 protocol OWToastViewModelingOutputs {
@@ -32,11 +33,29 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     var toastActionViewModel: OWToastActionViewModeling
     var showAction: Bool
 
-    init(requiredData: OWToastRequiredData) {
+    var actionClick = PublishSubject<Void>()
+    var disposeBag = DisposeBag()
+
+    init(requiredData: OWToastRequiredData, handler: (() -> Void)) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
         iconImage = self.iconForType(type: requiredData.type)
+
+        // TODO: in function
+        actionClick
+            .asObservable()
+            .subscribe(onNext: {
+                print("aaa")
+                handler()
+            })
+            .disposed(by: disposeBag)
+//        actionClick
+//            .asObservable()
+//            .subscribe(onNext: {
+//                handler()
+//        })
+//        .disposed(by: disposeBag)
     }
 }
 
