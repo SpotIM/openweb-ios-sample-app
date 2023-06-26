@@ -25,4 +25,10 @@ struct SPConfigurationSDKStatus: Decodable {
     let fetchImageBaseUrl: String
     let shouldShowCommentCounter: Bool
     let commentCounterCharactersLimit: Int
+    let eventsStrategyConfig: EventsStrategyConfig?
+}
+
+struct EventsStrategyConfig: Decodable {
+    let blockVersionsEqualOrPrevious: String?
+    let blockEventsByVersion: [String: [String]]?
 }
