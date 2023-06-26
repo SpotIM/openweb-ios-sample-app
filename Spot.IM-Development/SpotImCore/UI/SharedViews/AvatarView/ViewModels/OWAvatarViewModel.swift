@@ -70,11 +70,11 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     var imageType: Observable<OWImageType> {
         Observable.combineLatest(self.user, self.shouldBlockAvatar.asObserver())
-            .flatMap { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
+            .flatMapLatest { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
                 guard let self = self,
                       let imageId = user.imageId,
                       !shouldBlockAvatar
-                else { return .empty() }
+                else { return Observable.just(nil) }
 
                 return self.imageURLProvider.imageURL(with: imageId, size: nil)
             }
