@@ -1,5 +1,5 @@
 //
-//  OWNavigationHeaderCustomizableElement.swift
+//  OWHeaderCustomizableElement.swift
 //  SpotImCore
 //
 //  Created by Revital Pisman on 29/05/2023.
@@ -9,12 +9,12 @@
 import UIKit
 
 #if NEW_API
-public enum OWNavigationHeaderCustomizableElement {
+public enum OWHeaderCustomizableElement {
     case title(label: UILabel)
     case close(button: UIButton)
 }
 #else
-public enum OWNavigationHeaderCustomizableElement {
+public enum OWHeaderCustomizableElement {
     case title(label: UILabel)
     case close(button: UIButton)
 }

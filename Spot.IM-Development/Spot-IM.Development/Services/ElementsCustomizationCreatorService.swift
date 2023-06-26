@@ -74,7 +74,7 @@ fileprivate extension ElementsCustomizationCreatorService {
             navBar.backgroundColor = .blue
             navBar.tintColor = .green
 
-        case .navigationHeader(let element):
+        case .header(let element):
             switch element {
 
             case .title(let label):

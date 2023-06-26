@@ -247,8 +247,20 @@ fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.conversationViewVM)
 
-        let a = viewModel.outputs.customizeNavigationItemTitleLabelUI
+        let navigationBarCustomize = viewModel.outputs.customizeNavigationBarUI
+            .map { OWCustomizableElement.navigationBar($0) }
+
+        let navigationItemCustomizeTitle = viewModel.outputs.customizeNavigationItemTitleLabelUI
             .map { OWCustomizableElement.navigationBarTitle($0) }
+
+        let customizationElementsObservables = Observable.merge(navigationItemCustomizeTitle,
+                                                                navigationBarCustomize)
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
@@ -266,11 +278,11 @@ fileprivate extension OWConversationCoordinator {
         // Set customized title header
         let conversationTitleHeaderCustomizeTitle = viewModel.outputs.conversationTitleHeaderViewModel
             .outputs.customizeTitleLabelUI
-            .map { OWCustomizableElement.navigationHeader(element: .title(label: $0)) }
+            .map { OWCustomizableElement.header(element: .title(label: $0)) }
 
         let conversationTitleHeaderCustomizeCloseButton = viewModel.outputs.conversationTitleHeaderViewModel
             .outputs.customizeCloseButtonUI
-            .map { OWCustomizableElement.navigationHeader(element: .close(button: $0)) }
+            .map { OWCustomizableElement.header(element: .close(button: $0)) }
 
         let conversationTitleHeaderCustomizationElementsObservable = Observable.merge(conversationTitleHeaderCustomizeTitle,
                                                                                       conversationTitleHeaderCustomizeCloseButton)
@@ -381,7 +393,7 @@ fileprivate extension OWConversationCoordinator {
             .map { OWCustomizableElement.emptyState(element: .title(label: $0)) }
 
         let emptyStateCommentingEndedCustomizeIcon = conversationEmptyStateCustomizeIcon
-            .map { OWCustomizableElement.emptyStateCommentingEnded(element: .icon(image: $0)) }
+            .map { OWCustomizableElement.emptyStateCommentingEnded(element: .icon(imageView: $0)) }
 
         let emptyStateCommentingEndedCustomizeTitle = conversationEmptyStateCustomizeTitle
             .map { OWCustomizableElement.emptyStateCommentingEnded(element: .title(label: $0)) }

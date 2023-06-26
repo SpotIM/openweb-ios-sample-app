@@ -10,12 +10,12 @@ import UIKit
 
 #if NEW_API
 public enum OWEmptyStateCommentingEndedCustomizableElement {
-    case icon(image: UIImageView)
+    case icon(imageView: UIImageView)
     case title(label: UILabel)
 }
 #else
 enum OWEmptyStateCommentingEndedCustomizableElement {
-    case icon(image: UIImageView)
+    case icon(imageView: UIImageView)
     case title(label: UILabel)
 }
 #endif
