@@ -41,7 +41,7 @@ class OWPresenterService: OWPresenterServicing {
             }
 
             let menuVM = OWMenuSelectionViewModel(items: menuItems)
-            
+
             // calculate constraints for menu
             let senderLocationFrame = sender.convert(CGPoint.zero, to: presenterVC.view)
             let isTopSection = senderLocationFrame.y < (presenterVC.view.frame.height / 2)
