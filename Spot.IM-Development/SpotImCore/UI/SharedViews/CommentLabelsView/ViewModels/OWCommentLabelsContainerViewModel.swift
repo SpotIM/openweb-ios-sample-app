@@ -37,6 +37,8 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
     fileprivate let section: String
 
+    fileprivate var _selectedLabelIds = BehaviorSubject<Set<String>>(value: [])
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
@@ -46,13 +48,15 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         if let comment = comment {
             _comment.onNext(comment)
         }
+        self.setupObservers()
     }
+
     init(servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         self.section = ""
     }
 
-    fileprivate var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration> {
+    fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration> = {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> CommentLabelsSectionsConfig? in
@@ -68,24 +72,26 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 return commentLabelsSectionsConfig[self.section]
             }
             .unwrap()
-    }
+    }()
 
-    fileprivate var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> {
+    fileprivate lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
         Observable.combineLatest(_comment, _commentLabelsSection) { [weak self] comment, commentLabelsSection in
             guard let self = self else { return nil }
             return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
         }.unwrap()
-    }
+    }()
 
-    var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> {
-        _commentLabelsSettings
-            .map { setttings -> [OWCommentLabelViewModel] in
+    lazy var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> = {
+        Observable.combineLatest(_comment, _commentLabelsSettings, _selectedLabelIds)
+            .map { comment, setttings, selectedIds -> [OWCommentLabelViewModel] in
                 return setttings.map { commentLabelSetting in
-                    OWCommentLabelViewModel(commentLabelSettings: commentLabelSetting)
+                    let stateForSelectedId: OWLabelState = selectedIds.contains(commentLabelSetting.id) ? .selected : .notSelected
+                    return OWCommentLabelViewModel(commentLabelSettings: commentLabelSetting, state: comment != nil ? .readOnly : stateForSelectedId)
                 }
             }
             .asObservable()
-    }
+            .share(replay: 1)
+    }()
 
     fileprivate var _commentLabelsTitle: Observable<String?> {
         Observable.combineLatest(_comment, _commentLabelsSection) { comment, commentLabelsSection in
@@ -98,18 +104,47 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         _commentLabelsTitle
             .asObservable()
     }
+}
 
+fileprivate extension OWCommentLabelsContainerViewModel {
     func setupObservers() {
         commentLabelsViewModels
             .flatMapLatest { viewModels -> Observable<OWCommentLabelViewModeling> in
                 let clickOutputObservers: [Observable<OWCommentLabelViewModeling>] = viewModels
                     .map { vm in
-                        return vm.outputs.labelClickedOutput.map { vm }
+                        return vm.outputs.labelClickedOutput
+                            .map { vm }
                     }
                 return Observable.merge(clickOutputObservers)
             }
-            .subscribe(onNext: { _ in
-                // TODO: Handle click on label if needed
+            .flatMapLatest { vm -> Observable<(OWLabelState, OWCommentLabelSettings)> in
+                return Observable.combineLatest(vm.outputs.state, vm.outputs.commentLabelSettings)
+            }
+            .withLatestFrom(_commentLabelsSection) { ($0.0, $0.1, $1) }
+            .withLatestFrom(_selectedLabelIds) { ($0.0, $0.1, $0.2, $1) }
+            .subscribe(onNext: { [weak self] (state, settings, sectionSettings, selectedLabelIds) in
+                guard let self = self else { return }
+                switch state {
+                case .notSelected:
+                    var selectedLabelIdsCopy = selectedLabelIds
+                    switch (sectionSettings.maxSelected, selectedLabelIdsCopy.count) {
+                    case (1, 1):
+                        // replace existing selected label
+                        selectedLabelIdsCopy.removeAll()
+                        selectedLabelIdsCopy.insert(settings.id)
+                    case (_, _) where sectionSettings.maxSelected == selectedLabelIdsCopy.count:
+                        // max exceeded
+                        break
+                    default:
+                        selectedLabelIdsCopy.insert(settings.id)
+                    }
+                    self._selectedLabelIds.onNext(selectedLabelIdsCopy)
+                case .selected:
+                    // remove selection
+                    self._selectedLabelIds.onNext(selectedLabelIds.filter { $0 != settings.id })
+                case .readOnly:
+                    break
+                }
             })
             .disposed(by: disposeBag)
     }
