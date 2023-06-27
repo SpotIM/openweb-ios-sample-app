@@ -101,9 +101,12 @@ fileprivate extension OWAnalyticsService {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.spotConfigurationService()
-            .config(spotId: OpenWeb.manager.spotId)
-            .take(1)
+        OWManager.manager.currentSpotId
+            .flatMapLatest { spotId in
+                return OWSharedServicesProvider.shared.spotConfigurationService()
+                    .config(spotId: spotId)
+                    .take(1)
+            }
             .map { config in
                 return config.mobileSdk.eventsStrategyConfig
             }
