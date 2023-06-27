@@ -24,6 +24,11 @@ class OWVersion: Decodable {
             return nil
         }
     }
+
+    required convenience init(from decoder: Decoder) throws {
+        let versionString = try? decoder.singleValueContainer().decode(String.self)
+        self.init(from: versionString!)!
+    }
 }
 
 extension OWVersion: Comparable, Equatable {

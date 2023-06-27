@@ -29,6 +29,31 @@ struct SPConfigurationSDKStatus: Decodable {
 }
 
 struct EventsStrategyConfig: Decodable {
-    let blockVersionsEqualOrPrevious: String?
-    let blockEventsByVersion: [OWVersion: [String]]?
+    let blockVersionsEqualOrPrevious: OWVersion?
+    let blockEventsByVersion: Dictionary<OWVersion, [String]>?
+
+    enum CodingKeys: String, CodingKey {
+        case blockVersionsEqualOrPrevious, blockEventsByVersion
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        blockVersionsEqualOrPrevious = try? container.decode(OWVersion.self, forKey: .blockVersionsEqualOrPrevious)
+        let stringDictionary = try? container.decode([String: [String]].self, forKey: .blockEventsByVersion)
+
+        var dictionary: [OWVersion: [String]] = [:]
+        if let stringDictionary = stringDictionary {
+            for (stringKey, value) in stringDictionary {
+              guard let key = OWVersion(from: stringKey) else {
+                  throw DecodingError.dataCorruptedError(forKey: .blockEventsByVersion,
+                  in: container,
+                  debugDescription: "Invalid key '\(stringKey)'"
+                )
+              }
+              dictionary[key] = value
+            }
+        }
+        blockEventsByVersion = dictionary
+    }
 }
