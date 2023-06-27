@@ -30,5 +30,5 @@ struct SPConfigurationSDKStatus: Decodable {
 
 struct EventsStrategyConfig: Decodable {
     let blockVersionsEqualOrPrevious: String?
-    let blockEventsByVersion: [String: [String]]?
+    let blockEventsByVersion: [OWVersion: [String]]?
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class OWVersion {
+class OWVersion: Decodable {
     fileprivate let major: Int
     fileprivate let minor: Int
     fileprivate let patch: Int
@@ -21,7 +21,7 @@ class OWVersion {
             minor = versions.count > 1 ? Int(versions[1])! : 0
             patch = versions.count > 2 ? Int(versions[2])! : 0
         } catch {
-            // TODO: Throw error?
+            return nil
         }
     }
 }
@@ -39,5 +39,13 @@ extension OWVersion: Comparable, Equatable {
 
     static func == (lhs: OWVersion, rhs: OWVersion) -> Bool {
         return lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch == rhs.patch
+    }
+}
+
+extension OWVersion: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(major.hashValue)
+        hasher.combine(minor.hashValue)
+        hasher.combine(patch.hashValue)
     }
 }
