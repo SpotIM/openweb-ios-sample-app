@@ -67,7 +67,6 @@
 		166CCCAC2A30CDC100C7143F /* OWCommentCreationRegularViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCAB2A30CDC100C7143F /* OWCommentCreationRegularViewVM.swift */; };
 		166CCCAE2A30CDCB00C7143F /* OWCommentCreationLightViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCAD2A30CDCB00C7143F /* OWCommentCreationLightViewVM.swift */; };
 		166CCCB02A30CDD400C7143F /* OWCommentCreationFloatingKeyboardViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCAF2A30CDD400C7143F /* OWCommentCreationFloatingKeyboardViewVM.swift */; };
-        166CCCA42A2E362F00C7143F /* UIActivityViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */; };
 		166CCCB22A3A0FC300C7143F /* OWAdditionalSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB12A3A0FC300C7143F /* OWAdditionalSettingsProtocol.swift */; };
 		166CCCB42A3A10FB00C7143F /* OWAdditionalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB32A3A10FB00C7143F /* OWAdditionalSettings.swift */; };
 		166CCCB72A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166CCCB62A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift */; };
@@ -249,6 +248,8 @@
 		3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoints.swift */; };
 		3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EA8284E475500FF8360 /* OWKeychain.swift */; };
 		3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */; };
+		3D1D24852A4ACDC000692E2A /* ToolbarElementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24842A4ACDC000692E2A /* ToolbarElementModel.swift */; };
+		3D1D24872A4ACE0C00692E2A /* ToolbarElementAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24862A4ACE0C00692E2A /* ToolbarElementAction.swift */; };
 		3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A2D727A805BE003F8513 /* EasyViews.swift */; };
 		3D20A35827A968F8003F8513 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */; };
 		3D20A35A27A96915003F8513 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35927A96915003F8513 /* TableView+Registration.swift */; };
@@ -937,7 +938,6 @@
 		166CCCAB2A30CDC100C7143F /* OWCommentCreationRegularViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationRegularViewVM.swift; sourceTree = "<group>"; };
 		166CCCAD2A30CDCB00C7143F /* OWCommentCreationLightViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationLightViewVM.swift; sourceTree = "<group>"; };
 		166CCCAF2A30CDD400C7143F /* OWCommentCreationFloatingKeyboardViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationFloatingKeyboardViewVM.swift; sourceTree = "<group>"; };
-        166CCCA32A2E362F00C7143F /* UIActivityViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIActivityViewController+Rx.swift"; sourceTree = "<group>"; };
 		166CCCB12A3A0FC300C7143F /* OWAdditionalSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalSettingsProtocol.swift; sourceTree = "<group>"; };
 		166CCCB32A3A10FB00C7143F /* OWAdditionalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalSettings.swift; sourceTree = "<group>"; };
 		166CCCB62A3A127A00C7143F /* OWAdditionalSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalSettingsBuilder.swift; sourceTree = "<group>"; };
@@ -1127,6 +1127,8 @@
 		3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConfigurationEndpoints.swift; sourceTree = "<group>"; };
 		3D199EA8284E475500FF8360 /* OWKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychain.swift; sourceTree = "<group>"; };
 		3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaults.swift; sourceTree = "<group>"; };
+		3D1D24842A4ACDC000692E2A /* ToolbarElementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarElementModel.swift; sourceTree = "<group>"; };
+		3D1D24862A4ACE0C00692E2A /* ToolbarElementAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarElementAction.swift; sourceTree = "<group>"; };
 		3D20A2D727A805BE003F8513 /* EasyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
 		3D20A35927A96915003F8513 /* TableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Registration.swift"; sourceTree = "<group>"; };
@@ -2687,6 +2689,39 @@
 			path = SSO;
 			sourceTree = "<group>";
 		};
+		3D1D24802A4ACD7B00692E2A /* ToolbarFloatingCommentCreation */ = {
+			isa = PBXGroup;
+			children = (
+				3D1D24832A4ACDAB00692E2A /* Views */,
+				3D1D24822A4ACDA300692E2A /* ViewModels */,
+				3D1D24812A4ACD9D00692E2A /* Models */,
+			);
+			path = ToolbarFloatingCommentCreation;
+			sourceTree = "<group>";
+		};
+		3D1D24812A4ACD9D00692E2A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3D1D24842A4ACDC000692E2A /* ToolbarElementModel.swift */,
+				3D1D24862A4ACE0C00692E2A /* ToolbarElementAction.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3D1D24822A4ACDA300692E2A /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3D1D24832A4ACDAB00692E2A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		3D20A2D627A803F2003F8513 /* SdkAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -2933,6 +2968,7 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
+				3D1D24802A4ACD7B00692E2A /* ToolbarFloatingCommentCreation */,
 				3DCAE3E929D07A58005B9189 /* Errors */,
 				9E73DACF29C85E270098EEC1 /* Logger */,
 				9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */,
@@ -6119,6 +6155,7 @@
 				3DA8DBFA29F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift in Sources */,
 				9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewType.swift in Sources */,
 				9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */,
+				3D1D24872A4ACE0C00692E2A /* ToolbarElementAction.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
 				3DDE1D8729C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift in Sources */,
@@ -6191,6 +6228,7 @@
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
 				9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */,
 				9EBE5C2829AE082C001150DA /* IAUSettingsView.swift in Sources */,
+				3D1D24852A4ACDC000692E2A /* ToolbarElementModel.swift in Sources */,
 				9EA0F84529AD12E2008FD7A6 /* ConversationSettingsView.swift in Sources */,
 				9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */,
 				9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */,
