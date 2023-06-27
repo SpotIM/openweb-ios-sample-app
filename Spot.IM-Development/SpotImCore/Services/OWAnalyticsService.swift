@@ -22,6 +22,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate let maxEventsForFlush: Int
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
     fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
+    fileprivate var blockedEvents = BehaviorSubject<[String]>(value: [])
 
     fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
@@ -94,6 +95,42 @@ fileprivate extension OWAnalyticsService {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.flushEvents()
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.spotConfigurationService()
+            .config(spotId: OpenWeb.manager.spotId)
+            .take(1)
+            .map { config in
+                return config.mobileSdk.eventsStrategyConfig
+            }
+            .map { eventsStrategyConfig -> [String] in
+                guard let eventsStrategyConfig = eventsStrategyConfig,
+                      let currentSdkVersionString = OWSettingsWrapper.sdkVersion(),
+                      let currentSdkVersion = OWVersion(from: currentSdkVersionString)
+                else { return [] }
+
+                // Check if need to block all events
+                if let minVersionForEventsString = eventsStrategyConfig.blockVersionsEqualOrPrevious,
+                   let minVersionForEvents = OWVersion(from: minVersionForEventsString),
+                   minVersionForEvents >= currentSdkVersion {
+                    return OWAnalyticEventType.allCases.map { $0.rawValue }
+                }
+
+                // Check if need to block specific version
+                if let eventsByVersion = eventsStrategyConfig.blockEventsByVersion,
+                   let eventsForCurrentVersion = eventsByVersion[currentSdkVersion] {
+                    if (eventsForCurrentVersion.contains("all")) {
+                        return OWAnalyticEventType.allCases.map { $0.rawValue }
+                    } else {
+                        return eventsForCurrentVersion
+                    }
+                }
+                return []
+            }
+            .subscribe(onNext: { [weak self] blockedEvents in
+                guard let self = self else { return }
+                self.blockedEvents.onNext(blockedEvents)
             })
             .disposed(by: disposeBag)
     }
