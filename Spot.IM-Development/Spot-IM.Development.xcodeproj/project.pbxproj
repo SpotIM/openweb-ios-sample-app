@@ -250,6 +250,10 @@
 		3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */; };
 		3D1D24852A4ACDC000692E2A /* ToolbarElementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24842A4ACDC000692E2A /* ToolbarElementModel.swift */; };
 		3D1D24872A4ACE0C00692E2A /* ToolbarElementAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24862A4ACE0C00692E2A /* ToolbarElementAction.swift */; };
+		3D1D24892A4AF22500692E2A /* CommentCreationToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24882A4AF22500692E2A /* CommentCreationToolbar.swift */; };
+		3D1D248B2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D248A2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift */; };
+		3D1D24912A4AF60600692E2A /* ToolbarCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24902A4AF60600692E2A /* ToolbarCollectionCell.swift */; };
+		3D1D24932A4AF63500692E2A /* ToolbarCollectionCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D24922A4AF63500692E2A /* ToolbarCollectionCellViewModel.swift */; };
 		3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A2D727A805BE003F8513 /* EasyViews.swift */; };
 		3D20A35827A968F8003F8513 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */; };
 		3D20A35A27A96915003F8513 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35927A96915003F8513 /* TableView+Registration.swift */; };
@@ -1129,6 +1133,10 @@
 		3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaults.swift; sourceTree = "<group>"; };
 		3D1D24842A4ACDC000692E2A /* ToolbarElementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarElementModel.swift; sourceTree = "<group>"; };
 		3D1D24862A4ACE0C00692E2A /* ToolbarElementAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarElementAction.swift; sourceTree = "<group>"; };
+		3D1D24882A4AF22500692E2A /* CommentCreationToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCreationToolbar.swift; sourceTree = "<group>"; };
+		3D1D248A2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCreationToolbarViewModel.swift; sourceTree = "<group>"; };
+		3D1D24902A4AF60600692E2A /* ToolbarCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarCollectionCell.swift; sourceTree = "<group>"; };
+		3D1D24922A4AF63500692E2A /* ToolbarCollectionCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarCollectionCellViewModel.swift; sourceTree = "<group>"; };
 		3D20A2D727A805BE003F8513 /* EasyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
 		3D20A35927A96915003F8513 /* TableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Registration.swift"; sourceTree = "<group>"; };
@@ -2711,6 +2719,8 @@
 		3D1D24822A4ACDA300692E2A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				3D1D248A2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift */,
+				3D1D24922A4AF63500692E2A /* ToolbarCollectionCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -2718,6 +2728,8 @@
 		3D1D24832A4ACDAB00692E2A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3D1D24882A4AF22500692E2A /* CommentCreationToolbar.swift */,
+				3D1D24902A4AF60600692E2A /* ToolbarCollectionCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6169,6 +6181,7 @@
 				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
+				3D1D24912A4AF60600692E2A /* ToolbarCollectionCell.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				9EE2CDED29798919000C0E38 /* (null) in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
@@ -6210,6 +6223,7 @@
 				9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */,
 				3D3E3AC128B4EB61003B4F05 /* ConversationCounterCellViewModel.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
+				3D1D248B2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift in Sources */,
 				9EA0F83B29ABED06008FD7A6 /* GeneralSettingsView.swift in Sources */,
 				9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
@@ -6225,6 +6239,7 @@
 				8D99C69A2A233CC700DAB542 /* ElementsCustomizationCreatorService.swift in Sources */,
 				9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
+				3D1D24892A4AF22500692E2A /* CommentCreationToolbar.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
 				9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */,
 				9EBE5C2829AE082C001150DA /* IAUSettingsView.swift in Sources */,
@@ -6242,6 +6257,7 @@
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
 				3DB3D190282A7F7C008654CF /* AuthenticationStatus.swift in Sources */,
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
+				3D1D24932A4AF63500692E2A /* ToolbarCollectionCellViewModel.swift in Sources */,
 				9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
