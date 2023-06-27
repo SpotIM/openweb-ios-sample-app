@@ -291,6 +291,18 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     // Observable for the RepertReason network API
     lazy var submittedReportReasonObservable: Observable<Void> = {
         return submitReportReasonTapped
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .voidify()
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // 2. Waiting for authentication required for reporting
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .voidify()
+            }
             .flatMapLatest { [weak self] _ -> Observable<OWReportReason> in
                 guard let self = self else { return .empty() }
                 return self.selectedReason.take(1)
