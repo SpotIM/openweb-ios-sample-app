@@ -117,8 +117,7 @@ fileprivate extension OWAnalyticsService {
                 else { return [] }
 
                 // Check if need to block all events
-                if let minVersionForEventsString = eventsStrategyConfig.blockVersionsEqualOrPrevious,
-                   let minVersionForEvents = OWVersion(from: minVersionForEventsString),
+                if let minVersionForEvents = eventsStrategyConfig.blockVersionsEqualOrPrevious,
                    minVersionForEvents >= currentSdkVersion {
                     return OWAnalyticEventType.allCases.map { $0.rawValue }
                 }
