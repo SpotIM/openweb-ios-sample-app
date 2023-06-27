@@ -57,6 +57,9 @@ fileprivate extension OWAnalyticsService {
                     .rx_elements()
                     .take(1)
             }
+            .withLatestFrom(self.blockedEvents) { items, blockedEvents -> [OWAnalyticEvent] in
+                return items.filter { !blockedEvents.contains($0.type.rawValue)  }
+            }
             .flatMap { items -> Observable<Bool> in
                 return api.sendEvents(events: items)
                     .response
