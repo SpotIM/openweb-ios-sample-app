@@ -94,8 +94,8 @@ fileprivate extension OWAuthorizationRecoveryService {
             }
             .flatMap { [weak self] shouldRenewSSO -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                let authentication = self.servicesProvider.netwokAPI().authentication
-                return authentication
+                let user = self.servicesProvider.netwokAPI().user
+                return user
                     .userData()
                     .response
                     .observe(on: self.scheduler)
