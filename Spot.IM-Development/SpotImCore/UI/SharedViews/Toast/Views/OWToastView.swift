@@ -40,6 +40,13 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
         return OWToastActionView(viewModel: viewModel.outputs.toastActionViewModel)
     }()
 
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        tap.numberOfTapsRequired = 1
+        actionView.addGestureRecognizer(tap)
+        return tap
+    }()
+
     fileprivate var viewModel: OWToastViewModeling
     fileprivate var disposeBag = DisposeBag()
 
@@ -64,7 +71,7 @@ fileprivate extension OWToastView {
         self.layer.borderWidth = 1
         self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: .light).cgColor
         self.layer.cornerRadius = Metrics.cornerRadius
-        self.applyShadow()
+        self.apply(shadow: .standard)
 
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
@@ -90,15 +97,11 @@ fileprivate extension OWToastView {
         }
     }
 
-    func applyShadow() {
-        layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.07).cgColor
-        layer.shadowRadius = 20
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.masksToBounds = false
-    }
-
     func setupObservers() {
+        tapGesture.rx.event.voidify()
+            .bind(to: viewModel.inputs.actionClick)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

@@ -113,6 +113,7 @@ class OWPresenterService: OWPresenterServicing {
                         presenterVC.view.layoutIfNeeded()
                     }, completion: { _ in
                         toastView.removeFromSuperview()
+                        observer.onNext(.completion)
                     })
                 }
 

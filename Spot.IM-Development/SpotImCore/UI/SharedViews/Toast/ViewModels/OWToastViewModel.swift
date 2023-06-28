@@ -36,30 +36,26 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     var actionClick = PublishSubject<Void>()
     var disposeBag = DisposeBag()
 
-    init(requiredData: OWToastRequiredData, handler: (() -> Void)) {
+    init(requiredData: OWToastRequiredData, handler: @escaping (() -> Void)) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
         iconImage = self.iconForType(type: requiredData.type)
 
-        // TODO: in function
-        actionClick
-            .asObservable()
-            .subscribe(onNext: {
-                print("aaa")
-                handler()
-            })
-            .disposed(by: disposeBag)
-//        actionClick
-//            .asObservable()
-//            .subscribe(onNext: {
-//                handler()
-//        })
-//        .disposed(by: disposeBag)
+        setupObservers(onClickHandler: handler)
     }
 }
 
 fileprivate extension OWToastViewModel {
+    func setupObservers(onClickHandler: @escaping (() -> Void)) {
+        actionClick
+            .asObservable()
+            .subscribe(onNext: {
+                onClickHandler()
+            })
+            .disposed(by: disposeBag)
+    }
+
     func iconForType(type: OWToastType) -> UIImage {
         var image: UIImage? = nil
         switch(type) {
