@@ -200,7 +200,7 @@ extension OWAuthenticationManager {
                 guard let self = self else { return .empty() }
                 let authentication = self.servicesProvider.netwokAPI().authentication
                 return authentication
-                    .user()
+                    .userData()
                     .response
                     .observe(on: self.scheduler)
                     .exponentialRetry(maxAttempts: Metrics.maxAttemptsToObtainNewUser, millisecondsDelay: Metrics.delayToObtainUser) // Adding retry as it is critical we will succeed here
