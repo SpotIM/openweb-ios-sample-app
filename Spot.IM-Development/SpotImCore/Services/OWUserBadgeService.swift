@@ -17,9 +17,12 @@ protocol OWUserBadgeServicing {
 class OWUserBadgeService: OWUserBadgeServicing {
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let localizationManager: OWLocalizationManagerConfigurable
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared) {
         self.servicesProvider = servicesProvider
+        self.localizationManager = localizationManager
     }
 
     fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
