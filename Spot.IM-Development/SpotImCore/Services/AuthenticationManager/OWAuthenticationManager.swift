@@ -20,6 +20,8 @@ protocol OWAuthenticationManagerProtocol {
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
 
+    func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool>
+
     func enterAuthenticationRecoveryState()
     func finishAuthenticationRecovery(with authenticationRecovery: OWAuthenticationRecoveryResult)
     func logout() -> Observable<Void>
@@ -110,6 +112,27 @@ extension OWAuthenticationManager {
                 }
                 authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
             })
+    }
+
+    func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool> {
+        return self.currentAuthenticationLevelAvailability
+            .map { authenticationLevelAvailability -> OWAuthenticationLevel? in
+                switch authenticationLevelAvailability {
+                case .level(let level):
+                    return level
+                case .pending:
+                    return nil
+                }
+            }
+            .unwrap()
+            .flatMap { [weak self] level -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
+                guard let self = self else { return .empty() }
+                return self.requiredAuthenticationLevel(for: action)
+                    .map { (level, $0) }
+            }
+            .map { currentlevel, requiredlevel in
+                return currentlevel.level >= requiredlevel.level
+            }
     }
 
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool = true) -> Observable<Void> {
