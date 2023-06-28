@@ -13,6 +13,7 @@ import UIKit
 
 protocol OWCommentViewModelingInputs {
     func deleteCommentLocally()
+    func muteCommentLocally()
 }
 
 protocol OWCommentViewModelingOutputs {
@@ -68,6 +69,11 @@ class OWCommentViewModel: OWCommentViewModeling,
         self.updateDeletedCommentInCommentsService()
     }
 
+    func muteCommentLocally() {
+        self._shouldHideCommentContent.onNext(true)
+        self.commentHeaderVM.inputs.shouldMuteCommentLocally.onNext(true)
+    }
+
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
@@ -106,6 +112,8 @@ fileprivate extension OWCommentViewModel {
         else { return }
 
         comment.setIsDeleted(true)
-        self.sharedServiceProvider.commentsService().set(comments: [comment], postId: postId)
+        self.sharedServiceProvider
+            .commentsService()
+            .set(comments: [comment], postId: postId)
     }
 }
