@@ -28,7 +28,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var hiddenCommentReasonText: Observable<String> { get }
 
     var userNameTapped: Observable<Void> { get }
-    var openMenu: Observable<[OWRxPresenterAction]> { get }
+    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> { get }
 }
 
 protocol OWCommentHeaderViewModeling {
@@ -180,11 +180,11 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
-    var openMenu: Observable<[OWRxPresenterAction]> {
+    var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapMore
-            .map { [weak self] _ in
+            .map { [weak self] view in
                 guard let self = self else { return nil}
-                return self.optionsActions
+                return (self.optionsActions, view)
             }
             .unwrap()
             .asObservable()
@@ -194,7 +194,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate lazy var optionsActions: [OWRxPresenterAction] = {
         return [
             OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentOptionsMenu.cancel, style: .cancel)
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment)
         ]
     }()
 }

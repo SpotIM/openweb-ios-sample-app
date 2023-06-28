@@ -10,6 +10,5 @@ import Foundation
 
 enum OWCommentOptionsMenu: OWMenuTypeProtocol {
     case reportComment
-
-    case cancel
+    case editComment
 }
