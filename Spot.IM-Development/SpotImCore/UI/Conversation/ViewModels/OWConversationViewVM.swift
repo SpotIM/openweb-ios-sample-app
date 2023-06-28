@@ -460,7 +460,15 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.servicesProvider.presenterService()
-                    .showToast(requiredData: OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast...."), viewableMode: self.viewableMode)
+                    .showToast(requiredData: OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast...."), viewableMode: self.viewableMode).subscribe(onNext: { result in
+                        switch(result) {
+                        case .selected(let action):
+                            print(action)
+                        case .completion:
+                            print("completion")
+                        }
+
+                    }).disposed(by: self.disposeBag)
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
