@@ -198,8 +198,8 @@ extension OWAuthenticationManager {
             .take(1) // Here we are simply waiting for the config first / ensuring such exist for the specific spotId
             .flatMap { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                let authentication = self.servicesProvider.netwokAPI().authentication
-                return authentication
+                let user = self.servicesProvider.netwokAPI().user
+                return user
                     .userData()
                     .response
                     .observe(on: self.scheduler)

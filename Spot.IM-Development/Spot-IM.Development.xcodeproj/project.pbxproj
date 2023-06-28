@@ -92,6 +92,7 @@
 		16BEFD432A4C1B75007A51D5 /* OWCommentDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */; };
 		16BEFD452A4C3254007A51D5 /* OWCommentDeleteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */; };
 		16BEFD472A4C4638007A51D5 /* OWCommentUserMuteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */; };
+		16BEFD4B2A4C71CB007A51D5 /* OWUserEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD4A2A4C71CB007A51D5 /* OWUserEndpoints.swift */; };
 		16C42A3E29F00AA100725F07 /* OWCommentsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C42A3D29F00AA000725F07 /* OWCommentsService.swift */; };
 		16C42A4029F00E3C00725F07 /* OWUsersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C42A3F29F00E3C00725F07 /* OWUsersService.swift */; };
 		16C42A5629F68D7000725F07 /* OWCommentThreadSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C42A5529F68D7000725F07 /* OWCommentThreadSettingsBuilder.swift */; };
@@ -963,6 +964,7 @@
 		16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentDelete.swift; sourceTree = "<group>"; };
 		16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentDeleteAlert.swift; sourceTree = "<group>"; };
 		16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentUserMuteAlert.swift; sourceTree = "<group>"; };
+		16BEFD4A2A4C71CB007A51D5 /* OWUserEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserEndpoints.swift; sourceTree = "<group>"; };
 		16C42A3D29F00AA000725F07 /* OWCommentsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentsService.swift; sourceTree = "<group>"; };
 		16C42A3F29F00E3C00725F07 /* OWUsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUsersService.swift; sourceTree = "<group>"; };
 		16C42A5529F68D7000725F07 /* OWCommentThreadSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadSettingsBuilder.swift; sourceTree = "<group>"; };
@@ -3446,6 +3448,7 @@
 				24B087CA288E747200CAA0EB /* OWAuthenticationEndpoints.swift */,
 				24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */,
 				24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */,
+				16BEFD4A2A4C71CB007A51D5 /* OWUserEndpoints.swift */,
 			);
 			path = Endpoints;
 			sourceTree = "<group>";
@@ -6084,6 +6087,7 @@
 				3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */,
 				8D358D6429CB2BE200E229A3 /* OWConversationSortView.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
+				16BEFD4B2A4C71CB007A51D5 /* OWUserEndpoints.swift in Sources */,
 				3DDA9A5728FF01DE00FE3B86 /* OWAssociatedSkeletonShimmering.swift in Sources */,
 				166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */,
 				3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */,
