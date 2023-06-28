@@ -122,6 +122,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var muteAllUserComments = PublishSubject<String>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -1113,8 +1114,11 @@ fileprivate extension OWConversationViewViewModel {
             }
             .filter { $0 }
             .withLatestFrom(muteCommentUser)
-            .do(onNext: { commentVm in
-                // Update UI
+            .do(onNext: { [weak self] commentVm in
+                guard let self = self,
+                      let userId = commentVm.outputs.comment.userId
+                else { return }
+                self.muteAllUserComments.onNext(userId)
             })
             .flatMap { [weak self] commentVm -> Observable<Event<EmptyDecodable>> in
                 guard let self = self,
@@ -1142,6 +1146,35 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        muteAllUserComments
+            .asObservable()
+            .withLatestFrom(commentCellsVmsObservable) { userId, commentCellsVms -> (String, [OWCommentCellViewModeling]) in
+                return (userId, commentCellsVms)
+            }
+            .do(onNext: { [weak self] userId, _ in
+                guard let self = self,
+                      let user = self.servicesProvider.usersService().get(userId: userId)
+                else { return }
+
+                user.isMuted = true
+                self.servicesProvider
+                    .usersService()
+                    .set(users: [user])
+            })
+            .map { userId, commentCellsVms -> [OWCommentViewModeling] in
+                let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == userId }
+                return userCommentCells.map { $0.outputs.commentVM }
+            }
+            .do(onNext: { mutedUserCommentCellsVms in
+                mutedUserCommentCellsVms.forEach { $0.inputs.muteCommentLocally() }
+            })
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
     }
