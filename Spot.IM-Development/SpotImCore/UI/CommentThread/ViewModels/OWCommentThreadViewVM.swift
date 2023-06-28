@@ -832,9 +832,33 @@ fileprivate extension OWCommentThreadViewViewModel {
             .do(onNext: { commentVm in
                 // Update UI
             })
-            .subscribe { [weak self] commentVm in
-
+            .flatMap { [weak self] commentVm -> Observable<Event<EmptyDecodable>> in
+                guard let self = self,
+                      let userId = commentVm.outputs.comment.userId
+                else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .user
+                    .mute(userId: userId)
+                    .response
+                    .materialize()
             }
+            .map { event -> Bool in
+                switch event {
+                case .next:
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return true
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return false
+                default:
+                    return false
+                }
+            }
+            .filter { $0 }
+            .subscribe(onNext: { _ in
+                // successfully muted
+            })
             .disposed(by: disposeBag)
     }
 }
