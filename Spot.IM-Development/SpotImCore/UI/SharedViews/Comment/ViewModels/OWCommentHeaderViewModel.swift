@@ -185,25 +185,78 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
+    fileprivate var isLoggenInUserComment: Observable<Bool> {
+        _model
+            .unwrap()
+            .map { $0.userId }
+            .unwrap()
+            .flatMapLatest { [weak self] userId -> Observable<(String, OWUserAvailability)> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                    .authenticationManager()
+                    .activeUserAvailability
+                    .map { (userId, $0) }
+            }
+            .map { commentUserId, userAvailability in
+                switch userAvailability {
+                case .user(let user):
+                    return user.userId == commentUserId
+                case .notAvailable:
+                    return false
+                }
+            }
+    }
+
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapMore
-            .map { [weak self] view in
-                guard let self = self else { return nil}
-                return (self.optionsActions, view)
+            .flatMap { [weak self] view -> Observable<((Bool, Bool, Bool, Bool), UIView)> in
+                guard let self = self else { return .empty() }
+                let authentication = self.servicesProvider.authenticationManager()
+
+                return Observable.combineLatest(
+                    authentication.userHasAuthenticationLevel(for: .reportingComment),
+                    authentication.userHasAuthenticationLevel(for: .deletingComment),
+                    authentication.userHasAuthenticationLevel(for: .editingComment),
+                    authentication.userHasAuthenticationLevel(for: .mutingUser)
+                ).map { ($0, view) }
+            }
+            .withLatestFrom(isLoggenInUserComment) { ($0.0, $0.1, $1) }
+            .map { actions, view, isLoggenInUserComment in
+                let allowReportingComment = actions.0
+                let allowDeletingComment = actions.1
+                let allowEditingComment = actions.2
+                let allowMuteUser = actions.3
+
+                var optionsActions: [OWRxPresenterAction] = []
+                if (allowReportingComment && !isLoggenInUserComment) {
+                    optionsActions.append(OWRxPresenterAction(
+                        title: OWLocalizationManager.shared.localizedString(key: "Report"),
+                        type: OWCommentOptionsMenu.reportComment)
+                    )
+                }
+                if (allowEditingComment && isLoggenInUserComment) {
+                    optionsActions.append(OWRxPresenterAction(
+                        title: OWLocalizationManager.shared.localizedString(key: "Edit"),
+                        type: OWCommentOptionsMenu.editComment)
+                    )
+                }
+                if (allowDeletingComment && isLoggenInUserComment) {
+                    optionsActions.append(OWRxPresenterAction(
+                        title: OWLocalizationManager.shared.localizedString(key: "Delete"),
+                        type: OWCommentOptionsMenu.deleteComment)
+                    )
+                }
+                if (allowMuteUser && !isLoggenInUserComment) {
+                    optionsActions.append(OWRxPresenterAction(
+                        title: OWLocalizationManager.shared.localizedString(key: "Mute"),
+                        type: OWCommentOptionsMenu.muteUser)
+                    )
+                }
+                return (optionsActions, view)
             }
             .unwrap()
             .asObservable()
     }
-
-    // TODO: properly get the relevant actions
-    fileprivate lazy var optionsActions: [OWRxPresenterAction] = {
-        return [
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentOptionsMenu.deleteComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentOptionsMenu.muteUser)
-        ]
-    }()
 }
 
 fileprivate extension OWCommentHeaderViewModel {
