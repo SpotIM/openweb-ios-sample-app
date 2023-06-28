@@ -17,10 +17,10 @@ protocol OWUserBadgeServicing {
 class OWUserBadgeService: OWUserBadgeServicing {
 
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let localizationManager: OWLocalizationManagerConfigurable
+    fileprivate let localizationManager: OWLocalizationManagerProtocol
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared) {
+         localizationManager: OWLocalizationManagerProtocol = OWLocalizationManager.shared) {
         self.servicesProvider = servicesProvider
         self.localizationManager = localizationManager
     }
@@ -36,7 +36,7 @@ class OWUserBadgeService: OWUserBadgeServicing {
 
     func userBadgeText(user: SPUser) -> Observable<OWUserBadgeType> {
         return self.conversationConfig
-            .withLatestFrom(OWLocalizationManager.shared.currentLanguage) { conversationConfig, currentLanguage -> OWUserBadgeType in
+            .withLatestFrom(localizationManager.currentLanguage) { conversationConfig, currentLanguage -> OWUserBadgeType in
                 guard user.isStaff else { return .empty }
 
                 if let translations = conversationConfig.translationTextOverrides,
