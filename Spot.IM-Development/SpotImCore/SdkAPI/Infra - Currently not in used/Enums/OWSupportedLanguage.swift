@@ -16,15 +16,6 @@ public enum OWSupportedLanguage: String, Codable, CaseIterable {
     case spanish = "es"
     case portuguese = "pt"
     case french = "fr"
-
-    var userBadgeCode: String {
-        switch self {
-        case .spanish:
-            return "es-ES"
-        default:
-            return self.rawValue
-        }
-    }
 }
 #else
 enum OWSupportedLanguage: String, Codable, CaseIterable {
@@ -34,14 +25,5 @@ enum OWSupportedLanguage: String, Codable, CaseIterable {
     case spanish = "es"
     case portuguese = "pt"
     case french = "fr"
-
-    var userBadgeCode: String {
-        switch self {
-        case .spanish:
-            return "es-ES"
-        default:
-            return self.rawValue
-        }
-    }
 }
 #endif
