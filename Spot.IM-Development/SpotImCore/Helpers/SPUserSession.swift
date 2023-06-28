@@ -159,5 +159,5 @@ public final class SPPublicSessionInterface {
 }
 
 extension Notification.Name {
-    public static let userDisplayNameFrozen = Notification.Name.init("im.spot.ios.session.UserDisplayNameFrozen")
+    public static let userDisplayNameFrozen = Notification.Name("im.spot.ios.session.UserDisplayNameFrozen")
 }
