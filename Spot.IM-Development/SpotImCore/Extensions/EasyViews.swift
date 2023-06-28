@@ -256,6 +256,11 @@ extension UITableView {
         return self
     }
 
+    @discardableResult func separatorColor(_ color: UIColor) -> Self {
+        self.separatorColor = color
+        return self
+    }
+
     @discardableResult func dataSource(_ dataSource: UITableViewDataSource) -> Self {
         self.dataSource = dataSource
         return self

@@ -22,24 +22,27 @@ protocol OWConversationViewViewModelingInputs {
 
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTiTleHeader: Bool { get }
+    var shouldShowArticleDescription: Bool { get }
+    var shouldShowError: Observable<Void> { get }
+    var shouldShowConversationEmptyState: Observable<Bool> { get }
+
     var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
+    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
+    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
+
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
-    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
-    var shouldShowConversationEmptyState: Observable<Bool> { get }
-    var commentingCTAViewModel: OWCommentingCTAViewModel { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
-    var initialDataLoaded: Observable<Bool> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+
     var urlClickedOutput: Observable<URL> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
-    var shouldShowError: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -65,6 +68,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
+
+    lazy var shouldShowArticleDescription: Bool = {
+        return conversationData.article.additionalSettings.headerStyle != .none
+    }()
 
     var _shouldShowError = PublishSubject<Void>()
     var shouldShowError: Observable<Void> {
@@ -194,7 +201,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels
-            .map { items in
+            .map { [weak self] items in
+                guard let self = self else { return [] }
                 let section = ConversationDataSourceModel(model: self.postId, items: items)
                 return [section]
             }
@@ -203,12 +211,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
-            .asObservable()
-    }
-
-    fileprivate var _initialDataLoaded = BehaviorSubject<Bool>(value: false)
-    var initialDataLoaded: Observable<Bool> {
-        return _initialDataLoaded
             .asObservable()
     }
 
@@ -537,7 +539,7 @@ fileprivate extension OWConversationViewViewModel {
                     isReadOnly = false
                 case .enable:
                     isReadOnly = true
-                case .default:
+                case .server:
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
@@ -884,33 +886,22 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction])> in
-                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction])> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource)> in
+                let openMenuClickObservable: [Observable<([OWRxPresenterAction], OWUISource)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
-                        .map { (commentVm.outputs.comment, $0) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            // swiftlint:disable unused_closure_parameter
-            .subscribe(onNext: { [weak self] comment, actions in
-            // swiftlint:enable unused_closure_parameter
-                guard let self = self else { return }
-                _ = self.servicesProvider.presenterService()
-                    .showMenu(actions: actions, viewableMode: self.viewableMode)
-                    .subscribe(onNext: { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(let action):
-                            // TODO: handle selection
-                            break
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+            .flatMapLatest { [weak self] actions, sender -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty()}
+                return self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+            }
+            .subscribe(onNext: { [weak self] _ in
+                // TODO: handle
             })
             .disposed(by: disposeBag)
 
@@ -942,45 +933,40 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open sort option menu
         conversationSummaryViewModel.outputs.conversationSortVM.outputs.openSort
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+            .flatMapLatest { [weak self] sender -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
                 let sortDictateService = self.servicesProvider.sortDictateService()
-                self.servicesProvider.presenterService()
-                    .showMenu(
-                        title: OWLocalizationManager.shared.localizedString(key: "Sort by").uppercased(),
-                        actions: [
-                            .init(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
-                            .init(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest),
-                            .init(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWSortMenu.cancel, style: .cancel)
-                        ],
-                        viewableMode: self.viewableMode
-                    )
-                    .subscribe(onNext: { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(let action):
-                            switch action.type {
-                            case OWSortMenu.sortBest:
-                                sortDictateService.update(sortOption: .best, perPostId: self.postId)
-                            case OWSortMenu.sortNewest:
-                                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-                            case OWSortMenu.sortOldest:
-                                sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
-                            default:
-                                break
-                            }
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+                let actions = [
+                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
+                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .newest), type: OWSortMenu.sortNewest),
+                    OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .oldest), type: OWSortMenu.sortOldest)
+                    ]
+
+                return self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+
+            }
+            .subscribe(onNext: { [weak self] typy in
+                guard let self = self else { return }
+                switch (typy) {
+                case .completion:
+                    return
+                case .selected(action: let action):
+                    let sortDictateService = self.servicesProvider.sortDictateService()
+                    switch (action.type) {
+                    case OWSortMenu.sortBest: sortDictateService.update(sortOption: .best, perPostId: self.postId)
+                    case OWSortMenu.sortNewest: sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+                    case OWSortMenu.sortOldest: sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+                    default:
+                        return
+                    }
+                }
             })
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
@@ -994,7 +980,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Subscribe to URL click in comment text
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
                     let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
 

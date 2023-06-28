@@ -89,7 +89,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case isReadOnlyEnabled = "demo.isReadOnlyEnabled"
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
-        case hideArticleHeader = "hideArticleHeader"
+        case articleHeaderStyle = "articleHeaderStyle"
         case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
@@ -139,8 +139,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores if we should override system's interface style (light, dark)"
         case .spotIdKey:
             return "Key which stores the current spot id to be tested"
-        case .hideArticleHeader:
-            return "Key which stores if we should show/hide article header"
+        case .articleHeaderStyle:
+            return "Key which stores article header style"
         case .readOnlyModeIndex:
             return "Key which stores read only mode (default, enabled, disabled)"
         case .themeModeIndex:

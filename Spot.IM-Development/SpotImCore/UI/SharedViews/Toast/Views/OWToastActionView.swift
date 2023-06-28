@@ -28,7 +28,7 @@ class OWToastActionView: UIView {
                         ]
         )
         var label = UILabel()
-            .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
         label.attributedText = attributedString
         return label
     }()
@@ -37,7 +37,7 @@ class OWToastActionView: UIView {
         return UIImageView()
             .image(viewModel.outputs.icon?.withRenderingMode(.alwaysTemplate))
             .tintAdjustmentMode(.normal)
-            .tintColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
+            .tintColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
     }()
 
     fileprivate var viewModel: OWToastActionViewModeling
@@ -75,8 +75,8 @@ fileprivate extension OWToastActionView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
-                self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
+                self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
     }
