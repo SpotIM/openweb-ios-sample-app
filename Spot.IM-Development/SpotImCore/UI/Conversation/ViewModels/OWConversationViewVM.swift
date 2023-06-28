@@ -121,6 +121,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
+    fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -917,7 +918,7 @@ fileprivate extension OWConversationViewViewModel {
                     case OWCommentOptionsMenu.editComment:
                         self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
                     case OWCommentOptionsMenu.muteUser:
-                        break
+                        self.muteCommentUser.onNext(commentVm)
                     default:
                         return
                     }
@@ -1079,6 +1080,45 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { _ in
                 // successfully deleted
             })
+            .disposed(by: disposeBag)
+
+        muteCommentUser
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentUserMuteAlert.cancel, style: .cancel)
+                ]
+                return self.servicesProvider.presenterService()
+                    .showAlert(
+                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
+                        actions: actions,
+                        viewableMode: self.viewableMode
+                    )
+            }
+            .map { result -> Bool in
+                switch result {
+                case .completion:
+                    return false
+                case .selected(let action):
+                    switch action.type {
+                    case OWCommentUserMuteAlert.mute:
+                        return true
+                    default:
+                        return false
+                    }
+                }
+            }
+            .filter { $0 }
+            .withLatestFrom(muteCommentUser)
+            .do(onNext: { commentVm in
+                // Update UI
+            })
+            .subscribe { [weak self] commentVm in
+
+            }
             .disposed(by: disposeBag)
     }
 }
