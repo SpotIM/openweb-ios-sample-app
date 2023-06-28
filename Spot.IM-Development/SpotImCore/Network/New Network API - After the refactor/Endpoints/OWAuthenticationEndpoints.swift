@@ -13,12 +13,12 @@ enum OWAuthenticationEndpoints: OWEndpoints {
     case ssoStart(secret: String)
     case ssoComplete(codeB: String)
     case logout
-    case user
+    case userData
 
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
-        case .login, .ssoStart, .ssoComplete, .logout, .user:
+        case .login, .ssoStart, .ssoComplete, .logout, .userData:
             return .post
         }
     }
@@ -30,7 +30,7 @@ enum OWAuthenticationEndpoints: OWEndpoints {
         case .ssoStart:     return "/user/sso/start"
         case .ssoComplete:  return "/user/sso/complete"
         case .logout:       return "/user/logout"
-        case .user:         return "/user/data"
+        case .userData:         return "/user/data"
         }
     }
 
@@ -45,7 +45,7 @@ enum OWAuthenticationEndpoints: OWEndpoints {
             return ["code_b": codeB]
         case .logout:
             return nil
-        case .user:
+        case .userData:
             return nil
         }
     }
@@ -56,7 +56,7 @@ protocol OWAuthenticationAPI {
     func ssoStart(secret: String) -> OWNetworkResponse<OWSSOStartResponse>
     func ssoComplete(codeB: String) -> OWNetworkResponse<OWSSOCompletionResponse>
     func logout() -> OWNetworkResponse<EmptyDecodable>
-    func user() -> OWNetworkResponse<SPUser>
+    func userData() -> OWNetworkResponse<SPUser>
 }
 
 extension OWNetworkAPI: OWAuthenticationAPI {
@@ -87,8 +87,8 @@ extension OWNetworkAPI: OWAuthenticationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func user() -> OWNetworkResponse<SPUser> {
-        let endpoint = OWAuthenticationEndpoints.user
+    func userData() -> OWNetworkResponse<SPUser> {
+        let endpoint = OWAuthenticationEndpoints.userData
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

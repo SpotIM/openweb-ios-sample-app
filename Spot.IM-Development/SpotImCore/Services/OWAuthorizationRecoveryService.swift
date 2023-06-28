@@ -96,7 +96,7 @@ fileprivate extension OWAuthorizationRecoveryService {
                 guard let self = self else { return .empty() }
                 let authentication = self.servicesProvider.netwokAPI().authentication
                 return authentication
-                    .user()
+                    .userData()
                     .response
                     .observe(on: self.scheduler)
                     .take(1) // No need to dispose
