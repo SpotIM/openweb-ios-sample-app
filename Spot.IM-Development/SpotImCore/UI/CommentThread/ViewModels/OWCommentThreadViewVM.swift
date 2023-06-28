@@ -131,6 +131,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
+    fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
+
     var viewInitialized = PublishSubject<Void>()
     var pullToRefresh = PublishSubject<Void>()
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -715,14 +717,81 @@ fileprivate extension OWCommentThreadViewViewModel {
                     case OWCommentOptionsMenu.reportComment:
                         break
                     case OWCommentOptionsMenu.deleteComment:
-                        commentVm.inputs.deleteCommentLocally()
-                        self._performTableViewAnimation.onNext()
+                        self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
                         self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
                     default:
                         return
                     }
                 }
+            })
+            .disposed(by: disposeBag)
+
+        deleteComment
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentDeleteAlert.cancel, style: .cancel)
+                ]
+                return self.servicesProvider.presenterService()
+                    .showAlert(
+                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
+                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        actions: actions,
+                        viewableMode: self.viewableMode
+                    )
+            }
+            .map { result -> Bool in
+                switch result {
+                case .completion:
+                    return false
+                case .selected(let action):
+                    switch action.type {
+                    case OWCommentDeleteAlert.delete:
+                        return true
+                    default:
+                        return false
+                    }
+                }
+            }
+            .filter { $0 }
+            .withLatestFrom(deleteComment)
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] commentVm in
+                guard let self = self else { return }
+                commentVm.inputs.deleteCommentLocally()
+                self._performTableViewAnimation.onNext()
+            })
+            .observe(on: MainScheduler.asyncInstance)
+            .flatMap { [weak self] commentVm -> Observable<Event<OWCommentDelete>> in
+                let comment = commentVm.outputs.comment
+                guard let self = self,
+                      let commentId = comment.id
+                else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .commentDelete(id: commentId, parentId: comment.parentId)
+                    .response
+                    .materialize()
+            }
+            .map { event -> OWCommentDelete? in
+                switch event {
+                case .next(let commentDelete):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return commentDelete
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .subscribe(onNext: { _ in
+                // successfully deleted
             })
             .disposed(by: disposeBag)
     }
