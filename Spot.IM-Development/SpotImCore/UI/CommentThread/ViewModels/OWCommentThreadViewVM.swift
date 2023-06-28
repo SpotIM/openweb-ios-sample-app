@@ -689,32 +689,22 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWComment, [OWRxPresenterAction])> in
-                let openMenuClickObservable: [Observable<(OWComment, [OWRxPresenterAction])>] = commentCellsVms.map { commentCellVm -> Observable<(OWComment, [OWRxPresenterAction])> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource)> in
+                let openMenuClickObservable: [Observable<([OWRxPresenterAction], OWUISource)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
-                        .map { (commentVm.outputs.comment, $0) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            // swiftlint:disable unused_closure_parameter
-            .subscribe(onNext: { [weak self] comment, actions in
-                guard let self = self else { return }
-                _ = self.servicesProvider.presenterService()
-                    .showMenu(actions: actions, viewableMode: self.viewableMode)
-                    .subscribe(onNext: { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(let action):
-                            // TODO: handle selection
-                            break
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+            .flatMapLatest { [weak self] actions, sender -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty()}
+                return self.servicesProvider.presenterService()
+                    .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+            }
+            .subscribe(onNext: { [weak self] _ in
+                // TODO: handle
             })
             .disposed(by: disposeBag)
     }
