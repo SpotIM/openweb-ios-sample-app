@@ -198,7 +198,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         return [
             OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Report"), type: OWCommentOptionsMenu.reportComment),
             OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Edit"), type: OWCommentOptionsMenu.editComment),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentOptionsMenu.deleteComment)
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentOptionsMenu.deleteComment),
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentOptionsMenu.muteUser)
         ]
     }()
 }

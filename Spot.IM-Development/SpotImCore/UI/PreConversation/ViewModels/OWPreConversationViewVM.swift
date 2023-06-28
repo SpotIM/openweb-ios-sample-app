@@ -633,6 +633,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
                         self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
+                    case OWCommentOptionsMenu.muteUser:
+                        break
                     default:
                         return
                     }
