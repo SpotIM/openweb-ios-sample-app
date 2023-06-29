@@ -89,8 +89,13 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
 
+        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+            .map { _ -> OWDeepLinkOptions? in
+                return nil
+            }
+
         // Coordinate to full conversation
-        Observable.merge(openFullConversationObservable, openCommentCreationObservable)
+        Observable.merge(openFullConversationObservable, openCommentCreationObservable, openReportReasonObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
