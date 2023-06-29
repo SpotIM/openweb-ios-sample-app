@@ -183,30 +183,30 @@ fileprivate extension OWReportReasonCoordinator {
 
         // MARK: Flow Setup
 
-        // Submit - Open Thanks Screen - Flow
-        let closeReportReasonThanksTapped = viewModel.outputs.submittedReportReasonObservable
+        // Submit - Open Submitted Screen - Flow
+        let closeReportReasonSubmittedTapped = viewModel.outputs.submittedReportReasonObservable
             .filter { viewModel.outputs.viewableMode == .partOfFlow }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 guard let router = self.router else { return .empty() }
-                let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
-                let reportReasonThanksVC = OWReportReasonThanksVC(reportReasonThanksViewViewModel: reportReasonThanksViewVM)
+                let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
+                let reportReasonSubmittedVC = OWReportReasonSubmittedVC(reportReasonSubmittedViewViewModel: reportReasonSubmittedViewVM)
                 switch self.presentationalMode {
                 case .present(let style):
-                    reportReasonThanksVC.modalPresentationStyle = style.toOSModalPresentationStyle
+                    reportReasonSubmittedVC.modalPresentationStyle = style.toOSModalPresentationStyle
                 default:
-                    reportReasonThanksVC.modalPresentationStyle = .fullScreen
+                    reportReasonSubmittedVC.modalPresentationStyle = .fullScreen
                 }
-                router.present(reportReasonThanksVC, animated: true, dismissCompletion: nil)
-                return reportReasonThanksViewVM.outputs.closeReportReasonThanksTapped
+                router.present(reportReasonSubmittedVC, animated: true, dismissCompletion: nil)
+                return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
             }
 
         // Close ReportReason observable - General
         let closeReportReasonObservable = Observable.merge(viewModel.outputs.closeReportReasonTapped,
                                                additionalInfoCloseReportReasonTapped,
                                                cancelReportCancelTapped,
-                                               closeReportReasonThanksTapped)
+                                               closeReportReasonSubmittedTapped)
         .map { _ -> OWReportReasonCancelViewViewModel in
             return OWReportReasonCancelViewViewModel()
         }
@@ -266,16 +266,17 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 viewModel.outputs.viewableMode == .partOfFlow
             }
-            // Step 1 - Dismiss OWReportReasonThanksVC or OWReportReasonCancelVC
+            // Step 1 - Dismiss OWReportReasonSubmittedVC or OWReportReasonCancelVC
             .flatMap { [weak self] _ -> Observable<OWRoutering> in
                 guard let self = self,
                       let router = self.router else { return .empty() }
                 let visableViewController = router.navigationController?.visibleViewController
                 let isReportReasonVC = visableViewController?.isKind(of: OWReportReasonVC.self) ?? false
 
-                // For dismissing OWReportReasonThanksVC and OWReportReasonCancelVC screens
+                // For dismissing OWReportReasonSubmittedVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
-                    visableViewController?.dismiss(animated: !router.hasOnlyOneViewController)
+                    let hasMoreThanOneViewController = router.numberOfActiveViewControllers > 1
+                    visableViewController?.dismiss(animated: hasMoreThanOneViewController)
                 }
                 return .just(router)
             }
@@ -289,7 +290,8 @@ fileprivate extension OWReportReasonCoordinator {
                 // Pop AdditionaInfo screen or any other screens after ReportReasonVC
                 router.pop(toViewController: controllerToPopTo, animated: false)
 
-                if router.hasOnlyOneViewController {
+                let hasOnlyOneViewController = router.numberOfActiveViewControllers == 1
+                if hasOnlyOneViewController {
                     router.dismiss(animated: true, completion: self.reportReasonPopped)
                 } else {
                     router.pop(popStyle: .dismissStyle, animated: true)
@@ -316,29 +318,29 @@ fileprivate extension OWReportReasonCoordinator {
 
         // MARK: Independent Setup
 
-        // Submit - Open Thanks Screen - Independent
-        let closeThanksViewTapped = viewModel.outputs.submittedReportReasonObservable
+        // Submit - Open Submitted Screen - Independent
+        let closeSubmittedViewTapped = viewModel.outputs.submittedReportReasonObservable
             .voidify()
             .filter { viewModel.outputs.viewableMode == .independent }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                let reportReasonThanksViewVM = OWReportReasonThanksViewViewModel()
-                let reportReasonThanksView = OWReportReasonThanksView(viewModel: reportReasonThanksViewVM)
+                let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
+                let reportReasonSubmittedView = OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewVM)
 
-                reportReasonThanksView.alpha = 0
-                self.reportReasonView?.addSubview(reportReasonThanksView)
+                reportReasonSubmittedView.alpha = 0
+                self.reportReasonView?.addSubview(reportReasonSubmittedView)
                 UIView.animate(withDuration: Metrics.fadeDuration) {
-                    reportReasonThanksView.alpha = 1
+                    reportReasonSubmittedView.alpha = 1
                 }
-                reportReasonThanksView.OWSnp.makeConstraints { make in
+                reportReasonSubmittedView.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
-                return reportReasonThanksViewVM.outputs.closeReportReasonThanksTapped
+                return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
             }
 
-        // Close Report reason from Thanks Screen - Independent
-        closeThanksViewTapped
+        // Close Report reason from Submitted Screen - Independent
+        closeSubmittedViewTapped
             .map { OWViewActionCallbackType.closeReportReason }
             .subscribe(onNext: { [weak self] viewActionType in
                 guard let self = self else { return }

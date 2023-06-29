@@ -15,6 +15,7 @@ class OWReportReasonVC: UIViewController {
         static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonSize: CGFloat = 40
         static let closeButtonIdentidier = "report_reason_close_button_id"
+        static let closeCrossIcon = "closeCrossIcon"
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
@@ -27,7 +28,7 @@ class OWReportReasonVC: UIViewController {
 
     fileprivate lazy var closeButton: UIButton = {
         let closeButton = UIButton()
-            .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .contentMode(.center)
         return closeButton
     }()
@@ -68,8 +69,6 @@ fileprivate extension OWReportReasonVC {
         reportReasonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
-        setupNavControllerUI()
 
         closeButton.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.closeButtonSize)
@@ -124,7 +123,7 @@ fileprivate extension OWReportReasonVC {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
                 self.setupNavControllerUI(currentStyle)
             })
             .disposed(by: disposeBag)

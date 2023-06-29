@@ -136,7 +136,6 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling,
 
     init() {
         setupObservers()
-        setSDKConfigurations(Metrics.preFilledSpotId)
     }
 }
 
@@ -234,7 +233,6 @@ fileprivate extension BetaNewAPIViewModel {
             .do(onNext: { [weak self] dataModel in
                 self?._spotId.onNext(dataModel.spotId)
                 self?._postId.onNext(dataModel.postId)
-                self?.setSDKConfigurations(dataModel.spotId)
             })
             .subscribe()
             .disposed(by: disposeBag)

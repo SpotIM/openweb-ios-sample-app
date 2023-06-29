@@ -148,7 +148,8 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { commentId -> Observable<OWReportReasonCoordinatorResult> in
+            .flatMap { [weak self] commentId -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
                 let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
                                                                         router: self.router,
                                                                         actionsCallbacks: self.actionsCallbacks,
@@ -181,10 +182,12 @@ fileprivate extension OWPreConversationCoordinator {
         let openReportReason = viewModel.outputs.openReportReason
             .map { OWViewActionCallbackType.openReportReason(commentId: $0) }
 
-        Observable.merge(contentPressed, openPublisherProfile, openReportReason)
-            .subscribe { [weak self] viewActionType in
+        Observable.merge(contentPressed,
+                         openPublisherProfile,
+                         openReportReason)
+            .subscribe(onNext: { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
-            }
+            })
             .disposed(by: disposeBag)
     }
 

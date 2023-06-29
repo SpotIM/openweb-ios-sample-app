@@ -1,5 +1,5 @@
 //
-//  OWReportReasonThanksVC.swift
+//  OWReportReasonSubmittedVC.swift
 //  SpotImCore
 //
 //  Created by Refael Sommer on 16/04/2023.
@@ -10,21 +10,19 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonThanksVC: UIViewController {
-    fileprivate struct Metrics { }
+class OWReportReasonSubmittedVC: UIViewController {
+    let reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling
 
-    let reportReasonThanksViewViewModel: OWReportReasonThanksViewViewModeling
-
-    fileprivate lazy var reportReasonThanksView: OWReportReasonThanksView = {
-        return OWReportReasonThanksView(viewModel: reportReasonThanksViewViewModel)
+    fileprivate lazy var reportReasonSubmittedView: OWReportReasonSubmittedView = {
+        return OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewViewModel)
     }()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(reportReasonThanksViewViewModel: OWReportReasonThanksViewViewModeling) {
-        self.reportReasonThanksViewViewModel = reportReasonThanksViewViewModel
+    init(reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling) {
+        self.reportReasonSubmittedViewViewModel = reportReasonSubmittedViewViewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -38,12 +36,12 @@ class OWReportReasonThanksVC: UIViewController {
     }
 }
 
-fileprivate extension OWReportReasonThanksVC {
+fileprivate extension OWReportReasonSubmittedVC {
     func setupViews() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        view.addSubview(reportReasonThanksView)
-        reportReasonThanksView.OWSnp.makeConstraints { make in
+        view.addSubview(reportReasonSubmittedView)
+        reportReasonSubmittedView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }

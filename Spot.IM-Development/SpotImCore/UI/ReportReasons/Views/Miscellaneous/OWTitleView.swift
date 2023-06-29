@@ -26,6 +26,7 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
         static let titleFontSize: CGFloat = 15
         static let closeButtonTrailingPadding: CGFloat = 19
         static let closeButtonPadding: CGFloat = 20
+        static let closeCrossIcon = "closeCrossIcon"
     }
 
     var outputs: OWTitleViewOutputs { return self }
@@ -48,7 +49,7 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
 
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
-            .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .withPadding(Metrics.closeButtonPadding)
     }()
 
@@ -94,7 +95,7 @@ fileprivate extension OWTitleView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle))
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
 

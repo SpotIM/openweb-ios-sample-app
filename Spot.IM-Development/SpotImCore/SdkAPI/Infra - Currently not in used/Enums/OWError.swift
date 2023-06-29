@@ -71,7 +71,7 @@ public enum OWError: Error, Codable {
         case .missingImplementation:
             return "Error - Not implemented yet."
         case .reportReasonFlow:
-            return "Error in the process of starting report reason flow"
+            return "Error - In the process of starting report reason flow"
         }
     }
 }
@@ -139,7 +139,7 @@ enum OWError: Error, Codable {
         case .missingImplementation:
             return "Error - Not implemented yet."
         case .reportReasonFlow:
-            return "Error in the process of starting report reason flow"
+            return "Error - In the process of starting report reason flow"
         }
     }
 }
