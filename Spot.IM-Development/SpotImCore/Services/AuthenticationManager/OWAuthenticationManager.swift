@@ -94,23 +94,21 @@ extension OWAuthenticationManager {
         return self.shouldShowAuthenticationUI(for: action)
             .do(onNext: { [weak self] shouldShow in
                 guard shouldShow, let self = self,
-                      let routeringCompatible = self.manager.ui as? OWRouteringCompatible,
+                      let routeringModeProtocol = self.manager.ui as? OWRouteringModeProtocol,
                       let authenticationUILayer = self.manager.ui.authenticationUI as? OWUIAuthenticationInternalProtocol else { return }
                 let blockerService = self.servicesProvider.blockerServicing()
                 let blockerAction = OWDefaultBlockerAction(blockerType: .authentication)
                 blockerService.add(blocker: blockerAction)
 
-                /*
-                 TODO: We need a better way to distinguish whether we are in a flow mode or standalone component.
-                 Will be done once we will actually work with standalone components
-                */
-
                 let routeringMode: OWRouteringMode
-                if let navController = routeringCompatible.routering.navigationController {
+
+                if case let OWRouteringModeInternal.routering(routering) = routeringModeProtocol.activeRouteringMode,
+                   let navController = routering.navigationController {
                     routeringMode = .flow(navigationController: navController)
                 } else {
                    routeringMode = .none
                 }
+
                 authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
             })
     }
