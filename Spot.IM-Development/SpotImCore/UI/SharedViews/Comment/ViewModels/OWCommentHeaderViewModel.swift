@@ -207,23 +207,20 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapMore
-            .flatMap { [weak self] view -> Observable<((Bool, Bool, Bool, Bool), UIView)> in
+            .flatMap { [weak self] view -> Observable<([OWUserAction: Bool], UIView)> in
                 guard let self = self else { return .empty() }
+                let actions: [OWUserAction] = [.reportingComment, .deletingComment, .editingComment, .mutingUser]
                 let authentication = self.servicesProvider.authenticationManager()
 
-                return Observable.combineLatest(
-                    authentication.userHasAuthenticationLevel(for: .reportingComment),
-                    authentication.userHasAuthenticationLevel(for: .deletingComment),
-                    authentication.userHasAuthenticationLevel(for: .editingComment),
-                    authentication.userHasAuthenticationLevel(for: .mutingUser)
-                ).map { ($0, view) }
+                return authentication.userHasAuthenticationLevel(for: actions)
+                    .map { ($0, view) }
             }
             .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
-            .map { actions, view, isLoggedInUserComment in
-                let allowReportingComment = actions.0
-                let allowDeletingComment = actions.1
-                let allowEditingComment = actions.2
-                let allowMuteUser = actions.3
+            .map { actionsAuthenticationLevel, view, isLoggedInUserComment in
+                let allowReportingComment = actionsAuthenticationLevel[.reportingComment] ?? false
+                let allowDeletingComment = actionsAuthenticationLevel[.deletingComment] ?? false
+                let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
+                let allowMuteUser = actionsAuthenticationLevel[.mutingUser] ?? false
 
                 var optionsActions: [OWRxPresenterAction] = []
                 if (allowReportingComment && !isLoggedInUserComment) {
