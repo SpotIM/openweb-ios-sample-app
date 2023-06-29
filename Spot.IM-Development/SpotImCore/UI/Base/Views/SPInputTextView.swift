@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class OWInputTextView: OWBaseTextView {
+final class SPInputTextView: SPBaseTextView {
 
     deinit {
         removeObservers()
@@ -48,7 +48,7 @@ final class OWInputTextView: OWBaseTextView {
         }
     }
 
-    private var placeholderLabel: OWBaseLabel?
+    private var placeholderLabel: SPBaseLabel?
 
     private func resizePlaceholder() {
         if let placeholderLabel = placeholderLabel {
@@ -62,7 +62,7 @@ final class OWInputTextView: OWBaseTextView {
     }
 
     private func addPlaceholder(_ placeholderText: String) {
-        placeholderLabel = OWBaseLabel()
+        placeholderLabel = SPBaseLabel()
         guard let placeholderLabel = placeholderLabel else { return }
         placeholderLabel.text = placeholderText
         placeholderLabel.sizeToFit()
