@@ -25,7 +25,7 @@ extension OWConversationStyle {
         case 0: return .regular
         case 1: return .compact
         case 2: return .custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                               communityQuestionsStyle: OWCommunityQuestionsStyle(index: communityQuestionsStyleIndex),
+                               communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex),
                                spacing: OWConversationSpacing(index: spacingIndex,
                                               betweenComments: betweenComments,
                                               belowHeader: belowHeader,

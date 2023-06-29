@@ -13,6 +13,7 @@ import RxCocoa
 class OWConversationVC: UIViewController {
     fileprivate struct Metrics {
         static let navigationTitleFontSize: CGFloat = 18.0
+        static let closeButtonImageName: String = "closeButton"
     }
 
     fileprivate let viewModel: OWConversationViewModeling
@@ -24,7 +25,7 @@ class OWConversationVC: UIViewController {
 
     fileprivate lazy var closeButton: UIButton = {
         let closeButton = UIButton()
-            .image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
+            .image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
 
         closeButton.addTarget(self, action: #selector(self.closeConversationTapped(_:)), for: .touchUpInside)
@@ -113,21 +114,11 @@ fileprivate extension OWConversationVC {
     }
 
     func setupObservers() {
-        viewModel.outputs.shouldShowCustomizeNavigationItemLabel
-            .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                if shouldShow {
-                    self.navigationItem.titleView = self.titleLabel
-                    self.title = ""
-                }
-            })
-            .disposed(by: disposeBag)
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.closeButton.image(UIImage(spNamed: "closeButton", supportDarkMode: true), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
                 self.setupNavControllerUI(currentStyle)
                 self.updateCustomUI()
             })
@@ -135,7 +126,7 @@ fileprivate extension OWConversationVC {
     }
 
     func updateCustomUI() {
-        viewModel.inputs.triggerCustomizeNavigationItemTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeNavigationItemUI.onNext(navigationItem)
         if let navigationBar = navigationController?.navigationBar {
             viewModel.inputs.triggerCustomizeNavigationBarUI.onNext(navigationBar)
         }

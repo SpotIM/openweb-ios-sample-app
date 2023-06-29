@@ -10,8 +10,7 @@ import UIKit
 
 #if NEW_API
 public enum OWCustomizableElement {
-    case navigationBarTitle(_ label: UILabel)
-    case navigationBar(_ navigationBar: UINavigationBar)
+    case navigation(element: OWNavigationCustomizableElement)
     case header(element: OWHeaderCustomizableElement)
     case articleDescription(element: OWArticleDescriptionCustomizableElement)
     case summary(element: OWSummaryCustomizableElement)
@@ -26,8 +25,7 @@ public enum OWCustomizableElement {
 }
 #else
 enum OWCustomizableElement {
-    case navigationBarTitle(_ label: UILabel)
-    case navigationBar(_ navigationBar: UINavigationBar)
+    case navigation(element: OWNavigationCustomizableElement)
     case header(element: OWHeaderCustomizableElement)
     case articleDescription(element: OWArticleDescriptionCustomizableElement)
     case summary(element: OWSummaryCustomizableElement)
