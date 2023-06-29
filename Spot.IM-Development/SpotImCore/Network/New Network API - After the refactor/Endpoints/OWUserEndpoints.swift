@@ -23,7 +23,7 @@ enum OWUserEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        case .userData: return "user/data"
+        case .userData: return "/user/data"
         case .mute:     return "/user/mute-user"
         }
     }
