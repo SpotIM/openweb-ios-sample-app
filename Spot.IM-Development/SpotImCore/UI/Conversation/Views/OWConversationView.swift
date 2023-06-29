@@ -204,7 +204,6 @@ fileprivate extension OWConversationView {
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.tableViewRefreshControl.endRefreshing()
-                self.tableView.contentOffset = .zero
             })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
