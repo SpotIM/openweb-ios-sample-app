@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWAdditionalInfoVC: UIViewController {
-    let additionalInfoViewViewModel: OWAdditionalInfoViewViewModel
+    fileprivate let additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling
 
     fileprivate lazy var additionalInfoView: OWAdditionalInfoView = {
         return OWAdditionalInfoView(viewModel: additionalInfoViewViewModel)
@@ -21,7 +21,7 @@ class OWAdditionalInfoVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(additionalInfoViewViewModel: OWAdditionalInfoViewViewModel) {
+    init(additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling) {
         self.additionalInfoViewViewModel = additionalInfoViewViewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -30,15 +30,11 @@ class OWAdditionalInfoVC: UIViewController {
         super.loadView()
         setupViews()
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }
 
 fileprivate extension OWAdditionalInfoVC {
     func setupViews() {
-        self.title = additionalInfoViewViewModel.titleText
+        self.title = additionalInfoViewViewModel.outputs.titleText
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(additionalInfoView)
         additionalInfoView.OWSnp.makeConstraints { make in

@@ -33,7 +33,7 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
 
     fileprivate let disposeBag = DisposeBag()
 
-    let title: String
+    fileprivate let title: String
 
     var closeTap = PublishSubject<Void>()
     var closeTapped: Observable<Void> {

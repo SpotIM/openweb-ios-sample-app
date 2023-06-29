@@ -10,11 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-protocol OWTitleSubtitleIconViewInputs {
-
-}
-
-class OWTitleSubtitleIconView: UIView, OWTitleSubtitleIconViewInputs {
+class OWTitleSubtitleIconView: UIView {
     fileprivate struct Metrics {
         static let titleIconSize: CGFloat = 40
         static let titleFontSize: CGFloat = 20
@@ -24,7 +20,7 @@ class OWTitleSubtitleIconView: UIView, OWTitleSubtitleIconViewInputs {
         static let titleLabelSuffixIdentifier = "_title_label_id"
         static let subtitleLabelSuffixIdentifier = "_subtitle_label_id"
     }
-    var inputs: OWTitleSubtitleIconViewInputs { return self }
+    
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var titleIcon: UIImageView = {

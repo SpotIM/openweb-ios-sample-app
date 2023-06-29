@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 extension NSMutableAttributedString {
-    @discardableResult func fontForText(_ font: UIFont, text: String? = nil) -> NSMutableAttributedString {
+    @discardableResult func font(_ font: UIFont, forText text: String? = nil) -> NSMutableAttributedString {
         let text = text ?? self.string
         if let range = self.string.range(of: text) {
             let nsRange = NSRange(range, in: self.string)
@@ -19,7 +19,7 @@ extension NSMutableAttributedString {
         return self
     }
 
-    @discardableResult func colorForText(_ color: UIColor, text: String? = nil) -> NSMutableAttributedString {
+    @discardableResult func color(_ color: UIColor, forText text: String? = nil) -> NSMutableAttributedString {
         let text = text ?? self.string
         if let range = self.string.range(of: text) {
             let nsRange = NSRange(range, in: self.string)

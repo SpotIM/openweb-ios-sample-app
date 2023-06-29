@@ -38,7 +38,7 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         return UIButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
-                .font(.openSans(style: .semibold, of: Metrics.buttonFontSize))
+                .font(OWFontBook.shared.font(style: .semiBold, size: Metrics.buttonFontSize))
                 .setTitle(viewModel.outputs.confirmButtonText, state: .normal)
                 .corner(radius: Metrics.buttonRadius)
     }()
@@ -74,6 +74,7 @@ fileprivate extension OWReportReasonSubmittedView {
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing - Metrics.closeButtonPadding)
             make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing - Metrics.closeButtonPadding)
+            make.leading.greaterThanOrEqualToSuperview()
         }
 
         self.addSubviews(titleView)

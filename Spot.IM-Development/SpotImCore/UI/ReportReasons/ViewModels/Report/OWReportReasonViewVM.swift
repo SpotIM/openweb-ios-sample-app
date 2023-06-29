@@ -112,10 +112,10 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderKey)
                     .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
-                    .fontForText(OWFontBook.shared.font(style: .regular,
+                    .font(OWFontBook.shared.font(style: .regular,
                                                         size: Metrics.headerTextFontSize))
-                    .colorForText(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                                  text: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
+                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
+                                  forText: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
             }
             .unwrap()
     }
@@ -294,13 +294,13 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .flatMapLatest { [weak self] _ -> Observable<Void> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
-                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .reportingComment)
                     .voidify()
             }
             .flatMapLatest { [weak self] _ -> Observable<Void> in
                 // 2. Waiting for authentication required for reporting
                 guard let self = self else { return .empty() }
-                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .reportingComment)
                     .voidify()
             }
             .flatMapLatest { [weak self] _ -> Observable<OWReportReason> in

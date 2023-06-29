@@ -19,7 +19,6 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
-    var reportActionTitle: String { get }
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
@@ -87,10 +86,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                 return [section]
             }
     }
-
-    lazy var reportActionTitle: String = {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey)
-    }()
 
     lazy var viewAccessibilityIdentifier: String = {
         let styleId = (preConversationData.settings.preConversationSettings.style).styleIdentifier
@@ -630,7 +625,7 @@ fileprivate extension OWPreConversationViewViewModel {
             // swiftlint:enable unused_closure_parameter
                 guard let self = self else { return }
                 _ = self.servicesProvider.presenterService()
-                    .showMenu(actions: actions, viewableMode: self.viewableMode) // TODO: viewableMode
+                    .showMenu(actions: actions, viewableMode: self.viewableMode)
                     .subscribe(onNext: { [weak self] result in
                         guard let self = self else { return }
                         switch result {
@@ -638,7 +633,6 @@ fileprivate extension OWPreConversationViewViewModel {
                             // Do nothing
                             break
                         case .selected(let action):
-                            // TODO: handle selection
                             switch action.title {
                             case OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey):
                                 guard let commentId = comment.id else { return }

@@ -10,22 +10,21 @@ import UIKit
 import Foundation
 
 extension UILabel {
-    typealias MethodHandler = () -> Void
-    @discardableResult func addRangeGesture(stringRange: String, function: @escaping MethodHandler) -> UILabel {
-        RangeGestureRecognizer.stringRange = stringRange
-        RangeGestureRecognizer.function = function
+    @discardableResult func addRangeGesture(targetRange: String, function: @escaping OWBasicCompletion) -> UILabel {
         self.isUserInteractionEnabled = true
-        let tapgesture: UITapGestureRecognizer = RangeGestureRecognizer(target: self, action: #selector(tappedOnLabel(_ :)))
-        tapgesture.numberOfTapsRequired = 1
-        self.addGestureRecognizer(tapgesture)
+        let tapGesture = RangeGestureRecognizer(target: self, action: #selector(tappedOnLabel(_ :)))
+        tapGesture.stringRange = targetRange
+        tapGesture.function = function
+        tapGesture.numberOfTapsRequired = 1
+        self.addGestureRecognizer(tapGesture)
         return self
     }
 
     @objc func tappedOnLabel(_ gesture: RangeGestureRecognizer) {
         guard let text = self.text else { return }
-        let stringRange = (text as NSString).range(of: RangeGestureRecognizer.stringRange ?? "")
-        if gesture.didTapAttributedTextInLabel(label: self, inRange: stringRange) {
-            guard let existedFunction = RangeGestureRecognizer.function else { return }
+        let stringRange = (text as NSString).range(of: gesture.stringRange ?? "")
+        if gesture.didTapAttributedText(in: self, inRange: stringRange) {
+            guard let existedFunction = gesture.function else { return }
             existedFunction()
         }
     }
