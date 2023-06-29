@@ -213,7 +213,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     lazy var reportReasonOptions: Observable<[OWReportReason]> = {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
-            .map { $0.shared?.reportReasonsOptions?.reasonsList }
+            .map { $0.shared?.reportReasonsOptions?.reportReasons }
             .unwrap()
             .asObservable()
             .share(replay: 1)
@@ -321,7 +321,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     .netwokAPI()
                     .reportReason
                     .report(commentId: self.commentId,
-                            reasonMain: selectedReason.reportType.rawValue, reasonSub: "",
+                            reasonMain: selectedReason.type.rawValue, reasonSub: "",
                             userDescription: userDescription)
                     .response
                     .materialize()
@@ -370,7 +370,7 @@ fileprivate extension OWReportReasonViewViewModel {
         reportReasonsCharectersLimitEnabled
             .subscribe(onNext: { [weak self] show in
                 guard let self = self else { return }
-                self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(show)
+                self.textViewVM.inputs.charectersLimitEnabledChange.onNext(show)
             })
             .disposed(by: disposeBag)
 

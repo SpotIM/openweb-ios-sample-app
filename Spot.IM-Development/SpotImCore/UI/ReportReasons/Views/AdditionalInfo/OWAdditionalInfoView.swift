@@ -128,10 +128,7 @@ fileprivate extension OWAdditionalInfoView {
             make.top.equalTo(textView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()
             make.bottom.equalToSuperviewSafeArea().priority(Metrics.footerBottomToSuperviewPriority)
-            footerBottomPaddingConstraint = make.bottom
-                                                .equalToSuperview()
-                                                .priority(Metrics.footerBottomToKeyboardPriority)
-                                                .constraint
+            footerBottomPaddingConstraint = make.bottom.equalToSuperview().priority(Metrics.footerBottomToKeyboardPriority).constraint
             make.height.equalTo(Metrics.footerViewHeight)
         }
         footerBottomPaddingConstraint?.isActive = false

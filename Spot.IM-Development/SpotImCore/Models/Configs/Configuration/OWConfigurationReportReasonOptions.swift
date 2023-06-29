@@ -9,16 +9,19 @@
 import Foundation
 
 struct OWConfigurationReportReasonOptions: Codable {
-    fileprivate let reasons: [OWNetworkReportReason]
-    let reasonsList: [OWReportReason]
+    let reportReasons: [OWReportReason]
+
+    enum CodingKeys: String, CodingKey {
+        case reportReasons = "reasons"
+    }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.reasons = try values.decodeIfPresent([OWNetworkReportReason].self, forKey: .reasons)!
+        var reasons = [OWReportReason]()
+        if let failableReasons = try values.decodeIfPresent([OWFailableWrapperDecodable<OWReportReason>].self, forKey: .reportReasons) {
+            reasons = failableReasons.map { $0.wrappedValue }.unwrap()
+        }
 
-        self.reasonsList = self.reasons.filter({ $0.reportType != .new_reason_does_not_exist })
-            .map {
-                OWReportReason(reportType: $0.reportType.toReportReasonType, requiredAdditionalInfo: $0.requiredAdditionalInfo)
-            }
+        reportReasons = reasons
     }
 }

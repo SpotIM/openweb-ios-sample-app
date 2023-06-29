@@ -290,6 +290,11 @@ extension UITableView {
         self.delegate = delegate
         return self
     }
+
+    @discardableResult func registerCell<T: UITableViewCell>(cellClass: T.Type = T.self) -> Self {
+        self.register(cellClass: cellClass)
+        return self
+    }
 }
 
 extension String {

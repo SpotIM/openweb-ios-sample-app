@@ -9,11 +9,11 @@
 import Foundation
 
 struct OWReportReason: Codable {
-    let reportType: OWReportReasonType
+    let type: OWReportReasonType
     let requiredAdditionalInfo: Bool
-}
 
-struct OWNetworkReportReason: Codable {
-    let reportType: OWNetworkReportReasonType
-    let requiredAdditionalInfo: Bool
+    enum CodingKeys: String, CodingKey {
+        case type = "reportType"
+        case requiredAdditionalInfo
+    }
 }

@@ -12,7 +12,7 @@ import RxSwift
 protocol OWRoutering {
     var navigationController: UINavigationController? { get }
     var rootViewController: UIViewController? { get }
-    var hasOnlyOneViewController: Bool { get }
+    var numberOfActiveViewControllers: Int { get }
     func start()
     func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
@@ -144,8 +144,8 @@ class OWRouter: NSObject, OWRoutering {
         return childs.isEmpty
     }
 
-    var hasOnlyOneViewController: Bool {
-        return navigationController?.viewControllers.count ?? 1 == 1
+    var numberOfActiveViewControllers: Int {
+        return navigationController?.viewControllers.count ?? 0
     }
 }
 

@@ -162,6 +162,25 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        // Coordinate to report reasons - Flow
+        conversationVM.outputs
+            .conversationViewVM.outputs.openReportReason
+            .filter { [weak self] _ in
+                guard let self = self else { return true }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] commentId -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+                                                                        router: self.router,
+                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        presentationalMode: self.conversationData.presentationalStyle)
+
+                return self.coordinate(to: reportReasonCoordinator)
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
+
         // URL tapped from community guidelines screen
         let communityGuidelinesURLTapped = conversationVM.outputs
             .conversationViewVM.outputs
@@ -254,23 +273,6 @@ fileprivate extension OWConversationCoordinator {
 
         // Set customization elements
         setupCustomizationElements(forViewModel: viewModel)
-
-        // Coordinate to report reasons - Flow
-        viewModel.outputs.openReportReason
-            .filter { [weak self] _ in
-                guard let self = self else { return true }
-                return self.viewableMode == .partOfFlow
-            }
-            .flatMap { commentId -> Observable<OWReportReasonCoordinatorResult> in
-                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
-                                                                        router: self.router,
-                                                                        actionsCallbacks: self.actionsCallbacks,
-                                                                        presentationalMode: self.conversationData.presentationalStyle)
-
-                return self.coordinate(to: reportReasonCoordinator)
-            }
-            .subscribe()
-            .disposed(by: disposeBag)
     }
 
     func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {

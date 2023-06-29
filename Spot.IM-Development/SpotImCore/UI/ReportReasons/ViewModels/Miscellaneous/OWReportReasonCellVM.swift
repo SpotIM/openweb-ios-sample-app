@@ -39,7 +39,7 @@ class OWReportReasonCellViewModel: OWReportReasonCellViewModelingInputs, OWRepor
     var outputs: OWReportReasonCellViewModelingOutputs { return self }
 
     init(reason: OWReportReason) {
-        self.title = reason.reportType.localizedTitle
-        self.subtitle = reason.reportType.localizedSubtitle
+        self.title = reason.type.localizedTitle
+        self.subtitle = reason.type.localizedSubtitle
     }
 }

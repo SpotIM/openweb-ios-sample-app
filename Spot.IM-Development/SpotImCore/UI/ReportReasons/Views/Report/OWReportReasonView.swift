@@ -20,14 +20,14 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let tableHeaderViewIdentifier = "report_reason_table_header_view_id"
         static let tableViewHeaderLabelIdentifier = "report_reason_table_header_label_id"
         static let footerViewIdentifier = "report_reason_footer_view_id"
-        static let cellReuseIdentifier = "reportReasonCell"
         static let prefixIdentifier = "report_reason"
         static let cellHeight: CGFloat = 68
         static let titleViewHeight: CGFloat = 56
         static let buttonsRadius: CGFloat = 6
         static let buttonsPadding: CGFloat = 15
         static let buttonsHeight: CGFloat = 40
-        static let textViewPadding: CGFloat = 10
+        static let textViewHorizontalPadding: CGFloat = 10
+        static let textViewVerticalPadding: CGFloat = 10
         static let textViewHeight: CGFloat = 62
         static let submitDisabledOpacity: CGFloat = 0.5
         static let headerTextPadding: CGFloat = 16
@@ -83,6 +83,7 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         return UITableView(frame: .zero, style: .grouped)
             .delegate(self)
             .separatorStyle(.none)
+            .registerCell(cellClass: OWReportReasonCell.self)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
@@ -159,7 +160,7 @@ fileprivate extension OWReportReasonView {
 
         textView.OWSnp.makeConstraints { [weak self] make in
             guard let self = self else { return }
-            make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewPadding)
+            make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewHorizontalPadding)
             // Low priority so that when the next line textViewHeightConstraint will be active it will take over this constraint
             make.height.equalTo(0).priority(1)
             self.textViewHeightConstraint = make.height.equalTo(Metrics.textViewHeight).constraint
@@ -167,7 +168,7 @@ fileprivate extension OWReportReasonView {
         self.textViewHeightConstraint?.isActive = false
 
         footerStackView.OWSnp.makeConstraints { make in
-            make.top.equalTo(textView.OWSnp.bottom).offset(Metrics.textViewPadding)
+            make.top.equalTo(textView.OWSnp.bottom).offset(Metrics.textViewVerticalPadding)
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.buttonsPadding)
             make.bottom.equalToSuperview().inset(Metrics.buttonsPadding)
             make.height.equalTo(Metrics.buttonsHeight)
@@ -183,8 +184,33 @@ fileprivate extension OWReportReasonView {
     }
 
     func setupObservers() {
-        bindTableView()
+        // TableView binding
+        viewModel.outputs.reportReasonCellViewModels
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
+                cell.configure(with: viewModel)
+            }
+            .disposed(by: disposeBag)
 
+        tableViewReasons.rx.modelDeselected(OWReportReasonCellViewModeling.self)
+            .subscribe(onNext: { viewModel in
+                viewModel.inputs.setSelected.onNext(false)
+            })
+            .disposed(by: disposeBag)
+
+        tableViewReasons.rx.modelSelected(OWReportReasonCellViewModeling.self)
+            .subscribe(onNext: { viewModel in
+                viewModel.inputs.setSelected.onNext(true)
+            })
+            .disposed(by: disposeBag)
+
+        tableViewReasons.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
+            })
+            .disposed(by: disposeBag)
+
+        // Views Binding
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -273,32 +299,6 @@ fileprivate extension OWReportReasonView {
                 if let selectedIndex = self.tableViewReasons.indexPathForSelectedRow {
                     self.tableViewReasons.selectRow(at: selectedIndex, animated: true, scrollPosition: .bottom)
                 }
-            })
-            .disposed(by: disposeBag)
-    }
-
-    func bindTableView() {
-        tableViewReasons.register(OWReportReasonCell.self, forCellReuseIdentifier: Metrics.cellReuseIdentifier)
-
-        viewModel.outputs.reportReasonCellViewModels
-            .bind(to: tableViewReasons.rx.items(cellIdentifier: Metrics.cellReuseIdentifier, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
-                cell.configure(with: viewModel)
-            }.disposed(by: disposeBag)
-
-        tableViewReasons.rx.modelDeselected(OWReportReasonCellViewModeling.self)
-            .subscribe(onNext: { viewModel in
-                viewModel.inputs.setSelected.onNext(false)
-            }).disposed(by: disposeBag)
-
-        tableViewReasons.rx.modelSelected(OWReportReasonCellViewModeling.self)
-            .subscribe(onNext: { viewModel in
-                viewModel.inputs.setSelected.onNext(true)
-            }).disposed(by: disposeBag)
-
-        tableViewReasons.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
-                self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
             })
             .disposed(by: disposeBag)
     }

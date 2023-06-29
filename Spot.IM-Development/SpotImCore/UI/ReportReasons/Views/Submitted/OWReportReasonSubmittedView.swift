@@ -1,5 +1,5 @@
 //
-//  OWReportReasonThanksView.swift
+//  OWReportReasonSubmittedView.swift
 //  SpotImCore
 //
 //  Created by Refael Sommer on 27/04/2023.
@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWReportReasonThanksView: UIView, OWThemeStyleInjectorProtocol {
+class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-        static let identifier = "report_reason_thanks_view_id"
-        static let closeButtonIdentifier = "report_reason_thanks_close_button_id"
-        static let gotitButtonIdentifier = "report_reason_thanks_gotit_button_id"
-        static let titleViewPrefixIdentifier = "report_reason_thanks"
+        static let identifier = "report_reason_Submitted_view_id"
+        static let closeButtonIdentifier = "report_reason_Submitted_close_button_id"
+        static let gotitButtonIdentifier = "report_reason_Submitted_gotit_button_id"
+        static let titleViewPrefixIdentifier = "report_reason_Submitted"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
@@ -25,20 +25,21 @@ class OWReportReasonThanksView: UIView, OWThemeStyleInjectorProtocol {
         static let bottomPadding: CGFloat = 20
         static let buttonFontSize: CGFloat = 15
         static let closeButtonPadding: CGFloat = 20
+        static let closeCrossIcon = "closeCrossIcon"
     }
 
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
-            .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .withPadding(Metrics.closeButtonPadding)
     }()
 
-    fileprivate lazy var gotitButton: UIButton = {
+    fileprivate lazy var confirmButton: UIButton = {
         return UIButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
                 .font(.openSans(style: .semibold, of: Metrics.buttonFontSize))
-                .setTitle(viewModel.outputs.gotitButtonText, state: .normal)
+                .setTitle(viewModel.outputs.confirmButtonText, state: .normal)
                 .corner(radius: Metrics.buttonRadius)
     }()
 
@@ -49,10 +50,10 @@ class OWReportReasonThanksView: UIView, OWThemeStyleInjectorProtocol {
                                        accessibilityPrefixId: Metrics.titleViewPrefixIdentifier)
     }()
 
-    fileprivate let viewModel: OWReportReasonThanksViewViewModeling
+    fileprivate let viewModel: OWReportReasonSubmittedViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWReportReasonThanksViewViewModeling = OWReportReasonThanksViewViewModel()) {
+    init(viewModel: OWReportReasonSubmittedViewViewModeling = OWReportReasonSubmittedViewViewModel()) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -65,7 +66,7 @@ class OWReportReasonThanksView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWReportReasonThanksView {
+fileprivate extension OWReportReasonSubmittedView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
@@ -81,8 +82,8 @@ fileprivate extension OWReportReasonThanksView {
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
         }
 
-        self.addSubviews(gotitButton)
-        gotitButton.OWSnp.makeConstraints { make in
+        self.addSubviews(confirmButton)
+        confirmButton.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalSpacing)
             make.bottom.equalToSuperviewSafeArea().inset(Metrics.bottomPadding)
             make.height.equalTo(Metrics.buttonHeight)
@@ -90,9 +91,9 @@ fileprivate extension OWReportReasonThanksView {
     }
 
     func setupObservers() {
-        Observable.of(closeButton.rx.tap, gotitButton.rx.tap)
+        Observable.of(closeButton.rx.tap, confirmButton.rx.tap)
             .merge()
-            .bind(to: viewModel.inputs.closeReportReasonThanksTap)
+            .bind(to: viewModel.inputs.closeReportReasonSubmittedTap)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
@@ -100,13 +101,13 @@ fileprivate extension OWReportReasonThanksView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
-        gotitButton.accessibilityIdentifier = Metrics.gotitButtonIdentifier
+        confirmButton.accessibilityIdentifier = Metrics.gotitButtonIdentifier
     }
 }
