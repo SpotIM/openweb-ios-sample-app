@@ -25,6 +25,7 @@ protocol OWAdditionalInfoViewViewModelingOutputs {
     var submitAdditionalInfoTapped: Observable<Void> { get }
     var additionalInfoTextChanged: Observable<String> { get }
     var textViewVM: OWTextViewViewModeling { get }
+    var titleViewVM: OWTitleViewViewModeling { get }
     var cancelButtonText: String { get }
     var submitButtonText: Observable<String> { get }
     var titleText: String { get }
@@ -41,8 +42,6 @@ protocol OWAdditionalInfoViewViewModeling {
 
 class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWAdditionalInfoViewViewModelingOutputs, OWAdditionalInfoViewViewModeling {
     fileprivate struct Metrics {
-        static let titleKey = "AdditionalInfoTitle"
-        static let cancelKey = "Cancel"
         static let defaultTextViewMaxCharecters = 280
     }
 
@@ -52,11 +51,11 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     var outputs: OWAdditionalInfoViewViewModelingOutputs { return self }
 
     var titleText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: "AdditionalInfoTitle")
     }
 
     var cancelButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelKey)
+        return OWLocalizationManager.shared.localizedString(key: "Cancel")
     }
 
     var closeAdditionalInfoTap = PublishSubject<Void>()
@@ -123,6 +122,7 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
     }
 
     let textViewVM: OWTextViewViewModeling
+    let titleViewVM: OWTitleViewViewModeling = OWTitleViewViewModel()
     let viewableMode: OWViewableMode
 
     init(viewableMode: OWViewableMode,

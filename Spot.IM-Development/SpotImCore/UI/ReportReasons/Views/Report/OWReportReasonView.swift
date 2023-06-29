@@ -21,7 +21,6 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
         static let tableViewHeaderLabelIdentifier = "report_reason_table_header_label_id"
         static let footerViewIdentifier = "report_reason_footer_view_id"
         static let prefixIdentifier = "report_reason"
-        static let cellHeight: CGFloat = 68
         static let titleViewHeight: CGFloat = 56
         static let buttonsRadius: CGFloat = 6
         static let buttonsPadding: CGFloat = 15
@@ -79,16 +78,16 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
             .alpha(Metrics.submitDisabledOpacity)
     }()
 
+    fileprivate lazy var tableHeaderView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
     fileprivate lazy var tableViewReasons: UITableView = {
         return UITableView(frame: .zero, style: .grouped)
             .delegate(self)
             .separatorStyle(.none)
             .registerCell(cellClass: OWReportReasonCell.self)
-            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-    }()
-
-    fileprivate lazy var tableHeaderView: UIView = {
-        return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
@@ -271,7 +270,7 @@ fileprivate extension OWReportReasonView {
             .bind(to: submitButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
-        titleView.outputs.closeTapped
+        viewModel.outputs.titleViewVM.outputs.closeTapped
             .bind(to: viewModel.inputs.cancelReportReasonTap)
             .disposed(by: disposeBag)
 
@@ -305,10 +304,6 @@ fileprivate extension OWReportReasonView {
 }
 
 extension OWReportReasonView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return Metrics.cellHeight
-    }
-
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableHeaderView
     }

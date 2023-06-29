@@ -187,7 +187,7 @@ fileprivate extension OWAdditionalInfoView {
             .bind(to: viewModel.inputs.additionalInfoTextChange)
             .disposed(by: disposeBag)
 
-        titleView.outputs.closeTapped
+        viewModel.outputs.titleViewVM.outputs.closeTapped
             .bind(to: viewModel.inputs.closeAdditionalInfoTap)
             .disposed(by: disposeBag)
 
