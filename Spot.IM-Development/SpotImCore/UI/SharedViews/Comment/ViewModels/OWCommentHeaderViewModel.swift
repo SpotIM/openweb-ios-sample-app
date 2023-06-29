@@ -160,14 +160,12 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var hiddenCommentReasonText: Observable<String> {
         Observable.combineLatest(_unwrappedModel, _unwrappedUser, shouldDeleteCommentLocally, shouldMuteCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally in
+            // TODO: handle reported
             let localizationKey: String
             if model.deleted || shouldDeleteCommentLocally {
                 localizationKey = "This message was deleted."
             } else if user.isMuted || shouldMuteCommentLocally {
                 localizationKey = "This user is muted."
-            } else if let id = model.id,
-                      SPUserSessionHolder.session.reportedComments[id] != nil { // TODO: is reported - should be in new infra?
-                localizationKey = "This message was reported."
             } else {
                 return ""
             }
