@@ -24,6 +24,7 @@ class OWReportReasonCell: UITableViewCell {
         static let checkboxLeadingPadding: CGFloat = 16
         static let verticalTextSpace: CGFloat = 2
         static let cellTrailingPadding: CGFloat = 9
+        static let cellHeight: CGFloat = 68
     }
 
     fileprivate var subtitleHeightZeroConstraint: OWConstraint? = nil
@@ -89,6 +90,11 @@ fileprivate extension OWReportReasonCell {
     func setupViews() {
         selectionStyle = .none
         self.backgroundColor = .clear
+
+        contentView.OWSnp.makeConstraints { make in
+            make.height.equalTo(Metrics.cellHeight)
+            make.edges.equalToSuperview()
+        }
 
         contentView.addSubview(checkBox)
         checkBox.OWSnp.makeConstraints { make in

@@ -32,6 +32,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var closeReportReasonTapped: Observable<Void> { get }
     var submittedReportReasonObservable: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
+    var titleViewVM: OWTitleViewViewModeling { get }
     var selectedReason: Observable<OWReportReason> { get }
     var learnMoreTapped: Observable<URL?> { get }
     var viewableMode: OWViewableMode { get }
@@ -51,17 +52,6 @@ protocol OWReportReasonViewViewModeling {
 class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWReportReasonViewViewModelingOutputs, OWReportReasonViewViewModeling {
 
     fileprivate struct Metrics {
-        static let titleKey = "ReportReasonTitle"
-        static let textViewPlaceholderKey = "ReportReasonTextViewPlaceholder"
-        static let textViewMandatoryPlaceholderKey = "ReportReasonTextViewMandatoryPlaceholder"
-        static let cancelKey = "Cancel"
-        static let submitKey = "Submit"
-        static let tryAgainKey = "TryAgain"
-        static let errorAlertActionKey = "Got it"
-        static let errorAlertSubmitTitleKey = "ReportSubmissionFailedTitle"
-        static let errorAlertSubmitMessageKey = "ReportSubmissionFailedMessage"
-        static let tableViewHeaderKey = "ReportReasonHelpUsTitle"
-        static let tableViewHeaderTapKey = "ReportReasonHelpUsClickText"
         static let defaultTextViewMaxCharecters = 280
         static let headerTextFontSize: CGFloat = 15
     }
@@ -74,42 +64,42 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     var errorAlertTitleText: String {
 
-        return OWLocalizationManager.shared.localizedString(key: Metrics.errorAlertSubmitTitleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportSubmissionFailedTitle")
     }
 
     var errorAlertMessageText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.errorAlertSubmitMessageKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportSubmissionFailedMessage")
     }
 
     var errorAlertActionText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.errorAlertActionKey)
+        return OWLocalizationManager.shared.localizedString(key: "Got it")
     }
 
     var titleText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
     }
 
     var cancelButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelKey)
+        return OWLocalizationManager.shared.localizedString(key: "Cancel")
     }
 
     var changeSubmitButtonText = BehaviorSubject<Bool>(value: false)
     var submitButtonText: Observable<String> {
         return changeSubmitButtonText
             .map { changeText in
-                return OWLocalizationManager.shared.localizedString(key: changeText ? Metrics.tryAgainKey : Metrics.submitKey)
+                return OWLocalizationManager.shared.localizedString(key: changeText ? "TryAgain" : "Submit")
             }
     }
 
     var tableViewHeaderTapText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderTapKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsClickText")
     }
 
     var tableViewHeaderAttributedText: Observable<NSAttributedString> {
         shouldShowLearnMore
             .map { [weak self] shouldShowLearnMore in
                 guard let self = self else { return nil }
-                return OWLocalizationManager.shared.localizedString(key: Metrics.tableViewHeaderKey)
+                return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsTitle")
                     .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
                     .font(OWFontBook.shared.font(style: .regular,
@@ -190,6 +180,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
 
     let textViewVM: OWTextViewViewModeling
+    let titleViewVM: OWTitleViewViewModeling = OWTitleViewViewModel()
 
     init(commentId: OWCommentId,
          viewableMode: OWViewableMode,
@@ -200,7 +191,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
         self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
-                                              placeholderText: OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey),
+                                              placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
                                               charectersLimitEnabled: false,
                                               isEditable: false)
         setupObservers()
@@ -352,9 +343,9 @@ fileprivate extension OWReportReasonViewViewModel {
         selectedReason
             .map {
                 if $0.requiredAdditionalInfo == false {
-                    return OWLocalizationManager.shared.localizedString(key: Metrics.textViewPlaceholderKey)
+                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder")
                 } else {
-                    return OWLocalizationManager.shared.localizedString(key: Metrics.textViewMandatoryPlaceholderKey)
+                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewMandatoryPlaceholder")
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)

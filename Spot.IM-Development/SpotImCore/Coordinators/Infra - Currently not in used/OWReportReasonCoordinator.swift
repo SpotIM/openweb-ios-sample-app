@@ -229,10 +229,11 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 viewModel.outputs.viewableMode == .partOfFlow
             }
-            .subscribe(onNext: { [weak self] reportReasonCancelViewVM in
+            .subscribe(onNext: { [weak self] reportReasonViewModel in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewViewModel: reportReasonCancelViewVM)
+                let ReportReasonCancelVM = OWReportReasonCancelViewModel(reportReasonCancelViewViewModel: reportReasonViewModel)
+                let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewModel: ReportReasonCancelVM)
                 switch self.presentationalMode {
                 case .present(style: .fullScreen):
                     reportReasonCancelVC.modalPresentationStyle = .fullScreen

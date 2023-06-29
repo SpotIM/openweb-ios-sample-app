@@ -75,7 +75,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate let viewModel: OWReportReasonCancelViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWReportReasonCancelViewViewModeling) {
+    init(viewModel: OWReportReasonCancelViewViewModeling = OWReportReasonCancelViewViewModel()) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
