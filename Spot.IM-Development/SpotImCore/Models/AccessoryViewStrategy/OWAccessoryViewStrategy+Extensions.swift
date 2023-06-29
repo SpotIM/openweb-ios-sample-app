@@ -8,6 +8,12 @@
 
 import UIKit
 
+extension OWAccessoryViewStrategy {
+    static var `default`: OWAccessoryViewStrategy {
+        return .none
+    }
+}
+
 extension OWAccessoryViewStrategy: Codable {
 
     enum OWAccessoryViewStrategyType: String, Codable {

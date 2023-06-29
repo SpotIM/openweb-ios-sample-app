@@ -9,6 +9,6 @@
 import Foundation
 
 struct ToolbarElementModel {
-    let emoji: Character
+    let emoji: String
     let action: ToolbarElementAction
 }

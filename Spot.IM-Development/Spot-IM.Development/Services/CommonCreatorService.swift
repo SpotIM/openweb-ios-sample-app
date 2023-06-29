@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import SpotImCore
 
 #if NEW_API
@@ -78,7 +79,15 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func commentCreationFloatingBottomToolbar() -> CommentCreationToolbar {
-        let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel()
+        let toolbarElements = [
+            ToolbarElementModel(emoji: "😍", action: .append(text: "😍")),
+            ToolbarElementModel(emoji: "🔥", action: .append(text: "🔥")),
+            ToolbarElementModel(emoji: "❤️", action: .append(text: "❤️")),
+            ToolbarElementModel(emoji: "🚀", action: .append(text: "🚀")),
+            ToolbarElementModel(emoji: "🤩", action: .append(text: "🤩")),
+            ToolbarElementModel(emoji: "␡", action: .append(text: "␡"))
+        ]
+        let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel(toolbarElments: toolbarElements)
         let toolbar = CommentCreationToolbar(viewModel: viewModel)
         return toolbar
     }
