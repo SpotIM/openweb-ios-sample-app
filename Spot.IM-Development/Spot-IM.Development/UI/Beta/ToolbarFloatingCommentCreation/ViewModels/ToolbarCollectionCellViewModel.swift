@@ -42,6 +42,6 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
     init(model: ToolbarElementModel) {
         self.model = model
 
-        _emoji.onNext("\(model.emoji)")
+        _emoji.onNext(model.emoji)
     }
 }
