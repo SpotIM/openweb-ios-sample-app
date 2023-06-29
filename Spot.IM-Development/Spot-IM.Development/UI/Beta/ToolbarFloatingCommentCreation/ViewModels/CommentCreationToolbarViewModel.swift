@@ -9,7 +9,9 @@
 import Foundation
 import RxSwift
 
-protocol CommentCreationToolbarViewModelingInputs {}
+protocol CommentCreationToolbarViewModelingInputs {
+    var modelSelected: PublishSubject<ToolbarCollectionCellViewModeling> { get }
+}
 
 protocol CommentCreationToolbarViewModelingOutputs {
     var toolbarCellsVM: Observable<[ToolbarCollectionCellViewModeling]> { get }
@@ -31,4 +33,6 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
         return _toolbarCellsVM
             .unwrap()
     }
+
+    var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
 }
