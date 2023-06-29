@@ -17,7 +17,6 @@ protocol OWReportReasonSubmittedViewViewModelingOutputs {
     var title: String { get }
     var subtitle: String { get }
     var titleIconName: String { get }
-    var continueButtonText: String { get }
     var closeReportReasonSubmittedTapped: Observable<Void> { get }
     var confirmButtonText: String { get }
 }
@@ -30,11 +29,7 @@ protocol OWReportReasonSubmittedViewViewModeling {
 class OWReportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModelingInputs, OWReportReasonSubmittedViewViewModelingOutputs, OWReportReasonSubmittedViewViewModeling {
 
     fileprivate struct Metrics {
-        static let titleKey = "ReportReasonSubmittedTitle"
-        static let subtitleKey = "ReportReasonSubmittedSubtitle"
         static let titleIconName = "ReportReasonSubmittedIcon"
-        static let continueButtonKey = "Got it"
-        static let gotitKey = "Got it"
     }
 
     var inputs: OWReportReasonSubmittedViewViewModelingInputs { return self }
@@ -43,23 +38,19 @@ class OWReportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModel
     fileprivate let disposeBag = DisposeBag()
 
     var title: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonSubmittedTitle")
     }
 
     var subtitle: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.subtitleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonSubmittedSubtitle")
     }
 
     var titleIconName: String {
         return Metrics.titleIconName
     }
 
-    var continueButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.continueButtonKey)
-    }
-
     var confirmButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.gotitKey)
+        return OWLocalizationManager.shared.localizedString(key: "Got it")
     }
 
     var closeReportReasonSubmittedTap = PublishSubject<Void>()

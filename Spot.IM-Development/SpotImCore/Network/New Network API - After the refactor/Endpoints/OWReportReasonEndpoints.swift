@@ -49,7 +49,7 @@ protocol OWReportReasonAPI {
 }
 
 extension OWNetworkAPI: OWReportReasonAPI {
-    // Access by .conversation for readability
+    // Access by .reporReason for readability
     var reportReason: OWReportReasonAPI { return self }
 
     func report(commentId: String, reasonMain: String, reasonSub: String = "", userDescription: String = "") -> OWNetworkResponse<EmptyDecodable> {

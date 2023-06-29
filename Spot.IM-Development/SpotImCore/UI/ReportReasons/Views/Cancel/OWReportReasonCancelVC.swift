@@ -11,18 +11,14 @@ import RxSwift
 import RxCocoa
 
 class OWReportReasonCancelVC: UIViewController {
-    fileprivate let reportReasonCancelViewViewModel: OWReportReasonCancelViewViewModeling
-
-    fileprivate lazy var reportReasonCancelView: OWReportReasonCancelView = {
-        return OWReportReasonCancelView(viewModel: reportReasonCancelViewViewModel)
-    }()
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(reportReasonCancelViewViewModel: OWReportReasonCancelViewViewModeling) {
-        self.reportReasonCancelViewViewModel = reportReasonCancelViewViewModel
+    fileprivate let viewModel: OWReportReasonCancelViewModeling
+
+    init(reportReasonCancelViewModel: OWReportReasonCancelViewModeling) {
+        self.viewModel = reportReasonCancelViewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -36,6 +32,7 @@ fileprivate extension OWReportReasonCancelVC {
     func setupViews() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+        let reportReasonCancelView = OWReportReasonCancelView(viewModel: viewModel.outputs.reportReasonCancelViewViewModel)
         view.addSubview(reportReasonCancelView)
         reportReasonCancelView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()

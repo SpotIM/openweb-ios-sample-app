@@ -57,7 +57,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
-        static let reportActionKey = "Report"
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -634,7 +633,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             break
                         case .selected(let action):
                             switch action.title {
-                            case OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey):
+                            case OWLocalizationManager.shared.localizedString(key: "Report"):
                                 guard let commentId = comment.id else { return }
                                 self.openReportReasonChange.onNext(commentId)
                             default: break

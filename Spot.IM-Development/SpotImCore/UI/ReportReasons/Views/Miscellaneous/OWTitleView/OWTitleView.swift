@@ -9,15 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol OWTitleViewOutputs {
-    var closeTapped: Observable<Void> { get }
-}
-
-protocol OWTitleViewProtocol {
-    var outputs: OWTitleViewOutputs { get }
-}
-
-class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
+class OWTitleView: UIView {
     fileprivate struct Metrics {
         static let suffixIdentifier = "_title_view_id"
         static let titleLabelSuffixIdentifier = "_title_label_id"
@@ -29,16 +21,9 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
         static let closeCrossIcon = "closeCrossIcon"
     }
 
-    var outputs: OWTitleViewOutputs { return self }
-
+    fileprivate let viewModel: OWTitleViewViewModeling
     fileprivate let disposeBag = DisposeBag()
-
     fileprivate let title: String
-
-    var closeTap = PublishSubject<Void>()
-    var closeTapped: Observable<Void> {
-        return closeTap.asObservable()
-    }
 
     fileprivate lazy var titleLabel: UILabel = {
         return title
@@ -53,7 +38,8 @@ class OWTitleView: UIView, OWTitleViewProtocol, OWTitleViewOutputs {
             .withPadding(Metrics.closeButtonPadding)
     }()
 
-    init(title: String, prefixIdentifier: String) {
+    init(title: String, prefixIdentifier: String, viewModel: OWTitleViewViewModeling = OWTitleViewViewModel()) {
+        self.viewModel = viewModel
         self.title = title
         super.init(frame: .zero)
         setupViews()
@@ -100,7 +86,7 @@ fileprivate extension OWTitleView {
             .disposed(by: disposeBag)
 
         closeButton.rx.tap
-            .bind(to: closeTap)
+            .bind(to: viewModel.inputs.closeTap)
             .disposed(by: disposeBag)
     }
 }

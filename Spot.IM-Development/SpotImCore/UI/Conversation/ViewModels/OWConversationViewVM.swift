@@ -61,7 +61,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let willDisplayCellThrottle: Int = 700 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
-        static let reportActionKey = "Report"
     }
 
     fileprivate var postId: OWPostId {
@@ -914,7 +913,7 @@ fileprivate extension OWConversationViewViewModel {
                             break
                         case .selected(let action):
                             switch action.title {
-                            case OWLocalizationManager.shared.localizedString(key: Metrics.reportActionKey):
+                            case OWLocalizationManager.shared.localizedString(key: "Report"):
                                 guard let commentId = comment.id else { return }
                                 self.openReportReasonChange.onNext(commentId)
                             default: break

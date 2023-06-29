@@ -26,10 +26,6 @@ protocol OWReportReasonViewModeling {
 }
 
 class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewModelingInputs, OWReportReasonViewModelingOutputs {
-    fileprivate struct Metrics {
-        static let titleKey = "ReportReasonTitle"
-    }
-
     var inputs: OWReportReasonViewModelingInputs { return self }
     var outputs: OWReportReasonViewModelingOutputs { return self }
 
@@ -47,7 +43,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     }()
 
     var title: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
     }
 
     init (commentId: OWCommentId, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {

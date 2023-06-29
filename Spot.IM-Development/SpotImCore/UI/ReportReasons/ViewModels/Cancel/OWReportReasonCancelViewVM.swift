@@ -33,12 +33,8 @@ protocol OWReportReasonCancelViewViewModeling {
 class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInputs, OWReportReasonCancelViewViewModelingOutputs, OWReportReasonCancelViewViewModeling {
 
     fileprivate struct Metrics {
-        static let titleKey = "ReportReasonCancelTitle"
-        static let subtitleKey = "ReportReasonCancelSubtitle"
-        static let titleIconName = "ReportReasonCancelIcon"
-        static let continueButtonKey = "ReportReasonCancelContinueButton"
-        static let cancelButtonKey = "ReportReasonCancelCancelButton"
         static let trashIcon = "ReportReasonTrashIcon"
+        static let titleIconName = "ReportReasonCancelIcon"
     }
 
     var inputs: OWReportReasonCancelViewViewModelingInputs { return self }
@@ -47,11 +43,11 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     fileprivate let disposeBag = DisposeBag()
 
     var title: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.titleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelTitle")
     }
 
     var subtitle: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.subtitleKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelSubtitle")
     }
 
     var titleIconName: String {
@@ -63,11 +59,11 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     }
 
     var continueButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.continueButtonKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelContinueButton")
     }
 
     var cancelButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: Metrics.cancelButtonKey)
+        return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelCancelButton")
     }
 
     var closeReportReasonCancelTap = PublishSubject<Void>()
