@@ -46,8 +46,8 @@ class SPConversationSummaryViewModel: SPConversationSummaryViewModeling,
             .unwrap()
             .map {
                 let commentsText: String = $0 > 1 ?
-                    LocalizationManager.localizedString(key: "Comments") :
-                    LocalizationManager.localizedString(key: "Comment")
+                    SPLocalizationManager.localizedString(key: "Comments") :
+                    SPLocalizationManager.localizedString(key: "Comment")
                 return "\($0.formatedCount()) " + commentsText
             }
     }

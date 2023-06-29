@@ -14,7 +14,7 @@ internal protocol SPConversationSummaryViewDelegate: AnyObject {
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView)
 }
 
-final class SPConversationSummaryView: OWBaseView {
+final class SPConversationSummaryView: SPBaseView {
 
     fileprivate struct Metrics {
         static let separatorHeight: CGFloat = 1.0
@@ -34,20 +34,20 @@ final class SPConversationSummaryView: OWBaseView {
         static let sortButtonIdentifier = "conversation_summary_sort_button_id"
     }
 
-    private lazy var commentsCountLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var commentsCountLabel: SPBaseLabel = {
+        let lbl = SPBaseLabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.commentsFontSize)
         return lbl
     }()
 
-    private lazy var sortButton: OWBaseButton = {
-        let btn = OWBaseButton()
+    private lazy var sortButton: SPBaseButton = {
+        let btn = SPBaseButton()
         btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.sortButtonFontSize)
         let spacing: CGFloat = Metrics.insetTiny
         var inset: CGFloat = spacing / 2
 
         // Update insets in order to make additional space begween title and image
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+        if OWLocalizationManager.shared.semanticAttribute == .forceRightToLeft {
             inset = -inset
         }
 
@@ -69,14 +69,14 @@ final class SPConversationSummaryView: OWBaseView {
        return SPOnlineViewingUsersCounterView()
     }()
 
-    private lazy var bottomHorizontalSeparator: OWBaseView = {
-        let separator = OWBaseView()
+    private lazy var bottomHorizontalSeparator: SPBaseView = {
+        let separator = SPBaseView()
         separator.backgroundColor = .spSeparator2
         return separator
     }()
 
-    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: OWBaseView = {
-        let separator = OWBaseView()
+    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: SPBaseView = {
+        let separator = SPBaseView()
         separator.backgroundColor = .spSeparator2
         return separator
     }()
