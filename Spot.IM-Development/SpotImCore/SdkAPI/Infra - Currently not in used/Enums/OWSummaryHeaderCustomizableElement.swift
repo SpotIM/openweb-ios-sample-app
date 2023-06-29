@@ -1,5 +1,5 @@
 //
-//  OWSummeryHeaderCustomizableElement.swift
+//  OWSummaryHeaderCustomizableElement.swift
 //  SpotImCore
 //
 //  Created by Revital Pisman on 24/05/2023.
@@ -9,12 +9,12 @@
 import UIKit
 
 #if NEW_API
-public enum OWSummeryHeaderCustomizableElement {
+public enum OWSummaryHeaderCustomizableElement {
     case title(label: UILabel)
     case counter(label: UILabel)
 }
 #else
-enum OWSummeryHeaderCustomizableElement {
+enum OWSummaryHeaderCustomizableElement {
     case title(label: UILabel)
     case counter(label: UILabel)
 }

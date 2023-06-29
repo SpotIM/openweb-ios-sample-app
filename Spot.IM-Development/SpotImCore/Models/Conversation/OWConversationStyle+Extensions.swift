@@ -21,7 +21,7 @@ extension OWConversationStyle {
         }
     }
 
-    var communityQuestionStyle: OWCommunityQuestionsStyle {
+    var communityQuestionStyle: OWCommunityQuestionStyle {
         switch self {
         case .regular:
             return .regular
