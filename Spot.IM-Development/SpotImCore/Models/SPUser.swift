@@ -30,7 +30,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     var isCommunityModerator: Bool
     var isSuperAdmin: Bool
     var isJournalist: Bool
-    let isMuted: Bool
+    var isMuted: Bool
     let badgeType: String
     let tokenExpiration: Int?
     let ssoData: SPSSOData?
