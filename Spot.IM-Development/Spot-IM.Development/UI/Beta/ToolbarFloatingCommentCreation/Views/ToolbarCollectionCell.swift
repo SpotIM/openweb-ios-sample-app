@@ -18,7 +18,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
 
     fileprivate lazy var titleLabel: UILabel = {
         let lbl = UILabel()
-            .font(FontBook.secondaryHeadingBold)
+            .font(FontBook.largeHeading)
             .textAlignment(.center)
         return lbl
     }()
@@ -60,6 +60,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
 
 fileprivate extension ToolbarCollectionCell {
     func setupUI() {
+        contentView.addSubview(mainArea)
         mainArea.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.size.equalTo(Metrics.size)
