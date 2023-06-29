@@ -13,6 +13,7 @@ protocol ToolbarCollectionCellViewModelingInputs {}
 
 protocol ToolbarCollectionCellViewModelingOutputs {
     var emoji: Observable<String> { get }
+    var action: ToolbarElementAction { get }
 }
 
 protocol ToolbarCollectionCellViewModeling {
@@ -32,6 +33,10 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
     var emoji: Observable<String> {
         return _emoji
             .unwrap()
+    }
+
+    var action: ToolbarElementAction {
+        return model.action
     }
 
     init(model: ToolbarElementModel) {

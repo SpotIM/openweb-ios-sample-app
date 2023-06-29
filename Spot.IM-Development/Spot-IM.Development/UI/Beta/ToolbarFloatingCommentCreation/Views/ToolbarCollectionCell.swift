@@ -36,7 +36,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
     }()
 
     fileprivate var disposeBag: DisposeBag!
-    fileprivate var viewModel: ToolbarCollectionCellViewModeling
+    fileprivate var viewModel: ToolbarCollectionCellViewModeling!
 
     func configure(with viewModel: ToolbarCollectionCellViewModeling) {
         self.viewModel = viewModel
@@ -46,6 +46,11 @@ class ToolbarCollectionCell: UICollectionViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        setupUI()
     }
 
     override func prepareForReuse() {
