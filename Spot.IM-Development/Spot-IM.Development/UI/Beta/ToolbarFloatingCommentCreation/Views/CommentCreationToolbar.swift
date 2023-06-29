@@ -14,6 +14,8 @@ class CommentCreationToolbar: UIView {
 
     fileprivate lazy var toolbarCollection: UICollectionView = {
         let collection = UICollectionView()
+
+        collection.register(cellClass: ToolbarCollectionCell.self)
         return collection
     }()
 
@@ -42,6 +44,14 @@ fileprivate extension CommentCreationToolbar {
     }
 
     func setupObservers() {
+        viewModel.outputs.toolbarCellsVM
+            .observe(on: MainScheduler.instance)
+            .bind(to: toolbarCollection.rx.items(cellIdentifier: ToolbarCollectionCell.identifierName, cellType: ToolbarCollectionCell.self)) { _, viewModel, cell in
+                cell.configure(with: viewModel)
+            }
+            .disposed(by: disposeBag)
+
+        toolbarCollection.rx.modelSelected(ToolbarCollectionCellViewModel.self)
 
     }
 }
