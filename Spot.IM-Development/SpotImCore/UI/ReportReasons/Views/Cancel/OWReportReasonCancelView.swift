@@ -56,7 +56,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .setTitle(viewModel.outputs.continueButtonText, state: .normal)
-            .font(.openSans(style: .semibold, of: Metrics.buttonsFontSize))
+            .font(OWFontBook.shared.font(style: .semiBold, size: Metrics.buttonsFontSize))
             .corner(radius: Metrics.buttonsRadius)
     }()
 
@@ -66,7 +66,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(OWDesignColors.G4)
             .border(width: 1, color: OWDesignColors.G4)
             .setTitle(viewModel.outputs.cancelButtonText, state: .normal)
-            .font(.openSans(style: .semibold, of: Metrics.buttonsFontSize))
+            .font(OWFontBook.shared.font(style: .semiBold, size: Metrics.buttonsFontSize))
             .corner(radius: Metrics.buttonsRadius)
             .image(UIImage(spNamed: viewModel.outputs.trashIconName), state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Metrics.trashIconPadding))
@@ -75,7 +75,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate let viewModel: OWReportReasonCancelViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWReportReasonCancelViewViewModeling = OWReportReasonCancelViewViewModel()) {
+    init(viewModel: OWReportReasonCancelViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -96,6 +96,7 @@ fileprivate extension OWReportReasonCancelView {
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea().offset(Metrics.closeButtonTopSpacing - Metrics.closeButtonPadding)
             make.trailing.equalToSuperviewSafeArea().inset(Metrics.closeButtonTrailingSpacing - Metrics.closeButtonPadding)
+            make.leading.greaterThanOrEqualToSuperview()
         }
 
         self.addSubviews(titleView)

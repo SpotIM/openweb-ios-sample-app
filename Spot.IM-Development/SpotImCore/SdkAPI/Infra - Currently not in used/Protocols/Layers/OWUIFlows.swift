@@ -39,12 +39,6 @@ public protocol OWUIFlows {
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWDefaultCompletion)
 
-    func reportReason(commentId: OWCommentId,
-                      presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWReportReasonSettingsProtocol?,
-                      callbacks: OWViewActionsCallbacks?,
-                      completion: @escaping OWDefaultCompletion)
-
 #if BETA
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,

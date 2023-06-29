@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWReportReasonCancelVC: UIViewController {
-    let reportReasonCancelViewViewModel: OWReportReasonCancelViewViewModeling
+    fileprivate let reportReasonCancelViewViewModel: OWReportReasonCancelViewViewModeling
 
     fileprivate lazy var reportReasonCancelView: OWReportReasonCancelView = {
         return OWReportReasonCancelView(viewModel: reportReasonCancelViewViewModel)
@@ -29,10 +29,6 @@ class OWReportReasonCancelVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
     }
 }
 
