@@ -141,7 +141,7 @@ extension OWAuthenticationManager {
                 }
             }
             .unwrap()
-            .flatMap { [weak self] level -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
+            .flatMapLatest { [weak self] level -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
                 guard let self = self else { return .empty() }
                 return self.requiredAuthenticationLevel(for: action)
                     .map { (level, $0) }
