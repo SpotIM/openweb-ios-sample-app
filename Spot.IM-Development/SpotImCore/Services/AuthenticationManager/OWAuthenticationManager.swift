@@ -20,6 +20,9 @@ protocol OWAuthenticationManagerProtocol {
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
 
+    func userHasAuthenticationLevel(for actions: [OWUserAction]) -> Observable<[OWUserAction: Bool]>
+    func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool>
+
     func enterAuthenticationRecoveryState()
     func finishAuthenticationRecovery(with authenticationRecovery: OWAuthenticationRecoveryResult)
     func logout() -> Observable<Void>
@@ -112,6 +115,42 @@ extension OWAuthenticationManager {
             })
     }
 
+    func userHasAuthenticationLevel(for actions: [OWUserAction]) -> Observable<[OWUserAction: Bool]> {
+        let actionAndAuthenticationLevelTupple = actions.map { action in
+            return userHasAuthenticationLevel(for: action)
+                .map { (action, $0) }
+        }
+
+        let actionsAuthenticationLevelObservable = Observable.combineLatest(actionAndAuthenticationLevelTupple)
+
+        return actionsAuthenticationLevelObservable.map { actionsAuthenticationLevel in
+            var result: [OWUserAction: Bool] = [:]
+            actionsAuthenticationLevel.forEach { result[$0.0] = $0.1 }
+            return result
+        }
+    }
+
+    func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool> {
+        return self.currentAuthenticationLevelAvailability
+            .map { authenticationLevelAvailability -> OWAuthenticationLevel? in
+                switch authenticationLevelAvailability {
+                case .level(let level):
+                    return level
+                case .pending:
+                    return nil
+                }
+            }
+            .unwrap()
+            .flatMapLatest { [weak self] level -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
+                guard let self = self else { return .empty() }
+                return self.requiredAuthenticationLevel(for: action)
+                    .map { (level, $0) }
+            }
+            .map { currentlevel, requiredlevel in
+                return currentlevel.level >= requiredlevel.level
+            }
+    }
+
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool = true) -> Observable<Void> {
         return self.requiredAuthenticationLevel(for: action)
             .flatMap { [weak self] requiredlevel -> Observable<Void> in
@@ -198,9 +237,9 @@ extension OWAuthenticationManager {
             .take(1) // Here we are simply waiting for the config first / ensuring such exist for the specific spotId
             .flatMap { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                let authentication = self.servicesProvider.netwokAPI().authentication
-                return authentication
-                    .user()
+                let user = self.servicesProvider.netwokAPI().user
+                return user
+                    .userData()
                     .response
                     .observe(on: self.scheduler)
                     .exponentialRetry(maxAttempts: Metrics.maxAttemptsToObtainNewUser, millisecondsDelay: Metrics.delayToObtainUser) // Adding retry as it is critical we will succeed here
