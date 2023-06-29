@@ -175,6 +175,7 @@ fileprivate extension MockArticleFlowsViewModel {
             .unwrap()
             // Small delay so the navigation controller will be set from the view controller
             .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
@@ -213,6 +214,7 @@ fileprivate extension MockArticleFlowsViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
@@ -252,6 +254,7 @@ fileprivate extension MockArticleFlowsViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
@@ -291,6 +294,7 @@ fileprivate extension MockArticleFlowsViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
