@@ -28,6 +28,8 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
     var inputs: CommentCreationToolbarViewModelingInputs { return self }
     var outputs: CommentCreationToolbarViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
+
     var _toolbarCellsVM = BehaviorSubject<[ToolbarCollectionCellViewModeling]?>(value: nil)
     var toolbarCellsVM: Observable<[ToolbarCollectionCellViewModeling]> {
         return _toolbarCellsVM
@@ -37,7 +39,18 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
     init(toolbarElments: [ToolbarElementModel]) {
         let cellsVms = toolbarElments.map { ToolbarCollectionCellViewModel(model: $0) }
         self._toolbarCellsVM.onNext(cellsVms)
+        setupObservers()
     }
 
     var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
+}
+
+fileprivate extension CommentCreationToolbarViewModel {
+    func setupObservers() {
+        modelSelected
+            .subscribe(onNext: { _ in
+                // TODO continue to activate "comment creation text manipulation"
+            })
+            .disposed(by: disposeBag)
+    }
 }

@@ -22,6 +22,7 @@ class CommentCreationToolbar: UIView {
         layout.itemSize = CGSize(width: ToolbarMetrics.height, height: ToolbarMetrics.height)
 
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.showsHorizontalScrollIndicator = false
 
         collection.register(cellClass: ToolbarCollectionCell.self)
         return collection
@@ -40,12 +41,10 @@ class CommentCreationToolbar: UIView {
         setupUI()
         setupObservers()
     }
-
 }
 
 fileprivate extension CommentCreationToolbar {
     func setupUI() {
-        self.backgroundColor = .systemPink
         self.addSubview(toolbarCollection)
         toolbarCollection.snp.makeConstraints { make in
             make.edges.equalToSuperview()

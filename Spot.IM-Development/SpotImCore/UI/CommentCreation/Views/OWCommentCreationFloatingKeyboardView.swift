@@ -65,7 +65,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             self.addSubview(toolbar)
             toolbar.OWSnp.makeConstraints { make in
                 make.leading.trailing.bottom.equalToSuperview()
-                make.height.equalTo(80)
             }
         }
     }
