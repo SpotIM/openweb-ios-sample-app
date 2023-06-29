@@ -1,5 +1,5 @@
 //
-//  OWSummeryCustomizableElement.swift
+//  OWSummaryCustomizableElement.swift
 //  SpotImCore
 //
 //  Created by Revital Pisman on 29/05/2023.
@@ -9,12 +9,12 @@
 import UIKit
 
 #if NEW_API
-public enum OWSummeryCustomizableElement {
+public enum OWSummaryCustomizableElement {
     case commentsTitle(label: UILabel)
     case sortByTitle(label: UILabel)
 }
 #else
-enum OWSummeryCustomizableElement {
+enum OWSummaryCustomizableElement {
     case commentsTitle(label: UILabel)
     case sortByTitle(label: UILabel)
 }

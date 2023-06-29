@@ -31,12 +31,12 @@ class OWCommunityQuestionCellViewModel: OWCommunityQuestionCellViewModeling,
         return OWCommunityQuestionViewModel(style: self.style)
     }()
 
-    fileprivate let style: OWCommunityQuestionsStyle
+    fileprivate let style: OWCommunityQuestionStyle
 
     // Unique identifier
     let id: String = UUID().uuidString
 
-    init(style: OWCommunityQuestionsStyle = .regular) {
+    init(style: OWCommunityQuestionStyle = .regular) {
         self.style = style
     }
 }

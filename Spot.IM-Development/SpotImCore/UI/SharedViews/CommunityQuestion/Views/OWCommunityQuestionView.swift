@@ -87,7 +87,9 @@ fileprivate extension OWCommunityQuestionView {
     }
 
     func updateCustomUI() {
-        viewModel.inputs.triggerCustomizeQuestionLabelUI.onNext(questionLabel)
+        viewModel.inputs.triggerCustomizeQuestionContainerViewUI.onNext(questionContainer)
+        viewModel.inputs.triggerCustomizeQuestionTitleLabelUI.onNext(questionLabel)
+        viewModel.inputs.triggerCustomizeQuestionTitleTextViewUI.onNext(titleTextView)
     }
 
     func setupUI() {
