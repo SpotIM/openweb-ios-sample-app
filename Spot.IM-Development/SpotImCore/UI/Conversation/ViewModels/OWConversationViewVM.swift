@@ -122,7 +122,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
-    fileprivate var muteAllUserComments = PublishSubject<String>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -1016,7 +1015,7 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        deleteComment
+        let commentDeletedLocallyObservable = deleteComment
             .asObservable()
             .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
@@ -1053,6 +1052,9 @@ fileprivate extension OWConversationViewViewModel {
                 commentVm.inputs.deleteCommentLocally()
                 self._performTableViewAnimation.onNext()
             })
+
+        // Deleting comment from network
+        commentDeletedLocallyObservable
             .observe(on: MainScheduler.asyncInstance)
             .flatMap { [weak self] commentVm -> Observable<Event<OWCommentDelete>> in
                 let comment = commentVm.outputs.comment
@@ -1084,7 +1086,7 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        muteCommentUser
+        let muteUserObservable = muteCommentUser
             .asObservable()
             .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
@@ -1115,16 +1117,14 @@ fileprivate extension OWConversationViewViewModel {
             }
             .filter { $0 }
             .withLatestFrom(muteCommentUser)
-            .do(onNext: { [weak self] commentVm in
-                guard let self = self,
-                      let userId = commentVm.outputs.comment.userId
-                else { return }
-                self.muteAllUserComments.onNext(userId)
-            })
-            .flatMap { [weak self] commentVm -> Observable<Event<EmptyDecodable>> in
-                guard let self = self,
-                      let userId = commentVm.outputs.comment.userId
-                else { return .empty() }
+            .map { $0.outputs.comment.userId }
+            .unwrap()
+            .share()
+
+        // Handling mute user from network
+        muteUserObservable
+            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+                guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
                     .user
@@ -1150,8 +1150,8 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        muteAllUserComments
-            .asObservable()
+        // Handling muting comments "locally" of a muted user
+        muteUserObservable
             .withLatestFrom(commentCellsVmsObservable) { userId, commentCellsVms -> (String, [OWCommentCellViewModeling]) in
                 return (userId, commentCellsVms)
             }
