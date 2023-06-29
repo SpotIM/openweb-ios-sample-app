@@ -207,12 +207,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> {
         tapMore
-            .flatMap { [weak self] view -> Observable<([OWUserAction: Bool], UIView)> in
+            .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView)> in
                 guard let self = self else { return .empty() }
                 let actions: [OWUserAction] = [.reportingComment, .deletingComment, .editingComment, .mutingUser]
                 let authentication = self.servicesProvider.authenticationManager()
 
                 return authentication.userHasAuthenticationLevel(for: actions)
+                    .take(1)
                     .map { ($0, view) }
             }
             .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
