@@ -36,9 +36,9 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var authHandler: OWAuthenticationHandler?
     private var model: SPCommentCreationModel
 
-    let topContainerView: OWBaseView = .init()
-    let topContainerStack: OWBaseStackView = .init()
-    let commentContentScrollView: OWBaseScrollView = .init()
+    let topContainerView: SPBaseView = .init()
+    let topContainerStack: SPBaseStackView = .init()
+    let commentContentScrollView: SPBaseScrollView = .init()
     var textInputViewContainer: SPCommentTextInputView = .init()
     private let imagePreviewView: OWCommentImagePreview = .init()
     lazy var usernameView: SPNameInputView = SPNameInputView()
@@ -46,7 +46,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     let activityIndicator: SPLoaderView = SPLoaderView()
     var showsUserAvatarInTextInput: Bool { !showsUsernameInput }
 
-    private let mainContainerView: OWBaseView = .init()
+    private let mainContainerView: SPBaseView = .init()
 
     private let footerView: SPCommentFooterView = .init()
 
@@ -59,7 +59,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
 
-    private let scrollView: OWBaseScrollView = .init()
+    private let scrollView: SPBaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
@@ -69,12 +69,12 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var commentContentScrollViewBottomConstraint: OWConstraint?
     private var mainContainerBottomConstraint: OWConstraint?
 
-    private let closeButton: OWBaseButton = .init()
+    private let closeButton: SPBaseButton = .init()
 
     private lazy var commentHeaderView = SPCommentReplyHeaderView()
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     private let commentingContainer: UIView = .init()
-    private let commentingOnLabel: OWBaseLabel = .init()
+    private let commentingOnLabel: SPBaseLabel = .init()
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
 
     private var imagePicker: OWImagePicker?
@@ -293,15 +293,15 @@ class SPCommentCreationViewController: SPBaseViewController,
     func close() {
         if (model.commentText.count) >= commentCacheMinCount {
             let actions: [UIAlertAction] = [
-                UIAlertAction(title: LocalizationManager.localizedString(key: "Leave Page"),
+                UIAlertAction(title: SPLocalizationManager.localizedString(key: "Leave Page"),
                               style: .destructive) { _ in
                                 self.dismissController()
                 },
-                UIAlertAction(title: LocalizationManager.localizedString(key: "Continue Writing"),
+                UIAlertAction(title: SPLocalizationManager.localizedString(key: "Continue Writing"),
                               style: .default)
             ]
-            showAlert(title: LocalizationManager.localizedString(key: "Leave this page?"),
-                      message: LocalizationManager.localizedString(key: "The text you entered might be deleted if not published."),
+            showAlert(title: SPLocalizationManager.localizedString(key: "Leave this page?"),
+                      message: SPLocalizationManager.localizedString(key: "The text you entered might be deleted if not published."),
                       actions: actions)
         } else {
             dismissController()
@@ -397,7 +397,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
             self.hideLoader()
             self.showAlert(
-                title: LocalizationManager.localizedString(key: "Oops..."),
+                title: SPLocalizationManager.localizedString(key: "Oops..."),
                 message: error.localizedDescription
             )
         }
@@ -444,7 +444,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             }
 
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
-            commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
+            commentingOnLabel.text = SPLocalizationManager.localizedString(key: "Commenting on")
         } else {
             let commentHeaderText = getHeaderTitleBasedOnUserFlow()
             commentingOnLabel.text = commentHeaderText
@@ -453,8 +453,8 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func getHeaderTitleBasedOnUserFlow() -> String {
         return self.model.isInEditMode() ?
-        LocalizationManager.localizedString(key: "Edit a Comment") :
-        LocalizationManager.localizedString(key: "Add a Comment")
+        SPLocalizationManager.localizedString(key: "Edit a Comment") :
+        SPLocalizationManager.localizedString(key: "Add a Comment")
     }
 
     private func setupHeaderComponentsIfNeeded() {
@@ -469,7 +469,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         topContainerView.addSubview(closeButton)
 
         commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
-        commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
+        commentingOnLabel.text = SPLocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()
 
@@ -760,13 +760,13 @@ extension SPCommentCreationViewController {
         let postButtonTitle: String
         let action: SPCommentFooterView.PostButtonAction
         if self.signupToPostButtonIsActive() {
-            postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
+            postButtonTitle = SPLocalizationManager.localizedString(key: "Sign Up to Post")
             action = presentAuth
         } else if self.model.isInEditMode() {
-            postButtonTitle = LocalizationManager.localizedString(key: "Edit")
+            postButtonTitle = SPLocalizationManager.localizedString(key: "Edit")
             action = post
         } else {
-            postButtonTitle = LocalizationManager.localizedString(key: "Post")
+            postButtonTitle = SPLocalizationManager.localizedString(key: "Post")
             action = post
         }
         footerView.configurePostButton(title: postButtonTitle, action: action)
@@ -961,7 +961,7 @@ extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
         self.imagePicker?.present(from: self.view)
     }
 
-    func updatePostCommentButtonCustomUI(button: OWBaseButton) {
+    func updatePostCommentButtonCustomUI(button: SPBaseButton) {
         customUIDelegate?.customizeView(.commentCreationActionButton(button: button), source: .createComment)
     }
 }

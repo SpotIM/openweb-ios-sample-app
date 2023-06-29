@@ -101,7 +101,5 @@ fileprivate extension OWSpotConfigurationService {
         }
         // Locale
         let locale = config.mobileSdk.locale ?? "en"
-        LocalizationManager.reset()
-        LocalizationManager.setLocale(locale)
     }
 }
