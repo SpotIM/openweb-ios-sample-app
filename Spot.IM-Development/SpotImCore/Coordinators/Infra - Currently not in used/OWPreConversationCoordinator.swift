@@ -190,21 +190,28 @@ fileprivate extension OWPreConversationCoordinator {
         let communityQuestionCustomizeContainer = viewModel.outputs.communityQuestionViewModel
             .outputs.customizeQuestionContainerViewUI
 
-        let communityQuestionCustomizeTitle = viewModel.outputs.communityQuestionViewModel
+        let communityQuestionCustomizeTitleLabel = viewModel.outputs.communityQuestionViewModel
             .outputs.customizeQuestionTitleLabelUI
 
-        let communityQuestionCompactCustomizationElement = Observable.combineLatest(communityQuestionCustomizeContainer,
-                                                                                    communityQuestionCustomizeTitle)
-            .flatMap { container, title in
-                Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: title)))
-            }
-
-        let communityQuestionRegularCustomizationElement = viewModel.outputs.communityQuestionViewModel
+        let communityQuestionCustomizeTitleTextView = viewModel.outputs.communityQuestionViewModel
             .outputs.customizeQuestionTitleTextViewUI
-            .map { OWCustomizableElement.communityQuestion(element: .regular(textView: $0)) }
 
-        let communityQuestionCustomizationElementsObservable = Observable.merge(communityQuestionRegularCustomizationElement,
-                                                                                communityQuestionCompactCustomizationElement)
+        let communityQuestionStyle = viewModel.outputs.communityQuestionViewModel
+            .outputs.style
+
+        let communityQuestionCustomizationElementObservable = Observable.combineLatest(communityQuestionCustomizeContainer,
+                                                                                    communityQuestionCustomizeTitleLabel,
+                                                                                    communityQuestionCustomizeTitleTextView)
+            .flatMap { container, titleLabel, titleTextView in
+                switch communityQuestionStyle {
+                case .regular:
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .regular(textView: titleTextView)))
+                case .compact:
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: titleLabel)))
+                case .none:
+                    return .empty()
+                }
+            }
 
         // Set customized community guidelines
         let communityGuidelinesCustomizeContainer = viewModel.outputs.communityGuidelinesViewModel
@@ -216,18 +223,22 @@ fileprivate extension OWPreConversationCoordinator {
         let communityGuidelinesCustomizeIcon = viewModel.outputs.communityGuidelinesViewModel
             .outputs.customizeIconImageViewUI
 
-        let communityGuidelinesCompactCustomizationElement = Observable.combineLatest(communityGuidelinesCustomizeContainer,
+        let communityGuidelinesStyle = viewModel.outputs.communityGuidelinesViewModel
+            .outputs.style
+
+        let communityGuidelinesCustomizationElementObservable = Observable.combineLatest(communityGuidelinesCustomizeContainer,
                                                                                       communityGuidelinesCustomizeIcon,
                                                                                       communityGuidelinesCustomizeTitle)
             .flatMap { container, icon, title in
-                Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+                switch communityGuidelinesStyle {
+                case .regular:
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .regular(textView: title)))
+                case .compact:
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+                case .none:
+                    return .empty()
+                }
             }
-
-        let communityGuidelinesRegularCustomizationElement = communityGuidelinesCustomizeTitle
-            .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) }
-
-        let communityGuidelinesCustomizationElementsObservable = Observable.merge(communityGuidelinesRegularCustomizationElement,
-                                                                                  communityGuidelinesCompactCustomizationElement)
 
         // Commenting CTA
 
@@ -264,8 +275,8 @@ fileprivate extension OWPreConversationCoordinator {
                                                                                  commentingReadOnlyCustomizeTitle)
 
         let customizationElementsObservables = Observable.merge(summaryCustomizationElementsObservable,
-                                                                communityQuestionCustomizationElementsObservable,
-                                                                communityGuidelinesCustomizationElementsObservable,
+                                                                communityQuestionCustomizationElementObservable,
+                                                                communityGuidelinesCustomizationElementObservable,
                                                                 commentCreationEntryCustomizationElementsObservable,
                                                                 commentingReadOnlyCustomizationElementsObservable)
 

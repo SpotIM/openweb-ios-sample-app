@@ -64,19 +64,24 @@ fileprivate extension ElementsCustomizationCreatorService {
 //        }
 
         switch element {
-        case .navigationBarTitle(let label):
-            let attributedTitleText = NSMutableAttributedString(string: "TestNavigationTitle")
-            attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSRange(location: 0, length: attributedTitleText.length))
-            attributedTitleText.addAttribute(.foregroundColor, value: UIColor.blue, range: NSRange(location: 0, length: attributedTitleText.length))
-            label.attributedText = attributedTitleText
 
-        case .navigationBar(let navBar):
-            navBar.backgroundColor = .blue
-            navBar.tintColor = .green
+        case .navigation(let element):
+            switch element {
+            case .navigationItem(let navigationItem):
+                let lbl = UILabel()
+                lbl.textColor = .green
+                lbl.font = .italicSystemFont(ofSize: 15.0)
+                lbl.text = "TestNavigationItemTitle"
+                navigationItem.titleView = lbl
+            case .navigationBar(let navigationBar):
+                navigationBar.backgroundColor = .blue
+                navigationBar.tintColor = .green
+            default:
+                break
+            }
 
         case .header(let element):
             switch element {
-
             case .title(let label):
                 label.text = "TestNavigation"
                 label.textColor = .green
@@ -150,10 +155,8 @@ fileprivate extension ElementsCustomizationCreatorService {
                 default:
                     break
                 }
-
             case .counter(let label):
                 label.textColor = .green
-
             default:
                 break
             }
@@ -174,10 +177,10 @@ fileprivate extension ElementsCustomizationCreatorService {
             case .regular(let textView):
                 let attributedTitleText = NSMutableAttributedString(string: "TestCommunityQuestionRegular")
                 attributedTitleText.addAttribute(.foregroundColor,
-                                                 value: UIColor.green,
+                                                 value: UIColor.red,
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 attributedTitleText.addAttribute(.font,
-                                                 value: UIFont.systemFont(ofSize: 15, weight: .bold),
+                                                 value: UIFont.italicSystemFont(ofSize: 18),
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
             case .compact(let containerView, let label):
@@ -209,6 +212,7 @@ fileprivate extension ElementsCustomizationCreatorService {
                                                  range: NSRange(location: 0, length: attributedTitleText.length))
                 textView.attributedText = attributedTitleText
                 textView.textColor = .green
+
                 switch themeStyle {
                 case .dark:
                     containerView.backgroundColor = .gray
@@ -219,7 +223,6 @@ fileprivate extension ElementsCustomizationCreatorService {
                 default:
                     break
                 }
-
             default:
                 break
             }

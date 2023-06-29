@@ -24,6 +24,7 @@ protocol OWCommunityGuidelinesViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
+    var style: OWCommunityGuidelinesStyle { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -114,7 +115,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         return style == .compact
     }()
 
-    fileprivate let style: OWCommunityGuidelinesStyle
+    let style: OWCommunityGuidelinesStyle
     fileprivate let disposeBag = DisposeBag()
 
     init(style: OWCommunityGuidelinesStyle) {
