@@ -185,7 +185,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
-    fileprivate var isLoggenInUserComment: Observable<Bool> {
+    fileprivate var isLoggedInUserComment: Observable<Bool> {
         _model
             .unwrap()
             .map { $0.userId }
@@ -220,33 +220,33 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                     authentication.userHasAuthenticationLevel(for: .mutingUser)
                 ).map { ($0, view) }
             }
-            .withLatestFrom(isLoggenInUserComment) { ($0.0, $0.1, $1) }
-            .map { actions, view, isLoggenInUserComment in
+            .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
+            .map { actions, view, isLoggedInUserComment in
                 let allowReportingComment = actions.0
                 let allowDeletingComment = actions.1
                 let allowEditingComment = actions.2
                 let allowMuteUser = actions.3
 
                 var optionsActions: [OWRxPresenterAction] = []
-                if (allowReportingComment && !isLoggenInUserComment) {
+                if (allowReportingComment && !isLoggedInUserComment) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Report"),
                         type: OWCommentOptionsMenu.reportComment)
                     )
                 }
-                if (allowEditingComment && isLoggenInUserComment) {
+                if (allowEditingComment && isLoggedInUserComment) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Edit"),
                         type: OWCommentOptionsMenu.editComment)
                     )
                 }
-                if (allowDeletingComment && isLoggenInUserComment) {
+                if (allowDeletingComment && isLoggedInUserComment) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Delete"),
                         type: OWCommentOptionsMenu.deleteComment)
                     )
                 }
-                if (allowMuteUser && !isLoggenInUserComment) {
+                if (allowMuteUser && !isLoggedInUserComment) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Mute"),
                         type: OWCommentOptionsMenu.muteUser)
