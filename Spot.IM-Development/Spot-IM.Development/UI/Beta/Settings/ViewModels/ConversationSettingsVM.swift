@@ -64,7 +64,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
 
     var styleModeSelectedIndex = BehaviorSubject<Int>(value: OWConversationStyle.defaultIndex)
     var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.defaultIndex)
-    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionsStyle.defaultIndex)
+    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.defaultIndex)
     var conversationSpacingSelectedIndex = BehaviorSubject<Int>(value: OWConversationSpacing.defaultIndex)
     var betweenCommentsSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
     var belowHeaderSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)")
@@ -122,11 +122,13 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                         return 0
                     case .regular:
                         return 1
+                    case .compact:
+                        return 2
                     default:
-                        return OWCommunityQuestionsStyle.defaultIndex
+                        return OWCommunityQuestionStyle.defaultIndex
                     }
                 default:
-                    return OWCommunityQuestionsStyle.defaultIndex
+                    return OWCommunityQuestionStyle.defaultIndex
                 }
             }
             .asObservable()

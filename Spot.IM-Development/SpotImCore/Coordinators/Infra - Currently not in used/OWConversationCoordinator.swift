@@ -247,20 +247,7 @@ fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.conversationViewVM)
 
-        let navigationBarCustomize = viewModel.outputs.customizeNavigationBarUI
-            .map { OWCustomizableElement.navigationBar($0) }
-
-        let navigationItemCustomizeTitle = viewModel.outputs.customizeNavigationItemTitleLabelUI
-            .map { OWCustomizableElement.navigationBarTitle($0) }
-
-        let customizationElementsObservables = Observable.merge(navigationItemCustomizeTitle,
-                                                                navigationBarCustomize)
-
-        customizationElementsObservables
-            .subscribe { [weak self] element in
-                self?.customizationsService.trigger(customizableElement: element)
-            }
-            .disposed(by: disposeBag)
+        setupCustomizationElements(forViewModel: viewModel)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
@@ -273,8 +260,48 @@ fileprivate extension OWConversationCoordinator {
         setupCustomizationElements(forViewModel: viewModel)
     }
 
+    func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let closeConversationPressed = viewModel
+            .outputs.conversationTitleHeaderViewModel
+            .outputs.closeConversation
+            .map { OWViewActionCallbackType.closeConversationPressed }
+
+        let openPublisherProfile = Observable.merge(
+            viewModel.outputs.openPublisherProfile,
+            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
+        )
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+
+        Observable.merge(closeConversationPressed, openPublisherProfile)
+            .subscribe { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            }
+            .disposed(by: disposeBag)
+    }
+
+    func setupCustomizationElements(forViewModel viewModel: OWConversationViewModeling) {
+        let customizeNavigationItem = viewModel.outputs.customizeNavigationItemUI
+            .map { OWCustomizableElement.navigation(element: .navigationItem($0)) }
+
+        let customizeNavigationBar = viewModel.outputs.customizeNavigationBarUI
+            .map { OWCustomizableElement.navigation(element: .navigationBar($0)) }
+
+        let customizationElementsObservables = Observable.merge(customizeNavigationItem,
+                                                                customizeNavigationBar)
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
+    }
+
     // swiftlint:disable function_body_length
     func setupCustomizationElements(forViewModel viewModel: OWConversationViewViewModeling) {
+        // swiftlint:enable function_body_length
+
         // Set customized title header
         let conversationTitleHeaderCustomizeTitle = viewModel.outputs.conversationTitleHeaderViewModel
             .outputs.customizeTitleLabelUI
@@ -334,23 +361,31 @@ fileprivate extension OWConversationCoordinator {
             .outputs.communityQuestionViewModel
             .outputs.customizeQuestionContainerViewUI
 
-        let communityQuestionCustomizeTitle = viewModel.outputs.communityQuestionCellViewModel
+        let communityQuestionCustomizeTitleLabel = viewModel.outputs.communityQuestionCellViewModel
             .outputs.communityQuestionViewModel
             .outputs.customizeQuestionTitleLabelUI
 
-        let communityQuestionCompactCustomizationElement = Observable.combineLatest(communityQuestionCustomizeContainer,
-                                                                                    communityQuestionCustomizeTitle)
-            .flatMap { container, title in
-                Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: title)))
-            }
-
-        let communityQuestionRegularCustomizationElement = viewModel.outputs.communityQuestionCellViewModel
+        let communityQuestionCustomizeTitleTextView = viewModel.outputs.communityQuestionCellViewModel
             .outputs.communityQuestionViewModel
             .outputs.customizeQuestionTitleTextViewUI
-            .map { OWCustomizableElement.communityGuidelines(element: .regular(textView: $0)) }
 
-        let communityQuestionCustomizationElementsObservable = Observable.merge(communityQuestionRegularCustomizationElement,
-                                                                                communityQuestionCompactCustomizationElement)
+        let communityQuestionStyle = viewModel.outputs.communityQuestionCellViewModel
+            .outputs.communityQuestionViewModel
+            .outputs.style
+
+        let communityQuestionCustomizationElementObservable = Observable.combineLatest(communityQuestionCustomizeContainer,
+                                                                                    communityQuestionCustomizeTitleLabel,
+                                                                                    communityQuestionCustomizeTitleTextView)
+            .flatMap { container, titleLabel, titleTextView in
+                switch communityQuestionStyle {
+                case .regular:
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .regular(textView: titleTextView)))
+                case .compact:
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: titleLabel)))
+                case .none:
+                    return .empty()
+                }
+            }
 
         // Set customized community guidelines
         let communityGuidelinesCustomizeContainer = viewModel.outputs.communityGuidelinesCellViewModel
@@ -365,18 +400,23 @@ fileprivate extension OWConversationCoordinator {
             .outputs.communityGuidelinesViewModel
             .outputs.customizeIconImageViewUI
 
-        let communityGuidelinesCompactCustomizationElement = Observable.combineLatest(communityGuidelinesCustomizeContainer,
+        let communityGuidelinesStyle = viewModel.outputs.communityGuidelinesCellViewModel
+            .outputs.communityGuidelinesViewModel
+            .outputs.style
+
+        let communityGuidelinesCustomizationElementObservable = Observable.combineLatest(communityGuidelinesCustomizeContainer,
                                                                                       communityGuidelinesCustomizeIcon,
                                                                                       communityGuidelinesCustomizeTitle)
             .flatMap { container, icon, title in
-                Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+                switch communityGuidelinesStyle {
+                case .regular:
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .regular(textView: title)))
+                case .compact:
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+                case .none:
+                    return .empty()
+                }
             }
-
-        let communityGuidelinesRegularCustomizationElement = communityGuidelinesCustomizeTitle
-            .map { OWCustomizableElement.communityQuestion(element: .regular(textView: $0)) }
-
-        let communityGuidelinesCustomizationElementsObservable = Observable.merge(communityGuidelinesRegularCustomizationElement,
-                                                                                  communityGuidelinesCompactCustomizationElement)
 
         // Set customized conversation empty state
 
@@ -440,8 +480,8 @@ fileprivate extension OWConversationCoordinator {
         let customizationElementsObservables = Observable.merge(conversationTitleHeaderCustomizationElementsObservable,
                                                                 articleDescriptionCustomizationElementsObservable,
                                                                 summaryCustomizationElementsObservable,
-                                                                communityQuestionCustomizationElementsObservable,
-                                                                communityGuidelinesCustomizationElementsObservable,
+                                                                communityQuestionCustomizationElementObservable,
+                                                                communityGuidelinesCustomizationElementObservable,
                                                                 commentCreationEntryCustomizationElementsObservable,
                                                                 commentingReadOnlyCustomizationElementsObservable,
                                                                 conversationEmptyStateCustomizationElementsObservable)
@@ -449,28 +489,6 @@ fileprivate extension OWConversationCoordinator {
         customizationElementsObservables
             .subscribe { [weak self] element in
                 self?.customizationsService.trigger(customizableElement: element)
-            }
-            .disposed(by: disposeBag)
-    }
-    // swiftlint:enable function_body_length
-
-    func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
-
-        let closeConversationPressed = viewModel
-            .outputs.conversationTitleHeaderViewModel
-            .outputs.closeConversation
-            .map { OWViewActionCallbackType.closeConversationPressed }
-
-        let openPublisherProfile = Observable.merge(
-            viewModel.outputs.openPublisherProfile,
-            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
-        )
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
-
-        Observable.merge(closeConversationPressed, openPublisherProfile)
-            .subscribe { [weak self] viewActionType in
-                self?.viewActionsService.append(viewAction: viewActionType)
             }
             .disposed(by: disposeBag)
     }

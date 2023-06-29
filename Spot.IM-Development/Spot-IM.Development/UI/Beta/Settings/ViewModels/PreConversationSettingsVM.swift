@@ -54,7 +54,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
     var customStyleModeSelectedNumberOfComments = BehaviorSubject<Int>(value: 0)
     var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.defaultIndex)
-    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionsStyle.defaultIndex)
+    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.defaultIndex)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
@@ -130,11 +130,13 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
                         return 0
                     case .regular:
                         return 1
+                    case .compact:
+                        return 2
                     default:
-                        return OWCommunityQuestionsStyle.defaultIndex
+                        return OWCommunityQuestionStyle.defaultIndex
                     }
                 default:
-                    return OWCommunityQuestionsStyle.defaultIndex
+                    return OWCommunityQuestionStyle.defaultIndex
                 }
             }
             .asObservable()

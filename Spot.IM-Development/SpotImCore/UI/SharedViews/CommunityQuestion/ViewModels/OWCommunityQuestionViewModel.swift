@@ -24,6 +24,7 @@ protocol OWCommunityQuestionViewModelingOutputs {
     var customizeQuestionTitleLabelUI: Observable<UILabel> { get }
     var customizeQuestionContainerViewUI: Observable<UIView> { get }
     var customizeQuestionTitleTextViewUI: Observable<UITextView> { get }
+    var style: OWCommunityQuestionStyle { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -106,10 +107,10 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
         return style == .compact
     }()
 
-    fileprivate let style: OWCommunityQuestionsStyle
+    let style: OWCommunityQuestionStyle
     fileprivate let disposeBag = DisposeBag()
 
-    init(style: OWCommunityQuestionsStyle) {
+    init(style: OWCommunityQuestionStyle) {
         self.style = style
         setupObservers()
     }
@@ -145,16 +146,7 @@ fileprivate extension OWCommunityQuestionViewModel {
             .bind(to: _triggerCustomizeQuestionContainerViewUI)
             .disposed(by: disposeBag)
 
-//        triggerCustomizeQuestionTitleTextViewUI
-//            .bind(to: _triggerCustomizeQuestionTitleTextViewUI)
-//            .disposed(by: disposeBag)
-
         triggerCustomizeQuestionTitleTextViewUI
-            .flatMapLatest { [weak self] textView -> Observable<UITextView> in
-                guard let self = self else { return .empty() }
-                return self.attributedCommunityQuestion
-                    .map { _ in return textView }
-            }
             .bind(to: _triggerCustomizeQuestionTitleTextViewUI)
             .disposed(by: disposeBag)
 
