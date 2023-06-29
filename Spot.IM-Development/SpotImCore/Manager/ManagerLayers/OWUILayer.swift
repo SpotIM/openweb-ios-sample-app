@@ -199,31 +199,6 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func reportReason(commentId: OWCommentId,
-                      presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWReportReasonSettingsProtocol?,
-                      callbacks: OWViewActionsCallbacks?,
-                      completion: @escaping OWDefaultCompletion) {
-        prepareForNewFlow()
-
-        _ = flowsSdkCoordinator.startReportReasonFlow(commentId: commentId,
-                                                      presentationalMode: presentationalMode,
-                                                      callbacks: callbacks)
-        .observe(on: MainScheduler.asyncInstance)
-        .subscribe(onNext: { result in
-            switch result {
-            case .loadedToScreen:
-                completion(.success(()))
-            default:
-                break
-            }
-        }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.reportReasonFlow
-            completion(.failure(error))
-        })
-        .disposed(by: flowDisposeBag)
-    }
-
 #if BETA
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,

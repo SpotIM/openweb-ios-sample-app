@@ -16,21 +16,6 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         return router
     }
 
-    func startReportReasonFlow(commentId: OWCommentId,
-                               presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<OWReportReasonCoordinatorResult> {
-        invalidateExistingFlows()
-
-        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
-
-        let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
-                                                                router: router,
-                                                                actionsCallbacks: callbacks,
-                                                                presentationalMode: presentationalMode.style)
-
-        return coordinate(to: reportReasonCoordinator)
-    }
-
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
                                   callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {

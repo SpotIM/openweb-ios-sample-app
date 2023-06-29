@@ -10,16 +10,15 @@ import UIKit
 import Foundation
 
 class RangeGestureRecognizer: UITapGestureRecognizer {
-    // Stored variables
-    typealias MethodHandler = () -> Void
-    static var stringRange: String?
-    static var function: MethodHandler?
+    var stringRange: String?
+    var function: OWBasicCompletion?
 
-    func didTapAttributedTextInLabel(label: UILabel, inRange targetRange: NSRange) -> Bool {
+    func didTapAttributedText(in label: UILabel, inRange targetRange: NSRange) -> Bool {
         // Create instances of NSLayoutManager, NSTextContainer and NSTextStorage
         let layoutManager = NSLayoutManager()
         let textContainer = NSTextContainer(size: CGSize.zero)
-        let textStorage = NSTextStorage(attributedString: label.attributedText!)
+        guard let attributedText = label.attributedText else { return false }
+        let textStorage = NSTextStorage(attributedString: attributedText)
 
         // Configure layoutManager and textStorage
         layoutManager.addTextContainer(textContainer)
@@ -41,6 +40,6 @@ class RangeGestureRecognizer: UITapGestureRecognizer {
                                                      y: locationOfTouchInLabel.y - textContainerOffset.y)
         let indexOfCharacter = layoutManager.characterIndex(for: locationOfTouchInTextContainer, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
 
-        return NSLocationInRange(indexOfCharacter, targetRange)
+        return targetRange.location != NSNotFound && NSLocationInRange(indexOfCharacter, targetRange)
     }
 }

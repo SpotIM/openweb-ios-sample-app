@@ -47,5 +47,10 @@ protocol OWUIViews {
                       additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
+    
+    func reportReason(commentId: OWCommentId,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion)
 }
 #endif
