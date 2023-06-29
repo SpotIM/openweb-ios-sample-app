@@ -27,6 +27,7 @@ class OWTextView: UIView {
         static let textViewTopBottomPadding: CGFloat = 10
         static let textViewFontSize: CGFloat = 15
         static let charectersFontSize: CGFloat = 13
+        static let didBeginEditDelay = 1
     }
 
     let viewModel: OWTextViewViewModeling
@@ -87,6 +88,7 @@ fileprivate extension OWTextView {
             self.addSubviews(charectersCountLabel)
             charectersCountLabel.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
+                make.leading.greaterThanOrEqualToSuperview()
                 make.bottom.equalToSuperview().inset(Metrics.charectersBottomPadding)
             }
         }
@@ -106,6 +108,7 @@ fileprivate extension OWTextView {
             make.leading.equalTo(textView.OWSnp.leading).inset(Metrics.placeholderLeadingTrailingPadding)
             make.trailing.equalTo(textView.OWSnp.trailing).inset(Metrics.placeholderLeadingTrailingPadding)
             make.top.equalTo(textView.OWSnp.top).inset(Metrics.textViewTopBottomPadding)
+            make.bottom.greaterThanOrEqualTo(textView.OWSnp.bottom).inset(Metrics.textViewTopBottomPadding)
         }
     }
 
@@ -140,7 +143,7 @@ fileprivate extension OWTextView {
                 .disposed(by: disposeBag)
 
             textView.rx.didBeginEditing
-                .delay(.microseconds(1), scheduler: MainScheduler.asyncInstance)
+                .delay(.microseconds(Metrics.didBeginEditDelay), scheduler: MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
                     self.textView.resignFirstResponder()

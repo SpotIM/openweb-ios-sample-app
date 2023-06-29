@@ -117,9 +117,8 @@
 "ReportReasonCancelCancelButton" = "Cancelar Denúncia";
 "ReportReasonCancelTitle" = "Cancelar Denúncia";
 "ReportReasonCancelContinueButton" = "Continuar a Denúncia";
-"ReportReasonThanksSubtitle" = "Será notificado por e-mail sobre a decisão de moderação";
-"ReportReasonThanksTitle" = "Obrigado pela sua opinião!";
-"Community Guidelines" = "Orientações comunitárias";
+"ReportReasonSubmittedSubtitle" = "Será notificado por e-mail sobre a decisão de moderação";
+"ReportReasonSubmittedTitle" = "Obrigado pela sua opinião!";
 "ReportReasonHelpUsTitle" = "Para nos ajudar a compreender o problema, por favor escolha qual destas opções melhor descreve a violação (saiba mais)";
 "ReportReasonHelpUsClickText" = "(saiba mais)";
 "false_information_subtitle" = "Desinformação, informação errada, teoria da conspiração ou qualquer tipo de informação falsa";

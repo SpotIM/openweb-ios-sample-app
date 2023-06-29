@@ -111,16 +111,14 @@
 "Community Guidelines" = "Normas de la comunidad";
 "Read our" = "Lee nuestra";
 "Submit" = "Enviar";
-
 "ReportReasonTextViewMandatoryPlaceholder" = "Por favor, proporcione información adicional";
 "ReportReasonTextViewPlaceholder" = "Los medios pasarán a ser propiedad de The Harris Park.";
 "ReportReasonCancelSubtitle" = "¿Está seguro de que quiere cancelar el informe y eliminar la razón que ha aportado?";
 "ReportReasonCancelCancelButton" = "Cancelar informe";
 "ReportReasonCancelTitle" = "Cancelar informe";
 "ReportReasonCancelContinueButton" = "Continuar con el informe";
-"ReportReasonThanksSubtitle" = "Se te notificará a través de correo electrónico con respecto a la decisión de la moderación";
-"ReportReasonThanksTitle" = "¡Gracias por tus comentarios!";
-"Community Guidelines" = "Principios de la Comunidad";
+"ReportReasonSubmittedSubtitle" = "Se te notificará a través de correo electrónico con respecto a la decisión de la moderación";
+"ReportReasonSubmittedTitle" = "¡Gracias por tus comentarios!";
 "ReportReasonHelpUsTitle" = "Para ayudarnos a comprender el problema, seleccione cuál de estas opciones es la que mejor describe la infracción (más información)";
 "ReportReasonHelpUsClickText" = "(más información)";
 "false_information_subtitle" = "Disinformation, misinformation, conspiracy theories or additional misleading information.";

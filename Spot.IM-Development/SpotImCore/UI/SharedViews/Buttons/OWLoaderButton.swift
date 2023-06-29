@@ -11,9 +11,9 @@ import RxSwift
 import RxCocoa
 
 class OWLoaderButton: UIButton {
-    var spinner = UIActivityIndicatorView()
+    fileprivate var spinner = UIActivityIndicatorView()
 
-    var isLoading = false {
+    fileprivate var isLoading = false {
         didSet {
             updateView()
         }
@@ -29,7 +29,7 @@ class OWLoaderButton: UIButton {
         setupView()
     }
 
-    func setupView() {
+    fileprivate func setupView() {
         spinner.hidesWhenStopped = true
         spinner.color = .white
         addSubview(spinner)
@@ -38,7 +38,7 @@ class OWLoaderButton: UIButton {
         }
     }
 
-    func updateView() {
+    fileprivate func updateView() {
         if isLoading {
             spinner.startAnimating()
             titleLabel?.alpha = 0

@@ -11,8 +11,6 @@ import RxSwift
 import RxCocoa
 
 class OWAdditionalInfoVC: UIViewController {
-    fileprivate struct Metrics { }
-
     let additionalInfoViewViewModel: OWAdditionalInfoViewViewModel
 
     fileprivate lazy var additionalInfoView: OWAdditionalInfoView = {

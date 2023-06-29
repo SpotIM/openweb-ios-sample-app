@@ -28,11 +28,12 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
         static let trashIconPadding: CGFloat = 10
         static let buttonsFontSize: CGFloat = 15
         static let closeButtonPadding: CGFloat = 20
+        static let closeCrossIcon = "closeCrossIcon"
     }
 
     fileprivate lazy var closeButton: UIButton = {
         return UIButton()
-            .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+            .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             .withPadding(Metrics.closeButtonPadding)
     }()
 
@@ -137,7 +138,7 @@ fileprivate extension OWReportReasonCancelView {
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton
-                    .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+                    .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
 
                 self.continueButton
                     .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))

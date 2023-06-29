@@ -8,55 +8,17 @@
 
 import Foundation
 
-// All new reasons need to be added both in OWNetworkReportReasonType and OWReportReasonType
-enum OWNetworkReportReasonType: String, Codable {
-    case identity_attack
-    case hate_speech
-    case inappropriate_language
-    case spam
-    case false_information
-    case sexual_activity
-    case profile
-    case child_abuse
-    case terrorism
-    case copyright_infringement
-    case other
-    case new_reason_does_not_exist
-
-    init(from decoder: Decoder) throws {
-        // 1
-        let container = try decoder.singleValueContainer()
-        // 2
-        let rawString = try container.decode(String.self)
-
-        // 3
-        if let reportReasonType = OWNetworkReportReasonType(rawValue: rawString) {
-            self = reportReasonType
-        } else {
-            // 4
-            self = .new_reason_does_not_exist
-        }
-    }
-
-    var toReportReasonType: OWReportReasonType {
-        guard let reportType = OWReportReasonType(rawValue: self.rawValue) else {
-            fatalError("All new reasons need to be added both in OWNetworkReportReasonType and OWReportReasonType")
-        }
-        return reportType
-    }
-}
-
 enum OWReportReasonType: String, Codable {
-    case identity_attack
-    case hate_speech
-    case inappropriate_language
+    case identityAttack = "identity_attack"
+    case hateSpeech = "hate_speech"
+    case inappropriateLanguage = "inappropriate_language"
     case spam
-    case false_information
-    case sexual_activity
+    case falseInformation = "false_information"
+    case sexualActivity = "sexual_activity"
     case profile
-    case child_abuse
+    case childAbuse = "child_abuse"
     case terrorism
-    case copyright_infringement
+    case copyrightInfringement = "copyright_infringement"
     case other
 }
 
