@@ -95,7 +95,9 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         // Coordinate to full conversation
-        Observable.merge(openFullConversationObservable, openCommentCreationObservable, openReportReasonObservable)
+        Observable.merge(openFullConversationObservable,
+                         openCommentCreationObservable,
+                         openReportReasonObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
