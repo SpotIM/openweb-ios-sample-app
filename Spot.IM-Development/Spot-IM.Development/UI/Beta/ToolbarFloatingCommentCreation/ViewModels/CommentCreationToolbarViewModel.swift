@@ -34,5 +34,10 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
             .unwrap()
     }
 
+    init(toolbarElments: [ToolbarElementModel]) {
+        let cellsVms = toolbarElments.map { ToolbarCollectionCellViewModel(model: $0) }
+        self._toolbarCellsVM.onNext(cellsVms)
+    }
+
     var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
 }

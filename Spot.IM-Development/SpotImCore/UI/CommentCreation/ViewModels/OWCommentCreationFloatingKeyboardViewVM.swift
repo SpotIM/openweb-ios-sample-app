@@ -15,6 +15,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
+    var accessoryViewStrategy: OWAccessoryViewStrategy { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -33,7 +34,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
-    var commentType: OWCommentCreationType
+    let commentType: OWCommentCreationType
+    let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeButtonTap = PublishSubject<Void>()
 
@@ -43,6 +45,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         self.servicesProvider = servicesProvider
         self._commentCreationData.onNext(commentCreationData)
         commentType = commentCreationData.commentCreationType
+
+        // Setting accessoryViewStrategy
+        let style = commentCreationData.settings.commentCreationSettings.style
+        if case let OWCommentCreationStyle.floatingKeyboard(strategy) = style {
+            accessoryViewStrategy = strategy
+        } else {
+            accessoryViewStrategy = OWAccessoryViewStrategy.default
+        }
         setupObservers()
     }
 }

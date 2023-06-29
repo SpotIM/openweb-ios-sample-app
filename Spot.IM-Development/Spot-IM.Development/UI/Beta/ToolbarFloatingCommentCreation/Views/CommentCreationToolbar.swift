@@ -17,13 +17,11 @@ class CommentCreationToolbar: UIView {
     }
 
     fileprivate lazy var toolbarCollection: UICollectionView = {
-        let collection = UICollectionView()
-
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: ToolbarMetrics.height, height: ToolbarMetrics.height)
 
-        collection.collectionViewLayout = layout
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
 
         collection.register(cellClass: ToolbarCollectionCell.self)
         return collection
@@ -47,6 +45,7 @@ class CommentCreationToolbar: UIView {
 
 fileprivate extension CommentCreationToolbar {
     func setupUI() {
+        self.backgroundColor = .systemPink
         self.addSubview(toolbarCollection)
         toolbarCollection.snp.makeConstraints { make in
             make.edges.equalToSuperview()
