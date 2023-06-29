@@ -10,5 +10,6 @@ import Foundation
 
 enum OWCommentCreationType {
     case comment
+    case edit(comment: OWComment)
     case replyToComment(originComment: OWComment)
 }

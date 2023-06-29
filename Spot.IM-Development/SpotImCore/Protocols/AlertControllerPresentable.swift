@@ -50,7 +50,7 @@ extension OWAlertPresentable where Self: UIViewController {
             }
         } else {
             let defaultAction = UIAlertAction(
-                title: LocalizationManager.localizedString(key: "OK"),
+                title: SPLocalizationManager.localizedString(key: "OK"),
                 style: .default)
             alert.addAction(defaultAction)
         }

@@ -18,7 +18,7 @@ protocol OWAvatarViewDelegate: AnyObject {
     func avatarDidTapped()
 }
 
-final class SPAvatarView: OWBaseView {
+final class SPAvatarView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "user_avatar_view_id"
         static let avatarImageIdentifier = "avatar_image_id"
@@ -28,9 +28,9 @@ final class SPAvatarView: OWBaseView {
 
     weak var delegate: OWAvatarViewDelegate?
 
-    private let avatarImageView: OWBaseUIImageView = .init()
-    private let onlineIndicatorView: OWBaseView = .init()
-    private let avatarButton: OWBaseButton = .init()
+    private let avatarImageView: SPBaseUIImageView = .init()
+    private let onlineIndicatorView: SPBaseView = .init()
+    private let avatarButton: SPBaseButton = .init()
 
     fileprivate lazy var defaultAvatar: UIImage = {
         let image = UIImage(spNamed: "defaultAvatar", supportDarkMode: true)!
@@ -158,6 +158,6 @@ extension SPAvatarView {
         onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image
-        avatarButton.accessibilityLabel = LocalizationManager.localizedString(key: "Profile image")
+        avatarButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "Profile image")
     }
 }

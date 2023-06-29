@@ -20,6 +20,7 @@ class MockArticleFlowsVC: UIViewController {
         // 1.2 * screen height, defualt to 1200
         static let articleHeight: CGFloat = 1.2 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
         static let articleImageRatio: CGFloat = 2/3
+        static let articelImageViewCornerRadius: CGFloat = 10
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
@@ -74,6 +75,7 @@ class MockArticleFlowsVC: UIViewController {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
+            .corner(radius: Metrics.articelImageViewCornerRadius)
     }()
 
     fileprivate lazy var lblArticleDescription: UILabel = {
@@ -83,7 +85,7 @@ class MockArticleFlowsVC: UIViewController {
             .label
             .numberOfLines(0)
             .font(FontBook.secondaryHeadingMedium)
-            .textColor(ColorPalette.shared.color(type: .blackish))
+            .textColor(ColorPalette.shared.color(type: .text))
     }()
 
     fileprivate lazy var btnFullConversation: UIButton = {
@@ -146,7 +148,8 @@ fileprivate extension MockArticleFlowsVC {
     }
 
     func setupViews() {
-        view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        articleScrollView.backgroundColor = ColorPalette.shared.color(type: .background)
 
         view.addSubview(articleScrollView)
         articleScrollView.snp.makeConstraints { make in

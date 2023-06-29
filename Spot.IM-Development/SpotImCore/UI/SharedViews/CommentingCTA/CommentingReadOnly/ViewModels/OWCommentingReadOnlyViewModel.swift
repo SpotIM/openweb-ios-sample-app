@@ -62,5 +62,9 @@ fileprivate extension OWCommentingReadOnlyViewModel {
         triggerCustomizeTitleLabelUI
             .bind(to: _triggerCustomizeTitleLabelUI)
             .disposed(by: disposeBag)
+
+        triggerCustomizeIconImageViewUI
+            .bind(to: _triggerCustomizeIconImageViewUI)
+            .disposed(by: disposeBag)
     }
 }

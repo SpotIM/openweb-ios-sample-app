@@ -12,13 +12,13 @@ import Foundation
 public enum OWConversationStyle: Codable {
     case regular
     case compact
-    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionsStyle, spacing: OWConversationSpacing)
+    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionStyle, spacing: OWConversationSpacing)
 }
 
 #else
 enum OWConversationStyle: Codable {
     case regular
     case compact
-    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionsStyle, spacing: OWConversationSpacing)
+    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionStyle, spacing: OWConversationSpacing)
 }
 #endif

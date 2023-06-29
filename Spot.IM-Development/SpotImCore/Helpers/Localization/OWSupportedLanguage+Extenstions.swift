@@ -32,6 +32,15 @@ extension OWSupportedLanguage {
         }
     }
 
+    var userBadgeCode: String {
+        switch self {
+        case .spanish:
+            return "es-ES"
+        default:
+            return self.rawValue
+        }
+    }
+
     var semanticAttribute: UISemanticContentAttribute {
         switch self {
         case .hebrew, .arabic:
