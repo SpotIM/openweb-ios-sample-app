@@ -91,5 +91,13 @@ fileprivate extension OWCommentCreationEntryViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        triggerCustomizeContainerViewUI
+            .bind(to: _triggerCustomizeContainerViewUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeTitleLabelUI
+            .bind(to: _triggerCustomizeTitleLabelUI)
+            .disposed(by: disposeBag)
     }
 }
