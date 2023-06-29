@@ -10,7 +10,7 @@ import UIKit
 
 protocol SPCommentFooterViewDelegate: AnyObject {
     func clickedOnAddContentButton(type: SPCommentFooterContentButtonType)
-    func updatePostCommentButtonCustomUI(button: OWBaseButton)
+    func updatePostCommentButtonCustomUI(button: SPBaseButton)
 }
 
 enum SPCommentFooterContentButtonType {
@@ -18,16 +18,16 @@ enum SPCommentFooterContentButtonType {
     case gif // Not supported yet
 }
 
-final class SPCommentFooterView: OWBaseView {
+final class SPCommentFooterView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_footer_view_id"
         static let postButtonIdentifier = "comment_footer_view_post_button_id"
         static let addImageButtonIdentifier = "comment_footer_view_add_image_button_id"
     }
-    private let postButton: OWBaseButton = .init()
-    private let footerSeperator: OWBaseView = .init()
+    private let postButton: SPBaseButton = .init()
+    private let footerSeperator: SPBaseView = .init()
 
-    private let addImageButton: OWBaseButton = .init()
+    private let addImageButton: SPBaseButton = .init()
 
     typealias PostButtonAction = () -> Void
     private var postButtonAction: PostButtonAction?
@@ -124,7 +124,7 @@ final class SPCommentFooterView: OWBaseView {
         }
     }
 
-    private func addInsentsToActionButton(_ button: OWBaseButton) {
+    private func addInsentsToActionButton(_ button: SPBaseButton) {
         button.imageEdgeInsets = UIEdgeInsets(top: Theme.actionButtonVerticalInset,
                                               left: Theme.actionButtonHorizontalInset,
                                               bottom: Theme.actionButtonVerticalInset,

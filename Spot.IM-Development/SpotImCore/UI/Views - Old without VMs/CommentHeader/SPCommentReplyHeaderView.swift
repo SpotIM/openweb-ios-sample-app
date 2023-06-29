@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class SPCommentReplyHeaderView: OWBaseView {
+final class SPCommentReplyHeaderView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_reply_header_view_id"
         static let closeButtonIdentifier = "comment_reply_header_view_close_button_id"
@@ -16,12 +16,12 @@ final class SPCommentReplyHeaderView: OWBaseView {
         static let commentAuthorLabelIdentifier = "comment_reply_header_view_comment_author_label_id"
         static let commentLabelIdentifier = "comment_reply_header_view_comment_label_id"
     }
-    let closeButton: OWBaseButton = .init()
+    let closeButton: SPBaseButton = .init()
 
-    private let replyingLabel: OWBaseLabel = .init()
-    private let commentAuthorLabel: OWBaseLabel = .init()
-    private let commentLabel: OWBaseLabel = .init()
-    private let separatorView: OWBaseView = .init()
+    private let replyingLabel: SPBaseLabel = .init()
+    private let commentAuthorLabel: SPBaseLabel = .init()
+    private let commentLabel: SPBaseLabel = .init()
+    private let separatorView: SPBaseView = .init()
 
     private var commentLabelTopConstraint: OWConstraint? = nil
 
@@ -80,7 +80,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
     }
 
     private func setupReplyingLabel() {
-        replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
+        replyingLabel.text = SPLocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
         replyingLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Theme.topOffset)

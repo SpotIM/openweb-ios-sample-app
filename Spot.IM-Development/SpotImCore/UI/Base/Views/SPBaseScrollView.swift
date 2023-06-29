@@ -1,22 +1,20 @@
 //
-//  BaseView.swift
-//  Spot.IM-Core
+//  BaseScrollView.swift
+//  SpotImCore
 //
-//  Created by Eugene on 8/1/19.
+//  Created by Eugene on 11.11.2019.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
 import UIKit
 
-public class OWBaseView: UIView {
+class SPBaseScrollView: UIScrollView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
-            ?? semanticContentAttribute
-        backgroundColor = .spBackground0
-        translatesAutoresizingMaskIntoConstraints = false
+        semanticContentAttribute = SPLocalizationManager.currentLanguage?.customSemanticAttribute
+        ?? semanticContentAttribute
     }
 
     @available(*,

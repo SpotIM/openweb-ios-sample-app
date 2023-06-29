@@ -15,6 +15,7 @@ protocol OWLocalizationManagerProtocol {
     var locale: Locale { get }
     var semanticAttribute: UISemanticContentAttribute { get }
     var textAlignment: NSTextAlignment { get }
+    var currentLanguage: Observable<OWSupportedLanguage> { get }
 }
 
 protocol OWLocalizationManagerConfigurable {
@@ -53,7 +54,7 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
 
     fileprivate var _currentLanguageNonRx: OWSupportedLanguage = OWSupportedLanguage.default
     fileprivate let _currentLanguage = BehaviorSubject<OWSupportedLanguage?>(value: nil)
-    fileprivate var currentLanguage: Observable<OWSupportedLanguage> {
+    var currentLanguage: Observable<OWSupportedLanguage> {
         return _currentLanguage
             .unwrap()
     }

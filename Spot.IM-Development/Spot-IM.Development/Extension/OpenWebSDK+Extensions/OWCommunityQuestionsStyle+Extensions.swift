@@ -11,23 +11,25 @@ import SpotImCore
 
 #if NEW_API
 
-extension OWCommunityQuestionsStyle {
+extension OWCommunityQuestionStyle {
     init(index: Int) {
         switch index {
         case 0: self = .none
         case 1: self = .regular
+        case 2: self = .compact
         default:
             self = .none
         }
     }
 
     static var defaultIndex: Int {
-        return 0
+        return 1
     }
 
     enum CodingKeys: String, CodingKey {
         case none
         case regular
+        case compact
     }
 }
 

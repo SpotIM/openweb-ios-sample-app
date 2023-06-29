@@ -24,7 +24,7 @@ class OWMenuSelectionEncapsulationView: UIView {
     fileprivate let disposeBag = DisposeBag()
 
     init(menuVM: OWMenuSelectionViewModeling, constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]) {
-        menuView = OWMenuSelectionView.init(viewModel: menuVM)
+        menuView = OWMenuSelectionView(viewModel: menuVM)
         self.constraintsMapper = constraintsMapper
         super.init(frame: .zero)
         setupObservers()

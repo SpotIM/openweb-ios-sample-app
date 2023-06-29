@@ -130,7 +130,7 @@ protocol OWConversationAPI {
     func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<OWShareLink>
     func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<OWComment>
-    func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete>
+    func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<OWCommentDelete>
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<EmptyDecodable>
     func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse>
     func commentStatus(commentId: String) -> OWNetworkResponse<OWCommentStatusResponse>
@@ -199,7 +199,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete> {
+    func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<OWCommentDelete> {
         let endpoint = OWConversationEndpoints.commentDelete(id: id, parentId: parentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

@@ -17,9 +17,12 @@ protocol OWUserBadgeServicing {
 class OWUserBadgeService: OWUserBadgeServicing {
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let localizationManager: OWLocalizationManagerProtocol
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         localizationManager: OWLocalizationManagerProtocol = OWLocalizationManager.shared) {
         self.servicesProvider = servicesProvider
+        self.localizationManager = localizationManager
     }
 
     fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
@@ -33,11 +36,11 @@ class OWUserBadgeService: OWUserBadgeServicing {
 
     func userBadgeText(user: SPUser) -> Observable<OWUserBadgeType> {
         return self.conversationConfig
-            .map { conversationConfig in
+            .withLatestFrom(localizationManager.currentLanguage) { conversationConfig, currentLanguage -> OWUserBadgeType in
                 guard user.isStaff else { return .empty }
 
                 if let translations = conversationConfig.translationTextOverrides,
-                   let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()] {
+                   let currentTranslation = translations[currentLanguage.userBadgeCode] {
                     if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
                         return .badge(text: adminBadge)
                     } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
@@ -47,8 +50,7 @@ class OWUserBadgeService: OWUserBadgeServicing {
                     } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue] {
                         return .badge(text: communityModeratorBadge)
                     }
-                }
-                if let title = user.authorityTitle {
+                } else if let title = user.authorityTitle {
                     return .badge(text: title)
                 }
                 return .empty
