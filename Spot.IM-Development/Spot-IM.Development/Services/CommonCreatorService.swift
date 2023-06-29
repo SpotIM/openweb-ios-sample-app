@@ -16,6 +16,7 @@ protocol CommonCreatorServicing {
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
     func mockArticle() -> OWArticleProtocol
+    func commentCreationFloatingBottomToolbar() -> CommentCreationToolbar
 }
 
 class CommonCreatorService: CommonCreatorServicing {
@@ -74,6 +75,12 @@ class CommonCreatorService: CommonCreatorServicing {
                                 thumbnailUrl: articleStub.thumbnailUrl,
                                 additionalSettings: settings)
         return article
+    }
+
+    func commentCreationFloatingBottomToolbar() -> CommentCreationToolbar {
+        let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel()
+        let toolbar = CommentCreationToolbar(viewModel: viewModel)
+        return toolbar
     }
 }
 

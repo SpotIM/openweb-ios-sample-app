@@ -13,7 +13,7 @@ import RxCocoa
 class ToolbarCollectionCell: UICollectionViewCell {
     fileprivate struct Metrics {
         static let margin: CGFloat = 10
-        static let size: CGFloat = 80
+        static let size: CGFloat = CommentCreationToolbar.ToolbarMetrics.height
     }
 
     fileprivate lazy var titleLabel: UILabel = {

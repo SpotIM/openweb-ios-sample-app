@@ -12,8 +12,18 @@ import SnapKit
 
 class CommentCreationToolbar: UIView {
 
+    struct ToolbarMetrics {
+        static let height: CGFloat = 80
+    }
+
     fileprivate lazy var toolbarCollection: UICollectionView = {
         let collection = UICollectionView()
+
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: ToolbarMetrics.height, height: ToolbarMetrics.height)
+
+        collection.collectionViewLayout = layout
 
         collection.register(cellClass: ToolbarCollectionCell.self)
         return collection
@@ -40,6 +50,7 @@ fileprivate extension CommentCreationToolbar {
         self.addSubview(toolbarCollection)
         toolbarCollection.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+            make.height.equalTo(ToolbarMetrics.height)
         }
     }
 
@@ -52,6 +63,8 @@ fileprivate extension CommentCreationToolbar {
             .disposed(by: disposeBag)
 
         toolbarCollection.rx.modelSelected(ToolbarCollectionCellViewModel.self)
-
+            .map { $0 as ToolbarCollectionCellViewModeling }
+            .bind(to: viewModel.inputs.modelSelected)
+            .disposed(by: disposeBag)
     }
 }
