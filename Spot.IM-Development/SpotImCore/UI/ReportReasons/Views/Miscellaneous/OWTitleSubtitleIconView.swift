@@ -20,7 +20,7 @@ class OWTitleSubtitleIconView: UIView {
         static let titleLabelSuffixIdentifier = "_title_label_id"
         static let subtitleLabelSuffixIdentifier = "_subtitle_label_id"
     }
-    
+
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var titleIcon: UIImageView = {
