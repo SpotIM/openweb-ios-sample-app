@@ -32,15 +32,6 @@ class OWConversationVC: UIViewController {
         return closeButton
     }()
 
-    fileprivate lazy var titleLabel: UILabel = {
-        return UILabel()
-            .enforceSemanticAttribute()
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize))
-            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
-            .backgroundColor(.clear)
-    }()
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
