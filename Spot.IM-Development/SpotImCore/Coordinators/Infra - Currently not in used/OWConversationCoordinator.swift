@@ -169,9 +169,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] commentId -> Observable<OWReportReasonCoordinatorResult> in
+            .flatMap { [weak self] (commentId, parentId) -> Observable<OWReportReasonCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+                                                                        parentId: parentId,
                                                                         router: self.router,
                                                                         actionsCallbacks: self.actionsCallbacks,
                                                                         presentationalMode: self.conversationData.presentationalStyle)
@@ -383,7 +384,9 @@ fileprivate extension OWConversationCoordinator {
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
         let openReportReason = viewModel.outputs.openReportReason
-            .map { OWViewActionCallbackType.openReportReason(commentId: $0) }
+            .map { (commentId, parentId) in
+                OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
+            }
 
         Observable.merge(closeConversationPressed, openPublisherProfile, openReportReason)
             .subscribe { [weak self] viewActionType in

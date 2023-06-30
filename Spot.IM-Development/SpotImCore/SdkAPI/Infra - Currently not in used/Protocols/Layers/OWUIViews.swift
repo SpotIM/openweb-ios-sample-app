@@ -23,6 +23,7 @@ public protocol OWUIViews {
                       completion: @escaping OWViewCompletion)
 
     func reportReason(commentId: OWCommentId,
+                      parentId: OWCommentId,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)

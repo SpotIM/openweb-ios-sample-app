@@ -31,6 +31,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     }
 
     fileprivate let commentId: OWCommentId
+    fileprivate let parentId: OWCommentId
     fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
@@ -41,10 +42,12 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     var reportReasonView: UIView?
 
     init(commentId: OWCommentId,
+         parentId: OWCommentId,
          router: OWRoutering? = nil,
          actionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none) {
         self.commentId = commentId
+        self.parentId = parentId
         self.router = router
         self.actionsCallbacks = actionsCallbacks
         self.presentationalMode = presentationalMode
@@ -53,6 +56,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
         guard let router = router else { return .empty() }
         let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(commentId: commentId,
+                                                                                 parentId: parentId,
                                                                                  viewableMode: .partOfFlow,
                                                                                  presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
@@ -82,8 +86,8 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        // TODO: Complete when we would like to support comment creation as a view
         let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(commentId: commentId,
+                                                                                             parentId: parentId,
                                                                                              viewableMode: .independent,
                                                                                              presentationalMode: .none,
                                                                                              servicesProvider: OWSharedServicesProvider.shared)

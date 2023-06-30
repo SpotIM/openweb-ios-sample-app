@@ -36,18 +36,23 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
 
     let viewableMode: OWViewableMode
     let commentId: OWCommentId
+    let parentId: OWCommentId
     let presentationalMode: OWPresentationalModeCompact
 
     lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
-        return OWReportReasonViewViewModel(commentId: commentId, viewableMode: viewableMode, presentationalMode: presentationalMode)
+        return OWReportReasonViewViewModel(commentId: commentId,
+                                           parentId: parentId,
+                                           viewableMode: viewableMode,
+                                           presentationalMode: presentationalMode)
     }()
 
     var title: String {
         return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
     }
 
-    init (commentId: OWCommentId, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
+    init (commentId: OWCommentId, parentId: OWCommentId, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
         self.commentId = commentId
+        self.parentId = parentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentMode
     }
