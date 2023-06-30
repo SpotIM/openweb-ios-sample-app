@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-import SpotImCore
 
 #if NEW_API
 
@@ -453,7 +452,6 @@ fileprivate extension BetaNewAPIVC {
             navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
         }
     }
-    // swiftlint:enable function_body_length
 }
 
 fileprivate extension BetaNewAPIVC {

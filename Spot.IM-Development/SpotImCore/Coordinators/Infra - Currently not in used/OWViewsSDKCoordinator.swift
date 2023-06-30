@@ -59,6 +59,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
     }
 
     func reportReasonView(commentId: OWCommentId,
+                          parentId: OWCommentId,
                           callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -69,6 +70,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
                     let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+                                                                            parentId: parentId,
                                                                             actionsCallbacks: callbacks)
                     self.store(coordinator: reportReasonCoordinator)
                     return reportReasonCoordinator.showableComponent()

@@ -10,6 +10,7 @@ import Foundation
 
 enum OWReportReasonEndpoints: OWEndpoints {
     case report(commentId: String,
+                parentId: String,
                 reasonMain: String,
                 reasonSub: String,
                 userDescription: String)
@@ -32,12 +33,14 @@ enum OWReportReasonEndpoints: OWEndpoints {
     var parameters: OWNetworkParameters? {
         switch self {
         case .report(let commentId,
+                     let parentId,
                      let reasonMain,
                      let reasonSub,
                      let userDescription):
             let reasons = ["main": reasonMain, "sub": reasonSub]
             let userDescription = ["user_description": userDescription]
             return ["message_id": commentId,
+                    "parentId": parentId,
                     "reasons": reasons,
                     "report_metadata": userDescription]
         }
@@ -45,15 +48,16 @@ enum OWReportReasonEndpoints: OWEndpoints {
 }
 
 protocol OWReportReasonAPI {
-    func report(commentId: String, reasonMain: String, reasonSub: String, userDescription: String) -> OWNetworkResponse<EmptyDecodable>
+    func report(commentId: String, parentId: String, reasonMain: String, reasonSub: String, userDescription: String) -> OWNetworkResponse<EmptyDecodable>
 }
 
 extension OWNetworkAPI: OWReportReasonAPI {
     // Access by .reporReason for readability
     var reportReason: OWReportReasonAPI { return self }
 
-    func report(commentId: String, reasonMain: String, reasonSub: String = "", userDescription: String = "") -> OWNetworkResponse<EmptyDecodable> {
+    func report(commentId: String, parentId: String, reasonMain: String, reasonSub: String = "", userDescription: String = "") -> OWNetworkResponse<EmptyDecodable> {
         let endpoint = OWReportReasonEndpoints.report(commentId: commentId,
+                                                      parentId: parentId,
                                                       reasonMain: reasonMain,
                                                       reasonSub: reasonSub,
                                                       userDescription: userDescription)

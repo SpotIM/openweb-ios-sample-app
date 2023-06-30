@@ -83,6 +83,7 @@ fileprivate extension TestingPlaygroundIndependentViewModel {
                 }
 
                 views.reportReason(commentId: postId,
+                                   parentId: "",
                                    additionalSettings: nil,
                                    callbacks: actionsCallbacks,
                                    completion: { [weak self] result in
