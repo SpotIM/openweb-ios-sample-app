@@ -306,6 +306,7 @@ extension OWUILayer {
     }
 
     func reportReason(commentId: OWCommentId,
+                      parentId: OWCommentId,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
@@ -321,6 +322,7 @@ extension OWUILayer {
         }
 
         _ = viewsSdkCoordinator.reportReasonView(commentId: commentId,
+                                                 parentId: parentId,
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)

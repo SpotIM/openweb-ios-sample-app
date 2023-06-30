@@ -42,7 +42,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
-    var openReportReason: Observable<String> { get }
+    var openReportReason: Observable<(OWCommentId, OWCommentId)> { get }
+    var commentId: Observable<String> { get }
+    var parentId: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -199,9 +201,21 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var openReportReasonChange = PublishSubject<String>()
-    var openReportReason: Observable<String> {
+    fileprivate var openReportReasonChange = PublishSubject<(OWCommentId, OWCommentId)>()
+    var openReportReason: Observable<(OWCommentId, OWCommentId)> {
         return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var commentIdChange = PublishSubject<String>()
+    var commentId: Observable<String> {
+        return commentIdChange
+            .asObservable()
+    }
+
+    fileprivate var parentIdChange = PublishSubject<String>()
+    var parentId: Observable<String> {
+        return parentIdChange
             .asObservable()
     }
 
@@ -635,7 +649,8 @@ fileprivate extension OWPreConversationViewViewModel {
                             switch action.title {
                             case OWLocalizationManager.shared.localizedString(key: "Report"):
                                 guard let commentId = comment.id else { return }
-                                self.openReportReasonChange.onNext(commentId)
+                                let parentId = comment.parentId ?? ""
+                                self.openReportReasonChange.onNext((commentId, parentId))
                             default: break
                             }
                         }

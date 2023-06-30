@@ -40,7 +40,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var shouldShowError: Observable<Void> { get }
-    var openReportReason: Observable<String> { get }
+    var openReportReason: Observable<(OWCommentId, OWCommentId)> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -257,8 +257,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var openReportReasonChange = PublishSubject<String>()
-    var openReportReason: Observable<String> {
+    fileprivate var openReportReasonChange = PublishSubject<(OWCommentId, OWCommentId)>()
+    var openReportReason: Observable<(OWCommentId, OWCommentId)> {
         return openReportReasonChange
             .asObservable()
     }
@@ -915,7 +915,8 @@ fileprivate extension OWConversationViewViewModel {
                             switch action.title {
                             case OWLocalizationManager.shared.localizedString(key: "Report"):
                                 guard let commentId = comment.id else { return }
-                                self.openReportReasonChange.onNext(commentId)
+                                let parentId = comment.parentId ?? ""
+                                self.openReportReasonChange.onNext((commentId, parentId))
                             default: break
                             }
                         }

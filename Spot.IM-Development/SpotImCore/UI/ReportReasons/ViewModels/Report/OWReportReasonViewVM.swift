@@ -119,6 +119,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let presentationalMode: OWPresentationalModeCompact
     fileprivate let commentId: OWCommentId
+    fileprivate let parentId: OWCommentId
 
     var setSubmitInProgress = PublishSubject<Bool>()
     var submitInProgress: Observable<Bool> {
@@ -183,10 +184,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     let titleViewVM: OWTitleViewViewModeling = OWTitleViewViewModel()
 
     init(commentId: OWCommentId,
+         parentId: OWCommentId,
          viewableMode: OWViewableMode,
          presentationalMode: OWPresentationalModeCompact,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.commentId = commentId
+        self.parentId = parentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
@@ -312,6 +315,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     .netwokAPI()
                     .reportReason
                     .report(commentId: self.commentId,
+                            parentId: self.parentId,
                             reasonMain: selectedReason.type.rawValue, reasonSub: "",
                             userDescription: userDescription)
                     .response
