@@ -17,7 +17,7 @@ protocol SPPreConversationFooterDelegate: AnyObject {
     func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton)
 }
 
-internal final class SPPreConversationFooter: OWBaseView {
+internal final class SPPreConversationFooter: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "pre_conversation_footer_id"
         static let showMoreCommentsButtonIdentifier = "pre_conversation_footer_show_more_comments_button_id"
@@ -26,20 +26,20 @@ internal final class SPPreConversationFooter: OWBaseView {
         static let spotIMIconIdentifier = "pre_conversation_footer_ow_icon_id"
         static let addSpotIMButtonIdentifier = "pre_conversation_footer_open_ow_web_button_id"
     }
-    private lazy var separatorView: OWBaseView = .init()
+    private lazy var separatorView: SPBaseView = .init()
     private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
-    private lazy var termsButton: OWBaseButton = {
-        let btn = OWBaseButton()
+    private lazy var termsButton: SPBaseButton = {
+        let btn = SPBaseButton()
         return btn
     }()
-    private lazy var dotLabel: OWBaseLabel = .init()
-    private lazy var privacyButton: OWBaseButton = {
-        let btn = OWBaseButton()
+    private lazy var dotLabel: SPBaseLabel = .init()
+    private lazy var privacyButton: SPBaseButton = {
+        let btn = SPBaseButton()
         return btn
     }()
-    private lazy var spotIMIcon: OWBaseUIImageView = .init()
-    private lazy var addSpotIMButton: OWBaseButton = .init()
-    private lazy var openwebLinkView: OWBaseView = .init()
+    private lazy var spotIMIcon: SPBaseUIImageView = .init()
+    private lazy var addSpotIMButton: SPBaseButton = .init()
+    private lazy var openwebLinkView: SPBaseView = .init()
 
     private var moreCommentsTopConstraint: OWConstraint?
     private var termsBottomConstraint: OWConstraint?
@@ -140,9 +140,9 @@ internal final class SPPreConversationFooter: OWBaseView {
 
             var title: String
             if SpotIm.buttonOnlyMode == .withTitle {
-                title = LocalizationManager.localizedString(key: "Post a Comment")
+                title = SPLocalizationManager.localizedString(key: "Post a Comment")
             } else { // without title
-                title = LocalizationManager.localizedString(key: "Show Comments")
+                title = SPLocalizationManager.localizedString(key: "Show Comments")
                 if let commentsCount = showMoreCommentsButton.getCommentsCount() {
                     title += " (\(commentsCount))"
                 }
@@ -161,7 +161,7 @@ internal final class SPPreConversationFooter: OWBaseView {
             make.height.equalTo(1.0)
         }
 
-        let title = LocalizationManager.localizedString(key: "Show more comments")
+        let title = SPLocalizationManager.localizedString(key: "Show more comments")
 
         showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
@@ -180,7 +180,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     private func setupTermsButton() {
-        let title = LocalizationManager.localizedString(key: "Terms")
+        let title = SPLocalizationManager.localizedString(key: "Terms")
         termsButton.setTitle(title, for: .normal)
         termsButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb
@@ -207,7 +207,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     private func setupPrivacyButton() {
-        let title = LocalizationManager.localizedString(key: "Privacy")
+        let title = SPLocalizationManager.localizedString(key: "Privacy")
         privacyButton.setTitle(title, for: .normal)
         privacyButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb
@@ -230,7 +230,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     private func setupAddSpotIMButton() {
-        let title = LocalizationManager.localizedString(key: "Powered by OpenWeb")
+        let title = SPLocalizationManager.localizedString(key: "Powered by OpenWeb")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb

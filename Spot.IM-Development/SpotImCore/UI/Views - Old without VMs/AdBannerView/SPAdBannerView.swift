@@ -8,13 +8,13 @@
 
 import UIKit
 
-internal final class SPAdBannerView: OWBaseView {
+internal final class SPAdBannerView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "ad_banner_id"
         static let bannerViewIdentifier = "ad_banner_banner_view_id"
     }
 
-    private lazy var bannerContainerView: OWBaseView = .init()
+    private lazy var bannerContainerView: SPBaseView = .init()
     private var bannerView: UIView?
     private var bannerContainerHeight: OWConstraint?
 

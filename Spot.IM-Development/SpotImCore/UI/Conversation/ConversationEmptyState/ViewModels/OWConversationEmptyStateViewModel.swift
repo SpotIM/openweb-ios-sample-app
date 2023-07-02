@@ -117,10 +117,6 @@ fileprivate extension OWConversationEmptyStateViewModel {
         })
         .disposed(by: disposeBag)
 
-//        triggerCustomizeTitleLabelUI
-//            .bind(to: _triggerCustomizeTitleLabelUI)
-//            .disposed(by: disposeBag)
-
         triggerCustomizeTitleLabelUI
             .flatMapLatest { [weak self] label -> Observable<UILabel> in
                 guard let self = self else { return .empty() }

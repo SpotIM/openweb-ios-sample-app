@@ -15,12 +15,12 @@ protocol TotalTypingIndicationViewDelegate: AnyObject {
     func indicationViewClicked()
 }
 
-final class TotalTypingIndicationView: OWBaseView {
+final class TotalTypingIndicationView: SPBaseView {
 
     weak var delegate: TotalTypingIndicationViewDelegate?
-    private let animationImageView: OWBaseUIImageView = .init()
-    private let typingLabel: OWBaseLabel = .init()
-    private let newCommentsArrowImageView: OWBaseUIImageView = .init()
+    private let animationImageView: SPBaseUIImageView = .init()
+    private let typingLabel: SPBaseLabel = .init()
+    private let newCommentsArrowImageView: SPBaseUIImageView = .init()
 
     private var panGesture: UIPanGestureRecognizer?
     private var animationImageWidthConstraint: OWConstraint?
@@ -42,9 +42,9 @@ final class TotalTypingIndicationView: OWBaseView {
 
     func setCount(count: Int, isBlitz: Bool) {
         if isBlitz {
-            typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: count > 1 ? "New Comments" : "New Comment")
+            typingLabel.text = "\(count) " + SPLocalizationManager.localizedString(key: count > 1 ? "New Comments" : "New Comment")
         } else {
-            typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "Typing")
+            typingLabel.text = "\(count) " + SPLocalizationManager.localizedString(key: "Typing")
         }
         typingLabel.font = UIFont.preferred(style: isBlitz ? .bold : .regular, of: Metrics.labelTextSize)
         newCommentsArrowImageView.isHidden = !isBlitz
@@ -80,7 +80,7 @@ final class TotalTypingIndicationView: OWBaseView {
     }
 
     private func configureTypingLabel() {
-        typingLabel.text = LocalizationManager.localizedString(key: "Typing")
+        typingLabel.text = SPLocalizationManager.localizedString(key: "Typing")
         typingLabel.textAlignment = .center
         typingLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         typingLabel.font = UIFont.preferred(style: .regular, of: Metrics.labelTextSize)
