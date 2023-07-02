@@ -16,7 +16,6 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
         static let closeButtonIdentifier = "report_reason_cancel_close_button_id"
         static let continueButtonIdentifier = "report_reason_cancel_continue_button_id"
         static let cancelButtonIdentifier = "report_reason_cancel_cancel_button_id"
-        static let titleViewPrefixIdentifier = "report_reason_cancel"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
@@ -38,10 +37,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var titleView: OWTitleSubtitleIconView = {
-        return OWTitleSubtitleIconView(iconName: viewModel.outputs.titleIconName,
-                                       title: viewModel.outputs.title,
-                                       subtitle: viewModel.outputs.subtitle,
-                                       accessibilityPrefixId: Metrics.titleViewPrefixIdentifier)
+        return OWTitleSubtitleIconView(viewModel: viewModel.outputs.titleViewVM)
     }()
 
     fileprivate lazy var buttonsStackView: UIStackView = {

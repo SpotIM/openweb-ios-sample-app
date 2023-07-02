@@ -21,6 +21,7 @@ class OWTitleSubtitleIconView: UIView {
         static let subtitleLabelSuffixIdentifier = "_subtitle_label_id"
     }
 
+    fileprivate let viewModel: OWTitleSubtitleIconViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var titleIcon: UIImageView = {
@@ -47,11 +48,12 @@ class OWTitleSubtitleIconView: UIView {
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    init(iconName: String, title: String, subtitle: String, accessibilityPrefixId: String) {
+    init(viewModel: OWTitleSubtitleIconViewModeling) {
+        self.viewModel = viewModel
         super.init(frame: .zero)
-        setupViews(iconName: iconName, title: title, subtitle: subtitle)
+        setupViews()
         setupObservers()
-        applyAccessibility(prefixId: accessibilityPrefixId)
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -60,13 +62,13 @@ class OWTitleSubtitleIconView: UIView {
 }
 
 fileprivate extension OWTitleSubtitleIconView {
-    func applyAccessibility(prefixId: String) {
-        titleIcon.accessibilityIdentifier = prefixId + Metrics.titleIconSuffixIdentifier
-        titleLabel.accessibilityIdentifier = prefixId + Metrics.titleLabelSuffixIdentifier
-        subtitleLabel.accessibilityIdentifier = prefixId + Metrics.subtitleLabelSuffixIdentifier
+    func applyAccessibility() {
+        titleIcon.accessibilityIdentifier = viewModel.outputs.accessibilityPrefixId + Metrics.titleIconSuffixIdentifier
+        titleLabel.accessibilityIdentifier = viewModel.outputs.accessibilityPrefixId + Metrics.titleLabelSuffixIdentifier
+        subtitleLabel.accessibilityIdentifier = viewModel.outputs.accessibilityPrefixId + Metrics.subtitleLabelSuffixIdentifier
     }
 
-    func setupViews(iconName: String, title: String, subtitle: String) {
+    func setupViews() {
         self.addSubviews(titleIcon)
         titleIcon.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -86,9 +88,9 @@ fileprivate extension OWTitleSubtitleIconView {
             make.leading.trailing.bottom.equalToSuperview()
         }
 
-        titleIcon.image = UIImage(spNamed: iconName, supportDarkMode: false)
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
+        titleIcon.image = UIImage(spNamed: viewModel.outputs.iconName, supportDarkMode: false)
+        titleLabel.text = viewModel.outputs.title
+        subtitleLabel.text = viewModel.outputs.subtitle
     }
 
     func setupObservers() {

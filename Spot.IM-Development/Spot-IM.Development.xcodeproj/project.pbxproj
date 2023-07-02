@@ -821,6 +821,7 @@
 		9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */; };
 		9E8278792A4DAEC500EAA88E /* OWReportReasonCancelVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8278782A4DAEC500EAA88E /* OWReportReasonCancelVM.swift */; };
 		9E82787D2A4DC24E00EAA88E /* OWTitleViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */; };
+		9E8278802A516CC800EAA88E /* OWTitleSubtitleIconVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */; };
 		9E8B92A42A1B91F3004480F5 /* OWScreenPopStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */; };
 		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
 		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
@@ -1748,6 +1749,7 @@
 		9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWSupportedLanguage+Extensions.swift"; sourceTree = "<group>"; };
 		9E8278782A4DAEC500EAA88E /* OWReportReasonCancelVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelVM.swift; sourceTree = "<group>"; };
 		9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTitleViewVM.swift; sourceTree = "<group>"; };
+		9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWTitleSubtitleIconVM.swift; sourceTree = "<group>"; };
 		9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPopStyle.swift; sourceTree = "<group>"; };
 		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
@@ -4918,8 +4920,8 @@
 		9E3B8B6F29FFBE66006BB207 /* Miscellaneous */ = {
 			isa = PBXGroup;
 			children = (
+				9E82787E2A516C9400EAA88E /* OWTitleSubtitleIconView */,
 				9E82787A2A4DC21000EAA88E /* OWTitleView */,
-				9EC88D8A29FA760400EBD165 /* OWTitleSubtitleIconView.swift */,
 				9ED2E58429EC011000B39A00 /* OWReportReasonCell.swift */,
 				9E36BFEC29ED7E5F00478D06 /* OWRoundCheckBox.swift */,
 			);
@@ -5149,6 +5151,15 @@
 				9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */,
 			);
 			path = OWTitleView;
+			sourceTree = "<group>";
+		};
+		9E82787E2A516C9400EAA88E /* OWTitleSubtitleIconView */ = {
+			isa = PBXGroup;
+			children = (
+				9EC88D8A29FA760400EBD165 /* OWTitleSubtitleIconView.swift */,
+				9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */,
+			);
+			path = OWTitleSubtitleIconView;
 			sourceTree = "<group>";
 		};
 		9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */ = {
@@ -5910,6 +5921,7 @@
 				3DD72C812818297500117946 /* OWLogger.swift in Sources */,
 				3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */,
 				241AF9F1295B22A900A941C1 /* OWCommentTextViewModel.swift in Sources */,
+				9E8278802A516CC800EAA88E /* OWTitleSubtitleIconVM.swift in Sources */,
 				9ED2E58529EC011000B39A00 /* OWReportReasonCell.swift in Sources */,
 				3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */,
 				445418AC23685154001D0ED0 /* UIDevice+Extensions.swift in Sources */,
