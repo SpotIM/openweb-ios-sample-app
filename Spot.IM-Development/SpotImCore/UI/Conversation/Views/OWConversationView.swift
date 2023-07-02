@@ -59,7 +59,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
-
         tableView.refreshControl = tableViewRefreshControl
 
         tableView.allowsSelection = false
@@ -124,20 +123,31 @@ fileprivate extension OWConversationView {
             }
         }
 
-        self.addSubview(articleDescriptionView)
-        articleDescriptionView.OWSnp.makeConstraints { make in
-            if shouldShowTiTleHeader {
-                make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
-            } else {
-                make.top.equalToSuperview()
+        let shouldShowArticleDescription = viewModel.outputs.shouldShowArticleDescription
+        if shouldShowArticleDescription {
+            self.addSubview(articleDescriptionView)
+            articleDescriptionView.OWSnp.makeConstraints { make in
+                if shouldShowTiTleHeader {
+                    make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+                } else {
+                    make.top.equalToSuperview()
+                }
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(Metrics.articleDescriptionHeight)
             }
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.articleDescriptionHeight)
         }
 
         self.addSubview(conversationSummaryView)
         conversationSummaryView.OWSnp.makeConstraints { make in
-            make.top.equalTo(articleDescriptionView.OWSnp.bottom)
+            if shouldShowArticleDescription {
+                make.top.equalTo(articleDescriptionView.OWSnp.bottom)
+            } else {
+                if shouldShowTiTleHeader {
+                    make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+                } else {
+                    make.top.equalToSuperview()
+                }
+            }
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.conversationSummaryHeight)
         }
@@ -192,7 +202,9 @@ fileprivate extension OWConversationView {
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                self?.tableViewRefreshControl.endRefreshing()
+                guard let self = self else { return }
+                self.tableViewRefreshControl.endRefreshing()
+                self.tableView.contentOffset = .zero
             })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)

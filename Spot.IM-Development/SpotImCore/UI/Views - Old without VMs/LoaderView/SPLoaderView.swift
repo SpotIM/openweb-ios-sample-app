@@ -8,10 +8,10 @@
 
 import UIKit
 
-class SPLoaderView: OWBaseView {
+class SPLoaderView: SPBaseView {
 
     private let loader: UIActivityIndicatorView = .init(style: .whiteLarge)
-    private let backgroundView: OWBaseView = .init()
+    private let backgroundView: SPBaseView = .init()
     private let backgroundOpacity: CGFloat
 
     init(frame: CGRect = .zero, backgroundOpacity: CGFloat = 0.2) {

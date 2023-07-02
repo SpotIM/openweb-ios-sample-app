@@ -12,10 +12,10 @@ internal protocol SPLoginPromptViewDelegate {
     func userTapOnLoginPrompt()
 }
 
-internal final class SPLoginPromptView: OWBaseView {
+internal final class SPLoginPromptView: SPBaseView {
 
-    private lazy var titleTextView: OWBaseTextView = .init()
-    private lazy var separatorView: OWBaseView = .init()
+    private lazy var titleTextView: SPBaseTextView = .init()
+    private lazy var separatorView: SPBaseView = .init()
 
     private var titleBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
@@ -38,7 +38,7 @@ internal final class SPLoginPromptView: OWBaseView {
         separatorView.backgroundColor = .spSeparator2
     }
 
-    func getTextView() -> OWBaseTextView {
+    func getTextView() -> SPBaseTextView {
         return self.titleTextView
     }
 

@@ -9,11 +9,15 @@
 import Foundation
 import RxSwift
 
-class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible, OWCompactRouteringCompatible {
+class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactRouteringCompatible, OWRouteringCompatible {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
     var customizations: OWCustomizations { return self._customizations }
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
+
+    lazy var activeRouteringMode: OWRouteringModeInternal = {
+        return .routering(routering: routering)
+    }()
 
     var routering: OWRoutering {
         return flowsSdkCoordinator.routering
@@ -67,6 +71,9 @@ extension OWUILayer {
                                                 presentationalMode: presentationalMode,
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
@@ -101,6 +108,9 @@ extension OWUILayer {
                                                  presentationalMode: presentationalMode,
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
         .subscribe(onNext: { result in
             switch result {
             case .loadedToScreen:
@@ -135,13 +145,19 @@ extension OWUILayer {
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentCreationData = OWCommentCreationRequiredData(article: article, settings: additionalSettings, commentCreationType: .comment)
+        let commentCreationData = OWCommentCreationRequiredData(article: article,
+                                                                settings: additionalSettings,
+                                                                commentCreationType: .comment,
+                                                                presentationalStyle: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
                                                     presentationalMode: presentationalMode,
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
         .subscribe(onNext: { result in
             switch result {
             case .loadedToScreen:
@@ -178,13 +194,19 @@ extension OWUILayer {
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings,
                                                           presentationalStyle: presentationalMode.style)
-        let commentThreadData = OWCommentThreadRequiredData(article: article, settings: additionalSettings, commentId: commentId)
+        let commentThreadData = OWCommentThreadRequiredData(article: article,
+                                                            settings: additionalSettings,
+                                                            commentId: commentId,
+                                                            presentationalStyle: presentationalMode.style)
 
         _ = flowsSdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
                                                     presentationalMode: presentationalMode,
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
         .subscribe(onNext: { result in
             switch result {
             case .loadedToScreen:
@@ -223,6 +245,9 @@ extension OWUILayer {
                                                            presentationalMode: presentationalMode,
                                                            callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
         .subscribe(onNext: { result in
             switch result {
             case .loadedToScreen:
@@ -265,6 +290,9 @@ extension OWUILayer {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .independent)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
@@ -297,6 +325,9 @@ extension OWUILayer {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .independent)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
@@ -356,6 +387,9 @@ extension OWUILayer {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .independent)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
@@ -388,5 +422,14 @@ fileprivate extension OWUILayer {
     func prepareForNewFlow() {
         // Discard any previous subscription to other flows
         flowDisposeBag = DisposeBag()
+    }
+
+    func setActiveRouter(for viewableMode: OWViewableMode) {
+        switch viewableMode {
+        case .independent:
+            activeRouteringMode = .compactRoutering(compactRoutering: self.compactRoutering)
+        case .partOfFlow:
+            activeRouteringMode = .routering(routering: self.routering)
+        }
     }
 }

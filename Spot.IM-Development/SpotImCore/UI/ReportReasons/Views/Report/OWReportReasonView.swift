@@ -43,9 +43,10 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var footerView: UIView = {
-        return UIView()
+        let footerView = UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .apply(shadow: .low, direction: .up)
+            footerView.apply(shadow: .standard, direction: .up)
+        return footerView
     }()
 
     fileprivate lazy var textView: OWTextView = {

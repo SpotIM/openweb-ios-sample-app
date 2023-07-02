@@ -20,6 +20,9 @@ protocol OWAuthenticationManagerProtocol {
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
 
+    func userHasAuthenticationLevel(for actions: [OWUserAction]) -> Observable<[OWUserAction: Bool]>
+    func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool>
+
     func enterAuthenticationRecoveryState()
     func finishAuthenticationRecovery(with authenticationRecovery: OWAuthenticationRecoveryResult)
     func logout() -> Observable<Void>
@@ -91,25 +94,59 @@ extension OWAuthenticationManager {
         return self.shouldShowAuthenticationUI(for: action)
             .do(onNext: { [weak self] shouldShow in
                 guard shouldShow, let self = self,
-                      let routeringCompatible = self.manager.ui as? OWRouteringCompatible,
+                      let routeringModeProtocol = self.manager.ui as? OWRouteringModeProtocol,
                       let authenticationUILayer = self.manager.ui.authenticationUI as? OWUIAuthenticationInternalProtocol else { return }
                 let blockerService = self.servicesProvider.blockerServicing()
                 let blockerAction = OWDefaultBlockerAction(blockerType: .authentication)
                 blockerService.add(blocker: blockerAction)
 
-                /*
-                 TODO: We need a better way to distinguish whether we are in a flow mode or standalone component.
-                 Will be done once we will actually work with standalone components
-                */
-
                 let routeringMode: OWRouteringMode
-                if let navController = routeringCompatible.routering.navigationController {
+
+                if case let OWRouteringModeInternal.routering(routering) = routeringModeProtocol.activeRouteringMode,
+                   let navController = routering.navigationController {
                     routeringMode = .flow(navigationController: navController)
                 } else {
                    routeringMode = .none
                 }
+
                 authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
             })
+    }
+
+    func userHasAuthenticationLevel(for actions: [OWUserAction]) -> Observable<[OWUserAction: Bool]> {
+        let actionAndAuthenticationLevelTupple = actions.map { action in
+            return userHasAuthenticationLevel(for: action)
+                .map { (action, $0) }
+        }
+
+        let actionsAuthenticationLevelObservable = Observable.combineLatest(actionAndAuthenticationLevelTupple)
+
+        return actionsAuthenticationLevelObservable.map { actionsAuthenticationLevel in
+            var result: [OWUserAction: Bool] = [:]
+            actionsAuthenticationLevel.forEach { result[$0.0] = $0.1 }
+            return result
+        }
+    }
+
+    func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool> {
+        return self.currentAuthenticationLevelAvailability
+            .map { authenticationLevelAvailability -> OWAuthenticationLevel? in
+                switch authenticationLevelAvailability {
+                case .level(let level):
+                    return level
+                case .pending:
+                    return nil
+                }
+            }
+            .unwrap()
+            .flatMapLatest { [weak self] level -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
+                guard let self = self else { return .empty() }
+                return self.requiredAuthenticationLevel(for: action)
+                    .map { (level, $0) }
+            }
+            .map { currentlevel, requiredlevel in
+                return currentlevel.level >= requiredlevel.level
+            }
     }
 
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool = true) -> Observable<Void> {
@@ -198,9 +235,9 @@ extension OWAuthenticationManager {
             .take(1) // Here we are simply waiting for the config first / ensuring such exist for the specific spotId
             .flatMap { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                let authentication = self.servicesProvider.netwokAPI().authentication
-                return authentication
-                    .user()
+                let user = self.servicesProvider.netwokAPI().user
+                return user
+                    .userData()
                     .response
                     .observe(on: self.scheduler)
                     .exponentialRetry(maxAttempts: Metrics.maxAttemptsToObtainNewUser, millisecondsDelay: Metrics.delayToObtainUser) // Adding retry as it is critical we will succeed here

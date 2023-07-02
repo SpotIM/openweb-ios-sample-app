@@ -12,6 +12,8 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentViewModelingInputs {
+    func deleteCommentLocally()
+    func muteCommentLocally()
 }
 
 protocol OWCommentViewModelingOutputs {
@@ -39,13 +41,15 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
 
-    var statusIndicationVM: OWCommentStatusIndicationViewModeling {
-        return OWCommentStatusIndicationViewModel()
-    }
+    fileprivate let sharedServiceProvider: OWSharedServicesProviding
 
-    var commentActionsVM: OWCommentActionsViewModeling {
+    lazy var statusIndicationVM: OWCommentStatusIndicationViewModeling = {
+        return OWCommentStatusIndicationViewModel()
+    }()
+
+    lazy var commentActionsVM: OWCommentActionsViewModeling = {
         return OWCommentActionsViewModel()
-    }
+    }()
 
     var commentHeaderVM: OWCommentHeaderViewModeling
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
@@ -56,10 +60,22 @@ class OWCommentViewModel: OWCommentViewModeling,
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
-            .asObserver()
+            .asObservable()
     }
 
-    init(data: OWCommentRequiredData) {
+    func deleteCommentLocally() {
+        self._shouldHideCommentContent.onNext(true)
+        self.commentHeaderVM.inputs.shouldDeleteCommentLocally.onNext(true)
+        self.updateDeletedCommentInCommentsService()
+    }
+
+    func muteCommentLocally() {
+        self._shouldHideCommentContent.onNext(true)
+        self.commentHeaderVM.inputs.shouldMuteCommentLocally.onNext(true)
+    }
+
+    init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServiceProvider = sharedServiceProvider
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
@@ -68,7 +84,8 @@ class OWCommentViewModel: OWCommentViewModeling,
         dictateCommentContentVisibility(data: data)
     }
 
-    init() {
+    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServiceProvider = sharedServiceProvider
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
@@ -86,5 +103,17 @@ fileprivate extension OWCommentViewModel {
             SPUserSessionHolder.session.reportedComments[commentId] != nil // reported
 
         self._shouldHideCommentContent.onNext(shouldHide)
+    }
+
+    func updateDeletedCommentInCommentsService() {
+        guard let postId = OWManager.manager.postId,
+              let commentId = comment.id,
+              var comment = self.sharedServiceProvider.commentsService().get(commentId: commentId, postId: postId)
+        else { return }
+
+        comment.setIsDeleted(true)
+        self.sharedServiceProvider
+            .commentsService()
+            .set(comments: [comment], postId: postId)
     }
 }

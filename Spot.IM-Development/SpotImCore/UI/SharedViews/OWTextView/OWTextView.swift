@@ -47,14 +47,14 @@ class OWTextView: UIView {
     fileprivate lazy var charectersCountLabel: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(style: .regular, size: Metrics.charectersFontSize))
-                .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .text("0/" + "\(self.viewModel.outputs.textViewMaxCharecters)")
     }()
 
     fileprivate lazy var textViewPlaceholder: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(style: .regular, size: Metrics.textViewFontSize))
-                .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
     }()
 
@@ -166,7 +166,7 @@ fileprivate extension OWTextView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
-                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
+                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
