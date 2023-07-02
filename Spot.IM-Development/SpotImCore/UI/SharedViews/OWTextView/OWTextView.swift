@@ -108,7 +108,6 @@ fileprivate extension OWTextView {
             make.leading.equalTo(textView.OWSnp.leading).inset(Metrics.placeholderLeadingTrailingPadding)
             make.trailing.equalTo(textView.OWSnp.trailing).inset(Metrics.placeholderLeadingTrailingPadding)
             make.top.equalTo(textView.OWSnp.top).inset(Metrics.textViewTopBottomPadding)
-            make.bottom.greaterThanOrEqualTo(textView.OWSnp.bottom).inset(Metrics.textViewTopBottomPadding)
         }
     }
 
