@@ -82,11 +82,10 @@ fileprivate extension TestingPlaygroundIndependentViewModel {
                     self.loggerViewModel.inputs.log(text: log)
                 }
 
-                views.reportReason(commentId: postId,
-                                   parentId: "",
-                                   additionalSettings: nil,
-                                   callbacks: actionsCallbacks,
-                                   completion: { [weak self] result in
+                views.testingPlayground(postId: postId,
+                                    additionalSettings: nil,
+                                    callbacks: actionsCallbacks,
+                                    completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let view):
