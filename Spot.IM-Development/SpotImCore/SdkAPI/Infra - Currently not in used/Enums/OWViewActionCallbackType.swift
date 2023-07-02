@@ -38,7 +38,7 @@ enum OWViewActionCallbackType: Codable {
     case adTapped
     case closeConversationPressed
     case openPublisherProfile(userId: String)
-    case openReportReason(commentId: String)
+    case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case closeReportReason
     case error(_ error: OWError)
 }
