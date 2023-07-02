@@ -233,7 +233,7 @@ extension UIButton {
     @discardableResult func adjustTextAndImageAlignment(_ spacing: CGFloat) -> Self {
         var inset = spacing / 2
 
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+        if OWLocalizationManager.shared.semanticAttribute == .forceRightToLeft {
             inset = -inset
         }
 
@@ -278,6 +278,11 @@ extension UIImageView {
 extension UITableView {
     @discardableResult func separatorStyle(_ separatorStyle: UITableViewCell.SeparatorStyle) -> Self {
         self.separatorStyle = separatorStyle
+        return self
+    }
+
+    @discardableResult func separatorColor(_ color: UIColor) -> Self {
+        self.separatorColor = color
         return self
     }
 

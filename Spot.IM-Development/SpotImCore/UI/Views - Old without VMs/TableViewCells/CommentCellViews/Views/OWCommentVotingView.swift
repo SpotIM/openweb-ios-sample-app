@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class OWCommentVotingView: OWBaseView {
+final class OWCommentVotingView: SPBaseView {
 
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 32.0
@@ -26,8 +26,8 @@ final class OWCommentVotingView: OWBaseView {
     fileprivate var viewModel: OWCommentVotingViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    fileprivate lazy var stackView: OWBaseStackView = {
-        let stackView = OWBaseStackView()
+    fileprivate lazy var stackView: SPBaseStackView = {
+        let stackView = SPBaseStackView()
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.backgroundColor = .clear
@@ -60,16 +60,16 @@ final class OWCommentVotingView: OWBaseView {
         return button
     }()
 
-    fileprivate lazy var rankUpLabel: OWBaseLabel = {
-        let label = OWBaseLabel()
+    fileprivate lazy var rankUpLabel: SPBaseLabel = {
+        let label = SPBaseLabel()
         label.textAlignment = .center
         label.font = .preferred(style: .regular, of: Metrics.fontSize)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }()
 
-    fileprivate lazy var rankDownLabel: OWBaseLabel = {
-        let label = OWBaseLabel()
+    fileprivate lazy var rankDownLabel: SPBaseLabel = {
+        let label = SPBaseLabel()
         label.textAlignment = .center
         label.font = .preferred(style: .regular, of: Metrics.fontSize)
         label.setContentHuggingPriority(.required, for: .horizontal)
@@ -240,11 +240,7 @@ fileprivate extension OWCommentVotingView {
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-
         rankUpButton.accessibilityTraits = .button
-        rankUpButton.accessibilityLabel = LocalizationManager.localizedString(key: "Up vote button")
-
         rankDownButton.accessibilityTraits = .button
-        rankDownButton.accessibilityLabel = LocalizationManager.localizedString(key: "Down vote button")
     }
 }
