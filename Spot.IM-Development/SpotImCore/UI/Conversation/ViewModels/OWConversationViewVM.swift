@@ -18,6 +18,7 @@ protocol OWConversationViewViewModelingInputs {
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
+    var reportComment: PublishSubject<OWCommentId> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -43,7 +44,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openCommentCreation: Observable<OWCommentCreationType> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
-    var openReportReason: Observable<(OWCommentId, OWCommentId)> { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -121,6 +122,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    var reportComment = PublishSubject<OWCommentId>()
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
 
@@ -262,8 +264,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var openReportReasonChange = PublishSubject<(OWCommentId, OWCommentId)>()
-    var openReportReason: Observable<(OWCommentId, OWCommentId)> {
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
             .asObservable()
     }
@@ -920,9 +922,7 @@ fileprivate extension OWConversationViewViewModel {
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
-                        guard let commentId = commentVm.outputs.comment.id else { return }
-                              let parentId = commentVm.outputs.comment.parentId ?? ""
-                              self.openReportReasonChange.onNext((commentId, parentId))
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
@@ -954,7 +954,7 @@ fileprivate extension OWConversationViewViewModel {
                         case .completion:
                             // Do nothing
                             break
-                        case .selected(let action):
+                        case .selected(_):
                             break
                         }
                     })
@@ -1021,6 +1021,15 @@ fileprivate extension OWConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        reportComment
+            .subscribe(onNext: { [weak self] commentId in
+                guard let self = self,
+                      let commentCellVM = self.getCommentCellVm(for: commentId) else { return }
+                commentCellVM.commentVM.inputs.reportCommentLocally()
+                self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 

@@ -17,6 +17,7 @@ protocol OWReportReasonViewViewModelingInputs {
     var textViewTextChange: PublishSubject<String> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
     var isSubmitEnabledChange: PublishSubject<Bool> { get }
+    var reportReasonsSubmittedCommentIdChange: PublishSubject<OWCommentId> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
@@ -42,6 +43,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
+    var reportReasonsSubmittedCommentId: Observable<OWCommentId> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -270,6 +272,13 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .asObservable()
     }()
 
+    var reportReasonsSubmittedCommentIdChange = PublishSubject<OWCommentId>()
+    var reportReasonsSubmittedCommentId: Observable<OWCommentId> {
+        return reportReasonsSubmittedCommentIdChange
+            .asObservable()
+            .share()
+    }
+
     lazy var reportReasonsCounterMaxLength: Observable<Int> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
@@ -306,7 +315,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 return self.textViewVM.outputs.textViewText.take(1)
                     .map { return (selectedReason, $0) }
             }
-            .flatMapLatest { [weak self]  result -> Observable<Event<EmptyDecodable>> in
+            .flatMapLatest { [weak self] result -> Observable<Event<EmptyDecodable>> in
                 guard let self = self else { return .empty() }
                 let selectedReason = result.0
                 let userDescription = result.1
@@ -321,13 +330,13 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     .response
                     .materialize()
             }
-            .map { event -> EmptyDecodable? in
+            .map { [weak self] event -> EmptyDecodable? in
+                guard let self = self else { return nil }
                 switch event {
                 case .next(let submit):
-                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    self.reportReasonsSubmittedCommentIdChange.onNext(self.commentId)
                     return submit
                 case .error(_):
-                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     self.setSubmitInProgress.onNext(false)
                     self.errorSubmitting.onNext()
                     self.changeSubmitButtonText.onNext(true)

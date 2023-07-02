@@ -26,6 +26,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate var router: OWRoutering!
+    fileprivate var reportReasonSubmittedChange = PublishSubject<OWCommentId>()
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
@@ -35,6 +36,10 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     }()
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .preConversation)
+    }()
+    lazy var reportReasonSubmitted: Observable<OWCommentId> = {
+        return reportReasonSubmittedChange
+            .asObservable()
     }()
 
     init(router: OWRoutering! = nil,
@@ -93,9 +98,14 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
-            .map { _ -> OWDeepLinkOptions? in
-                return nil
+            .map { [weak self] _ -> OWDeepLinkOptions? in
+                guard let self = self else { return nil }
+                return .reportReason(reportReasonSubmitted: self.reportReasonSubmitted)
             }
+
+        reportReasonSubmitted
+            .bind(to: viewModel.inputs.reportComment)
+            .disposed(by: disposeBag)
 
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable,
@@ -153,19 +163,34 @@ fileprivate extension OWPreConversationCoordinator {
         setupCustomizationElements(forViewModel: viewModel)
 
         // Coordinate to report reasons - Flow
-        viewModel.outputs.openReportReason
+        let reportReasonCoordinatorObserver = viewModel.outputs.openReportReason
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] (commentId, parentId) -> Observable<OWReportReasonCoordinatorResult> in
-                guard let self = self else { return .empty() }
-                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
-                                                                        parentId: parentId,
-                                                                        router: self.router,
-                                                                        actionsCallbacks: self.actionsCallbacks,
-                                                                        presentationalMode: self.preConversationData.presentationalStyle)
+            .map { [weak self] commentVM -> OWReportReasonCoordinator? in
+                guard let self = self,
+                      let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return nil }
+                return OWReportReasonCoordinator(commentId: commentId,
+                                                 parentId: parentId,
+                                                 router: self.router,
+                                                 actionsCallbacks: self.actionsCallbacks,
+                                                 presentationalMode: self.preConversationData.presentationalStyle)
 
+            }
+            .unwrap()
+            .asObservable()
+            .share()
+
+        reportReasonCoordinatorObserver
+            .flatMap { $0.reportReasonSubmitted }
+            .bind(to: reportReasonSubmittedChange)
+            .disposed(by: disposeBag)
+
+        reportReasonCoordinatorObserver
+            .flatMap { [weak self] reportReasonCoordinator -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
                 return self.coordinate(to: reportReasonCoordinator)
             }
             .do(onNext: { [weak self] coordinatorResult in
@@ -173,6 +198,8 @@ fileprivate extension OWPreConversationCoordinator {
                 switch coordinatorResult {
                 case .popped:
                     self._dissmissConversation.onNext()
+                case .submitedReport(_):
+                    break
                 default:
                     break
                 }
@@ -191,8 +218,10 @@ fileprivate extension OWPreConversationCoordinator {
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
         let openReportReason = viewModel.outputs.openReportReason
-            .map { (commentId, parentId) in
-                OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
+            .map { commentVM -> OWViewActionCallbackType in
+                guard let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return .error(.reportReasonFlow) }
+                return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
         Observable.merge(contentPressed,
