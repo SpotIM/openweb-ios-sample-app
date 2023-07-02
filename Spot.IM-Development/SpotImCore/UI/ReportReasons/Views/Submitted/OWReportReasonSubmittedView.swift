@@ -15,7 +15,6 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "report_reason_Submitted_view_id"
         static let closeButtonIdentifier = "report_reason_Submitted_close_button_id"
         static let gotitButtonIdentifier = "report_reason_Submitted_gotit_button_id"
-        static let titleViewPrefixIdentifier = "report_reason_Submitted"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
@@ -44,10 +43,7 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var titleView: OWTitleSubtitleIconView = {
-        return OWTitleSubtitleIconView(iconName: viewModel.outputs.titleIconName,
-                                       title: viewModel.outputs.title,
-                                       subtitle: viewModel.outputs.subtitle,
-                                       accessibilityPrefixId: Metrics.titleViewPrefixIdentifier)
+        return OWTitleSubtitleIconView(viewModel: viewModel.outputs.titleViewVM)
     }()
 
     fileprivate let viewModel: OWReportReasonSubmittedViewViewModeling

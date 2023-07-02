@@ -14,11 +14,9 @@ protocol OWReportReasonSubmittedViewViewModelingInputs {
 }
 
 protocol OWReportReasonSubmittedViewViewModelingOutputs {
-    var title: String { get }
-    var subtitle: String { get }
-    var titleIconName: String { get }
     var closeReportReasonSubmittedTapped: Observable<Void> { get }
     var confirmButtonText: String { get }
+    var titleViewVM: OWTitleSubtitleIconViewModeling { get }
 }
 
 protocol OWReportReasonSubmittedViewViewModeling {
@@ -30,12 +28,20 @@ class OWReportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModel
 
     fileprivate struct Metrics {
         static let titleIconName = "ReportReasonSubmittedIcon"
+        static let titleViewPrefixIdentifier = "report_reason_submitted"
     }
 
     var inputs: OWReportReasonSubmittedViewViewModelingInputs { return self }
     var outputs: OWReportReasonSubmittedViewViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
+
+    var titleViewVM: OWTitleSubtitleIconViewModeling {
+        return OWTitleSubtitleIconViewModel(iconName: titleIconName,
+                                            title: title,
+                                            subtitle: subtitle,
+                                            accessibilityPrefixId: Metrics.titleViewPrefixIdentifier)
+    }
 
     var title: String {
         return OWLocalizationManager.shared.localizedString(key: "ReportReasonSubmittedTitle")

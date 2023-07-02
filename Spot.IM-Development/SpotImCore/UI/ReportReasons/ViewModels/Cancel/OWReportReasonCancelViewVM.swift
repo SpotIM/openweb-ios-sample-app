@@ -15,9 +15,7 @@ protocol OWReportReasonCancelViewViewModelingInputs {
 }
 
 protocol OWReportReasonCancelViewViewModelingOutputs {
-    var title: String { get }
-    var subtitle: String { get }
-    var titleIconName: String { get }
+    var titleViewVM: OWTitleSubtitleIconViewModeling { get }
     var continueButtonText: String { get }
     var cancelButtonText: String { get }
     var closeReportReasonCancelTapped: Observable<Void> { get }
@@ -35,12 +33,20 @@ class OWReportReasonCancelViewViewModel: OWReportReasonCancelViewViewModelingInp
     fileprivate struct Metrics {
         static let trashIcon = "ReportReasonTrashIcon"
         static let titleIconName = "ReportReasonCancelIcon"
+        static let titleViewPrefixIdentifier = "report_reason_cancel"
     }
 
     var inputs: OWReportReasonCancelViewViewModelingInputs { return self }
     var outputs: OWReportReasonCancelViewViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
+
+    var titleViewVM: OWTitleSubtitleIconViewModeling {
+        return OWTitleSubtitleIconViewModel(iconName: titleIconName,
+                                            title: title,
+                                            subtitle: subtitle,
+                                            accessibilityPrefixId: Metrics.titleViewPrefixIdentifier)
+    }
 
     var title: String {
         return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelTitle")
