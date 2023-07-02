@@ -12,6 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentViewModelingInputs {
+    func reportCommentLocally()
     func deleteCommentLocally()
     func muteCommentLocally()
 }
@@ -61,6 +62,11 @@ class OWCommentViewModel: OWCommentViewModeling,
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
             .asObservable()
+    }
+
+    func reportCommentLocally() {
+        self._shouldHideCommentContent.onNext(true)
+        self.commentHeaderVM.inputs.shouldReportCommentLocally.onNext(true)
     }
 
     func deleteCommentLocally() {

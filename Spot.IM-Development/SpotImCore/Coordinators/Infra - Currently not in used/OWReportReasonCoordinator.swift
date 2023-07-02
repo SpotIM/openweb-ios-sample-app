@@ -12,7 +12,7 @@ import RxSwift
 enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
     case loadedToScreen
     case popped
-    case submitedReport(report: OWReportReason)
+    case submitedReport(commentId: OWCommentId)
 
     var loadedToScreen: Bool {
         switch self {
@@ -38,8 +38,15 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .reportReason)
     }()
     fileprivate let reportReasonPopped = PublishSubject<Void>()
+    fileprivate let reportReasonSubmittedChange = PublishSubject<OWCommentId>()
     let presentationalMode: OWPresentationalModeCompact
     var reportReasonView: UIView?
+
+    lazy var reportReasonSubmitted: Observable<OWCommentId> = {
+        reportReasonSubmittedChange
+            .asObservable()
+            .share()
+    }()
 
     init(commentId: OWCommentId,
          parentId: OWCommentId,
@@ -78,11 +85,16 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .map { OWReportReasonCoordinatorResult.popped }
             .asObservable()
 
+        let reportReasonSubmittedObservable = reportReasonSubmittedChange
+            .map { OWReportReasonCoordinatorResult.submitedReport(commentId: $0) }
+            .asObservable()
+            .share()
+
         let reportReasonLoadedToScreenObservable = reportReasonVM.outputs.loadedToScreen
             .map { OWReportReasonCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        return Observable.merge(reportReasonPoppedObservable, reportReasonLoadedToScreenObservable)
+        return Observable.merge(reportReasonPoppedObservable, reportReasonLoadedToScreenObservable, reportReasonSubmittedObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -102,6 +114,13 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 fileprivate extension OWReportReasonCoordinator {
     func setupObservers(forViewModel viewModel: OWReportReasonViewModeling) {
         // Setting up general observers which affect app flow however not entirely inside the SDK
+        viewModel.outputs
+            .reportReasonViewViewModel.outputs.reportReasonsSubmittedCommentId
+            .subscribe(onNext: { [weak self] commentId in
+                guard let self = self else { return }
+                self.reportReasonSubmittedChange.onNext(commentId)
+            })
+            .disposed(by: disposeBag)
     }
 
     // swiftlint:disable function_body_length
