@@ -245,7 +245,7 @@ fileprivate extension OWConversationView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
-                self.tableView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+                self.tableView.setContentOffset(.zero, animated: true)
             })
             .disposed(by: disposeBag)
     }
