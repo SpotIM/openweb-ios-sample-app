@@ -76,6 +76,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 deepLinkToCommentThread.onNext(commentThreadData)
             case .highlightComment(let commentId):
                 conversationVM.inputs.highlightComment.onNext(commentId)
+            case .reportReason(let reportReasonSubmitted):
+                reportReasonSubmitted
+                    .bind(to: conversationVM.outputs.conversationViewVM.inputs.reportComment)
+                    .disposed(by: disposeBag)
+                animated = false
             default:
                 break
             }
@@ -166,22 +171,47 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
 
         // Coordinate to report reasons - Flow
-        conversationVM.outputs
+        let reportReasonCoordinatorObserver = conversationVM.outputs
             .conversationViewVM.outputs.openReportReason
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] (commentId, parentId) -> Observable<OWReportReasonCoordinatorResult> in
-                guard let self = self else { return .empty() }
-                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: commentId,
+            .map { [weak self] commentVM -> OWReportReasonCoordinator? in
+                guard let self = self,
+                      let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return nil }
+                return OWReportReasonCoordinator(commentId: commentId,
                                                                         parentId: parentId,
                                                                         router: self.router,
                                                                         actionsCallbacks: self.actionsCallbacks,
                                                                         presentationalMode: self.conversationData.presentationalStyle)
+            }
+            .unwrap()
+            .asObservable()
+            .share()
 
+        reportReasonCoordinatorObserver
+            .flatMap { $0.reportReasonSubmitted }
+            .bind(to: conversationVM.outputs.conversationViewVM.inputs.reportComment)
+            .disposed(by: disposeBag)
+
+        reportReasonCoordinatorObserver
+            .flatMap { [weak self] reportReasonCoordinator -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
                 return self.coordinate(to: reportReasonCoordinator)
             }
+            .do(onNext: { result in
+                switch result {
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                case .submitedReport(_):
+                    break
+                }
+            })
             .subscribe()
             .disposed(by: disposeBag)
 
@@ -295,8 +325,10 @@ fileprivate extension OWConversationCoordinator {
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
         let openReportReason = viewModel.outputs.openReportReason
-            .map { (commentId, parentId) in
-                OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
+            .map { commentVM -> OWViewActionCallbackType in
+                guard let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return .error(.reportReasonFlow) }
+                return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
         Observable.merge(closeConversationPressed, openPublisherProfile, openReportReason)

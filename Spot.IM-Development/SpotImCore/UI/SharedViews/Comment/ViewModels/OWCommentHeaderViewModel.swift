@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentHeaderViewModelingInputs {
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
+    var shouldReportCommentLocally: BehaviorSubject<Bool> { get }
     var shouldDeleteCommentLocally: BehaviorSubject<Bool> { get }
     var shouldMuteCommentLocally: BehaviorSubject<Bool> { get }
 }
@@ -62,6 +63,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
+    var shouldReportCommentLocally = BehaviorSubject<Bool>(value: false)
     var shouldDeleteCommentLocally = BehaviorSubject<Bool>(value: false)
     var shouldMuteCommentLocally = BehaviorSubject<Bool>(value: false)
 
@@ -159,13 +161,19 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser, shouldDeleteCommentLocally, shouldMuteCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally in
+        Observable.combineLatest(_unwrappedModel,
+                                 _unwrappedUser,
+                                 shouldDeleteCommentLocally,
+                                 shouldMuteCommentLocally,
+                                 shouldReportCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
             // TODO: handle reported
             let localizationKey: String
             if model.deleted || shouldDeleteCommentLocally {
                 localizationKey = "This message was deleted."
             } else if user.isMuted || shouldMuteCommentLocally {
                 localizationKey = "This user is muted."
+            } else if shouldReportCommentLocally {
+                localizationKey = "This message was reported."
             } else {
                 return ""
             }
