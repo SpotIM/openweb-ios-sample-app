@@ -73,7 +73,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readMore = NSMutableAttributedString(
-            string: LocalizationManager.localizedString(key: "Read More"),
+            string: SPLocalizationManager.localizedString(key: "Read More"),
             attributes: attribs)
 
         readMore.insert(ellipsis, at: 0)
@@ -102,7 +102,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readLess = NSAttributedString(
-            string: LocalizationManager.localizedString(key: "Read Less"),
+            string: SPLocalizationManager.localizedString(key: "Read Less"),
             attributes: attribs)
 
         let mutableSelf = mutableCopy() as? NSMutableAttributedString
@@ -118,7 +118,7 @@ extension NSAttributedString {
                        .font: UIFont.italicSystemFont(ofSize: fontPointSize)
         ]
 
-        let editedText = NSAttributedString(string: LocalizationManager.localizedString(key: "Edited"), attributes: editedTextAttributes)
+        let editedText = NSAttributedString(string: SPLocalizationManager.localizedString(key: "Edited"), attributes: editedTextAttributes)
 
         let mutableSelf = text.mutableCopy() as? NSMutableAttributedString
         mutableSelf?.append(editedText)
@@ -147,7 +147,6 @@ extension NSAttributedString {
     }
 
     func isEmpty() -> Bool {
-        let range = NSRange(location: 0, length: self.length)
         let trimmedString = self.string.trimmingCharacters(in: .whitespacesAndNewlines)
 
         return trimmedString.isEmpty
@@ -190,8 +189,8 @@ internal extension NSMutableAttributedString {
 
 extension NSMutableParagraphStyle {
 
-    func updateAlignment() {
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+    func spUpdateAlignment() {
+        if SPLocalizationManager.currentLanguage?.isRightToLeft ?? false {
             alignment = .right
         } else {
             alignment = .left

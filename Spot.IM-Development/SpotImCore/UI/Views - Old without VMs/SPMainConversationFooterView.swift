@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class SPMainConversationFooterView: OWBaseView {
+final class SPMainConversationFooterView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "main_conversation_footer_id"
         static let commentCreationEntryIdentifier = "main_conversation_footer_comment_creation_entry_id"
@@ -17,13 +17,13 @@ final class SPMainConversationFooterView: OWBaseView {
 
     let commentCreationEntryView: SPCommentCreationEntryView = .init()
 
-    private lazy var separatorView: OWBaseView = .init()
-    private lazy var bannerContainerView: OWBaseView = .init()
+    private lazy var separatorView: SPBaseView = .init()
+    private lazy var bannerContainerView: SPBaseView = .init()
 
     private var bannerView: UIView?
     private var bannerContainerHeight: OWConstraint?
 
-    private var readOnlyLabel: OWBaseLabel?
+    private var readOnlyLabel: SPBaseLabel?
 
     internal var dropsShadow: Bool = false {
         didSet { showSeparatorIfNeeded() }
@@ -103,7 +103,7 @@ final class SPMainConversationFooterView: OWBaseView {
         commentCreationEntryView.isUserInteractionEnabled = false
         commentCreationEntryView.isHidden = true
 
-        readOnlyLabel = OWBaseLabel()
+        readOnlyLabel = SPBaseLabel()
         setupReadOnlyLabel(isPreConversation: isPreConversation)
     }
 
@@ -113,7 +113,7 @@ final class SPMainConversationFooterView: OWBaseView {
         setupAccessibilityIdentifiers()
         readOnlyLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
         readOnlyLabel.textColor = .spForeground3
-        readOnlyLabel.text = LocalizationManager.localizedString(key: "Commenting on this article has ended")
+        readOnlyLabel.text = SPLocalizationManager.localizedString(key: "Commenting on this article has ended")
 
         readOnlyLabel.OWSnp.makeConstraints { make in
             make.centerY.equalTo(commentCreationEntryView)

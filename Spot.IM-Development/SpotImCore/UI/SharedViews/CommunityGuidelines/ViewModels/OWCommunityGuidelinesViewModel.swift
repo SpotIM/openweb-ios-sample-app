@@ -10,18 +10,21 @@ import Foundation
 import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
+    var triggerCustomizeContainerViewUI: PublishSubject<UIView> { get }
     var triggerCustomizeTitleTextViewUI: PublishSubject<UITextView> { get }
     var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
     var urlClicked: PublishSubject<URL> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
+    var customizeContainerViewUI: Observable<UIView> { get }
+    var customizeTitleTextViewUI: Observable<UITextView> { get }
+    var customizeIconImageViewUI: Observable<UIImageView> { get }
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
-    var customizeTitleTextViewUI: Observable<UITextView> { get }
-    var customizeIconImageViewUI: Observable<UIImageView> { get }
+    var style: OWCommunityGuidelinesStyle { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -42,15 +45,23 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
     fileprivate let _triggerCustomizeTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
     fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
 
+    var triggerCustomizeContainerViewUI = PublishSubject<UIView>()
     var triggerCustomizeTitleTextViewUI = PublishSubject<UITextView>()
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     let urlClicked = PublishSubject<URL>()
 
     var urlClickedOutput: Observable<URL> {
         urlClicked.asObservable()
+    }
+
+    var customizeContainerViewUI: Observable<UIView> {
+        return _triggerCustomizeContainerViewUI
+            .unwrap()
+            .asObservable()
     }
 
     var customizeTitleTextViewUI: Observable<UITextView> {
@@ -73,16 +84,19 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .share(replay: 1)
     }
 
-    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
+    fileprivate var _communityGuidelinesTitle: Observable<String?> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
-            .observe(on: MainScheduler.asyncInstance)
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
                 return config.conversation?.communityGuidelinesTitle?.value
             }
+    }
+
+    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
+        return _communityGuidelinesTitle
             .unwrap()
             .map { [weak self] communityGuidelines in
                 guard let self = self else { return nil }
@@ -101,7 +115,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         return style == .compact
     }()
 
-    fileprivate let style: OWCommunityGuidelinesStyle
+    let style: OWCommunityGuidelinesStyle
     fileprivate let disposeBag = DisposeBag()
 
     init(style: OWCommunityGuidelinesStyle) {
@@ -112,11 +126,15 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
 
 fileprivate extension OWCommunityGuidelinesViewModel {
     func setupObservers() {
-        communityGuidelinesHtmlAttributedString
-            .subscribe(onNext: { [weak self] htmlString in
+        _communityGuidelinesTitle
+            .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                self._shouldShowView.onNext(htmlString !== nil)
+                self._shouldShowView.onNext(text != nil)
             })
+            .disposed(by: disposeBag)
+
+        triggerCustomizeContainerViewUI
+            .bind(to: _triggerCustomizeContainerViewUI)
             .disposed(by: disposeBag)
 
         triggerCustomizeIconImageViewUI
