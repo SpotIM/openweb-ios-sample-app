@@ -1,5 +1,5 @@
 //
-//  OWCommunityQuestionsStyle.swift
+//  OWCommunityQuestionStyle.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 31/01/2023.
@@ -9,14 +9,14 @@
 import Foundation
 
 #if NEW_API
-public enum OWCommunityQuestionsStyle: Codable {
+public enum OWCommunityQuestionStyle: Codable {
     case none
     case regular
     case compact
 }
 
 #else
-enum OWCommunityQuestionsStyle: Codable {
+enum OWCommunityQuestionStyle: Codable {
     case none
     case regular
     case compact

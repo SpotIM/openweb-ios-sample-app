@@ -103,21 +103,16 @@ fileprivate extension OWConversationSortView {
         // Setup sort title
         viewModel.outputs.selectedSortOption
             .map { $0.title }
-            .bind(to: sortByLabel.rx.text)
+            .bind(to: sortLabel.rx.text)
             .disposed(by: disposeBag)
 
         // Setup sort button tapped
         tapGesture.rx.event
-            .voidify()
+            .map { [weak self] _ in
+                self?.sortIcon
+            }
+            .unwrap()
             .bind(to: viewModel.inputs.sortTapped)
-            .disposed(by: disposeBag)
-
-        // Setup sort option selected
-        viewModel.outputs.openSort
-            .subscribe(onNext: { [weak self] _ in
-                guard let _ = self else { return }
-                // TODO: open sort
-            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

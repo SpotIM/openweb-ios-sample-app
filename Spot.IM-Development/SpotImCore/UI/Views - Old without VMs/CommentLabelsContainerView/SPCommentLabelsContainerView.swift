@@ -13,11 +13,11 @@ protocol SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged()
 }
 
-internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecognizerDelegate {
+internal final class SPCommentLabelsContainerView: SPBaseView, UIGestureRecognizerDelegate {
 
-    var container: OWBaseStackView = .init()
+    var container: SPBaseStackView = .init()
     var labelsViews: [CommentLabelView] = .init()
-    var guidelineTextLabel: OWBaseLabel = .init()
+    var guidelineTextLabel: SPBaseLabel = .init()
     var maxLabels: Int = 1
     var selectedLabelsIds: [String] = .init()
 

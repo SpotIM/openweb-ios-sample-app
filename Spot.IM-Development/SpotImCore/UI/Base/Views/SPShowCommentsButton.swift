@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class SPShowCommentsButton: OWBaseButton {
+public class SPShowCommentsButton: SPBaseButton {
     fileprivate struct Metrics {
         static let identifier = "show_comments_button_id"
     }
