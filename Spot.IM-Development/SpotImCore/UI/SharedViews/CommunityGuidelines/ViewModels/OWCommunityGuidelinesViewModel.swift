@@ -98,6 +98,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         return _communityGuidelinesTitle
             .unwrap()
+            .observe(on: MainScheduler.asyncInstance)
             .map { [weak self] communityGuidelines in
                 guard let self = self else { return nil }
                 if self.style == .compact {
@@ -107,7 +108,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                     return self.getTitleTextViewAttributedText(htmlString: string)
                 }
             }
-            .observe(on: MainScheduler.instance)
             .asObservable()
     }
 
