@@ -293,8 +293,11 @@ fileprivate extension OWCommentThreadViewViewModel {
             replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
         }
 
+        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedStatus(for: comment, postId: self.postId)
+
         return OWCommentCellViewModel(data: OWCommentRequiredData(
-            comment: comment,
+            comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit
