@@ -22,10 +22,10 @@ extension OWPreConversationStyle {
         case OWPreConversationStyleIndexer.compact.index: return .compact
         case OWPreConversationStyleIndexer.ctaButtonOnly.index: return .ctaButtonOnly
         case OWPreConversationStyleIndexer.ctaWithSummary.index: return .ctaWithSummary(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                                                                                        communityQuestionsStyle: OWCommunityQuestionsStyle(index: communityQuestionsStyleIndex))
+                                                                                        communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex))
         case OWPreConversationStyleIndexer.custom.index: return .custom(numberOfComments: numberOfComments,
                                        communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                                       communityQuestionsStyle: OWCommunityQuestionsStyle(index: communityQuestionsStyleIndex))
+                                       communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex))
         default: return `default`
         }
     }

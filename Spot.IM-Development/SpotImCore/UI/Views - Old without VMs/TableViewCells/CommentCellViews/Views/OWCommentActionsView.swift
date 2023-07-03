@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 /// aka Engagement view
-final class OWCommentActionsView: OWBaseView {
+final class OWCommentActionsView: SPBaseView {
 
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 16.0
@@ -27,15 +27,15 @@ final class OWCommentActionsView: OWBaseView {
 
     private let replyDefaultTitle: String
 
-    private let stackView: OWBaseStackView = .init()
+    private let stackView: SPBaseStackView = .init()
 
-    private let replyButton: OWBaseButton = .init()
+    private let replyButton: SPBaseButton = .init()
     private let votingView: OWCommentVotingView = .init()
 
     private var isReadOnlyMode: Bool = false
 
     override init(frame: CGRect) {
-        replyDefaultTitle = LocalizationManager.localizedString(key: "Reply")
+        replyDefaultTitle = SPLocalizationManager.localizedString(key: "Reply")
         super.init(frame: frame)
         clipsToBounds = true
         setupUI()
@@ -88,7 +88,7 @@ final class OWCommentActionsView: OWBaseView {
 
         case (true, .some, false):
             isEnabled = false
-            replyButtonTitle = LocalizationManager.localizedString(key: "Replies")
+            replyButtonTitle = SPLocalizationManager.localizedString(key: "Replies")
 
         }
 

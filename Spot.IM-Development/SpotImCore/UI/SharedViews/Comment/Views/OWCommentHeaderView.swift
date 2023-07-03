@@ -230,17 +230,18 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
 
+        optionButton.rx.tap
+            .map { [weak self] in
+                return self?.optionButton
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tapMore)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowSubtitleSeperator
             .map { !$0 }
             .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.isHidden)
             .disposed(by: disposeBag)
-
-        optionButton.rx.tap.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.inputs.tapMore.onNext(self.optionButton)
-            // TODO: handle tap!
-        })
-        .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
             .bind(to: hiddenCommentReasonLabel.rx.text)
@@ -312,7 +313,7 @@ fileprivate extension OWCommentHeaderView {
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
         optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Options menu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
     }
 }

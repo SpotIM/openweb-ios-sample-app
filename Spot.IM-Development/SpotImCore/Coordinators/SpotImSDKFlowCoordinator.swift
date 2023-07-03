@@ -34,7 +34,7 @@ public enum CustomizableView {
     case navigationItemTitle(label: UILabel)
     case showCommentsButton(button: SPShowCommentsButton)
     case header(titleLabel: UILabel, counterLabel: UILabel)
-    case commentCreationActionButton(button: OWBaseButton)
+    case commentCreationActionButton(button: SPBaseButton)
     case readOnlyLabel(label: UILabel)
     case emptyStateReadOnlyLabel(label: UILabel)
 }
@@ -131,7 +131,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         configureAPIAndRealTimeHandlers()
 
         if let localeId = localeId {
-            LocalizationManager.setLocale(localeId)
+            SPLocalizationManager.setLocale(localeId)
         }
 
         // Set self to be the delegate for all auth provider functions
@@ -321,16 +321,16 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
 
     private func presentFailureAlert(viewController: UIViewController, spNetworkError: SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
         let retryAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Retry"),
+            title: SPLocalizationManager.localizedString(key: "Retry"),
             style: .default,
             handler: retryHandler)
 
         let okAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "OK"),
+            title: SPLocalizationManager.localizedString(key: "OK"),
             style: .default)
 
         let alert = UIAlertController(
-            title: LocalizationManager.localizedString(key: "Oops..."),
+            title: SPLocalizationManager.localizedString(key: "Oops..."),
             message: spNetworkError.localizedDescription,
             preferredStyle: .alert
         )
@@ -457,7 +457,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
 
-        let navigationItemTitleText = LocalizationManager.localizedString(key: "Conversation")
+        let navigationItemTitleText = SPLocalizationManager.localizedString(key: "Conversation")
         if SpotIm.enableCustomNavigationItemTitle {
             let navigationItemLabel = getNavigationItemTitleLabel(with: navigationItemTitleText, source: .conversation)
             controller.navigationItem.titleView = navigationItemLabel

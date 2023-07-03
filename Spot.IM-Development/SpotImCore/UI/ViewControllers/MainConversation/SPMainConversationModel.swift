@@ -282,7 +282,7 @@ final class SPMainConversationModel {
         }
 
         let cancelAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Cancel"),
+            title: SPLocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
         )
         actions.append(cancelAction)
@@ -298,7 +298,7 @@ final class SPMainConversationModel {
 
         if availability.isShareable {
         let shareAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Share"),
+            title: SPLocalizationManager.localizedString(key: "Share"),
             style: .default) { [weak self] _ in
                 self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId, replyingToID: replyingToID), sender: sender)
             }
@@ -309,7 +309,7 @@ final class SPMainConversationModel {
            SPUserSessionHolder.session.user?.registered ?? false,
            let authorId = viewModel?.authorId {
         let muteAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Mute"),
+            title: SPLocalizationManager.localizedString(key: "Mute"),
             style: .default) { [weak self] _ in
                 self?.commentsActionDelegate?.prepareFlowForAction(.mute(commentId: commentId, replyingToID: replyingToID, userId: authorId), sender: sender)
             }
@@ -318,7 +318,7 @@ final class SPMainConversationModel {
 
         if availability.isReportable {
             let reportAction = UIAlertAction(
-                title: LocalizationManager.localizedString(key: "Report"),
+                title: SPLocalizationManager.localizedString(key: "Report"),
                 style: .default) { [weak self] _ in
                     self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId, replyingToID: replyingToID), sender: sender)
                 }
@@ -327,7 +327,7 @@ final class SPMainConversationModel {
 
         if availability.isEditable {
             let editAction = UIAlertAction(
-                title: LocalizationManager.localizedString(key: "Edit"),
+                title: SPLocalizationManager.localizedString(key: "Edit"),
                 style: .default,
                 handler: {[weak self] _ in
                     self?.commentsActionDelegate?.prepareFlowForAction(.edit(commentId: commentId, replyingToID: replyingToID), sender: sender)
@@ -338,7 +338,7 @@ final class SPMainConversationModel {
 
         if availability.isDeletable {
             let deleteAction = UIAlertAction(
-                title: LocalizationManager.localizedString(key: "Delete"),
+                title: SPLocalizationManager.localizedString(key: "Delete"),
                 style: .default) { [weak self] _ in
                     self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId, replyingToID: replyingToID), sender: sender)
                 }
@@ -346,7 +346,7 @@ final class SPMainConversationModel {
         }
 
         let cancelAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Cancel"),
+            title: SPLocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
         ) { _ in
             SPAnalyticsHolder.default.log(event: .messageContextMenuClosed(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
