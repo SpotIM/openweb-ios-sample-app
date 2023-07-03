@@ -192,7 +192,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .share()
 
         reportReasonCoordinatorObserver
-            .flatMap { $0.reportReasonSubmitted }
+            .flatMap { $0.outputs.reportReasonSubmitted }
             .bind(to: conversationVM.outputs.conversationViewVM.inputs.reportComment)
             .disposed(by: disposeBag)
 
