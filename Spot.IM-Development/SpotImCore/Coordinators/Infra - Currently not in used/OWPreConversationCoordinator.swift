@@ -26,7 +26,6 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate var router: OWRoutering!
-    fileprivate var reportReasonSubmittedChange = PublishSubject<OWCommentId>()
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
@@ -37,6 +36,8 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate lazy var customizationsService: OWCustomizationsServicing = {
         return OWCustomizationsService(viewSourceType: .preConversation)
     }()
+
+    fileprivate var reportReasonSubmittedChange = PublishSubject<OWCommentId>()
     lazy var reportReasonSubmitted: Observable<OWCommentId> = {
         return reportReasonSubmittedChange
             .asObservable()
@@ -183,10 +184,10 @@ fileprivate extension OWPreConversationCoordinator {
             .asObservable()
             .share()
 
-        reportReasonCoordinatorObserver
-            .flatMap { $0.reportReasonSubmitted }
-            .bind(to: reportReasonSubmittedChange)
-            .disposed(by: disposeBag)
+//        reportReasonCoordinatorObserver
+//            .flatMap { $0.reportReasonSubmitted }
+//            .bind(to: reportReasonSubmittedChange)
+//            .disposed(by: disposeBag)
 
         reportReasonCoordinatorObserver
             .flatMap { [weak self] reportReasonCoordinator -> Observable<OWReportReasonCoordinatorResult> in
@@ -198,8 +199,8 @@ fileprivate extension OWPreConversationCoordinator {
                 switch coordinatorResult {
                 case .popped:
                     self._dissmissConversation.onNext()
-                case .submitedReport(_):
-                    break
+                case .submitedReport(let commentId):
+                    reportReasonSubmittedChange.onNext(commentId)
                 default:
                     break
                 }
