@@ -673,7 +673,6 @@ fileprivate extension OWConversationViewViewModel {
 
         // fetch more comments
         let loadMoreCommentsReadObservable = _loadMoreComments
-            .distinctUntilChanged()
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
