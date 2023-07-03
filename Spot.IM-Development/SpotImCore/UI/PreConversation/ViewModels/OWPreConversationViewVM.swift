@@ -389,8 +389,12 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = responseUsers[comment.userId ?? ""] else { return }
+
+                    let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+                    let commentWithUpdatedStatus = reportedCommentsService.getUpdatedStatus(for: comment, postId: self.postId)
+
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
-                        comment: comment,
+                        comment: commentWithUpdatedStatus,
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
