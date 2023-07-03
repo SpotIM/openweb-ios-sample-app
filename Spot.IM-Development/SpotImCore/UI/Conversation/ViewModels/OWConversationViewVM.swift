@@ -6,6 +6,8 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import RxSwift
 import RxCocoa
@@ -1027,11 +1029,17 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Subscribe to report reason reported with comment id
         reportComment
-            .subscribe(onNext: { [weak self] commentId in
-                guard let self = self,
-                      let commentCellVM = self.getCommentCellVm(for: commentId) else { return }
-                commentCellVM.commentVM.inputs.reportCommentLocally()
+            .withLatestFrom(commentCellsVmsObservable) {
+                ($0, $1)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] commentId, commentCellVMs in
+                guard let self = self else { return }
+                self.servicesProvider.reportedCommentsService().set(reportedCommentIds: [commentId], postId: self.postId)
+                let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId })
+                commentCellVM?.outputs.commentVM.inputs.reportCommentLocally()
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)

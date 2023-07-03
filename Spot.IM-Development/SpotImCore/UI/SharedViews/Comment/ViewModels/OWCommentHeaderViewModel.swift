@@ -172,7 +172,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 localizationKey = "This message was deleted."
             } else if user.isMuted || shouldMuteCommentLocally {
                 localizationKey = "This user is muted."
-            } else if shouldReportCommentLocally {
+            } else if model.reported || shouldReportCommentLocally {
                 localizationKey = "This message was reported."
             } else {
                 return ""

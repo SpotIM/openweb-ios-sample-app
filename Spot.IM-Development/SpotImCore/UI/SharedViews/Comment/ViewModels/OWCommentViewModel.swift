@@ -65,8 +65,8 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     func reportCommentLocally() {
-        self._shouldHideCommentContent.onNext(true)
         self.commentHeaderVM.inputs.shouldReportCommentLocally.onNext(true)
+        self._shouldHideCommentContent.onNext(true)
     }
 
     func deleteCommentLocally() {
@@ -106,7 +106,7 @@ fileprivate extension OWCommentViewModel {
 
         let shouldHide = data.user.isMuted || // muted
             data.comment.deleted || // deleted
-            SPUserSessionHolder.session.reportedComments[commentId] != nil // reported
+            data.comment.reported // reported
 
         self._shouldHideCommentContent.onNext(shouldHide)
     }
