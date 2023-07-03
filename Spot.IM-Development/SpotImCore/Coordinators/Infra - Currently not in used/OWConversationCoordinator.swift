@@ -192,11 +192,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .share()
 
         reportReasonCoordinatorObserver
-            .flatMap { $0.outputs.reportReasonSubmitted }
-            .bind(to: conversationVM.outputs.conversationViewVM.inputs.reportComment)
-            .disposed(by: disposeBag)
-
-        reportReasonCoordinatorObserver
             .flatMap { [weak self] reportReasonCoordinator -> Observable<OWReportReasonCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 return self.coordinate(to: reportReasonCoordinator)
@@ -208,8 +203,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     // Nothing
                 case .popped:
                     break
-                case .submitedReport(_):
-                    break
+                case .submitedReport(let commentId):
+                    conversationVM.outputs.conversationViewVM.inputs.reportComment.onNext(commentId)
                 }
             })
             .subscribe()

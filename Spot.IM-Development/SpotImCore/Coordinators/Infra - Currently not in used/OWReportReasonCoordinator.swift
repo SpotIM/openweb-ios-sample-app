@@ -24,21 +24,11 @@ enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
     }
 }
 
-protocol OWReportReasonCoordinatorModelingOutputs {
-    var reportReasonSubmitted: Observable<OWCommentId> { get }
-}
-
-protocol OWReportReasonCoordinatorModeling {
-    var outputs: OWReportReasonCoordinatorModelingOutputs { get }
-}
-
-class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult>, OWReportReasonCoordinatorModeling, OWReportReasonCoordinatorModelingOutputs {
+class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult> {
     fileprivate struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
-
-    var outputs: OWReportReasonCoordinatorModelingOutputs { return self }
 
     fileprivate let commentId: OWCommentId
     fileprivate let parentId: OWCommentId
@@ -52,11 +42,6 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     var reportReasonView: UIView?
 
     fileprivate let reportReasonSubmittedChange = PublishSubject<OWCommentId>()
-    lazy var reportReasonSubmitted: Observable<OWCommentId> = {
-        reportReasonSubmittedChange
-            .asObservable()
-            .share()
-    }()
 
     init(commentId: OWCommentId,
          parentId: OWCommentId,
