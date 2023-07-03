@@ -34,7 +34,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
         guard let commentId = comment.id else { return comment }
         var updatedComment = comment
         if isReported(commentId: commentId, postId: postId) {
-            // TODO - update updatedComment with the correct status
+            updatedComment.setIsReported(true)
         }
         return updatedComment
     }
