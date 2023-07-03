@@ -24,11 +24,21 @@ enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
     }
 }
 
-class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult> {
+protocol OWReportReasonCoordinatorModelingOutputs {
+    var reportReasonSubmitted: Observable<OWCommentId> { get }
+}
+
+protocol OWReportReasonCoordinatorModeling {
+    var outputs: OWReportReasonCoordinatorModelingOutputs { get }
+}
+
+class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResult>, OWReportReasonCoordinatorModeling, OWReportReasonCoordinatorModelingOutputs {
     fileprivate struct Metrics {
         static let fadeDuration: CGFloat = 0.3
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
+
+    var outputs: OWReportReasonCoordinatorModelingOutputs { return self }
 
     fileprivate let commentId: OWCommentId
     fileprivate let parentId: OWCommentId
