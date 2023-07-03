@@ -17,6 +17,9 @@ class OWCommentCreationContentView: UIView {
     fileprivate let disposeBag = DisposeBag()
     fileprivate let viewModel: OWCommentCreationContentViewModeling
 
+    fileprivate lazy var textInput: UITextView = {
+        return UITextView()
+    }()
 
     init(with viewModel: OWCommentCreationContentViewModeling) {
         self.viewModel = viewModel
@@ -36,7 +39,10 @@ class OWCommentCreationContentView: UIView {
 
 fileprivate extension OWCommentCreationContentView {
     func setupUI() {
-
+        addSubview(textInput)
+        textInput.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setupObservers() {
@@ -45,6 +51,18 @@ fileprivate extension OWCommentCreationContentView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
             }).disposed(by: disposeBag)
+
+        viewModel.outputs.commentTextOutput
+            .bind(to: textInput.rx.text)
+            .disposed(by: disposeBag)
+
+        textInput.rx.didChange
+            .map { [weak self] _ in
+                guard let self = self else { return nil }
+                return self.textInput.text
+            }
+            .bind(to: viewModel.inputs.commentText)
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

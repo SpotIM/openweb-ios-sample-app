@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
-
+    var commentText: BehaviorSubject<String?> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
-
+    var commentTextOutput: Observable<String?> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -30,6 +30,13 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var outputs: OWCommentCreationContentViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+
+    var commentText = BehaviorSubject<String?>(value: nil)
+
+    var commentTextOutput: Observable<String?> {
+        commentText
+            .asObservable()
+    }
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider

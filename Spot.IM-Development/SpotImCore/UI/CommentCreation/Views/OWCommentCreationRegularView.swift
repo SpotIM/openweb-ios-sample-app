@@ -54,8 +54,8 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var textInput: UITextView = {
-        return UITextView()
+    fileprivate lazy var contentView: OWCommentCreationContentView = {
+        return OWCommentCreationContentView(with: self.viewModel.outputs.commentCreationContentVM)
     }()
 
     fileprivate lazy var commentReplyCounterView: OWCommentReplyCounterView = {
@@ -138,8 +138,8 @@ fileprivate extension OWCommentCreationRegularView {
             make.trailing.equalToSuperview().offset(-Metrics.replyCounterTrailingOffset)
         }
 
-        self.addSubview(textInput)
-        textInput.OWSnp.makeConstraints { make in
+        self.addSubview(contentView)
+        contentView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(12.0)
             make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
@@ -149,12 +149,6 @@ fileprivate extension OWCommentCreationRegularView {
     func setupObservers() {
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
-            .disposed(by: disposeBag)
-
-        textInput.rx.text
-            .map { $0?.count }
-            .unwrap()
-            .bind(to: viewModel.outputs.commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
     }
 }
