@@ -184,11 +184,6 @@ fileprivate extension OWPreConversationCoordinator {
             .asObservable()
             .share()
 
-//        reportReasonCoordinatorObserver
-//            .flatMap { $0.reportReasonSubmitted }
-//            .bind(to: reportReasonSubmittedChange)
-//            .disposed(by: disposeBag)
-
         reportReasonCoordinatorObserver
             .flatMap { [weak self] reportReasonCoordinator -> Observable<OWReportReasonCoordinatorResult> in
                 guard let self = self else { return .empty() }
