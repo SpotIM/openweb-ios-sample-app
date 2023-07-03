@@ -19,6 +19,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var footerViewModel: OWCommentCreationFooterViewModeling { get }
     var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
+    var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -30,6 +31,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     var inputs: OWCommentCreationRegularViewViewModelingInputs { return self }
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
@@ -53,6 +55,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         return OWCommentLabelsContainerViewModel(section: commentCreationData.article.additionalSettings.section)
     }()
 
+    lazy var commentCreationContentVM: OWCommentCreationContentViewModeling = {
+        return OWCommentCreationContentViewModel()
+    }()
+
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode = .independent) {
@@ -65,6 +71,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
 fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
-
+        commentCreationContentVM.outputs.commentTextOutput
+            .map { $0?.count }
+            .unwrap()
+            .bind(to: commentCounterViewModel.inputs.commentTextCount)
+            .disposed(by: disposeBag)
     }
 }
