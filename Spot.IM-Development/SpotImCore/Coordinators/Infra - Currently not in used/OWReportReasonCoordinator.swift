@@ -38,10 +38,10 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .reportReason)
     }()
     fileprivate let reportReasonPopped = PublishSubject<Void>()
-    fileprivate let reportReasonSubmittedChange = PublishSubject<OWCommentId>()
     let presentationalMode: OWPresentationalModeCompact
     var reportReasonView: UIView?
 
+    fileprivate let reportReasonSubmittedChange = PublishSubject<OWCommentId>()
     lazy var reportReasonSubmitted: Observable<OWCommentId> = {
         reportReasonSubmittedChange
             .asObservable()
@@ -116,10 +116,7 @@ fileprivate extension OWReportReasonCoordinator {
         // Setting up general observers which affect app flow however not entirely inside the SDK
         viewModel.outputs
             .reportReasonViewViewModel.outputs.reportReasonsSubmittedCommentId
-            .subscribe(onNext: { [weak self] commentId in
-                guard let self = self else { return }
-                self.reportReasonSubmittedChange.onNext(commentId)
-            })
+            .bind(to: reportReasonSubmittedChange)
             .disposed(by: disposeBag)
     }
 
