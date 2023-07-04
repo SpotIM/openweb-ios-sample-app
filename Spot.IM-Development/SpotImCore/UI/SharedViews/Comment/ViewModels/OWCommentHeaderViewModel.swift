@@ -184,8 +184,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     fileprivate var isLoggedInUserComment: Observable<Bool> {
-        _model
-            .unwrap()
+        _unwrappedModel
             .map { $0.userId }
             .unwrap()
             .flatMapLatest { [weak self] userId -> Observable<(String, OWUserAvailability)> in
@@ -217,7 +216,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                     .map { ($0, view) }
             }
             .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
-            .map { actionsAuthenticationLevel, view, isLoggedInUserComment in
+            .withLatestFrom(_unwrappedUser) { ($0.0, $0.1, $0.2, $1) }
+            .map { actionsAuthenticationLevel, view, isLoggedInUserComment, user in
                 let allowReportingComment = actionsAuthenticationLevel[.reportingComment] ?? false
                 let allowDeletingComment = actionsAuthenticationLevel[.deletingComment] ?? false
                 let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
@@ -242,7 +242,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                         type: OWCommentOptionsMenu.deleteComment)
                     )
                 }
-                if (allowMuteUser && !isLoggedInUserComment) {
+                if (allowMuteUser && !isLoggedInUserComment && !user.isAdmin) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Mute"),
                         type: OWCommentOptionsMenu.muteUser)
