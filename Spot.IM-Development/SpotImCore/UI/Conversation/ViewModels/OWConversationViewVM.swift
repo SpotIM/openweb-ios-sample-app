@@ -64,10 +64,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
-        static let willDisplayCellThrottle: Int = 700 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
+
+    fileprivate let loadMoreScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "LoadMoreComments")
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -99,6 +100,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
     fileprivate var _loadMoreComments = PublishSubject<Int>()
+    fileprivate var isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -673,6 +675,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // fetch more comments
         let loadMoreCommentsReadObservable = _loadMoreComments
+            .observe(on: loadMoreScheduler)
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
@@ -689,6 +692,7 @@ fileprivate extension OWConversationViewViewModel {
         let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
             .map { [weak self] event -> OWConversationReadRM? in
                 guard let self = self else { return nil }
+                self.isLoadingMoreComments.onNext(false)
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -887,13 +891,20 @@ fileprivate extension OWConversationViewViewModel {
                 return rowIndex
             }
             .unwrap()
-            .throttle(.milliseconds(Metrics.willDisplayCellThrottle), scheduler: MainScheduler.asyncInstance)
             .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
                 return (rowIndex, cellsVMs.count)
             }
-            .subscribe(onNext: { [weak self] rowIndex, cellsCount in
-                guard let self = self else { return }
-                if (rowIndex > cellsCount - Metrics.tableViewPaginationCellsOffset) {
+            .withLatestFrom(isLoadingMoreComments) { result, isLoadingMoreComments in
+                let rowIndex = result.0
+                let cellsCount = result.1
+                let userIsAtLastCells = rowIndex > (cellsCount - Metrics.tableViewPaginationCellsOffset)
+                let loadMore = !isLoadingMoreComments && userIsAtLastCells
+                return loadMore
+            }
+            .subscribe(onNext: { [weak self] loadMore in
+                if loadMore {
+                    guard let self = self else { return }
+                    self.isLoadingMoreComments.onNext(true)
                     self._loadMoreComments.onNext(self.paginationOffset)
                 }
             })
