@@ -68,7 +68,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let collapsableTextLineLimit: Int = 4
     }
 
-    fileprivate let loadMoreScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "LoadMoreComments")
+    fileprivate let loadMoreCommentsScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "loadMoreCommentsQueue")
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -675,7 +675,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // fetch more comments
         let loadMoreCommentsReadObservable = _loadMoreComments
-            .observe(on: loadMoreScheduler)
+            .observe(on: loadMoreCommentsScheduler)
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
@@ -891,22 +891,19 @@ fileprivate extension OWConversationViewViewModel {
                 return rowIndex
             }
             .unwrap()
+            .withLatestFrom(isLoadingMoreComments) { rowIndex, isLoadingMoreComments in
+                return (rowIndex, isLoadingMoreComments)
+            }
+            .filter { !$0.1 }
+            .map { $0.0 }
             .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
-                return (rowIndex, cellsVMs.count)
+                return (rowIndex > (cellsVMs.count - Metrics.tableViewPaginationCellsOffset))
             }
-            .withLatestFrom(isLoadingMoreComments) { result, isLoadingMoreComments in
-                let rowIndex = result.0
-                let cellsCount = result.1
-                let userIsAtLastCells = rowIndex > (cellsCount - Metrics.tableViewPaginationCellsOffset)
-                let loadMore = !isLoadingMoreComments && userIsAtLastCells
-                return loadMore
-            }
-            .subscribe(onNext: { [weak self] loadMore in
-                if loadMore {
-                    guard let self = self else { return }
-                    self.isLoadingMoreComments.onNext(true)
-                    self._loadMoreComments.onNext(self.paginationOffset)
-                }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.isLoadingMoreComments.onNext(true)
+                self._loadMoreComments.onNext(self.paginationOffset)
             })
             .disposed(by: disposeBag)
 
