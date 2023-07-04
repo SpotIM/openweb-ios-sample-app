@@ -102,8 +102,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 
 fileprivate extension OWCommentViewModel {
     func dictateCommentContentVisibility(data: OWCommentRequiredData) {
-        guard let commentId = data.comment.id else { return }
-
         let shouldHide = data.user.isMuted || // muted
             data.comment.deleted || // deleted
             data.comment.reported // reported
