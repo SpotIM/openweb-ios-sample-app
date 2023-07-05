@@ -11,14 +11,31 @@ import RxSwift
 
 class OWCommentCreationContentView: UIView {
     fileprivate struct Metrics {
-
+        static let textInputFontSize: CGFloat = 15.0
+        static let placeholderLabelTopOffset: CGFloat = 8.0
+        static let placeholderLabelLeadingOffset: CGFloat = 6.0
     }
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let viewModel: OWCommentCreationContentViewModeling
 
+    fileprivate lazy var placeholderLabel: UILabel = {
+        return UILabel()
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
+            .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+    }()
+
     fileprivate lazy var textInput: UITextView = {
-        return UITextView()
+        var textView = UITextView()
+            .backgroundColor(.clear)
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
+            .textAlignment(OWLocalizationManager.shared.textAlignment)
+
+        textView.becomeFirstResponder()
+
+        return textView
     }()
 
     init(with viewModel: OWCommentCreationContentViewModeling) {
@@ -43,6 +60,12 @@ fileprivate extension OWCommentCreationContentView {
         textInput.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+
+        addSubview(placeholderLabel)
+        placeholderLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(textInput.OWSnp.top).offset(Metrics.placeholderLabelTopOffset)
+            make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
+        }
     }
 
     func setupObservers() {
@@ -50,6 +73,8 @@ fileprivate extension OWCommentCreationContentView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.textInput.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.placeholderLabel.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentTextOutput
@@ -62,6 +87,11 @@ fileprivate extension OWCommentCreationContentView {
                 return self.textInput.text
             }
             .bind(to: viewModel.inputs.commentText)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showPlaceholder
+            .map { !$0 }
+            .bind(to: placeholderLabel.rx.isHidden)
             .disposed(by: disposeBag)
     }
 
