@@ -313,6 +313,11 @@ extension UITextView {
         self.textContainerInset = textContainerInset
         return self
     }
+
+    @discardableResult func textAlignment(_ textAlignment: NSTextAlignment) -> Self {
+        self.textAlignment = textAlignment
+        return self
+    }
 }
 
 extension UIStackView {
