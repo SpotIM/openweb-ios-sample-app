@@ -62,7 +62,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
-        let deepLinkToReportReason = BehaviorSubject<(OWCommentId, OWCommentId)?>(value: nil)
+        let deepLinkToReportReason = BehaviorSubject<OWReportReasonsRequiredData?>(value: nil)
 
         var animated = true
 
@@ -77,9 +77,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 deepLinkToCommentThread.onNext(commentThreadData)
             case .highlightComment(let commentId):
                 conversationVM.inputs.highlightComment.onNext(commentId)
-            case .reportReason(let commentId, let parentId):
+            case .reportReason(let reportData):
                 animated = false
-                deepLinkToReportReason.onNext((commentId, parentId))
+                deepLinkToReportReason.onNext(reportData)
             default:
                 break
             }
@@ -143,17 +143,28 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        let reportReasonFromConversationObservable = conversationVM.outputs.conversationViewVM
+            .outputs.openReportReason
+            .map { commentVM -> OWReportReasonsRequiredData? in
+                guard let commentId = commentVM.outputs.comment.id,
+                    let parentId = commentVM.outputs.comment.parentId else {
+                    return nil
+                }
+
+                return OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
+            }
+            .unwrap()
+
         // Coordinate to report reason
-        let coordinateReportReasonObservable = deepLinkToReportReason.unwrap()
+        let coordinateReportReasonObservable = Observable.merge(deepLinkToReportReason.unwrap(), reportReasonFromConversationObservable)
             .asObservable()
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] tuple -> Observable<OWReportReasonCoordinatorResult> in
+            .flatMap { [weak self] reportData -> Observable<OWReportReasonCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: tuple.0,
-                                                                        parentId: tuple.1,
+                let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
                                                                         router: self.router,
                                                                         actionsCallbacks: self.actionsCallbacks,
                                                                         presentationalMode: self.conversationData.presentationalStyle)
@@ -212,11 +223,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self,
                       let commentId = commentVM.outputs.comment.id,
                       let parentId = commentVM.outputs.comment.parentId else { return nil }
-                return OWReportReasonCoordinator(commentId: commentId,
-                                                                        parentId: parentId,
-                                                                        router: self.router,
-                                                                        actionsCallbacks: self.actionsCallbacks,
-                                                                        presentationalMode: self.conversationData.presentationalStyle)
+                let reportData = OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
+                return OWReportReasonCoordinator(reportData: reportData,
+                                                 router: self.router,
+                                                 actionsCallbacks: self.actionsCallbacks,
+                                                 presentationalMode: self.conversationData.presentationalStyle)
             }
             .unwrap()
             .asObservable()
