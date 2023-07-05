@@ -76,5 +76,16 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
             .unwrap()
             .bind(to: commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.commentTextOutput
+            .map { !($0?.isEmpty ?? true) }
+            .bind(to: footerViewModel.inputs.ctaEnabled)
+            .disposed(by: disposeBag)
+
+        footerViewModel.outputs.performCtaAction
+            .subscribe(onNext: { _ in
+                // TODO - handle post / edit comment
+            })
+            .disposed(by: disposeBag)
     }
 }
