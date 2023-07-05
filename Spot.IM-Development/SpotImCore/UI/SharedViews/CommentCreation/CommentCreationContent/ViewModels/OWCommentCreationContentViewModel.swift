@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
-    var commentText: BehaviorSubject<String?> { get }
+    var commentText: BehaviorSubject<String> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
-    var commentTextOutput: Observable<String?> { get }
+    var commentTextOutput: Observable<String> { get }
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
 }
@@ -35,20 +35,37 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate let imageURLProvider: OWImageProviding
     fileprivate let servicesProvider: OWSharedServicesProviding
 
-    var commentText = BehaviorSubject<String?>(value: nil)
+    var commentText = BehaviorSubject<String>(value: "")
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
         OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
-    var commentTextOutput: Observable<String?> {
+    fileprivate lazy var _commentTextCharactersLimit: Observable<Int?> = {
+        return servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+            .map { config -> Int? in
+                guard config.mobileSdk.shouldShowCommentCounter else { return nil }
+                return config.mobileSdk.commentCounterCharactersLimit
+            }
+    }()
+
+    var commentTextOutput: Observable<String> {
         commentText
             .asObservable()
+            .withLatestFrom(_commentTextCharactersLimit) { ($0, $1) }
+            .scan(("", nil)) { previous, newTuple -> (String, Int?) in
+                guard let limiter = newTuple.1 else { return newTuple }
+                let previousText = previous.0
+                let newText = newTuple.0
+
+                return newText.count <= limiter ? (newText, limiter) : (previousText, limiter)
+            }
+            .map { $0.0 }
     }
 
     var showPlaceholder: Observable<Bool> {
         commentTextOutput
-            .map { ($0?.count ?? 0) == 0 }
+            .map { $0.count == 0 }
     }
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,

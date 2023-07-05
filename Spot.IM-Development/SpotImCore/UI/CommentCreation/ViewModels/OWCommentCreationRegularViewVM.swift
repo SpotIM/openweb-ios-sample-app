@@ -72,13 +72,13 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
         commentCreationContentVM.outputs.commentTextOutput
-            .map { $0?.count }
+            .map { $0.count }
             .unwrap()
             .bind(to: commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
 
         commentCreationContentVM.outputs.commentTextOutput
-            .map { !($0?.isEmpty ?? true) }
+            .map { !$0.isEmpty }
             .bind(to: footerViewModel.inputs.ctaEnabled)
             .disposed(by: disposeBag)
 
