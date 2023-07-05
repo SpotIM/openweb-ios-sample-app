@@ -98,7 +98,8 @@ fileprivate extension OWPreConversationCoordinator {
                 // 3. Perform deeplink to comment creation screen
                 guard let commentId = commentVM.outputs.comment.id,
                 let parentId = commentVM.outputs.comment.parentId else { return nil }
-                return OWDeepLinkOptions.reportReason(commentId: commentId, parentId: parentId)
+                let reportData = OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
+                return OWDeepLinkOptions.reportReason(reportData: reportData)
             }
 
         // Coordinate to full conversation

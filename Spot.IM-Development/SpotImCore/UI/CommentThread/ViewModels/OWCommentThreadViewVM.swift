@@ -514,8 +514,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
                 // 1. Find if such comment VM exist for this comment ID
-                let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId })
-                return commentCellVM?.outputs.commentVM
+                guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
+                    return .empty()
+                }
+                return Observable.just(commentCellVM.outputs.commentVM)
             }
             .unwrap()
             .observe(on: MainScheduler.instance)

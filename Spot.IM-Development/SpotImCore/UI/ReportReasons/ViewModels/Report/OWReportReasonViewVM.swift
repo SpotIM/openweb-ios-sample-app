@@ -17,7 +17,6 @@ protocol OWReportReasonViewViewModelingInputs {
     var textViewTextChange: PublishSubject<String> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
     var isSubmitEnabledChange: PublishSubject<Bool> { get }
-    var reportReasonsSubmittedCommentIdChange: PublishSubject<OWCommentId> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
@@ -43,7 +42,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
-    var reportReasonsSubmittedCommentId: Observable<OWCommentId> { get }
+    var reportReasonSubmittedSuccessfully: Observable<OWCommentId> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -56,6 +55,10 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate struct Metrics {
         static let defaultTextViewMaxCharecters = 280
         static let headerTextFontSize: CGFloat = 15
+    }
+
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
     }
 
     var errorSubmitting = PublishSubject<Void>()
@@ -110,6 +113,11 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                                   forText: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
             }
             .unwrap()
+    }
+
+    fileprivate let _reportReasonSubmittedSuccessfully = PublishSubject<OWCommentId>()
+    var reportReasonSubmittedSuccessfully: Observable<OWCommentId> {
+        return _reportReasonSubmittedSuccessfully
     }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
@@ -185,13 +193,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     let textViewVM: OWTextViewViewModeling
     let titleViewVM: OWTitleViewViewModeling = OWTitleViewViewModel()
 
-    init(commentId: OWCommentId,
-         parentId: OWCommentId,
+    init(reportData: OWReportReasonsRequiredData,
          viewableMode: OWViewableMode,
          presentationalMode: OWPresentationalModeCompact,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.commentId = commentId
-        self.parentId = parentId
+        self.commentId = reportData.commentId
+        self.parentId = reportData.parentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
@@ -272,13 +279,6 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .asObservable()
     }()
 
-    var reportReasonsSubmittedCommentIdChange = PublishSubject<OWCommentId>()
-    var reportReasonsSubmittedCommentId: Observable<OWCommentId> {
-        return reportReasonsSubmittedCommentIdChange
-            .asObservable()
-            .share()
-    }
-
     lazy var reportReasonsCounterMaxLength: Observable<Int> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
@@ -334,7 +334,9 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let submit):
-                    self.reportReasonsSubmittedCommentIdChange.onNext(self.commentId)
+                    let reportService = self.servicesProvider.reportedCommentsService()
+                    reportService.updateCommentReportedSuccessfully(commentId: self.commentId, postId: self.postId)
+                    self._reportReasonSubmittedSuccessfully.onNext(self.commentId)
                     return submit
                 case .error(_):
                     self.setSubmitInProgress.onNext(false)
