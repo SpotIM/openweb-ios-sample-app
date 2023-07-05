@@ -391,7 +391,9 @@ fileprivate extension BetaNewAPIVC {
         // Bind select preset
         viewModel.outputs.shouldShowSelectPreset
             .skip(1)
-            .subscribe { [weak self] in self?.showPresetPicker($0) }
+            .subscribe(onNext: { [weak self] in
+                self?.showPresetPicker($0)
+            })
             .disposed(by: disposeBag)
 
         btnDone.rx.tap
