@@ -20,8 +20,8 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: 15.0))
-            .text(OWLocalizationManager.shared.localizedString(key: "Commenting on"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .numberOfLines(1)
             .enforceSemanticAttribute()
     }()
 
@@ -33,17 +33,18 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var topContainerView: UIView = {
         let topContainerView = UIView()
 
-        topContainerView.addSubview(titleLabel)
-        titleLabel.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(topContainerView.OWSnp.centerY)
-            make.leading.equalToSuperview().offset(16.0)
-        }
-
         topContainerView.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(topContainerView.OWSnp.centerY)
             make.trailing.equalToSuperview().offset(-5.0)
             make.size.equalTo(40.0)
+        }
+
+        topContainerView.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(topContainerView.OWSnp.centerY)
+            make.leading.equalToSuperview().offset(16.0)
+            make.trailing.equalTo(closeButton.OWSnp.leading).offset(-16.0)
         }
 
         return topContainerView
@@ -149,6 +150,10 @@ fileprivate extension OWCommentCreationRegularView {
     func setupObservers() {
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.titleAttributedString
+            .bind(to: titleLabel.rx.attributedText)
             .disposed(by: disposeBag)
     }
 }

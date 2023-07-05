@@ -15,6 +15,7 @@ protocol OWCommentCreationRegularViewViewModelingInputs {
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
+    var titleAttributedString: Observable<NSAttributedString> { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var footerViewModel: OWCommentCreationFooterViewModeling { get }
     var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
@@ -57,6 +58,29 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var commentCreationContentVM: OWCommentCreationContentViewModeling = {
         return OWCommentCreationContentViewModel()
+    }()
+
+    lazy var titleAttributedString: Observable<NSAttributedString> = {
+        let commentingOnText = OWLocalizationManager.shared.localizedString(key: "Commenting on")
+        switch commentCreationData.commentCreationType {
+        case .replyToComment(originComment: let originComment):
+            guard let userId = originComment.userId,
+                  let user = self.servicesProvider.usersService().get(userId: userId),
+                  let displayName = user.displayName
+            else { return Observable.just(NSAttributedString(string: commentingOnText)) }
+
+            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+
+            let attrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
+            let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
+
+            attributedString.append(boldUserNameString)
+
+            return Observable.just(attributedString)
+
+        default:
+            return Observable.just(NSAttributedString(string: commentingOnText))
+        }
     }()
 
     init (commentCreationData: OWCommentCreationRequiredData,
