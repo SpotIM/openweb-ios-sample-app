@@ -15,6 +15,7 @@ protocol OWCommentCreationContentViewModelingInputs {
 
 protocol OWCommentCreationContentViewModelingOutputs {
     var commentTextOutput: Observable<String?> { get }
+    var showPlaceholder: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -36,6 +37,11 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var commentTextOutput: Observable<String?> {
         commentText
             .asObservable()
+    }
+
+    var showPlaceholder: Observable<Bool> {
+        commentTextOutput
+            .map { ($0?.count ?? 0) == 0 }
     }
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
