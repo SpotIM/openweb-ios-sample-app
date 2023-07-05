@@ -16,6 +16,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var viewInitialized: PublishSubject<Void> { get }
+    var reportComment: PublishSubject<OWCommentId> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -42,6 +43,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
+    var commentId: Observable<String> { get }
+    var parentId: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -142,6 +146,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWPreConversationCompactContentViewModel(imageProvider: imageProvider)
     }()
 
+    var reportComment = PublishSubject<OWCommentId>()
+
     fileprivate lazy var commentsCountObservable: Observable<String> = {
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
@@ -195,6 +201,24 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate var _openPublisherProfile = PublishSubject<String>()
     var openPublisherProfile: Observable<String> {
         return _openPublisherProfile
+            .asObservable()
+    }
+
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
+        return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var commentIdChange = PublishSubject<String>()
+    var commentId: Observable<String> {
+        return commentIdChange
+            .asObservable()
+    }
+
+    fileprivate var parentIdChange = PublishSubject<String>()
+    var parentId: Observable<String> {
+        return parentIdChange
             .asObservable()
     }
 
@@ -316,17 +340,39 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.populateInitialUI()
             setupObservers()
     }
+
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
+        guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
+              let commentUserId = comment.userId,
+              let user = self.servicesProvider.usersService().get(userId: commentUserId)
+        else { return nil }
+
+        var replyToUser: SPUser? = nil
+        if let replyToCommentId = comment.parentId,
+           let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
+           let replyToUserId = replyToComment.userId {
+            replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
+        }
+
+        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedStatus(for: comment, postId: self.postId)
+
+        return OWCommentCellViewModel(data: OWCommentRequiredData(
+            comment: commentWithUpdatedStatus,
+            user: user,
+            replyToUser: replyToUser,
+            collapsableTextLineLimit: 0
+        ))
+    }
 }
 
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
@@ -389,8 +435,12 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = responseUsers[comment.userId ?? ""] else { return }
+
+                    let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+                    let commentWithUpdatedStatus = reportedCommentsService.getUpdatedStatus(for: comment, postId: self.postId)
+
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
-                        comment: comment,
+                        comment: commentWithUpdatedStatus,
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
@@ -473,6 +523,21 @@ fileprivate extension OWPreConversationViewViewModel {
                          return Observable.just(commentCellsVms)
                     }
                     .share()
+
+        // Subscribe to report reason reported with comment id
+        reportComment
+            .withLatestFrom(commentCellsVmsObservable) {
+                ($0, $1)
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] commentId, commentCellVMs in
+                guard let self = self else { return }
+                self.servicesProvider.reportedCommentsService().set(reportedCommentIds: [commentId], postId: self.postId)
+                let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId })
+                commentCellVM?.outputs.commentVM.inputs.reportCommentLocally()
+                self._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
@@ -630,7 +695,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
-                        break
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
