@@ -336,6 +336,35 @@ extension OWUILayer {
         })
     }
 
+    func reportReason(commentId: OWCommentId,
+                      parentId: OWCommentId,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWViewCompletion) {
+
+        checkIfPostIdExists { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        _ = viewsSdkCoordinator.reportReasonView(commentId: commentId,
+                                                 parentId: parentId,
+                                                 callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+    }
+
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol?,
@@ -380,6 +409,14 @@ fileprivate extension OWUILayer {
         }
 
         manager.postId = postId
+    }
+
+    func checkIfPostIdExists(completion: @escaping OWDefaultCompletion) {
+        guard OWManager.manager.postId != nil else {
+            completion(.failure(OWError.missingPostId))
+            return
+        }
+        completion(.success(()))
     }
 
     func prepareForNewFlow() {
