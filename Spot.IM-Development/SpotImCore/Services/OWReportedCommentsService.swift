@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import RxSwift
 
-typealias OWReportedCommentIds = Set<OWCommentId>
+fileprivate typealias OWReportedCommentIds = Set<OWCommentId>
 
 protocol OWReportedCommentsServicing {
-    func getUpdatedStatus(for comment: OWComment, postId: OWPostId) -> OWComment
-    func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId)
+    func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment
+    func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId)
+    var commentJustReported: Observable<OWCommentId> { get }
 
     func cleanCache()
 }
@@ -20,27 +22,37 @@ protocol OWReportedCommentsServicing {
 class OWReportedCommentsService: OWReportedCommentsServicing {
 
     fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
+    fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
 
-    func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
+    func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment {
+        guard let commentId = originalComment.id else { return originalComment }
+        var updatedComment = originalComment
+        if (originalComment.status == .pending || originalComment.status == .unknown) && isReported(commentId: commentId, postId: postId) {
+            updatedComment.setIsReported(true)
+        }
+        return updatedComment
+    }
+
+    func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId) {
+        _commentJustReported.onNext(commentId)
+    }
+
+    var commentJustReported: Observable<OWCommentId> {
+        return _commentJustReported
+            .share()
+    }
+
+    func cleanCache() {
+        self._mapPostIdToReportedCommentIds.removeAll()
+    }
+
+    fileprivate func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
         if let existingCommentIdsForPostId = _mapPostIdToReportedCommentIds[postId] {
             // merge and replacing current comments
             _mapPostIdToReportedCommentIds[postId] = existingCommentIdsForPostId.union(ids)
         } else {
             _mapPostIdToReportedCommentIds[postId] = Set(ids)
         }
-    }
-
-    func getUpdatedStatus(for comment: OWComment, postId: OWPostId) -> OWComment {
-        guard let commentId = comment.id else { return comment }
-        var updatedComment = comment
-        if (comment.status == .pending || comment.status == .unknown) && isReported(commentId: commentId, postId: postId) {
-            updatedComment.setIsReported(true)
-        }
-        return updatedComment
-    }
-
-    func cleanCache() {
-        self._mapPostIdToReportedCommentIds.removeAll()
     }
 }
 

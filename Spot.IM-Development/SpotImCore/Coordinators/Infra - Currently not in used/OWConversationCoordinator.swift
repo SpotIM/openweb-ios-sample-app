@@ -62,6 +62,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
+        let deepLinkToReportReason = BehaviorSubject<(OWCommentId, OWCommentId)?>(value: nil)
 
         var animated = true
 
@@ -76,11 +77,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 deepLinkToCommentThread.onNext(commentThreadData)
             case .highlightComment(let commentId):
                 conversationVM.inputs.highlightComment.onNext(commentId)
-            case .reportReason(let reportReasonSubmitted):
-                reportReasonSubmitted
-                    .bind(to: conversationVM.outputs.conversationViewVM.inputs.reportComment)
-                    .disposed(by: disposeBag)
+            case .reportReason(let commentId, let parentId):
                 animated = false
+                deepLinkToReportReason.onNext((commentId, parentId))
             default:
                 break
             }
@@ -144,6 +143,38 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        // Coordinate to report reason
+        let coordinateReportReasonObservable = deepLinkToReportReason.unwrap()
+            .asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] tuple -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let reportReasonCoordinator = OWReportReasonCoordinator(commentId: tuple.0,
+                                                                        parentId: tuple.1,
+                                                                        router: self.router,
+                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        presentationalMode: self.conversationData.presentationalStyle)
+                return self.coordinate(to: reportReasonCoordinator)
+            }
+            .do(onNext: { coordinatorResult in
+                switch coordinatorResult {
+                case .popped:
+                    // Nothing
+                    break
+                case .submitedReport(_):
+                    // Nothing - already taken care in report VM in which we update the report service
+                    break
+                default:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+                return Observable.never()
+            }
+
         // Coordinate to comment thread
         let coordinateCommentThreadObservable = deepLinkToCommentThread.unwrap().asObservable()
             .filter { [weak self] _ in
@@ -190,25 +221,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .unwrap()
             .asObservable()
             .share()
-
-        reportReasonCoordinatorObserver
-            .flatMap { [weak self] reportReasonCoordinator -> Observable<OWReportReasonCoordinatorResult> in
-                guard let self = self else { return .empty() }
-                return self.coordinate(to: reportReasonCoordinator)
-            }
-            .do(onNext: { result in
-                switch result {
-                case .loadedToScreen:
-                    break
-                    // Nothing
-                case .popped:
-                    break
-                case .submitedReport(let commentId):
-                    conversationVM.outputs.conversationViewVM.inputs.reportComment.onNext(commentId)
-                }
-            })
-            .subscribe()
-            .disposed(by: disposeBag)
 
         // URL tapped from community guidelines screen
         let communityGuidelinesURLTapped = conversationVM.outputs
@@ -270,6 +282,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         return Observable.merge(
             conversationPoppedObservable,
             coordinateCommentCreationObservable,
+            coordinateReportReasonObservable,
             coordinateCommentThreadObservable,
             conversationLoadedObservable,
             coordinateToSafariObservable
