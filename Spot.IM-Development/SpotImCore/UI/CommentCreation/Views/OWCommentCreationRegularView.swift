@@ -141,7 +141,7 @@ fileprivate extension OWCommentCreationRegularView {
         self.addSubview(contentView)
         contentView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(12.0)
+            make.top.equalTo(articleDescriptionView.OWSnp.bottom)
             make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
         }
     }
