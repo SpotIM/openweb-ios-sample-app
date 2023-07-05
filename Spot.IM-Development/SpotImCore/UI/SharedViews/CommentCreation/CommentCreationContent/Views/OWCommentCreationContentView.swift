@@ -14,10 +14,18 @@ class OWCommentCreationContentView: UIView {
         static let textInputFontSize: CGFloat = 15.0
         static let placeholderLabelTopOffset: CGFloat = 8.0
         static let placeholderLabelLeadingOffset: CGFloat = 6.0
+        static let horizontalOffset: CGFloat = 16.0
+        static let verticalOffset: CGFloat = 12.0
+        static let avatarSize: CGFloat = 40.0
+        static let avatarToInputSpacing: CGFloat = 13.0
     }
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let viewModel: OWCommentCreationContentViewModeling
+
+    fileprivate lazy var avatarView: OWAvatarView = {
+        return OWAvatarView()
+    }()
 
     fileprivate lazy var placeholderLabel: UILabel = {
         return UILabel()
@@ -32,10 +40,44 @@ class OWCommentCreationContentView: UIView {
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .textAlignment(OWLocalizationManager.shared.textAlignment)
+            .textContainerInset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+            .isScrollEnabled(false)
 
         textView.becomeFirstResponder()
 
         return textView
+    }()
+
+    fileprivate lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+
+        scroll.isUserInteractionEnabled = true
+
+        scroll.contentLayoutGuide.OWSnp.makeConstraints { make in
+            make.width.equalTo(scroll)
+        }
+
+        scroll.addSubview(avatarView)
+        avatarView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
+            make.leading.equalTo(scroll.contentLayoutGuide).offset(Metrics.horizontalOffset)
+            make.size.equalTo(Metrics.avatarSize)
+        }
+
+        scroll.addSubview(textInput)
+        textInput.OWSnp.makeConstraints { make in
+            make.leading.equalTo(avatarView.OWSnp.trailing).offset(Metrics.avatarToInputSpacing)
+            make.trailing.equalTo(scroll.contentLayoutGuide).offset(-Metrics.horizontalOffset)
+            make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
+        }
+
+        scroll.addSubview(placeholderLabel)
+        placeholderLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(textInput.OWSnp.top)
+            make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
+        }
+
+        return scroll
     }()
 
     init(with viewModel: OWCommentCreationContentViewModeling) {
@@ -43,6 +85,8 @@ class OWCommentCreationContentView: UIView {
         super.init(frame: .zero)
 
         self.enforceSemanticAttribute()
+
+        avatarView.configure(with: viewModel.outputs.avatarViewVM)
 
         setupUI()
         setupObservers()
@@ -56,15 +100,9 @@ class OWCommentCreationContentView: UIView {
 
 fileprivate extension OWCommentCreationContentView {
     func setupUI() {
-        addSubview(textInput)
-        textInput.OWSnp.makeConstraints { make in
+        addSubview(scrollView)
+        scrollView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-
-        addSubview(placeholderLabel)
-        placeholderLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(textInput.OWSnp.top).offset(Metrics.placeholderLabelTopOffset)
-            make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
         }
     }
 
