@@ -41,6 +41,7 @@ class OWCommentCreationContentView: UIView {
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .textAlignment(OWLocalizationManager.shared.textAlignment)
             .textContainerInset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+            .tintColor(OWColorPalette.shared.color(type: .cursorColor, themeStyle: .light))
             .isScrollEnabled(false)
 
         textView.becomeFirstResponder()
@@ -112,6 +113,7 @@ fileprivate extension OWCommentCreationContentView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.textInput.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.textInput.tintColor = OWColorPalette.shared.color(type: .cursorColor, themeStyle: currentStyle)
                 self.placeholderLabel.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
