@@ -19,6 +19,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaTitleText: Observable<String> { get }
     var ctaButtonEnabled: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
+    var performCtaAction: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFooterViewModeling {
@@ -56,6 +57,17 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         }
     }()
 
+    var performCtaAction: Observable<Void> {
+        tapCta
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
+            }
+            .filter { !$0 } // Do not continue if needed to authenticate
+            .map { _ -> Void in () }
+    }
+
     var ctaEnabled = BehaviorSubject<Bool>(value: false)
 
     var ctaTitleText: Observable<String> {
@@ -77,5 +89,13 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+
+        setupObservers()
+    }
+}
+
+fileprivate extension OWCommentCreationFooterViewModel {
+    func setupObservers() {
+
     }
 }
