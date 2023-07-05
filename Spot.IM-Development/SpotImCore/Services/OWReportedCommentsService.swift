@@ -34,6 +34,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     }
 
     func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId) {
+        set(reportedCommentIds: [commentId], postId: postId)
         _commentJustReported.onNext(commentId)
     }
 

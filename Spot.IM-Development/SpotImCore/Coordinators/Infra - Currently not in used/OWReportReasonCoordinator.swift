@@ -30,8 +30,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let commentId: OWCommentId
-    fileprivate let parentId: OWCommentId
+    fileprivate let reportData: OWReportReasonsRequiredData
     fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
@@ -41,15 +40,11 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     let presentationalMode: OWPresentationalModeCompact
     var reportReasonView: UIView?
 
-    fileprivate let reportReasonSubmittedChange = PublishSubject<OWCommentId>()
-
-    init(commentId: OWCommentId,
-         parentId: OWCommentId,
+    init(reportData: OWReportReasonsRequiredData,
          router: OWRoutering? = nil,
          actionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none) {
-        self.commentId = commentId
-        self.parentId = parentId
+        self.reportData = reportData
         self.router = router
         self.actionsCallbacks = actionsCallbacks
         self.presentationalMode = presentationalMode
@@ -57,8 +52,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
         guard let router = router else { return .empty() }
-        let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(commentId: commentId,
-                                                                                 parentId: parentId,
+        let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(reportData: reportData,
                                                                                  viewableMode: .partOfFlow,
                                                                                  presentMode: self.presentationalMode)
         let reportReasonVC = OWReportReasonVC(viewModel: reportReasonVM)
@@ -80,7 +74,8 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .map { OWReportReasonCoordinatorResult.popped }
             .asObservable()
 
-        let reportReasonSubmittedObservable = reportReasonSubmittedChange
+        let reportReasonSubmittedObservable = reportReasonVM.outputs.reportReasonViewViewModel
+            .outputs.reportReasonSubmittedSuccessfully
             .map { OWReportReasonCoordinatorResult.submitedReport(commentId: $0) }
             .asObservable()
             .share()
@@ -93,8 +88,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(commentId: commentId,
-                                                                                             parentId: parentId,
+        let reportReasonViewVM: OWReportReasonViewViewModeling = OWReportReasonViewViewModel(reportData: reportData,
                                                                                              viewableMode: .independent,
                                                                                              presentationalMode: .none,
                                                                                              servicesProvider: OWSharedServicesProvider.shared)
@@ -108,11 +102,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 
 fileprivate extension OWReportReasonCoordinator {
     func setupObservers(forViewModel viewModel: OWReportReasonViewModeling) {
-        // Setting up general observers which affect app flow however not entirely inside the SDK
-        viewModel.outputs
-            .reportReasonViewViewModel.outputs.reportReasonsSubmittedCommentId
-            .bind(to: reportReasonSubmittedChange)
-            .disposed(by: disposeBag)
+        // Nothing here
     }
 
     // swiftlint:disable function_body_length
