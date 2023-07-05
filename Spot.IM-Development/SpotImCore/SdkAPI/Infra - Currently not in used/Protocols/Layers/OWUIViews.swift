@@ -22,9 +22,10 @@ public protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
-    func reportReason(commentId: OWCommentId,
+    func reportReason(postId: OWPostId,
+                      commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWConversationSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
@@ -49,9 +50,10 @@ protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
-    func reportReason(commentId: OWCommentId,
+    func reportReason(postId: OWPostId,
+                      commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWConversationSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 }

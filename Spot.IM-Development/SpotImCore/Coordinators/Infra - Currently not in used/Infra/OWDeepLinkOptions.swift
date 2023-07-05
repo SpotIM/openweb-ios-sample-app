@@ -14,5 +14,5 @@ enum OWDeepLinkOptions {
     case commentCreation(commentCreationData: OWCommentCreationRequiredData)
     case commentThread(commentThreadData: OWCommentThreadRequiredData)
     case authentication
-    case reportReason(reportReasonSubmitted: Observable<OWCommentId>)
+    case reportReason(commentId: OWCommentId, parentId: OWCommentId)
 }
