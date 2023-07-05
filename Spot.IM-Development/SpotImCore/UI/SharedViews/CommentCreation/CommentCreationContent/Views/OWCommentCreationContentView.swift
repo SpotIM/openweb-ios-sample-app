@@ -123,7 +123,7 @@ fileprivate extension OWCommentCreationContentView {
 
         textInput.rx.didChange
             .map { [weak self] _ in
-                guard let self = self else { return nil }
+                guard let self = self else { return "" }
                 return self.textInput.text
             }
             .bind(to: viewModel.inputs.commentText)
@@ -133,6 +133,7 @@ fileprivate extension OWCommentCreationContentView {
             .map { !$0 }
             .bind(to: placeholderLabel.rx.isHidden)
             .disposed(by: disposeBag)
+
     }
 
     func applyAccessibility() {
