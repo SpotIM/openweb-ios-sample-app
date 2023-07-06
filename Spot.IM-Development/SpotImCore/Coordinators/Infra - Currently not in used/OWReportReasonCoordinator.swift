@@ -67,7 +67,6 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                         popCompletion: reportReasonPopped)
         }
 
-        setupObservers(forViewModel: reportReasonVM)
         setupViewActionsCallbacks(forViewModel: reportReasonVM.outputs.reportReasonViewViewModel)
 
         let reportReasonPoppedObservable = reportReasonPopped
@@ -101,10 +100,6 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
 }
 
 fileprivate extension OWReportReasonCoordinator {
-    func setupObservers(forViewModel viewModel: OWReportReasonViewModeling) {
-        // Nothing here
-    }
-
     // swiftlint:disable function_body_length
     func setupViewActionsCallbacks(forViewModel viewModel: OWReportReasonViewViewModeling) {
     // swiftlint:enable function_body_length
