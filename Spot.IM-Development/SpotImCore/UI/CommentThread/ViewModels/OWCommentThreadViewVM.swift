@@ -15,7 +15,6 @@ protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
-    var reportComment: PublishSubject<OWCommentId> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -144,8 +143,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return _performTableViewAnimation
             .asObservable()
     }
-
-    var reportComment = PublishSubject<OWCommentId>()
 
     init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
@@ -297,7 +294,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         }
 
         let reportedCommentsService = self.servicesProvider.reportedCommentsService()
-        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedStatus(for: comment, postId: self.postId)
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
 
         return OWCommentCellViewModel(data: OWCommentRequiredData(
             comment: commentWithUpdatedStatus,
@@ -509,17 +506,28 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .share()
 
-        // Subscribe to report reason reported with comment id
-        reportComment
+        // Responding to comments which are just reported
+        let reportService = servicesProvider.reportedCommentsService()
+        reportService.commentJustReported
             .withLatestFrom(commentCellsVmsObservable) {
                 ($0, $1)
             }
+            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+                // 1. Find if such comment VM exist for this comment ID
+                guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
+                    return .empty()
+                }
+                return Observable.just(commentCellVM.outputs.commentVM)
+            }
+            .unwrap()
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] commentId, commentCellVMs in
+            .do(onNext: { commentVM in
+                // 2. Update report locally
+                commentVM.inputs.reportCommentLocally()
+            })
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.servicesProvider.reportedCommentsService().set(reportedCommentIds: [commentId], postId: self.postId)
-                let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId })
-                commentCellVM?.outputs.commentVM.inputs.reportCommentLocally()
+                // 3. Update table view
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
