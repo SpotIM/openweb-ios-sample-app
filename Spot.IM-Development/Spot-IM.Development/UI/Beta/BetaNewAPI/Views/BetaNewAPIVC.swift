@@ -29,6 +29,7 @@ class BetaNewAPIVC: UIViewController {
         static let btnUIViewsIdentifier = "btn_ui_views_id"
         static let btnMiscellaneousIdentifier = "btn_miscellaneous_id"
         static let btnTestingPlaygroundIdentifier = "btn_testing_playground_id"
+        static let btnAutomationIdentifier = "btn_automation_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let textFieldHeight: CGFloat = 40
@@ -146,6 +147,10 @@ class BetaNewAPIVC: UIViewController {
         return NSLocalizedString("TestingPlayground", comment: "").blueRoundedButton
     }()
 
+    fileprivate lazy var btnAutomation: UIButton = {
+        return NSLocalizedString("Automation", comment: "").blueRoundedButton
+    }()
+
     fileprivate var selectedAnswer: ConversationPreset?
 
     init(viewModel: BetaNewAPIViewModeling = BetaNewAPIViewModel()) {
@@ -190,6 +195,7 @@ fileprivate extension BetaNewAPIVC {
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
         btnTestingPlayground.accessibilityIdentifier = Metrics.btnTestingPlaygroundIdentifier
+        btnAutomation.accessibilityIdentifier = Metrics.btnAutomationIdentifier
     }
 
     func setupViews() {
@@ -259,6 +265,8 @@ fileprivate extension BetaNewAPIVC {
             #endif
         }
 
+        var currentBottomView: UIView = btnMiscellaneous
+
         #if BETA
         // Adding testing playground button
         scrollView.addSubview(btnTestingPlayground)
@@ -267,8 +275,24 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnMiscellaneous.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            #if !(AUTOMATION)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+            #endif
+        }
+        currentBottomView = btnTestingPlayground
+        #endif
+
+        #if AUTOMATION
+        // Adding testing playground button
+        scrollView.addSubview(btnAutomation)
+        btnAutomation.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(currentBottomView.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
+        currentBottomView = btnAutomation
         #endif
 
         // Setup preset picker and its container.
@@ -353,12 +377,25 @@ fileprivate extension BetaNewAPIVC {
             .bind(to: viewModel.inputs.testingPlaygroundTapped)
             .disposed(by: disposeBag)
 
+        btnAutomation.rx.tap
+            .bind(to: viewModel.inputs.automationTapped)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.openTestingPlayground
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
                 let testingPlaygroundVM = TestingPlaygroundViewModel(dataModel: dataModel)
                 let testingPlaygroundVC = TestingPlaygroundVC(viewModel: testingPlaygroundVM)
                 self.navigationController?.pushViewController(testingPlaygroundVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openAutomation
+            .subscribe(onNext: { [weak self] dataModel in
+                guard let self = self else { return }
+                let automationVM = AutomationViewModel(dataModel: dataModel)
+                let automationVC = AutomationVC(viewModel: automationVM)
+                self.navigationController?.pushViewController(automationVC, animated: true)
             })
             .disposed(by: disposeBag)
 
