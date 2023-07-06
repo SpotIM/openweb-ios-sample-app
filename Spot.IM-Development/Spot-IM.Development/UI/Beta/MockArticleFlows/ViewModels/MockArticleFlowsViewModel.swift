@@ -328,7 +328,7 @@ fileprivate extension MockArticleFlowsViewModel {
         // Providing `displayAuthenticationFlow` callback
         let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
             guard let self = self else { return }
-            let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
+            let authenticationVM = AuthenticationPlaygroundNewAPIViewModel(filterBySpotId: OpenWeb.manager.spotId)
             let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
 
             switch routeringMode {
