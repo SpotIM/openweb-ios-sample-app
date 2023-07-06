@@ -212,27 +212,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
-        // Coordinate to report reasons - Flow
-        let reportReasonCoordinatorObserver = conversationVM.outputs
-            .conversationViewVM.outputs.openReportReason
-            .filter { [weak self] _ in
-                guard let self = self else { return true }
-                return self.viewableMode == .partOfFlow
-            }
-            .map { [weak self] commentVM -> OWReportReasonCoordinator? in
-                guard let self = self,
-                      let commentId = commentVM.outputs.comment.id,
-                      let parentId = commentVM.outputs.comment.parentId else { return nil }
-                let reportData = OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
-                return OWReportReasonCoordinator(reportData: reportData,
-                                                 router: self.router,
-                                                 actionsCallbacks: self.actionsCallbacks,
-                                                 presentationalMode: self.conversationData.presentationalStyle)
-            }
-            .unwrap()
-            .asObservable()
-            .share()
-
         // URL tapped from community guidelines screen
         let communityGuidelinesURLTapped = conversationVM.outputs
             .conversationViewVM.outputs

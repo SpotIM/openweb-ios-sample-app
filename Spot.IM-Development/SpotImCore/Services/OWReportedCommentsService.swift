@@ -46,8 +46,10 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     func cleanCache() {
         self._mapPostIdToReportedCommentIds.removeAll()
     }
+}
 
-    fileprivate func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
+fileprivate extension OWReportedCommentsService {
+    func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
         if let existingCommentIdsForPostId = _mapPostIdToReportedCommentIds[postId] {
             // merge and replacing current comments
             _mapPostIdToReportedCommentIds[postId] = existingCommentIdsForPostId.union(ids)
@@ -55,9 +57,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
             _mapPostIdToReportedCommentIds[postId] = Set(ids)
         }
     }
-}
 
-fileprivate extension OWReportedCommentsService {
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
     }
