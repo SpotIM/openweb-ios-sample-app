@@ -17,6 +17,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
+    var sendCommentIcon: UIImage? { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -28,9 +29,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     OWCommentCreationFloatingKeyboardViewViewModeling,
     OWCommentCreationFloatingKeyboardViewViewModelingInputs,
     OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
+
     fileprivate struct Metrics {
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "What do you think?")
+        static let sendCommentIcon = "sendCommentIcon"
     }
+
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
     var outputs: OWCommentCreationFloatingKeyboardViewViewModelingOutputs { return self }
 
@@ -49,6 +53,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         return OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
+    lazy var sendCommentIcon: UIImage? = {
+        return UIImage(spNamed: Metrics.sendCommentIcon)
+    }()
+
     let textViewVM: OWTextViewViewModeling
 
     init (commentCreationData: OWCommentCreationRequiredData,
@@ -63,7 +71,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         self.textViewVM = OWTextViewViewModel(placeholderText: Metrics.textViewPlaceholderText,
                                               textViewText: "",
                                               charectersLimitEnabled: false,
-                                              isEditable: true)
+                                              isEditable: true,
+                                              isAutoExpandable: true)
         commentType = commentCreationData.commentCreationType
         setupObservers()
     }
