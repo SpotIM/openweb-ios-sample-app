@@ -23,6 +23,11 @@ class OWCommentCreationVC: UIViewController {
         return commentCreationView
     }()
 
+    fileprivate lazy var footerSafeAreaView: UIView = {
+        return UIView(frame: .zero)
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -67,12 +72,14 @@ fileprivate extension OWCommentCreationVC {
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-            case .regular, .light:
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            case .floatingKeyboard:
-                make.top.bottom.equalToSuperview()
-            }
+            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+        }
+
+        view.addSubview(footerSafeAreaView)
+        footerSafeAreaView.OWSnp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
 
@@ -90,6 +97,7 @@ fileprivate extension OWCommentCreationVC {
                     }
                 }()
                 self.view.backgroundColor = backgroundColor
+                self.footerSafeAreaView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 

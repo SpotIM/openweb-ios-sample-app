@@ -27,6 +27,9 @@ class OWTextView: UIView {
         static let textViewTopBottomPadding: CGFloat = 10
         static let textViewFontSize: CGFloat = 15
         static let charectersFontSize: CGFloat = 13
+        static let baseTextViewHeight: CGFloat = 30
+        static let maxNumberOfLines = 4
+        static let expandAnimationDuration: CGFloat = 0.1
     }
 
     let viewModel: OWTextViewViewModeling
@@ -99,6 +102,10 @@ fileprivate extension OWTextView {
             } else {
                 make.edges.equalToSuperview()
             }
+            if viewModel.outputs.isAutoExpandable {
+                make.height.equalTo(textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                       maxLines: Metrics.maxNumberOfLines))
+            }
         }
 
         self.addSubviews(textViewPlaceholder)
@@ -134,7 +141,22 @@ fileprivate extension OWTextView {
             .bind(to: textViewPlaceholder.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if !viewModel.outputs.isEditable {
+        if viewModel.outputs.isEditable {
+            if viewModel.outputs.isAutoExpandable {
+                textView.rx.text
+                    .subscribe(onNext: { [weak self] _ in
+                        guard let self = self else { return }
+                        UIView.animate(withDuration: Metrics.expandAnimationDuration) {
+                            self.textView.OWSnp.updateConstraints { make in
+                                make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                                            maxLines: Metrics.maxNumberOfLines))
+                            }
+                            self.layoutIfNeeded()
+                        }
+                    })
+                    .disposed(by: disposeBag)
+            }
+        } else {
             textView.rx.didBeginEditing
                 .bind(to: viewModel.inputs.textViewTap)
                 .disposed(by: disposeBag)
@@ -168,5 +190,27 @@ fileprivate extension OWTextView {
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+extension UITextView {
+    func newHeight(withBaseHeight baseHeight: CGFloat, maxLines: Int) -> CGFloat {
+        // Calculate the required size of the textview
+        let fixedWidth = frame.size.width
+        let newSize = sizeThatFits(CGSize(width: fixedWidth, height: .greatestFiniteMagnitude))
+        var newFrame = frame
+
+        // Height is always >= the base height, so calculate the possible new height
+        let height: CGFloat = newSize.height > baseHeight ? newSize.height : baseHeight
+        newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: height)
+
+        return min(maxHeight(for: maxLines), newFrame.height)
+    }
+
+    func maxHeight(for lines: Int) -> CGFloat {
+        if let font = self.font {
+            return font.lineHeight * CGFloat(lines)
+        }
+        return 0
     }
 }

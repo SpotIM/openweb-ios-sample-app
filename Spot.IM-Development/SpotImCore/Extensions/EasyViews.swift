@@ -333,6 +333,11 @@ extension UITextView {
         self.textContainerInset = textContainerInset
         return self
     }
+
+    @discardableResult func maxNumberOfLines(_ maxNumberOfLines: Int) -> Self {
+        self.textContainer.maximumNumberOfLines = maxNumberOfLines
+        return self
+    }
 }
 
 extension UIStackView {
