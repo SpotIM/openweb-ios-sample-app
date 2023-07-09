@@ -26,12 +26,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var footerSafeAreaView: UIView = {
-        return UIView(frame: .zero)
-            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-    }()
-
-    fileprivate lazy var textView: OWTextView = {
+    fileprivate lazy var textViewObject: OWTextView = {
         return OWTextView(viewModel: viewModel.outputs.textViewVM,
                           prefixIdentifier: Metrics.prefixIdentifier)
     }()
@@ -63,6 +58,11 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         applyAccessibility()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext()
+    }
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -84,13 +84,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.bottom.equalTo(self.safeAreaLayoutGuide)
         }
 
-        self.addSubview(footerSafeAreaView)
-        footerSafeAreaView.OWSnp.makeConstraints { make in
-            make.top.equalTo(footerView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
-
         footerView.addSubview(userAvatarView)
         userAvatarView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().inset(Metrics.userAvatarLeadingPadding)
@@ -98,12 +91,11 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.size.equalTo(Metrics.userAvatarSize)
         }
 
-        footerView.addSubview(textView)
-        textView.OWSnp.makeConstraints { make in
+        footerView.addSubview(textViewObject)
+        textViewObject.OWSnp.makeConstraints { make in
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
             make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
             make.bottom.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
-            make.height.equalTo(50) // Will be removed after expandable capability added
         }
     }
 
@@ -114,7 +106,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 guard let self = self else { return }
 
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.footerSafeAreaView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 

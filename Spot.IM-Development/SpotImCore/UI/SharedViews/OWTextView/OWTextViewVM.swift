@@ -29,6 +29,7 @@ protocol OWTextViewViewModelingOutputs {
     var hidePlaceholder: Observable<Bool> { get }
     var textViewText: Observable<String> { get }
     var charectersLimitEnabled: Bool { get }
+    var isAutoExpandable: Bool { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -45,6 +46,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     fileprivate let disposeBag = DisposeBag()
 
     let isEditable: Bool
+    let isAutoExpandable: Bool
     var textViewMaxCharecters: Int
     var textViewMaxCharectersChange = PublishSubject<Int>()
 
@@ -86,16 +88,27 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
             .map { $0 > 0 }
     }
 
+    var expandableHeightChanged = PublishSubject<Void>()
+    var expandableHeight: Observable<CGFloat> {
+        return expandableHeightChanged
+            .map { [weak self] _ in
+                guard let self = self else { return 0 }
+                 return 0
+            }
+    }
+
     init(textViewMaxCharecters: Int = 0,
          placeholderText: String,
          textViewText: String = "",
          charectersLimitEnabled: Bool,
-         isEditable: Bool) {
+         isEditable: Bool,
+         isAutoExpandable: Bool = false) {
         self.textViewMaxCharecters = textViewMaxCharecters
         self.placeholderTextChange = BehaviorSubject(value: placeholderText)
         self.textViewTextChange = BehaviorSubject(value: textViewText)
         self.isEditable = isEditable
         self.charectersLimitEnabled = charectersLimitEnabled
+        self.isAutoExpandable = isAutoExpandable
         self.setupObservers()
     }
 }
