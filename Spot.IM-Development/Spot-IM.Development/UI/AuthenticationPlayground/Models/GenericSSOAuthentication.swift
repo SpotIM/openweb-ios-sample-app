@@ -19,10 +19,10 @@ extension GenericSSOAuthentication {
     static let mockModels = Self.createMockModels()
 
     static func createMockModels() -> [GenericSSOAuthentication] {
-    #if PUBLIC_DEMO_APP
-        return []
-    #else
-        return [
+        var authenticationModels: [GenericSSOAuthentication] = []
+
+    #if !PUBLIC_DEMO_APP
+        let models = [
             // All those Users are for The demo spot `sp_eCIlROSD`
             GenericSSOAuthentication(displayName: "Alon Haiut",
                                      spotId: "sp_eCIlROSD",
@@ -61,6 +61,34 @@ extension GenericSSOAuthentication {
                                                               password: "1234",
                                                               userId: "u_lAt51Sg8WoDL"))
         ]
-#endif
+        authenticationModels.append(contentsOf: models)
+    #endif
+
+    #if AUTOMATION
+        let automationModels = [
+            // All those Users are for spot `sp_f1f0OMkt`
+            GenericSSOAuthentication(displayName: "AT-Test-User",
+                                                 spotId: "sp_f1f0OMkt",
+                                                 ssoToken: "03230530ruvFh2.65386531333139612d336534382d343038662d386165352d6366326130343965",
+                                                 user: UserAuthentication(username: "test",
+                                                                          password: "1234",
+                                                                          userId: "1")),
+                        GenericSSOAuthentication(displayName: "AT-Test-User2",
+                                                 spotId: "sp_f1f0OMkt",
+                                                 ssoToken: "03230530ruvFh2.65386531333139612d336534382d343038662d386165352d6366326130343965",
+                                                 user: UserAuthentication(username: "test2",
+                                                                          password: "asdf12345",
+                                                                          userId: "2")),
+                        GenericSSOAuthentication(displayName: "AT-Test-User3",
+                                                 spotId: "sp_f1f0OMkt",
+                                                 ssoToken: "03230530ruvFh2.65386531333139612d336534382d343038662d386165352d6366326130343965",
+                                                 user: UserAuthentication(username: "test3",
+                                                                          password: "123qwe",
+                                                                          userId: "3"))
+        ]
+        authenticationModels.append(contentsOf: automationModels)
+    #endif
+
+        return authenticationModels
     }
 }

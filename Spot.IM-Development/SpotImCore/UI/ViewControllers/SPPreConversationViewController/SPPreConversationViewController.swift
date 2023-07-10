@@ -234,7 +234,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     private func setupHeaderView() {
-        header.set(title: LocalizationManager.localizedString(key: "Conversation"))
+        header.set(title: SPLocalizationManager.localizedString(key: "Conversation"))
         header.delegate = self
         header.configure(onlineViewingUsersVM: model.onlineViewingUsersPreConversationVM)
         let headerHeight = SpotIm.buttonOnlyMode == .withoutTitle ? 0 : Theme.headerHeight
@@ -344,7 +344,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.presentErrorView(error: error)
                     } else {
                         self.showAlert(
-                            title: LocalizationManager.localizedString(key: "Oops..."),
+                            title: SPLocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
                     }
@@ -404,7 +404,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         // Here we specifically showing call to action text instead of the default empty state
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
-        let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
+        let callToAction = SPLocalizationManager.localizedString(key: "Be the first to comment")
         footerView.hideShowMoreCommentsButton()
         model.preConvCommetEntryVM.inputs.configure(ctaText: callToAction)
     }
@@ -414,7 +414,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.stateActionView = nil
 
         footerView.showShowMoreCommentsButton()
-        let callToAction = LocalizationManager.localizedString(key: "What do you think?")
+        let callToAction = SPLocalizationManager.localizedString(key: "What do you think?")
         model.preConvCommetEntryVM.inputs.configure(ctaText: callToAction)
     }
 

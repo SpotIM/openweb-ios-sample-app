@@ -68,7 +68,7 @@ class SPUserNameViewModel: SPUserNameViewModeling,
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
-                : LocalizationManager.localizedString(key: "To") + " \($0)"
+                : SPLocalizationManager.localizedString(key: "To") + " \($0)"
             })
     }
 
@@ -125,7 +125,7 @@ class SPUserNameViewModel: SPUserNameViewModeling,
                 } else {
                     localizationKey = "This message was deleted."
                 }
-                return LocalizationManager.localizedString(key: localizationKey)
+                return SPLocalizationManager.localizedString(key: localizationKey)
             }
     }
 
