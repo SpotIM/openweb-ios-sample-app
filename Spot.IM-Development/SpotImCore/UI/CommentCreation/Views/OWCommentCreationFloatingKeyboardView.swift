@@ -14,16 +14,21 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     fileprivate struct Metrics {
         static let identifier = "comment_creation_floating_keyboard_view_id"
         static let prefixIdentifier = "comment_creation_floating_keyboard"
-        static let userAvatarLeadingPadding: CGFloat = 16
+        static let userAvatarLeadingPadding: CGFloat = 20
+        static let footerTrailingPadding: CGFloat = 12
         static let userAvatarBottomPadding: CGFloat = 12
         static let userAvatarSize: CGFloat = 40
         static let textViewHorizontalPadding: CGFloat = 10
         static let textViewVerticalPadding: CGFloat = 12
+        static let sendImageIcon = "sendCommentIcon"
+        static let sendButtonSize: CGFloat = 35
+        static let delayCloseDuration = 300 // miliseconds
     }
 
     fileprivate lazy var footerView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var textViewObject: OWTextView = {
@@ -42,6 +47,14 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             .backgroundColor(.clear)
     }()
 
+    fileprivate lazy var sendButton: UIButton = {
+        let image = UIImage(spNamed: Metrics.sendImageIcon, supportDarkMode: false)
+        return UIButton()
+            .image(image, state: .normal)
+            .alpha(0)
+            .enforceSemanticAttribute()
+    }()
+
     fileprivate let viewModel: OWCommentCreationFloatingKeyboardViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -52,14 +65,11 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     init(viewModel: OWCommentCreationFloatingKeyboardViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        self.enforceSemanticAttribute()
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
         setupViews()
         setupObservers()
         applyAccessibility()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
         self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext()
     }
 
@@ -94,8 +104,15 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         footerView.addSubview(textViewObject)
         textViewObject.OWSnp.makeConstraints { make in
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
             make.bottom.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+        }
+
+        footerView.addSubview(sendButton)
+        sendButton.OWSnp.makeConstraints { make in
+            make.leading.equalTo(textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
+            make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
+            make.size.equalTo(Metrics.sendButtonSize)
+            make.centerY.equalToSuperview()
         }
     }
 
@@ -110,7 +127,50 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
 
         closeButton.rx.tap
+            .bind(to: viewModel.outputs.textViewVM.inputs.resignFirstResponderCall)
+            .disposed(by: disposeBag)
+
+        closeButton.rx.tap
+            .delay(.milliseconds(Metrics.delayCloseDuration), scheduler: MainScheduler.instance)
             .bind(to: viewModel.inputs.closeButtonTap)
+            .disposed(by: disposeBag)
+
+        // keyboard will show
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .subscribe(onNext: { [weak self] notification in
+                guard
+                    let self = self,
+                    let animationDuration = notification.keyboardAnimationDuration
+                    else { return }
+                UIView.animate(withDuration: animationDuration) { [weak self] in
+                    guard let self = self else { return }
+                    self.sendButton.alpha(1)
+                    self.sendButton.OWSnp.updateConstraints { make in
+                        make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
+                    }
+                    footerView.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // keyboard will hide
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .subscribe(onNext: { [weak self] notification in
+                guard
+                    let self = self,
+                    let animationDuration = notification.keyboardAnimationDuration
+                    else { return }
+                UIView.animate(withDuration: animationDuration) { [weak self] in
+                    guard let self = self else { return }
+                    self.sendButton.alpha(0)
+                    self.sendButton.OWSnp.updateConstraints { make in
+                        make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
+                    }
+                    footerView.layoutIfNeeded()
+                }
+            })
             .disposed(by: disposeBag)
     }
 }

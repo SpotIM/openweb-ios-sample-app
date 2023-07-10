@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWTextViewViewModelingInputs {
     var becomeFirstResponderCall: PublishSubject<Void> { get }
+    var resignFirstResponderCall: PublishSubject<Void> { get }
     var textViewTap: PublishSubject<Void> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
     var textViewTextChange: BehaviorSubject<String> { get }
@@ -21,6 +22,7 @@ protocol OWTextViewViewModelingInputs {
 
 protocol OWTextViewViewModelingOutputs {
     var becomeFirstResponderCalled: Observable<Void> { get }
+    var resignFirstResponderCalled: Observable<Void> { get }
     var textViewTapped: Observable<Void> { get }
     var textViewMaxCharecters: Int { get }
     var isEditable: Bool { get }
@@ -57,6 +59,12 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var becomeFirstResponderCalled: Observable<Void> {
         return becomeFirstResponderCall
             .delay(.milliseconds(Metrics.becomeFirstResponderDelay), scheduler: MainScheduler.instance)
+            .asObservable()
+    }
+
+    var resignFirstResponderCall = PublishSubject<Void>()
+    var resignFirstResponderCalled: Observable<Void> {
+        return resignFirstResponderCall
             .asObservable()
     }
 
