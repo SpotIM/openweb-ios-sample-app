@@ -10,7 +10,7 @@ import Foundation
 
 struct SPEventsStrategyConfig: Decodable {
     let blockVersionsEqualOrPrevious: OWVersion?
-    let blockEventsByVersion: Dictionary<OWVersion, [String]>?
+    let blockEventsByVersionMapper: Dictionary<OWVersion, [String]>
 
     enum CodingKeys: String, CodingKey {
         case blockVersionsEqualOrPrevious, blockEventsByVersion
@@ -25,15 +25,10 @@ struct SPEventsStrategyConfig: Decodable {
         var dictionary: [OWVersion: [String]] = [:]
         if let stringDictionary = stringDictionary {
             for (stringKey, value) in stringDictionary {
-              guard let key = OWVersion(from: stringKey) else {
-                  throw DecodingError.dataCorruptedError(forKey: .blockEventsByVersion,
-                  in: container,
-                  debugDescription: "Invalid key '\(stringKey)'"
-                )
-              }
+              guard let key = OWVersion(from: stringKey) else { continue }
               dictionary[key] = value
             }
         }
-        blockEventsByVersion = dictionary
+        blockEventsByVersionMapper = dictionary
     }
 }
