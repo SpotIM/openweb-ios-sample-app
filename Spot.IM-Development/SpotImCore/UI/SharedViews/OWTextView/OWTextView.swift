@@ -44,6 +44,7 @@ class OWTextView: UIView {
                                           left: Metrics.textViewLeadingTrailingPadding,
                                           bottom: Metrics.textViewTopBottomPadding,
                                           right: Metrics.textViewLeadingTrailingPadding))
+                .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var charectersCountLabel: UILabel = {
@@ -51,6 +52,7 @@ class OWTextView: UIView {
                 .font(OWFontBook.shared.font(style: .regular, size: Metrics.charectersFontSize))
                 .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .text("0/" + "\(self.viewModel.outputs.textViewMaxCharecters)")
+                .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var textViewPlaceholder: UILabel = {
@@ -58,11 +60,15 @@ class OWTextView: UIView {
                 .font(OWFontBook.shared.font(style: .regular, size: Metrics.textViewFontSize))
                 .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
+                .enforceSemanticAttribute()
     }()
 
     init(viewModel: OWTextViewViewModeling, prefixIdentifier: String) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+
+        self.enforceSemanticAttribute()
+
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: prefixIdentifier)
@@ -178,6 +184,13 @@ fileprivate extension OWTextView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.textView.becomeFirstResponder()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.resignFirstResponderCalled
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textView.resignFirstResponder()
             })
             .disposed(by: disposeBag)
 
