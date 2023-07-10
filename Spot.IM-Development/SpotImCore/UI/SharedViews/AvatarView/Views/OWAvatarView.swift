@@ -153,6 +153,6 @@ fileprivate extension OWAvatarView {
         onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image
-        avatarButton.accessibilityLabel = LocalizationManager.localizedString(key: "Profile image")
+        avatarButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Profile image")
     }
 }

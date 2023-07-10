@@ -30,7 +30,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     var isCommunityModerator: Bool
     var isSuperAdmin: Bool
     var isJournalist: Bool
-    let isMuted: Bool
+    var isMuted: Bool
     let badgeType: String
     let tokenExpiration: Int?
     let ssoData: SPSSOData?
@@ -59,9 +59,9 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
 
     var authorityTitle: String? {
         if isAdmin || isSuperAdmin || isModerator || isJournalist {
-            return LocalizationManager.localizedString(key: "Staff")
+            return SPLocalizationManager.localizedString(key: "Staff")
         } else if isCommunityModerator {
-            return LocalizationManager.localizedString(key: "Community Moderator")
+            return SPLocalizationManager.localizedString(key: "Community Moderator")
         } else {
             return nil
         }
