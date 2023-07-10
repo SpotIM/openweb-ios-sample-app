@@ -1,5 +1,5 @@
 //
-//  OWPreConversationHeaderView.swift
+//  OWPreConversationSummaryView.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 24/10/2022.

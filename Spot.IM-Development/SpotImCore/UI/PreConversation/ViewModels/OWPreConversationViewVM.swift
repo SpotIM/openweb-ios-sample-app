@@ -42,6 +42,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
+    var commentId: Observable<String> { get }
+    var parentId: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -198,6 +201,24 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
+        return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var commentIdChange = PublishSubject<String>()
+    var commentId: Observable<String> {
+        return commentIdChange
+            .asObservable()
+    }
+
+    fileprivate var parentIdChange = PublishSubject<String>()
+    var parentId: Observable<String> {
+        return parentIdChange
+            .asObservable()
+    }
+
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
@@ -215,6 +236,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return _urlClick
             .asObservable()
     }
+
+    fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
+    fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
 
     var viewInitialized = PublishSubject<Void>()
 
@@ -313,17 +337,39 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.populateInitialUI()
             setupObservers()
     }
+
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
+        guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
+              let commentUserId = comment.userId,
+              let user = self.servicesProvider.usersService().get(userId: commentUserId)
+        else { return nil }
+
+        var replyToUser: SPUser? = nil
+        if let replyToCommentId = comment.parentId,
+           let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
+           let replyToUserId = replyToComment.userId {
+            replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
+        }
+
+        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
+
+        return OWCommentCellViewModel(data: OWCommentRequiredData(
+            comment: commentWithUpdatedStatus,
+            user: user,
+            replyToUser: replyToUser,
+            collapsableTextLineLimit: 0
+        ))
+    }
 }
 
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
@@ -386,8 +432,12 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = responseUsers[comment.userId ?? ""] else { return }
+
+                    let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+                    let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
+
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
-                        comment: comment,
+                        comment: commentWithUpdatedStatus,
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
@@ -470,6 +520,32 @@ fileprivate extension OWPreConversationViewViewModel {
                          return Observable.just(commentCellsVms)
                     }
                     .share()
+
+        // Responding to comments which are just reported
+        let reportService = servicesProvider.reportedCommentsService()
+        reportService.commentJustReported
+            .withLatestFrom(commentCellsVmsObservable) {
+                ($0, $1)
+            }
+            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+                // 1. Find if such comment VM exist for this comment ID
+                guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
+                    return .empty()
+                }
+                return Observable.just(commentCellVM.outputs.commentVM)
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { commentVM in
+                // 2. Update report locally
+                commentVM.inputs.reportCommentLocally()
+            })
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // 3. Update table view
+                self._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
@@ -602,22 +678,206 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Open menu for comment and handle actions
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource)> in
-                let openMenuClickObservable: [Observable<([OWRxPresenterAction], OWUISource)>] = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource)> in
+            .flatMapLatest { commentCellsVms -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
+                let openMenuClickObservable = commentCellsVms.map { commentCellVm -> Observable<([OWRxPresenterAction], OWUISource, OWCommentViewModeling)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentHeaderVm = commentVm.outputs.commentHeaderVM
 
                     return commentHeaderVm.outputs.openMenu
+                        .map { ($0.0, $0.1, commentVm) }
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .flatMapLatest { [weak self] actions, sender -> Observable<OWRxPresenterResponseType> in
+            .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+                    .map { ($0, commentVm) }
             }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] result, commentVm in
+                guard let self = self else { return }
+                switch result {
+                case .completion:
+                    break
+                case .selected(action: let action):
+                    switch (action.type) {
+                    case OWCommentOptionsMenu.reportComment:
+                        self.openReportReasonChange.onNext(commentVm)
+                    case OWCommentOptionsMenu.deleteComment:
+                        self.deleteComment.onNext(commentVm)
+                    case OWCommentOptionsMenu.editComment:
+                        self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
+                    case OWCommentOptionsMenu.muteUser:
+                        self.muteCommentUser.onNext(commentVm)
+                    default:
+                        return
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
+        let commentDeletedLocallyObservable = deleteComment
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentDeleteAlert.cancel, style: .cancel)
+                ]
+                return self.servicesProvider.presenterService()
+                    .showAlert(
+                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
+                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        actions: actions,
+                        viewableMode: self.viewableMode
+                    )
+            }
+            .map { result -> Bool in
+                switch result {
+                case .completion:
+                    return false
+                case .selected(let action):
+                    switch action.type {
+                    case OWCommentDeleteAlert.delete:
+                        return true
+                    default:
+                        return false
+                    }
+                }
+            }
+            .filter { $0 }
+            .withLatestFrom(deleteComment)
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] commentVm in
+                guard let self = self else { return }
+                commentVm.inputs.deleteCommentLocally()
+                self._performTableViewAnimation.onNext()
+            })
+
+        // Deleting comment from network
+        commentDeletedLocallyObservable
+            .observe(on: MainScheduler.asyncInstance)
+            .flatMap { [weak self] commentVm -> Observable<Event<OWCommentDelete>> in
+                let comment = commentVm.outputs.comment
+                guard let self = self,
+                      let commentId = comment.id
+                else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .commentDelete(id: commentId, parentId: comment.parentId)
+                    .response
+                    .materialize()
+            }
+            .map { event -> OWCommentDelete? in
+                switch event {
+                case .next(let commentDelete):
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return commentDelete
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .subscribe(onNext: { _ in
+                // successfully deleted
+            })
+            .disposed(by: disposeBag)
+
+        let muteUserObservable = muteCommentUser
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWCommentUserMuteAlert.cancel, style: .cancel)
+                ]
+                return self.servicesProvider.presenterService()
+                    .showAlert(
+                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
+                        actions: actions,
+                        viewableMode: self.viewableMode
+                    )
+            }
+            .map { result -> Bool in
+                switch result {
+                case .completion:
+                    return false
+                case .selected(let action):
+                    switch action.type {
+                    case OWCommentUserMuteAlert.mute:
+                        return true
+                    default:
+                        return false
+                    }
+                }
+            }
+            .filter { $0 }
+            .withLatestFrom(muteCommentUser)
+            .map { $0.outputs.comment.userId }
+            .unwrap()
+            .share()
+
+        // Handling mute user from network
+        muteUserObservable
+            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .user
+                    .mute(userId: userId)
+                    .response
+                    .materialize()
+            }
+            .map { event -> Bool in
+                switch event {
+                case .next:
+                    // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    return true
+                case .error(_):
+                    // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    return false
+                default:
+                    return false
+                }
+            }
+            .filter { $0 }
+            .subscribe(onNext: { _ in
+                // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        // Handling muting comments "locally" of a muted user
+        muteUserObservable
+            .withLatestFrom(commentCellsVmsObservable) { userId, commentCellsVms -> (String, [OWCommentCellViewModeling]) in
+                return (userId, commentCellsVms)
+            }
+            .do(onNext: { [weak self] userId, _ in
+                guard let self = self,
+                      let user = self.servicesProvider.usersService().get(userId: userId)
+                else { return }
+
+                user.isMuted = true
+                self.servicesProvider
+                    .usersService()
+                    .set(users: [user])
+            })
+            .map { userId, commentCellsVms -> [OWCommentViewModeling] in
+                let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == userId }
+                return userCommentCells.map { $0.outputs.commentVM }
+            }
+            .do(onNext: { mutedUserCommentCellsVms in
+                mutedUserCommentCellsVms.forEach { $0.inputs.muteCommentLocally() }
+            })
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                // TODO: handle
+                guard let self = self else { return }
+                self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
     }
