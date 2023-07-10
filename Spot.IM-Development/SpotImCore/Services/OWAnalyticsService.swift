@@ -123,8 +123,7 @@ fileprivate extension OWAnalyticsService {
                 }
 
                 // Check if need to block specific version
-                if let eventsByVersion = eventsStrategyConfig.blockEventsByVersion,
-                   let eventsForCurrentVersion = eventsByVersion[currentSdkVersion] {
+                if let eventsForCurrentVersion = eventsStrategyConfig.blockEventsByVersionMapper[currentSdkVersion] {
                     if (eventsForCurrentVersion.contains("all")) {
                         return OWAnalyticEventType.allCases.map { $0.rawValue }
                     } else {
