@@ -26,8 +26,11 @@ class OWVersion: Decodable {
     }
 
     required convenience init(from decoder: Decoder) throws {
-        let versionString = try? decoder.singleValueContainer().decode(String.self)
-        self.init(from: versionString!)!
+        guard let versionString = try? decoder.singleValueContainer().decode(String.self) else {
+            throw OWParserError.generalParseError
+        }
+
+        self.init(from: versionString)!
     }
 }
 
