@@ -45,7 +45,7 @@ struct RealTimeDataModel: Decodable {
     private let conversationCountMessages: [String: [RealTimeMessagesCountModel]]?
     private let conversationTypingV2Count: [String: [[String: Int]]]?
     private let conversationTypingV2Users: [String: [RealTimeTypingUsersModel]]?
-    private let onlineUsers: [String: [RealTimeOnlineUserModel]]?
+    let onlineUsers: [String: [RealTimeOnlineUserModel]]?
     private let onlineViewingUsers: [String: [RealTimeOnlineViewingUsersModel]]?
     private let conversationNewMessages: [String: [SPComment]]?
 
