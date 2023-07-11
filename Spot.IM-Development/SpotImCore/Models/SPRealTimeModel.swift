@@ -102,6 +102,16 @@ struct RealTimeDataModel: Decodable {
         return onlineUsersViewing
     }
 
+    /// Will return if the given user is online
+    func isUserOnline(conversationId: String, userId: String) -> Bool {
+        guard let onlineUsersArray = onlineUsers?[conversationId],
+              let _ = onlineUsersArray.firstIndex(where: { $0.userId == userId}) else {
+            return false
+        }
+
+        return true
+    }
+
     private func getRealTimeMessagesCountModel(_ id: String) throws -> RealTimeMessagesCountModel {
         guard let conversationDataArray = conversationCountMessages?[id] else {
             throw RealTimeError.conversationNotFound
