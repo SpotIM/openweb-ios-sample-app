@@ -102,8 +102,8 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             if let userId = user.id,
                let postId = OWManager.manager.postId,
                let realtimeData = realtimeData.data,
-               self?.sharedServicesProvider.usersService()
-                .isUserOnline(userId, perConversationId: "\(OWManager.manager.spotId)_\(postId)", realtimeData: realtimeData) == true {
+               let usersService = self?.sharedServicesProvider.usersService(),
+               usersService.isUserOnline(userId, perPostId: postId, realtimeData: realtimeData) == true {
                 return true
             }
 
