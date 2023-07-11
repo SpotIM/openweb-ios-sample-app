@@ -90,13 +90,21 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         return Observable.combineLatest(
             user,
             sharedServicesProvider.authenticationManager().activeUserAvailability,
-            sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-        ) { user, availability, config in
+            sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId),
+            sharedServicesProvider.realtimeService().realtimeData
+        ) { user, availability, config, realtimeData in
             guard config.conversation?.disableOnlineDotIndicator != true else { return false }
 
             if (user.online == true) {
                 return true
             }
+
+            if let userId = user.id,
+               let postId = OWManager.manager.postId,
+               realtimeData.data?.isUserOnline(conversationId: "\(OWManager.manager.spotId)_\(postId)", userId: userId) == true {
+                return true
+            }
+
             switch availability {
             case .user(let sessionUser):
                 return user.id == sessionUser.id
