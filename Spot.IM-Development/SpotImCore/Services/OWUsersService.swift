@@ -14,6 +14,7 @@ protocol OWUsersServicing {
     func get(userId id: String) -> SPUser?
     func set(users: OWUsersMapper)
     func set(users: [SPUser])
+    func isUserOnline(_ userId: String, perConversationId conversationId: String, realtimeData: RealTimeDataModel) -> Bool
 
     func cleanCache()
 }
@@ -41,6 +42,15 @@ class OWUsersService: OWUsersServicing {
     func set(users: OWUsersMapper) {
         // merge and replacing current users
         _users.merge(users, uniquingKeysWith: {(_, new) in new })
+    }
+
+    func isUserOnline(_ userId: String, perConversationId conversationId: String, realtimeData: RealTimeDataModel) -> Bool {
+        guard let onlineUsersArray = realtimeData.onlineUsers?[conversationId],
+              let _ = onlineUsersArray.firstIndex(where: { $0.userId == userId}) else {
+            return false
+        }
+
+        return true
     }
 
     func cleanCache() {

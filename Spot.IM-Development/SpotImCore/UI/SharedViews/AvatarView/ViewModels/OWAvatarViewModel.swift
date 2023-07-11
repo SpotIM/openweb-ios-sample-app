@@ -92,7 +92,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             sharedServicesProvider.authenticationManager().activeUserAvailability,
             sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId),
             sharedServicesProvider.realtimeService().realtimeData
-        ) { user, availability, config, realtimeData in
+        ) { [weak self] user, availability, config, realtimeData in
             guard config.conversation?.disableOnlineDotIndicator != true else { return false }
 
             if (user.online == true) {
@@ -101,7 +101,9 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
             if let userId = user.id,
                let postId = OWManager.manager.postId,
-               realtimeData.data?.isUserOnline(conversationId: "\(OWManager.manager.spotId)_\(postId)", userId: userId) == true {
+               let realtimeData = realtimeData.data,
+               self?.sharedServicesProvider.usersService()
+                .isUserOnline(userId, perConversationId: "\(OWManager.manager.spotId)_\(postId)", realtimeData: realtimeData) == true {
                 return true
             }
 

@@ -45,7 +45,7 @@ struct RealTimeDataModel: Decodable {
     private let conversationCountMessages: [String: [RealTimeMessagesCountModel]]?
     private let conversationTypingV2Count: [String: [[String: Int]]]?
     private let conversationTypingV2Users: [String: [RealTimeTypingUsersModel]]?
-    private let onlineUsers: [String: [RealTimeOnlineUserModel]]?
+    let onlineUsers: [String: [RealTimeOnlineUserModel]]?
     private let onlineViewingUsers: [String: [RealTimeOnlineViewingUsersModel]]?
     private let conversationNewMessages: [String: [SPComment]]?
 
@@ -100,16 +100,6 @@ struct RealTimeDataModel: Decodable {
         }
 
         return onlineUsersViewing
-    }
-
-    /// Will return if the given user is online
-    func isUserOnline(conversationId: String, userId: String) -> Bool {
-        guard let onlineUsersArray = onlineUsers?[conversationId],
-              let _ = onlineUsersArray.firstIndex(where: { $0.userId == userId}) else {
-            return false
-        }
-
-        return true
     }
 
     private func getRealTimeMessagesCountModel(_ id: String) throws -> RealTimeMessagesCountModel {
