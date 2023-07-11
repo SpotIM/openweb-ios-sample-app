@@ -18,6 +18,7 @@ protocol OWAnalyticsServicing {
 class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate struct Metrics {
         static let maxEvents: Int = 10
+        static let allEventsPlacholder: String = "all"
     }
 
     fileprivate let maxEventsForFlush: Int
@@ -64,7 +65,7 @@ fileprivate extension OWAnalyticsService {
                     .take(1)
             }
             .withLatestFrom(self.blockedEvents) { items, blockedEvents -> [OWAnalyticEvent] in
-                return items.filter { !blockedEvents.contains($0.type.rawValue)  }
+                return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
             }
             .flatMap { items -> Observable<Bool> in
                 return api.sendEvents(events: items)
@@ -79,6 +80,14 @@ fileprivate extension OWAnalyticsService {
                 OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
             })
             .subscribe()
+    }
+
+    func shouldSendEvent(event: OWAnalyticEvent, blockedEvents: [String]) -> Bool {
+        let blockedEventsSet = Set(blockedEvents)
+        if blockedEventsSet.contains(Metrics.allEventsPlacholder) {
+            return false
+        }
+        return !blockedEventsSet.contains(event.type.eventName)
     }
 }
 
@@ -124,16 +133,12 @@ fileprivate extension OWAnalyticsService {
                 // Check if need to block all events
                 if let minVersionForEvents = eventsStrategyConfig.blockVersionsEqualOrPrevious,
                    minVersionForEvents >= currentSdkVersion {
-                    return OWAnalyticEventType.allCases.map { $0.rawValue }
+                    return [Metrics.allEventsPlacholder]
                 }
 
                 // Check if need to block specific version
                 if let eventsForCurrentVersion = eventsStrategyConfig.blockEventsByVersionMapper[currentSdkVersion] {
-                    if (eventsForCurrentVersion.contains("all")) {
-                        return OWAnalyticEventType.allCases.map { $0.rawValue }
-                    } else {
-                        return eventsForCurrentVersion
-                    }
+                    return eventsForCurrentVersion
                 }
                 return []
             }

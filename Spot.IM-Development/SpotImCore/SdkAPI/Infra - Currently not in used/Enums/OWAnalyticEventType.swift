@@ -8,6 +8,13 @@
 
 import Foundation
 
-enum OWAnalyticEventType: String, CaseIterable {
-    case eventNumberOne = "event_number_one"
+enum OWAnalyticEventType {
+    case eventNumberOne(someProperty: String)
+
+    var eventName: String {
+        switch self {
+        case .eventNumberOne:
+            return "event_number_one"
+        }
+    }
 }
