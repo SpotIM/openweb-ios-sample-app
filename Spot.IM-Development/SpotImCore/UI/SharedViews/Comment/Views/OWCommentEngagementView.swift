@@ -128,6 +128,7 @@ fileprivate extension OWCommentEngagementView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.showReplyButton
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showReply in
                 guard let self = self else { return }
                 self.replyButton.isHidden = !showReply
