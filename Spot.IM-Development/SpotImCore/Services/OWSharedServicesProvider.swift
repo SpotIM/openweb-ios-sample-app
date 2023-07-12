@@ -265,6 +265,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _spotConfigurationService.spotChanged(spotId: spotId)
         _commentsService.cleanCache()
         _usersService.cleanCache()
+        _analyticsService.spotChanged(spotId: spotId)
         _reportedCommentsService.cleanCache()
     }
 }
