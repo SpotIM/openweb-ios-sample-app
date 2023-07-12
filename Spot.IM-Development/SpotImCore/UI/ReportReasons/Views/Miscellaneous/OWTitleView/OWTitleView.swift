@@ -28,7 +28,7 @@ class OWTitleView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
         return title
                 .label
-                .font(UIFont.preferred(style: .bold, of: Metrics.titleFontSize))
+                .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
                 .text(title)
     }()
 

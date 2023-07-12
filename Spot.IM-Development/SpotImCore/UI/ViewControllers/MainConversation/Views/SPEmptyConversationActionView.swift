@@ -100,7 +100,7 @@ final class SPEmptyConversationActionView: SPBaseView {
 
     private func configureMessageLabel(relativeToIcon: Bool) {
         messageLabel.numberOfLines = 0
-        messageLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
+        messageLabel.font = UIFont.spPreferred(style: .regular, of: Theme.titleFontSize)
         messageLabel.textAlignment = .center
         messageLabel.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -117,7 +117,7 @@ final class SPEmptyConversationActionView: SPBaseView {
     private func configureActionButton() {
         actionButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
         actionButton.setTitleColor(.white, for: .normal)
-        actionButton.titleLabel?.font = UIFont.preferred(style: .medium, of: Theme.actionButtonTitleFontSize)
+        actionButton.titleLabel?.font = UIFont.spPreferred(style: .medium, of: Theme.actionButtonTitleFontSize)
         actionButton.OWSnp.makeConstraints { make in
             make.height.equalTo(Theme.actionButtonHeight)
             make.centerX.bottom.equalToSuperview()
