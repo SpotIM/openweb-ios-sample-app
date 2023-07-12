@@ -24,6 +24,7 @@ class OWCommentHeaderView: UIView {
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
+        static let userNameSubtitleLabelIdentifier = "comment_header_user_name_subtitle_label_id"
         static let badgeTagContainerIdentifier = "comment_header_user_badge_tag_container_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
@@ -315,5 +316,6 @@ fileprivate extension OWCommentHeaderView {
         optionButton.accessibilityTraits = .button
         optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Options menu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
+        subtitleLabel.accessibilityIdentifier = Metrics.userNameSubtitleLabelIdentifier
     }
 }
