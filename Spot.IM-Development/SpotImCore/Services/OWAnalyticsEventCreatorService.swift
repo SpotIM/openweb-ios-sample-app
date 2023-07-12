@@ -35,7 +35,7 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
             component: component,
             userStatus: userStatus,
             userId: userId,
-            guid: <#T##String#>)
+            guid: servicesProvider.authenticationManager().networkCredentials.guid ?? "")
     }
 }
 
