@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct OWAnalyticEventServer: Decodable {
     var eventName: String
@@ -16,26 +17,25 @@ struct OWAnalyticEventServer: Decodable {
     var componentName: String
 //    var payload: Any // TODO: maybe some protocol
     var generalData: OWAnalyticEventServerGeneralData
-    var abTests: OWAnalyticEventServerAbTest
+    var abTests: OWAnalyticEventServerAbTest = OWAnalyticEventServerAbTest()
 }
 
 struct OWAnalyticEventServerGeneralData: Decodable {
-    var spotId: String
-    var postId: String
+    var spotId: String = OWManager.manager.spotId
+    var postId: String = OWManager.manager.postId ?? ""
     var articleUrl: String // TODO: string or URL?
-    var pageViewId: String
+    var pageViewId: String = "" // TODO: add to analyticsService?
     var userStatus: String
     var userId: String // in case user is connected
-    var deviceId: String
+    var deviceId: String = UIDevice.current.identifierForVendor?.uuidString ?? ""
     var guid: String
     var platform: String = "ios_phone"
-    var platformVersion: String
-    var sdkVersion: String
-    var hostAppVersion: String
-    var hostAppScheme: String
-    var deviceType: String
+    var platformVersion: String = UIDevice.current.systemVersion
+    var sdkVersion: String = OWSettingsWrapper.sdkVersion() ?? ""
+    var hostAppVersion: String = Bundle.main.shortVersion ?? ""
+    var hostAppScheme: String = Bundle.main.bundleIdentifier ?? ""
+    var deviceType: String = "" // TODO: where do we get it from?
     var layoutStyle: String
-//    var ip: String
 }
 
 struct OWAnalyticEventServerAbTest: Decodable {
