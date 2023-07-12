@@ -55,7 +55,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -63,7 +63,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()

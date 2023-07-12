@@ -111,7 +111,7 @@ final class SPMainConversationFooterView: SPBaseView {
         guard let readOnlyLabel = self.readOnlyLabel else { return }
         addSubview(readOnlyLabel)
         setupAccessibilityIdentifiers()
-        readOnlyLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
+        readOnlyLabel.font = UIFont.spPreferred(style: .regular, of: Theme.fontSize)
         readOnlyLabel.textColor = .spForeground3
         readOnlyLabel.text = SPLocalizationManager.localizedString(key: "Commenting on this article has ended")
 
