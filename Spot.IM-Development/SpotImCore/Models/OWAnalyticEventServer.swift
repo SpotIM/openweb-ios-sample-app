@@ -12,7 +12,7 @@ import UIKit
 struct OWAnalyticEventServer: Decodable {
     var eventName: String
     var eventGroup: String
-    var eventTimestamp: TimeInterval
+    var eventTimestamp: String
     var productName: String = "conversation"
     var componentName: String
 //    var payload: Any // TODO: maybe some protocol

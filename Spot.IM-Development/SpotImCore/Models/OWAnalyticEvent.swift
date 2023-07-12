@@ -10,18 +10,20 @@ import Foundation
 
 struct OWAnalyticEvent: OWUpdaterProtocol {
     let type: OWAnalyticEventType
-    let timestamp: TimeInterval
+    let timestamp: String
     let articleUrl: String
     let layoutStyle: OWLayoutStyle
     let component: OWAnalyticsComponent
+    let userStatus: String
+    let userId: String
+    let guid: String
 
-    // calculated property to OWAnalyticEventServer
     func analyticEventServer() -> OWAnalyticEventServer {
         let generalData = OWAnalyticEventServerGeneralData(
             articleUrl: articleUrl,
-            userStatus: "", // TODO: should we get it or set it here?
-            userId: "", // TODO: should we get it or set it here?
-            guid: "", // TODO: should we get it or set it here?
+            userStatus: userStatus, // TODO: should we get it or set it here?
+            userId: userId, // TODO: should we get it or set it here?
+            guid: guid, // TODO: should we get it or set it here?
             layoutStyle: layoutStyle.rawValue
         )
 
