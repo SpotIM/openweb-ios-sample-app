@@ -127,7 +127,7 @@ fileprivate extension OWAnalyticsService {
             .map { eventsStrategyConfig -> [String] in
                 guard let eventsStrategyConfig = eventsStrategyConfig,
                       let currentSdkVersionString = OWSettingsWrapper.sdkVersion(),
-                      let currentSdkVersion = OWVersion(from: currentSdkVersionString)
+                      let currentSdkVersion = try? OWVersion(from: currentSdkVersionString)
                 else { return [] }
 
                 // Check if need to block all events
