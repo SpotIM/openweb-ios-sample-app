@@ -86,7 +86,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
         return cellsViewModels
-            .map { items in
+            .map { [weak self] items in
+                guard let self = self else { return [] }
                 let section = CommentThreadDataSourceModel(model: self.postId, items: items)
                 return [section]
             }
@@ -384,7 +385,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+                self._commentsPresentationData.removeAll()
+                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
@@ -616,6 +618,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(threadActionsClickObservable)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
                 switch mode {
