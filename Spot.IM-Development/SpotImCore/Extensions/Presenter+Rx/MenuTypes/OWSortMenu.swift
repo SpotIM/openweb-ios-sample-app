@@ -9,10 +9,6 @@
 import Foundation
 
 enum OWSortMenu: String, OWMenuTypeProtocol {
-    var identifier: String {
-        return self.rawValue
-    }
-
     case sortBest
     case sortNewest
     case sortOldest
