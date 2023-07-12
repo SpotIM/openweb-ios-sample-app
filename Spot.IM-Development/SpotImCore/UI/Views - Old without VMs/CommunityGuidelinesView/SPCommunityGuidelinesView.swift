@@ -86,7 +86,7 @@ internal final class SPCommunityGuidelinesView: SPBaseView {
         if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
             htmlMutableAttributedString.addAttribute(
                 .font,
-                value: UIFont.preferred(style: .medium, of: Theme.titleFontSize),
+                value: UIFont.spPreferred(style: .medium, of: Theme.titleFontSize),
                 range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(
