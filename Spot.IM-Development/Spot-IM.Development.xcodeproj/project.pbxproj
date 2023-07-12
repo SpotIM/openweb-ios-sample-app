@@ -202,6 +202,7 @@
 		24F1753B2A5BCFD60078BCF6 /* SPEventsStrategyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F1753A2A5BCFD60078BCF6 /* SPEventsStrategyConfig.swift */; };
 		24F1753D2A5E78360078BCF6 /* OWAnalyticEventServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F1753C2A5E78360078BCF6 /* OWAnalyticEventServer.swift */; };
 		24F1753F2A5E8BD30078BCF6 /* OWLayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F1753E2A5E8BD30078BCF6 /* OWLayoutStyle.swift */; };
+		24F175412A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F175402A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift */; };
 		24F4CD8029C057D300261F80 /* OWPreConversationSummaryStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4CD7F29C057D300261F80 /* OWPreConversationSummaryStyle.swift */; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
@@ -1124,6 +1125,7 @@
 		24F1753A2A5BCFD60078BCF6 /* SPEventsStrategyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPEventsStrategyConfig.swift; sourceTree = "<group>"; };
 		24F1753C2A5E78360078BCF6 /* OWAnalyticEventServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventServer.swift; sourceTree = "<group>"; };
 		24F1753E2A5E8BD30078BCF6 /* OWLayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLayoutStyle.swift; sourceTree = "<group>"; };
+		24F175402A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsEventCreatorService.swift; sourceTree = "<group>"; };
 		24F4CD7F29C057D300261F80 /* OWPreConversationSummaryStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSummaryStyle.swift; sourceTree = "<group>"; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		2C9BF800CBE1B5708054E2BF /* Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; sourceTree = "<group>"; };
@@ -4415,6 +4417,7 @@
 				3D91578B29E4962D00215A48 /* OWViewActionsService.swift */,
 				243053F629EEA1DF00A4CB5A /* OWPresenterService.swift */,
 				3DF74FBE29EEFA2300A8265A /* OWCustomizationsService.swift */,
+				24F175402A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -6205,6 +6208,7 @@
 				3D08E09928770C4500E6F1AC /* FloatingPointType+OWIdentifiableType.swift in Sources */,
 				8D358D6C29D2FA1700E229A3 /* OWCommunityQuestionCell.swift in Sources */,
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
+				24F175412A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
 				445418A823685154001D0ED0 /* Dictionary+JSONString.swift in Sources */,
 				24A24A14291BABB300D72755 /* OWSafariViewController.swift in Sources */,
