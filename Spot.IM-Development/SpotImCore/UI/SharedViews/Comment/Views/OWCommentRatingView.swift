@@ -75,8 +75,8 @@ class OWCommentRatingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        applyAccessibility()
         setupUI()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
