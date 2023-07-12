@@ -17,4 +17,15 @@ enum OWAnalyticEventType {
             return "fullConversationLoaded"
         }
     }
+
+    var eventGroup: OWAnalyticEventGroup {
+        switch self {
+        case .fullConversationLoaded:
+            return .loaded
+        }
+    }
+}
+
+enum OWAnalyticEventGroup: String {
+    case loaded = "loaded"
 }
