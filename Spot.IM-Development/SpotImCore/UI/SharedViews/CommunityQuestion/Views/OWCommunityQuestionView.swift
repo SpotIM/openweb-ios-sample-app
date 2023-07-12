@@ -56,23 +56,26 @@ class OWCommunityQuestionView: UIView {
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
+    // For init when using in Views and not in cells
     init(with viewModel: OWCommunityQuestionViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        setupUI()
+        updateUI()
         setupObservers()
         applyAccessibility()
     }
 
+    // For using in cells that will then call the configure function
     init() {
         super.init(frame: .zero)
+        applyAccessibility()
     }
 
     // Only when using community question as a cell
     func configure(with viewModel: OWCommunityQuestionViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        self.setupUI()
+        self.updateUI()
         self.setupObservers()
     }
 
@@ -92,9 +95,15 @@ fileprivate extension OWCommunityQuestionView {
         viewModel.inputs.triggerCustomizeQuestionTitleTextViewUI.onNext(titleTextView)
     }
 
-    func setupUI() {
+    // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
+    // using function configure and here it is also called in init when this class is used as a standalone uiview
+    func updateUI() {
         self.backgroundColor = .clear
         self.isHidden = true
+
+        questionContainer.removeFromSuperview()
+        questionLabel.removeFromSuperview()
+        titleTextView.removeFromSuperview()
 
         if viewModel.outputs.showContainer {
             self.addSubview(questionContainer)
