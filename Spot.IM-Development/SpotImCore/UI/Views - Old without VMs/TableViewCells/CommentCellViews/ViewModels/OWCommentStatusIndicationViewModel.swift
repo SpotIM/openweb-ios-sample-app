@@ -107,7 +107,7 @@ fileprivate extension OWCommentStatusIndicationViewModel {
         let attributedMessage = NSAttributedString(
             string: text,
             attributes: [
-                NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
+                NSAttributedString.Key.font: OWFontBook.shared.font(style: .regular, size: OWCommentStatusIndicationView.Metrics.fontSize)
             ])
         // get the text height and add padding
         let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)

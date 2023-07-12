@@ -30,26 +30,30 @@ class OWCommentEngagementView: UIView {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
             .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
-            .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
+            .setTitleFont(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
     }()
+
     fileprivate lazy var replyDotDivider: UIView = {
         return UIView()
             .corner(radius: Metrics.dotDividerSize/2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
+
     fileprivate lazy var votingView: OWCommentRatingView = {
         return OWCommentRatingView()
     }()
+
     fileprivate lazy var votingDotDivider: UIView = {
         return UIView()
             .corner(radius: Metrics.dotDividerSize/2)
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
+
     fileprivate lazy var shareButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
             .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
-            .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
+            .setTitleFont(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
     }()
 
     override init(frame: CGRect) {

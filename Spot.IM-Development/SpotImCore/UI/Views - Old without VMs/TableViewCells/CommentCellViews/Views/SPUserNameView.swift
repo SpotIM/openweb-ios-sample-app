@@ -110,7 +110,7 @@ fileprivate extension SPUserNameView {
         nameAndBadgeStackview.alignment = .leading
         nameAndBadgeStackview.spacing = Metrics.badgeLeadingPadding
 
-        badgeTagLabel.font = .preferred(style: .medium, of: Metrics.labelFontSize)
+        badgeTagLabel.font = .spPreferred(style: .medium, of: Metrics.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
         badgeTagLabel.layer.cornerRadius = 3
         badgeTagLabel.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
@@ -148,7 +148,7 @@ fileprivate extension SPUserNameView {
 
         // Setup subtitle label
 
-        subtitleLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
+        subtitleLabel.font = .spPreferred(style: .regular, of: Metrics.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
@@ -159,7 +159,7 @@ fileprivate extension SPUserNameView {
         }
 
         // Setup date label
-        dateLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
+        dateLabel.font = .spPreferred(style: .regular, of: Metrics.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         dateLabel.isUserInteractionEnabled = false
         dateLabel.OWSnp.makeConstraints { make in
@@ -181,7 +181,7 @@ fileprivate extension SPUserNameView {
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .foregroundColor: UIColor.spForeground3,
-            .font: UIFont.preferred(style: .italic, of: 17.0),
+            .font: UIFont.spPreferred(style: .italic, of: 17.0),
             .paragraphStyle: paragraphStyle
         ]
 
@@ -251,7 +251,7 @@ fileprivate extension SPUserNameView {
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self.userNameLabel.font(
-                    .preferred(style: style, of: Metrics.fontSize)
+                    .spPreferred(style: style, of: Metrics.fontSize)
                 )
             }).disposed(by: disposeBag)
 

@@ -46,7 +46,7 @@ final class TotalTypingIndicationView: SPBaseView {
         } else {
             typingLabel.text = "\(count) " + SPLocalizationManager.localizedString(key: "Typing")
         }
-        typingLabel.font = UIFont.preferred(style: isBlitz ? .bold : .regular, of: Metrics.labelTextSize)
+        typingLabel.font = UIFont.spPreferred(style: isBlitz ? .bold : .regular, of: Metrics.labelTextSize)
         newCommentsArrowImageView.isHidden = !isBlitz
         animationImageView.isHidden = isBlitz
         animationImageWidthConstraint?.update(offset: isBlitz ? 0 : Metrics.animationImageWidth)
@@ -83,7 +83,7 @@ final class TotalTypingIndicationView: SPBaseView {
         typingLabel.text = SPLocalizationManager.localizedString(key: "Typing")
         typingLabel.textAlignment = .center
         typingLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        typingLabel.font = UIFont.preferred(style: .regular, of: Metrics.labelTextSize)
+        typingLabel.font = UIFont.spPreferred(style: .regular, of: Metrics.labelTextSize)
         typingLabel.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(animationImageView.OWSnp.trailing).offset(Metrics.typingLabelLeadingOffset)
