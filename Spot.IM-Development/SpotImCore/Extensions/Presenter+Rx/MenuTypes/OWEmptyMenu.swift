@@ -8,6 +8,6 @@
 
 import Foundation
 
-enum OWEmptyMenu: OWMenuTypeProtocol {
-    case ok
+enum OWEmptyMenu: String, OWMenuTypeProtocol {
+   case ok
 }

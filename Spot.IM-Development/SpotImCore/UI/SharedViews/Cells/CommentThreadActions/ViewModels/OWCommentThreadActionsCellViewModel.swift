@@ -47,7 +47,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var mode: OWCommentThreadActionsCellMode = .collapse
 
-    var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread)
+    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread, commentId: self.commentPresentationData.id)
 
     init(id: String = UUID().uuidString, data: OWCommentPresentationData, mode: OWCommentThreadActionsCellMode = .collapse, depth: Int = 0) {
         self.id = id
@@ -57,7 +57,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
         let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
 
-        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType)
+        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id)
     }
 
     init() {
