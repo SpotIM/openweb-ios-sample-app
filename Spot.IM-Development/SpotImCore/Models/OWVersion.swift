@@ -13,24 +13,29 @@ class OWVersion: Decodable {
     fileprivate let minor: Int
     fileprivate let patch: Int
 
-    init?(from versionString: String) {
-        do {
-            let versionDelimiter = "."
-            let versions = versionString.components(separatedBy: versionDelimiter)
-            major = Int(versions[0])!
-            minor = versions.count > 1 ? Int(versions[1])! : 0
-            patch = versions.count > 2 ? Int(versions[2])! : 0
-        } catch {
-            return nil
+    init(from versionString: String) throws {
+        let versionDelimiter = "."
+        let versions = versionString.components(separatedBy: versionDelimiter)
+        guard let major = Int(versions[0]),
+              let minor = versions.count > 1 ? Int(versions[1]) : 0,
+              let patch = versions.count > 2 ? Int(versions[2]) : 0 else {
+            throw OWParserError.generalParseError
         }
+        self.major = major
+        self.minor = minor
+        self.patch = patch
     }
 
     required convenience init(from decoder: Decoder) throws {
         guard let versionString = try? decoder.singleValueContainer().decode(String.self) else {
             throw OWParserError.generalParseError
         }
+        do {
+            try self.init(from: versionString)
+        } catch let err {
+            throw err
+        }
 
-        self.init(from: versionString)!
     }
 }
 
