@@ -25,7 +25,7 @@ struct SPEventsStrategyConfig: Decodable {
         var dictionary: [OWVersion: [String]] = [:]
         if let stringDictionary = stringDictionary {
             for (stringKey, value) in stringDictionary {
-              guard let key = OWVersion(from: stringKey) else { continue }
+              guard let key = try? OWVersion(from: stringKey) else { continue }
               dictionary[key] = value
             }
         }
