@@ -64,7 +64,8 @@ fileprivate extension OWAnalyticsService {
                     .rx_elements()
                     .take(1)
             }
-            .withLatestFrom(self.blockedEvents) { items, blockedEvents -> [OWAnalyticEvent] in
+            .withLatestFrom(self.blockedEvents) { [weak self] items, blockedEvents -> [OWAnalyticEvent] in
+                guard let self = self else { return []}
                 return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
             }
             .flatMap { items -> Observable<Bool> in
