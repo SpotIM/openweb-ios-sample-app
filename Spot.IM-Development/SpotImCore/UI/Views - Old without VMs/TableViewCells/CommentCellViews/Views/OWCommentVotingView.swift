@@ -84,8 +84,8 @@ final class OWCommentVotingView: SPBaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        applyAccessibility()
         setupUI()
+        applyAccessibility()
     }
 
     func configure(with viewModel: OWCommentVotingViewModeling, delegate: CommentActionsDelegate) {

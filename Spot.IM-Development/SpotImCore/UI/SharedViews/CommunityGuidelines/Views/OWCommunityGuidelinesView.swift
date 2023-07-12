@@ -60,29 +60,35 @@ class OWCommunityGuidelinesView: UIView {
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
+    // For init when using in Views and not in cells
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         self.isUserInteractionEnabled = true
-        setupUI()
-        setupObservers()
-        applyAccessibility()
+        initializeView()
+    }
+
+    // For using in cells that will then call the configure function
+    init() {
+        super.init(frame: .zero)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init() {
-        super.init(frame: .zero)
-    }
-
     // Only when using community guidelines as a cell
     func configure(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
+        initializeView()
+    }
+
+    // All usages should call this function
+    func initializeView() {
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 }
 
