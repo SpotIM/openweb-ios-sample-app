@@ -79,7 +79,7 @@ class OWCommentThreadActionsView: UIView {
     fileprivate lazy var actionLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 

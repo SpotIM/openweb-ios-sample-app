@@ -144,7 +144,7 @@ final class OWCommentActionsView: SPBaseView {
     private func configureReplyButton() {
         stackView.addArrangedSubview(replyButton)
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
-        replyButton.titleLabel?.font = .preferred(style: .regular, of: Metrics.fontSize)
+        replyButton.titleLabel?.font = OWFontBook.shared.font(style: .regular, size: Metrics.fontSize)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
     }
 

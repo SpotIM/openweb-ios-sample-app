@@ -40,7 +40,7 @@ class OWCommentLabelView: UIView {
     }()
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
     }()
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()

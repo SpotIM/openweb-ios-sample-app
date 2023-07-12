@@ -41,7 +41,7 @@ class OWCommunityQuestionView: UIView {
     fileprivate lazy var questionLabel: UILabel = {
         return UILabel()
             .wrapContent()
-            .font(UIFont.preferred(style: .italic, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .italic, size: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
