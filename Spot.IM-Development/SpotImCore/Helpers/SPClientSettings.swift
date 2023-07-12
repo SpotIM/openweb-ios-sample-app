@@ -24,7 +24,7 @@ public class SPClientSettings {
 
     internal func setup(spotId: String) -> Observable<SpotConfig> {
         self.spotKey = spotId
-        UIFont.loadAllFonts
+        UIFont.spLoadAllFonts
 
         NotificationCenter.default.addObserver(
             self,

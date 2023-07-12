@@ -10,39 +10,39 @@ import UIKit
 
 internal extension UIFont {
 
-    static func preferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
+    static func spPreferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
         if let customFontFamily = SpotIm.customFontFamily {
-            return customFont(customFontFamily: customFontFamily, style: style, of: size)
+            return spCustomFont(customFontFamily: customFontFamily, style: style, of: size)
         }
 
-        return openSans(style: style, of: size)
+        return spOpenSans(style: style, of: size)
     }
 
-    static func customFont(customFontFamily: String, style: SPFontStyle, of size: CGFloat) -> UIFont {
+    static func spCustomFont(customFontFamily: String, style: SPFontStyle, of size: CGFloat) -> UIFont {
         let fontName = "\(customFontFamily)-\(style.rawValue)"
-        return UIFont(name: fontName, size: size) ?? openSans(style: style, of: size)
+        return UIFont(name: fontName, size: size) ?? spOpenSans(style: style, of: size)
     }
 
-    static func openSans(style: SPFontStyle, of size: CGFloat) -> UIFont {
-        let openSans = name(of: .openSans, with: style)
+    static func spOpenSans(style: SPFontStyle, of size: CGFloat) -> UIFont {
+        let openSans = spName(of: .openSans, with: style)
         return UIFont(name: openSans, size: size) ?? systemFont(ofSize: size)
     }
 
-    private static func name(of family: SPFontFamily, with style: SPFontStyle) -> String {
+    private static func spName(of family: SPFontFamily, with style: SPFontStyle) -> String {
         return "\(family.rawValue)-\(style.rawValue)"
     }
 
     // load framework font in application
-    static let loadAllFonts: () = {
-        registerFontWith(filenameString: "OpenSans-Regular.ttf")
-        registerFontWith(filenameString: "OpenSans-Light.ttf")
-        registerFontWith(filenameString: "OpenSans-Medium.ttf")
-        registerFontWith(filenameString: "OpenSans-Bold.ttf")
-        registerFontWith(filenameString: "OpenSans-Italic.ttf")
+    static let spLoadAllFonts: () = {
+        spRegisterFontWith(filenameString: "OpenSans-Regular.ttf")
+        spRegisterFontWith(filenameString: "OpenSans-Light.ttf")
+        spRegisterFontWith(filenameString: "OpenSans-Medium.ttf")
+        spRegisterFontWith(filenameString: "OpenSans-Bold.ttf")
+        spRegisterFontWith(filenameString: "OpenSans-Italic.ttf")
     }()
 
     // MARK: - Make custom font bundle register to framework
-    static func registerFontWith(filenameString: String) {
+    static func spRegisterFontWith(filenameString: String) {
         let frameworkBundle = Bundle.openWeb
         guard
             let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil)
