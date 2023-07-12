@@ -65,12 +65,15 @@ class OWCommunityGuidelinesView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         self.isUserInteractionEnabled = true
-        initializeView()
+        updateUI()
+        setupObservers()
+        applyAccessibility()
     }
 
     // For using in cells that will then call the configure function
     init() {
         super.init(frame: .zero)
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -81,21 +84,21 @@ class OWCommunityGuidelinesView: UIView {
     func configure(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        initializeView()
-    }
-
-    // All usages should call this function
-    func initializeView() {
-        setupUI()
+        updateUI()
         setupObservers()
-        applyAccessibility()
     }
 }
 
 fileprivate extension OWCommunityGuidelinesView {
-    func setupUI() {
+    // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
+    // using function configure and here it is also called in init when this class is used as a standalone uiview
+    func updateUI() {
         self.backgroundColor = .clear
         self.isHidden = true
+
+        guidelinesContainer.removeFromSuperview()
+        guidelinesIcon.removeFromSuperview()
+        titleTextView.removeFromSuperview()
 
         if viewModel.outputs.showContainer {
             self.addSubview(guidelinesContainer)
