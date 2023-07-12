@@ -27,5 +27,5 @@ enum OWAnalyticEventType {
 }
 
 enum OWAnalyticEventGroup: String {
-    case loaded = "loaded"
+    case loaded
 }
