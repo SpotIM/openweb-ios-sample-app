@@ -36,13 +36,13 @@ final class SPConversationSummaryView: SPBaseView {
 
     private lazy var commentsCountLabel: SPBaseLabel = {
         let lbl = SPBaseLabel()
-        lbl.font = UIFont.preferred(style: .regular, of: Metrics.commentsFontSize)
+        lbl.font = UIFont.spPreferred(style: .regular, of: Metrics.commentsFontSize)
         return lbl
     }()
 
     private lazy var sortButton: SPBaseButton = {
         let btn = SPBaseButton()
-        btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.sortButtonFontSize)
+        btn.titleLabel?.font = UIFont.spPreferred(style: .bold, of: Metrics.sortButtonFontSize)
         let spacing: CGFloat = Metrics.insetTiny
         var inset: CGFloat = spacing / 2
 

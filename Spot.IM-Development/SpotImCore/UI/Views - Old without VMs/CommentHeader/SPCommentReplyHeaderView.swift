@@ -81,7 +81,7 @@ final class SPCommentReplyHeaderView: SPBaseView {
 
     private func setupReplyingLabel() {
         replyingLabel.text = SPLocalizationManager.localizedString(key: "Replying to ")
-        replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
+        replyingLabel.font = UIFont.spPreferred(style: .regular, of: Theme.titleFontSize)
         replyingLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Theme.topOffset)
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
@@ -89,7 +89,7 @@ final class SPCommentReplyHeaderView: SPBaseView {
     }
 
     private func setupCommentAuthorLabel() {
-        commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        commentAuthorLabel.font = UIFont.spPreferred(style: .bold, of: Theme.titleFontSize)
         commentAuthorLabel.OWSnp.makeConstraints { make in
             make.firstBaseline.equalTo(replyingLabel)
             make.lastBaseline.equalTo(replyingLabel)
@@ -109,7 +109,7 @@ final class SPCommentReplyHeaderView: SPBaseView {
 
     private func setupCommentLabel() {
         commentLabel.numberOfLines = 3
-        commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
+        commentLabel.font = UIFont.spPreferred(style: .regular, of: Theme.commentFontSize)
         commentLabel.OWSnp.makeConstraints { make in
             commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
