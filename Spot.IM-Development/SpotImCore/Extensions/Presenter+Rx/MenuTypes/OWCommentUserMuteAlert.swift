@@ -9,10 +9,6 @@
 import Foundation
 
 enum OWCommentUserMuteAlert: String, OWMenuTypeProtocol {
-    var identifier: String {
-        return self.rawValue
-    }
-
     case mute
     case cancel
 }

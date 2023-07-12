@@ -9,9 +9,5 @@
 import Foundation
 
 enum OWEmptyMenu: String, OWMenuTypeProtocol {
-    var identifier: String {
-        return self.rawValue
-    }
-
-    case ok
+   case ok
 }

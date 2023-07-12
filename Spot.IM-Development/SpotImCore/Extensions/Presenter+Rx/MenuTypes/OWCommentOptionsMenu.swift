@@ -9,10 +9,6 @@
 import Foundation
 
 enum OWCommentOptionsMenu: String, OWMenuTypeProtocol {
-    var identifier: String {
-        return self.rawValue
-    }
-
     case reportComment
     case editComment
     case deleteComment
