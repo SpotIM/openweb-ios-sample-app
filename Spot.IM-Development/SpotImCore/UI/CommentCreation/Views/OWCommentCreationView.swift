@@ -58,15 +58,18 @@ fileprivate extension OWCommentCreationView {
         self.useAsThemeStyleInjector()
 
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
-        self.addGestureRecognizer(tapGesture)
 
         let commentCreationView: UIView
         switch viewModel.outputs.commentCreationStyle {
         case .regular:
+            self.addGestureRecognizer(tapGesture)
             commentCreationView = commentCreationRegularView
         case .light:
+            self.addGestureRecognizer(tapGesture)
             commentCreationView = commentCreationLightView
         case .floatingKeyboard:
+            // Intentionally not adding the `tapGesture` here, to not mess up with the bottom toolbar if such exist.
+            // Should add a gesture recognizer only to the containing view above it
             commentCreationView = commentCreationFloatingKeyboardView
         }
 
