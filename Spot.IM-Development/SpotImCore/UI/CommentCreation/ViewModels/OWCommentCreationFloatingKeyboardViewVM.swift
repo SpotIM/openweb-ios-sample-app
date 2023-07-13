@@ -39,6 +39,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     var closeButtonTap = PublishSubject<Void>()
 
+    fileprivate let disposeBag = DisposeBag()
+
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode = .independent) {
@@ -59,6 +61,19 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
     func setupObservers() {
+        let commentCreationRequestsService = servicesProvider.commentCreationRequestsService()
 
+        commentCreationRequestsService.newRequest
+            .subscribe(onNext: { [weak self] request in
+                guard let self = self else { return }
+                switch request {
+                case .manipulateUserInputText(let manipulationTextCompletion):
+                    // TODO: change this part appropriately once we support floating keyboard style with a bottom toolbar
+                    let newRequestedText = manipulationTextCompletion(.success("This is a test"))
+                    let logger = self.servicesProvider.logger()
+                    logger.log(level: .verbose, "The new requested text is: \(newRequestedText)")
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
