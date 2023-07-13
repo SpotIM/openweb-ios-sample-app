@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import SpotImCore
 
+#if NEW_API
+
 protocol CommentCreationToolbarViewModelingInputs {
     var modelSelected: PublishSubject<ToolbarCollectionCellViewModeling> { get }
     func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol)
@@ -75,3 +77,5 @@ fileprivate extension CommentCreationToolbarViewModel {
             .disposed(by: disposeBag)
     }
 }
+
+#endif
