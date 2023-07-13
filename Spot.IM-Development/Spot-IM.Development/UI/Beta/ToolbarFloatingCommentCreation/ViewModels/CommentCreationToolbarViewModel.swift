@@ -8,9 +8,11 @@
 
 import Foundation
 import RxSwift
+import SpotImCore
 
 protocol CommentCreationToolbarViewModelingInputs {
     var modelSelected: PublishSubject<ToolbarCollectionCellViewModeling> { get }
+    func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol)
 }
 
 protocol CommentCreationToolbarViewModelingOutputs {
@@ -43,13 +45,32 @@ class CommentCreationToolbarViewModel: CommentCreationToolbarViewModeling,
     }
 
     var modelSelected = PublishSubject<ToolbarCollectionCellViewModeling>()
+
+    fileprivate var commentCreationSettings: OWCommentCreationSettingsProtocol?
+    func setCommentCreationSettings(_ settings: OWCommentCreationSettingsProtocol) {
+        commentCreationSettings = settings
+    }
 }
 
 fileprivate extension CommentCreationToolbarViewModel {
     func setupObservers() {
         modelSelected
-            .subscribe(onNext: { _ in
-                // TODO continue to activate "comment creation text manipulation"
+            .subscribe(onNext: { [weak self] cellViewModel in
+                guard let self = self,
+                        let settings = self.commentCreationSettings else { return }
+                settings.request(.manipulateUserInputText(completion: { result in
+                    let action = cellViewModel.outputs.action
+                    switch (result, action) {
+                    case (.success(let userTextInput), .append(let textToAppend)):
+                        return "\(userTextInput) \(textToAppend)"
+                    case (.success(_), .removeAll):
+                        return ""
+                    default:
+                        let textToLog = "Received an error when tried to request `manipulateUserInputText` request option"
+                        DLog(textToLog)
+                        return ""
+                    }
+                }))
             })
             .disposed(by: disposeBag)
     }
