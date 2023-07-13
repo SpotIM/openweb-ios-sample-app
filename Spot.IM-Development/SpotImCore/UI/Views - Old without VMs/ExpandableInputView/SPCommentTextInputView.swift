@@ -129,7 +129,7 @@ final class SPCommentTextInputView: SPBaseView, SPTextInputView {
         textToAvatarConstraint?.deactivate()
 
         textInputView.delegate = self
-        textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
+        textInputView.font = UIFont.spPreferred(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textAlignment = SPLocalizationManager.getTextAlignment()
         textInputView.isScrollEnabled = false
     }

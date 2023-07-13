@@ -25,14 +25,14 @@ internal final class SPPreConversationHeaderView: SPBaseView {
 
     private lazy var titleLabel: SPBaseLabel = {
         let lbl = SPBaseLabel()
-        lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
+        lbl.font = UIFont.spPreferred(style: .bold, of: Metrics.titleFontSize)
         lbl.textColor = .spForeground0
         return lbl
     }()
 
     private lazy var counterLabel: SPBaseLabel = {
         let lbl = SPBaseLabel()
-        lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
+        lbl.font = UIFont.spPreferred(style: .regular, of: Metrics.counterFontSize)
         lbl.textColor = .spForeground1
         return lbl
     }()

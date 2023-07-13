@@ -128,7 +128,7 @@ final class MessageContainerView: SPBaseView {
     private func configureTextLabel() {
         mainTextLabel.backgroundColor = .spBackground0
         mainTextLabel.numberOfLines = 0
-        mainTextLabel.font = .preferred(style: .regular, of: Theme.fontSize)
+        mainTextLabel.font = .spPreferred(style: .regular, of: Theme.fontSize)
         mainTextLabel.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

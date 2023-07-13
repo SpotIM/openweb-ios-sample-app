@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWCommentUserMuteAlert: OWMenuTypeProtocol {
+enum OWCommentUserMuteAlert: String, OWMenuTypeProtocol {
     case mute
     case cancel
 }

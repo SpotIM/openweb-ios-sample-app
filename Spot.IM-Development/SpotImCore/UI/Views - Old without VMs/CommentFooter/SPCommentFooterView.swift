@@ -89,7 +89,7 @@ final class SPCommentFooterView: SPBaseView {
         postButton.addTarget(self, action: #selector(onClickOnPostButton), for: .touchUpInside)
         postButton.setTitleColor(.white, for: .normal)
         postButton.isEnabled = false
-        postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
+        postButton.titleLabel?.font = UIFont.spPreferred(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(
             top: 0.0,
             left: Theme.postButtonHorizontalInset,

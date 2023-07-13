@@ -36,7 +36,10 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
     var disposeBag = DisposeBag()
 
     init(items: [OWMenuSelectionItem]) {
-        let vms = items.map { OWMenuSelectionCellViewModel(title: $0.title) }
+        let vms = items.map {
+            OWMenuSelectionCellViewModel(title: $0.title,
+                                         titleIdentifier: $0.titleIdentifier)
+        }
         _cellsViewModels.onNext(vms)
 
         cellSelected
@@ -51,5 +54,6 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
 
 struct OWMenuSelectionItem {
     var title: String
+    var titleIdentifier: String
     var handler: (() -> Void)
 }
