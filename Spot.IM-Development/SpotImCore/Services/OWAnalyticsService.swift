@@ -12,16 +12,19 @@ import RxSwift
 protocol OWAnalyticsServicing {
     func sendAnalyticEvent(event: OWAnalyticEvent)
     func sendAnalyticEvents(events: [OWAnalyticEvent])
+    func spotChanged(spotId: OWSpotId)
 }
 
 class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate struct Metrics {
         static let maxEvents: Int = 10
+        static let allEventsPlacholder: String = "all"
     }
 
     fileprivate let maxEventsForFlush: Int
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
     fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
+    fileprivate var blockedEvents = BehaviorSubject<[String]>(value: [])
 
     fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
@@ -32,6 +35,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
         self.appLifeCycle = appLifeCycle
 
         setupObservers()
+        setEventsStrategyConfig(spotId: OWManager.manager.spotId)
     }
 
     func sendAnalyticEvent(event: OWAnalyticEvent) {
@@ -40,6 +44,10 @@ class OWAnalyticsService: OWAnalyticsServicing {
 
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
         analyticsEvents.append(contentsOf: events)
+    }
+
+    func spotChanged(spotId: OWSpotId) {
+        setEventsStrategyConfig(spotId: spotId)
     }
 
 }
@@ -56,6 +64,10 @@ fileprivate extension OWAnalyticsService {
                     .rx_elements()
                     .take(1)
             }
+            .withLatestFrom(self.blockedEvents) { [weak self] items, blockedEvents -> [OWAnalyticEvent] in
+                guard let self = self else { return []}
+                return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
+            }
             .flatMap { items -> Observable<Bool> in
                 return api.sendEvents(events: items)
                     .response
@@ -69,6 +81,14 @@ fileprivate extension OWAnalyticsService {
                 OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
             })
             .subscribe()
+    }
+
+    func shouldSendEvent(event: OWAnalyticEvent, blockedEvents: [String]) -> Bool {
+        let blockedEventsSet = Set(blockedEvents)
+        if blockedEventsSet.contains(Metrics.allEventsPlacholder) {
+            return false
+        }
+        return !blockedEventsSet.contains(event.type.eventName)
     }
 }
 
@@ -96,5 +116,36 @@ fileprivate extension OWAnalyticsService {
                 self.flushEvents()
             })
             .disposed(by: disposeBag)
+    }
+
+    func setEventsStrategyConfig(spotId: OWSpotId) {
+        _ = OWSharedServicesProvider.shared.spotConfigurationService()
+            .config(spotId: spotId)
+            .take(1)
+            .map { config in
+                return config.mobileSdk.eventsStrategyConfig
+            }
+            .map { eventsStrategyConfig -> [String] in
+                guard let eventsStrategyConfig = eventsStrategyConfig,
+                      let currentSdkVersionString = OWSettingsWrapper.sdkVersion(),
+                      let currentSdkVersion = try? OWVersion(from: currentSdkVersionString)
+                else { return [] }
+
+                // Check if need to block all events
+                if let minVersionForEvents = eventsStrategyConfig.blockVersionsEqualOrPrevious,
+                   minVersionForEvents >= currentSdkVersion {
+                    return [Metrics.allEventsPlacholder]
+                }
+
+                // Check if need to block specific version
+                if let eventsForCurrentVersion = eventsStrategyConfig.blockEventsByVersionMapper[currentSdkVersion] {
+                    return eventsForCurrentVersion
+                }
+                return []
+            }
+            .subscribe(onNext: { [weak self] blockedEvents in
+                guard let self = self else { return }
+                self.blockedEvents.onNext(blockedEvents)
+            })
     }
 }

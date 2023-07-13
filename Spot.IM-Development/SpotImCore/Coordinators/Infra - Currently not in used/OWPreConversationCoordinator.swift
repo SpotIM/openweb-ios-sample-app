@@ -72,8 +72,9 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
 }
 
 fileprivate extension OWPreConversationCoordinator {
+    // swiftlint:disable function_body_length
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
-
+    // swiftlint:enable function_body_length
         let openFullConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openFullConversation
             .map { _ -> OWDeepLinkOptions? in
                 return nil
@@ -91,8 +92,20 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
 
+        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+            .observe(on: MainScheduler.instance)
+            .map { commentVM -> OWDeepLinkOptions? in
+                // 3. Perform deeplink to comment creation screen
+                guard let commentId = commentVM.outputs.comment.id,
+                let parentId = commentVM.outputs.comment.parentId else { return nil }
+                let reportData = OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
+                return OWDeepLinkOptions.reportReason(reportData: reportData)
+            }
+
         // Coordinate to full conversation
-        Observable.merge(openFullConversationObservable, openCommentCreationObservable)
+        Observable.merge(openFullConversationObservable,
+                         openCommentCreationObservable,
+                         openReportReasonObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
@@ -154,10 +167,19 @@ fileprivate extension OWPreConversationCoordinator {
         let openPublisherProfile = viewModel.outputs.openPublisherProfile
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
-        Observable.merge(contentPressed, openPublisherProfile)
-            .subscribe { [weak self] viewActionType in
-                self?.viewActionsService.append(viewAction: viewActionType)
+        let openReportReason = viewModel.outputs.openReportReason
+            .map { commentVM -> OWViewActionCallbackType in
+                guard let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return .error(.reportReasonFlow) }
+                return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
+
+        Observable.merge(contentPressed,
+                         openPublisherProfile,
+                         openReportReason)
+            .subscribe(onNext: { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            })
             .disposed(by: disposeBag)
     }
 

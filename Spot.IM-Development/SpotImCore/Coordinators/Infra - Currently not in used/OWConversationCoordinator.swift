@@ -62,6 +62,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
+        let deepLinkToReportReason = BehaviorSubject<OWReportReasonsRequiredData?>(value: nil)
 
         var animated = true
 
@@ -76,6 +77,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 deepLinkToCommentThread.onNext(commentThreadData)
             case .highlightComment(let commentId):
                 conversationVM.inputs.highlightComment.onNext(commentId)
+            case .reportReason(let reportData):
+                animated = false
+                deepLinkToReportReason.onNext(reportData)
             default:
                 break
             }
@@ -132,6 +136,49 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                     // Nothing
                 case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+                return Observable.never()
+            }
+
+        let reportReasonFromConversationObservable = conversationVM.outputs.conversationViewVM
+            .outputs.openReportReason
+            .map { commentVM -> OWReportReasonsRequiredData? in
+                guard let commentId = commentVM.outputs.comment.id,
+                    let parentId = commentVM.outputs.comment.parentId else {
+                    return nil
+                }
+
+                return OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
+            }
+            .unwrap()
+
+        // Coordinate to report reason
+        let coordinateReportReasonObservable = Observable.merge(deepLinkToReportReason.unwrap(), reportReasonFromConversationObservable)
+            .asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] reportData -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
+                                                                        router: self.router,
+                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        presentationalMode: self.conversationData.presentationalStyle)
+                return self.coordinate(to: reportReasonCoordinator)
+            }
+            .do(onNext: { coordinatorResult in
+                switch coordinatorResult {
+                case .popped:
+                    // Nothing
+                    break
+                case .submitedReport(_):
+                    // Nothing - already taken care in report VM in which we update the report service
+                    break
+                default:
                     break
                 }
             })
@@ -225,6 +272,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         return Observable.merge(
             conversationPoppedObservable,
             coordinateCommentCreationObservable,
+            coordinateReportReasonObservable,
             coordinateCommentThreadObservable,
             conversationLoadedObservable,
             coordinateToSafariObservable
@@ -274,7 +322,14 @@ fileprivate extension OWConversationCoordinator {
         )
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
 
-        Observable.merge(closeConversationPressed, openPublisherProfile)
+        let openReportReason = viewModel.outputs.openReportReason
+            .map { commentVM -> OWViewActionCallbackType in
+                guard let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return .error(.reportReasonFlow) }
+                return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
+            }
+
+        Observable.merge(closeConversationPressed, openPublisherProfile, openReportReason)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

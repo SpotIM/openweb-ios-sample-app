@@ -21,9 +21,12 @@ class OWCommentHeaderView: UIView {
         static let subscriberVerticalPadding: CGFloat = 7
         static let optionButtonSize: CGFloat = 20
         static let badgeHorizontalInset: CGFloat = 4
+        static let commentReasonLabelFontSize: CGFloat = 17
+        static let commentReasonLabelLineSpacing: CGFloat = 3.5
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
+        static let userNameSubtitleLabelIdentifier = "comment_header_user_name_subtitle_label_id"
         static let badgeTagContainerIdentifier = "comment_header_user_badge_tag_container_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
@@ -98,8 +101,8 @@ class OWCommentHeaderView: UIView {
         return UILabel()
             .isHidden(true)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.preferred(style: .italic, of: 17))
-            .lineSpacing(3.5)
+            .font(OWFontBook.shared.font(style: .italic, size: Metrics.commentReasonLabelFontSize))
+            .lineSpacing(Metrics.commentReasonLabelLineSpacing)
             .enforceSemanticAttribute()
     }()
 
@@ -315,5 +318,6 @@ fileprivate extension OWCommentHeaderView {
         optionButton.accessibilityTraits = .button
         optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Options menu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
+        subtitleLabel.accessibilityIdentifier = Metrics.userNameSubtitleLabelIdentifier
     }
 }

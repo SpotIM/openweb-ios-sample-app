@@ -6,6 +6,8 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import RxSwift
 import RxCocoa
@@ -43,6 +45,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openCommentCreation: Observable<OWCommentCreationType> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -60,10 +63,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
-        static let willDisplayCellThrottle: Int = 700 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
+
+    fileprivate let loadMoreCommentsScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "loadMoreCommentsQueue")
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -95,6 +99,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
     fileprivate var _loadMoreComments = PublishSubject<Int>()
+    fileprivate var isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -260,6 +265,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return _isEmpty
             .share(replay: 1)
     }()
+
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
+        return openReportReasonChange
+            .asObservable()
+    }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
@@ -437,8 +448,11 @@ fileprivate extension OWConversationViewViewModel {
             replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
         }
 
+        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
+
         return OWCommentCellViewModel(data: OWCommentRequiredData(
-            comment: comment,
+            comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit
@@ -659,7 +673,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // fetch more comments
         let loadMoreCommentsReadObservable = _loadMoreComments
-            .distinctUntilChanged()
+            .observe(on: loadMoreCommentsScheduler)
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
@@ -676,6 +690,7 @@ fileprivate extension OWConversationViewViewModel {
         let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
             .map { [weak self] event -> OWConversationReadRM? in
                 guard let self = self else { return nil }
+                self.isLoadingMoreComments.onNext(false)
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -874,15 +889,19 @@ fileprivate extension OWConversationViewViewModel {
                 return rowIndex
             }
             .unwrap()
-            .throttle(.milliseconds(Metrics.willDisplayCellThrottle), scheduler: MainScheduler.asyncInstance)
-            .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
-                return (rowIndex, cellsVMs.count)
+            .withLatestFrom(isLoadingMoreComments) { rowIndex, isLoadingMoreComments in
+                return (rowIndex, isLoadingMoreComments)
             }
-            .subscribe(onNext: { [weak self] rowIndex, cellsCount in
+            .filter { !$0.1 }
+            .map { $0.0 }
+            .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
+                return (rowIndex > (cellsVMs.count - Metrics.tableViewPaginationCellsOffset))
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                if (rowIndex > cellsCount - Metrics.tableViewPaginationCellsOffset) {
-                    self._loadMoreComments.onNext(self.paginationOffset)
-                }
+                self.isLoadingMoreComments.onNext(true)
+                self._loadMoreComments.onNext(self.paginationOffset)
             })
             .disposed(by: disposeBag)
 
@@ -913,7 +932,7 @@ fileprivate extension OWConversationViewViewModel {
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
-                        break
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
@@ -945,7 +964,7 @@ fileprivate extension OWConversationViewViewModel {
                         case .completion:
                             // Do nothing
                             break
-                        case .selected(let action):
+                        case .selected(_):
                             break
                         }
                     })
@@ -1012,6 +1031,32 @@ fileprivate extension OWConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comments which are just reported
+        let reportService = servicesProvider.reportedCommentsService()
+        reportService.commentJustReported
+            .withLatestFrom(commentCellsVmsObservable) {
+                ($0, $1)
+            }
+            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+                // 1. Find if such comment VM exist for this comment ID
+                guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
+                    return .empty()
+                }
+                return Observable.just(commentCellVM.outputs.commentVM)
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { commentVM in
+                // 2. Update report locally
+                commentVM.inputs.reportCommentLocally()
+            })
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // 3. Update table view
+                self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 

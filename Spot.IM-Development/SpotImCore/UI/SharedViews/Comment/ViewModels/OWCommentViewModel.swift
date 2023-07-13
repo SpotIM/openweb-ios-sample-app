@@ -12,6 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentViewModelingInputs {
+    func reportCommentLocally()
     func deleteCommentLocally()
     func muteCommentLocally()
 }
@@ -63,6 +64,11 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
+    func reportCommentLocally() {
+        self.commentHeaderVM.inputs.shouldReportCommentLocally.onNext(true)
+        self._shouldHideCommentContent.onNext(true)
+    }
+
     func deleteCommentLocally() {
         self._shouldHideCommentContent.onNext(true)
         self.commentHeaderVM.inputs.shouldDeleteCommentLocally.onNext(true)
@@ -96,11 +102,9 @@ class OWCommentViewModel: OWCommentViewModeling,
 
 fileprivate extension OWCommentViewModel {
     func dictateCommentContentVisibility(data: OWCommentRequiredData) {
-        guard let commentId = data.comment.id else { return }
-
         let shouldHide = data.user.isMuted || // muted
             data.comment.deleted || // deleted
-            SPUserSessionHolder.session.reportedComments[commentId] != nil // reported
+            data.comment.reported // reported
 
         self._shouldHideCommentContent.onNext(shouldHide)
     }
