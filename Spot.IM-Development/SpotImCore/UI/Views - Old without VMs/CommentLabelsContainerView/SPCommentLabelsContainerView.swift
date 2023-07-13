@@ -74,7 +74,7 @@ internal final class SPCommentLabelsContainerView: SPBaseView, UIGestureRecogniz
 
     private func configureGuidelineText() {
         guidelineTextLabel.textColor = .spForeground4
-        guidelineTextLabel.font = UIFont.preferred(style: .medium, of: Theme.guidelineTextFontSize)
+        guidelineTextLabel.font = UIFont.spPreferred(style: .medium, of: Theme.guidelineTextFontSize)
         guidelineTextLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
         }

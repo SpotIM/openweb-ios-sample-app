@@ -10,6 +10,7 @@ public typealias JSON = [String: Any]
 public enum OWParserError: Error {
 
     case keyNotFound
+    case generalParseError
 
 }
 

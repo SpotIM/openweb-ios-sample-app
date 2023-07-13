@@ -55,7 +55,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
         return txt
             .label
-            .font(UIFont.preferred(style: .regular, of: Metrics.replyCounterFontSize))
+            .font(UIFont.spPreferred(style: .regular, of: Metrics.replyCounterFontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
 
@@ -468,7 +468,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
         topContainerView.addSubview(closeButton)
 
-        commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
+        commentingOnLabel.font = UIFont.spPreferred(style: .regular, of: 16.0)
         commentingOnLabel.text = SPLocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()

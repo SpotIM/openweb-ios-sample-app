@@ -73,6 +73,11 @@ extension UIView {
         self.clipsToBounds = clipsToBounds
         return self
     }
+
+    @discardableResult func alpha(_ alpha: CGFloat) -> Self {
+        self.alpha = alpha
+        return self
+    }
 }
 
 extension UILabel {
@@ -111,6 +116,11 @@ extension UILabel {
         return self
     }
 
+    @discardableResult func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> UILabel {
+        self.lineBreakMode = lineBreakMode
+        return self
+    }
+
     @discardableResult func lineSpacing(_ spacing: CGFloat) -> UILabel {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = spacing
@@ -140,6 +150,11 @@ extension UILabel {
         text.addAttribute(NSAttributedString.Key.kern, value: spacing, range: NSRange(location: 0, length: text.length - 1))
         self.attributedText = text
 
+        return self
+    }
+
+    @discardableResult func attributedText(_ attributedText: NSAttributedString) -> UILabel {
+        self.attributedText = attributedText
         return self
     }
 }
@@ -204,6 +219,41 @@ extension UIButton {
         self.titleLabel?.font = font
         return self
     }
+
+    @discardableResult func isEnabled(_ isEnabled: Bool) -> Self {
+        self.isEnabled = isEnabled
+        return self
+    }
+
+    @discardableResult func contentMode(_ mode: UIView.ContentMode) -> Self {
+        self.contentMode = mode
+        return self
+    }
+
+    @discardableResult func adjustTextAndImageAlignment(_ spacing: CGFloat) -> Self {
+        var inset = spacing / 2
+
+        if OWLocalizationManager.shared.semanticAttribute == .forceRightToLeft {
+            inset = -inset
+        }
+
+        imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
+        titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
+        contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)
+
+        return self
+    }
+
+    @discardableResult func reverseTransform() -> Self {
+        let currentTransform = transform
+        let currentScaleX = currentTransform.a
+
+        transform = CGAffineTransform(scaleX: -currentScaleX, y: currentScaleX)
+        titleLabel?.transform = CGAffineTransform(scaleX: -currentScaleX, y: currentScaleX)
+        transform = CGAffineTransform(scaleX: -currentScaleX, y: currentScaleX)
+
+        return self
+    }
 }
 
 extension UIImageView {
@@ -245,6 +295,11 @@ extension UITableView {
         self.delegate = delegate
         return self
     }
+
+    @discardableResult func registerCell<T: UITableViewCell>(cellClass: T.Type = T.self) -> Self {
+        self.register(cellClass: cellClass)
+        return self
+    }
 }
 
 extension String {
@@ -281,6 +336,11 @@ extension UITextView {
 
     @discardableResult func isEditable(_ editable: Bool) -> Self {
         self.isEditable = editable
+        return self
+    }
+
+    @discardableResult func text(_ text: String) -> Self {
+        self.text = text
         return self
     }
 
@@ -328,6 +388,11 @@ extension UIStackView {
 
     @discardableResult func spacing(_ spacing: CGFloat) -> Self {
         self.spacing = spacing
+        return self
+    }
+
+    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
+        self.distribution = distribution
         return self
     }
 }
