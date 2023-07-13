@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+#if NEW_API
+
 protocol ToolbarCollectionCellViewModelingInputs {}
 
 protocol ToolbarCollectionCellViewModelingOutputs {
@@ -45,3 +47,5 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
         _emoji.onNext(model.emoji)
     }
 }
+
+#endif
