@@ -11,14 +11,17 @@ import RxSwift
 
 class OWCommentCreationReplySnippetView: UIView {
     fileprivate struct Metrics {
-
+        static let replySnippetFontSize: CGFloat = 13.0
+        static let horizontalOffset: CGFloat = 16.0
+        static let bottomSpacing: CGFloat = 12.0
+        static let replySnippetNumberOfLines: Int = 2
     }
 
     fileprivate lazy var replySnippetLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: 13.0))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.replySnippetFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .numberOfLines(2)
+            .numberOfLines(Metrics.replySnippetNumberOfLines)
             .enforceSemanticAttribute()
     }()
 
@@ -52,12 +55,12 @@ fileprivate extension OWCommentCreationReplySnippetView {
         addSubview(replySnippetLabel)
         replySnippetLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(16.0)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
         addSubview(bottomSeparatorView)
         bottomSeparatorView.OWSnp.makeConstraints { make in
-            make.top.equalTo(replySnippetLabel.OWSnp.bottom).offset(12.0)
+            make.top.equalTo(replySnippetLabel.OWSnp.bottom).offset(Metrics.bottomSpacing)
             make.height.equalTo(1)
             make.bottom.leading.trailing.equalToSuperview()
         }
