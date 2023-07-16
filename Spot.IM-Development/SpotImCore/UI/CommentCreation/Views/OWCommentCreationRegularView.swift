@@ -55,6 +55,11 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
+    fileprivate lazy var replySnippetView: OWCommentCreationReplySnippetView = {
+        return OWCommentCreationReplySnippetView(with: self.viewModel.outputs.replySnippetViewModel)
+            .enforceSemanticAttribute()
+    }()
+
     fileprivate lazy var contentView: OWCommentCreationContentView = {
         return OWCommentCreationContentView(with: self.viewModel.outputs.commentCreationContentVM)
     }()
@@ -114,10 +119,18 @@ fileprivate extension OWCommentCreationRegularView {
             make.height.equalTo(68.0)
         }
 
-        self.addSubview(articleDescriptionView)
-        articleDescriptionView.OWSnp.makeConstraints { make in
-            make.top.equalTo(topContainerView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+        if viewModel.outputs.shouldShowReplySnippet {
+            self.addSubview(replySnippetView)
+            replySnippetView.OWSnp.makeConstraints { make in
+                make.top.equalTo(topContainerView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+        } else {
+            self.addSubview(articleDescriptionView)
+            articleDescriptionView.OWSnp.makeConstraints { make in
+                make.top.equalTo(topContainerView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
         }
 
         self.addSubview(footerView)
@@ -142,7 +155,7 @@ fileprivate extension OWCommentCreationRegularView {
         self.addSubview(contentView)
         contentView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(articleDescriptionView.OWSnp.bottom)
+            make.top.equalTo(viewModel.outputs.shouldShowReplySnippet ? replySnippetView.OWSnp.bottom : articleDescriptionView.OWSnp.bottom)
             make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
         }
     }
