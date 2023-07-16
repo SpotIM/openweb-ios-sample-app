@@ -17,6 +17,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var commentTextOutput: Observable<String> { get }
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
+    var placeholderText: Observable<String> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -34,6 +35,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate let disposeBag = DisposeBag()
     fileprivate let imageURLProvider: OWImageProviding
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentCreationType: OWCommentCreationType
 
     var commentText = BehaviorSubject<String>(value: "")
 
@@ -68,11 +70,21 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .map { $0.count == 0 }
     }
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+    var placeholderText: Observable<String> {
+        switch commentCreationType {
+        case .replyToComment:
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "Type your reply…"))
+        default:
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+        }
+    }
+
+    init(commentCreationType: OWCommentCreationType,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.servicesProvider = servicesProvider
         self.imageURLProvider = imageURLProvider
-
+        self.commentCreationType = commentCreationType
         setupObservers()
     }
 }

@@ -31,7 +31,7 @@ class OWCommentCreationContentView: UIView {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
-            .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var textInput: UITextView = {
@@ -132,6 +132,10 @@ fileprivate extension OWCommentCreationContentView {
         viewModel.outputs.showPlaceholder
             .map { !$0 }
             .bind(to: placeholderLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.placeholderText
+            .bind(to: placeholderLabel.rx.text)
             .disposed(by: disposeBag)
 
     }
