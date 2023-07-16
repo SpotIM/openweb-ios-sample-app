@@ -293,8 +293,11 @@ fileprivate extension OWCommentThreadViewViewModel {
             replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
         }
 
+        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
+
         return OWCommentCellViewModel(data: OWCommentRequiredData(
-            comment: comment,
+            comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
@@ -503,6 +506,32 @@ fileprivate extension OWCommentThreadViewViewModel {
                  return Observable.just(commentCellsVms)
             }
             .share()
+
+        // Responding to comments which are just reported
+        let reportService = servicesProvider.reportedCommentsService()
+        reportService.commentJustReported
+            .withLatestFrom(commentCellsVmsObservable) {
+                ($0, $1)
+            }
+            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+                // 1. Find if such comment VM exist for this comment ID
+                guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
+                    return .empty()
+                }
+                return Observable.just(commentCellVM.outputs.commentVM)
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { commentVM in
+                // 2. Update report locally
+                commentVM.inputs.reportCommentLocally()
+            })
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // 3. Update table view
+                self._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable

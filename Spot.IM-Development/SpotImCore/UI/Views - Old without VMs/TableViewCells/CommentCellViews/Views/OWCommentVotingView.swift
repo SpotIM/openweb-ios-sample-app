@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class OWCommentVotingView: SPBaseView {
+final class OWCommentVotingView: UIView {
 
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 32.0
@@ -26,12 +26,11 @@ final class OWCommentVotingView: SPBaseView {
     fileprivate var viewModel: OWCommentVotingViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    fileprivate lazy var stackView: SPBaseStackView = {
-        let stackView = SPBaseStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.backgroundColor = .clear
-        return stackView
+    fileprivate lazy var stackView: UIStackView = {
+        return UIStackView()
+            .axis(.horizontal)
+            .alignment(.center)
+            .backgroundColor(.clear)
     }()
 
     fileprivate lazy var rankUpButton: SPAnimatedButton = {
@@ -60,20 +59,18 @@ final class OWCommentVotingView: SPBaseView {
         return button
     }()
 
-    fileprivate lazy var rankUpLabel: SPBaseLabel = {
-        let label = SPBaseLabel()
-        label.textAlignment = .center
-        label.font = .preferred(style: .regular, of: Metrics.fontSize)
-        label.setContentHuggingPriority(.required, for: .horizontal)
-        return label
+    fileprivate lazy var rankUpLabel: UILabel = {
+        return UILabel()
+            .textAlignment(.center)
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .hugContent(axis: .horizontal)
     }()
 
-    fileprivate lazy var rankDownLabel: SPBaseLabel = {
-        let label = SPBaseLabel()
-        label.textAlignment = .center
-        label.font = .preferred(style: .regular, of: Metrics.fontSize)
-        label.setContentHuggingPriority(.required, for: .horizontal)
-        return label
+    fileprivate lazy var rankDownLabel: UILabel = {
+        return UILabel()
+            .textAlignment(.center)
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .hugContent(axis: .horizontal)
     }()
 
     fileprivate lazy var seperetorView: UIView = {
@@ -84,8 +81,12 @@ final class OWCommentVotingView: SPBaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        applyAccessibility()
         setupUI()
+        applyAccessibility()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configure(with viewModel: OWCommentVotingViewModeling, delegate: CommentActionsDelegate) {
