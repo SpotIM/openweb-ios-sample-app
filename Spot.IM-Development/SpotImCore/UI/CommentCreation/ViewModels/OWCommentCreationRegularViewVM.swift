@@ -57,7 +57,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     lazy var commentCreationContentVM: OWCommentCreationContentViewModeling = {
-        return OWCommentCreationContentViewModel()
+        return OWCommentCreationContentViewModel(commentCreationType: commentCreationData.commentCreationType)
     }()
 
     lazy var titleAttributedString: Observable<NSAttributedString> = {
