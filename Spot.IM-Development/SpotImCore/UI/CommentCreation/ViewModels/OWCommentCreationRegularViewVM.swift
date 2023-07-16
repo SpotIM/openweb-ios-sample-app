@@ -15,8 +15,10 @@ protocol OWCommentCreationRegularViewViewModelingInputs {
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentType: OWCommentCreationType { get }
+    var shouldShowReplySnippet: Bool { get }
     var titleAttributedString: Observable<NSAttributedString> { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
+    var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling { get }
     var footerViewModel: OWCommentCreationFooterViewModeling { get }
     var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
@@ -42,6 +44,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
         return OWArticleDescriptionViewModel(article: commentCreationData.article)
+    }()
+
+    lazy var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling = {
+        return OWCommentCreationReplySnippetViewModel(commentCreationType: commentType)
     }()
 
     lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
@@ -82,6 +88,24 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
             return Observable.just(NSAttributedString(string: commentingOnText))
         }
     }()
+
+    var shouldShowReplySnippet: Bool {
+        guard let postId = OWManager.manager.postId else { return false }
+        var replyToComment: OWComment? = nil
+        switch commentType {
+        case .edit(let comment):
+            if let parentId = comment.parentId,
+               let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+                replyToComment = parentComment
+            }
+        case .replyToComment(let originComment):
+            replyToComment = originComment
+        default:
+            break
+        }
+
+        return replyToComment?.text?.text != nil
+    }
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
