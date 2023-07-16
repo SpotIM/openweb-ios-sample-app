@@ -85,6 +85,13 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         self.servicesProvider = servicesProvider
         self.imageURLProvider = imageURLProvider
         self.commentCreationType = commentCreationType
+
+        if case .edit(let comment) = commentCreationType {
+            if let commentText = comment.text?.text {
+                self.inputs.commentText.onNext(commentText)
+            }
+        }
+
         setupObservers()
     }
 }
