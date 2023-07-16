@@ -14,12 +14,18 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_regular_view_id"
 
-        static let replyCounterTrailingOffset = 16.0
+        static let horizontalOffset: CGFloat = 16.0
+        static let titleFontSize: CGFloat = 15.0
+        static let closeButtonSize: CGFloat = 40.0
+        static let closeButtonTrailingOffset: CGFloat = 5.0
+        static let topContainerHeight: CGFloat = 68.0
+        static let footerHeight: CGFloat = 72.0
+        static let commentLabelsSpacing: CGFloat = 15.0
     }
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: 15.0))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.titleFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .numberOfLines(1)
             .enforceSemanticAttribute()
@@ -36,15 +42,15 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         topContainerView.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(topContainerView.OWSnp.centerY)
-            make.trailing.equalToSuperview().offset(-5.0)
-            make.size.equalTo(40.0)
+            make.trailing.equalToSuperview().offset(-Metrics.closeButtonTrailingOffset)
+            make.size.equalTo(Metrics.closeButtonSize)
         }
 
         topContainerView.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.centerY.equalTo(topContainerView.OWSnp.centerY)
-            make.leading.equalToSuperview().offset(16.0)
-            make.trailing.equalTo(closeButton.OWSnp.leading).offset(-16.0)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalTo(closeButton.OWSnp.leading).offset(-Metrics.horizontalOffset)
         }
 
         return topContainerView
@@ -116,7 +122,7 @@ fileprivate extension OWCommentCreationRegularView {
         self.addSubview(topContainerView)
         topContainerView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(68.0)
+            make.height.equalTo(Metrics.topContainerHeight)
         }
 
         if viewModel.outputs.shouldShowReplySnippet {
@@ -136,20 +142,20 @@ fileprivate extension OWCommentCreationRegularView {
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(72.0)
+            make.height.equalTo(Metrics.footerHeight)
         }
 
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
-            make.bottom.equalTo(footerView.OWSnp.top).offset(-15.0)
-            make.leading.equalToSuperview().offset(15.0)
+            make.bottom.equalTo(footerView.OWSnp.top).offset(-Metrics.commentLabelsSpacing)
+            make.leading.equalToSuperview().offset(Metrics.commentLabelsSpacing)
             make.trailing.lessThanOrEqualToSuperview()
         }
 
         self.addSubview(commentReplyCounterView)
         commentReplyCounterView.OWSnp.makeConstraints { make in
             make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
-            make.trailing.equalToSuperview().offset(-Metrics.replyCounterTrailingOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
         }
 
         self.addSubview(contentView)
