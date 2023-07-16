@@ -51,7 +51,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
-        return OWCommentCreationFooterViewModel()
+        return OWCommentCreationFooterViewModel(commentCreationType: commentCreationData.commentCreationType)
     }()
 
     lazy var commentCounterViewModel: OWCommentReplyCounterViewModeling = {
@@ -68,7 +68,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var titleAttributedString: Observable<NSAttributedString> = {
         let commentingOnText = OWLocalizationManager.shared.localizedString(key: "Commenting on")
-        
+
         var replyToComment: OWComment? = nil
         switch commentCreationData.commentCreationType {
         case .edit(let comment):

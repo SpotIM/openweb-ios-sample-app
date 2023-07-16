@@ -35,6 +35,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var outputs: OWCommentCreationFooterViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentCreationType: OWCommentCreationType
 
     var tapCta = PublishSubject<Void>()
     var tapAction = PublishSubject<Void>()
@@ -72,8 +73,16 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     var ctaTitleText: Observable<String> {
         _shouldSignUpToPostComment
-            .map { shouldSignUpToPost in
-                return shouldSignUpToPost ? OWLocalizationManager.shared.localizedString(key: "Sign Up to Post") : OWLocalizationManager.shared.localizedString(key: "Post")
+            .map { [weak self] shouldSignUpToPost in
+                guard let self = self, !shouldSignUpToPost else {
+                    return OWLocalizationManager.shared.localizedString(key: "Sign Up to Post")
+                }
+
+                if case .edit = self.commentCreationType {
+                    return OWLocalizationManager.shared.localizedString(key: "Edit")
+                } else {
+                    return OWLocalizationManager.shared.localizedString(key: "Post")
+                }
             }
     }
 
@@ -87,8 +96,10 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         return Observable.just(false)
     }
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentCreationType: OWCommentCreationType,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.commentCreationType = commentCreationType
 
         setupObservers()
     }
