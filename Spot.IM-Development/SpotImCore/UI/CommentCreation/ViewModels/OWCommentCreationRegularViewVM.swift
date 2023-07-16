@@ -68,25 +68,34 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     lazy var titleAttributedString: Observable<NSAttributedString> = {
         let commentingOnText = OWLocalizationManager.shared.localizedString(key: "Commenting on")
+        
+        var replyToComment: OWComment? = nil
         switch commentCreationData.commentCreationType {
-        case .replyToComment(originComment: let originComment):
-            guard let userId = originComment.userId,
-                  let user = self.servicesProvider.usersService().get(userId: userId),
-                  let displayName = user.displayName
-            else { return Observable.just(NSAttributedString(string: commentingOnText)) }
-
-            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
-
-            let attrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
-            let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
-
-            attributedString.append(boldUserNameString)
-
-            return Observable.just(attributedString)
-
+        case .edit(let comment):
+            if let postId = OWManager.manager.postId,
+               let parentId = comment.parentId,
+               let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+                replyToComment = comment
+            }
+        case .replyToComment(let originComment):
+            replyToComment = originComment
         default:
-            return Observable.just(NSAttributedString(string: commentingOnText))
+            break
         }
+
+        guard let userId = replyToComment?.userId,
+              let user = self.servicesProvider.usersService().get(userId: userId),
+              let displayName = user.displayName
+        else { return Observable.just(NSAttributedString(string: commentingOnText)) }
+
+        var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+
+        let attrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
+        let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
+
+        attributedString.append(boldUserNameString)
+
+        return Observable.just(attributedString)
     }()
 
     var shouldShowReplySnippet: Bool {
