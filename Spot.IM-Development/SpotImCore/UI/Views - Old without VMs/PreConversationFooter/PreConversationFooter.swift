@@ -166,7 +166,7 @@ internal final class SPPreConversationFooter: SPBaseView {
         showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
         showMoreCommentsButton.setTitleColor(.white, for: .normal)
-        showMoreCommentsButton.titleLabel?.font = .preferred(style: .medium, of: Theme.showMoreCommentsButtonFontSize)
+        showMoreCommentsButton.titleLabel?.font = .spPreferred(style: .medium, of: Theme.showMoreCommentsButtonFontSize)
         showMoreCommentsButton.layer.cornerRadius = Theme.showMoreCommentsButtonCornerRadius
         showMoreCommentsButton.addTarget(self, action: #selector(showMoreComments), for: .touchUpInside)
 
@@ -184,7 +184,7 @@ internal final class SPPreConversationFooter: SPBaseView {
         termsButton.setTitle(title, for: .normal)
         termsButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb
-        termsButton.titleLabel?.font = .openSans(style: .regular, of: Theme.bottomRowSize)
+        termsButton.titleLabel?.font = .spOpenSans(style: .regular, of: Theme.bottomRowSize)
         termsButton.addTarget(self, action: #selector(showTerms), for: .touchUpInside)
 
         termsButton.OWSnp.makeConstraints { make in
@@ -198,7 +198,7 @@ internal final class SPPreConversationFooter: SPBaseView {
     private func setupDotLabel() {
         dotLabel.text = "·"
         dotLabel.textColor = .coolGrey
-        dotLabel.font = .openSans(style: .regular, of: Theme.bottomRowSize)
+        dotLabel.font = .spOpenSans(style: .regular, of: Theme.bottomRowSize)
         dotLabel.OWSnp.makeConstraints { make in
             make.leading.equalTo(termsButton.OWSnp.trailing).offset(5.0)
             make.trailing.equalTo(privacyButton.OWSnp.leading).offset(-5.0)
@@ -211,7 +211,7 @@ internal final class SPPreConversationFooter: SPBaseView {
         privacyButton.setTitle(title, for: .normal)
         privacyButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb
-        privacyButton.titleLabel?.font = .openSans(style: .regular, of: Theme.bottomRowSize)
+        privacyButton.titleLabel?.font = .spOpenSans(style: .regular, of: Theme.bottomRowSize)
         privacyButton.addTarget(self, action: #selector(showPrivacy), for: .touchUpInside)
 
         privacyButton.OWSnp.makeConstraints { make in
@@ -234,7 +234,7 @@ internal final class SPPreConversationFooter: SPBaseView {
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb
-        addSpotIMButton.titleLabel?.font = .openSans(style: .regular, of: Theme.bottomRowSize)
+        addSpotIMButton.titleLabel?.font = .spOpenSans(style: .regular, of: Theme.bottomRowSize)
         addSpotIMButton.addTarget(self, action: #selector(showAddSpotIM), for: .touchUpInside)
 
         addSpotIMButton.OWSnp.makeConstraints { make in

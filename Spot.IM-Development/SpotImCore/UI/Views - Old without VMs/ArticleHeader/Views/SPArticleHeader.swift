@@ -155,7 +155,7 @@ internal final class SPArticleHeader: SPBaseView {
     private func setupConversationTitleLabel() {
         conversationTitleLabel.text = SPLocalizationManager.localizedString(key: "Loading")
         conversationTitleLabel.numberOfLines = 2
-        conversationTitleLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
+        conversationTitleLabel.font = UIFont.spPreferred(style: .regular, of: Theme.titleFontSize)
 
         conversationTitleLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -164,7 +164,7 @@ internal final class SPArticleHeader: SPBaseView {
 
     private func setupConversationAuthorLabel() {
         conversationAuthorLabel.numberOfLines = 1
-        conversationAuthorLabel.font = UIFont.preferred(style: .regular, of: Theme.subTitleFontSize)
+        conversationAuthorLabel.font = UIFont.spPreferred(style: .regular, of: Theme.subTitleFontSize)
 
         conversationAuthorLabel.OWSnp.makeConstraints { make in
             make.bottom.leading.trailing.equalToSuperview()

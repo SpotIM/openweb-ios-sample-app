@@ -90,7 +90,7 @@ fileprivate extension OWCommentCreationCoordinator {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
             .subscribe { [weak self] _ in
-                self?.router.pop(popStyle: .presentStyle, animated: false)
+                self?.router.pop(popStyle: .dismissStyle, animated: false)
             }
             .disposed(by: disposeBag)
     }

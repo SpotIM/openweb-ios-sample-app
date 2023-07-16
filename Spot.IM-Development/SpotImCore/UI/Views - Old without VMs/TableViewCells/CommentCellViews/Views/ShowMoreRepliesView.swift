@@ -76,7 +76,7 @@ internal final class ShowMoreRepliesView: SPBaseView {
     private func configureShowHideRepliesButton() {
         showHideRepliesButton.backgroundColor = .spBackground0
         showHideRepliesButton.addTarget(self, action: #selector(showHideReplies), for: .touchUpInside)
-        showHideRepliesButton.titleLabel?.font = .preferred(style: .bold, of: Theme.fontSize)
+        showHideRepliesButton.titleLabel?.font = .spPreferred(style: .bold, of: Theme.fontSize)
         showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
         showHideRepliesButton.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()

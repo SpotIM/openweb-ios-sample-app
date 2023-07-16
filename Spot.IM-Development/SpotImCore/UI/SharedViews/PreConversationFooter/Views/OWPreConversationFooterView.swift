@@ -27,19 +27,19 @@ internal class OWPreConversationFooterView: UIView {
         return OWLocalizationManager.shared.localizedString(key: "Terms")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.openSans(style: .regular, of: Metrics.fontSize))
+            .font(.spOpenSans(style: .regular, of: Metrics.fontSize))
     }()
     private lazy var separator: UILabel = {
         "|"
             .label
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.openSans(style: .regular, of: Metrics.fontSize))
+            .font(.spOpenSans(style: .regular, of: Metrics.fontSize))
     }()
     private lazy var privacyButton: UIButton = {
         return OWLocalizationManager.shared.localizedString(key: "Privacy")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.openSans(style: .regular, of: Metrics.fontSize))
+            .font(.spOpenSans(style: .regular, of: Metrics.fontSize))
     }()
     private lazy var openWebIconImageView: UIImageView = {
         return UIImageView(image: UIImage(spNamed: "OpenWeb-logo", supportDarkMode: true))
@@ -48,7 +48,7 @@ internal class OWPreConversationFooterView: UIView {
         let btn = OWLocalizationManager.shared.localizedString(key: "Powered by")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.openSans(style: .regular, of: Metrics.poweredByFontSize))
+            .font(.spOpenSans(style: .regular, of: Metrics.poweredByFontSize))
             .enforceSemanticAttribute()
         return btn
     }()

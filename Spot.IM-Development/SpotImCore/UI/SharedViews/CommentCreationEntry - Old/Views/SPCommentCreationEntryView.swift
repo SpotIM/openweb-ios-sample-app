@@ -44,7 +44,7 @@ class SPCommentCreationEntryView: UIView {
 
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
+            .font(UIFont.spPreferred(style: .regular, of: Metrics.fontSize))
             .text(SPLocalizationManager.localizedString(key: "What do you think?"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()

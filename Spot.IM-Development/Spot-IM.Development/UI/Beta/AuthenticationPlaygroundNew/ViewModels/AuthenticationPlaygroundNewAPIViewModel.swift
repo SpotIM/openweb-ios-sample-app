@@ -72,13 +72,33 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
     }()
 
-    fileprivate let _genericSSOOptions = BehaviorSubject(value: GenericSSOAuthentication.mockModels)
+    lazy var genericSSOAuthenticationModels: [GenericSSOAuthentication] = {
+        var models = GenericSSOAuthentication.mockModels
+
+        if let spotId = spotIdToFilterBy {
+            models = models.filter { $0.spotId == spotId }
+        }
+
+        return models
+    }()
+
+    fileprivate lazy var _genericSSOOptions = BehaviorSubject(value: genericSSOAuthenticationModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
         return _genericSSOOptions
             .asObservable()
     }
 
-    fileprivate let _JWTSSOOptions = BehaviorSubject(value: JWTSSOAuthentication.mockModels)
+    lazy var JWTSSSOAuthenticationModels: [JWTSSOAuthentication] = {
+        var models = JWTSSOAuthentication.mockModels
+
+        if let spotId = spotIdToFilterBy {
+            models = models.filter { $0.spotId == spotId }
+        }
+
+        return models
+    }()
+
+    fileprivate lazy var _JWTSSOOptions = BehaviorSubject(value: JWTSSSOAuthenticationModels)
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> {
         return _JWTSSOOptions
             .asObservable()
@@ -104,7 +124,10 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
 
     fileprivate let disposeBag = DisposeBag()
 
-    init() {
+    fileprivate var spotIdToFilterBy: OWSpotId?
+
+    init(filterBySpotId spotId: OWSpotId? = nil) {
+        spotIdToFilterBy = spotId
         setupObservers()
     }
 }

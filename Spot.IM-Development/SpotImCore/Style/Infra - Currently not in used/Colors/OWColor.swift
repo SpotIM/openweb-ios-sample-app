@@ -77,7 +77,7 @@ struct OWColor {
                                darkThemeColor: OWDesignColors.D4)
             case .textColor6:
                 return OWColor(lightThemeColor: OWDesignColors.L4,
-                                darkThemeColor: OWDesignColors.D2)
+                               darkThemeColor: OWDesignColors.D2)
             case .backgroundColor1:
                 return OWColor(lightThemeColor: OWDesignColors.L1.withAlphaComponent(0.03),
                                darkThemeColor: OWDesignColors.D1.withAlphaComponent(0.1))

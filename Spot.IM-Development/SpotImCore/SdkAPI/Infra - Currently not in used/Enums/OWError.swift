@@ -9,12 +9,16 @@
 import Foundation
 
 #if NEW_API
-public enum OWError: Error {
+
+public enum OWError: Error, Codable {
+    case reportReasonSubmitError(title: String, description: String)
     case missingSpotId
+    case missingPostId
     case castingError(description: String)
     case preConversationFlow
     case conversationFlow
     case commentCreationFlow
+    case reportReasonFlow
     case commentThreadFlow
     case preConversationView
     case conversationView
@@ -30,8 +34,12 @@ public enum OWError: Error {
 
     public var description: String {
         switch self {
+        case .reportReasonSubmitError:
+            return "Error - submitting report reason failed"
         case .missingSpotId:
             return "Error - spotId must be set first under `OpenWeb.manager`"
+        case .missingPostId:
+            return "Error - postId must be set first via any of the APIs calls"
         case .castingError(let des):
             return des
         case .preConversationFlow:
@@ -62,16 +70,23 @@ public enum OWError: Error {
             return "Error - a user is already logged in"
         case .missingImplementation:
             return "Error - Not implemented yet."
+        case .reportReasonFlow:
+            return "Error - In the process of starting report reason flow"
         }
     }
 }
+
 #else
-enum OWError: Error {
+
+enum OWError: Error, Codable {
+    case reportReasonSubmitError(title: String, description: String)
     case missingSpotId
+    case missingPostId
     case castingError(description: String)
     case preConversationFlow
     case conversationFlow
     case commentCreationFlow
+    case reportReasonFlow
     case commentThreadFlow
     case preConversationView
     case conversationView
@@ -87,8 +102,12 @@ enum OWError: Error {
 
     var description: String {
         switch self {
+        case .reportReasonSubmitError:
+            return "Error - submitting report reason failed"
         case .missingSpotId:
             return "Error - spotId must be set first under `OpenWeb.manager`"
+        case .missingPostId:
+            return "Error - postId must be set first via any of the APIs calls"
         case .castingError(let des):
             return des
         case .preConversationFlow:
@@ -119,7 +138,10 @@ enum OWError: Error {
             return "Error - a user is already logged in"
         case .missingImplementation:
             return "Error - Not implemented yet."
+        case .reportReasonFlow:
+            return "Error - In the process of starting report reason flow"
         }
     }
 }
+
 #endif
