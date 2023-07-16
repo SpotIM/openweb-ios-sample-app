@@ -14,10 +14,24 @@ class OWCommentCreationReplySnippetView: UIView {
 
     }
 
-    fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewModel: OWCommentCreationReplySnippetViewModel
+    fileprivate lazy var replySnippetLabel: UILabel = {
+        return UILabel()
+            .font(OWFontBook.shared.font(style: .regular, size: 13.0))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .numberOfLines(2)
+            .enforceSemanticAttribute()
+    }()
 
-    init(with viewModel: OWCommentCreationReplySnippetViewModel) {
+    fileprivate lazy var bottomSeparatorView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate let disposeBag = DisposeBag()
+    fileprivate let viewModel: OWCommentCreationReplySnippetViewModeling
+
+    init(with viewModel: OWCommentCreationReplySnippetViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
@@ -35,7 +49,18 @@ class OWCommentCreationReplySnippetView: UIView {
 
 fileprivate extension OWCommentCreationReplySnippetView {
     func setupUI() {
+        addSubview(replySnippetLabel)
+        replySnippetLabel.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(16.0)
+        }
 
+        addSubview(bottomSeparatorView)
+        bottomSeparatorView.OWSnp.makeConstraints { make in
+            make.top.equalTo(replySnippetLabel.OWSnp.bottom).offset(12.0)
+            make.height.equalTo(1)
+            make.bottom.leading.trailing.equalToSuperview()
+        }
     }
 
     func setupObservers() {
@@ -43,7 +68,14 @@ fileprivate extension OWCommentCreationReplySnippetView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.replySnippetLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.bottomSeparatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
+
+        viewModel.outputs.replySnippetText
+            .bind(to: replySnippetLabel.rx.text)
+            .disposed(by: disposeBag)
+
     }
 
     func applyAccessibility() {

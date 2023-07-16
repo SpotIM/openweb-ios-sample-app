@@ -13,6 +13,7 @@ protocol OWCommentCreationReplySnippetViewModelingInputs {
 }
 
 protocol OWCommentCreationReplySnippetViewModelingOutputs {
+    var replySnippetText: Observable<String> { get }
 }
 
 protocol OWCommentCreationReplySnippetViewModeling {
@@ -29,10 +30,33 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentCreationType: OWCommentCreationType
+
+    var replySnippetText: Observable<String> {
+        guard let postId = OWManager.manager.postId else { return Observable.empty() }
+        var replyToComment: OWComment? = nil
+        switch commentCreationType {
+        case .edit(let comment):
+            if let parentId = comment.parentId,
+               let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+                replyToComment = parentComment
+            }
+        case .replyToComment(let originComment):
+            replyToComment = originComment
+        default:
+            break
+        }
+        if let originCommentText = replyToComment?.text?.text {
+            return Observable.just(originCommentText)
+        } else {
+            return Observable.empty()
+        }
+    }
 
     init(commentCreationType: OWCommentCreationType,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.commentCreationType = commentCreationType
         setupObservers()
     }
 }
