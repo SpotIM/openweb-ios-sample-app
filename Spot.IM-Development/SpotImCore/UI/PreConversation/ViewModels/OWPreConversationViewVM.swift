@@ -42,6 +42,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
+    var commentId: Observable<String> { get }
+    var parentId: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -198,6 +201,24 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
+        return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var commentIdChange = PublishSubject<String>()
+    var commentId: Observable<String> {
+        return commentIdChange
+            .asObservable()
+    }
+
+    fileprivate var parentIdChange = PublishSubject<String>()
+    var parentId: Observable<String> {
+        return parentIdChange
+            .asObservable()
+    }
+
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
@@ -316,17 +337,40 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.populateInitialUI()
             setupObservers()
     }
+
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
+        guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
+              let commentUserId = comment.userId,
+              let user = self.servicesProvider.usersService().get(userId: commentUserId)
+        else { return nil }
+
+        var replyToUser: SPUser? = nil
+        if let replyToCommentId = comment.parentId,
+           let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
+           let replyToUserId = replyToComment.userId {
+            replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
+        }
+
+        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
+
+        return OWCommentCellViewModel(data: OWCommentRequiredData(
+            comment: commentWithUpdatedStatus,
+            user: user,
+            replyToUser: replyToUser,
+            collapsableTextLineLimit: 0,
+            section: self.preConversationData.article.additionalSettings.section
+        ))
+    }
 }
 
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
@@ -389,8 +433,12 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 for (index, comment) in comments.enumerated() {
                     guard let user = responseUsers[comment.userId ?? ""] else { return }
+
+                    let reportedCommentsService = self.servicesProvider.reportedCommentsService()
+                    let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
+
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
-                        comment: comment,
+                        comment: commentWithUpdatedStatus,
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
@@ -474,6 +522,32 @@ fileprivate extension OWPreConversationViewViewModel {
                          return Observable.just(commentCellsVms)
                     }
                     .share()
+
+        // Responding to comments which are just reported
+        let reportService = servicesProvider.reportedCommentsService()
+        reportService.commentJustReported
+            .withLatestFrom(commentCellsVmsObservable) {
+                ($0, $1)
+            }
+            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+                // 1. Find if such comment VM exist for this comment ID
+                guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
+                    return .empty()
+                }
+                return Observable.just(commentCellVM.outputs.commentVM)
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { commentVM in
+                // 2. Update report locally
+                commentVM.inputs.reportCommentLocally()
+            })
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // 3. Update table view
+                self._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
@@ -631,7 +705,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
-                        break
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:

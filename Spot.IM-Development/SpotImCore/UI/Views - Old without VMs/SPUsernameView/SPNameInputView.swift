@@ -26,8 +26,8 @@ internal final class SPNameInputView: SPBaseView, SPTextInputView {
         usernameTextView.isFirstResponder
     }
 
-    let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
-    let boldFont = UIFont.preferred(style: .bold, of: Theme.fontSize)
+    let font = UIFont.spPreferred(style: .regular, of: Theme.fontSize)
+    let boldFont = UIFont.spPreferred(style: .bold, of: Theme.fontSize)
 
     // MARK: - Overrides
 

@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import RxSwift
 
 enum OWDeepLinkOptions {
-    case highlightComment(commentId: String)
+    case highlightComment(commentId: OWCommentId)
     case commentCreation(commentCreationData: OWCommentCreationRequiredData)
     case commentThread(commentThreadData: OWCommentThreadRequiredData)
     case authentication
+    case reportReason(reportData: OWReportReasonsRequiredData)
 }
