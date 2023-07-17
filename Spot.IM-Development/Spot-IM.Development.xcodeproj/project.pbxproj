@@ -194,6 +194,7 @@
 		24E66A232A65560700D5F4E9 /* OWAnalyticsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A222A65560700D5F4E9 /* OWAnalyticsComponent.swift */; };
 		24E66A252A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A242A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift */; };
 		24E66A272A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */; };
+		24E66A292A6563C200D5F4E9 /* OWAnalyticEventGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */; };
 		24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535D293E20BC00A74427 /* OWCommentCell.swift */; };
 		24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */; };
 		24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */; };
@@ -1133,6 +1134,7 @@
 		24E66A222A65560700D5F4E9 /* OWAnalyticsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsComponent.swift; sourceTree = "<group>"; };
 		24E66A242A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventServerGeneralData.swift; sourceTree = "<group>"; };
 		24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventServerAbTest.swift; sourceTree = "<group>"; };
+		24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventGroup.swift; sourceTree = "<group>"; };
 		24E7535D293E20BC00A74427 /* OWCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCell.swift; sourceTree = "<group>"; };
 		24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderView.swift; sourceTree = "<group>"; };
 		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -2602,7 +2604,9 @@
 				24F1753E2A5E8BD30078BCF6 /* OWLayoutStyle.swift */,
 				24E66A222A65560700D5F4E9 /* OWAnalyticsComponent.swift */,
 				24E66A242A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift */,
+				24993F8928CF058000452AF8 /* OWAnalyticEventType.swift */,
 				24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */,
+				24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -2714,7 +2718,6 @@
 				3D451B7929C788AF00CB3BE6 /* OWRouteringMode.swift */,
 				3D08E0742875CC7500E6F1AC /* OWPresentationalMode.swift */,
 				3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */,
-				24993F8928CF058000452AF8 /* OWAnalyticEventType.swift */,
 				3D611B9628C64533003960CE /* OWReadOnlyMode.swift */,
 				3D611B9B28C64791003960CE /* OWError.swift */,
 				3D611BAA28C7468F003960CE /* OWViewSourceType.swift */,
@@ -5929,6 +5932,7 @@
 				24EF864C29CB296C00327394 /* OWDesignColors.swift in Sources */,
 				3D20A39927B0243D003F8513 /* Debugging.swift in Sources */,
 				3D08E0702875BD4F00E6F1AC /* OWUIViews.swift in Sources */,
+				24E66A292A6563C200D5F4E9 /* OWAnalyticEventGroup.swift in Sources */,
 				4454189523685154001D0ED0 /* SPConfigurationSDKStatus.swift in Sources */,
 				161470D228609C9900CFBC9D /* SPCommentUserViewModel.swift in Sources */,
 				3DA2646A2951E3B200688FFF /* StringEncoding+Network.swift in Sources */,

@@ -101,7 +101,7 @@ internal extension UIDevice {
 }
 
 public extension UIDevice {
-
+    // https://stackoverflow.com/a/26962452
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)
