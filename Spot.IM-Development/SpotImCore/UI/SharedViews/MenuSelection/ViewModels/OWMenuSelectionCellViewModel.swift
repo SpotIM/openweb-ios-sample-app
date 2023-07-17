@@ -15,6 +15,7 @@ protocol OWMenuSelectionCellViewModelingInputs {
 
 protocol OWMenuSelectionCellViewModelingOutputs {
     var titleText: Observable<String> { get }
+    var titleIdentifier: String { get }
 }
 
 protocol OWMenuSelectionCellViewModeling {
@@ -36,7 +37,10 @@ class OWMenuSelectionCellViewModel:
             .asObserver()
     }
 
-    init(title: String) {
+    let titleIdentifier: String
+
+    init(title: String, titleIdentifier: String) {
+        self.titleIdentifier = titleIdentifier
         _titleText.onNext(title)
     }
 }

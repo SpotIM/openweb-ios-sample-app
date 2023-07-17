@@ -15,6 +15,7 @@ class OWAvatarView: UIView {
         static let avatarImageIdentifier = "avatar_image_id"
         static let avatarButtonIdentifier = "avatar_button_id"
         static let onlineIndicatorIdentifier = "online_indicator_id"
+        static let onlineGreenIndicatorIdentifier = "online_green_indicator_id"
 
         static let defaultAvatarImageName = "defaultAvatar"
 
@@ -33,6 +34,12 @@ class OWAvatarView: UIView {
             .contentMode(.scaleAspectFill)
     }()
 
+    fileprivate lazy var onlineGreenView = {
+        UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .green, themeStyle: .light))
+            .corner(radius: Metrics.innerIndicatorSize / 2)
+    }()
+
     fileprivate lazy var onlineIndicatorView: UIView = {
         let view = UIView()
             .corner(radius: Metrics.onlineIndicatorSize / 2)
@@ -42,12 +49,8 @@ class OWAvatarView: UIView {
             view.layer.backgroundFilters = [blurFilter]
         }
 
-        let greenView = UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .green, themeStyle: .light))
-            .corner(radius: Metrics.innerIndicatorSize / 2)
-
-        view.addSubview(greenView)
-        greenView.OWSnp.makeConstraints { make in
+        view.addSubview(onlineGreenView)
+        onlineGreenView.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.innerIndicatorSize)
             make.center.equalToSuperview()
         }
@@ -151,6 +154,7 @@ fileprivate extension OWAvatarView {
         avatarImageView.accessibilityIdentifier = Metrics.avatarImageIdentifier
         avatarButton.accessibilityIdentifier = Metrics.avatarButtonIdentifier
         onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
+        onlineGreenView.accessibilityIdentifier = Metrics.onlineGreenIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image
         avatarButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Profile image")
