@@ -41,6 +41,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func reportedCommentsService() -> OWReportedCommentsServicing
     func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
+    func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -152,6 +153,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWPresenterService()
     }()
 
+    fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
+        return OWCommentCreationRequestsService()
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -242,6 +247,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func presenterService() -> OWPresenterServicing {
         return _presenterService
+    }
+
+    func commentCreationRequestsService() -> OWCommentCreationRequestsServicing {
+        return _commentCreationRequestsService
     }
 }
 

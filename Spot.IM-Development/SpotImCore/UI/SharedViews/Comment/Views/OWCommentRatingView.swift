@@ -75,8 +75,8 @@ class OWCommentRatingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        applyAccessibility()
         setupUI()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -234,11 +234,7 @@ fileprivate extension OWCommentRatingView {
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-
-        rankUpButton.accessibilityTraits = .button
         rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Up vote button")
-
-        rankDownButton.accessibilityTraits = .button
         rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Down vote button")
     }
 }
