@@ -24,6 +24,13 @@ enum OWAnalyticEventType {
             return .loaded
         }
     }
+
+    var payload: [String: String] { // TODO
+        switch self {
+        case .fullConversationLoaded(let someProperty):
+            return ["some_property": someProperty]
+        }
+    }
 }
 
 enum OWAnalyticEventGroup: String {

@@ -21,9 +21,9 @@ struct OWAnalyticEvent: OWUpdaterProtocol {
     func analyticEventServer() -> OWAnalyticEventServer {
         let generalData = OWAnalyticEventServerGeneralData(
             articleUrl: articleUrl,
-            userStatus: userStatus, // TODO: should we get it or set it here?
-            userId: userId, // TODO: should we get it or set it here?
-            guid: guid, // TODO: should we get it or set it here?
+            userStatus: userStatus,
+            userId: userId,
+            guid: guid,
             layoutStyle: layoutStyle.rawValue
         )
 
@@ -32,6 +32,7 @@ struct OWAnalyticEvent: OWUpdaterProtocol {
             eventGroup: type.eventGroup.rawValue,
             eventTimestamp: timestamp,
             componentName: component.rawValue,
+            payload: type.payload,
             generalData: generalData
         )
     }
