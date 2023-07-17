@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWTextViewViewModelingInputs {
-    var becomeFirstResponderCall: PublishSubject<Void> { get }
+    var becomeFirstResponderCall: PublishSubject<Bool> { get }
     var resignFirstResponderCall: PublishSubject<Void> { get }
     var textViewTap: PublishSubject<Void> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
@@ -21,7 +21,7 @@ protocol OWTextViewViewModelingInputs {
 }
 
 protocol OWTextViewViewModelingOutputs {
-    var becomeFirstResponderCalled: Observable<Void> { get }
+    var becomeFirstResponderCalled: Observable<Bool> { get }
     var resignFirstResponderCalled: Observable<Void> { get }
     var textViewTapped: Observable<Void> { get }
     var textViewMaxCharecters: Int { get }
@@ -41,7 +41,7 @@ protocol OWTextViewViewModeling {
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
     fileprivate struct Metrics {
-        static let becomeFirstResponderDelay = 550
+        static let becomeFirstResponderDelay = 550 // miliseconds
     }
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
@@ -55,10 +55,17 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var charectersLimitEnabled = true
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
-    var becomeFirstResponderCall = PublishSubject<Void>()
-    var becomeFirstResponderCalled: Observable<Void> {
+    var becomeFirstResponderCall = PublishSubject<Bool>()
+    var becomeFirstResponderCalled: Observable<Bool> {
         return becomeFirstResponderCall
-            .delay(.milliseconds(Metrics.becomeFirstResponderDelay), scheduler: MainScheduler.instance)
+            .flatMap { withDelay -> Observable<Bool> in
+                if withDelay {
+                    return Observable.just(withDelay)
+                        .delay(.milliseconds(Metrics.becomeFirstResponderDelay), scheduler: MainScheduler.instance)
+                } else {
+                    return Observable.just(withDelay)
+                }
+            }
             .asObservable()
     }
 
