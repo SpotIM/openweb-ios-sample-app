@@ -32,7 +32,3 @@ enum OWAnalyticEventType {
         }
     }
 }
-
-enum OWAnalyticEventGroup: String {
-    case loaded
-}
