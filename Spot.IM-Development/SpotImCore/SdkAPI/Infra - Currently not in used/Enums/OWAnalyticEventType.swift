@@ -9,4 +9,12 @@
 import Foundation
 
 enum OWAnalyticEventType {
+    case eventNumberOne(someProperty: String)
+
+    var eventName: String {
+        switch self {
+        case .eventNumberOne:
+            return "event_number_one"
+        }
+    }
 }

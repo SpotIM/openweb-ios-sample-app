@@ -19,6 +19,7 @@ protocol BetaNewAPIViewModelingInputs {
     var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
     var testingPlaygroundTapped: PublishSubject<Void> { get }
+    var automationTapped: PublishSubject<Void> { get }
     var selectPresetTapped: PublishSubject<Void> { get }
     var doneSelectPresetTapped: PublishSubject<Void> { get }
     var settingsTapped: PublishSubject<Void> { get }
@@ -37,6 +38,7 @@ protocol BetaNewAPIViewModelingOutputs {
     var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<SDKConversationDataModel> { get }
     var openTestingPlayground: Observable<SDKConversationDataModel> { get }
+    var openAutomation: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
     var openAuthentication: Observable<Void> { get }
 }
@@ -65,6 +67,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling,
     let uiViewsTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
     let testingPlaygroundTapped = PublishSubject<Void>()
+    let automationTapped = PublishSubject<Void>()
     let selectPresetTapped = PublishSubject<Void>()
     let settingsTapped = PublishSubject<Void>()
     let authenticationTapped = PublishSubject<Void>()
@@ -109,6 +112,11 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling,
     fileprivate let _openTestingPlayground = PublishSubject<SDKConversationDataModel>()
     var openTestingPlayground: Observable<SDKConversationDataModel> {
         return _openTestingPlayground.asObservable()
+    }
+
+    fileprivate let _openAutomation = PublishSubject<SDKConversationDataModel>()
+    var openAutomation: Observable<SDKConversationDataModel> {
+        return _openAutomation.asObservable()
     }
 
     fileprivate let _openSettings = PublishSubject<Void>()
@@ -176,6 +184,11 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _openTestingPlayground)
             .disposed(by: disposeBag)
 
+        automationTapped
+            .withLatestFrom(conversationDataModelObservable)
+            .bind(to: _openAutomation)
+            .disposed(by: disposeBag)
+
         selectPresetTapped
             .map { true }
             .bind(to: _shouldShowSelectPreset)
@@ -193,6 +206,7 @@ fileprivate extension BetaNewAPIViewModel {
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),
                          testingPlaygroundTapped.voidify(),
+                         automationTapped.voidify(),
                          settingsTapped.voidify(),
                          authenticationTapped.voidify(),
                          enteredSpotId.voidify().skip(1),

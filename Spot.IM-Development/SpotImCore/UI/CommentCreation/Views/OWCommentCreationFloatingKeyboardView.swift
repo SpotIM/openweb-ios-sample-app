@@ -51,7 +51,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         let image = UIImage(spNamed: Metrics.sendImageIcon, supportDarkMode: false)
         return UIButton()
             .image(image, state: .normal)
-            .alpha(0)
+            .setAlpha(0)
             .enforceSemanticAttribute()
     }()
 
@@ -94,17 +94,18 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.bottom.equalTo(self.safeAreaLayoutGuide)
         }
 
-        footerView.addSubview(userAvatarView)
-        userAvatarView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(Metrics.userAvatarLeadingPadding)
-            make.bottom.equalToSuperview().inset(Metrics.userAvatarBottomPadding)
-            make.size.equalTo(Metrics.userAvatarSize)
-        }
-
         footerView.addSubview(textViewObject)
+        footerView.addSubview(userAvatarView)
+
         textViewObject.OWSnp.makeConstraints { make in
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.bottom.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+            make.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+        }
+
+        userAvatarView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(Metrics.userAvatarLeadingPadding)
+            make.centerY.equalTo(textViewObject.OWSnp.centerY)
+            make.size.equalTo(Metrics.userAvatarSize)
         }
 
         footerView.addSubview(sendButton)
@@ -112,7 +113,15 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.leading.equalTo(textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
             make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
             make.size.equalTo(Metrics.sendButtonSize)
-            make.centerY.equalToSuperview()
+            make.bottom.equalTo(textViewObject.OWSnp.bottom)
+        }
+
+        if case let OWAccessoryViewStrategy.bottomToolbar(toolbar) = viewModel.outputs.accessoryViewStrategy {
+            footerView.addSubview(toolbar)
+            toolbar.OWSnp.makeConstraints { make in
+                make.top.equalTo(textViewObject.OWSnp.bottom)
+                make.leading.trailing.bottom.equalToSuperview()
+            }
         }
     }
 

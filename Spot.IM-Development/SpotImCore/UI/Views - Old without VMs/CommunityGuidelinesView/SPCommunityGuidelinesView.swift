@@ -14,14 +14,14 @@ internal protocol SPCommunityGuidelinesViewDelegate {
     func customizeTextView(textView: UITextView, source: SPViewSourceType)
 }
 
-internal final class SPCommunityGuidelinesView: OWBaseView {
+internal final class SPCommunityGuidelinesView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
         static let titleTextIdentifier = "community_guidelines_title_text_id"
     }
 
-    private lazy var titleTextView: OWBaseTextView = .init()
-    private lazy var separatorView: OWBaseView = .init()
+    private lazy var titleTextView: SPBaseTextView = .init()
+    private lazy var separatorView: SPBaseView = .init()
 
     private var titleBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
@@ -86,7 +86,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
         if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
             htmlMutableAttributedString.addAttribute(
                 .font,
-                value: UIFont.preferred(style: .medium, of: Theme.titleFontSize),
+                value: UIFont.spPreferred(style: .medium, of: Theme.titleFontSize),
                 range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(

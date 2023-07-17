@@ -120,7 +120,7 @@ fileprivate extension OWCommentCreationCoordinator {
                 if dismiss {
                     self.router.dismiss(dismissStyle: .fade, completion: nil)
                 } else {
-                    self.router.pop(popStyle: .presentStyle, animated: true)
+                    self.router.pop(popStyle: .regular, animated: true)
                 }
             }
             .disposed(by: disposeBag)

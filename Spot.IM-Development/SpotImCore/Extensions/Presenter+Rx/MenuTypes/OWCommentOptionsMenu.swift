@@ -8,8 +8,9 @@
 
 import Foundation
 
-enum OWCommentOptionsMenu: OWMenuTypeProtocol {
+enum OWCommentOptionsMenu: String, OWMenuTypeProtocol {
     case reportComment
-
-    case cancel
+    case editComment
+    case deleteComment
+    case muteUser
 }
