@@ -18,6 +18,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
     var sendCommentIcon: UIImage? { get }
+    var accessoryViewStrategy: OWAccessoryViewStrategy { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -43,7 +44,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
-    var commentType: OWCommentCreationType
+    let commentType: OWCommentCreationType
+    let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeButtonTap = PublishSubject<Void>()
     var imageURLProvider: OWImageProviding
@@ -74,6 +76,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                                               isEditable: true,
                                               isAutoExpandable: true)
         commentType = commentCreationData.commentCreationType
+
+        // Setting accessoryViewStrategy
+        let style = commentCreationData.settings.commentCreationSettings.style
+        if case let OWCommentCreationStyle.floatingKeyboard(strategy) = style {
+            accessoryViewStrategy = strategy
+        } else {
+            accessoryViewStrategy = OWAccessoryViewStrategy.default
+        }
         setupObservers()
     }
 }
@@ -89,6 +99,21 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                     self.avatarViewVM.inputs.userInput.onNext(nil)
                 case .user(let user):
                     self.avatarViewVM.inputs.userInput.onNext(user)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        let commentCreationRequestsService = servicesProvider.commentCreationRequestsService()
+
+        commentCreationRequestsService.newRequest
+            .subscribe(onNext: { [weak self] request in
+                guard let self = self else { return }
+                switch request {
+                case .manipulateUserInputText(let manipulationTextCompletion):
+                    // TODO: change this part appropriately once we support floating keyboard style with a bottom toolbar
+                    let newRequestedText = manipulationTextCompletion(.success("This is a test"))
+                    let logger = self.servicesProvider.logger()
+                    logger.log(level: .verbose, "The new requested text is: \(newRequestedText)")
                 }
             })
             .disposed(by: disposeBag)

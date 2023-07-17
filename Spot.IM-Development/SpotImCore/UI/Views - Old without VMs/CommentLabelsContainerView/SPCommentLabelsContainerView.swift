@@ -13,11 +13,11 @@ protocol SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged()
 }
 
-internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecognizerDelegate {
+internal final class SPCommentLabelsContainerView: SPBaseView, UIGestureRecognizerDelegate {
 
-    var container: OWBaseStackView = .init()
+    var container: SPBaseStackView = .init()
     var labelsViews: [CommentLabelView] = .init()
-    var guidelineTextLabel: OWBaseLabel = .init()
+    var guidelineTextLabel: SPBaseLabel = .init()
     var maxLabels: Int = 1
     var selectedLabelsIds: [String] = .init()
 
@@ -74,7 +74,7 @@ internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecogniz
 
     private func configureGuidelineText() {
         guidelineTextLabel.textColor = .spForeground4
-        guidelineTextLabel.font = UIFont.preferred(style: .medium, of: Theme.guidelineTextFontSize)
+        guidelineTextLabel.font = UIFont.spPreferred(style: .medium, of: Theme.guidelineTextFontSize)
         guidelineTextLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
         }

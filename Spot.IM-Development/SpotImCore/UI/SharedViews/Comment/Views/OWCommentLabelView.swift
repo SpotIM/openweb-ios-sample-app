@@ -12,7 +12,7 @@ import RxSwift
 class OWCommentLabelView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_label_id"
-
+        static let labelIdentifier = "comment_label_label_id"
         static let cornerRaius: CGFloat = 3
         static let horizontalMargin: CGFloat = 10.0
         static let fontSize: CGFloat = 13.0
@@ -40,7 +40,7 @@ class OWCommentLabelView: UIView {
     }()
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
     }()
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
@@ -53,8 +53,8 @@ class OWCommentLabelView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
+        applyAccessibility()
     }
 
     func configure(viewModel: OWCommentLabelViewModeling) {
@@ -69,6 +69,11 @@ class OWCommentLabelView: UIView {
 }
 
 fileprivate extension OWCommentLabelView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        label.accessibilityIdentifier = Metrics.labelIdentifier
+    }
+
     func setupUI() {
         addSubviews(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in

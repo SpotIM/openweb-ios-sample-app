@@ -12,7 +12,7 @@ class SPBaseTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
+        semanticContentAttribute = SPLocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
 
         selectionStyle = .none

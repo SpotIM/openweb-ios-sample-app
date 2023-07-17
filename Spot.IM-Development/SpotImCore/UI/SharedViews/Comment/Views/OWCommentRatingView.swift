@@ -55,7 +55,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -63,7 +63,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -75,8 +75,8 @@ class OWCommentRatingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        applyAccessibility()
         setupUI()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -234,11 +234,7 @@ fileprivate extension OWCommentRatingView {
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-
-        rankUpButton.accessibilityTraits = .button
         rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Up vote button")
-
-        rankDownButton.accessibilityTraits = .button
         rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Down vote button")
     }
 }
