@@ -29,6 +29,7 @@ internal struct OWComment: Decodable, Equatable {
     var hasNext: Bool
     var edited: Bool
     var deleted: Bool
+    var reported: Bool = false
     var published: Bool
 
     var rank: Rank?
@@ -47,6 +48,14 @@ internal struct OWComment: Decodable, Equatable {
 
     mutating func setIsEdited(_ editedStatus: Bool) {
         edited = editedStatus
+    }
+
+    mutating func setIsDeleted(_ isDeleted: Bool) {
+        deleted = isDeleted
+    }
+
+    mutating func setIsReported(_ isReported: Bool) {
+        reported = isReported
     }
 
     var status: CommentStatus? {

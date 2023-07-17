@@ -8,10 +8,8 @@
 
 import Foundation
 
-enum OWSortMenu: OWMenuTypeProtocol {
+enum OWSortMenu: String, OWMenuTypeProtocol {
     case sortBest
     case sortNewest
     case sortOldest
-
-    case cancel
 }

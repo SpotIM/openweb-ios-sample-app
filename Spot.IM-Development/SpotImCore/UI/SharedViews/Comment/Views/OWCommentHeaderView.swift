@@ -21,9 +21,12 @@ class OWCommentHeaderView: UIView {
         static let subscriberVerticalPadding: CGFloat = 7
         static let optionButtonSize: CGFloat = 20
         static let badgeHorizontalInset: CGFloat = 4
+        static let commentReasonLabelFontSize: CGFloat = 17
+        static let commentReasonLabelLineSpacing: CGFloat = 3.5
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
+        static let userNameSubtitleLabelIdentifier = "comment_header_user_name_subtitle_label_id"
         static let badgeTagContainerIdentifier = "comment_header_user_badge_tag_container_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
@@ -98,8 +101,8 @@ class OWCommentHeaderView: UIView {
         return UILabel()
             .isHidden(true)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.preferred(style: .italic, of: 17))
-            .lineSpacing(3.5)
+            .font(OWFontBook.shared.font(style: .italic, size: Metrics.commentReasonLabelFontSize))
+            .lineSpacing(Metrics.commentReasonLabelLineSpacing)
             .enforceSemanticAttribute()
     }()
 
@@ -230,17 +233,18 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
 
+        optionButton.rx.tap
+            .map { [weak self] in
+                return self?.optionButton
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.tapMore)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowSubtitleSeperator
             .map { !$0 }
             .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.isHidden)
             .disposed(by: disposeBag)
-
-        optionButton.rx.tap.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.inputs.tapMore.onNext(self.optionButton)
-            // TODO: handle tap!
-        })
-        .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
             .bind(to: hiddenCommentReasonLabel.rx.text)
@@ -312,7 +316,8 @@ fileprivate extension OWCommentHeaderView {
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
         optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Options menu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
+        subtitleLabel.accessibilityIdentifier = Metrics.userNameSubtitleLabelIdentifier
     }
 }
