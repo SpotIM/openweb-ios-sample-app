@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWTextViewViewModelingInputs {
+    // becomeFirstResponderCall has bool for delaying the keyboard
     var becomeFirstResponderCall: PublishSubject<Bool> { get }
     var resignFirstResponderCall: PublishSubject<Void> { get }
     var textViewTap: PublishSubject<Void> { get }
@@ -55,16 +56,14 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var charectersLimitEnabled = true
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
+    // becomeFirstResponderCall has bool for delaying the keyboard
     var becomeFirstResponderCall = PublishSubject<Bool>()
     var becomeFirstResponderCalled: Observable<Void> {
         return becomeFirstResponderCall
             .flatMap { withDelay -> Observable<Void> in
-                if withDelay {
-                    return Observable.just(())
-                        .delay(.milliseconds(Metrics.becomeFirstResponderDelay), scheduler: MainScheduler.instance)
-                } else {
-                    return Observable.just(())
-                }
+                return Observable.just(())
+                    .delay(.milliseconds(withDelay ? Metrics.becomeFirstResponderDelay : 0),
+                           scheduler: MainScheduler.instance)
             }
             .asObservable()
     }
