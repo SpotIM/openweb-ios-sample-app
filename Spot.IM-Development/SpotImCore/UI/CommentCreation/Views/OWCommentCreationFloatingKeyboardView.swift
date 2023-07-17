@@ -70,7 +70,8 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         setupViews()
         setupObservers()
         applyAccessibility()
-        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext()
+        // false for becomeFirstResponder without delay
+        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(false)
     }
 
     private func applyAccessibility() {
@@ -100,6 +101,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         textViewObject.OWSnp.makeConstraints { make in
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
             make.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+            make.bottom.equalToSuperview().inset(Metrics.textViewVerticalPadding)
         }
 
         userAvatarView.OWSnp.makeConstraints { make in
@@ -116,13 +118,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
         }
 
-        if case let OWAccessoryViewStrategy.bottomToolbar(toolbar) = viewModel.outputs.accessoryViewStrategy {
-            footerView.addSubview(toolbar)
-            toolbar.OWSnp.makeConstraints { make in
-                make.top.equalTo(textViewObject.OWSnp.bottom)
-                make.leading.trailing.bottom.equalToSuperview()
-            }
-        }
+//        if case let OWAccessoryViewStrategy.bottomToolbar(toolbar) = viewModel.outputs.accessoryViewStrategy {
+//            footerView.addSubview(toolbar)
+//            toolbar.OWSnp.makeConstraints { make in
+//                make.top.equalTo(textViewObject.OWSnp.bottom)
+//                make.leading.trailing.bottom.equalToSuperview()
+//            }
+//        }
     }
 
     func setupObservers() {
