@@ -21,7 +21,7 @@ protocol OWTextViewViewModelingInputs {
 }
 
 protocol OWTextViewViewModelingOutputs {
-    var becomeFirstResponderCalled: Observable<Bool> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
     var resignFirstResponderCalled: Observable<Void> { get }
     var textViewTapped: Observable<Void> { get }
     var textViewMaxCharecters: Int { get }
@@ -56,14 +56,14 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     var becomeFirstResponderCall = PublishSubject<Bool>()
-    var becomeFirstResponderCalled: Observable<Bool> {
+    var becomeFirstResponderCalled: Observable<Void> {
         return becomeFirstResponderCall
-            .flatMap { withDelay -> Observable<Bool> in
+            .flatMap { withDelay -> Observable<Void> in
                 if withDelay {
-                    return Observable.just(withDelay)
+                    return Observable.just(())
                         .delay(.milliseconds(Metrics.becomeFirstResponderDelay), scheduler: MainScheduler.instance)
                 } else {
-                    return Observable.just(withDelay)
+                    return Observable.just(())
                 }
             }
             .asObservable()
@@ -101,15 +101,6 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var hidePlaceholder: Observable<Bool> {
         return textViewCharectersCount
             .map { $0 > 0 }
-    }
-
-    var expandableHeightChanged = PublishSubject<Void>()
-    var expandableHeight: Observable<CGFloat> {
-        return expandableHeightChanged
-            .map { [weak self] _ in
-                guard let self = self else { return 0 }
-                 return 0
-            }
     }
 
     init(textViewMaxCharecters: Int = 0,
