@@ -52,7 +52,7 @@ class OWTestingBlueFirstLevel: UIView {
 
     fileprivate var viewModel: OWTestingBlueFirstLevelViewModeling!
     fileprivate var disposeBag = DisposeBag()
-    fileprivate var labelsHeightConstraint: OWConstraint?
+    fileprivate var heightConstraint: OWConstraint?
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -78,7 +78,7 @@ fileprivate extension OWTestingBlueFirstLevel {
             .corner(radius: Metrics.roundCorners)
 
         self.OWSnp.makeConstraints { make in
-            labelsHeightConstraint = make.height.equalTo(Metrics.collapsedCellContentHeight).constraint
+            heightConstraint = make.height.equalTo(Metrics.collapsedCellContentHeight).constraint
         }
 
         self.addSubview(lblIdentifier)
@@ -124,7 +124,7 @@ fileprivate extension OWTestingBlueFirstLevel {
                     height = Metrics.expandedCellContentHeight
                 }
 
-                self.labelsHeightConstraint?.update(offset: height)
+                self.heightConstraint?.update(offset: height)
             })
             .disposed(by: disposeBag)
 
@@ -168,7 +168,7 @@ fileprivate extension OWTestingBlueFirstLevel {
                     height = Metrics.expandedCellContentHeight
                 }
 
-                self.labelsHeightConstraint?.update(offset: height)
+                self.heightConstraint?.update(offset: height)
             })
             .disposed(by: disposeBag)
     }
