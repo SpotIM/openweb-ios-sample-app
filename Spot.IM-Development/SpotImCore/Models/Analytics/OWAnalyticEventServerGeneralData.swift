@@ -1,24 +1,13 @@
 //
-//  OWAnalyticEventServer.swift
+//  OWAnalyticEventServerGeneralData.swift
 //  SpotImCore
 //
-//  Created by  Nogah Melamed on 12/07/2023.
+//  Created by  Nogah Melamed on 17/07/2023.
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
 import Foundation
 import UIKit
-
-struct OWAnalyticEventServer: Decodable {
-    var eventName: String
-    var eventGroup: String
-    var eventTimestamp: String
-    var productName: String = "conversation"
-    var componentName: String
-    var payload: [String: String] // TODO
-    var generalData: OWAnalyticEventServerGeneralData
-    var abTests: OWAnalyticEventServerAbTest = OWAnalyticEventServerAbTest()
-}
 
 struct OWAnalyticEventServerGeneralData: Decodable {
     var spotId: String = OWManager.manager.spotId
@@ -36,9 +25,4 @@ struct OWAnalyticEventServerGeneralData: Decodable {
     var hostAppScheme: String = Bundle.main.bundleIdentifier ?? ""
     var deviceType: String = UIDevice.modelName // TODO: where do we get it from?
     var layoutStyle: String
-}
-
-struct OWAnalyticEventServerAbTest: Decodable {
-    var selectedTests: [Dictionary<String, String>] = []
-    var affectiveTests: [Dictionary<String, String>] = []
 }
