@@ -21,6 +21,9 @@ enum OWAnalyticEventType {
     case commentMenuEditClicked(commentId: OWCommentId)
     case editCommentClicked(commentId: OWCommentId)
     case postCommentClicked
+    case postReplyClicked(replyToCommentId: OWCommentId)
+    case signUpToPostClicked
+    case commentReadMoreClicked(commentId: OWCommentId)
 
     var eventName: String {
         switch self {
@@ -48,6 +51,12 @@ enum OWAnalyticEventType {
             return "editCommentClicked"
         case .postCommentClicked:
             return "postCommentClicked"
+        case .postReplyClicked:
+            return "postReplyClicked"
+        case .signUpToPostClicked:
+            return "signUpToPostClicked"
+        case .commentReadMoreClicked:
+            return "commentReadMoreClicked"
         }
     }
 
@@ -67,8 +76,12 @@ enum OWAnalyticEventType {
              .commentMenuEditClicked:
             return .commentMenu
         case .editCommentClicked,
-             .postCommentClicked:
+             .postCommentClicked,
+             .postReplyClicked,
+             .signUpToPostClicked:
             return .commentCreation
+        case .commentReadMoreClicked:
+            return .commentInteraction
         }
     }
 
@@ -78,7 +91,8 @@ enum OWAnalyticEventType {
              .preConversationLoaded,
              .fullConversationViewed,
              .preConversationViewed,
-             .postCommentClicked:
+             .postCommentClicked,
+             .signUpToPostClicked:
             return OWAnalyticEventPayload(payloadDictionary: [:])
         case .commentMenuClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
@@ -93,6 +107,10 @@ enum OWAnalyticEventType {
         case .commentMenuEditClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         case .editCommentClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+        case .postReplyClicked(let replyToCommentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
+        case .commentReadMoreClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         }
     }
