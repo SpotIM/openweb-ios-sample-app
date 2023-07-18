@@ -37,6 +37,11 @@ enum OWAnalyticEventType {
     case sortByChanged(previousSort: OWSortOption, selectedSort: OWSortOption)
     case userProfileClicked(userId: String)
     case myProfileClicked(source: OWAvatarSource)
+    case createCommentCTAClicked
+    case replyClicked(replyToCommentId: OWCommentId)
+    case commentCreationClosePage
+    case commentCreationLeavePage
+    case commentCreationContinueWriting
 
     var eventName: String {
         switch self {
@@ -96,6 +101,16 @@ enum OWAnalyticEventType {
             return "userProfileClicked"
         case .myProfileClicked:
             return "myProfileClicked"
+        case .createCommentCTAClicked:
+            return "createCommentCTAClicked"
+        case .replyClicked:
+            return "replyClicked"
+        case .commentCreationClosePage:
+            return "commentCreationClosePage"
+        case .commentCreationLeavePage:
+            return "commentCreationLeavePage"
+        case .commentCreationContinueWriting:
+            return "commentCreationContinueWriting"
         }
     }
 
@@ -103,7 +118,8 @@ enum OWAnalyticEventType {
         switch self {
         case .fullConversationLoaded,
              .preConversationLoaded,
-             .loadMoreComments:
+             .loadMoreComments,
+             .createCommentCTAClicked: // TODO: createCommentCTAClicked?
             return .loaded
         case .fullConversationViewed,
              .preConversationViewed:
@@ -118,7 +134,10 @@ enum OWAnalyticEventType {
         case .editCommentClicked,
              .postCommentClicked,
              .postReplyClicked,
-             .signUpToPostClicked:
+             .signUpToPostClicked,
+             .commentCreationClosePage,
+             .commentCreationLeavePage,
+             .commentCreationContinueWriting:
             return .commentCreation
         case .commentShareClicked,
              .commentReadMoreClicked,
@@ -127,7 +146,8 @@ enum OWAnalyticEventType {
              .commentRankUpUndoButtonClicked,
              .commentRankDownUndoButtonClicked,
              .loadMoreRepliesClicked,
-             .hideMoreRepliesClicked:
+             .hideMoreRepliesClicked,
+             .replyClicked:
             return .commentInteraction
         case .sortByClicked,
              .sortByClosed,
@@ -146,7 +166,11 @@ enum OWAnalyticEventType {
              .fullConversationViewed,
              .preConversationViewed,
              .postCommentClicked,
-             .signUpToPostClicked:
+             .signUpToPostClicked,
+             .createCommentCTAClicked,
+             .commentCreationClosePage,
+             .commentCreationLeavePage,
+             .commentCreationContinueWriting:
             return OWAnalyticEventPayload(payloadDictionary: [:])
         case .commentMenuClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
@@ -192,6 +216,8 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["userId": userId])
         case .myProfileClicked(let source):
             return OWAnalyticEventPayload(payloadDictionary: ["source": source])
+        case .replyClicked(let replyToCommentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
         }
     }
 }
