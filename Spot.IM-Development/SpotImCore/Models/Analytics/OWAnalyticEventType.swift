@@ -25,10 +25,10 @@ enum OWAnalyticEventType {
         }
     }
 
-    var payload: [String: String] { // TODO
+    var payload: OWAnalyticEventPayload {
         switch self {
         case .fullConversationLoaded(let someProperty):
-            return ["some_property": someProperty]
+            return OWAnalyticEventPayload(payloadDictionary: ["some_property": someProperty])
         }
     }
 }
