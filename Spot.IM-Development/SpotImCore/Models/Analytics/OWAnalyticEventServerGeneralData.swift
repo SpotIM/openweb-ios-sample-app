@@ -23,6 +23,6 @@ struct OWAnalyticEventServerGeneralData: Encodable {
     var sdkVersion: String = OWSettingsWrapper.sdkVersion() ?? ""
     var hostAppVersion: String = Bundle.main.shortVersion ?? ""
     var hostAppScheme: String = Bundle.main.bundleIdentifier ?? ""
-    var deviceType: String = UIDevice.modelName
+    var deviceType: String = UIDevice.current.deviceName()
     var layoutStyle: String
 }
