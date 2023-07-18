@@ -23,6 +23,7 @@ enum OWAnalyticEventType {
     case postCommentClicked
     case postReplyClicked(replyToCommentId: OWCommentId)
     case signUpToPostClicked
+    case commentShareClicked(commentId: OWCommentId)
     case commentReadMoreClicked(commentId: OWCommentId)
     case commentRankUpButtonClicked(commentId: OWCommentId)
     case commentRankDownButtonClicked(commentId: OWCommentId)
@@ -65,6 +66,8 @@ enum OWAnalyticEventType {
             return "postReplyClicked"
         case .signUpToPostClicked:
             return "signUpToPostClicked"
+        case .commentShareClicked:
+            return "commentShareClicked"
         case .commentReadMoreClicked:
             return "commentReadMoreClicked"
         case .commentRankUpButtonClicked:
@@ -111,7 +114,8 @@ enum OWAnalyticEventType {
              .postReplyClicked,
              .signUpToPostClicked:
             return .commentCreation
-        case .commentReadMoreClicked,
+        case .commentShareClicked,
+             .commentReadMoreClicked,
              .commentRankUpButtonClicked,
              .commentRankDownButtonClicked,
              .commentRankUpUndoButtonClicked,
@@ -151,6 +155,8 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         case .postReplyClicked(let replyToCommentId):
             return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
+        case .commentShareClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         case .commentReadMoreClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         case .commentRankUpButtonClicked(let commentId):
