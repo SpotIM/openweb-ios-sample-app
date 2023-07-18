@@ -1225,17 +1225,13 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
     }
 
-    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEventServer {
-        let event = servicesProvider
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
                 articleUrl: conversationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
-
-        return servicesProvider
-            .analyticsEventCreatorService()
-            .serverAnalyticEvent(from: event)
     }
 }
