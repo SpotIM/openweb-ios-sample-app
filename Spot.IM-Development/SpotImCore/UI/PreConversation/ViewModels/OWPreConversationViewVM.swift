@@ -892,11 +892,11 @@ fileprivate extension OWPreConversationViewViewModel {
         }
     }
 
-    func getServerEvent(for event: OWAnalyticEventType) -> OWAnalyticEventServer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEventServer {
         return servicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
-                for: event,
+                for: eventType,
                 articleUrl: preConversationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
                 component: .preConversation)
