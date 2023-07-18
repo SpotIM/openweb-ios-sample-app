@@ -31,6 +31,9 @@ enum OWAnalyticEventType {
     case loadMoreComments(page: Int, commentsPerPage: Int)
     case loadMoreRepliesClicked(commentId: OWCommentId)
     case hideMoreRepliesClicked(commentId: OWCommentId)
+    case sortByClicked(currentSort: OWSortOption)
+    case sortByClosed(currentSort: OWSortOption)
+    case sortByChanged(previousSort: OWSortOption, selectedSort: OWSortOption)
 
     var eventName: String {
         switch self {
@@ -78,6 +81,12 @@ enum OWAnalyticEventType {
             return "loadMoreRepliesClicked"
         case .hideMoreRepliesClicked:
             return "hideMoreRepliesClicked"
+        case .sortByClicked:
+            return "sortByClicked"
+        case .sortByClosed:
+            return "sortByClosed"
+        case .sortByChanged:
+            return "sortByChanged"
         }
     }
 
@@ -110,6 +119,10 @@ enum OWAnalyticEventType {
              .loadMoreRepliesClicked,
              .hideMoreRepliesClicked:
             return .commentInteraction
+        case .sortByClicked,
+             .sortByClosed,
+             .sortByChanged:
+            return .sortMenu
         }
     }
 
@@ -154,6 +167,12 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         case .hideMoreRepliesClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+        case .sortByClicked(let currentSort):
+            return OWAnalyticEventPayload(payloadDictionary: ["currentSort": currentSort.rawValue])
+        case .sortByClosed(let currentSort):
+            return OWAnalyticEventPayload(payloadDictionary: ["currentSort": currentSort.rawValue])
+        case .sortByChanged(let previousSort, let selectedSort):
+            return OWAnalyticEventPayload(payloadDictionary: ["previousSort": previousSort.rawValue, "selectedSort": selectedSort.rawValue])
         }
     }
 }

@@ -14,4 +14,5 @@ enum OWAnalyticEventGroup: String {
     case commentMenu
     case commentCreation
     case commentInteraction
+    case sortMenu
 }
