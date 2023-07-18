@@ -196,6 +196,7 @@
 		24E66A272A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */; };
 		24E66A292A6563C200D5F4E9 /* OWAnalyticEventGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */; };
 		24E66A2B2A66594900D5F4E9 /* OWAnalyticEventPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A2A2A66594900D5F4E9 /* OWAnalyticEventPayload.swift */; };
+		24E66A312A66B41400D5F4E9 /* OWAvatarSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A302A66B41400D5F4E9 /* OWAvatarSource.swift */; };
 		24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535D293E20BC00A74427 /* OWCommentCell.swift */; };
 		24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */; };
 		24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */; };
@@ -1137,6 +1138,7 @@
 		24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventServerAbTest.swift; sourceTree = "<group>"; };
 		24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventGroup.swift; sourceTree = "<group>"; };
 		24E66A2A2A66594900D5F4E9 /* OWAnalyticEventPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventPayload.swift; sourceTree = "<group>"; };
+		24E66A302A66B41400D5F4E9 /* OWAvatarSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAvatarSource.swift; sourceTree = "<group>"; };
 		24E7535D293E20BC00A74427 /* OWCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCell.swift; sourceTree = "<group>"; };
 		24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderView.swift; sourceTree = "<group>"; };
 		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -2610,6 +2612,7 @@
 				24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */,
 				24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */,
 				24E66A2A2A66594900D5F4E9 /* OWAnalyticEventPayload.swift */,
+				24E66A302A66B41400D5F4E9 /* OWAvatarSource.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -6043,6 +6046,7 @@
 				3DFA6BAB29217B870047E313 /* OWUserAuthenticationStatusCompletion.swift in Sources */,
 				4454188B23685154001D0ED0 /* SPInternalAuthenticationRequests.swift in Sources */,
 				8DE52F5129EBEBAC00D3985C /* OWSpacerViewModel.swift in Sources */,
+				24E66A312A66B41400D5F4E9 /* OWAvatarSource.swift in Sources */,
 				247C017F27FED861006A3962 /* OWCommentStatusIndicationViewModel.swift in Sources */,
 				3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */,
 				445418B523685154001D0ED0 /* SPConstants.swift in Sources */,

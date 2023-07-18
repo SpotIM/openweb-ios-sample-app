@@ -35,6 +35,8 @@ enum OWAnalyticEventType {
     case sortByClicked(currentSort: OWSortOption)
     case sortByClosed(currentSort: OWSortOption)
     case sortByChanged(previousSort: OWSortOption, selectedSort: OWSortOption)
+    case userProfileClicked(userId: String)
+    case myProfileClicked(source: OWAvatarSource)
 
     var eventName: String {
         switch self {
@@ -90,6 +92,10 @@ enum OWAnalyticEventType {
             return "sortByClosed"
         case .sortByChanged:
             return "sortByChanged"
+        case .userProfileClicked:
+            return "userProfileClicked"
+        case .myProfileClicked:
+            return "myProfileClicked"
         }
     }
 
@@ -127,6 +133,9 @@ enum OWAnalyticEventType {
              .sortByClosed,
              .sortByChanged:
             return .sortMenu
+        case .userProfileClicked,
+             .myProfileClicked:
+            return .profile
         }
     }
 
@@ -179,6 +188,10 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["currentSort": currentSort.rawValue])
         case .sortByChanged(let previousSort, let selectedSort):
             return OWAnalyticEventPayload(payloadDictionary: ["previousSort": previousSort.rawValue, "selectedSort": selectedSort.rawValue])
+        case .userProfileClicked(let userId):
+            return OWAnalyticEventPayload(payloadDictionary: ["userId": userId])
+        case .myProfileClicked(let source):
+            return OWAnalyticEventPayload(payloadDictionary: ["source": source])
         }
     }
 }
