@@ -13,29 +13,5 @@ struct OWAnalyticEvent: OWUpdaterProtocol {
     let timestamp: Double
     let articleUrl: String
     let layoutStyle: OWLayoutStyle
-    let component: OWAnalyticsComponent
-    let userStatus: String
-    let userId: String
-    let guid: String
-}
-
-extension OWAnalyticEvent {
-    func analyticEventServer() -> OWAnalyticEventServer {
-        let generalData = OWAnalyticEventServerGeneralData(
-            articleUrl: articleUrl,
-            userStatus: userStatus,
-            userId: userId,
-            guid: guid,
-            layoutStyle: layoutStyle.rawValue
-        )
-
-        return OWAnalyticEventServer(
-            eventName: type.eventName,
-            eventGroup: type.eventGroup.rawValue,
-            eventTimestamp: timestamp,
-            componentName: component.rawValue,
-            payload: type.payload,
-            generalData: generalData
-        )
-    }
+    let component: OWViewSourceType
 }

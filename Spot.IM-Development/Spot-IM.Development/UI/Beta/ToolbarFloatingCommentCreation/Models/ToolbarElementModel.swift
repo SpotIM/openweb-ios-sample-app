@@ -10,5 +10,6 @@ import Foundation
 
 struct ToolbarElementModel {
     let emoji: String
+    let accessibility: String
     let action: ToolbarElementAction
 }
