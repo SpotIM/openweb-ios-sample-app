@@ -9,12 +9,12 @@
 import Foundation
 
 struct OWAnalyticEventServer: Encodable {
-    var eventName: String
-    var eventGroup: String
-    var eventTimestamp: Double
-    var productName: String = "conversation"
-    var componentName: String
-    var payload: OWAnalyticEventPayload
-    var generalData: OWAnalyticEventServerGeneralData
-    var abTests: OWAnalyticEventServerAbTest = OWAnalyticEventServerAbTest()
+    let eventName: String
+    let eventGroup: String
+    let eventTimestamp: Double
+    let productName: OWProductSource
+    let componentName: String
+    let payload: OWAnalyticEventPayload
+    let generalData: OWAnalyticEventServerGeneralData
+    let abTests: OWAnalyticEventServerAbTest
 }
