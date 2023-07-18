@@ -196,6 +196,7 @@
 		24E66A272A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */; };
 		24E66A292A6563C200D5F4E9 /* OWAnalyticEventGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */; };
 		24E66A2B2A66594900D5F4E9 /* OWAnalyticEventPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A2A2A66594900D5F4E9 /* OWAnalyticEventPayload.swift */; };
+		24E66A2D2A66908400D5F4E9 /* OWProductSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E66A2C2A66908400D5F4E9 /* OWProductSource.swift */; };
 		24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535D293E20BC00A74427 /* OWCommentCell.swift */; };
 		24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */; };
 		24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */; };
@@ -1137,6 +1138,7 @@
 		24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventServerAbTest.swift; sourceTree = "<group>"; };
 		24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventGroup.swift; sourceTree = "<group>"; };
 		24E66A2A2A66594900D5F4E9 /* OWAnalyticEventPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventPayload.swift; sourceTree = "<group>"; };
+		24E66A2C2A66908400D5F4E9 /* OWProductSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWProductSource.swift; sourceTree = "<group>"; };
 		24E7535D293E20BC00A74427 /* OWCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCell.swift; sourceTree = "<group>"; };
 		24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderView.swift; sourceTree = "<group>"; };
 		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -2610,6 +2612,7 @@
 				24E66A262A65566D00D5F4E9 /* OWAnalyticEventServerAbTest.swift */,
 				24E66A282A6563C200D5F4E9 /* OWAnalyticEventGroup.swift */,
 				24E66A2A2A66594900D5F4E9 /* OWAnalyticEventPayload.swift */,
+				24E66A2C2A66908400D5F4E9 /* OWProductSource.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -6302,6 +6305,7 @@
 				1628A75D28EB0E770019B5EC /* OWCommentCreationView.swift in Sources */,
 				9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */,
 				445417FD23685144001D0ED0 /* NavigationController+Appearance.swift in Sources */,
+				24E66A2D2A66908400D5F4E9 /* OWProductSource.swift in Sources */,
 				24D7C25529E5302F001F148B /* OWAvatarView.swift in Sources */,
 				169D58E227D11925009936F3 /* OWVotesType.swift in Sources */,
 				4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */,
