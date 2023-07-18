@@ -18,6 +18,10 @@ class CommentCreationToolbar: UIView {
         static let height: CGFloat = 80
     }
 
+    fileprivate struct Metrics {
+        static let accessibility = "comment_creation_toolbar_id"
+    }
+
     fileprivate lazy var toolbarCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -41,6 +45,7 @@ class CommentCreationToolbar: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupUI()
+        applyAccessibility()
         setupObservers()
     }
 }
@@ -52,6 +57,10 @@ fileprivate extension CommentCreationToolbar {
             make.edges.equalToSuperview()
             make.height.equalTo(ToolbarMetrics.height)
         }
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.accessibility
     }
 
     func setupObservers() {

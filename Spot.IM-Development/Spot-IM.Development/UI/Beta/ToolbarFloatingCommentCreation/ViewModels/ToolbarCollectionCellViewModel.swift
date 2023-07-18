@@ -16,6 +16,7 @@ protocol ToolbarCollectionCellViewModelingInputs {}
 protocol ToolbarCollectionCellViewModelingOutputs {
     var emoji: Observable<String> { get }
     var action: ToolbarElementAction { get }
+    var accessibilityPrefix: String { get }
 }
 
 protocol ToolbarCollectionCellViewModeling {
@@ -39,6 +40,10 @@ class ToolbarCollectionCellViewModel: ToolbarCollectionCellViewModeling,
 
     var action: ToolbarElementAction {
         return model.action
+    }
+
+    var accessibilityPrefix: String {
+        model.accessibility
     }
 
     init(model: ToolbarElementModel) {
