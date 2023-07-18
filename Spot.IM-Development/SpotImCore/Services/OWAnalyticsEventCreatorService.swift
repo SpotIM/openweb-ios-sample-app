@@ -18,7 +18,7 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
     fileprivate var userStatus: String = ""
     fileprivate var userId: String = ""
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding) {
@@ -34,7 +34,7 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
             articleUrl: articleUrl,
             layoutStyle: layoutStyle,
             component: component
-            )
+        )
     }
 
     func serverAnalyticEvent(from event: OWAnalyticEvent) -> OWAnalyticEventServer {
