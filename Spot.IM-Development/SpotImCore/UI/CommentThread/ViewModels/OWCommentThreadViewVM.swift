@@ -924,4 +924,14 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
     }
+
+    func getServerEvent(for event: OWAnalyticEventType) -> OWAnalyticEventServer {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: event,
+                articleUrl: commentThreadData.article.url.absoluteString,
+                layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
+                component: .commentCreation)
+    }
 }
