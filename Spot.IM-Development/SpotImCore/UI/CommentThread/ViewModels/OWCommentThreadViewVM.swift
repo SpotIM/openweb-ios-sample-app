@@ -925,11 +925,11 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
     }
 
-    func getServerEvent(for event: OWAnalyticEventType) -> OWAnalyticEventServer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEventServer {
         return servicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
-                for: event,
+                for: eventType,
                 articleUrl: commentThreadData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
                 component: .commentCreation)
