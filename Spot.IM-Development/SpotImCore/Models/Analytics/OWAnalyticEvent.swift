@@ -13,7 +13,7 @@ struct OWAnalyticEvent: OWUpdaterProtocol {
     let timestamp: Double
     let articleUrl: String
     let layoutStyle: OWLayoutStyle
-    let component: OWAnalyticsComponent
+    let component: OWViewSourceType
     let userStatus: String
     let userId: String
     let guid: String
@@ -33,7 +33,7 @@ extension OWAnalyticEvent {
             eventName: type.eventName,
             eventGroup: type.eventGroup.rawValue,
             eventTimestamp: timestamp,
-            componentName: component.rawValue,
+            componentName: component.analyticsComponentName,
             payload: type.payload,
             generalData: generalData
         )
