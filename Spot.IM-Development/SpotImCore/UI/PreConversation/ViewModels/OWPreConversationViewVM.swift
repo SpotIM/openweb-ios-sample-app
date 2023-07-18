@@ -891,4 +891,14 @@ fileprivate extension OWPreConversationViewViewModel {
             _cellsViewModels.append(contentsOf: skeletonCells)
         }
     }
+
+    func getServerEvent(for event: OWAnalyticEventType) -> OWAnalyticEventServer {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: event,
+                articleUrl: preConversationData.article.url.absoluteString,
+                layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
+                component: .preConversation)
+    }
 }
