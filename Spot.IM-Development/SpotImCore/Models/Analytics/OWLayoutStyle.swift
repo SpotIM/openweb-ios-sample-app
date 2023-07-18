@@ -12,4 +12,21 @@ enum OWLayoutStyle: String {
     case push = "push"
     case presentFull = "present_full"
     case pageSheet = "present_page_sheet"
+    case view = "view"
+
+    init(from presentationalStyle: OWPresentationalModeCompact) {
+        switch presentationalStyle {
+        case .present(style: let style):
+            switch style {
+            case .fullScreen:
+                self = .presentFull
+            case .pageSheet:
+                self = .pageSheet
+            }
+        case .push:
+            self = .push
+        case .none:
+            self = .view
+        }
+    }
 }
