@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct OWAnalyticEventServerAbTest: Decodable {
+struct OWAnalyticEventServerAbTest: Encodable {
     var selectedTests: [Dictionary<String, String>] = []
     var affectiveTests: [Dictionary<String, String>] = []
 }
