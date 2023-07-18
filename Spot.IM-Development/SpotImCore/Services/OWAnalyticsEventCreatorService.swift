@@ -29,7 +29,7 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
     func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticsComponent) -> OWAnalyticEventServer {
         return OWAnalyticEvent(
             type: type,
-            timestamp: String(Date().timeIntervalSince1970 * 1000.0),
+            timestamp: Date().timeIntervalSince1970 * 1000,
             articleUrl: articleUrl,
             layoutStyle: layoutStyle,
             component: component,

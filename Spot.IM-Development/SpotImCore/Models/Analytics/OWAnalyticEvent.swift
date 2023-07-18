@@ -10,7 +10,7 @@ import Foundation
 
 struct OWAnalyticEvent: OWUpdaterProtocol {
     let type: OWAnalyticEventType
-    let timestamp: String
+    let timestamp: Double
     let articleUrl: String
     let layoutStyle: OWLayoutStyle
     let component: OWAnalyticsComponent
