@@ -13,7 +13,7 @@ struct OWAnalyticEventServerGeneralData: Encodable {
     var spotId: String = OWManager.manager.spotId
     var postId: String = OWManager.manager.postId ?? ""
     var articleUrl: String
-    var pageViewId: String = "" // TODO: add to analyticsService? (currently in SPAnalyticsService, what the meaning? when do we change it?)
+    var pageViewId: String = "" // TODO: we should create the correct logic for pageViewId in OWAnalyticsService
     var userStatus: String
     var userId: String // in case user is connected
     var deviceId: String = UIDevice.current.identifierForVendor?.uuidString ?? ""
