@@ -1226,12 +1226,16 @@ fileprivate extension OWConversationViewViewModel {
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEventServer {
-        return servicesProvider
+        let event = servicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
                 articleUrl: conversationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
+
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .serverAnalyticEvent(from: event)
     }
 }

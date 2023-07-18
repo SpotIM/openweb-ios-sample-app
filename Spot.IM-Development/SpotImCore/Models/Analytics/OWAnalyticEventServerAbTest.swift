@@ -9,6 +9,6 @@
 import Foundation
 
 struct OWAnalyticEventServerAbTest: Encodable {
-    let selectedTests: [Dictionary<String, String>] = []
-    let affectiveTests: [Dictionary<String, String>] = []
+    let selectedTests: [Dictionary<String, String>]
+    let affectiveTests: [Dictionary<String, String>]
 }

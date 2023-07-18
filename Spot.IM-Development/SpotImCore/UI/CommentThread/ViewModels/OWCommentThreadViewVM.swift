@@ -926,12 +926,16 @@ fileprivate extension OWCommentThreadViewViewModel {
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEventServer {
-        return servicesProvider
+        let event = servicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
                 articleUrl: commentThreadData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
                 component: .commentCreation)
+
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .serverAnalyticEvent(from: event)
     }
 }
