@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWAnalyticsEventCreatorServicing {
-    func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticsComponent) -> OWAnalyticEventServer
+    func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWViewSourceType) -> OWAnalyticEventServer
 }
 
 class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
@@ -26,7 +26,7 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
         setupObservers()
     }
 
-    func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWAnalyticsComponent) -> OWAnalyticEventServer {
+    func analyticsEvent(for type: OWAnalyticEventType, articleUrl: String, layoutStyle: OWLayoutStyle, component: OWViewSourceType) -> OWAnalyticEventServer {
         return OWAnalyticEvent(
             type: type,
             timestamp: Date().timeIntervalSince1970 * 1000,
