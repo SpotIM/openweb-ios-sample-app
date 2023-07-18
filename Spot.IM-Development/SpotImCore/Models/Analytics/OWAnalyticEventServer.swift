@@ -12,9 +12,9 @@ struct OWAnalyticEventServer: Encodable {
     let eventName: String
     let eventGroup: String
     let eventTimestamp: Double
-    let productName: OWProductSource = .conversation
+    let productName: OWProductSource
     let componentName: String
     let payload: OWAnalyticEventPayload
     let generalData: OWAnalyticEventServerGeneralData
-    let abTests: OWAnalyticEventServerAbTest = OWAnalyticEventServerAbTest()
+    let abTests: OWAnalyticEventServerAbTest
 }
