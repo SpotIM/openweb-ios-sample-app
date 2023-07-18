@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct OWAnalyticEventServerGeneralData: Decodable {
+struct OWAnalyticEventServerGeneralData: Encodable {
     var spotId: String = OWManager.manager.spotId
     var postId: String = OWManager.manager.postId ?? ""
     var articleUrl: String
