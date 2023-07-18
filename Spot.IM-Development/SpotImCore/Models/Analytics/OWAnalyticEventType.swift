@@ -24,6 +24,10 @@ enum OWAnalyticEventType {
     case postReplyClicked(replyToCommentId: OWCommentId)
     case signUpToPostClicked
     case commentReadMoreClicked(commentId: OWCommentId)
+    case commentRankUpButtonClicked(commentId: OWCommentId)
+    case commentRankDownButtonClicked(commentId: OWCommentId)
+    case commentRankUpUndoButtonClicked(commentId: OWCommentId)
+    case commentRankDownUndoButtonClicked(commentId: OWCommentId)
 
     var eventName: String {
         switch self {
@@ -57,6 +61,14 @@ enum OWAnalyticEventType {
             return "signUpToPostClicked"
         case .commentReadMoreClicked:
             return "commentReadMoreClicked"
+        case .commentRankUpButtonClicked:
+            return "commentRankUpButtonClicked"
+        case .commentRankDownButtonClicked:
+            return "commentRankDownButtonClicked"
+        case .commentRankUpUndoButtonClicked:
+            return "commentRankUpUndoButtonClicked"
+        case .commentRankDownUndoButtonClicked:
+            return "commentRankDownUndoButtonClicked"
         }
     }
 
@@ -80,7 +92,11 @@ enum OWAnalyticEventType {
              .postReplyClicked,
              .signUpToPostClicked:
             return .commentCreation
-        case .commentReadMoreClicked:
+        case .commentReadMoreClicked,
+             .commentRankUpButtonClicked,
+             .commentRankDownButtonClicked,
+             .commentRankUpUndoButtonClicked,
+             .commentRankDownUndoButtonClicked:
             return .commentInteraction
         }
     }
@@ -111,6 +127,14 @@ enum OWAnalyticEventType {
         case .postReplyClicked(let replyToCommentId):
             return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
         case .commentReadMoreClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+        case .commentRankUpButtonClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+        case .commentRankDownButtonClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+        case .commentRankUpUndoButtonClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+        case .commentRankDownUndoButtonClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         }
     }
