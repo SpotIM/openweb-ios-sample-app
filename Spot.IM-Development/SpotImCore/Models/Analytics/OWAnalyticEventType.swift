@@ -42,6 +42,7 @@ enum OWAnalyticEventType {
     case commentCreationClosePage
     case commentCreationLeavePage
     case commentCreationContinueWriting
+    case loginPromptClicked
 
     var eventName: String {
         switch self {
@@ -111,6 +112,8 @@ enum OWAnalyticEventType {
             return "commentCreationLeavePage"
         case .commentCreationContinueWriting:
             return "commentCreationContinueWriting"
+        case .loginPromptClicked:
+            return "loginPromptClicked"
         }
     }
 
@@ -118,8 +121,7 @@ enum OWAnalyticEventType {
         switch self {
         case .fullConversationLoaded,
              .preConversationLoaded,
-             .loadMoreComments,
-             .createCommentCTAClicked: // TODO: createCommentCTAClicked?
+             .loadMoreComments:
             return .loaded
         case .fullConversationViewed,
              .preConversationViewed:
@@ -137,7 +139,8 @@ enum OWAnalyticEventType {
              .signUpToPostClicked,
              .commentCreationClosePage,
              .commentCreationLeavePage,
-             .commentCreationContinueWriting:
+             .commentCreationContinueWriting,
+             .createCommentCTAClicked:
             return .commentCreation
         case .commentShareClicked,
              .commentReadMoreClicked,
@@ -156,6 +159,8 @@ enum OWAnalyticEventType {
         case .userProfileClicked,
              .myProfileClicked:
             return .profile
+        case .loginPromptClicked:
+            return .auth
         }
     }
 
@@ -170,7 +175,8 @@ enum OWAnalyticEventType {
              .createCommentCTAClicked,
              .commentCreationClosePage,
              .commentCreationLeavePage,
-             .commentCreationContinueWriting:
+             .commentCreationContinueWriting,
+             .loginPromptClicked:
             return OWAnalyticEventPayload(payloadDictionary: [:])
         case .commentMenuClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
