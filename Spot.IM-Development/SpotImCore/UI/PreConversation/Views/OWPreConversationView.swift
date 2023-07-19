@@ -16,7 +16,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let commentingCTAHeight: CGFloat = 72
         static let horizontalOffset: CGFloat = 16.0
         static let btnFullConversationCornerRadius: CGFloat = 6
-        static let btnFullConversationFontSize: CGFloat = 15
         static let btnFullConversationTextPadding: CGFloat = 12
         static let btnFullConversationTopPadding: CGFloat = 24
         static let bottomPadding: CGFloat = 24
@@ -56,6 +55,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
     }()
+
     fileprivate var commentingCTAZeroHeightConstraint: OWConstraint? = nil
 
     fileprivate lazy var tableView: UITableView = {
@@ -84,8 +84,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.btnFullConversationFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyContext))
     }()
+
     fileprivate var ctaZeroHeightConstraint: OWConstraint? = nil
 
     fileprivate lazy var footerTopDevider: UIView = {

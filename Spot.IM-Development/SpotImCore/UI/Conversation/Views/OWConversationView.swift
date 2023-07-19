@@ -12,9 +12,9 @@ import RxCocoa
 
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-        static let conversationTitleHeaderHeight: CGFloat = 56
-        static let articleDescriptionHeight: CGFloat = 86
-        static let conversationSummaryHeight: CGFloat = 44
+//        static let conversationTitleHeaderHeight: CGFloat = 56
+//        static let articleDescriptionHeight: CGFloat = 86
+//        static let conversationSummaryHeight: CGFloat = 44
         static let tableViewAnimationDuration: Double = 0.25
         static let commentingCTAHeight: CGFloat = 64
         static let separatorHeight: CGFloat = 1
@@ -119,7 +119,6 @@ fileprivate extension OWConversationView {
             self.addSubview(conversationTitleHeaderView)
             conversationTitleHeaderView.OWSnp.makeConstraints { make in
                 make.top.leading.trailing.equalToSuperview()
-                make.height.equalTo(Metrics.conversationTitleHeaderHeight)
             }
         }
 
@@ -133,7 +132,6 @@ fileprivate extension OWConversationView {
                     make.top.equalToSuperview()
                 }
                 make.leading.trailing.equalToSuperview()
-                make.height.equalTo(Metrics.articleDescriptionHeight)
             }
         }
 
@@ -149,7 +147,7 @@ fileprivate extension OWConversationView {
                 }
             }
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.conversationSummaryHeight)
+//            make.height.equalTo(Metrics.conversationSummaryHeight)
         }
 
         // After building the other views, position the table view in the appropriate place

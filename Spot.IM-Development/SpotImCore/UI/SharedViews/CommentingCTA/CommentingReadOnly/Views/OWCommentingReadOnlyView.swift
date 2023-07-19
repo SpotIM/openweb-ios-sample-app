@@ -12,7 +12,6 @@ import RxCocoa
 
 class OWCommentingReadOnlyView: UIView {
     fileprivate struct Metrics {
-        static let fontSize: CGFloat = 15
         static let labelLeadingOffset: CGFloat = 4
         static let iconSize: CGFloat = 24
     }
@@ -26,7 +25,7 @@ class OWCommentingReadOnlyView: UIView {
        return UILabel()
             .text(OWLocalizationManager.shared.localizedString(key: "Commenting on this article has ended"))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyContext))
             .enforceSemanticAttribute()
     }()
 

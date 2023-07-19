@@ -13,8 +13,6 @@ import RxSwift
 class OWTitleSubtitleIconView: UIView {
     fileprivate struct Metrics {
         static let titleIconSize: CGFloat = 40
-        static let titleFontSize: CGFloat = 20
-        static let subtitleFontSize: CGFloat = 15
         static let verticalSpacing: CGFloat = 10
         static let titleIconSuffixIdentifier = "_title_icon_id"
         static let titleLabelSuffixIdentifier = "_title_label_id"
@@ -32,7 +30,7 @@ class OWTitleSubtitleIconView: UIView {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
+            .font(OWFontBook.shared.font(typography: .titleMedium))
             .numberOfLines(0)
             .textAlignment(.center)
             .textColor(OWColorPalette.shared.color(type: .textColor1,
@@ -41,7 +39,7 @@ class OWTitleSubtitleIconView: UIView {
 
     fileprivate lazy var subtitleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .numberOfLines(0)
             .textAlignment(.center)
             .textColor(OWColorPalette.shared.color(type: .textColor2,

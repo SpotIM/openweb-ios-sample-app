@@ -17,7 +17,6 @@ class OWCommentCreationEntryView: UIView {
         static let containerLeadingOffset: CGFloat = 10
         static let labelInsetVertical: CGFloat = 12
         static let labelInsetHorizontal: CGFloat = 15
-        static let fontSize: CGFloat = 15
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
@@ -41,7 +40,7 @@ class OWCommentCreationEntryView: UIView {
 
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .enforceSemanticAttribute()
@@ -92,7 +91,7 @@ fileprivate extension OWCommentCreationEntryView {
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.height.equalTo(userAvatarView.OWSnp.height)
+//            make.height.equalTo(userAvatarView.OWSnp.height)
             make.trailing.equalToSuperview()
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
