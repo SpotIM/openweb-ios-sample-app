@@ -94,8 +94,6 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        self.enforceSemanticAttribute()
-
         commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
 
         setupViews()
@@ -110,6 +108,7 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWCommentCreationRegularView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
         OWSharedServicesProvider.shared.themeStyleService()
