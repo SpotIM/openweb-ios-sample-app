@@ -79,6 +79,11 @@ fileprivate extension OWCommentCreationReplySnippetView {
             .bind(to: replySnippetLabel.rx.text)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.showSeparator
+            .map { !$0 }
+            .bind(to: bottomSeparatorView.rx.isHidden)
+            .disposed(by: disposeBag)
+
     }
 
     func applyAccessibility() {
