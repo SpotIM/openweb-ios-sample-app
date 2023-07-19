@@ -17,4 +17,5 @@ enum OWAnalyticEventGroup: String {
     case sortMenu
     case profile
     case auth
+    case configuration
 }
