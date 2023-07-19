@@ -39,7 +39,7 @@ class OWCommentCreationContentView: UIView {
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .textAlignment(OWLocalizationManager.shared.textAlignment)
-            .textContainerInset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+            .textContainerInset(.zero)
             .tintColor(OWColorPalette.shared.color(type: .cursorColor, themeStyle: .light))
             .isScrollEnabled(false)
 
@@ -85,8 +85,6 @@ class OWCommentCreationContentView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        self.enforceSemanticAttribute()
-
         avatarView.configure(with: viewModel.outputs.avatarViewVM)
 
         setupUI()
@@ -101,6 +99,8 @@ class OWCommentCreationContentView: UIView {
 
 fileprivate extension OWCommentCreationContentView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+
         addSubview(scrollView)
         scrollView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()

@@ -47,8 +47,6 @@ class OWCommentLabelsContainerView: UIView {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
 
-        self.enforceSemanticAttribute()
-
         setupUI()
     }
 
@@ -64,15 +62,15 @@ class OWCommentLabelsContainerView: UIView {
 
     func prepareForReuse() {
         // clean stackview if needed
-        self.labelsContainerStackView.subviews.forEach { view in
-            view.removeFromSuperview()
-        }
+        self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
         self.labelsHeightConstraint?.update(offset: 0)
     }
 }
 
 fileprivate extension OWCommentLabelsContainerView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+
         addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
