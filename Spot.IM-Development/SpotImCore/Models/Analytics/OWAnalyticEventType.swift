@@ -45,6 +45,7 @@ enum OWAnalyticEventType {
     case loginPromptClicked
     case configuredPreConversationStyle(style: OWPreConversationStyle)
     case configuredFullConversationStyle(style: OWConversationStyle)
+    case configuredCommentCreationStyle(style: OWCommentCreationStyle)
 
     var eventName: String {
         switch self {
@@ -120,6 +121,8 @@ enum OWAnalyticEventType {
             return "configuredPreConversationStyle"
         case .configuredFullConversationStyle:
             return "configuredFullConversationStyle"
+        case .configuredCommentCreationStyle:
+            return "configuredCommentCreationStyle"
         }
     }
 
@@ -168,7 +171,8 @@ enum OWAnalyticEventType {
         case .loginPromptClicked:
             return .auth
         case .configuredPreConversationStyle,
-             .configuredFullConversationStyle:
+             .configuredFullConversationStyle,
+             .configuredCommentCreationStyle:
             return .configuration
         }
     }
@@ -236,6 +240,8 @@ enum OWAnalyticEventType {
         case .configuredPreConversationStyle(let style):
             return style.analyticsPayload
         case .configuredFullConversationStyle(let style):
+            return style.analyticsPayload
+        case .configuredCommentCreationStyle(let style):
             return style.analyticsPayload
         }
     }
