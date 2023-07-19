@@ -14,6 +14,7 @@ protocol OWCommentCreationReplySnippetViewModelingInputs {
 
 protocol OWCommentCreationReplySnippetViewModelingOutputs {
     var replySnippetText: Observable<String> { get }
+    var showSeparator: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationReplySnippetViewModeling {
@@ -31,6 +32,7 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationType: OWCommentCreationType
+    fileprivate let shouldShowSeparator: Bool
 
     var replySnippetText: Observable<String> {
         guard let postId = OWManager.manager.postId else { return Observable.empty() }
@@ -53,10 +55,16 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
         }
     }
 
+    var showSeparator: Observable<Bool> {
+        Observable.just(shouldShowSeparator)
+    }
+
     init(commentCreationType: OWCommentCreationType,
+         shouldShowSeparator: Bool = true,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationType = commentCreationType
+        self.shouldShowSeparator = shouldShowSeparator
         setupObservers()
     }
 }
