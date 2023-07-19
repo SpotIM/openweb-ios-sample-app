@@ -43,6 +43,8 @@ enum OWAnalyticEventType {
     case commentCreationLeavePage
     case commentCreationContinueWriting
     case loginPromptClicked
+    case configuredPreConversationStyle(style: OWPreConversationStyle)
+    case configuredFullConversationStyle(style: OWConversationStyle)
 
     var eventName: String {
         switch self {
@@ -114,6 +116,10 @@ enum OWAnalyticEventType {
             return "commentCreationContinueWriting"
         case .loginPromptClicked:
             return "loginPromptClicked"
+        case .configuredPreConversationStyle:
+            return "configuredPreConversationStyle"
+        case .configuredFullConversationStyle:
+            return "configuredFullConversationStyle"
         }
     }
 
@@ -161,6 +167,9 @@ enum OWAnalyticEventType {
             return .profile
         case .loginPromptClicked:
             return .auth
+        case .configuredPreConversationStyle,
+             .configuredFullConversationStyle:
+            return .configuration
         }
     }
 
@@ -224,6 +233,10 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["source": source])
         case .replyClicked(let replyToCommentId):
             return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
+        case .configuredPreConversationStyle(let style):
+            return style.analyticsPayload
+        case .configuredFullConversationStyle(let style):
+            return style.analyticsPayload
         }
     }
 }
