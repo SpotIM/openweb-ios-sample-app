@@ -75,7 +75,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
             if let postId = OWManager.manager.postId,
                let parentId = comment.parentId,
                let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
-                replyToComment = comment
+                replyToComment = parentComment
             }
         case .replyToComment(let originComment):
             replyToComment = originComment
