@@ -12,14 +12,13 @@ import RxCocoa
 
 class OWConversationTitleHeaderView: UIView {
     fileprivate struct Metrics {
-        static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 16
     }
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
+            .font(OWFontBook.shared.font(typography: .titleSmall))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
     }()
