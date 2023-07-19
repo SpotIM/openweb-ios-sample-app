@@ -30,4 +30,5 @@ struct OWAnalyticEventPayloadKeys {
     static let communityQuestionsStyle = "communityQuestionsStyle"
     static let spacing = "spacing"
     static let numberOfComments = "numberOfComments"
+    static let accessoryViewStrategy = "accessoryViewStrategy"
 }
