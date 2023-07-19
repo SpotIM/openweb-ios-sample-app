@@ -38,8 +38,6 @@ class OWCommentCreationReplySnippetView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        self.enforceSemanticAttribute()
-
         setupUI()
         setupObservers()
         applyAccessibility()
@@ -52,6 +50,8 @@ class OWCommentCreationReplySnippetView: UIView {
 
 fileprivate extension OWCommentCreationReplySnippetView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+        
         addSubview(replySnippetLabel)
         replySnippetLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
