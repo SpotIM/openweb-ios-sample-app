@@ -68,8 +68,6 @@ class OWCommentCreationFooterView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        self.enforceSemanticAttribute()
-
         setupUI()
         setupObservers()
         applyAccessibility()
@@ -82,6 +80,8 @@ class OWCommentCreationFooterView: UIView {
 
 fileprivate extension OWCommentCreationFooterView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+
         addSubview(seperatorView)
         seperatorView.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.seperatorHeight)

@@ -30,8 +30,6 @@ class OWCommentReplyCounterView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        self.enforceSemanticAttribute()
-
         setupUI()
         setupObservers()
         applyAccessibility()
@@ -44,6 +42,8 @@ class OWCommentReplyCounterView: UIView {
 
 fileprivate extension OWCommentReplyCounterView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+
         self.OWSnp.makeConstraints { make in
             viewHeightConstraint = make.height.equalTo(0).constraint
         }

@@ -56,6 +56,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .asObservable()
             .withLatestFrom(_commentTextCharactersLimit) { ($0, $1) }
             .scan(("", nil)) { previous, newTuple -> (String, Int?) in
+                // Handle characters limit for comment text
                 guard let limiter = newTuple.1 else { return newTuple }
                 let previousText = previous.0
                 let newText = newTuple.0
