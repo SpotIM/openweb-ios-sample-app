@@ -12,8 +12,8 @@ import RxCocoa
 
 class OWReportReasonVC: UIViewController {
     fileprivate struct Metrics {
-        static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonSize: CGFloat = 40
+
         static let closeButtonIdentidier = "report_reason_close_button_id"
         static let closeCrossIcon = "closeCrossIcon"
     }
@@ -94,7 +94,7 @@ fileprivate extension OWReportReasonVC {
 
         // Setup Title
         let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
+            NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext),
             NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
         ]
 

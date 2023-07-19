@@ -15,9 +15,6 @@ class OWCommentHeaderView: UIView {
     fileprivate struct Metrics {
         static let avatarSideSize: CGFloat = 36.0
         static let avatarImageViewTrailingOffset: CGFloat = 8.0
-        static let subtitleFontSize: CGFloat = 12.0
-        static let usernameFontSize: CGFloat = 13.0
-        static let badgeLabelFontSize: CGFloat = 10.0
         static let subscriberVerticalPadding: CGFloat = 7
         static let optionButtonSize: CGFloat = 20
         static let badgeHorizontalInset: CGFloat = 4
@@ -44,7 +41,7 @@ class OWCommentHeaderView: UIView {
         return UILabel()
             .userInteractionEnabled(false)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.usernameFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteContext))
     }()
 
     fileprivate lazy var badgeTagContainer: UIView = {
@@ -56,7 +53,7 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var badgeTagLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.badgeLabelFontSize))
+            .font(OWFontBook.shared.font(typography: .infoCaption))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -66,7 +63,7 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var subtitleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .font(OWFontBook.shared.font(typography: .metaText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
@@ -74,14 +71,14 @@ class OWCommentHeaderView: UIView {
     fileprivate lazy var seperatorBetweenSubtitleAndDateLabel: UILabel = {
         return UILabel()
             .text(" · ")
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .font(OWFontBook.shared.font(typography: .metaText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
     fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
+            .font(OWFontBook.shared.font(typography: .metaText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
             .enforceSemanticAttribute()
@@ -98,7 +95,7 @@ class OWCommentHeaderView: UIView {
         return UILabel()
             .isHidden(true)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.preferred(style: .italic, of: 17))
+            .font(OWFontBook.shared.font(typography: .bodySpecial))
             .lineSpacing(3.5)
             .enforceSemanticAttribute()
     }()
@@ -241,6 +238,11 @@ fileprivate extension OWCommentHeaderView {
         viewModel.outputs.shouldShowSubtitleSeperator
             .map { !$0 }
             .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowSubtitleSeperator
+            .map { $0 ? " · " : ""}
+            .bind(to: seperatorBetweenSubtitleAndDateLabel.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
