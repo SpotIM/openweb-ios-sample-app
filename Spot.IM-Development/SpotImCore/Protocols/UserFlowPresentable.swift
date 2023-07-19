@@ -21,7 +21,7 @@ protocol OWUserAuthFlowDelegate: AnyObject {
 
 protocol OWUserPresentable: AnyObject {
 
-    var userIcon: OWBaseButton { get }
+    var userIcon: SPBaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.
     func setupUserIconHandler()
 }
@@ -43,7 +43,7 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
 
         if let user = SPUserSessionHolder.session.user, user.registered {
             let logOutAction = UIAlertAction(
-                title: LocalizationManager.localizedString(key: "Log Out"),
+                title: SPLocalizationManager.localizedString(key: "Log Out"),
                 style: .default
             ) { _ in
                 self.presentLogOutConfirmation()
@@ -51,7 +51,7 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
             profileActions.append(logOutAction)
         } else {
             let logInAction = UIAlertAction(
-                title: LocalizationManager.localizedString(key: "Log In"),
+                title: SPLocalizationManager.localizedString(key: "Log In"),
                 style: .default
             ) { _ in
                 SPAnalyticsHolder.default.log(event: .loginClicked(.mainLogin), source: .conversation)
@@ -59,7 +59,7 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
             }
             profileActions.append(logInAction)
         }
-        let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
+        let noAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"),
                                      style: .cancel)
 
         profileActions.append(noAction)
@@ -69,7 +69,7 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
 
     private func presentLogOutConfirmation() {
         let yesAction = UIAlertAction(
-            title: LocalizationManager.localizedString(key: "Log Out"),
+            title: SPLocalizationManager.localizedString(key: "Log Out"),
             style: .destructive) { _ in
                 SpotIm.logout { result in
                     let logger = OWSharedServicesProvider.shared.logger()
@@ -82,11 +82,11 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
                 }
         }
 
-        let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
+        let noAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
-            title: LocalizationManager.localizedString(key: "Log Out"),
-            message: LocalizationManager.localizedString(key: "Are you sure you want to log out?"),
+            title: SPLocalizationManager.localizedString(key: "Log Out"),
+            message: SPLocalizationManager.localizedString(key: "Are you sure you want to log out?"),
             actions: [yesAction, noAction]
         )
     }

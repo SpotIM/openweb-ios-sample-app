@@ -70,11 +70,11 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     var imageType: Observable<OWImageType> {
         Observable.combineLatest(self.user, self.shouldBlockAvatar.asObserver())
-            .flatMap { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
+            .flatMapLatest { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
                 guard let self = self,
                       let imageId = user.imageId,
                       !shouldBlockAvatar
-                else { return .empty() }
+                else { return Observable.just(nil) }
 
                 return self.imageURLProvider.imageURL(with: imageId, size: nil)
             }
@@ -90,13 +90,23 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         return Observable.combineLatest(
             user,
             sharedServicesProvider.authenticationManager().activeUserAvailability,
-            sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-        ) { user, availability, config in
+            sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId),
+            sharedServicesProvider.realtimeService().realtimeData
+        ) { [weak self] user, availability, config, realtimeData in
             guard config.conversation?.disableOnlineDotIndicator != true else { return false }
 
             if (user.online == true) {
                 return true
             }
+
+            if let userId = user.id,
+               let postId = OWManager.manager.postId,
+               let realtimeData = realtimeData.data,
+               let usersService = self?.sharedServicesProvider.usersService(),
+               usersService.isUserOnline(userId, perPostId: postId, realtimeData: realtimeData) == true {
+                return true
+            }
+
             switch availability {
             case .user(let sessionUser):
                 return user.id == sessionUser.id

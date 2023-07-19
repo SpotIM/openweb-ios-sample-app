@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-enum OWCommentThreadCellOption: CaseIterable {
+enum OWCommentThreadCellOption: CaseIterable, OWUpdaterProtocol {
     static var allCases: [OWCommentThreadCellOption] {
         return [
             .comment(viewModel: OWCommentCellViewModel.stub()),

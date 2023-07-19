@@ -73,6 +73,11 @@ extension UIView {
         self.clipsToBounds = clipsToBounds
         return self
     }
+
+    @discardableResult func alpha(_ alpha: CGFloat) -> Self {
+        self.alpha = alpha
+        return self
+    }
 }
 
 extension UILabel {
@@ -111,6 +116,11 @@ extension UILabel {
         return self
     }
 
+    @discardableResult func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> UILabel {
+        self.lineBreakMode = lineBreakMode
+        return self
+    }
+
     @discardableResult func lineSpacing(_ spacing: CGFloat) -> UILabel {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = spacing
@@ -140,6 +150,11 @@ extension UILabel {
         text.addAttribute(NSAttributedString.Key.kern, value: spacing, range: NSRange(location: 0, length: text.length - 1))
         self.attributedText = text
 
+        return self
+    }
+
+    @discardableResult func attributedText(_ attributedText: NSAttributedString) -> UILabel {
+        self.attributedText = attributedText
         return self
     }
 }
@@ -205,10 +220,20 @@ extension UIButton {
         return self
     }
 
+    @discardableResult func isEnabled(_ isEnabled: Bool) -> Self {
+        self.isEnabled = isEnabled
+        return self
+    }
+
+    @discardableResult func contentMode(_ mode: UIView.ContentMode) -> Self {
+        self.contentMode = mode
+        return self
+    }
+
     @discardableResult func adjustTextAndImageAlignment(_ spacing: CGFloat) -> Self {
         var inset = spacing / 2
 
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+        if OWLocalizationManager.shared.semanticAttribute == .forceRightToLeft {
             inset = -inset
         }
 
@@ -270,6 +295,11 @@ extension UITableView {
         self.delegate = delegate
         return self
     }
+
+    @discardableResult func registerCell<T: UITableViewCell>(cellClass: T.Type = T.self) -> Self {
+        self.register(cellClass: cellClass)
+        return self
+    }
 }
 
 extension String {
@@ -306,6 +336,11 @@ extension UITextView {
 
     @discardableResult func isEditable(_ editable: Bool) -> Self {
         self.isEditable = editable
+        return self
+    }
+
+    @discardableResult func text(_ text: String) -> Self {
+        self.text = text
         return self
     }
 
@@ -353,6 +388,11 @@ extension UIStackView {
 
     @discardableResult func spacing(_ spacing: CGFloat) -> Self {
         self.spacing = spacing
+        return self
+    }
+
+    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
+        self.distribution = distribution
         return self
     }
 }

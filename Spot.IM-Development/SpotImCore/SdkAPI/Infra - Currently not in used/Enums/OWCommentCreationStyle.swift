@@ -12,13 +12,13 @@ import Foundation
 public enum OWCommentCreationStyle: Codable {
     case regular
     case light // Called new header before
-    case floatingKeyboard
+    case floatingKeyboard(accessoryViewStrategy: OWAccessoryViewStrategy = .none)
 }
 
 #else
 enum OWCommentCreationStyle: Codable {
     case regular
     case light // Called new header before
-    case floatingKeyboard
+    case floatingKeyboard(accessoryViewStrategy: OWAccessoryViewStrategy = .none)
 }
 #endif

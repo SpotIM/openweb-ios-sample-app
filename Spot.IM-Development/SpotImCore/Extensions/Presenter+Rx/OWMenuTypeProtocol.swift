@@ -8,4 +8,13 @@
 
 import Foundation
 
-protocol OWMenuTypeProtocol {}
+protocol OWMenuTypeProtocol {
+    var rawValue: String { get }
+    var identifier: String { get }
+}
+
+extension OWMenuTypeProtocol {
+    var identifier: String {
+        return rawValue
+    }
+}

@@ -18,9 +18,9 @@ enum HeaderMode {
     var title: String {
         switch(self) {
         case .add:
-            return LocalizationManager.localizedString(key: "Add a comment")
+            return SPLocalizationManager.localizedString(key: "Add a comment")
         case .edit:
-            return LocalizationManager.localizedString(key: "Edit a comment")
+            return SPLocalizationManager.localizedString(key: "Edit a comment")
         }
     }
 }
@@ -29,7 +29,7 @@ protocol SPCommentCreationNewHeaderViewDelegate: AnyObject {
     func customizeHeaderTitle(label: UILabel)
 }
 
-final class SPCommentCreationNewHeaderView: OWBaseView {
+final class SPCommentCreationNewHeaderView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_new_header_view_id"
         static let closeButtonIdentifier = "comment_creation_new_header_view_close_button_id"
@@ -40,13 +40,13 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     weak var delegate: SPCommentCreationNewHeaderViewDelegate?
 
-    let closeButton: OWBaseButton = .init()
+    let closeButton: SPBaseButton = .init()
 
-    private let headerTitleLabel: OWBaseLabel = .init()
-    private let replyingLabel: OWBaseLabel = .init()
-    private let commentAuthorLabel: OWBaseLabel = .init()
-    private let commentLabel: OWBaseLabel = .init()
-    private let separatorView: OWBaseView = .init()
+    private let headerTitleLabel: SPBaseLabel = .init()
+    private let replyingLabel: SPBaseLabel = .init()
+    private let commentAuthorLabel: SPBaseLabel = .init()
+    private let commentLabel: SPBaseLabel = .init()
+    private let separatorView: SPBaseView = .init()
 
     private var replyingLabelTopConstraint: OWConstraint? = nil
     private var commentLabelTopConstraint: OWConstraint? = nil
@@ -136,7 +136,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
 
     private func setupHeaderTitle() {
         headerTitleLabel.textAlignment = .center
-        headerTitleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        headerTitleLabel.font = UIFont.spPreferred(style: .bold, of: Theme.titleFontSize)
         headerTitleLabel.OWSnp.makeConstraints { make in
             make.height.equalTo(Theme.headerTitleHeight)
             make.top.equalToSuperview().offset(Theme.topOffset)
@@ -163,8 +163,8 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
 
     private func setupReplyingLabel() {
-        replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
-        replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.replyingToFontSize)
+        replyingLabel.text = SPLocalizationManager.localizedString(key: "Replying to ")
+        replyingLabel.font = UIFont.spPreferred(style: .regular, of: Theme.replyingToFontSize)
         replyingLabel.OWSnp.makeConstraints { make in
             replyingLabelTopConstraint = make.top.equalTo(separatorView.OWSnp.bottom).offset(Theme.replyingTopOffset).constraint
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
@@ -172,7 +172,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
 
     private func setupCommentAuthorLabel() {
-        commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.replyingToFontSize)
+        commentAuthorLabel.font = UIFont.spPreferred(style: .bold, of: Theme.replyingToFontSize)
         commentAuthorLabel.OWSnp.makeConstraints { make in
             make.firstBaseline.lastBaseline.equalTo(replyingLabel)
             make.leading.equalTo(replyingLabel.OWSnp.trailing)
@@ -182,7 +182,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
 
     private func setupCommentLabel() {
         commentLabel.numberOfLines = 2
-        commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
+        commentLabel.font = UIFont.spPreferred(style: .regular, of: Theme.commentFontSize)
         commentLabel.OWSnp.makeConstraints { make in
             commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
