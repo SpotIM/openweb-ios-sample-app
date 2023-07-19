@@ -81,7 +81,7 @@ class OWCommentCreationFooterView: UIView {
 fileprivate extension OWCommentCreationFooterView {
     func setupUI() {
         self.enforceSemanticAttribute()
-        
+
         addSubview(seperatorView)
         seperatorView.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.seperatorHeight)
