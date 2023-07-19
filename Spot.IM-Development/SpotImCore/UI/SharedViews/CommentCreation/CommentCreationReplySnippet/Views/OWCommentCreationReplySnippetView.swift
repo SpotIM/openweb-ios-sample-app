@@ -51,7 +51,7 @@ class OWCommentCreationReplySnippetView: UIView {
 fileprivate extension OWCommentCreationReplySnippetView {
     func setupUI() {
         self.enforceSemanticAttribute()
-        
+
         addSubview(replySnippetLabel)
         replySnippetLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
