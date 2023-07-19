@@ -31,7 +31,6 @@ class OWCommentCreationContentView: UIView {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
-            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var textInput: UITextView = {
@@ -51,6 +50,7 @@ class OWCommentCreationContentView: UIView {
 
     fileprivate lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
+            .enforceSemanticAttribute()
 
         scroll.isUserInteractionEnabled = true
 
