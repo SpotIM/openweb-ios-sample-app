@@ -45,10 +45,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let headerView: OWBaseView = .init()
-    private let separatorView: OWBaseView = .init()
+    private let headerView: SPBaseView = .init()
+    private let separatorView: SPBaseView = .init()
     private let commentMediaView: CommentMediaView = .init()
-    private let opacityView: OWBaseView = .init()
+    private let opacityView: SPBaseView = .init()
 
     private var commentId: String?
     private var replyingToId: String?
@@ -234,11 +234,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private func updateRepliesButtonTitle(with repliesCount: Int?, minimumVisibleRepliesCount: Int) {
         if let repliesCount = repliesCount, repliesCount == minimumVisibleRepliesCount + 1 {
-            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Previous Reply")
-            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Reply")
+            moreRepliesView.collapsedTitle = SPLocalizationManager.localizedString(key: "View Previous Reply")
+            moreRepliesView.expandedTitle = SPLocalizationManager.localizedString(key: "Hide Reply")
         } else {
-            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Previous Replies")
-            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
+            moreRepliesView.collapsedTitle = SPLocalizationManager.localizedString(key: "View Previous Replies")
+            moreRepliesView.expandedTitle = SPLocalizationManager.localizedString(key: "Hide Replies")
         }
     }
 
@@ -365,19 +365,19 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
-        paragraphStyle.updateAlignment()
+        paragraphStyle.spUpdateAlignment()
 
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {
             attributes = [
                 .foregroundColor: UIColor.spForeground3,
-                .font: UIFont.preferred(style: .italic, of: Theme.deletedFontSize),
+                .font: UIFont.spPreferred(style: .italic, of: Theme.deletedFontSize),
                 .paragraphStyle: paragraphStyle
             ]
         } else {
             attributes = [
                 .foregroundColor: UIColor.spForeground1,
-                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
+                .font: UIFont.spPreferred(style: .regular, of: Theme.fontSize),
                 .paragraphStyle: paragraphStyle
             ]
         }

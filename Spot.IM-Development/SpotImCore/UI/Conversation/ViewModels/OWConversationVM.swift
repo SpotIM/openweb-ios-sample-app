@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWConversationViewModelingInputs {
+    var triggerCustomizeNavigationItemUI: PublishSubject<UINavigationItem> { get }
+    var triggerCustomizeNavigationBarUI: PublishSubject<UINavigationBar> { get }
     // String is the commentId
     var highlightComment: PublishSubject<String> { get }
     var viewDidLoad: PublishSubject<Void> { get }
@@ -17,6 +19,8 @@ protocol OWConversationViewModelingInputs {
 }
 
 protocol OWConversationViewModelingOutputs {
+    var customizeNavigationItemUI: Observable<UINavigationItem> { get }
+    var customizeNavigationBarUI: Observable<UINavigationBar> { get }
     var conversationViewVM: OWConversationViewViewModeling { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
@@ -41,6 +45,26 @@ class OWConversationViewModel: OWConversationViewModeling,
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
+
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeNavigationItemUI = BehaviorSubject<UINavigationItem?>(value: nil)
+    fileprivate let _triggerCustomizeNavigationBarUI = BehaviorSubject<UINavigationBar?>(value: nil)
+    fileprivate let _shouldShowCustomizeNavigationItemLabel = BehaviorSubject<Bool?>(value: nil)
+
+    var triggerCustomizeNavigationItemUI = PublishSubject<UINavigationItem>()
+    var triggerCustomizeNavigationBarUI = PublishSubject<UINavigationBar>()
+
+    var customizeNavigationItemUI: Observable<UINavigationItem> {
+        return _triggerCustomizeNavigationItemUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeNavigationBarUI: Observable<UINavigationBar> {
+        return _triggerCustomizeNavigationBarUI
+            .unwrap()
+            .asObservable()
+    }
 
     lazy var conversationViewVM: OWConversationViewViewModeling = {
         return OWConversationViewViewModel(conversationData: conversationData,
@@ -99,6 +123,14 @@ fileprivate extension OWConversationViewModel {
         // Same reason
         viewDidLoad
             .bind(to: _viewDidLoad)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeNavigationItemUI
+            .bind(to: _triggerCustomizeNavigationItemUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeNavigationBarUI
+            .bind(to: _triggerCustomizeNavigationBarUI)
             .disposed(by: disposeBag)
     }
 }

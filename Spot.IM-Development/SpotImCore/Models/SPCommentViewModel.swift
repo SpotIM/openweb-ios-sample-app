@@ -206,7 +206,7 @@ internal struct CommentViewModel {
         let leadingOffset: CGFloat = depthOffset()
         let lineWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - Theme.avatarWidth - Theme.usernameTrailing
 
-        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? ""), attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
+        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? ""), attributes: [.font: UIFont.spPreferred(style: .medium, of: Theme.fontSize)])
 
         return attributedMessage.width(withConstrainedHeight: Theme.usernameLineHeight) < lineWidth
     }
@@ -354,13 +354,13 @@ internal struct CommentViewModel {
         if !isDeleted {
             attributes = [
                 .foregroundColor: UIColor.charcoalGrey,
-                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
+                .font: UIFont.spPreferred(style: .regular, of: Theme.fontSize),
                 .paragraphStyle: paragraphStyle
             ]
         } else {
             attributes = [
                 .foregroundColor: UIColor.steelGrey,
-                .font: UIFont.preferred(style: .italic, of: Theme.deletedFontSize),
+                .font: UIFont.spPreferred(style: .italic, of: Theme.deletedFontSize),
                 .paragraphStyle: paragraphStyle
             ]
         }
@@ -395,7 +395,7 @@ internal struct CommentViewModel {
 
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
-           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()] {
+           let currentTranslation = SPLocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[SPLocalizationManager.getLanguageCode()] {
             if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
                 return adminBadge
             } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {

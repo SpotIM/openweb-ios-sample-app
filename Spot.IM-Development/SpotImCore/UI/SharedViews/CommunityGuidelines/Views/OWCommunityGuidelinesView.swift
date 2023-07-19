@@ -60,12 +60,19 @@ class OWCommunityGuidelinesView: UIView {
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
+    // For init when using in Views and not in cells
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         self.isUserInteractionEnabled = true
-        setupUI()
+        updateUI()
         setupObservers()
+        applyAccessibility()
+    }
+
+    // For using in cells that will then call the configure function
+    init() {
+        super.init(frame: .zero)
         applyAccessibility()
     }
 
@@ -73,23 +80,25 @@ class OWCommunityGuidelinesView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init() {
-        super.init(frame: .zero)
-    }
-
     // Only when using community guidelines as a cell
     func configure(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        setupUI()
+        updateUI()
         setupObservers()
     }
 }
 
 fileprivate extension OWCommunityGuidelinesView {
-    func setupUI() {
+    // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
+    // using function configure and here it is also called in init when this class is used as a standalone uiview
+    func updateUI() {
         self.backgroundColor = .clear
         self.isHidden = true
+
+        guidelinesContainer.removeFromSuperview()
+        guidelinesIcon.removeFromSuperview()
+        titleTextView.removeFromSuperview()
 
         if viewModel.outputs.showContainer {
             self.addSubview(guidelinesContainer)
@@ -149,6 +158,7 @@ fileprivate extension OWCommunityGuidelinesView {
     }
 
     func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeContainerViewUI.onNext(guidelinesContainer)
         viewModel.inputs.triggerCustomizeTitleTextViewUI.onNext(titleTextView)
         viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(guidelinesIcon)
     }

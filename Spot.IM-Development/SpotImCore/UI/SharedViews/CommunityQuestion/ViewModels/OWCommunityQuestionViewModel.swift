@@ -11,7 +11,9 @@ import RxSwift
 
 protocol OWCommunityQuestionViewModelingInputs {
     var conversationFetched: PublishSubject<OWConversationReadRM> { get }
-    var triggerCustomizeQuestionLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeQuestionTitleLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeQuestionContainerViewUI: PublishSubject<UIView> { get }
+    var triggerCustomizeQuestionTitleTextViewUI: PublishSubject<UITextView> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
@@ -19,7 +21,10 @@ protocol OWCommunityQuestionViewModelingOutputs {
     var attributedCommunityQuestion: Observable<NSAttributedString> { get }
     var shouldShowView: Observable<Bool> { get }
     var showContainer: Bool { get }
-    var customizeQuestionLabelUI: Observable<UILabel> { get }
+    var customizeQuestionTitleLabelUI: Observable<UILabel> { get }
+    var customizeQuestionContainerViewUI: Observable<UIView> { get }
+    var customizeQuestionTitleTextViewUI: Observable<UITextView> { get }
+    var style: OWCommunityQuestionStyle { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -39,9 +44,13 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
-    fileprivate let _triggerCustomizeQuestionLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let _triggerCustomizeQuestionTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let _triggerCustomizeQuestionContainerViewUI = BehaviorSubject<UIView?>(value: nil)
+    fileprivate let _triggerCustomizeQuestionTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
 
-    var triggerCustomizeQuestionLabelUI = PublishSubject<UILabel>()
+    var triggerCustomizeQuestionTitleLabelUI = PublishSubject<UILabel>()
+    var triggerCustomizeQuestionContainerViewUI = PublishSubject<UIView>()
+    var triggerCustomizeQuestionTitleTextViewUI = PublishSubject<UITextView>()
     var conversationFetched = PublishSubject<OWConversationReadRM>()
 
     let _communityQuestion = BehaviorSubject<String?>(value: nil)
@@ -76,8 +85,20 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
             .share(replay: 0)
     }
 
-    var customizeQuestionLabelUI: Observable<UILabel> {
-        return _triggerCustomizeQuestionLabelUI
+    var customizeQuestionTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeQuestionTitleLabelUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeQuestionContainerViewUI: Observable<UIView> {
+        return _triggerCustomizeQuestionContainerViewUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeQuestionTitleTextViewUI: Observable<UITextView> {
+        return _triggerCustomizeQuestionTitleTextViewUI
             .unwrap()
             .asObservable()
     }
@@ -86,10 +107,10 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
         return style == .compact
     }()
 
-    fileprivate let style: OWCommunityQuestionsStyle
+    let style: OWCommunityQuestionStyle
     fileprivate let disposeBag = DisposeBag()
 
-    init(style: OWCommunityQuestionsStyle) {
+    init(style: OWCommunityQuestionStyle) {
         self.style = style
         setupObservers()
     }
@@ -117,8 +138,16 @@ fileprivate extension OWCommunityQuestionViewModel {
             })
             .disposed(by: disposeBag)
 
-        triggerCustomizeQuestionLabelUI
-            .bind(to: _triggerCustomizeQuestionLabelUI)
+        triggerCustomizeQuestionTitleLabelUI
+            .bind(to: _triggerCustomizeQuestionTitleLabelUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeQuestionContainerViewUI
+            .bind(to: _triggerCustomizeQuestionContainerViewUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeQuestionTitleTextViewUI
+            .bind(to: _triggerCustomizeQuestionTitleTextViewUI)
             .disposed(by: disposeBag)
 
     }

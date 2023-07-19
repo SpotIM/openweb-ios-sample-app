@@ -72,7 +72,13 @@ fileprivate extension OWConversationTitleHeaderView {
 
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeButton", supportDarkMode: true), for: .normal)
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeCloseButtonUI.onNext(closeButton)
     }
 }
