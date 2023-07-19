@@ -33,6 +33,10 @@ protocol OWCommentCreationLightViewViewModeling {
 }
 
 class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModeling, OWCommentCreationLightViewViewModelingInputs, OWCommentCreationLightViewViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let titleFontSize: CGFloat = 15.0
+    }
+
     var inputs: OWCommentCreationLightViewViewModelingInputs { return self }
     var outputs: OWCommentCreationLightViewViewModelingOutputs { return self }
 
@@ -93,9 +97,9 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
               let displayName = user.displayName
         else { return .empty() }
 
-        var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+        let attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
 
-        let attrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
+        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize)]
         let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
 
         attributedString.append(boldUserNameString)
