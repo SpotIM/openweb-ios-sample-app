@@ -50,6 +50,8 @@ enum OWAnalyticEventType {
     case configureThemeEnforcement(theme: OWThemeStyle)
     case configuredInitialSort(initialSort: OWSortOption)
     case configureSortTitle(sort: OWSortOption, title: String)
+    case configureLanguageStrategy(strategy: OWLanguageStrategy)
+    case localeStrategy(strategy: OWLocaleStrategy)
 
     var eventName: String {
         switch self {
@@ -135,6 +137,10 @@ enum OWAnalyticEventType {
             return "configuredInitialSort"
         case .configureSortTitle:
             return "configureSortTitle"
+        case .configureLanguageStrategy:
+            return "configureLanguageStrategy"
+        case .localeStrategy:
+            return "localeStrategy"
         }
     }
 
@@ -188,7 +194,9 @@ enum OWAnalyticEventType {
              .configuredFontFamily,
              .configureThemeEnforcement,
              .configuredInitialSort,
-             .configureSortTitle:
+             .configureSortTitle,
+             .configureLanguageStrategy,
+             .localeStrategy:
             return .configuration
         }
     }
@@ -267,6 +275,10 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["initialSort": sort.rawValue])
         case .configureSortTitle(let sort, let title):
             return OWAnalyticEventPayload(payloadDictionary: ["sort": sort.rawValue, "title": title])
+        case .configureLanguageStrategy(let strategy):
+            return OWAnalyticEventPayload(payloadDictionary: ["strategy": strategy])
+        case .localeStrategy(let strategy):
+            return OWAnalyticEventPayload(payloadDictionary: ["strategy": strategy])
         }
     }
 }
