@@ -22,7 +22,7 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         static let closeButtonPadding: CGFloat = 20
 
         static let closeCrossIcon = "closeCrossIcon"
-        
+
         static let identifier = "report_reason_Submitted_view_id"
         static let closeButtonIdentifier = "report_reason_Submitted_close_button_id"
         static let gotitButtonIdentifier = "report_reason_Submitted_gotit_button_id"
