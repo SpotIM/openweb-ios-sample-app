@@ -249,51 +249,56 @@ enum OWAnalyticEventType {
              .showMoreComments:
             return OWAnalyticEventPayload(payloadDictionary: [:])
         case .commentMenuClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuClosed(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuReportClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuDeleteClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuConfirmDeleteClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuEditClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .editCommentClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .postReplyClicked(let replyToCommentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.replyToCommentId: replyToCommentId])
         case .commentShareClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentReadMoreClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentRankUpButtonClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentRankDownButtonClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentRankUpUndoButtonClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentRankDownUndoButtonClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .loadMoreComments(let page, let commentsPerPage):
-            return OWAnalyticEventPayload(payloadDictionary: ["page": page, "commentsPerPage": commentsPerPage])
+            return OWAnalyticEventPayload(payloadDictionary: [
+                OWAnalyticEventPayloadKeys.page: page,
+                OWAnalyticEventPayloadKeys.commentsPerPage: commentsPerPage])
         case .loadMoreRepliesClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .hideMoreRepliesClicked(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .sortByClicked(let currentSort):
-            return OWAnalyticEventPayload(payloadDictionary: ["currentSort": currentSort.rawValue])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.currentSort: currentSort.rawValue])
         case .sortByClosed(let currentSort):
-            return OWAnalyticEventPayload(payloadDictionary: ["currentSort": currentSort.rawValue])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.currentSort: currentSort.rawValue])
         case .sortByChanged(let previousSort, let selectedSort):
-            return OWAnalyticEventPayload(payloadDictionary: ["previousSort": previousSort.rawValue, "selectedSort": selectedSort.rawValue])
+            return OWAnalyticEventPayload(payloadDictionary: [
+                OWAnalyticEventPayloadKeys.previousSort: previousSort.rawValue,
+                OWAnalyticEventPayloadKeys.selectedSort: selectedSort.rawValue
+            ])
         case .userProfileClicked(let userId):
-            return OWAnalyticEventPayload(payloadDictionary: ["userId": userId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.userId: userId])
         case .myProfileClicked(let source):
-            return OWAnalyticEventPayload(payloadDictionary: ["source": source])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.source: source])
         case .replyClicked(let replyToCommentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["replyToCommentId": replyToCommentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.replyToCommentId: replyToCommentId])
         case .configuredPreConversationStyle(let style):
             return style.analyticsPayload
         case .configuredFullConversationStyle(let style):
@@ -301,21 +306,24 @@ enum OWAnalyticEventType {
         case .configuredCommentCreationStyle(let style):
             return style.analyticsPayload
         case .configuredFontFamily(let font):
-            return OWAnalyticEventPayload(payloadDictionary: ["font": font])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.font: font])
         case .configureThemeEnforcement(let theme):
-            return OWAnalyticEventPayload(payloadDictionary: ["theme": theme.rawValue])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.theme: theme.rawValue])
         case .configuredInitialSort(let sort):
-            return OWAnalyticEventPayload(payloadDictionary: ["initialSort": sort.rawValue])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.initialSort: sort.rawValue])
         case .configureSortTitle(let sort, let title):
-            return OWAnalyticEventPayload(payloadDictionary: ["sort": sort.rawValue, "title": title])
+            return OWAnalyticEventPayload(payloadDictionary: [
+                OWAnalyticEventPayloadKeys.sort: sort.rawValue,
+                OWAnalyticEventPayloadKeys.title: title
+            ])
         case .configureLanguageStrategy(let strategy):
-            return OWAnalyticEventPayload(payloadDictionary: ["strategy": strategy])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
         case .localeStrategy(let strategy):
-            return OWAnalyticEventPayload(payloadDictionary: ["strategy": strategy])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
         case .readingTime(let timeInMs):
-            return OWAnalyticEventPayload(payloadDictionary: ["timeInMs": timeInMs])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.timeInMs: timeInMs])
         case .commentViewed(let commentId):
-            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         }
     }
 }

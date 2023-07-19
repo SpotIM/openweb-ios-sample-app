@@ -12,23 +12,23 @@ extension OWPreConversationStyle {
     var analyticsPayload: OWAnalyticEventPayload {
         switch self {
         case .regular:
-            return OWAnalyticEventPayload(payloadDictionary: ["style": "regular"])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.style: "regular"])
         case .compact:
-            return OWAnalyticEventPayload(payloadDictionary: ["style": "compact"])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.style: "compact"])
         case .ctaButtonOnly:
-            return OWAnalyticEventPayload(payloadDictionary: ["style": "ctaButtonOnly"])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.style: "ctaButtonOnly"])
         case .ctaWithSummary(let communityGuidelinesStyle, let communityQuestionsStyle):
             return OWAnalyticEventPayload(payloadDictionary: [
-                "style": "ctaWithSummary",
-                "communityGuidelinesStyle": communityGuidelinesStyle,
-                "communityQuestionsStyle": communityQuestionsStyle
+                OWAnalyticEventPayloadKeys.style: "ctaWithSummary",
+                OWAnalyticEventPayloadKeys.communityGuidelinesStyle: communityGuidelinesStyle,
+                OWAnalyticEventPayloadKeys.communityQuestionsStyle: communityQuestionsStyle
             ])
         case .custom(let numberOfComments, let communityGuidelinesStyle, let communityQuestionsStyle):
             return OWAnalyticEventPayload(payloadDictionary: [
-                "style": "custom",
-                "numberOfComments": numberOfComments,
-                "communityGuidelinesStyle": communityGuidelinesStyle,
-                "communityQuestionsStyle": communityQuestionsStyle
+                OWAnalyticEventPayloadKeys.style: "custom",
+                OWAnalyticEventPayloadKeys.numberOfComments: numberOfComments,
+                OWAnalyticEventPayloadKeys.communityGuidelinesStyle: communityGuidelinesStyle,
+                OWAnalyticEventPayloadKeys.communityQuestionsStyle: communityQuestionsStyle
             ])
         }
     }
