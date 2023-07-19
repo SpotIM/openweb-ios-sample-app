@@ -12,11 +12,14 @@ extension OWCommentCreationStyle {
     var analyticsPayload: OWAnalyticEventPayload {
         switch self {
         case .regular:
-            return OWAnalyticEventPayload(payloadDictionary: ["style": "regular"])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.style: "regular"])
         case .light:
-            return OWAnalyticEventPayload(payloadDictionary: ["style": "light"])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.style: "light"])
         case .floatingKeyboard(let accessoryViewStrategy):
-            return OWAnalyticEventPayload(payloadDictionary: ["style": "floatingKeyboard", "accessoryViewStrategy": accessoryViewStrategy])
+            return OWAnalyticEventPayload(payloadDictionary: [
+                OWAnalyticEventPayloadKeys.style: "floatingKeyboard",
+                OWAnalyticEventPayloadKeys.accessoryViewStrategy: accessoryViewStrategy
+            ])
         }
     }
 }
