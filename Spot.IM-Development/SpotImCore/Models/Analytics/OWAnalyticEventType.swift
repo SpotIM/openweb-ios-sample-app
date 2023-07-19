@@ -52,6 +52,13 @@ enum OWAnalyticEventType {
     case configureSortTitle(sort: OWSortOption, title: String)
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
+    case readingTime(timeInMs: Int)
+    case commentViewed(commentId: OWCommentId)
+    case cameraIconClickedOpen
+    case cameraIconClickedTakePhoto
+    case cameraIconClickedChooseFromGallery
+    case cameraIconClickedClose
+    case showMoreComments
 
     var eventName: String {
         switch self {
@@ -141,6 +148,20 @@ enum OWAnalyticEventType {
             return "configureLanguageStrategy"
         case .localeStrategy:
             return "localeStrategy"
+        case .readingTime:
+            return "readingTime"
+        case .commentViewed:
+            return "commentViewed"
+        case .cameraIconClickedOpen:
+            return "cameraIconClickedOpen"
+        case .cameraIconClickedTakePhoto:
+            return "cameraIconClickedTakePhoto"
+        case .cameraIconClickedChooseFromGallery:
+            return "cameraIconClickedChooseFromGallery"
+        case .cameraIconClickedClose:
+            return "cameraIconClickedClose"
+        case .showMoreComments:
+            return "showMoreComments"
         }
     }
 
@@ -148,10 +169,13 @@ enum OWAnalyticEventType {
         switch self {
         case .fullConversationLoaded,
              .preConversationLoaded,
-             .loadMoreComments:
+             .loadMoreComments,
+             .showMoreComments:
             return .loaded
         case .fullConversationViewed,
-             .preConversationViewed:
+             .preConversationViewed,
+             .readingTime,
+             .commentViewed:
             return .viewed
         case .commentMenuClicked,
              .commentMenuClosed,
@@ -167,7 +191,11 @@ enum OWAnalyticEventType {
              .commentCreationClosePage,
              .commentCreationLeavePage,
              .commentCreationContinueWriting,
-             .createCommentCTAClicked:
+             .createCommentCTAClicked,
+             .cameraIconClickedOpen,
+             .cameraIconClickedTakePhoto,
+             .cameraIconClickedChooseFromGallery,
+             .cameraIconClickedClose:
             return .commentCreation
         case .commentShareClicked,
              .commentReadMoreClicked,
@@ -213,7 +241,12 @@ enum OWAnalyticEventType {
              .commentCreationClosePage,
              .commentCreationLeavePage,
              .commentCreationContinueWriting,
-             .loginPromptClicked:
+             .loginPromptClicked,
+             .cameraIconClickedOpen,
+             .cameraIconClickedTakePhoto,
+             .cameraIconClickedChooseFromGallery,
+             .cameraIconClickedClose,
+             .showMoreComments:
             return OWAnalyticEventPayload(payloadDictionary: [:])
         case .commentMenuClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
@@ -279,6 +312,10 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: ["strategy": strategy])
         case .localeStrategy(let strategy):
             return OWAnalyticEventPayload(payloadDictionary: ["strategy": strategy])
+        case .readingTime(let timeInMs):
+            return OWAnalyticEventPayload(payloadDictionary: ["timeInMs": timeInMs])
+        case .commentViewed(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: ["commentId": commentId])
         }
     }
 }
