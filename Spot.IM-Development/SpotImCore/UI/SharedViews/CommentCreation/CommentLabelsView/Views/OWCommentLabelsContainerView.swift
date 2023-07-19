@@ -26,6 +26,7 @@ class OWCommentLabelsContainerView: UIView {
             .font(OWFontBook.shared.font(style: .medium, size: Metrics.titleLabelFontSize))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var labelsContainerStackView: UIStackView = {
@@ -45,6 +46,9 @@ class OWCommentLabelsContainerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
+
+        self.enforceSemanticAttribute()
+
         setupUI()
     }
 
