@@ -38,6 +38,7 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var topContainerView: UIView = {
         let topContainerView = UIView()
+            .enforceSemanticAttribute()
 
         topContainerView.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
@@ -92,6 +93,8 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentCreationRegularViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+
+        self.enforceSemanticAttribute()
 
         commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
 
