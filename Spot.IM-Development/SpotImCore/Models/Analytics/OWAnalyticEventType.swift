@@ -46,6 +46,10 @@ enum OWAnalyticEventType {
     case configuredPreConversationStyle(style: OWPreConversationStyle)
     case configuredFullConversationStyle(style: OWConversationStyle)
     case configuredCommentCreationStyle(style: OWCommentCreationStyle)
+    case configuredFontFamily(font: OWFontGroupFamily)
+    case configureThemeEnforcement(theme: OWThemeStyle)
+    case configuredInitialSort(initialSort: OWSortOption)
+    case configureSortTitle(sort: OWSortOption, title: String)
 
     var eventName: String {
         switch self {
@@ -123,6 +127,14 @@ enum OWAnalyticEventType {
             return "configuredFullConversationStyle"
         case .configuredCommentCreationStyle:
             return "configuredCommentCreationStyle"
+        case .configuredFontFamily:
+            return "configuredFontFamily"
+        case .configureThemeEnforcement:
+            return "configureThemeEnforcement"
+        case .configuredInitialSort:
+            return "configuredInitialSort"
+        case .configureSortTitle:
+            return "configureSortTitle"
         }
     }
 
@@ -172,7 +184,11 @@ enum OWAnalyticEventType {
             return .auth
         case .configuredPreConversationStyle,
              .configuredFullConversationStyle,
-             .configuredCommentCreationStyle:
+             .configuredCommentCreationStyle,
+             .configuredFontFamily,
+             .configureThemeEnforcement,
+             .configuredInitialSort,
+             .configureSortTitle:
             return .configuration
         }
     }
@@ -243,6 +259,14 @@ enum OWAnalyticEventType {
             return style.analyticsPayload
         case .configuredCommentCreationStyle(let style):
             return style.analyticsPayload
+        case .configuredFontFamily(let font):
+            return OWAnalyticEventPayload(payloadDictionary: ["font": font])
+        case .configureThemeEnforcement(let theme):
+            return OWAnalyticEventPayload(payloadDictionary: ["theme": theme.rawValue])
+        case .configuredInitialSort(let sort):
+            return OWAnalyticEventPayload(payloadDictionary: ["initialSort": sort.rawValue])
+        case .configureSortTitle(let sort, let title):
+            return OWAnalyticEventPayload(payloadDictionary: ["sort": sort.rawValue, "title": title])
         }
     }
 }
