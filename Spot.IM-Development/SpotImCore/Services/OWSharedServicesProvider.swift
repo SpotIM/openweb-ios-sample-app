@@ -26,6 +26,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
     func analyticsService() -> OWAnalyticsServicing
+    func analyticsEventCreatorService() -> OWAnalyticsEventCreatorServicing
     func userDefaults() -> OWUserDefaultsProtocol
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
@@ -37,8 +38,10 @@ protocol OWSharedServicesProviding: AnyObject {
     func authenticationManager() -> OWAuthenticationManagerProtocol
     func blockerServicing() -> OWBlockerServicing
     func commentsService() -> OWCommentsServicing
+    func reportedCommentsService() -> OWReportedCommentsServicing
     func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
+    func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -90,6 +93,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWAnalyticsService()
     }()
 
+    fileprivate lazy var _analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = {
+        return OWAnalyticsEventCreatorService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
         return OWUserDefaults(servicesProvider: self)
     }()
@@ -134,12 +141,20 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCommentsService()
     }()
 
+    fileprivate lazy var _reportedCommentsService: OWReportedCommentsServicing = {
+        return OWReportedCommentsService()
+    }()
+
     fileprivate lazy var _usersService: OWUsersServicing = {
         return OWUsersService()
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
         return OWPresenterService()
+    }()
+
+    fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
+        return OWCommentCreationRequestsService()
     }()
 
     func themeStyleService() -> OWThemeStyleServicing {
@@ -186,6 +201,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _analyticsService
     }
 
+    func analyticsEventCreatorService() -> OWAnalyticsEventCreatorServicing {
+        return _analyticsEventCreatorService
+    }
+
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing {
         return _skeletonShimmeringService
     }
@@ -218,12 +237,20 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _commentsService
     }
 
+    func reportedCommentsService() -> OWReportedCommentsServicing {
+        return _reportedCommentsService
+    }
+
     func usersService() -> OWUsersServicing {
         return _usersService
     }
 
     func presenterService() -> OWPresenterServicing {
         return _presenterService
+    }
+
+    func commentCreationRequestsService() -> OWCommentCreationRequestsServicing {
+        return _commentCreationRequestsService
     }
 }
 
@@ -256,6 +283,8 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _spotConfigurationService.spotChanged(spotId: spotId)
         _commentsService.cleanCache()
         _usersService.cleanCache()
+        _analyticsService.spotChanged(spotId: spotId)
+        _reportedCommentsService.cleanCache()
     }
 }
 

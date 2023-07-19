@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-internal final class SPUserNameView: OWBaseView {
+internal final class SPUserNameView: SPBaseView {
 
     enum ContentType {
         case comment, reply
@@ -36,17 +36,17 @@ internal final class SPUserNameView: OWBaseView {
     fileprivate var viewModel: SPUserNameViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    private let userNameLabel: OWBaseLabel = .init()
-    private let badgeTagLabel: OWBaseLabel = .init()
+    private let userNameLabel: SPBaseLabel = .init()
+    private let badgeTagLabel: SPBaseLabel = .init()
     private let nameAndBadgeStackview = UIStackView()
-    private let subtitleLabel: OWBaseLabel = .init()
-    private let dateLabel: OWBaseLabel = .init()
-    private lazy var moreButton: OWBaseButton = {
-        let btn = OWBaseButton()
+    private let subtitleLabel: SPBaseLabel = .init()
+    private let dateLabel: SPBaseLabel = .init()
+    private lazy var moreButton: SPBaseButton = {
+        let btn = SPBaseButton()
         return btn
     }()
-    private lazy var hiddenCommentReasonLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var hiddenCommentReasonLabel: SPBaseLabel = {
+        let lbl = SPBaseLabel()
         return lbl
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
@@ -110,7 +110,7 @@ fileprivate extension SPUserNameView {
         nameAndBadgeStackview.alignment = .leading
         nameAndBadgeStackview.spacing = Metrics.badgeLeadingPadding
 
-        badgeTagLabel.font = .preferred(style: .medium, of: Metrics.labelFontSize)
+        badgeTagLabel.font = .spPreferred(style: .medium, of: Metrics.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
         badgeTagLabel.layer.cornerRadius = 3
         badgeTagLabel.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
@@ -148,7 +148,7 @@ fileprivate extension SPUserNameView {
 
         // Setup subtitle label
 
-        subtitleLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
+        subtitleLabel.font = .spPreferred(style: .regular, of: Metrics.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
@@ -159,7 +159,7 @@ fileprivate extension SPUserNameView {
         }
 
         // Setup date label
-        dateLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
+        dateLabel.font = .spPreferred(style: .regular, of: Metrics.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         dateLabel.isUserInteractionEnabled = false
         dateLabel.OWSnp.makeConstraints { make in
@@ -176,12 +176,12 @@ fileprivate extension SPUserNameView {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
-        paragraphStyle.updateAlignment()
+        paragraphStyle.spUpdateAlignment()
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .foregroundColor: UIColor.spForeground3,
-            .font: UIFont.preferred(style: .italic, of: 17.0),
+            .font: UIFont.spPreferred(style: .italic, of: 17.0),
             .paragraphStyle: paragraphStyle
         ]
 
@@ -251,7 +251,7 @@ fileprivate extension SPUserNameView {
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self.userNameLabel.font(
-                    .preferred(style: style, of: Metrics.fontSize)
+                    .spPreferred(style: style, of: Metrics.fontSize)
                 )
             }).disposed(by: disposeBag)
 
@@ -283,6 +283,6 @@ extension SPUserNameView {
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
 
         moreButton.accessibilityTraits = .button
-        moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+        moreButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "Options menu")
     }
 }

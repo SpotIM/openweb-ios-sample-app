@@ -16,9 +16,11 @@ protocol OWNetworkAPIProtocol {
     var realtime: OWRealtimeAPI { get }
     var configuration: OWConfigurationAPI { get }
     var profile: OWProfileAPI { get }
+    var user: OWUserAPI { get }
     var images: OWImagesAPI { get }
     var authentication: OWAuthenticationAPI { get }
     var conversation: OWConversationAPI { get }
+    var reportReason: OWReportReasonAPI { get }
     var failureReporter: OWFailureReportAPI { get }
 }
 

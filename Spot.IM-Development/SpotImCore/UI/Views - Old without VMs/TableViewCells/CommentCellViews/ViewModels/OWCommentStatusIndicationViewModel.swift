@@ -87,11 +87,11 @@ fileprivate extension OWCommentStatusIndicationViewModel {
     func indicationText(status: SPComment.CommentStatus, isStrictMode: Bool) -> String {
         switch(status) {
         case .reject, .block:
-            return LocalizationManager.localizedString(key: "This comment violated our policy.")
+            return SPLocalizationManager.localizedString(key: "This comment violated our policy.")
         case .requireApproval, .pending:
             return isStrictMode ?
-            LocalizationManager.localizedString(key: "Your comment is waiting for approval due to the site’s policy.") :
-            LocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
+            SPLocalizationManager.localizedString(key: "Your comment is waiting for approval due to the site’s policy.") :
+            SPLocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
         default:
             return ""
         }
@@ -107,7 +107,7 @@ fileprivate extension OWCommentStatusIndicationViewModel {
         let attributedMessage = NSAttributedString(
             string: text,
             attributes: [
-                NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
+                NSAttributedString.Key.font: OWFontBook.shared.font(style: .regular, size: OWCommentStatusIndicationView.Metrics.fontSize)
             ])
         // get the text height and add padding
         let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)

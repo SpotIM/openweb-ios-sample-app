@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class ShowMoreRepliesView: OWBaseView {
+internal final class ShowMoreRepliesView: SPBaseView {
     fileprivate struct Metrics {
         static let identifier = "show_more_replies_id"
     }
@@ -18,8 +18,8 @@ internal final class ShowMoreRepliesView: OWBaseView {
     var expandedTitle: String?
 
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
-    private let showHideRepliesButton: OWBaseButton = .init()
-    private let disclosureIndicator: OWBaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
+    private let showHideRepliesButton: SPBaseButton = .init()
+    private let disclosureIndicator: SPBaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,13 +76,13 @@ internal final class ShowMoreRepliesView: OWBaseView {
     private func configureShowHideRepliesButton() {
         showHideRepliesButton.backgroundColor = .spBackground0
         showHideRepliesButton.addTarget(self, action: #selector(showHideReplies), for: .touchUpInside)
-        showHideRepliesButton.titleLabel?.font = .preferred(style: .bold, of: Theme.fontSize)
+        showHideRepliesButton.titleLabel?.font = .spPreferred(style: .bold, of: Theme.fontSize)
         showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
         showHideRepliesButton.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+        if SPLocalizationManager.currentLanguage?.isRightToLeft ?? false {
             showHideRepliesButton.contentEdgeInsets.left += activityIndicator.frame.width + Theme.activityOffset
         } else {
             showHideRepliesButton.contentEdgeInsets.right += activityIndicator.frame.width + Theme.activityOffset

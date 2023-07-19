@@ -21,6 +21,8 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
             switch viewModel.outputs.commentType {
             case .comment:
                 return nil
+            case .edit:
+                return nil
             case .replyToComment(let originComment):
                 return "Reply to user: \(originComment.userId ?? "missing userId")"
             }
