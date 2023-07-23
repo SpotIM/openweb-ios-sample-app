@@ -13,8 +13,10 @@ enum OWAnalyticEventGroup: String {
     case viewed
     case commentMenu
     case commentCreation
+    case camera
     case commentInteraction
-    case sortMenu
+    case engagement
+    case sort
     case profile
     case auth
     case configuration
