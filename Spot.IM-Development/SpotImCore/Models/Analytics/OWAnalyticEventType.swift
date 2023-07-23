@@ -52,14 +52,16 @@ enum OWAnalyticEventType {
     case configureSortTitle(sort: OWSortOption, title: String)
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
-    case readingTime(timeInMs: Int)
+    case readingTime(milliseconds: Int)
     case commentViewed(commentId: OWCommentId)
     case cameraIconClickedOpen
     case cameraIconClickedTakePhoto
     case cameraIconClickedChooseFromGallery
     case cameraIconClickedClose
     case showMoreComments
+}
 
+extension OWAnalyticEventType {
     var eventName: String {
         switch self {
         case .fullConversationLoaded:
@@ -322,8 +324,8 @@ enum OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
         case .localeStrategy(let strategy):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
-        case .readingTime(let timeInMs):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.timeInMs: timeInMs])
+        case .readingTime(let milliseconds):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.milliseconds: milliseconds])
         case .commentViewed(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         }
