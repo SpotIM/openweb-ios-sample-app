@@ -34,7 +34,7 @@ class OWPresenterService: OWPresenterServicing {
         return Observable.create { observer in
             // Map to regular UIAlertAction
             let menuItems = actions.map { rxAction in
-                OWMenuSelectionItem(title: rxAction.title) {
+                OWMenuSelectionItem(title: rxAction.title, titleIdentifier: rxAction.type.identifier) {
                     observer.onNext(.selected(action: rxAction))
                     observer.onCompleted()
                 }

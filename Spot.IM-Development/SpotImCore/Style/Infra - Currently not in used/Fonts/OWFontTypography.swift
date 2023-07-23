@@ -83,20 +83,20 @@ enum OWFontTypography {
 
     var maxSizeEnforcement: OWFontSizeEnforcement {
         switch self {
-        case .titleLarge: return .none
-        case .titleMedium: return .none
-        case .titleSmall: return .none
-        case .bodyText: return .none
-        case .bodyInteraction: return .none
-        case .bodyContext: return .none
-        case .bodySpecial: return .none
-        case .footnoteText: return .none
-        case .footnoteLink: return .none
-        case .footnoteContext: return .none
-        case .footnoteSpecial: return .none
-        case .footnoteCaption: return .none
-        case .metaText: return .none
-        case .infoCaption: return .none
+        case .titleLarge: return .fixed(26)
+        case .titleMedium: return .fixed(24)
+        case .titleSmall: return .fixed(21)
+        case .bodyText: return .fixed(21)
+        case .bodyInteraction: return .fixed(21)
+        case .bodyContext: return .fixed(21)
+        case .bodySpecial: return .fixed(21)
+        case .footnoteText: return .fixed(17)
+        case .footnoteLink: return .fixed(17)
+        case .footnoteContext: return .fixed(17)
+        case .footnoteSpecial: return .fixed(17)
+        case .footnoteCaption: return .fixed(17)
+        case .metaText: return .fixed(16)
+        case .infoCaption: return .fixed(15)
         }
     }
 

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWCommentStatusIndicationView: SPBaseView {
+class OWCommentStatusIndicationView: UIView {
     struct Metrics {
         static let iconSize: CGFloat = 14
 
@@ -19,22 +19,18 @@ class OWCommentStatusIndicationView: SPBaseView {
         static let textVerticalPadding: CGFloat = 12
         static let statusTextHorizontalOffset: CGFloat = 8
 
-        static let fontSize: CGFloat = 15
-
         static let identifier = "comment_status_indication_view_id"
     }
 
-    private let iconImageView: SPBaseUIImageView = {
-        let imageView = SPBaseUIImageView()
-        imageView.image = UIImage(spNamed: "pendingIcon")
-        return imageView
+    private let iconImageView: UIImageView = {
+        return UIImageView()
+            .image(UIImage(spNamed: "pendingIcon")!)
     }()
 
-    private let statusTextLabel: SPBaseLabel = {
-        let label = SPBaseLabel()
-        label.numberOfLines = 0
-        label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
-        return label
+    private let statusTextLabel: UILabel = {
+        return UILabel()
+            .numberOfLines(0)
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate var viewModel: OWCommentStatusIndicationViewModeling!
@@ -44,6 +40,10 @@ class OWCommentStatusIndicationView: SPBaseView {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
         setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func updateColorsAccordingToStyle() {

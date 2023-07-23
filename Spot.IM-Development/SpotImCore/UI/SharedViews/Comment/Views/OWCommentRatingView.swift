@@ -14,7 +14,6 @@ class OWCommentRatingView: UIView {
 
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 24.0
-        static let fontSize: CGFloat = 12.0
         static let stackviewHeight: CGFloat = 24.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
@@ -55,7 +54,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -63,7 +62,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -75,8 +74,8 @@ class OWCommentRatingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        applyAccessibility()
         setupUI()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -234,11 +233,7 @@ fileprivate extension OWCommentRatingView {
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-
-        rankUpButton.accessibilityTraits = .button
         rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Up vote button")
-
-        rankDownButton.accessibilityTraits = .button
         rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Down vote button")
     }
 }

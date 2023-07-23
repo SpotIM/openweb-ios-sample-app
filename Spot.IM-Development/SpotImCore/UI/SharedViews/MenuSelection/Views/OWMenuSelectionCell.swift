@@ -13,6 +13,9 @@ import RxSwift
 class OWMenuSelectionCell: UITableViewCell {
 
     fileprivate struct Metrics {
+        static let identifier = "menu_selection_cell_id"
+        static let contentViewIdentifier = "menu_selection_content_view_id"
+        static let labelIdentifier = "menu_selection_label_id_"
         static let textSize: CGFloat = 15
         static let verticalPadding: CGFloat = 12
         static let horizontalPadding: CGFloat = 4
@@ -39,12 +42,18 @@ class OWMenuSelectionCell: UITableViewCell {
     func configure(with viewModel: OWMenuSelectionCellViewModeling) {
         self.disposeBag = DisposeBag()
         self.viewModel = viewModel
-
         self.setupObservers()
+        self.applyAccessibility()
     }
 }
 
 fileprivate extension OWMenuSelectionCell {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        contentView.accessibilityIdentifier = Metrics.contentViewIdentifier
+        label.accessibilityIdentifier = Metrics.labelIdentifier + viewModel.outputs.titleIdentifier
+    }
+
     func setupUI() {
         self.backgroundColor = UIColor.clear
         self.selectionStyle = .none

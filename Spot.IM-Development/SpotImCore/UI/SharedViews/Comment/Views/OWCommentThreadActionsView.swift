@@ -12,10 +12,12 @@ import RxSwift
 
 class OWCommentThreadActionsView: UIView {
     fileprivate struct Metrics {
+        static let identifier = "comment_thread_actions_view_id_"
+        static let actionViewIdentifier = "comment_thread_actions_view_action_view_id_"
+        static let actionLabelIdentifier = "comment_thread_actions_view_action_label_id_"
         static let topOffset: CGFloat = 4.0
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
-        static let fontSize: CGFloat = 15.0
         static let cellHeight: CGFloat = 40.0
         static let textToImageSpacing: CGFloat = 6.5
     }
@@ -35,8 +37,8 @@ class OWCommentThreadActionsView: UIView {
     func configure(with viewModel: OWCommentThreadActionsViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-
         self.setupObservers()
+        self.applyAccessibility()
     }
 
     func prepareForReuse() {
@@ -79,7 +81,7 @@ class OWCommentThreadActionsView: UIView {
     fileprivate lazy var actionLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -96,6 +98,12 @@ class OWCommentThreadActionsView: UIView {
 }
 
 fileprivate extension OWCommentThreadActionsView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier + viewModel.outputs.commentId
+        actionView.accessibilityIdentifier = Metrics.actionViewIdentifier + viewModel.outputs.commentId
+        actionLabel.accessibilityIdentifier = Metrics.actionLabelIdentifier + viewModel.outputs.commentId
+    }
+
     func setupUI() {
         self.backgroundColor = .clear
 

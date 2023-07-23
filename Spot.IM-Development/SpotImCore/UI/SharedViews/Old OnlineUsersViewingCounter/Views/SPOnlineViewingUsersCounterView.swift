@@ -33,7 +33,7 @@ class SPOnlineViewingUsersCounterView: UIView {
 
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
-            .font(UIFont.preferred(style: .regular, of: Metrics.viewersFontSize))
+            .font(UIFont.spPreferred(style: .regular, of: Metrics.viewersFontSize))
             .textColor(.spForeground3)
 
         return lbl
