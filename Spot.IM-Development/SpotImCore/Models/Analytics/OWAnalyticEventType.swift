@@ -169,8 +169,7 @@ enum OWAnalyticEventType {
         switch self {
         case .fullConversationLoaded,
              .preConversationLoaded,
-             .loadMoreComments,
-             .showMoreComments:
+             .loadMoreComments:
             return .loaded
         case .fullConversationViewed,
              .preConversationViewed,
@@ -187,34 +186,37 @@ enum OWAnalyticEventType {
         case .editCommentClicked,
              .postCommentClicked,
              .postReplyClicked,
-             .signUpToPostClicked,
              .commentCreationClosePage,
              .commentCreationLeavePage,
              .commentCreationContinueWriting,
-             .createCommentCTAClicked,
-             .cameraIconClickedOpen,
+             .createCommentCTAClicked:
+            return .commentCreation
+        case .cameraIconClickedOpen,
              .cameraIconClickedTakePhoto,
              .cameraIconClickedChooseFromGallery,
              .cameraIconClickedClose:
-            return .commentCreation
-        case .commentShareClicked,
-             .commentReadMoreClicked,
-             .commentRankUpButtonClicked,
-             .commentRankDownButtonClicked,
-             .commentRankUpUndoButtonClicked,
-             .commentRankDownUndoButtonClicked,
+            return .camera
+        case .commentReadMoreClicked,
              .loadMoreRepliesClicked,
              .hideMoreRepliesClicked,
              .replyClicked:
             return .commentInteraction
+        case .commentShareClicked,
+             .commentRankUpButtonClicked,
+             .commentRankDownButtonClicked,
+             .commentRankUpUndoButtonClicked,
+             .commentRankDownUndoButtonClicked,
+             .showMoreComments:
+            return .engagement
         case .sortByClicked,
              .sortByClosed,
              .sortByChanged:
-            return .sortMenu
+            return .sort
         case .userProfileClicked,
              .myProfileClicked:
             return .profile
-        case .loginPromptClicked:
+        case .loginPromptClicked,
+             .signUpToPostClicked:
             return .auth
         case .configuredPreConversationStyle,
              .configuredFullConversationStyle,
