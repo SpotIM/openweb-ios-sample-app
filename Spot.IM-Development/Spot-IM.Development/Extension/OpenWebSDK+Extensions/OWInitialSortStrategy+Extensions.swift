@@ -30,8 +30,8 @@ extension OWInitialSortStrategy {
         switch self {
         case .useServerConfig: return 0
         case .use(sortOption: .best): return 1
-        case .use(sortOption: .newest): return 1
-        case .use(sortOption: .oldest): return 1
+        case .use(sortOption: .newest): return 2
+        case .use(sortOption: .oldest): return 3
         default: return OWInitialSortStrategy.`default`.index
         }
     }
