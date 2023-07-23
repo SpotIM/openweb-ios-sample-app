@@ -21,7 +21,7 @@ enum OWToastType {
 }
 
 // TODO: should have some onClick function (except none)
-enum OWToastAction: OWMenuTypeProtocol {
+enum OWToastAction: String, OWMenuTypeProtocol {
     case undo
     case tryAgain
     case learnMore
