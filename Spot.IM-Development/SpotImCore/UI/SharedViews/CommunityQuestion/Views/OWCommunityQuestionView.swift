@@ -53,6 +53,7 @@ class OWCommunityQuestionView: UIView {
             .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
+    fileprivate var heightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -122,6 +123,7 @@ fileprivate extension OWCommunityQuestionView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
             }
         }
     }
@@ -139,6 +141,13 @@ fileprivate extension OWCommunityQuestionView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
+
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
