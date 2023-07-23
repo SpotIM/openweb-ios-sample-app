@@ -14,16 +14,26 @@ import SpotImCore
 extension OWInitialSortStrategy {
     static func initialSort(fromIndex index: Int) -> OWInitialSortStrategy {
         switch index {
-        case 0: return .useServerConfig
-        case 1: return .use(sortOption: .best)
-        case 2: return .use(sortOption: .newest)
-        case 3: return .use(sortOption: .oldest)
+        case OWInitialSortStrategy.useServerConfig.index: return .useServerConfig
+        case OWInitialSortStrategy.use(sortOption: .best).index: return .use(sortOption: .best)
+        case OWInitialSortStrategy.use(sortOption: .newest).index: return .use(sortOption: .newest)
+        case OWInitialSortStrategy.use(sortOption: .oldest).index: return .use(sortOption: .oldest)
         default: return .useServerConfig
         }
     }
 
-    static var defaultIndex: Int {
-        return 0
+    static var `default`: OWInitialSortStrategy {
+        return .useServerConfig
+    }
+
+    var index: Int {
+        switch self {
+        case .useServerConfig: return 0
+        case .use(sortOption: .best): return 1
+        case .use(sortOption: .newest): return 1
+        case .use(sortOption: .oldest): return 1
+        default: return OWInitialSortStrategy.`default`.index
+        }
     }
 }
 
