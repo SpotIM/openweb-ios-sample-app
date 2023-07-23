@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWCommentDeleteAlert: OWMenuTypeProtocol {
+enum OWCommentDeleteAlert: String, OWMenuTypeProtocol {
     case delete
     case cancel
 }

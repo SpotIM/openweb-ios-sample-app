@@ -14,7 +14,6 @@ import RxCocoa
 final class OWCommentActionsView: SPBaseView {
 
     fileprivate struct Metrics {
-        static let fontSize: CGFloat = 16.0
         static let baseOffset: CGFloat = 14
         static let identifier = "comment_actions_view_id"
         static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
@@ -144,7 +143,7 @@ final class OWCommentActionsView: SPBaseView {
     private func configureReplyButton() {
         stackView.addArrangedSubview(replyButton)
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
-        replyButton.titleLabel?.font = .preferred(style: .regular, of: Metrics.fontSize)
+        replyButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyText)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
     }
 

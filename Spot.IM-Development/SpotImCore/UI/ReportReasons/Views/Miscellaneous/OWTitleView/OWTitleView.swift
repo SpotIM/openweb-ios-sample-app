@@ -11,14 +11,15 @@ import RxSwift
 
 class OWTitleView: UIView {
     fileprivate struct Metrics {
+        static let closeButtonTrailingPadding: CGFloat = 19
+        static let closeButtonPadding: CGFloat = 20
+        
+        static let closeCrossIcon = "closeCrossIcon"
+
         static let suffixIdentifier = "_title_view_id"
         static let titleLabelSuffixIdentifier = "_title_label_id"
         static let closeButtonSuffixIdentifier = "_close_button_id"
         static let titleLeadingPadding: CGFloat = 16
-        static let titleFontSize: CGFloat = 15
-        static let closeButtonTrailingPadding: CGFloat = 19
-        static let closeButtonPadding: CGFloat = 20
-        static let closeCrossIcon = "closeCrossIcon"
     }
 
     fileprivate let viewModel: OWTitleViewViewModeling
@@ -28,7 +29,7 @@ class OWTitleView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
         return title
                 .label
-                .font(UIFont.preferred(style: .bold, of: Metrics.titleFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyContext))
                 .text(title)
     }()
 
