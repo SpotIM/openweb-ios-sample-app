@@ -146,10 +146,12 @@ fileprivate extension ConversationSettingsView {
 
     func setupObservers() {
         viewModel.outputs.styleModeIndex
+            .debug("RIVI styleModeIndex")
             .bind(to: segmentedStyleMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         segmentedStyleMode.rx.selectedSegmentIndex
+            .debug("RIVI selectedSegmentIndex")
             .bind(to: viewModel.inputs.styleModeSelectedIndex)
             .disposed(by: disposeBag)
 
