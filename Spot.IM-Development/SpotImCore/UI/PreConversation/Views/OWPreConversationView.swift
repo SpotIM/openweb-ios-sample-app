@@ -304,11 +304,9 @@ fileprivate extension OWPreConversationView {
                     make.top.equalTo(self.communityQuestionView.OWSnp.bottom).offset(shouldShowDevider ? Metrics.communityQuestionDeviderPadding : 0)
                     make.height.equalTo(shouldShowDevider ? Metrics.separatorHeight : 0)
                 }
+                self.communityQuestionBottomDevider.isHidden = !shouldShowDevider
             })
-            .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                self.communityQuestionBottomDevider.isHidden = !shouldShow
-            })
+            .subscribe()
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationCTAButtonTitle
