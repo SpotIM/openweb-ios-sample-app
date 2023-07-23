@@ -17,6 +17,7 @@ protocol OWToastViewModelingOutputs {
     var title: String { get }
     var toastActionViewModel: OWToastActionViewModeling { get }
     var showAction: Bool { get }
+    var borderColor: UIColor { get }
 }
 
 protocol OWToastViewModeling {
@@ -32,6 +33,7 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     var title: String
     var toastActionViewModel: OWToastActionViewModeling
     var showAction: Bool
+    var borderColor: UIColor = .clear
 
     var actionClick = PublishSubject<Void>()
     var disposeBag = DisposeBag()
@@ -41,6 +43,7 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
         iconImage = self.iconForType(type: requiredData.type)
+        borderColor = self.borderColorForType(type: requiredData.type)
 
         setupObservers(onClickHandler: handler)
     }
@@ -62,8 +65,22 @@ fileprivate extension OWToastViewModel {
         case .information: image = UIImage(spNamed: "informationToast", supportDarkMode: false)
         case .success: image = UIImage(spNamed: "successToast", supportDarkMode: false)
         case .error: image = UIImage(spNamed: "errorToast", supportDarkMode: false)
+        case .warning: image = UIImage(spNamed: "warningToast", supportDarkMode: false)
         }
 
         return image ?? UIImage()
+    }
+
+    func borderColorForType(type: OWToastType) -> UIColor {
+        switch(type) {
+        case .information:
+            return OWDesignColors.G5
+        case .success:
+            return OWDesignColors.G3
+        case .error:
+            return OWDesignColors.G4
+        case .warning:
+            return OWDesignColors.G6
+        }
     }
 }

@@ -18,6 +18,7 @@ enum OWToastType {
     case information
     case success
     case error
+    case warning
 }
 
 // TODO: should have some onClick function (except none)

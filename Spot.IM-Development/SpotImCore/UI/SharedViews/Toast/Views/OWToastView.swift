@@ -69,7 +69,7 @@ fileprivate extension OWToastView {
 
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
         self.layer.borderWidth = 1
-        self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: .light).cgColor
+        self.layer.borderColor = viewModel.outputs.borderColor.cgColor
         self.layer.cornerRadius = Metrics.cornerRadius
         self.apply(shadow: .standard)
 
@@ -107,7 +107,6 @@ fileprivate extension OWToastView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: currentStyle).cgColor
                 self.messageLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
