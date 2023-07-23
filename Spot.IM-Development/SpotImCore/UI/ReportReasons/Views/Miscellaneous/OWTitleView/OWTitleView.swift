@@ -13,7 +13,7 @@ class OWTitleView: UIView {
     fileprivate struct Metrics {
         static let closeButtonTrailingPadding: CGFloat = 19
         static let closeButtonPadding: CGFloat = 20
-        
+
         static let closeCrossIcon = "closeCrossIcon"
 
         static let suffixIdentifier = "_title_view_id"
