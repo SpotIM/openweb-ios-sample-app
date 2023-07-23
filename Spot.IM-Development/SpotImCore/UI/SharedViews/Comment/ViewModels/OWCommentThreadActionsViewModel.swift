@@ -23,6 +23,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var tapOutput: Observable<Void> { get }
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
+    var commentId: String { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -39,7 +40,10 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
         tap.asObservable()
     }
 
-    init(with type: OWCommentThreadActionType) {
+    let commentId: String
+
+    init(with type: OWCommentThreadActionType, commentId: String) {
+        self.commentId = commentId
         switch type {
         case .collapseThread:
             _actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))

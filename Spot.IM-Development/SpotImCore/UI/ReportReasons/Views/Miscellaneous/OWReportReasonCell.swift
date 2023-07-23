@@ -38,7 +38,7 @@ class OWReportReasonCell: UITableViewCell {
         let lblTitle = UILabel()
         return lblTitle
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .font(.openSans(style: .regular, of: Metrics.titleFontSize))
+                .font(.spOpenSans(style: .regular, of: Metrics.titleFontSize))
                 .lineBreakMode(.byWordWrapping)
     }()
 
@@ -46,7 +46,7 @@ class OWReportReasonCell: UITableViewCell {
         let lblSubtitle = UILabel()
         return lblSubtitle
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .font(.openSans(style: .regular, of: Metrics.subtitleFontSize))
+                .font(.spOpenSans(style: .regular, of: Metrics.subtitleFontSize))
                 .numberOfLines(2)
                 .lineBreakMode(.byTruncatingMiddle)
     }()

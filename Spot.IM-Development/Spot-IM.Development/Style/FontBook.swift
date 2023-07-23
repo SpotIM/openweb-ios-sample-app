@@ -12,6 +12,11 @@ import UIKit
 // We might configure the font family in the future, but for now for the internal SampleApp it's good enough.
 
 class FontBook {
+    static let largeHeading = font(with: .regular, size: 40)
+    static let largeHeadingBold = font(with: .bold, size: 40)
+    static let largeHeadingMedium = font(with: .medium, size: 40)
+    static let largeHeadingLight = font(with: .light, size: 40)
+
     static let primaryHeading = font(with: .regular, size: 30)
     static let primaryHeadingBold = font(with: .bold, size: 30)
     static let primaryHeadingMedium = font(with: .medium, size: 30)

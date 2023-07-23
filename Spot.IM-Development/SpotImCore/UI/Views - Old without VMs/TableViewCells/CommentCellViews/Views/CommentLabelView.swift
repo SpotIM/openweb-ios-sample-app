@@ -128,7 +128,7 @@ internal final class CommentLabelView: SPBaseView {
     }
 
     private func configureLabel() {
-        label.font = .preferred(style: .medium, of: Theme.fontSize)
+        label.font = .spPreferred(style: .medium, of: Theme.fontSize)
         label.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.trailing.equalToSuperview().offset(-Theme.horizontalMargin)

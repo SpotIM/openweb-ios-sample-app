@@ -84,14 +84,15 @@ fileprivate extension OWFontBook {
     }
 
     func adjust(font: UIFont, typography: OWFontTypography) -> UIFont {
-        let requestedSize = font.pointSize
+        let dynamicFont = adjustDynamic(font: font, style: typography.textStyle)
+        let requestedDynamicSize = dynamicFont.pointSize
 
-        if case .fixed(let maxSize) = typography.maxSizeEnforcement, requestedSize > maxSize {
+        if case .fixed(let maxSize) = typography.maxSizeEnforcement, requestedDynamicSize > maxSize {
             return font.withSize(maxSize)
-        } else if case .fixed(let minSize) = typography.minSizeEnforcement, requestedSize < minSize {
+        } else if case .fixed(let minSize) = typography.minSizeEnforcement, requestedDynamicSize < minSize {
             return font.withSize(minSize)
         } else {
-            return adjustDynamic(font: font, style: typography.textStyle)
+            return dynamicFont
         }
     }
 
