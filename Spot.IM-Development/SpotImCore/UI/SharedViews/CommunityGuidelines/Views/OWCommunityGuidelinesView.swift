@@ -57,6 +57,7 @@ class OWCommunityGuidelinesView: UIView {
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
     }()
 
+    fileprivate var heightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -124,6 +125,7 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
             }
         }
     }
@@ -133,6 +135,13 @@ fileprivate extension OWCommunityGuidelinesView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
+
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         viewModel.outputs.communityGuidelinesHtmlAttributedString
             .bind(to: titleTextView.rx.attributedText)
