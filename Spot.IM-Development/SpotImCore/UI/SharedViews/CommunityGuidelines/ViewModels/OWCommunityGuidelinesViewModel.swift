@@ -129,7 +129,8 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         _communityGuidelinesTitle
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                self._shouldShowView.onNext(text != nil)
+                let shouldShow = (text != nil) && (self.style != .none)
+                self._shouldShowView.onNext(shouldShow)
             })
             .disposed(by: disposeBag)
 
