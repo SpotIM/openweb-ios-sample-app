@@ -17,7 +17,7 @@ enum OWConversationStyleIndexer {
         switch self {
         case .regular: return 0
         case .compact: return 1
-        case .custom: return 4
+        case .custom: return 2
         }
     }
 }
