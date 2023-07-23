@@ -17,7 +17,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling { get }
     var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling { get }
     var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling { get }
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
 }
@@ -55,7 +55,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData)
     }()
 
-    lazy var commentType: OWCommentCreationType = {
+    lazy var commentType: OWCommentCreationTypeInternal = {
         return self.commentCreationData.commentCreationType
     }()
 

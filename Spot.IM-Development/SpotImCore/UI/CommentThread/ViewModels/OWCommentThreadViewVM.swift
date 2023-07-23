@@ -20,7 +20,7 @@ protocol OWCommentThreadViewViewModelingInputs {
 protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var urlClickedOutput: Observable<URL> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
@@ -94,8 +94,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
-    var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentCreation: Observable<OWCommentCreationType> {
+    var commentCreationTap = PublishSubject<OWCommentCreationTypeInternal>()
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> {
         return commentCreationTap
             .asObservable()
     }
