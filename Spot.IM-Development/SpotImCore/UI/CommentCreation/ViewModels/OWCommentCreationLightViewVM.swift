@@ -15,7 +15,7 @@ protocol OWCommentCreationLightViewViewModelingInputs {
 }
 
 protocol OWCommentCreationLightViewViewModelingOutputs {
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var shouldShowReplySnippet: Bool { get }
     var titleText: Observable<String> { get }
     var replyToAttributedString: Observable<NSAttributedString> { get }
@@ -44,7 +44,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
-    var commentType: OWCommentCreationType
+    var commentType: OWCommentCreationTypeInternal
 
     lazy var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling = {
         return OWCommentCreationReplySnippetViewModel(commentCreationType: commentType, shouldShowSeparator: false)

@@ -35,7 +35,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate let disposeBag = DisposeBag()
     fileprivate let imageURLProvider: OWImageProviding
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationType: OWCommentCreationType
+    fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
     var commentText = BehaviorSubject<String>(value: "")
 
@@ -80,7 +80,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         }
     }
 
-    init(commentCreationType: OWCommentCreationType,
+    init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.servicesProvider = servicesProvider

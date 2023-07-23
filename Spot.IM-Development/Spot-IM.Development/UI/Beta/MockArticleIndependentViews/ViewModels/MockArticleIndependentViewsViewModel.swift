@@ -152,10 +152,17 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         return Observable.merge(self.conversationStyleChanged)
     }()
 
-    // All the stuff which should trigger new comment creation component
     fileprivate lazy var commentCreationStyleChanged: Observable<Void> = {
-        // TODO: Complete once developed
-        return Observable.never()
+        return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
+                guard let self = self else { return .empty() }
+                return self.actionSettings
+                    .take(1)
+                    .map { $0.viewType }
+            }
+            .filter { $0 == .commentCreation }
+            .voidify()
     }()
     fileprivate lazy var commentCreationUpdater: Observable<Void> = {
         return Observable.merge(self.commentCreationStyleChanged)
@@ -225,6 +232,8 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             return self.retrievePreConversation(settings: settings)
         case .conversation:
             return self.retrieveConversation(settings: settings)
+        case .commentCreation:
+            return self.retrieveCommentCreation(settings: settings)
         default:
             return Observable.error(GeneralErrors.missingImplementation)
         }
@@ -290,6 +299,43 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 switch result {
                 case .success(let conversationView):
                     observer.onNext(conversationView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveConversation error: \(message)")
+                    observer.onError(error)
+                }
+            })
+
+            return Disposables.create()
+        }
+    }
+
+    func retrieveCommentCreation(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else { return Disposables.create() }
+
+            let additionalSettings = self.commonCreatorService.additionalSettings()
+            let article = self.commonCreatorService.mockArticle()
+
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
+            uiViews.commentCreation(postId: settings.postId,
+                                    article: article,
+                                    commentCreationType: .comment,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: actionsCallbacks,
+                                    completion: { result in
+                switch result {
+                case .success(let commentCreationView):
+                    observer.onNext(commentCreationView)
                     observer.onCompleted()
                 case .failure(let error):
                     let message = error.description
