@@ -11,11 +11,14 @@ import RxSwift
 
 enum OWAnalyticsEndpoints: OWEndpoints {
     case sendEvent(info: SPEventInfo)
+    case sendBatchEvents(events: [OWAnalyticEventServer])
 
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
         case .sendEvent:
+            return .post
+        case .sendBatchEvents:
             return .post
         }
     }
@@ -25,6 +28,8 @@ enum OWAnalyticsEndpoints: OWEndpoints {
         switch self {
         case .sendEvent:
             return "/event"
+        case .sendBatchEvents:
+            return "/events/batch"
         }
     }
 
@@ -54,6 +59,14 @@ enum OWAnalyticsEndpoints: OWEndpoints {
             ]
 
             return params
+        case .sendBatchEvents(let events):
+            let params = ["events": events]
+            let encoder: JSONEncoder = JSONEncoder()
+            let datadata = try? encoder.encode(params)
+            guard let datadata = datadata else { return [:] }
+            let json = try? JSONSerialization.jsonObject(with: datadata, options: []) as? [String : Any]
+            guard let json = json else { return [:] }
+            return json
         }
     }
 }
@@ -75,8 +88,16 @@ extension OWNetworkAPI: OWAnalyticsAPI {
 
     // TODO: send events to BE and return real res
     func sendEvents(events: [OWAnalyticEvent]) -> OWNetworkResponse<Bool> {
-        let progress = PublishSubject<Progress>()
-        let res = OWNetworkResponse<Bool>(progress: progress, response: .empty())
-        return res
+        let serverEvents: [OWAnalyticEventServer] = events.map {
+            OWSharedServicesProvider.shared
+                .analyticsEventCreatorService()
+                .serverAnalyticEvent(from: $0)
+        }
+        let endpoint = OWAnalyticsEndpoints.sendBatchEvents(events: serverEvents)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+//        let progress = PublishSubject<Progress>()
+//        let res = OWNetworkResponse<Bool>(progress: progress, response: .empty())
+//        return res
     }
 }
