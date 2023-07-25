@@ -129,11 +129,24 @@ fileprivate extension OWCommentCreationVC {
         // keyboard will hide
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
-            .voidify()
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+            .subscribe(onNext: { [weak self] notification in
+                guard
+                    let self = self,
+                    let animationDuration = notification.keyboardAnimationDuration
+                    else { return }
                 self.commentCreationView.OWSnp.updateConstraints { make in
                     make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                }
+
+                UIView.animate(withDuration: animationDuration) { [weak self] in
+                    guard let self = self else { return }
+                    self.view.layoutIfNeeded()
+                    switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    case .floatingKeyboard:
+                        self.view.backgroundColor = .clear
+                    default:
+                        break
+                    }
                 }
             })
             .disposed(by: disposeBag)
