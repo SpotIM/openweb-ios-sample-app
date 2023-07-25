@@ -96,8 +96,5 @@ extension OWNetworkAPI: OWAnalyticsAPI {
         let endpoint = OWAnalyticsEndpoints.sendBatchEvents(events: serverEvents)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
-//        let progress = PublishSubject<Progress>()
-//        let res = OWNetworkResponse<Bool>(progress: progress, response: .empty())
-//        return res
     }
 }
