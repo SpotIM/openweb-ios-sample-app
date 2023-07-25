@@ -69,6 +69,7 @@ fileprivate extension OWAnalyticsService {
                 return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
             }
             .debug("NOGAH1")
+            .filter { $0.count > 0 }
             .flatMap { items -> Observable<OWBatchAnalyticsResponse> in
                 return api.sendEvents(events: items)
                     .response

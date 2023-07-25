@@ -27,17 +27,23 @@ struct OWAnalyticEventPayload: Encodable {
 
 fileprivate extension OWAnalyticEventPayload {
     func encode(value: Encodable, forKey key: String, container: inout KeyedEncodingContainer<AnyStringKey>) {
-//        if let codingKey = AnyStringKey(stringValue: key) {
-            try? container.encode(value, forKey: AnyStringKey(stringValue: key))
-//        }
+        try? container.encode(value, forKey: AnyStringKey(stringValue: key))
     }
 }
 
 struct AnyStringKey: CodingKey, Hashable, ExpressibleByStringLiteral {
     var stringValue: String
-    init(stringValue: String) { self.stringValue = stringValue }
-    init(_ stringValue: String) { self.init(stringValue: stringValue) }
+    init(stringValue: String) {
+        self.stringValue = stringValue
+    }
+    init(_ stringValue: String) {
+        self.init(stringValue: stringValue)
+    }
     var intValue: Int?
-    init?(intValue: Int) { return nil }
-    init(stringLiteral value: String) { self.init(value) }
+    init?(intValue: Int) {
+        return nil
+    }
+    init(stringLiteral value: String) {
+        self.init(value)
+    }
 }
