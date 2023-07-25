@@ -30,6 +30,12 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let toolbarAnimationMilisecondsDuration = 300 // miliseconds
         static let toolbarAnimationSecondsDuration = CGFloat(toolbarAnimationMilisecondsDuration) / 1000 // seconds
         static let underFooterHeight: CGFloat = 300
+        static let headerIconLeadingPadding: CGFloat = 20
+        static let headerTitleLeadingPadding: CGFloat = 14
+        static let headerTrailingPadding: CGFloat = 10
+        static let headerTitleFontSize: CGFloat = 15
+        static let headerHeight: CGFloat = 40
+        static let headerIconSize: CGFloat = 16
     }
 
     fileprivate lazy var underFooterView: UIView = {
@@ -37,30 +43,54 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
+    fileprivate lazy var headerTitleLabel: UILabel = {
+        let currentStyle = viewModel.outputs.servicesProvider.themeStyleService().currentStyle
+        return UILabel()
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.headerTitleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+    }()
+
+    fileprivate lazy var headerIconView: UIImageView = {
+        let currentStyle = viewModel.outputs.servicesProvider.themeStyleService().currentStyle
+        return UIImageView()
+            .tintColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+    }()
+
     fileprivate lazy var headerView: UIView = {
         let headerView = UIView()
-        var iconImage: UIImage?
-        var headerText = ""
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
 
         switch viewModel.outputs.commentType {
         case .comment:
             break
         case .edit(comment: let comment):
-            iconImage = UIImage(spNamed: Metrics.editImageIcon)
-            var user: SPUser?
-            if let userId = comment.userId {
-                user = comment.users?[userId]
-                if user == nil, let commentUsers = comment.users {
-                    user = commentUsers[userId]
-                }
-            }
-            headerText = OWLocalizationManager.shared.localizedString(key: "Replying to ") + (user?.displayName ?? "")
+            headerIconView.image(UIImage(spNamed: Metrics.editImageIcon))
+            headerTitleLabel.text = OWLocalizationManager.shared.localizedString(key: "Editing comment")
         case .replyToComment(originComment: let originComment):
-            iconImage = UIImage(spNamed: Metrics.replyImageIcon)
+            headerIconView.image(UIImage(spNamed: Metrics.replyImageIcon))
+            var name = ""
+            if let userId = originComment.userId,
+               let user = viewModel.outputs.servicesProvider.usersService().get(userId: userId),
+               let displayName = user.displayName {
+                name = displayName
+            }
+            headerTitleLabel.text = OWLocalizationManager.shared.localizedString(key: "Replying to ") + name
         }
 
-        let iconView = UIImageView().image(iconImage)
+        headerView.addSubview(headerIconView)
+        headerView.addSubview(headerTitleLabel)
 
+        headerIconView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(Metrics.headerIconLeadingPadding)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(Metrics.headerIconSize)
+        }
+
+        headerTitleLabel.OWSnp.makeConstraints { make in
+            make.leading.equalTo(headerIconView.OWSnp.trailing).offset(Metrics.headerTitleLeadingPadding)
+            make.trailing.greaterThanOrEqualToSuperview().inset(Metrics.headerTrailingPadding)
+            make.centerY.equalToSuperview()
+        }
         return headerView
     }()
 
@@ -179,6 +209,11 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             break
         case .edit, .replyToComment:
             self.addSubviews(headerView)
+            headerView.OWSnp.makeConstraints { make in
+                make.bottom.equalTo(footerView.OWSnp.top)
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(Metrics.headerHeight)
+            }
         }
 
         footerView.addSubview(textViewObject)
@@ -249,7 +284,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-
+                self.headerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.headerIconView.tintColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.headerTitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.underFooterView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
