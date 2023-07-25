@@ -337,13 +337,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.populateInitialUI()
             setupObservers()
 
-            let event = event(for: .configuredPreConversationStyle(style: preConversationData.settings.preConversationSettings.style))
-            let eventServer = servicesProvider
-                .analyticsEventCreatorService()
-                .serverAnalyticEvent(from: event)
-            let encoder: JSONEncoder = JSONEncoder()
-            let eventEncoded = try? encoder.encode(eventServer)
-            print(eventEncoded)
+            let event = event(for: .preConversationLoaded)
             servicesProvider.analyticsService()
                 .sendAnalyticEvents(events: [event])
     }
