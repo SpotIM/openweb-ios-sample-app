@@ -27,7 +27,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
 
     fileprivate lazy var mainArea: UIView = {
         let view = UIView()
-            .backgroundColor(ColorPalette.shared.color(type: .white))
+//            .backgroundColor(ColorPalette.shared.color(type: .white))
 
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in

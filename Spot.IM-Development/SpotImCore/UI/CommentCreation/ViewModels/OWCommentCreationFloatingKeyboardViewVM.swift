@@ -106,14 +106,15 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
         let commentCreationRequestsService = servicesProvider.commentCreationRequestsService()
 
         commentCreationRequestsService.newRequest
-            .subscribe(onNext: { [weak self] request in
+            .withLatestFrom(textViewVM.outputs.textViewText) { ($0, $1) }
+            .subscribe(onNext: { [weak self] tuple in
                 guard let self = self else { return }
+                let request = tuple.0
+                let currentText = tuple.1
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
-                    // TODO: change this part appropriately once we support floating keyboard style with a bottom toolbar
-                    let newRequestedText = manipulationTextCompletion(.success("This is a test"))
-                    let logger = self.servicesProvider.logger()
-                    logger.log(level: .verbose, "The new requested text is: \(newRequestedText)")
+                    let newRequestedText = manipulationTextCompletion(.success(currentText))
+                    self.textViewVM.inputs.textViewTextChange.onNext(newRequestedText)
                 }
             })
             .disposed(by: disposeBag)
