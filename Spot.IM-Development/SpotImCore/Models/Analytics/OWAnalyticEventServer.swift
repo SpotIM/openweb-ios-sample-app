@@ -11,7 +11,7 @@ import Foundation
 struct OWAnalyticEventServer: Encodable {
     let eventName: String
     let eventGroup: String
-    let eventTimestamp: Double
+    let eventTimestamp: Int
     let productName: OWProductSource
     let componentName: String
     let payload: OWAnalyticEventPayload
