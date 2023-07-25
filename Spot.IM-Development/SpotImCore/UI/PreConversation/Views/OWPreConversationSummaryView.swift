@@ -19,7 +19,7 @@ class OWPreConversationSummaryView: UIView {
         static let onlineViewingUsersBottomOffset: CGFloat = 3
         static let nextArrowIconSize: CGFloat = 20
 
-        static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
         static let identifier = "pre_conversation_summary_view_id"
         static let titleLabelIdentifier = "pre_conversation_title_label_id"

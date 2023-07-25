@@ -23,6 +23,9 @@ enum OWFontTypography {
     case footnoteCaption
     case metaText
     case infoCaption
+}
+
+extension OWFontTypography {
 
     var defaultSize: CGFloat {
         switch self {
@@ -118,9 +121,4 @@ enum OWFontTypography {
         case .infoCaption: return .none
         }
     }
-}
-
-enum OWFontSizeEnforcement {
-    case fixed(CGFloat)
-    case none
 }

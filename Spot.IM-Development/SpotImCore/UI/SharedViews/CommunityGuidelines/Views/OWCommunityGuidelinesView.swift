@@ -35,7 +35,7 @@ class OWCommunityGuidelinesView: UIView {
             .wrapContent(axis: .vertical)
             .hugContent(axis: .vertical)
             .font(OWFontBook.shared.font(typography: .bodySpecial))
-            .adjustDynamicFont()
+//            .adjustDynamicFont()
             .dataDetectorTypes([.link])
             .textContainerInset(.zero)
 
