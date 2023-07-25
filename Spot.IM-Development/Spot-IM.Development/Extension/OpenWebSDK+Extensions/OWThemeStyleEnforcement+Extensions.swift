@@ -14,15 +14,24 @@ import SpotImCore
 extension OWThemeStyleEnforcement {
     static func themeStyle(fromIndex index: Int) -> OWThemeStyleEnforcement {
         switch index {
-        case 0: return .none
-        case 1: return .theme(.light)
-        case 2: return .theme(.dark)
-        default: return .none
+        case OWThemeStyleEnforcement.none.index: return .none
+        case OWThemeStyleEnforcement.theme(.light).index: return .theme(.light)
+        case OWThemeStyleEnforcement.theme(.dark).index: return .theme(.dark)
+        default: return `default`
         }
     }
 
-    static var defaultIndex: Int {
-        return 0
+    static var `default`: OWThemeStyleEnforcement {
+        return .none
+    }
+
+    var index: Int {
+        switch self {
+        case .none: return 0
+        case .theme(.light): return 1
+        case .theme(.dark): return 2
+        default: return OWThemeStyleEnforcement.`default`.index
+        }
     }
 }
 
