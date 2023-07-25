@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWTextViewViewModelingInputs {
     // becomeFirstResponderCall has bool for delaying the keyboard
-    var becomeFirstResponderCall: PublishSubject<Bool> { get }
+    var becomeFirstResponderCall: PublishSubject<Int> { get }
     var resignFirstResponderCall: PublishSubject<Void> { get }
     var textViewTap: PublishSubject<Void> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
@@ -41,9 +41,6 @@ protocol OWTextViewViewModeling {
 }
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
-    fileprivate struct Metrics {
-        static let becomeFirstResponderDelay = 550 // miliseconds
-    }
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
@@ -57,12 +54,12 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     // becomeFirstResponderCall has bool for delaying the keyboard
-    var becomeFirstResponderCall = PublishSubject<Bool>()
+    var becomeFirstResponderCall = PublishSubject<Int>()
     var becomeFirstResponderCalled: Observable<Void> {
         return becomeFirstResponderCall
-            .flatMap { withDelay -> Observable<Void> in
+            .flatMap { delayDuration -> Observable<Void> in
                 return Observable.just(())
-                    .delay(.milliseconds(withDelay ? Metrics.becomeFirstResponderDelay : 0),
+                    .delay(.milliseconds(delayDuration),
                            scheduler: MainScheduler.instance)
             }
             .asObservable()

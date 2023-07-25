@@ -28,6 +28,7 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
         static let footerBottomToSuperviewPriority: CGFloat = 750
         static let footerBottomToKeyboardPriority: CGFloat = 1000
         static let submitDisabledOpacity: CGFloat = 0.5
+        static let becomeFirstResponderDelay = 550 // miliseconds
     }
 
     fileprivate let viewModel: OWAdditionalInfoViewViewModeling
@@ -83,8 +84,7 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        // true for becomeFirstResponder with delay
-        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(true)
+        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(Metrics.becomeFirstResponderDelay)
     }
 
     required init?(coder: NSCoder) {

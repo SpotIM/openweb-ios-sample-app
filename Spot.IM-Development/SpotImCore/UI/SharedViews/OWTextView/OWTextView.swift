@@ -22,7 +22,7 @@ class OWTextView: UIView {
         static let textViewBottomPadding: CGFloat = 16
         static let charectersTrailingPadding: CGFloat = 12
         static let charectersBottomPadding: CGFloat = 8
-        static let textViewLeadingTrailingPadding: CGFloat = 5
+        static let textViewLeadingTrailingPadding: CGFloat = 10
         static let placeholderLeadingTrailingPadding: CGFloat = textViewLeadingTrailingPadding + 5
         static let textViewTopBottomPadding: CGFloat = 10
         static let textViewFontSize: CGFloat = 15
@@ -116,8 +116,7 @@ fileprivate extension OWTextView {
 
         self.addSubviews(textViewPlaceholder)
         textViewPlaceholder.OWSnp.makeConstraints { make in
-            make.leading.equalTo(textView.OWSnp.leading).inset(Metrics.placeholderLeadingTrailingPadding)
-            make.trailing.equalTo(textView.OWSnp.trailing).inset(Metrics.placeholderLeadingTrailingPadding)
+            make.leading.trailing.equalToSuperview().inset(Metrics.placeholderLeadingTrailingPadding)
             make.top.equalTo(textView.OWSnp.top).inset(Metrics.textViewTopBottomPadding)
         }
     }

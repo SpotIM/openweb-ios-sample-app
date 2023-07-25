@@ -20,14 +20,54 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let userAvatarSize: CGFloat = 40
         static let textViewHorizontalPadding: CGFloat = 10
         static let textViewVerticalPadding: CGFloat = 12
+        static let sendButtonHorizontalPadding: CGFloat = 5
         static let sendImageIcon = "sendCommentIcon"
+        static let editImageIcon = "commentCreationEditIcon"
+        static let replyImageIcon = "commentCreationReplyIcon"
         static let sendButtonSize: CGFloat = 35
-        static let delayCloseDuration = 300 // miliseconds
+        static let sendButtonImageSize: CGFloat = 24
+        static let delayCloseDuration = 400 // miliseconds
+        static let toolbarAnimationMilisecondsDuration = 300 // miliseconds
+        static let toolbarAnimationSecondsDuration = CGFloat(toolbarAnimationMilisecondsDuration) / 1000 // seconds
+        static let underFooterHeight: CGFloat = 300
     }
+
+    fileprivate lazy var underFooterView: UIView = {
+        return UIView(frame: .zero)
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var headerView: UIView = {
+        let headerView = UIView()
+        var iconImage: UIImage?
+        var headerText = ""
+
+        switch viewModel.outputs.commentType {
+        case .comment:
+            break
+        case .edit(comment: let comment):
+            iconImage = UIImage(spNamed: Metrics.editImageIcon)
+            var user: SPUser?
+            if let userId = comment.userId {
+                user = comment.users?[userId]
+                if user == nil, let commentUsers = comment.users {
+                    user = commentUsers[userId]
+                }
+            }
+            headerText = OWLocalizationManager.shared.localizedString(key: "Replying to ") + (user?.displayName ?? "")
+        case .replyToComment(originComment: let originComment):
+            iconImage = UIImage(spNamed: Metrics.replyImageIcon)
+        }
+
+        let iconView = UIImageView().image(iconImage)
+
+        return headerView
+    }()
 
     fileprivate lazy var footerView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .clipsToBounds(true)
             .enforceSemanticAttribute()
     }()
 
@@ -51,8 +91,21 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         let image = UIImage(spNamed: Metrics.sendImageIcon, supportDarkMode: false)
         return UIButton()
             .image(image, state: .normal)
+            .imageEdgeInsets(UIEdgeInsets(top: Metrics.sendButtonSize - Metrics.sendButtonImageSize,
+                                          left: 0,
+                                          bottom: 0,
+                                          right: 0))
             .setAlpha(0)
             .enforceSemanticAttribute()
+            .tintColor(OWColorPalette.shared.color(type: .brandColor,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var toolbar: UIView? = {
+        if case let OWAccessoryViewStrategy.bottomToolbar(toolbar) = viewModel.outputs.accessoryViewStrategy {
+            return toolbar
+        }
+        return nil
     }()
 
     fileprivate let viewModel: OWCommentCreationFloatingKeyboardViewViewModeling
@@ -70,17 +123,43 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         setupViews()
         setupObservers()
         applyAccessibility()
-        // false for becomeFirstResponder without delay
-        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(false)
+    }
+
+    fileprivate var firstLayoutSubviewsDone = false
+    override func layoutSubviews() {
+        if !firstLayoutSubviewsDone,
+           let toolbar = toolbar,
+           subviews.contains(toolbar) {
+            firstLayoutSubviewsDone = true
+            let delayKeyboard = Metrics.toolbarAnimationMilisecondsDuration
+            viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(delayKeyboard)
+            updateToolbarConstraints(hidden: true)
+            layoutIfNeeded()
+            UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
+                guard let self = self else { return }
+                self.updateToolbarConstraints(hidden: false)
+                self.layoutIfNeeded()
+            }
+        } else if !firstLayoutSubviewsDone {
+            firstLayoutSubviewsDone = true
+            self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(0)
+        }
+    }
+
+    override func removeFromSuperview() {
+        super.removeFromSuperview()
+        firstLayoutSubviewsDone = false
     }
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        // TODO add all views
     }
 }
 
 fileprivate extension OWCommentCreationFloatingKeyboardView {
     func setupViews() {
+        self.clipsToBounds = false
         self.useAsThemeStyleInjector()
         self.backgroundColor = .clear
 
@@ -92,21 +171,22 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(self.safeAreaLayoutGuide)
+            make.bottom.equalTo(self.OWSnp.bottom)
+        }
+
+        switch viewModel.outputs.commentType {
+        case .comment:
+            break
+        case .edit, .replyToComment:
+            self.addSubviews(headerView)
         }
 
         footerView.addSubview(textViewObject)
         footerView.addSubview(userAvatarView)
 
-        textViewObject.OWSnp.makeConstraints { make in
-            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.top.equalToSuperview().inset(Metrics.textViewVerticalPadding)
-            make.bottom.equalToSuperview().inset(Metrics.textViewVerticalPadding)
-        }
-
         userAvatarView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().inset(Metrics.userAvatarLeadingPadding)
-            make.centerY.equalTo(textViewObject.OWSnp.centerY)
+            make.bottom.equalTo(textViewObject.OWSnp.bottom)
             make.size.equalTo(Metrics.userAvatarSize)
         }
 
@@ -118,13 +198,50 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
         }
 
-//        if case let OWAccessoryViewStrategy.bottomToolbar(toolbar) = viewModel.outputs.accessoryViewStrategy {
-//            footerView.addSubview(toolbar)
-//            toolbar.OWSnp.makeConstraints { make in
-//                make.top.equalTo(textViewObject.OWSnp.bottom)
-//                make.leading.trailing.bottom.equalToSuperview()
-//            }
-//        }
+        textViewObject.OWSnp.makeConstraints { make in
+            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
+            make.top.bottom.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+        }
+
+        if let toolbar = toolbar {
+            self.addSubview(toolbar)
+            updateToolbarConstraints(hidden: true)
+        }
+
+        self.addSubview(underFooterView)
+        underFooterView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(self.OWSnp.bottom)
+            make.height.equalTo(Metrics.underFooterHeight)
+        }
+    }
+
+    func updateToolbarConstraints(hidden: Bool) {
+        if let toolbar = toolbar {
+            toolbar.OWSnp.removeConstraints()
+            footerView.OWSnp.removeConstraints()
+            if hidden {
+                toolbar.OWSnp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+                    make.top.equalTo(footerView.OWSnp.bottom)
+                }
+
+                footerView.OWSnp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(self.safeAreaLayoutGuide)
+                }
+            } else {
+                toolbar.OWSnp.makeConstraints { make in
+                    make.top.equalTo(textViewObject.OWSnp.bottom)
+                    make.leading.trailing.bottom.equalToSuperview()
+                }
+
+                footerView.OWSnp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(toolbar.OWSnp.top)
+                }
+            }
+        }
     }
 
     func setupObservers() {
@@ -134,15 +251,28 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 guard let self = self else { return }
 
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.underFooterView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
         closeButton.rx.tap
+            .flatMap({ [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                if self.toolbar != nil {
+                    self.updateToolbarConstraints(hidden: true)
+                    UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
+                        guard let self = self else { return }
+                        self.layoutIfNeeded()
+                    }
+                    return Observable.just(()).delay(.milliseconds(Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
+                }
+                return Observable.just(())
+            })
             .bind(to: viewModel.outputs.textViewVM.inputs.resignFirstResponderCall)
             .disposed(by: disposeBag)
 
         closeButton.rx.tap
-            .delay(.milliseconds(Metrics.delayCloseDuration), scheduler: MainScheduler.instance)
+            .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)
 
@@ -158,6 +288,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     guard let self = self else { return }
                     self.sendButton.alpha(1)
                     self.sendButton.OWSnp.updateConstraints { make in
+                        make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.sendButtonHorizontalPadding)
                         make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
                     }
                     footerView.layoutIfNeeded()
@@ -173,10 +304,14 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     let self = self,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
+
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
+                    self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1,
+                                                                                        themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
                     self.sendButton.alpha(0)
                     self.sendButton.OWSnp.updateConstraints { make in
+                        make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
                         make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
                     }
                     footerView.layoutIfNeeded()
