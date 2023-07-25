@@ -10,15 +10,33 @@ import Foundation
 
 #if NEW_API
 public enum OWConversationStyle: Codable {
+    public struct Metrics {
+        public static let defaultCommunityGuidelinesStyle: OWCommunityGuidelinesStyle = .regular
+        public static let defaultCommunityQuestionsStyle: OWCommunityQuestionStyle = .regular
+        public static let defaultSpacing: OWConversationSpacing = .custom(betweenComments: OWConversationSpacing.Metrics.defaultSpaceBetweenComments,
+                                                                          belowHeader: OWConversationSpacing.Metrics.defaultSpaceBelowHeader,
+                                                                          belowCommunityGuidelines: OWConversationSpacing.Metrics.defaultSpaceBelowCommunityGuidelines,
+                                                                          belowCommunityQuestions: OWConversationSpacing.Metrics.defaultSpaceBelowCommunityQuestions)
+    }
+
     case regular
     case compact
-    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionStyle, spacing: OWConversationSpacing)
+    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle = Metrics.defaultCommunityGuidelinesStyle,
+                communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle,
+                spacing: OWConversationSpacing = Metrics.defaultSpacing)
 }
 
 #else
 enum OWConversationStyle: Codable {
+    public struct Metrics {
+        public static let defaultCommunityGuidelinesStyle: OWCommunityGuidelinesStyle = .regular
+        public static let defaultCommunityQuestionsStyle: OWCommunityQuestionStyle = .regular
+    }
+
     case regular
     case compact
-    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle, communityQuestionsStyle: OWCommunityQuestionStyle, spacing: OWConversationSpacing)
+    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle = Metrics.defaultCommunityGuidelinesStyle,
+                communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle,
+                spacing: OWConversationSpacing)
 }
 #endif

@@ -21,31 +21,28 @@ extension OWConversationStyle {
                                   belowHeader: CGFloat,
                                   belowCommunityGuidelines: CGFloat,
                                   belowCommunityQuestions: CGFloat) -> OWConversationStyle {
+        // swiftlint:enable function_parameter_count
+
         switch index {
-        case 0: return .regular
-        case 1: return .compact
-        case 2: return .custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
-                               communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex),
-                               spacing: OWConversationSpacing(index: spacingIndex,
-                                              betweenComments: betweenComments,
-                                              belowHeader: belowHeader,
-                                              belowCommunityGuidelines: belowCommunityGuidelines,
-                                              belowCommunityQuestions: belowCommunityQuestions))
+        case OWConversationStyleIndexer.regular.index: return .regular
+        case OWConversationStyleIndexer.compact.index: return .compact
+        case OWConversationStyleIndexer.custom.index: return .custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle(index: communityGuidelinesStyleIndex),
+                                                                communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex),
+                                                                spacing: OWConversationSpacing(index: spacingIndex,
+                                                                                               betweenComments: betweenComments,
+                                                                                               belowHeader: belowHeader,
+                                                                                               belowCommunityGuidelines: belowCommunityGuidelines,
+                                                                                               belowCommunityQuestions: belowCommunityQuestions))
         default: return `default`
         }
     }
-    // swiftlint:enable function_parameter_count
 
     static var defaultIndex: Int {
-        return 0
+        return OWConversationStyleIndexer.regular.index
     }
 
     static var `default`: OWConversationStyle {
         return .regular
-    }
-
-    static var customIndex: Int {
-        return 2
     }
 }
 
