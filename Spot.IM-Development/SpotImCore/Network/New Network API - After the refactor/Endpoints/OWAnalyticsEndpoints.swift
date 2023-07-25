@@ -62,9 +62,10 @@ enum OWAnalyticsEndpoints: OWEndpoints {
         case .sendBatchEvents(let events):
             let params = ["events": events]
             let encoder: JSONEncoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
             let datadata = try? encoder.encode(params)
             guard let datadata = datadata else { return [:] }
-            let json = try? JSONSerialization.jsonObject(with: datadata, options: []) as? [String : Any]
+            let json = try? JSONSerialization.jsonObject(with: datadata, options: []) as? [String: Any]
             guard let json = json else { return [:] }
             return json
         }

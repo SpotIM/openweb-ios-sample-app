@@ -336,6 +336,16 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.viewableMode = viewableMode
             self.populateInitialUI()
             setupObservers()
+
+            let event = event(for: .configuredPreConversationStyle(style: preConversationData.settings.preConversationSettings.style))
+            let eventServer = servicesProvider
+                .analyticsEventCreatorService()
+                .serverAnalyticEvent(from: event)
+            let encoder: JSONEncoder = JSONEncoder()
+            let eventEncoded = try? encoder.encode(eventServer)
+            print(eventEncoded)
+            servicesProvider.analyticsService()
+                .sendAnalyticEvents(events: [event])
     }
 
     func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
