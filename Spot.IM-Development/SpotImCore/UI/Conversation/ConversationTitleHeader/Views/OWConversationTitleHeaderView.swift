@@ -13,6 +13,7 @@ import RxCocoa
 class OWConversationTitleHeaderView: UIView {
     fileprivate struct Metrics {
         static let verticalOffset: CGFloat = 16
+        static let closeButtonTopBottomPadding = 7
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -53,7 +54,7 @@ fileprivate extension OWConversationTitleHeaderView {
 
         self.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.top.bottom.equalToSuperview().inset(Metrics.closeButtonTopBottomPadding)
             make.trailing.equalToSuperview().offset(-Metrics.verticalOffset)
             make.leading.greaterThanOrEqualTo(titleLabel).offset(Metrics.verticalOffset)
         }

@@ -25,7 +25,6 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
         static let buttonsHeight: CGFloat = 40
         static let bottomPadding: CGFloat = 20
         static let trashIconPadding: CGFloat = 10
-//        static let buttonsFontSize: CGFloat = 15
         static let closeButtonPadding: CGFloat = 20
         static let closeCrossIcon = "closeCrossIcon"
     }

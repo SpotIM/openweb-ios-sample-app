@@ -11,7 +11,7 @@ import RxSwift
 
 class OWCommentingCTAView: UIView {
     fileprivate struct Metrics {
-        static let commentCreationTopPadding: CGFloat = 28
+        static let commentCreationBottomPadding: CGFloat = 16
         static let readOnlyTopPadding: CGFloat = 40
     }
 
@@ -22,12 +22,15 @@ class OWCommentingCTAView: UIView {
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
             .enforceSemanticAttribute()
+            .wrapContent()
     }()
 
     fileprivate lazy var commentingReadOnlyView: OWCommentingReadOnlyView = {
         return OWCommentingReadOnlyView(with: self.viewModel.outputs.commentingReadOnlyViewModel)
+            .wrapContent()
     }()
 
+    fileprivate var heightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWCommentingCTAViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -55,6 +58,7 @@ fileprivate extension OWCommentingCTAView {
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
+            self.heightConstraint = make.height.equalTo(0).constraint
         }
     }
 
@@ -69,9 +73,19 @@ fileprivate extension OWCommentingCTAView {
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
+                    if style == .cta || style == .conversationEnded {
+                        make.bottom.equalToSuperview().offset(-Metrics.commentCreationBottomPadding)
+                    }
                 }
             })
             .disposed(by: disposeBag)
+
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
     }
 
     func view(forStyle style: OWCommentingCTAStyle) -> UIView {

@@ -13,10 +13,9 @@ import RxCocoa
 class OWPreConversationSummaryView: UIView {
     fileprivate struct Metrics {
         static let counterLeading: CGFloat = 8
-        static let counterLabelBottomOffset: CGFloat = 2
         static let nextArrowLeading: CGFloat = 10
         static let onlineViewingUsersBottomLeading: CGFloat = 8
-        static let onlineViewingUsersBottomOffset: CGFloat = 3
+        static let onlineViewingUsersBottomOffset: CGFloat = 2
         static let nextArrowIconSize: CGFloat = 20
 
         static let margins: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
@@ -98,14 +97,14 @@ fileprivate extension OWPreConversationSummaryView {
         self.addSubview(counterLabel)
         counterLabel.OWSnp.makeConstraints { make in
             make.top.greaterThanOrEqualToSuperview()
-            make.bottom.equalToSuperview().offset(-Metrics.counterLabelBottomOffset)
+            make.lastBaseline.equalTo(titleLabel)
             make.leading.equalTo(titleLabel.OWSnp.trailing).offset(Metrics.counterLeading)
         }
 
         self.addSubview(onlineViewingUsersView)
         onlineViewingUsersView.OWSnp.makeConstraints { make in
             make.top.greaterThanOrEqualToSuperview()
-            make.bottom.equalToSuperview().offset(-Metrics.onlineViewingUsersBottomOffset)
+            make.bottom.equalTo(counterLabel).offset(-Metrics.onlineViewingUsersBottomOffset)
             make.leading.greaterThanOrEqualTo(counterLabel.OWSnp.trailing).offset(Metrics.onlineViewingUsersBottomLeading)
         }
 

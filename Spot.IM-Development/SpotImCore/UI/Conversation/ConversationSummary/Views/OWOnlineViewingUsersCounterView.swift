@@ -27,13 +27,13 @@ class OWOnlineViewingUsersCounterView: UIView {
     fileprivate lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: "onlineViewingUsers", supportDarkMode: false)!)
-            .wrapContent(axis: .horizontal)
+            .wrapContent()
     }()
 
     fileprivate lazy var counterLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
-            .wrapContent(axis: .horizontal)
+            .wrapContent()
             .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -56,13 +56,13 @@ fileprivate extension OWOnlineViewingUsersCounterView {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.top.greaterThanOrEqualToSuperview()
-            make.leading.bottom.equalToSuperview()
-            make.width.equalTo(Metrics.iconSize)
+            make.centerY.leading.equalToSuperview()
+            make.size.equalTo(Metrics.iconSize)
         }
 
         self.addSubview(counterLabel)
         counterLabel.OWSnp.makeConstraints { make in
-            make.centerY.trailing.equalToSuperview()
+            make.top.bottom.trailing.equalToSuperview()
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.horizontalMargin)
         }
 
