@@ -19,6 +19,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var textViewVM: OWTextViewViewModeling { get }
     var sendCommentIcon: UIImage? { get }
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
+    var servicesProvider: OWSharedServicesProviding { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -41,7 +42,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
     let commentType: OWCommentCreationType
