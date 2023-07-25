@@ -10,4 +10,14 @@ import Foundation
 
 enum OWAnalyticEventGroup: String {
     case loaded
+    case viewed
+    case commentMenu
+    case commentCreation
+    case camera
+    case commentInteraction
+    case engagement
+    case sort
+    case profile
+    case auth
+    case configuration
 }

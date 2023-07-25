@@ -14,16 +14,25 @@ import SpotImCore
 extension OWCommunityGuidelinesStyle {
     init(index: Int) {
         switch index {
-        case 0: self = .none
-        case 1: self = .regular
-        case 2: self = .compact
+        case OWCommunityGuidelinesStyle.none.index: self = .none
+        case OWCommunityGuidelinesStyle.regular.index: self = .regular
+        case OWCommunityGuidelinesStyle.compact.index: self = .compact
         default:
             self = .none
         }
     }
 
-    static var defaultIndex: Int {
-        return 1
+    static var `default`: OWCommunityGuidelinesStyle {
+        return .regular
+    }
+
+    var index: Int {
+        switch self {
+        case .none: return 0
+        case .regular: return 1
+        case .compact: return 2
+        default: return OWCommunityQuestionStyle.`default`.index
+        }
     }
 
     enum CodingKeys: String, CodingKey {
