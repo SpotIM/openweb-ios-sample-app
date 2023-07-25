@@ -74,7 +74,13 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
                let displayName = user.displayName {
                 name = displayName
             }
-            headerTitleLabel.text = OWLocalizationManager.shared.localizedString(key: "Replying to ") + name
+            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+
+            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.headerTitleFontSize)]
+            let boldUserNameString = NSMutableAttributedString(string: name, attributes: attrs)
+
+            attributedString.append(boldUserNameString)
+            headerTitleLabel.attributedText = attributedString
         }
 
         headerView.addSubview(headerIconView)
@@ -208,14 +214,14 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         case .comment:
             break
         case .edit, .replyToComment:
-            self.addSubviews(headerView)
+            self.addSubview(headerView)
+            self.bringSubviewToFront(footerView)
             headerView.OWSnp.makeConstraints { make in
-                make.bottom.equalTo(footerView.OWSnp.top)
+                make.bottom.equalTo(footerView.OWSnp.top).inset(Metrics.headerHeight)
                 make.leading.trailing.equalToSuperview()
                 make.height.equalTo(Metrics.headerHeight)
             }
         }
-
         footerView.addSubview(textViewObject)
         footerView.addSubview(userAvatarView)
 
@@ -328,7 +334,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.sendButtonHorizontalPadding)
                         make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
                     }
-                    footerView.layoutIfNeeded()
+                    if case .comment = self.viewModel.outputs.commentType {} else {
+                        self.headerView.OWSnp.updateConstraints { make in
+                            make.bottom.equalTo(self.footerView.OWSnp.top).inset(0)
+                        }
+                        self.headerView.layoutIfNeeded()
+                    }
+                    self.footerView.layoutIfNeeded()
                 }
             })
             .disposed(by: disposeBag)
@@ -351,7 +363,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
                         make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
                     }
-                    footerView.layoutIfNeeded()
+                    if case .comment = self.viewModel.outputs.commentType {} else {
+                        self.headerView.OWSnp.updateConstraints { make in
+                            make.bottom.equalTo(self.footerView.OWSnp.top).inset(Metrics.headerHeight)
+                        }
+                        self.headerView.layoutIfNeeded()
+                    }
+                    self.footerView.layoutIfNeeded()
                 }
             })
             .disposed(by: disposeBag)
