@@ -18,7 +18,7 @@ class OWArticleDescriptionView: UIView {
         static let paddingBetweenImageAndLabels: CGFloat = 10
         static let LabelsPadding: CGFloat = 8
 
-        static let margins: UIEdgeInsets = .init(top: 12, left: 12, bottom: 16, right: 16)
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 16, right: 16)
 
         static let identifier = "article_header_id"
         static let conversationImageIdentifier = "article_header_conversation_image_id"

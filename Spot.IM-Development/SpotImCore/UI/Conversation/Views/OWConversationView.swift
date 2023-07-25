@@ -12,9 +12,6 @@ import RxCocoa
 
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-//        static let conversationTitleHeaderHeight: CGFloat = 56
-//        static let articleDescriptionHeight: CGFloat = 86
-//        static let conversationSummaryHeight: CGFloat = 44
         static let tableViewAnimationDuration: Double = 0.25
         static let commentingCTAHeight: CGFloat = 64
         static let separatorHeight: CGFloat = 1

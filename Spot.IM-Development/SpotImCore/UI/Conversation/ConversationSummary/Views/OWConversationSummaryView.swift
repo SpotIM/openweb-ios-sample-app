@@ -14,12 +14,13 @@ class OWConversationSummaryView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16
         static let trailingOffset: CGFloat = 8
-        static let margins: UIEdgeInsets = .init(top: 10, left: 16, bottom: 10, right: 16)
         static let horizontalMarginBetweenSeparator: CGFloat = 5
         static let topMarginBetweenSeparator: CGFloat = 3.5
         static let separatorHeight: CGFloat = 1
         static let separatorWidth: CGFloat = 1
         static let horizontalMarginBetweenOnlineUsersAndSort: CGFloat = 10
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
 
         static let identifier = "conversation_header_view_id"
         static let commentsCountLabelIdentifier = "comments_count_label_id"

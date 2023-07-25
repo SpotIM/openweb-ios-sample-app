@@ -1,5 +1,5 @@
 //
-//  UIView+adjustDynamicFont.swift
+//  UIView+DynamicFont.swift
 //  SpotImCore
 //
 //  Created by Revital Pisman on 12/07/2023.
@@ -12,12 +12,6 @@ extension UITextView {
     @discardableResult func font(_ font: UIFont) -> Self {
         self.font = font
         self.adjustsFontForContentSizeCategory = true
-        return self
-    }
-
-    @objc @discardableResult func adjustDynamicFont() -> Self {
-        self.adjustsFontForContentSizeCategory = true
-
         return self
     }
 }
