@@ -144,7 +144,6 @@ fileprivate extension OWConversationView {
                 }
             }
             make.leading.trailing.equalToSuperview()
-//            make.height.equalTo(Metrics.conversationSummaryHeight)
         }
 
         // After building the other views, position the table view in the appropriate place

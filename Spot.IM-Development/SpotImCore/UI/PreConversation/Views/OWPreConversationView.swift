@@ -54,6 +54,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
+            .wrapContent()
     }()
 
     fileprivate var commentingCTAZeroHeightConstraint: OWConstraint? = nil
@@ -204,7 +205,6 @@ fileprivate extension OWPreConversationView {
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom).offset(Metrics.commentingCTATopPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-            make.height.equalTo(0)
         }
 
         self.addSubview(tableView)
@@ -346,7 +346,6 @@ fileprivate extension OWPreConversationView {
                 guard let self = self else { return }
                 self.commentingCTAView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityGuidelinesView.OWSnp.bottom).offset(shouldShow ? Metrics.commentingCTATopPadding : 0)
-                    make.height.equalTo(shouldShow ? Metrics.commentingCTAHeight : 0)
                 }
             })
             .disposed(by: disposeBag)

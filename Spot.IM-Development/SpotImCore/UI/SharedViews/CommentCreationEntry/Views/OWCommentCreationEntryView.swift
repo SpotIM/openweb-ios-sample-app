@@ -17,6 +17,9 @@ class OWCommentCreationEntryView: UIView {
         static let containerLeadingOffset: CGFloat = 10
         static let labelInsetVertical: CGFloat = 12
         static let labelInsetHorizontal: CGFloat = 15
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
@@ -84,14 +87,16 @@ fileprivate extension OWCommentCreationEntryView {
         applyAccessibility()
         addSubview(userAvatarView)
         userAvatarView.OWSnp.makeConstraints { make in
+            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
+            make.bottom.greaterThanOrEqualToSuperview().offset(Metrics.margins.bottom)
             make.centerY.leading.equalToSuperview()
             make.size.equalTo(Metrics.userAvatarSize)
         }
 
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-//            make.height.equalTo(userAvatarView.OWSnp.height)
+            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
+            make.bottom.greaterThanOrEqualToSuperview().offset(-Metrics.margins.bottom)
             make.trailing.equalToSuperview()
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
