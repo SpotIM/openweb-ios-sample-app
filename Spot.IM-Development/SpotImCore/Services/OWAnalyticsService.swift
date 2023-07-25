@@ -17,7 +17,7 @@ protocol OWAnalyticsServicing {
 
 class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate struct Metrics {
-        static let maxEvents: Int = 2// 10
+        static let maxEvents: Int = 10
         static let allEventsPlacholder: String = "all"
     }
 
@@ -68,7 +68,6 @@ fileprivate extension OWAnalyticsService {
                 guard let self = self else { return []}
                 return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
             }
-            .debug("NOGAH1")
             .filter { $0.count > 0 }
             .flatMap { items -> Observable<OWBatchAnalyticsResponse> in
                 return api.sendEvents(events: items)
@@ -76,7 +75,6 @@ fileprivate extension OWAnalyticsService {
                     .exponentialRetry(maxAttempts: 2, millisecondsDelay: 1000)
                     .take(1)
             }
-            .debug("NOGAH2")
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.analyticsEvents.removeAll()
@@ -99,7 +97,6 @@ fileprivate extension OWAnalyticsService {
 fileprivate extension OWAnalyticsService {
     func setupObservers() {
         let backgroundObservable = appLifeCycle.didEnterBackground
-            .debug("NOGAH: backgroundObservable")
             .filter { [weak self] in
                 guard let self = self else { return false }
                 return !self.analyticsEvents.isEmpty
@@ -107,7 +104,6 @@ fileprivate extension OWAnalyticsService {
 
         let maxEventObservable = analyticsEvents
             .rx_elements()
-            .debug("NOGAH: maxEventObservable")
             .filter { [weak self] events in
                 guard let self = self else { return false }
                 return events.count >= self.maxEventsForFlush
@@ -116,7 +112,6 @@ fileprivate extension OWAnalyticsService {
 
         Observable.merge(backgroundObservable, maxEventObservable)
             .observe(on: flushEventsQueue)
-            .debug("NOGAH: flushEvents")
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.flushEvents()
