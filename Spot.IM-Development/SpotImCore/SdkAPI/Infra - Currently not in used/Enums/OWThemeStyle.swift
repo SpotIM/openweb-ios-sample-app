@@ -9,12 +9,12 @@
 import Foundation
 
 #if NEW_API
-public enum OWThemeStyle {
+public enum OWThemeStyle: String {
     case light
     case dark
 }
 #else
-enum OWThemeStyle {
+enum OWThemeStyle: String {
     case light
     case dark
 }

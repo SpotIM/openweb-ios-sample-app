@@ -30,6 +30,10 @@ extension OWPreConversationStyle {
         }
     }
 
+    static var defaultIndex: Int {
+        return OWPreConversationStyleIndexer.regular.index
+    }
+
     static var `default`: OWPreConversationStyle {
         return .regular
     }

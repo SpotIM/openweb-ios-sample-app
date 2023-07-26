@@ -11,7 +11,6 @@ import RxSwift
 
 class OWCommentCreationContentView: UIView {
     fileprivate struct Metrics {
-        static let textInputFontSize: CGFloat = 15.0
         static let placeholderLabelTopOffset: CGFloat = 8.0
         static let placeholderLabelLeadingOffset: CGFloat = 6.0
         static let horizontalOffset: CGFloat = 16.0
@@ -29,14 +28,14 @@ class OWCommentCreationContentView: UIView {
 
     fileprivate lazy var placeholderLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
     }()
 
     fileprivate lazy var textInput: UITextView = {
         var textView = UITextView()
             .backgroundColor(.clear)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textInputFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .textAlignment(OWLocalizationManager.shared.textAlignment)
             .textContainerInset(.zero)
