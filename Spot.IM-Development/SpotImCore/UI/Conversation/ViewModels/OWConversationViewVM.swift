@@ -832,17 +832,19 @@ fileprivate extension OWConversationViewViewModel {
 
         // Responding to share url from comment cells VMs
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWCommentViewModeling)> in
+                let shareClickOutputObservable: [Observable<(URL, OWCommentViewModeling)>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.shareCommentUrl
+                        .map { ($0, commentVM) }
                 }
                 return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] shareUrl, commentVm -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
+                self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
 
