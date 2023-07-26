@@ -12,14 +12,14 @@ import RxCocoa
 
 class OWConversationTitleHeaderView: UIView {
     fileprivate struct Metrics {
-        static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 16
+        static let closeButtonTopBottomPadding = 7
     }
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
+            .font(OWFontBook.shared.font(typography: .titleSmall))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
     }()
@@ -54,7 +54,7 @@ fileprivate extension OWConversationTitleHeaderView {
 
         self.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.top.bottom.equalToSuperview().inset(Metrics.closeButtonTopBottomPadding)
             make.trailing.equalToSuperview().offset(-Metrics.verticalOffset)
             make.leading.greaterThanOrEqualTo(titleLabel).offset(Metrics.verticalOffset)
         }
