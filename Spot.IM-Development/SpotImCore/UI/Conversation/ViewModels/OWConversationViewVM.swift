@@ -936,6 +936,7 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                self.sendEvent(for: .loadMoreComments(paginationOffset: self.paginationOffset))
                 self.isLoadingMoreComments.onNext(true)
                 self._loadMoreComments.onNext(self.paginationOffset)
             })
