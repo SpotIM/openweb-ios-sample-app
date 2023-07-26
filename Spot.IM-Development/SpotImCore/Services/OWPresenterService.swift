@@ -40,7 +40,9 @@ class OWPresenterService: OWPresenterServicing {
                 }
             }
 
-            let menuVM = OWMenuSelectionViewModel(items: menuItems)
+            let menuVM = OWMenuSelectionViewModel(items: menuItems, onDismiss: {
+                observer.onNext(.completion)
+            })
 
             // calculate constraints for menu
             let senderLocationFrame = sender.convert(CGPoint.zero, to: presenterVC.view)
