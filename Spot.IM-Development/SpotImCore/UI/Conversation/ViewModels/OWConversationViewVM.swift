@@ -906,9 +906,11 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 switch mode {
                 case .collapse:
+                    self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
                     commentPresentationData.setRepliesPresentation([])
                     commentPresentationData.update.onNext()
                 case .expand:
+                    self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
