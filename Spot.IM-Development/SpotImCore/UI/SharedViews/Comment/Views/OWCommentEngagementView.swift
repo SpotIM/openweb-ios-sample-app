@@ -13,9 +13,9 @@ import RxCocoa
 class OWCommentEngagementView: UIView {
 
     fileprivate struct Metrics {
-        static let fontSize: CGFloat = 13.0
         static let baseOffset: CGFloat = 14
         static let dotDividerSize: CGFloat = 3
+
         static let identifier = "comment_actions_view_id"
         static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
         static let shareButtonIdentifier = "comment_actions_view_share_button_id"
@@ -29,8 +29,8 @@ class OWCommentEngagementView: UIView {
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
-            .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
-            .setTitleFont(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
     fileprivate lazy var replyDotDivider: UIView = {
@@ -52,8 +52,8 @@ class OWCommentEngagementView: UIView {
     fileprivate lazy var shareButton: UIButton = {
         return UIButton()
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
-            .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
-            .setTitleFont(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
     override init(frame: CGRect) {

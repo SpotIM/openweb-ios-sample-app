@@ -81,10 +81,6 @@ extension UIView {
 }
 
 extension UILabel {
-    @discardableResult func font(_ font: UIFont) -> Self {
-        self.font = font
-        return self
-    }
 
     @discardableResult func minimumFontSize(_ size: CGFloat) -> UILabel {
         self.minimumScaleFactor = size / self.font.pointSize
@@ -160,10 +156,6 @@ extension UILabel {
 }
 
 extension UIButton {
-    @discardableResult func font(_ font: UIFont) -> Self {
-        self.titleLabel?.font = font
-        return self
-    }
 
     @discardableResult func textColor(_ color: UIColor, forState state: UIControl.State = .normal) -> Self {
         self.setTitleColor(color, for: state)
@@ -207,16 +199,6 @@ extension UIButton {
 
     @discardableResult func setTitle(_ title: String?, state: UIControl.State) -> Self {
         self.setTitle(title, for: state)
-        return self
-    }
-
-    @discardableResult func setTitleColor(_ color: UIColor?, state: UIControl.State) -> Self {
-        self.setTitleColor(color, for: state)
-        return self
-    }
-
-    @discardableResult func setTitleFont(_ font: UIFont?) -> Self {
-        self.titleLabel?.font = font
         return self
     }
 
@@ -356,11 +338,6 @@ extension UITextView {
 
     @discardableResult func dataDetectorTypes(_ dataDetectorTypes: UIDataDetectorTypes) -> Self {
         self.dataDetectorTypes = dataDetectorTypes
-        return self
-    }
-
-    @discardableResult func font(_ font: UIFont) -> Self {
-        self.font = font
         return self
     }
 
