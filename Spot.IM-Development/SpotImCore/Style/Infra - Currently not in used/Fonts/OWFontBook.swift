@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 protocol OWFontBookProtocol {
-    func font(style: OWFontStyle, size: CGFloat, forceOpenWebFont: Bool) -> UIFont
+    func font(typography: OWFontTypography, forceOpenWebFont: Bool) -> UIFont
 }
 
 extension OWFontBookProtocol {
-    func font(style: OWFontStyle, size: CGFloat, forceOpenWebFont: Bool = false) -> UIFont {
-        return font(style: style, size: size, forceOpenWebFont: forceOpenWebFont)
+    func font(typography: OWFontTypography, forceOpenWebFont: Bool = false) -> UIFont {
+        return font(typography: typography, forceOpenWebFont: forceOpenWebFont)
     }
 }
 
@@ -34,18 +34,22 @@ class OWFontBook: OWFontBookProtocol, OWFontBookProtocolConfigurable {
         self.load(family: .default) // Load OpenWeb defualt font
     }
 
-    func font(style: OWFontStyle, size: CGFloat, forceOpenWebFont: Bool) -> UIFont {
+    func font(typography: OWFontTypography, forceOpenWebFont: Bool) -> UIFont {
+        let style = typography.fontStyle
+        let size = typography.defaultSize
+        let defaultFont = openWebFont(style: style, size: size)
+
         guard !forceOpenWebFont else {
-            return openWebFont(style: style, size: size)
+            return adjust(font: defaultFont, typography: typography)
         }
 
-        guard let font = font(family: self.fontFamilyGroup, style: style, size: size) else {
+        guard let font = font(family: self.fontFamilyGroup, style: typography.fontStyle, size: typography.defaultSize) else {
             let logText = "Failed to generate \(self.fontFamilyGroup.fontFamilyName) font for style \(style.rawValue) for size \(size.description) - recovering by returning OpenWeb font"
             OWSharedServicesProvider.shared.logger().log(level: .error, logText)
-            return openWebFont(style: style, size: size)
+            return adjust(font: defaultFont, typography: typography)
         }
 
-        return font
+        return adjust(font: font, typography: typography)
     }
 
     func configure(fontFamilyGroup: OWFontGroupFamily) {
@@ -77,6 +81,23 @@ fileprivate extension OWFontBook {
             let fontFilename = fontFilename(family: family, style: style)
             register(fontFilename: "\(fontFilename).ttf", insideOpenWebSDK: insideOpenWebSDK)
         }
+    }
+
+    func adjust(font: UIFont, typography: OWFontTypography) -> UIFont {
+        let dynamicFont = adjustDynamic(font: font, style: typography.textStyle)
+        let requestedDynamicSize = dynamicFont.pointSize
+
+        if case .fixed(let maxSize) = typography.maxSizeEnforcement, requestedDynamicSize > maxSize {
+            return font.withSize(maxSize)
+        } else if case .fixed(let minSize) = typography.minSizeEnforcement, requestedDynamicSize < minSize {
+            return font.withSize(minSize)
+        } else {
+            return dynamicFont
+        }
+    }
+
+    func adjustDynamic(font: UIFont, style: UIFont.TextStyle) -> UIFont {
+        return UIFontMetrics(forTextStyle: style).scaledFont(for: font)
     }
 
     func fontFilename(family: OWFontGroupFamily, style: OWFontStyle) -> String {

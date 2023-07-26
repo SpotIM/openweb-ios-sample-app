@@ -14,11 +14,11 @@ import RxCocoa
 class OWOnlineViewingUsersCounterView: UIView {
     fileprivate struct Metrics {
         static let horizontalMargin: CGFloat = 6
-        static let viewersFontSize: CGFloat = 13.0
+        static let iconSize: CGFloat = 24.0
+
         static let identifier = "online_viewing_users_counter_id"
         static let imgViewIconIdentifier = "online_viewing_users_img_view_icon_id"
         static let lblViewersNumberIdentifier = "online_viewing_users_lbl_viewers_number_id"
-        static let iconSize: CGFloat = 16.0
     }
 
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
@@ -27,13 +27,14 @@ class OWOnlineViewingUsersCounterView: UIView {
     fileprivate lazy var iconImageView: UIImageView = {
         return UIImageView()
             .image(UIImage(spNamed: "onlineViewingUsers", supportDarkMode: false)!)
-            .contentMode(.scaleAspectFit)
+            .wrapContent()
     }()
 
     fileprivate lazy var counterLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.viewersFontSize))
+            .wrapContent()
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -54,15 +55,17 @@ fileprivate extension OWOnlineViewingUsersCounterView {
     func setupUI() {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
-            make.top.leading.bottom.equalToSuperview()
+            make.top.greaterThanOrEqualToSuperview()
+            make.centerY.leading.equalToSuperview()
             make.size.equalTo(Metrics.iconSize)
         }
 
         self.addSubview(counterLabel)
         counterLabel.OWSnp.makeConstraints { make in
-            make.centerY.trailing.equalToSuperview()
+            make.top.bottom.trailing.equalToSuperview()
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.horizontalMargin)
         }
+
         applyAccessibility()
     }
 

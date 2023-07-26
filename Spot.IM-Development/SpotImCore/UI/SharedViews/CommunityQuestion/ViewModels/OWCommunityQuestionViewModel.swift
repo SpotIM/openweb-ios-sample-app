@@ -38,11 +38,6 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
-    struct Metrics {
-        static let communityQuestionFontSize = 15.0
-        static let communityQuestionFont = OWFontBook.shared.font(style: .regular, size: Metrics.communityQuestionFontSize)
-    }
-
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
     fileprivate let _triggerCustomizeQuestionTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
     fileprivate let _triggerCustomizeQuestionContainerViewUI = BehaviorSubject<UIView?>(value: nil)
@@ -68,7 +63,7 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
 
                 let attributes: [NSAttributedString.Key: Any] = [
                     .paragraphStyle: paragraphStyle,
-                    .font: Metrics.communityQuestionFont,
+                    .font: OWFontBook.shared.font(typography: .bodyText),
                     .foregroundColor: OWColorPalette.shared.color(type: .textColor2,
                                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
                 ]

@@ -15,7 +15,6 @@ final class OWCommentVotingView: UIView {
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 32.0
         static let voteButtonInset: CGFloat = 4.0
-        static let fontSize: CGFloat = 16.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
         static let rankDownButtonIdentifier = "comment_voting_view_rank_down_button_id"
@@ -62,14 +61,14 @@ final class OWCommentVotingView: UIView {
     fileprivate lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .hugContent(axis: .horizontal)
     }()
 
     fileprivate lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .hugContent(axis: .horizontal)
     }()
 
