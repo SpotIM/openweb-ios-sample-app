@@ -14,6 +14,7 @@ typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPr
 
 protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
+    var fullConversationCTATap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var viewInitialized: PublishSubject<Void> { get }
 }
@@ -184,8 +185,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var fullConversationTap = PublishSubject<Void>()
+    var fullConversationCTATap = PublishSubject<Void>()
+
     var openFullConversation: Observable<Void> {
-        return fullConversationTap
+        return Observable.merge(fullConversationTap, fullConversationCTATap)
             .asObservable()
     }
 
@@ -893,6 +896,14 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
+
+        fullConversationCTATap
+            .asObserver()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.sendEvent(for: .showMoreComments)
             })
             .disposed(by: disposeBag)
     }
