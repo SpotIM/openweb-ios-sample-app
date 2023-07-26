@@ -503,7 +503,9 @@ fileprivate extension OWPreConversationViewViewModel {
             .outputs
             .commentCreationTapped
             .subscribe(onNext: { [weak self] in
-                self?.commentCreationTap.onNext(.comment)
+                guard let self = self else { return }
+                self.sendEvent(for: .createCommentCTAClicked)
+                self.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
 
