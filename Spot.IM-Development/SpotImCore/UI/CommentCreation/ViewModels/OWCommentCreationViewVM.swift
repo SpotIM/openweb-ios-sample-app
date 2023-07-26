@@ -33,14 +33,51 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+    fileprivate let viewableMode: OWViewableMode
 
     lazy var closeButtonTapped: Observable<Void> = {
-        return Observable.merge(
-            commentCreationRegularViewVm.inputs.closeButtonTap,
-            commentCreationLightViewVm.inputs.closeButtonTap,
-            commentCreationFloatingKeyboardViewVm.inputs.closeButtonTap
-        )
-        .asObservable()
+        let commentTextAfterTapObservable: Observable<String>
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            commentTextAfterTapObservable = commentCreationRegularViewVm.inputs.closeButtonTap
+                .withLatestFrom(commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+        case .light:
+            commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
+                .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+        case .floatingKeyboard:
+            commentTextAfterTapObservable = Observable.never()
+        }
+        return commentTextAfterTapObservable
+            .map { !$0.isEmpty }
+            .flatMap { [weak self] hasText -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                if hasText {
+                    // TODO - Localization
+                    let actions = [
+                        OWRxPresenterAction(title: "Yes", type: OWCloseEditorAlert.yes),
+                        OWRxPresenterAction(title: "No", type: OWCloseEditorAlert.no, style: .cancel)
+                    ]
+                    return self.servicesProvider.presenterService()
+                        // TODO - Localization
+                        .showAlert(title: "Close editor?", message: "", actions: actions, viewableMode: viewableMode)
+                        .flatMap { result -> Observable<Void> in
+                            switch result {
+                            case .completion:
+                                return Observable.empty()
+                            case .selected(let action):
+                                switch action.type {
+                                case OWCloseEditorAlert.yes:
+                                    // TODO - save comment to cache
+                                    return Observable.just(())
+                                default:
+                                    return Observable.empty()
+                                }
+                            }
+                        }
+                } else {
+                    return Observable.just(())
+                }
+            }
     }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
@@ -65,9 +102,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          viewableMode: OWViewableMode = .independent) {
+          viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }
