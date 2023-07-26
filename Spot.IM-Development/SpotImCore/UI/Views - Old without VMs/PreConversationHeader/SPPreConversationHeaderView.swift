@@ -17,7 +17,9 @@ internal final class SPPreConversationHeaderView: SPBaseView {
         static let counterLeading: CGFloat = 5
         static let titleFontSize: CGFloat = 25
         static let counterFontSize: CGFloat = 16
-        static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+
         static let identifier = "pre_conversation_header_view_id"
         static let titleLabelIdentifier = "pre_conversation_header_title_label_id"
         static let counterLabelIdentifier = "pre_conversation_header_counter_label_id"
