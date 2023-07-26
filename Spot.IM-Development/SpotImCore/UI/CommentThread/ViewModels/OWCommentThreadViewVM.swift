@@ -577,7 +577,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return Observable.merge(replyClickOutputObservable)
             }
             .subscribe(onNext: { [weak self] comment in
-                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+                guard let self = self else { return }
+                self.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+                self.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
 
