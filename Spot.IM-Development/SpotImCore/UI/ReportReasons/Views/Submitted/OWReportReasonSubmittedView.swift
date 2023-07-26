@@ -12,9 +12,6 @@ import RxSwift
 
 class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-        static let identifier = "report_reason_Submitted_view_id"
-        static let closeButtonIdentifier = "report_reason_Submitted_close_button_id"
-        static let gotitButtonIdentifier = "report_reason_Submitted_gotit_button_id"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
@@ -22,9 +19,13 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         static let buttonRadius: CGFloat = 6
         static let buttonHeight: CGFloat = 40
         static let bottomPadding: CGFloat = 20
-        static let buttonFontSize: CGFloat = 15
         static let closeButtonPadding: CGFloat = 20
+
         static let closeCrossIcon = "closeCrossIcon"
+
+        static let identifier = "report_reason_Submitted_view_id"
+        static let closeButtonIdentifier = "report_reason_Submitted_close_button_id"
+        static let gotitButtonIdentifier = "report_reason_Submitted_gotit_button_id"
     }
 
     fileprivate lazy var closeButton: UIButton = {
@@ -37,7 +38,7 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         return UIButton()
                 .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textColor(.white)
-                .font(OWFontBook.shared.font(style: .semiBold, size: Metrics.buttonFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyInteraction))
                 .setTitle(viewModel.outputs.confirmButtonText, state: .normal)
                 .corner(radius: Metrics.buttonRadius)
     }()

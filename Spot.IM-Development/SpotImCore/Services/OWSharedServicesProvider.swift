@@ -26,6 +26,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
     func analyticsService() -> OWAnalyticsServicing
+    func analyticsEventCreatorService() -> OWAnalyticsEventCreatorServicing
     func userDefaults() -> OWUserDefaultsProtocol
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
@@ -90,6 +91,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _analyticsService: OWAnalyticsServicing = {
         return OWAnalyticsService()
+    }()
+
+    fileprivate lazy var _analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = {
+        return OWAnalyticsEventCreatorService(servicesProvider: self)
     }()
 
     fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
@@ -194,6 +199,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func analyticsService() -> OWAnalyticsServicing {
         return _analyticsService
+    }
+
+    func analyticsEventCreatorService() -> OWAnalyticsEventCreatorServicing {
+        return _analyticsEventCreatorService
     }
 
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing {

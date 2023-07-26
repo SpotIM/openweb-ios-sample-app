@@ -17,16 +17,11 @@ enum OWPreConversationStyleIndexer {
 
     var index: Int {
         switch self {
-        case .regular:
-            return 0
-        case .compact:
-            return 1
-        case .ctaButtonOnly:
-            return 2
-        case .ctaWithSummary:
-            return 3
-        case .custom:
-            return 4
+        case .regular: return 0
+        case .compact: return 1
+        case .ctaButtonOnly: return 2
+        case .ctaWithSummary: return 3
+        case .custom: return 4
         }
     }
 }
