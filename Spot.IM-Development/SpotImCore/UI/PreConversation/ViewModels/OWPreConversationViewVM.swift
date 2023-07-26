@@ -692,6 +692,7 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
+                self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
@@ -701,16 +702,21 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 switch result {
                 case .completion:
+                    self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
                     break
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
+                        self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
+                        self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
+                        self.sendEvent(for: .commentMenuEditClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
                     case OWCommentOptionsMenu.muteUser:
+                        self.sendEvent(for: .commentMenuMuteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.muteCommentUser.onNext(commentVm)
                     default:
                         return
@@ -721,7 +727,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
@@ -733,15 +739,16 @@ fileprivate extension OWPreConversationViewViewModel {
                         message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
                         actions: actions,
                         viewableMode: self.viewableMode
-                    )
+                    ).map { ($0, commentVm) }
             }
-            .map { result -> Bool in
+            .map { result, commentVm -> Bool in
                 switch result {
                 case .completion:
                     return false
                 case .selected(let action):
                     switch action.type {
                     case OWCommentDeleteAlert.delete:
+                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         return true
                     default:
                         return false
