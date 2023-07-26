@@ -1019,8 +1019,13 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open sort option menu
         conversationSummaryViewModel.outputs.conversationSortVM.outputs.openSort
-            .flatMapLatest { [weak self] sender -> Observable<OWRxPresenterResponseType> in
+            .withLatestFrom(sortOptionObservable) { sender, currentSort -> (OWUISource, OWSortOption) in
+                return (sender, currentSort)
+            }
+            .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
+                self.sendEvent(for: .sortByClicked(currentSort: currentSort))
+
                 let sortDictateService = self.servicesProvider.sortDictateService()
                 let actions = [
                     OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
@@ -1030,22 +1035,27 @@ fileprivate extension OWConversationViewViewModel {
 
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+                    .map { ($0, currentSort) }
 
             }
-            .subscribe(onNext: { [weak self] typy in
+            .subscribe(onNext: { [weak self] typy, currentSort in
                 guard let self = self else { return }
                 switch (typy) {
                 case .completion:
+                    self.sendEvent(for: .sortByClosed(currentSort: currentSort))
                     return
                 case .selected(action: let action):
                     let sortDictateService = self.servicesProvider.sortDictateService()
+                    var newSort: OWSortOption = .best
                     switch (action.type) {
-                    case OWSortMenu.sortBest: sortDictateService.update(sortOption: .best, perPostId: self.postId)
-                    case OWSortMenu.sortNewest: sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-                    case OWSortMenu.sortOldest: sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+                    case OWSortMenu.sortBest: newSort = .best
+                    case OWSortMenu.sortNewest: newSort = .newest
+                    case OWSortMenu.sortOldest: newSort = .oldest
                     default:
-                        return
+                        break
                     }
+                    self.sendEvent(for: .sortByChanged(previousSort: currentSort, selectedSort: newSort))
+                    sortDictateService.update(sortOption: newSort, perPostId: self.postId)
                 }
             })
             .disposed(by: disposeBag)
