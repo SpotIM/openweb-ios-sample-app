@@ -973,7 +973,6 @@ fileprivate extension OWConversationViewViewModel {
                 switch result {
                 case .completion:
                     self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
-                    break
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
