@@ -319,6 +319,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.conversationData = conversationData
         self.viewableMode = viewableMode
         setupObservers()
+
+        sendEvent(for: .fullConversationLoaded)
     }
 }
 
@@ -1265,5 +1267,12 @@ fileprivate extension OWConversationViewViewModel {
                 articleUrl: conversationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

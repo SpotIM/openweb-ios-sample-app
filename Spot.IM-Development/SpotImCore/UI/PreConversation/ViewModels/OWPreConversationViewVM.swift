@@ -337,9 +337,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.populateInitialUI()
             setupObservers()
 
-            let event = event(for: .preConversationLoaded)
-            servicesProvider.analyticsService()
-                .sendAnalyticEvents(events: [event])
+            sendEvent(for: .preConversationLoaded)
     }
 
     func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
@@ -904,5 +902,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 articleUrl: preConversationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
                 component: .preConversation)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }
