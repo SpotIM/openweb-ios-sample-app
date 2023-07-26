@@ -30,7 +30,7 @@ enum OWAnalyticEventType {
     case commentRankDownButtonClicked(commentId: OWCommentId)
     case commentRankUpUndoButtonClicked(commentId: OWCommentId)
     case commentRankDownUndoButtonClicked(commentId: OWCommentId)
-    case loadMoreComments(page: Int, commentsPerPage: Int)
+    case loadMoreComments(paginationOffset: Int)
     case loadMoreRepliesClicked(commentId: OWCommentId)
     case hideMoreRepliesClicked(commentId: OWCommentId)
     case sortByClicked(currentSort: OWSortOption)
@@ -286,10 +286,8 @@ extension OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentRankDownUndoButtonClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
-        case .loadMoreComments(let page, let commentsPerPage):
-            return OWAnalyticEventPayload(payloadDictionary: [
-                OWAnalyticEventPayloadKeys.page: page,
-                OWAnalyticEventPayloadKeys.commentsPerPage: commentsPerPage])
+        case .loadMoreComments(let paginationOffset):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.paginationOffset: paginationOffset])
         case .loadMoreRepliesClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .hideMoreRepliesClicked(let commentId):
