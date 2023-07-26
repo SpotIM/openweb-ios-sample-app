@@ -52,14 +52,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .flatMap { [weak self] hasText -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 if hasText {
-                    // TODO - Localization
                     let actions = [
                         OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Yes"), type: OWCloseEditorAlert.yes),
                         OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
                     ]
                     return self.servicesProvider.presenterService()
                         // TODO - Localization
-                        .showAlert(title: "Close editor?", message: "", actions: actions, viewableMode: viewableMode)
+                        .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: viewableMode)
                         .flatMap { result -> Observable<Void> in
                             switch result {
                             case .completion:
