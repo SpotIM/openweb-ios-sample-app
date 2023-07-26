@@ -90,7 +90,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var articleAssociatedSelectedURL = PublishSubject<String>()
     var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
-    var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.defaultLocaleIndex)
+    var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
@@ -126,19 +126,19 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var readOnlyModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex)
+        return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.default.index)
     }
 
     var themeModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.defaultIndex)
+        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index)
     }
 
     var modalStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.defaultIndex)
+        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index)
     }
 
     var initialSortIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.defaultIndex)
+        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index)
     }
 
     var fontGroupTypeIndex: Observable<Int> {
@@ -195,7 +195,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                 case .useServerConfig:
                     return 1
                 default:
-                    return OWLocaleStrategy.defaultLocaleIndex
+                    return OWLocaleStrategy.default.index
                 }
             }
             .asObservable()

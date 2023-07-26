@@ -12,22 +12,61 @@ import RxCocoa
 
 class OWConversationSummaryView: UIView {
     fileprivate struct Metrics {
-        static let commentsCountFontSize: CGFloat = 15.0
-        static let sideOffset: CGFloat = 16.0
-        static let horizontalMarginBetweenSeparator: CGFloat = 9.5
-        static let topMarginBetweenSeparator: CGFloat = 13.5
-        static let separatorHeight: CGFloat = 1.0
-        static let separatorWidth: CGFloat = 1.0
-        static let horizontalMarginBetweenOnlineUsersAndSort: CGFloat = 5.0
+        static let leadingOffset: CGFloat = 16
+        static let trailingOffset: CGFloat = 8
+        static let horizontalMarginBetweenSeparator: CGFloat = 5
+        static let topMarginBetweenSeparator: CGFloat = 3.5
+        static let separatorHeight: CGFloat = 1
+        static let separatorWidth: CGFloat = 1
+        static let horizontalMarginBetweenOnlineUsersAndSort: CGFloat = 10
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+
         static let identifier = "conversation_header_view_id"
         static let commentsCountLabelIdentifier = "comments_count_label_id"
     }
 
+    fileprivate lazy var summaryView: UIView = {
+        let view = UIView()
+            .enforceSemanticAttribute()
+
+        // Setup comments label
+        view.addSubview(commentsCountLabel)
+        commentsCountLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.leading.equalToSuperview()
+        }
+
+        // Setup vertical separator between comments and viewingUsers
+        view.addSubview(verticalSeparatorBetweenCommentsAndViewingUsers)
+        verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.makeConstraints { make in
+            make.leading.equalTo(commentsCountLabel.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
+            make.bottom.equalToSuperview().offset(-Metrics.topMarginBetweenSeparator)
+            make.top.equalToSuperview().offset(Metrics.topMarginBetweenSeparator)
+            make.width.equalTo(Metrics.separatorWidth)
+        }
+
+        // Setup online viewing users
+        view.addSubview(onlineViewingUsersView)
+        onlineViewingUsersView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
+            make.centerY.equalToSuperview()
+        }
+
+        // Setup sort button
+        view.addSubview(conversationSortView)
+        conversationSortView.OWSnp.makeConstraints { make in
+            make.leading.greaterThanOrEqualTo(onlineViewingUsersView.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenOnlineUsersAndSort)
+            make.top.bottom.trailing.equalToSuperview()
+        }
+
+        return view
+    }()
+
     fileprivate lazy var commentsCountLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
-            .font(OWFontBook.shared.font(style: .regular,
-                                         size: Metrics.commentsCountFontSize))
+            .wrapContent()
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -41,11 +80,13 @@ class OWConversationSummaryView: UIView {
     fileprivate lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
             .enforceSemanticAttribute()
+            .wrapContent()
     }()
 
     fileprivate lazy var conversationSortView: OWConversationSortView = {
         return OWConversationSortView(viewModel: viewModel.outputs.conversationSortVM)
             .enforceSemanticAttribute()
+            .wrapContent()
     }()
 
     fileprivate lazy var bottomHorizontalSeparator: UIView = {
@@ -74,45 +115,19 @@ fileprivate extension OWConversationSummaryView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
-        // Setup comments label
-        self.addSubview(commentsCountLabel)
-        commentsCountLabel.OWSnp.makeConstraints { make in
+        // Setup summary
+        self.addSubview(summaryView)
+        summaryView.OWSnp.makeConstraints { make in
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.sideOffset)
+                make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.leadingOffset)
+                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.trailingOffset)
             } else {
-                make.leading.equalToSuperview().offset(Metrics.sideOffset)
+                make.leading.equalToSuperview().offset(Metrics.leadingOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.trailingOffset)
             }
-            make.top.bottom.equalToSuperview()
-        }
-
-        // Setup vertical separator between comments and viewingUsers
-        self.addSubview(verticalSeparatorBetweenCommentsAndViewingUsers)
-        verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.makeConstraints { make in
-            make.leading.equalTo(commentsCountLabel.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
-            make.bottom.equalToSuperview().offset(-Metrics.topMarginBetweenSeparator)
-            make.top.equalToSuperview().offset(Metrics.topMarginBetweenSeparator)
-            make.width.equalTo(Metrics.separatorWidth)
-        }
-
-        // Setup online viewing users
-        self.addSubview(onlineViewingUsersView)
-        onlineViewingUsersView.OWSnp.makeConstraints { make in
-            make.leading.equalTo(verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
-            make.centerY.equalToSuperview()
-        }
-
-        // Setup sort button
-        self.addSubviews(conversationSortView)
-        conversationSortView.OWSnp.makeConstraints { make in
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.sideOffset)
-            } else {
-                make.trailing.equalToSuperview().offset(-Metrics.sideOffset)
-            }
-            make.leading.greaterThanOrEqualTo(onlineViewingUsersView.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenOnlineUsersAndSort)
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.margins.top)
+            make.bottom.equalToSuperview().offset(-Metrics.margins.bottom)
         }
 
         // Setup bottom horizontal separator

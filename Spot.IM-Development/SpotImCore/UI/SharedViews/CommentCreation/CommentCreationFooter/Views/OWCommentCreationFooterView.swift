@@ -18,7 +18,6 @@ class OWCommentCreationFooterView: UIView {
         static let seperatorHeight: CGFloat = 1.0
 
         static let ctaButtonCornerRadius: CGFloat = 5.0
-        static let ctaButtonTitleFontSize: CGFloat = 15.0
         static let ctaButtonHorizontalContentInset: CGFloat = 15.0
         static let ctaButtonHight: CGFloat = 40.0
         static let ctaButtonEnabledAlpha: CGFloat = 1
@@ -40,10 +39,9 @@ class OWCommentCreationFooterView: UIView {
     }()
 
     fileprivate lazy var ctaButton: UIButton = {
-        return UIButton()
+        let button = UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .setTitleColor(.white, state: .normal)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.ctaButtonTitleFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .corner(radius: Metrics.ctaButtonCornerRadius)
             .contentEdgeInsets(UIEdgeInsets(
                 top: 0,
@@ -51,6 +49,8 @@ class OWCommentCreationFooterView: UIView {
                 bottom: 0,
                 right: Metrics.ctaButtonHorizontalContentInset
             ))
+        button.setTitleColor(.white, for: .normal)
+        return button
     }()
 
     fileprivate lazy var addImageButton: UIButton = {

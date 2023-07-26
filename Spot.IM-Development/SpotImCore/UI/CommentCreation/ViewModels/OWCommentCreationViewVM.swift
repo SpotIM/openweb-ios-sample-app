@@ -76,4 +76,14 @@ fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
 
     }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: commentCreationData.article.url.absoluteString,
+                layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
+                component: .commentCreation)
+    }
 }
