@@ -54,8 +54,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 if hasText {
                     // TODO - Localization
                     let actions = [
-                        OWRxPresenterAction(title: "Yes", type: OWCloseEditorAlert.yes),
-                        OWRxPresenterAction(title: "No", type: OWCloseEditorAlert.no, style: .cancel)
+                        OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Yes"), type: OWCloseEditorAlert.yes),
+                        OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
                     ]
                     return self.servicesProvider.presenterService()
                         // TODO - Localization
