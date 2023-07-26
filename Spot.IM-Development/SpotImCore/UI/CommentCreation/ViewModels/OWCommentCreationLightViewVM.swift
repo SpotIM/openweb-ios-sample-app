@@ -99,7 +99,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
         let attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
 
-        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize)]
+        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
         let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
 
         attributedString.append(boldUserNameString)
