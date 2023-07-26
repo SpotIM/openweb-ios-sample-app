@@ -124,6 +124,7 @@ fileprivate extension OWCommentThreadView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
+                self.tableView.setContentOffset(.zero, animated: true)
             })
             .disposed(by: disposeBag)
 

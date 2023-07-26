@@ -11,7 +11,6 @@ import RxSwift
 
 class OWCommentCreationReplySnippetView: UIView {
     fileprivate struct Metrics {
-        static let replySnippetFontSize: CGFloat = 13.0
         static let horizontalOffset: CGFloat = 16.0
         static let bottomSpacing: CGFloat = 12.0
         static let replySnippetNumberOfLines: Int = 2
@@ -19,7 +18,7 @@ class OWCommentCreationReplySnippetView: UIView {
 
     fileprivate lazy var replySnippetLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.replySnippetFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .numberOfLines(Metrics.replySnippetNumberOfLines)
             .enforceSemanticAttribute()

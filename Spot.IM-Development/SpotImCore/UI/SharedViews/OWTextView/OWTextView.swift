@@ -25,8 +25,6 @@ class OWTextView: UIView {
         static let textViewLeadingTrailingPadding: CGFloat = 5
         static let placeholderLeadingTrailingPadding: CGFloat = textViewLeadingTrailingPadding + 5
         static let textViewTopBottomPadding: CGFloat = 10
-        static let textViewFontSize: CGFloat = 15
-        static let charectersFontSize: CGFloat = 13
         static let didBeginEditDelay = 1
     }
 
@@ -35,7 +33,7 @@ class OWTextView: UIView {
 
     fileprivate lazy var textView: UITextView = {
         return UITextView()
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.textViewFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
@@ -46,14 +44,14 @@ class OWTextView: UIView {
 
     fileprivate lazy var charectersCountLabel: UILabel = {
         return UILabel()
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.charectersFontSize))
+                .font(OWFontBook.shared.font(typography: .footnoteText))
                 .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .text("0/" + "\(self.viewModel.outputs.textViewMaxCharecters)")
     }()
 
     fileprivate lazy var textViewPlaceholder: UILabel = {
         return UILabel()
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.textViewFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
     }()

@@ -15,7 +15,6 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         static let horizontalOffset: CGFloat = 16.0
         static let replyToVerticalSpacing: CGFloat = 15.0
         static let topContainerHeight: CGFloat = 54.0
-        static let titleFontSize: CGFloat = 18.0
         static let replyToFontSize: CGFloat = 15.0
         static let closeButtonSize: CGFloat = 40.0
         static let closeButtonTrailingOffset: CGFloat = 5.0
@@ -27,7 +26,7 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
+            .font(OWFontBook.shared.font(typography: .titleSmall))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
             .numberOfLines(1)
     }()
@@ -72,7 +71,7 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var replyToLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.replyToFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .numberOfLines(1)
             .enforceSemanticAttribute()

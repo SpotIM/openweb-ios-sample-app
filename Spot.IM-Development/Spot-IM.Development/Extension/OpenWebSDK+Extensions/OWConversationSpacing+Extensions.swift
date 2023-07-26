@@ -14,12 +14,12 @@ import SpotImCore
 extension OWConversationSpacing {
     init(index: Int, betweenComments: CGFloat, belowHeader: CGFloat, belowCommunityGuidelines: CGFloat, belowCommunityQuestions: CGFloat) {
         switch index {
-        case 0: self = .regular
-        case 1: self = .compact
-        case 2: self = .custom(betweenComments: betweenComments,
-                               belowHeader: belowHeader,
-                               belowCommunityGuidelines: belowCommunityGuidelines,
-                               belowCommunityQuestions: belowCommunityQuestions)
+        case OWConversationSpacingIndexer.regular.index: self = .regular
+        case OWConversationSpacingIndexer.compact.index: self = .compact
+        case OWConversationSpacingIndexer.custom.index: self = .custom(betweenComments: betweenComments,
+                                                                       belowHeader: belowHeader,
+                                                                       belowCommunityGuidelines: belowCommunityGuidelines,
+                                                                       belowCommunityQuestions: belowCommunityQuestions)
         default:
             self = .regular
         }
@@ -40,7 +40,7 @@ extension OWConversationSpacing {
     }
 
     static var defaultIndex: Int {
-        return 0
+        return OWConversationSpacingIndexer.regular.index
     }
 
     enum CodingKeys: String, CodingKey {
