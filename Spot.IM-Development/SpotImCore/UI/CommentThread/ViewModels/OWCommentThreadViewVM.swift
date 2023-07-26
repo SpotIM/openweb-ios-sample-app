@@ -75,6 +75,37 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
+            .scan([], accumulator: { previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
+                var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
+
+                previousCommentThreadCellsOptions.forEach { commentThreadCellOption in
+                    switch commentThreadCellOption {
+                    case .comment(let commentCellViewModel):
+                        guard let commentId = commentCellViewModel.outputs.commentVM.outputs.comment.id else { return }
+                        commentsVmsMapper[commentId] = commentCellViewModel
+                    default:
+                        break
+                    }
+                }
+
+                let adjustedNewCommentCellOptions: [OWCommentThreadCellOption] = newCommentThreadCellsOptions.map { commentThreadCellOptions in
+                    switch commentThreadCellOptions {
+                    case .comment(let viewModel):
+                        guard let commentId = viewModel.outputs.commentVM.outputs.comment.id else {
+                            return commentThreadCellOptions
+                        }
+                        if let commentVm = commentsVmsMapper[commentId] {
+                            return OWCommentThreadCellOption.comment(viewModel: commentVm)
+                        } else {
+                            return commentThreadCellOptions
+                        }
+                    default:
+                        return commentThreadCellOptions
+                    }
+                }
+
+                return adjustedNewCommentCellOptions
+            })
             .share(replay: 1)
     }()
 
@@ -86,7 +117,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
         return cellsViewModels
-            .map { items in
+            .map { [weak self] items in
+                guard let self = self else { return [] }
                 let section = CommentThreadDataSourceModel(model: self.postId, items: items)
                 return [section]
             }
@@ -385,7 +417,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+                self._commentsPresentationData.removeAll()
+                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
@@ -535,7 +568,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<OWComment> in
+            .flatMapLatest { commentCellsVms -> Observable<OWComment> in
                 let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
@@ -617,6 +650,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(threadActionsClickObservable)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
                 switch mode {
@@ -632,7 +666,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
@@ -645,7 +679,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<String> in
+            .flatMapLatest { commentCellsVms -> Observable<String> in
                 let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openPublisherProfile
@@ -659,7 +693,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Subscribe to URL click in comment text
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
                     let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
 
@@ -924,5 +958,15 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: commentThreadData.article.url.absoluteString,
+                layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
+                component: .commentCreation)
     }
 }

@@ -27,7 +27,7 @@ class OWTestingBlueFirstLevel: UIView {
         return UILabel()
             .textColor(.black)
             .numberOfLines(1)
-            .font(OWFontBook.shared.font(style: .regular, size: 15.0))
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate lazy var btnRemove: UIButton = {
@@ -37,7 +37,7 @@ class OWTestingBlueFirstLevel: UIView {
             .textColor(.black)
             .withPadding(Metrics.padding)
             .corner(radius: Metrics.roundCorners)
-            .font(OWFontBook.shared.font(style: .regular, size: 15.0))
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate lazy var btnState: UIButton = {
@@ -47,7 +47,7 @@ class OWTestingBlueFirstLevel: UIView {
             .textColor(.black)
             .withPadding(Metrics.padding)
             .corner(radius: Metrics.roundCorners)
-            .font(OWFontBook.shared.font(style: .regular, size: 15.0))
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate var viewModel: OWTestingBlueFirstLevelViewModeling!

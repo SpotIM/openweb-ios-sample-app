@@ -31,10 +31,6 @@ protocol OWCommentCreationRegularViewViewModeling {
 }
 
 class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewModeling, OWCommentCreationRegularViewViewModelingInputs, OWCommentCreationRegularViewViewModelingOutputs {
-    fileprivate struct Metrics {
-        static let titleFontSize: CGFloat = 15.0
-    }
-
     var inputs: OWCommentCreationRegularViewViewModelingInputs { return self }
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
@@ -94,7 +90,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
         var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
 
-        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize)]
+        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
         let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
 
         attributedString.append(boldUserNameString)

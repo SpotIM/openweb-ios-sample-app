@@ -13,7 +13,6 @@ class OWCommentLabelsContainerView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_labels_container_id"
 
-        static let titleLabelFontSize: CGFloat = 13.0
         static let titleLabelSpacing: CGFloat = 10.0
 
         static let labelsContainerStackViewSpacing: CGFloat = 10.0
@@ -23,7 +22,7 @@ class OWCommentLabelsContainerView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .numberOfLines(1)
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.titleLabelFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteContext))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .enforceSemanticAttribute()
