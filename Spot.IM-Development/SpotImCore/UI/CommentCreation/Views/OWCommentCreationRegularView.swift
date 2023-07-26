@@ -15,7 +15,6 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "comment_creation_regular_view_id"
 
         static let horizontalOffset: CGFloat = 16.0
-        static let titleFontSize: CGFloat = 15.0
         static let closeButtonSize: CGFloat = 40.0
         static let closeButtonTrailingOffset: CGFloat = 5.0
         static let topContainerHeight: CGFloat = 68.0
@@ -25,7 +24,8 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.titleFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .text(OWLocalizationManager.shared.localizedString(key: "Commenting on"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .numberOfLines(1)
             .enforceSemanticAttribute()

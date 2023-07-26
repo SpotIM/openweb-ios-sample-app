@@ -14,9 +14,10 @@ import SpotImCore
 extension OWArticleHeaderStyle {
     static func articleHeaderStyle(fromIndex index: Int) -> OWArticleHeaderStyle {
         switch index {
-        case 0: return .none
-        case 1: return .regular
-        default: return `default`
+        case OWArticleHeaderStyle.none.index: return .none
+        case OWArticleHeaderStyle.regular.index: return .regular
+        default:
+            return `default`
         }
     }
 
@@ -26,11 +27,8 @@ extension OWArticleHeaderStyle {
 
     var index: Int {
         switch self {
-
-        case .none:
-            return 0
-        case .regular:
-            return 1
+        case .none: return 0
+        case .regular: return 1
         default:
             return OWArticleHeaderStyle.`default`.index
         }

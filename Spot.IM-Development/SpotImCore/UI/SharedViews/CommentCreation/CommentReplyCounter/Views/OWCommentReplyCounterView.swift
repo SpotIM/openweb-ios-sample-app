@@ -11,13 +11,12 @@ import RxSwift
 
 class OWCommentReplyCounterView: UIView {
     fileprivate struct Metrics {
-        static let counterFontSize = 13.0
         static let counterHeight = 24.0
     }
 
     fileprivate lazy var counterLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.counterFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
 

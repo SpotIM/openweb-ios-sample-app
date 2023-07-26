@@ -17,8 +17,6 @@ import RxCocoa
 class OWTestingCellsGenerator: UIView {
 
     fileprivate struct Metrics {
-        static let mainFontSize: CGFloat = 16.0
-        static let secondaryFontSize: CGFloat = 14.0
         static let verticalMargin: CGFloat = 10.0
         static let horizontalMargin: CGFloat = 8.0
         static let roundCorners: CGFloat = 10.0
@@ -32,7 +30,7 @@ class OWTestingCellsGenerator: UIView {
 
     fileprivate lazy var mainTitle: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.mainFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate lazy var addCellsView: UIView = {
@@ -66,7 +64,7 @@ class OWTestingCellsGenerator: UIView {
             .textColor(.black)
             .withPadding(Metrics.buttonsPadding)
             .corner(radius: Metrics.roundCorners)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.secondaryFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
     fileprivate lazy var textFieldNumberToAdd: UITextField = {
@@ -76,7 +74,7 @@ class OWTestingCellsGenerator: UIView {
             .border(width: 2.0, color: UIColor.black)
 
         txtField.textColor = UIColor.black
-        txtField.font = UIFont.systemFont(ofSize: Metrics.secondaryFontSize)
+        txtField.font = OWFontBook.shared.font(typography: .bodyText)
         txtField.keyboardType = .numberPad
         txtField.textAlignment = .center
 
@@ -100,7 +98,7 @@ class OWTestingCellsGenerator: UIView {
             .textColor(.black)
             .withPadding(Metrics.buttonsPadding)
             .corner(radius: Metrics.roundCorners)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.secondaryFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
     fileprivate lazy var btnRemoveAll: UIButton = {
@@ -110,7 +108,7 @@ class OWTestingCellsGenerator: UIView {
             .textColor(.black)
             .withPadding(Metrics.buttonsPadding)
             .corner(radius: Metrics.roundCorners)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.secondaryFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
 
     init(viewModel: OWTestingCellsGeneratorViewModeling) {
