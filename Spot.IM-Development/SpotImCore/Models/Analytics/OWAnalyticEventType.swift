@@ -19,6 +19,7 @@ enum OWAnalyticEventType {
     case commentMenuDeleteClicked(commentId: OWCommentId)
     case commentMenuConfirmDeleteClicked(commentId: OWCommentId)
     case commentMenuEditClicked(commentId: OWCommentId)
+    case commentMenuMuteClicked(commentId: OWCommentId)
     case editCommentClicked(commentId: OWCommentId)
     case postCommentClicked
     case postReplyClicked(replyToCommentId: OWCommentId)
@@ -84,6 +85,8 @@ extension OWAnalyticEventType {
             return "commentMenuConfirmDeleteClicked"
         case .commentMenuEditClicked:
             return "commentMenuEditClicked"
+        case .commentMenuMuteClicked:
+            return "commentMenuMuteClicked"
         case .editCommentClicked:
             return "editCommentClicked"
         case .postCommentClicked:
@@ -183,7 +186,8 @@ extension OWAnalyticEventType {
              .commentMenuReportClicked,
              .commentMenuDeleteClicked,
              .commentMenuConfirmDeleteClicked,
-             .commentMenuEditClicked:
+             .commentMenuEditClicked,
+             .commentMenuMuteClicked:
             return .commentMenu
         case .editCommentClicked,
              .postCommentClicked,
@@ -263,6 +267,8 @@ extension OWAnalyticEventType {
         case .commentMenuConfirmDeleteClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuEditClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .commentMenuMuteClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .editCommentClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])

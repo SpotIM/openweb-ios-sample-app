@@ -22,8 +22,10 @@ class OWMenuSelectionEncapsulationView: UIView {
     fileprivate var menuView: OWMenuSelectionView
     fileprivate var constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let menuVM: OWMenuSelectionViewModeling
 
     init(menuVM: OWMenuSelectionViewModeling, constraintsMapper: [OWMenuConstraintOption: OWConstraintItem]) {
+        self.menuVM = menuVM
         menuView = OWMenuSelectionView(viewModel: menuVM)
         self.constraintsMapper = constraintsMapper
         super.init(frame: .zero)
@@ -55,6 +57,7 @@ fileprivate extension OWMenuSelectionEncapsulationView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.dismissMenu()
+                self.menuVM.inputs.menuDismissed.onNext()
             })
             .disposed(by: disposeBag)
     }
