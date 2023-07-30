@@ -69,7 +69,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
                     // TODO: change this part appropriately once we support floating keyboard style with a bottom toolbar
-                    let newRequestedText = manipulationTextCompletion(.success("This is a test"))
+                    let initialText = "This is a test"
+                    let cursorRange: Range<String.Index> = initialText.endIndex..<initialText.endIndex
+                    let manipulationTextModel = OWManipulateTextModel(text: initialText, cursorRange: cursorRange)
+                    let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
                     let logger = self.servicesProvider.logger()
                     logger.log(level: .verbose, "The new requested text is: \(newRequestedText)")
                 }
