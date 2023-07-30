@@ -62,11 +62,11 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     let textViewVM: OWTextViewViewModeling
 
-    init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          viewableMode: OWViewableMode = .independent,
-          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
-          sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentCreationData: OWCommentCreationRequiredData,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         viewableMode: OWViewableMode = .independent,
+         imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self._commentCreationData.onNext(commentCreationData)
         self.imageURLProvider = imageURLProvider
