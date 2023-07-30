@@ -37,6 +37,8 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
+    fileprivate lazy var postId = OWManager.manager.postId
+
     var commentText = BehaviorSubject<String>(value: "")
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
@@ -87,18 +89,33 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         self.imageURLProvider = imageURLProvider
         self.commentCreationType = commentCreationType
 
-        setupEditedTextIfNeeded()
+        self.setupInitialTextIfNeeded()
 
         setupObservers()
     }
 }
 
 fileprivate extension OWCommentCreationContentViewModel {
-    func setupEditedTextIfNeeded() {
-        if case .edit(let comment) = commentCreationType {
+    func setupInitialTextIfNeeded() {
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+        var initialText: String? = nil
+        switch commentCreationType {
+        case .comment:
+            guard let postId = self.postId else { return }
+            initialText = commentsCacheService[.comment(postId: postId)]
+        case .replyToComment(originComment: let originComment):
+            guard let postId = self.postId,
+                  let originCommentId = originComment.id
+            else { return }
+            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
+        case .edit(comment: let comment):
             if let commentText = comment.text?.text {
-                self.inputs.commentText.onNext(commentText)
+                initialText = commentText
             }
+        }
+
+        if let initialText = initialText {
+            self.inputs.commentText.onNext(initialText)
         }
     }
 
