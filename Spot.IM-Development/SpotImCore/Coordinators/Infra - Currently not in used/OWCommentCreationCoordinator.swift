@@ -45,7 +45,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
-        // TODO: complete the flow
         let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel(commentCreationData: commentCreationData, viewableMode: .partOfFlow)
         let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
 
