@@ -25,13 +25,13 @@ public protocol OWUIViews {
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
 #if BETA
     func testingPlayground(postId: OWPostId,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol,
                            callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWViewCompletion)
 #endif
@@ -53,7 +53,7 @@ protocol OWUIViews {
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 }
