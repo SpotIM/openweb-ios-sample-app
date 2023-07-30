@@ -63,8 +63,11 @@ fileprivate extension CommentCreationToolbarViewModel {
                 settings.request(.manipulateUserInputText(completion: { result in
                     let action = cellViewModel.outputs.action
                     switch (result, action) {
-                    case (.success(let userTextInput), .append(let textToAppend)):
-                        return "\(userTextInput) \(textToAppend)"
+                    case (.success(let manipulateTextModel), .append(let textToAppend)):
+                        let userTextInput = manipulateTextModel.text
+                        let range = manipulateTextModel.cursorRange
+                        let newText = userTextInput.replacingCharacters(in: range, with: " \(textToAppend)")
+                        return newText
                     case (.success(_), .removeAll):
                         return ""
                     default:
