@@ -350,6 +350,11 @@ extension UITextView {
         self.textContainerInset = textContainerInset
         return self
     }
+
+    @discardableResult func textAlignment(_ textAlignment: NSTextAlignment) -> Self {
+        self.textAlignment = textAlignment
+        return self
+    }
 }
 
 extension UIStackView {
@@ -363,13 +368,13 @@ extension UIStackView {
         return self
     }
 
-    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
-        self.spacing = spacing
+    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
+        self.distribution = distribution
         return self
     }
 
-    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
-        self.distribution = distribution
+    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
+        self.spacing = spacing
         return self
     }
 }

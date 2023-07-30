@@ -13,4 +13,5 @@ struct OWCommentRequiredData {
     let user: SPUser
     let replyToUser: SPUser?
     let collapsableTextLineLimit: Int
+    let section: String
 }

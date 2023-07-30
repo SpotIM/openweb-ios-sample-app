@@ -332,7 +332,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
-            collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit
+            collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
+            section: self.commentThreadData.article.additionalSettings.section
         ))
     }
 
