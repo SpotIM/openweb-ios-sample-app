@@ -11,6 +11,9 @@ import RxSwift
 
 class OWCommentCreationReplySnippetView: UIView {
     fileprivate struct Metrics {
+        static let identifier = "comment_cretion_reply_snippet_id"
+        static let labelIdentifier = "comment_cretion_reply_snippet_label_id"
+
         static let horizontalOffset: CGFloat = 16.0
         static let bottomSpacing: CGFloat = 12.0
         static let replySnippetNumberOfLines: Int = 2
@@ -81,6 +84,7 @@ fileprivate extension OWCommentCreationReplySnippetView {
     }
 
     func applyAccessibility() {
-
+        self.accessibilityIdentifier = Metrics.identifier
+        self.replySnippetLabel.accessibilityIdentifier = Metrics.labelIdentifier
     }
 }
