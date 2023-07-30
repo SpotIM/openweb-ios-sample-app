@@ -11,7 +11,6 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentLabelsContainerViewModelingInputs {
-    // TODO: click ?
 }
 
 protocol OWCommentLabelsContainerViewModelingOutputs {
