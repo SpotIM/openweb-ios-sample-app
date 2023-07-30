@@ -38,6 +38,8 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
+    fileprivate lazy var postId = OWManager.manager.postId
+
     var commentType: OWCommentCreationType
 
     var closeButtonTap = PublishSubject<Void>()
@@ -72,7 +74,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         var replyToComment: OWComment? = nil
         switch commentCreationData.commentCreationType {
         case .edit(let comment):
-            if let postId = OWManager.manager.postId,
+            if let postId = self.postId,
                let parentId = comment.parentId,
                let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
                 replyToComment = parentComment
@@ -99,7 +101,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     var shouldShowReplySnippet: Bool {
-        guard let postId = OWManager.manager.postId else { return false }
+        guard let postId = self.postId else { return false }
         var replyToComment: OWComment? = nil
         switch commentType {
         case .edit(let comment):
