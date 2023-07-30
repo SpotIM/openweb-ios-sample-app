@@ -17,6 +17,6 @@ public struct OWManipulateTextModel {
 #else
 struct OWManipulateTextModel {
     let text: String
-    public let cursorRange: Range<String.Index>
+    let cursorRange: Range<String.Index>
 }
 #endif
