@@ -20,7 +20,7 @@ protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func themeStyleService() -> OWThemeStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
-    func commentsInMemoryCacheService() -> OWCacheService<String, String>
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
@@ -61,8 +61,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCacheService<String, UIImage>()
     }()
 
-    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<String, String> = {
-        return OWCacheService<String, String>()
+    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, String> = {
+        return OWCacheService<OWCachedCommentKey, String>()
     }()
 
     fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
@@ -165,7 +165,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _imageCacheService
     }
 
-    func commentsInMemoryCacheService() -> OWCacheService<String, String> {
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String> {
         return _commentsInMemoryCacheService
     }
 
