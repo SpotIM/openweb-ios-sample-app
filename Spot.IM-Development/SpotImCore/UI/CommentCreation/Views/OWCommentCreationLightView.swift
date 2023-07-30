@@ -12,6 +12,8 @@ import RxCocoa
 
 class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
+        static let identifier = "comment_creation_light_view_id"
+
         static let horizontalOffset: CGFloat = 16.0
         static let replyToVerticalSpacing: CGFloat = 15.0
         static let topContainerHeight: CGFloat = 54.0
@@ -20,8 +22,7 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         static let closeButtonTrailingOffset: CGFloat = 5.0
         static let footerHeight: CGFloat = 72.0
         static let commentLabelsSpacing: CGFloat = 15.0
-
-        static let identifier = "comment_creation_light_view_id"
+        static let closeButtomImageName: String = "closeCrossIconNew"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -126,18 +127,6 @@ fileprivate extension OWCommentCreationLightView {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIconNew", supportDarkMode: true), state: .normal)
-                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
-                self.replyToLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-            })
-            .disposed(by: disposeBag)
-
         self.addSubview(topContainerView)
         topContainerView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -186,6 +175,18 @@ fileprivate extension OWCommentCreationLightView {
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtomImageName, supportDarkMode: true), state: .normal)
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
+                self.replyToLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)

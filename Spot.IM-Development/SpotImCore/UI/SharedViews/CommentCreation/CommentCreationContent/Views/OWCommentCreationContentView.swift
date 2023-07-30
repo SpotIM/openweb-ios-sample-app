@@ -11,6 +11,9 @@ import RxSwift
 
 class OWCommentCreationContentView: UIView {
     fileprivate struct Metrics {
+        static let identifier = "comment_cretion_content_id"
+        static let textInputIdentifier = "comment_cretion_content_text_id"
+
         static let placeholderLabelTopOffset: CGFloat = 8.0
         static let placeholderLabelLeadingOffset: CGFloat = 6.0
         static let horizontalOffset: CGFloat = 16.0
@@ -140,6 +143,7 @@ fileprivate extension OWCommentCreationContentView {
     }
 
     func applyAccessibility() {
-
+        self.accessibilityIdentifier = Metrics.identifier
+        self.textInput.accessibilityIdentifier = Metrics.textInputIdentifier
     }
 }
