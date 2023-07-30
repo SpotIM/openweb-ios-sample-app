@@ -15,7 +15,7 @@ import SnapKit
 class CommentCreationToolbar: UIView {
 
     struct ToolbarMetrics {
-        static let height: CGFloat = 80
+        static let height: CGFloat = 50
     }
 
     fileprivate lazy var toolbarCollection: UICollectionView = {
@@ -68,5 +68,4 @@ fileprivate extension CommentCreationToolbar {
             .disposed(by: disposeBag)
     }
 }
-
 #endif
