@@ -28,6 +28,7 @@ class OWCommentLabelView: UIView {
 
     fileprivate lazy var labelContainer: UIView = {
         return UIView()
+            .userInteractionEnabled(true)
             .corner(radius: Metrics.cornerRaius)
     }()
     fileprivate lazy var iconImageView: UIImageView = {
@@ -43,7 +44,7 @@ class OWCommentLabelView: UIView {
     }()
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
-        self.addGestureRecognizer(tapGesture)
+        labelContainer.addGestureRecognizer(tapGesture)
         return tapGesture
     }()
 

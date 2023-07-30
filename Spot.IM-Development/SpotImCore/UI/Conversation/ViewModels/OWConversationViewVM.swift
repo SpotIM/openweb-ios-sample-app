@@ -487,7 +487,8 @@ fileprivate extension OWConversationViewViewModel {
             comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
-            collapsableTextLineLimit: Metrics.collapsableTextLineLimit
+            collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
+            section: self.conversationData.article.additionalSettings.section
         ))
     }
 
