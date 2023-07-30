@@ -325,15 +325,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     let self = self,
                     let animationDuration = notification.keyboardAnimationDuration
                 else { return }
-
-                switch self.viewModel.outputs.commentType {
-                case .edit(comment: let comment):
-                    if let editText = comment.text?.text {
-                        self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext(editText)
-                    }
-                default: break
-                }
-
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
                     self.sendButton.alpha(1)
@@ -348,6 +339,17 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         self.headerView.layoutIfNeeded()
                     }
                     self.footerView.layoutIfNeeded()
+                }
+                switch self.viewModel.outputs.commentType {
+                case .edit(comment: let comment):
+                    if let editText = comment.text?.text {
+                        self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext(editText)
+                    }
+                case .comment:
+                    // TODO check if last comment exists and what type it is, then show the type and load the last text
+                    break
+                case .replyToComment:
+                    break
                 }
             })
             .disposed(by: disposeBag)
