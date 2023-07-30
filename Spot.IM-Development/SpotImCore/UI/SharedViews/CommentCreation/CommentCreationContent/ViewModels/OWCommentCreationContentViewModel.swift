@@ -87,17 +87,21 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         self.imageURLProvider = imageURLProvider
         self.commentCreationType = commentCreationType
 
-        if case .edit(let comment) = commentCreationType {
-            if let commentText = comment.text?.text {
-                self.inputs.commentText.onNext(commentText)
-            }
-        }
+        setupEditedTextIfNeeded()
 
         setupObservers()
     }
 }
 
 fileprivate extension OWCommentCreationContentViewModel {
+    func setupEditedTextIfNeeded() {
+        if case .edit(let comment) = commentCreationType {
+            if let commentText = comment.text?.text {
+                self.inputs.commentText.onNext(commentText)
+            }
+        }
+    }
+
     func setupObservers() {
         servicesProvider.authenticationManager()
             .activeUserAvailability
