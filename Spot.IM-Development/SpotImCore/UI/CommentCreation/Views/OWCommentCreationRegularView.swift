@@ -20,6 +20,8 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         static let topContainerHeight: CGFloat = 68.0
         static let footerHeight: CGFloat = 72.0
         static let commentLabelsSpacing: CGFloat = 15.0
+
+        static let closeButtomImageName: String = "closeCrossIcon"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -111,16 +113,6 @@ fileprivate extension OWCommentCreationRegularView {
         self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
-            })
-            .disposed(by: disposeBag)
-
         self.addSubview(topContainerView)
         topContainerView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -169,6 +161,16 @@ fileprivate extension OWCommentCreationRegularView {
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtomImageName, supportDarkMode: true), state: .normal)
+            })
+            .disposed(by: disposeBag)
+
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)
