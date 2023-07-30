@@ -29,6 +29,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let delayCloseDuration = 400 // miliseconds
         static let toolbarAnimationMilisecondsDuration = 300 // miliseconds
         static let toolbarAnimationSecondsDuration = CGFloat(toolbarAnimationMilisecondsDuration) / 1000 // seconds
+        static let delayKeyboard = 0 // No delay
         static let underFooterHeight: CGFloat = 300
         static let headerIconLeadingPadding: CGFloat = 20
         static let headerTitleLeadingPadding: CGFloat = 14
@@ -37,6 +38,8 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
     }
+
+    fileprivate var toolbarBottomConstraint: OWConstraint?
 
     fileprivate lazy var underFooterView: UIView = {
         return UIView(frame: .zero)
@@ -167,8 +170,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
            let toolbar = toolbar,
            subviews.contains(toolbar) {
             firstLayoutSubviewsDone = true
-            let delayKeyboard = Metrics.toolbarAnimationMilisecondsDuration
-            viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(delayKeyboard)
+            viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(Metrics.delayKeyboard)
             updateToolbarConstraints(hidden: true)
             layoutIfNeeded()
             UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
@@ -246,37 +248,33 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         if let toolbar = toolbar {
             self.addSubview(toolbar)
+            toolbar.OWSnp.makeConstraints { make in
+                toolbarBottomConstraint = make.bottom.equalToSuperview().constraint
+                make.top.equalTo(textViewObject.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
             updateToolbarConstraints(hidden: true)
         }
 
         self.addSubview(underFooterView)
         underFooterView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(self.OWSnp.bottom)
+            make.top.equalTo(self.OWSnp.bottom).inset(Metrics.textViewVerticalPadding)
             make.height.equalTo(Metrics.underFooterHeight)
         }
     }
 
     func updateToolbarConstraints(hidden: Bool) {
         if let toolbar = toolbar {
-            toolbar.OWSnp.removeConstraints()
             footerView.OWSnp.removeConstraints()
             if hidden {
-                toolbar.OWSnp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperview()
-                    make.top.equalTo(footerView.OWSnp.bottom)
-                }
-
+                toolbarBottomConstraint?.deactivate()
                 footerView.OWSnp.makeConstraints { make in
                     make.leading.trailing.equalToSuperview()
-                    make.bottom.equalTo(self.safeAreaLayoutGuide)
+                    make.bottom.equalTo(self.OWSnp.bottom)
                 }
             } else {
-                toolbar.OWSnp.makeConstraints { make in
-                    make.top.equalTo(textViewObject.OWSnp.bottom)
-                    make.leading.trailing.bottom.equalToSuperview()
-                }
-
+                toolbarBottomConstraint?.activate()
                 footerView.OWSnp.makeConstraints { make in
                     make.leading.trailing.equalToSuperview()
                     make.bottom.equalTo(toolbar.OWSnp.top)
@@ -307,7 +305,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         guard let self = self else { return }
                         self.layoutIfNeeded()
                     }
-                    return Observable.just(()).delay(.milliseconds(Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
+                    return Observable.just(()).delay(.milliseconds(Metrics.delayKeyboard), scheduler: MainScheduler.instance)
                 }
                 return Observable.just(())
             })
@@ -326,7 +324,16 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 guard
                     let self = self,
                     let animationDuration = notification.keyboardAnimationDuration
-                    else { return }
+                else { return }
+
+                switch self.viewModel.outputs.commentType {
+                case .edit(comment: let comment):
+                    if let editText = comment.text?.text {
+                        self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext(editText)
+                    }
+                default: break
+                }
+
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
                     self.sendButton.alpha(1)
@@ -370,6 +377,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         self.headerView.layoutIfNeeded()
                     }
                     self.footerView.layoutIfNeeded()
+                    self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
                 }
             })
             .disposed(by: disposeBag)
