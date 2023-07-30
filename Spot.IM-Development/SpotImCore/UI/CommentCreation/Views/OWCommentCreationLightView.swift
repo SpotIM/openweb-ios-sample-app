@@ -186,7 +186,7 @@ fileprivate extension OWCommentCreationLightView {
                 self.replyToLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
-        
+
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)
