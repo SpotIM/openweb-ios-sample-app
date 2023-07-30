@@ -16,7 +16,7 @@ public struct OWManipulateTextModel {
 
 #else
 struct OWManipulateTextModel {
-    let userId: String
+    let text: String
     public let cursorRange: Range<String.Index>
 }
 #endif
