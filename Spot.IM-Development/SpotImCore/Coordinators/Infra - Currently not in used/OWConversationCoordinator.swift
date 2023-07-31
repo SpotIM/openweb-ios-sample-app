@@ -129,9 +129,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
             .do(onNext: { result in
                 switch result {
-                case .commentCreated(_):
+                case .commentCreated(let comment):
                     // TODO: We will probably would like to push this comment to the table view with a nice highlight animation
-                    break
+                    print(comment)
                 case .loadedToScreen:
                     break
                     // Nothing

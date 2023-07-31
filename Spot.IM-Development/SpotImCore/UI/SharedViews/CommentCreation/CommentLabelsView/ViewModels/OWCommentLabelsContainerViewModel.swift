@@ -16,6 +16,7 @@ protocol OWCommentLabelsContainerViewModelingInputs {
 protocol OWCommentLabelsContainerViewModelingOutputs {
     var commentLabelsTitle: Observable<String?> { get }
     var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> { get }
+    var selectedLabelIds: Observable<[String]> { get }
 }
 
 protocol OWCommentLabelsContainerViewModeling {
@@ -37,6 +38,11 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     fileprivate let section: String
 
     fileprivate var _selectedLabelIds = BehaviorSubject<Set<String>>(value: [])
+    var selectedLabelIds: Observable<[String]> {
+        _selectedLabelIds
+            .map { Array($0) }
+            .asObservable()
+    }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
