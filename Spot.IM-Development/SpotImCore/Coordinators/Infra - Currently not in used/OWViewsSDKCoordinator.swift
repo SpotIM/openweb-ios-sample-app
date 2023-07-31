@@ -64,7 +64,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWConversationCoordinatorResult>.self)
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWCommentCreationCoordinatorResult>.self)
             })
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
