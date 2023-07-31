@@ -25,14 +25,18 @@ class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
     fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
     fileprivate var blockedEvents = BehaviorSubject<[String]>(value: [])
+    fileprivate let analyticsEventCreatorService: OWAnalyticsEventCreatorServicing
 
     fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
 
     init(maxEventsForFlush: Int = Metrics.maxEvents,
-         appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle()) {
+         appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
+         analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = OWSharedServicesProvider.shared.analyticsEventCreatorService()
+    ) {
         self.maxEventsForFlush = maxEventsForFlush
         self.appLifeCycle = appLifeCycle
+        self.analyticsEventCreatorService = analyticsEventCreatorService
 
         setupObservers()
         setEventsStrategyConfig(spotId: OWManager.manager.spotId)
@@ -67,6 +71,13 @@ fileprivate extension OWAnalyticsService {
             .withLatestFrom(self.blockedEvents) { [weak self] items, blockedEvents -> [OWAnalyticEvent] in
                 guard let self = self else { return []}
                 return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
+            }
+            .map { [weak self] event in
+                guard let self = self else { return []}
+                return event.map {
+                    self.analyticsEventCreatorService
+                        .serverAnalyticEvent(from: $0)
+                }
             }
             .filter { $0.count > 0 }
             .flatMap { items -> Observable<OWBatchAnalyticsResponse> in
