@@ -14,8 +14,8 @@ import SpotImCore
 extension OWLocaleStrategy {
     static func localeStrategy(fromIndex index: Int) -> OWLocaleStrategy {
         switch index {
-        case 0: return .useDevice
-        case 1: return .useServerConfig
+        case OWLocaleStrategy.useDevice.index: return .useDevice
+        case OWLocaleStrategy.useServerConfig.index: return .useServerConfig
         default: return `default`
         }
     }
@@ -25,8 +25,13 @@ extension OWLocaleStrategy {
         return .useDevice
     }
 
-    static var defaultLocaleIndex: Int {
-        return 0
+    var index: Int {
+        switch self {
+        case .useDevice: return 0
+        case .useServerConfig: return 1
+        case .`default`: return 2
+        default: return OWLocaleStrategy.`default`.index
+        }
     }
 
     enum CodingKeys: String, CodingKey {

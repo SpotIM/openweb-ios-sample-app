@@ -16,6 +16,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
     fileprivate struct Metrics {
         static let margin: CGFloat = 5
         static let size: CGFloat = CommentCreationToolbar.ToolbarMetrics.height
+        static let accessibilitySurfix = "toolbar_cell_id"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -41,7 +42,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
 
     func configure(with viewModel: ToolbarCollectionCellViewModeling) {
         self.viewModel = viewModel
-
+        self.updateAccessibility()
         self.setupObservers()
     }
 
@@ -66,6 +67,10 @@ fileprivate extension ToolbarCollectionCell {
             make.edges.equalToSuperview()
             make.size.equalTo(Metrics.size)
         }
+    }
+
+    func updateAccessibility() {
+        self.accessibilityIdentifier = "\(viewModel.outputs.accessibilityPrefix)_\(Metrics.accessibilitySurfix)"
     }
 
     func setupObservers() {

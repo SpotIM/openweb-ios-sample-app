@@ -19,7 +19,7 @@ protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
     var pullToRefresh: PublishSubject<Void> { get }
-    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -42,7 +42,7 @@ protocol OWConversationViewViewModelingOutputs {
     var performTableViewAnimation: Observable<Void> { get }
 
     var urlClickedOutput: Observable<URL> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
@@ -83,8 +83,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentCreation: Observable<OWCommentCreationType> {
+    var commentCreationTap = PublishSubject<OWCommentCreationTypeInternal>()
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> {
         return commentCreationTap
             .asObservable()
     }
@@ -161,19 +161,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWConversationEmptyStateViewModel()
     }()
 
-    fileprivate var shouldShowCommunityQuestion: Observable<Bool> {
+    fileprivate lazy var shouldShowCommunityQuestion: Observable<Bool> = {
         return communityQuestionCellViewModel.outputs
             .communityQuestionViewModel.outputs
             .shouldShowView
-    }
+    }()
 
-    fileprivate var shouldShowCommunityGuidelines: Observable<Bool> {
+    fileprivate lazy var shouldShowCommunityGuidelines: Observable<Bool> = {
         return communityGuidelinesCellViewModel.outputs
             .communityGuidelinesViewModel.outputs
             .shouldShowView
-    }
+    }()
 
-    fileprivate var commentCellsOptions: Observable<[OWConversationCellOption]> {
+    fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
@@ -182,16 +182,16 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 return Observable.just(self.getCommentCells(for: commentsPresentationData))
             })
             .asObservable()
-    }
+    }()
 
-    fileprivate var communityCellsOptions: Observable<[OWConversationCellOption]> {
+    fileprivate lazy var communityCellsOptions: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
             .flatMapLatest({ [weak self] showCommunityQuestion, showCommunityGuidlines -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
                 return Observable.just(self.getCommunityCells(shouldShowCommunityQuestion: showCommunityQuestion, shouldShowCommunityGuidelines: showCommunityGuidlines))
             })
             .asObservable()
-    }
+    }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(communityCellsOptions, commentCellsOptions, isEmptyObservable)
@@ -202,6 +202,37 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     return Observable.just(self.getSkeletonCells())
                 }
                 return Observable.just(communityCellsOptions + commentCellsOptions)
+            })
+            .scan([], accumulator: { previousConversationCellsOptions, newConversationCellsOptions in
+                var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
+
+                previousConversationCellsOptions.forEach { conversationCellOption in
+                    switch conversationCellOption {
+                    case .comment(let commentCellViewModel):
+                        guard let commentId = commentCellViewModel.outputs.commentVM.outputs.comment.id else { return }
+                        commentsVmsMapper[commentId] = commentCellViewModel
+                    default:
+                        break
+                    }
+                }
+
+                let adjustedNewCommentCellOptions: [OWConversationCellOption] = newConversationCellsOptions.map { conversationCellOptions in
+                    switch conversationCellOptions {
+                    case .comment(let viewModel):
+                        guard let commentId = viewModel.outputs.commentVM.outputs.comment.id else {
+                            return conversationCellOptions
+                        }
+                        if let commentVm = commentsVmsMapper[commentId] {
+                            return OWConversationCellOption.comment(viewModel: commentVm)
+                        } else {
+                            return conversationCellOptions
+                        }
+                    default:
+                        return conversationCellOptions
+                    }
+                }
+
+                return adjustedNewCommentCellOptions
             })
             .share(replay: 1)
             .asObservable()
@@ -264,6 +295,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate lazy var isEmptyObservable: Observable<Bool> = {
         return _isEmpty
             .share(replay: 1)
+            .asObservable()
     }()
 
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
@@ -455,7 +487,8 @@ fileprivate extension OWConversationViewViewModel {
             comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
-            collapsableTextLineLimit: Metrics.collapsableTextLineLimit
+            collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
+            section: self.conversationData.article.additionalSettings.section
         ))
     }
 
@@ -1223,5 +1256,15 @@ fileprivate extension OWConversationViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: conversationData.article.url.absoluteString,
+                layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
+                component: .conversation)
     }
 }

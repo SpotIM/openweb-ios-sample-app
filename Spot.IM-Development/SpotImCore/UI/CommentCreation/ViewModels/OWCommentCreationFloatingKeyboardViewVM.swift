@@ -14,12 +14,13 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
     var sendCommentIcon: UIImage? { get }
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
     var servicesProvider: OWSharedServicesProviding { get }
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -40,12 +41,13 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
     var outputs: OWCommentCreationFloatingKeyboardViewViewModelingOutputs { return self }
 
+    var viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
-    let commentType: OWCommentCreationType
+    let commentType: OWCommentCreationTypeInternal
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeButtonTap = PublishSubject<Void>()
@@ -64,10 +66,11 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     init(commentCreationData: OWCommentCreationRequiredData,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         viewableMode: OWViewableMode = .independent,
+         viewableMode: OWViewableMode,
          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
          sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.viewableMode = viewableMode
         self._commentCreationData.onNext(commentCreationData)
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
@@ -114,7 +117,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                 let currentText = tuple.1
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
-                    let newRequestedText = manipulationTextCompletion(.success(currentText))
+                    let cursorRange: Range<String.Index> = currentText.endIndex..<currentText.endIndex
+                    let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: cursorRange)
+                    let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
                     self.textViewVM.inputs.textViewTextChange.onNext(newRequestedText)
                 }
             })

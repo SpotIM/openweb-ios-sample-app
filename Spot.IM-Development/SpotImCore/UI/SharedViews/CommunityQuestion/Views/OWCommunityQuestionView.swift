@@ -12,11 +12,12 @@ import RxSwift
 // TODO: complete
 class OWCommunityQuestionView: UIView {
     fileprivate struct Metrics {
-        static let identifier = "community_question_id"
         static let fontSize: CGFloat = 15.0
         static let questionHorizontalOffset: CGFloat = 12.0
         static let questionVerticalOffset: CGFloat = 8.0
         static let containerCorderRadius: CGFloat = 8.0
+
+        static let identifier = "community_question_id"
     }
 
     fileprivate lazy var titleTextView: UITextView = {
@@ -29,6 +30,7 @@ class OWCommunityQuestionView: UIView {
             .wrapContent(axis: .vertical)
             .hugContent(axis: .vertical)
             .dataDetectorTypes([.link])
+            .font(OWFontBook.shared.font(typography: .bodySpecial))
             .textContainerInset(.zero)
 
         textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
@@ -41,7 +43,8 @@ class OWCommunityQuestionView: UIView {
     fileprivate lazy var questionLabel: UILabel = {
         return UILabel()
             .wrapContent()
-            .font(OWFontBook.shared.font(style: .italic, size: Metrics.fontSize))
+            .numberOfLines(0)
+            .font(OWFontBook.shared.font(typography: .bodySpecial))
             .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -53,6 +56,7 @@ class OWCommunityQuestionView: UIView {
             .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
+    fileprivate var heightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -122,6 +126,7 @@ fileprivate extension OWCommunityQuestionView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
             }
         }
     }
@@ -139,6 +144,13 @@ fileprivate extension OWCommunityQuestionView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
+
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style

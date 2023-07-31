@@ -143,6 +143,8 @@ fileprivate extension MockArticleIndependentViewsVC {
                     self.handlePreConversationPresentation()
                 case.conversation:
                     self.handleConversationPresentation()
+                case .commentCreation:
+                    self.handleCommentCreationPresentation()
                 default:
                     // TODO: Implement for supported types
                     break
@@ -167,6 +169,16 @@ fileprivate extension MockArticleIndependentViewsVC {
 
         scrollView.addSubview(conversation)
         conversation.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.height.equalTo(scrollView.snp.height)
+        }
+    }
+
+    func handleCommentCreationPresentation() {
+        guard let commentCreation = self.independentView else { return }
+
+        scrollView.addSubview(commentCreation)
+        commentCreation.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)
             make.height.equalTo(scrollView.snp.height)
         }

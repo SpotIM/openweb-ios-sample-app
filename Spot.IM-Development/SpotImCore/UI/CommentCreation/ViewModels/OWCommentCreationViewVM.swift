@@ -17,7 +17,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling { get }
     var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling { get }
     var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling { get }
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
 }
@@ -31,6 +31,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
+    fileprivate let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
@@ -52,10 +53,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
-        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData)
+        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData, viewableMode: viewableMode)
     }()
 
-    lazy var commentType: OWCommentCreationType = {
+    lazy var commentType: OWCommentCreationTypeInternal = {
         return self.commentCreationData.commentCreationType
     }()
 
@@ -63,11 +64,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         return self.commentCreationData.settings.commentCreationSettings.style
     }()
 
-    init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          viewableMode: OWViewableMode = .independent) {
-        self.servicesProvider = servicesProvider
+    init(commentCreationData: OWCommentCreationRequiredData,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         viewableMode: OWViewableMode) {
         self.commentCreationData = commentCreationData
+        self.servicesProvider = servicesProvider
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }
@@ -75,5 +77,15 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
 
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: commentCreationData.article.url.absoluteString,
+                layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
+                component: .commentCreation)
     }
 }
