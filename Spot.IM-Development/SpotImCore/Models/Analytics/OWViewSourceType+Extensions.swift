@@ -21,6 +21,8 @@ extension OWViewSourceType {
             return "comment_thread"
         case .reportReason:
             return "report_reason"
+        case .none:
+            return "none"
         }
     }
 }
