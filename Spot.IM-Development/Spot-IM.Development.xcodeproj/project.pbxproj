@@ -460,6 +460,7 @@
 		3DA8DBFA29F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8DBF929F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift */; };
 		3DA9A42A284398150033BB8C /* OWNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */; };
 		3DB1D59C2A76522A0012388E /* OWManipulateTextModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB1D59B2A76522A0012388E /* OWManipulateTextModel.swift */; };
+		3DB1D59E2A770E8F0012388E /* SampleAppNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB1D59D2A770E8F0012388E /* SampleAppNavigationController.swift */; };
 		3DB3B94D29F462A000C50192 /* OWTestingPlaygroundCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B94C29F462A000C50192 /* OWTestingPlaygroundCoordinator.swift */; };
 		3DB3B95029F4634300C50192 /* OWTestingPlaygroundRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B94F29F4634300C50192 /* OWTestingPlaygroundRequiredData.swift */; };
 		3DB3B95229F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3B95129F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift */; };
@@ -1430,6 +1431,7 @@
 		3DA8DBF929F1597C00783BA5 /* TestingPlaygroundIndependentViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingPlaygroundIndependentViewViewModel.swift; sourceTree = "<group>"; };
 		3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkInterceptor.swift; sourceTree = "<group>"; };
 		3DB1D59B2A76522A0012388E /* OWManipulateTextModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManipulateTextModel.swift; sourceTree = "<group>"; };
+		3DB1D59D2A770E8F0012388E /* SampleAppNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppNavigationController.swift; sourceTree = "<group>"; };
 		3DB3B94C29F462A000C50192 /* OWTestingPlaygroundCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingPlaygroundCoordinator.swift; sourceTree = "<group>"; };
 		3DB3B94F29F4634300C50192 /* OWTestingPlaygroundRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingPlaygroundRequiredData.swift; sourceTree = "<group>"; };
 		3DB3B95129F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTestingPlaygroundSettingsProtocol.swift; sourceTree = "<group>"; };
@@ -3559,6 +3561,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		3DB1D59F2A7712CC0012388E /* NavigationController */ = {
+			isa = PBXGroup;
+			children = (
+				3DB1D59D2A770E8F0012388E /* SampleAppNavigationController.swift */,
+			);
+			path = NavigationController;
+			sourceTree = "<group>";
+		};
 		3DB3B94E29F4630D00C50192 /* TestingPlayground */ = {
 			isa = PBXGroup;
 			children = (
@@ -4755,6 +4765,7 @@
 		5D4943B72302CA8C00AA7541 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				3DB1D59F2A7712CC0012388E /* NavigationController */,
 				3D611B7F28C4D85C003960CE /* Beta */,
 				3D3E3AB628B3A267003B4F05 /* ConversationCounter */,
 				3DB3D17B282A495C008654CF /* AuthenticationPlayground */,
@@ -6865,6 +6876,7 @@
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				3DF9418A2A56DB6800A687BD /* AutomationVC.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
+				3DB1D59E2A770E8F0012388E /* SampleAppNavigationController.swift in Sources */,
 				9E73DAE029C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift in Sources */,
 				9ED2E57F29E49AD500B39A00 /* OWLocaleStrategy+Extensions.swift in Sources */,
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
