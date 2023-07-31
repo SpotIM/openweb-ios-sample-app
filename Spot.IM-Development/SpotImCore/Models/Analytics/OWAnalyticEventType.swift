@@ -48,8 +48,8 @@ enum OWAnalyticEventType {
     case configuredFullConversationStyle(style: OWConversationStyle)
     case configuredCommentCreationStyle(style: OWCommentCreationStyle)
     case configuredFontFamily(font: OWFontGroupFamily)
-    case configureThemeEnforcement(theme: OWThemeStyle)
-    case configuredInitialSort(initialSort: OWSortOption)
+    case configureThemeEnforcement(theme: OWThemeStyle?)
+    case configuredInitialSort(initialSort: OWInitialSortStrategy)
     case configureSortTitle(sort: OWSortOption, title: String)
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
@@ -316,9 +316,9 @@ extension OWAnalyticEventType {
         case .configuredFontFamily(let font):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.font: font])
         case .configureThemeEnforcement(let theme):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.theme: theme.rawValue])
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.theme: theme?.rawValue])
         case .configuredInitialSort(let sort):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.initialSort: sort.rawValue])
+            return sort.analyticsPayload
         case .configureSortTitle(let sort, let title):
             return OWAnalyticEventPayload(payloadDictionary: [
                 OWAnalyticEventPayloadKeys.sort: sort.rawValue,
