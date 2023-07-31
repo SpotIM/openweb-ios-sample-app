@@ -23,7 +23,7 @@ class OWMenuSelectionCell: UITableViewCell {
 
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
     }()
 

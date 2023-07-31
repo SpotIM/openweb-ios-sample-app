@@ -74,7 +74,7 @@ class CommonCreatorService: CommonCreatorServicing {
         let articleStub = OWArticle.stub()
 
         let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
-                                                                                                           defaultValue: OWReadOnlyMode.defaultIndex))
+                                                                                                           defaultValue: OWReadOnlyMode.default.index))
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 
@@ -98,12 +98,12 @@ class CommonCreatorService: CommonCreatorServicing {
 
     func commentCreationFloatingBottomToolbar() -> (CommentCreationToolbarViewModeling, CommentCreationToolbar) {
         let toolbarElements = [
-            ToolbarElementModel(emoji: "😍", action: .append(text: "😍")),
-            ToolbarElementModel(emoji: "🔥", action: .append(text: "🔥")),
-            ToolbarElementModel(emoji: "❤️", action: .append(text: "❤️")),
-            ToolbarElementModel(emoji: "🚀", action: .append(text: "🚀")),
-            ToolbarElementModel(emoji: "🤩", action: .append(text: "🤩")),
-            ToolbarElementModel(emoji: "␡", action: .removeAll)
+            ToolbarElementModel(emoji: "😍", accessibility: "heart_eyes", action: .append(text: "😍")),
+            ToolbarElementModel(emoji: "🔥", accessibility: "fire", action: .append(text: "🔥")),
+            ToolbarElementModel(emoji: "❤️", accessibility: "heart", action: .append(text: "❤️")),
+            ToolbarElementModel(emoji: "🚀", accessibility: "rocket", action: .append(text: "🚀")),
+            ToolbarElementModel(emoji: "🤩", accessibility: "starry_eyes", action: .append(text: "🤩")),
+            ToolbarElementModel(emoji: "␡", accessibility: "delete", action: .removeAll)
         ]
         let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel(toolbarElments: toolbarElements)
         let toolbar = CommentCreationToolbar(viewModel: viewModel)

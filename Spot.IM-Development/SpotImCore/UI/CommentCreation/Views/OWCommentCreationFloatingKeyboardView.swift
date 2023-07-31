@@ -37,9 +37,15 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerTitleFontSize: CGFloat = 15
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
+        static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
     }
 
     fileprivate var toolbarBottomConstraint: OWConstraint?
+
+    fileprivate lazy var mainContainer: UIView = {
+        return UIView(frame: .zero)
+            .backgroundColor(.clear)
+    }()
 
     fileprivate lazy var underFooterView: UIView = {
         return UIView(frame: .zero)
@@ -49,7 +55,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     fileprivate lazy var headerTitleLabel: UILabel = {
         let currentStyle = viewModel.outputs.servicesProvider.themeStyleService().currentStyle
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.headerTitleFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
     }()
 
@@ -79,7 +85,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             }
             var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
 
-            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.headerTitleFontSize)]
+            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyInteraction)]
             let boldUserNameString = NSMutableAttributedString(string: name, attributes: attrs)
 
             attributedString.append(boldUserNameString)
@@ -159,24 +165,29 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         super.init(frame: .zero)
         self.enforceSemanticAttribute()
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
-        setupViews()
-        setupObservers()
-        applyAccessibility()
     }
 
     fileprivate var firstLayoutSubviewsDone = false
+    fileprivate var didSetupView = false
     override func layoutSubviews() {
+        if !didSetupView {
+            didSetupView = true
+            setupViews()
+            applyAccessibility()
+            setupObservers()
+        }
+
         if !firstLayoutSubviewsDone,
            let toolbar = toolbar,
-           subviews.contains(toolbar) {
+           mainContainer.subviews.contains(toolbar) {
             firstLayoutSubviewsDone = true
             viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(Metrics.delayKeyboard)
             updateToolbarConstraints(hidden: true)
-            layoutIfNeeded()
+            mainContainer.layoutIfNeeded()
             UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
                 guard let self = self else { return }
                 self.updateToolbarConstraints(hidden: false)
-                self.layoutIfNeeded()
+                mainContainer.layoutIfNeeded()
             }
         } else if !firstLayoutSubviewsDone {
             firstLayoutSubviewsDone = true
@@ -198,15 +209,22 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
 fileprivate extension OWCommentCreationFloatingKeyboardView {
     func setupViews() {
         self.clipsToBounds = false
+        mainContainer.clipsToBounds = false
         self.useAsThemeStyleInjector()
         self.backgroundColor = .clear
 
-        self.addSubview(closeButton)
+        self.addSubviews(mainContainer)
+        mainContainer.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.bottom.equalToSuperviewSafeArea()
+        }
+
+        mainContainer.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        self.addSubview(footerView)
+        mainContainer.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(self.OWSnp.bottom)
@@ -216,8 +234,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         case .comment:
             break
         case .edit, .replyToComment:
-            self.addSubview(headerView)
-            self.bringSubviewToFront(footerView)
+            mainContainer.addSubview(headerView)
+            mainContainer.bringSubviewToFront(footerView)
             headerView.OWSnp.makeConstraints { make in
                 make.bottom.equalTo(footerView.OWSnp.top).inset(Metrics.headerHeight)
                 make.leading.trailing.equalToSuperview()
@@ -247,7 +265,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         }
 
         if let toolbar = toolbar {
-            self.addSubview(toolbar)
+            mainContainer.addSubview(toolbar)
             toolbar.OWSnp.makeConstraints { make in
                 toolbarBottomConstraint = make.bottom.equalToSuperview().constraint
                 make.top.equalTo(textViewObject.OWSnp.bottom)
@@ -256,10 +274,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             updateToolbarConstraints(hidden: true)
         }
 
-        self.addSubview(underFooterView)
+        mainContainer.addSubview(underFooterView)
         underFooterView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(self.OWSnp.bottom).inset(Metrics.textViewVerticalPadding)
+            make.top.equalTo(mainContainer.OWSnp.bottom).inset(Metrics.textViewVerticalPadding)
             make.height.equalTo(Metrics.underFooterHeight)
         }
     }
@@ -271,7 +289,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 toolbarBottomConstraint?.deactivate()
                 footerView.OWSnp.makeConstraints { make in
                     make.leading.trailing.equalToSuperview()
-                    make.bottom.equalTo(self.OWSnp.bottom)
+                    make.bottom.equalTo(mainContainer.OWSnp.bottom)
                 }
             } else {
                 toolbarBottomConstraint?.activate()
@@ -283,6 +301,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -303,7 +322,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.updateToolbarConstraints(hidden: true)
                     UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
                         guard let self = self else { return }
-                        self.layoutIfNeeded()
+                        mainContainer.layoutIfNeeded()
                     }
                     return Observable.just(()).delay(.milliseconds(Metrics.delayKeyboard), scheduler: MainScheduler.instance)
                 }
@@ -322,8 +341,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .notification(UIResponder.keyboardWillShowNotification)
             .subscribe(onNext: { [weak self] notification in
                 guard
-                    let self = self,
-                    let animationDuration = notification.keyboardAnimationDuration
+                   let self = self,
+                   let expandedKeyboardHeight = notification.keyboardSize?.height,
+                   let animationDuration = notification.keyboardAnimationDuration
                 else { return }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
@@ -350,6 +370,24 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     break
                 case .replyToComment:
                     break
+                }
+
+                let bottomPadding: CGFloat
+                if #available(iOS 11.0, *) {
+                    bottomPadding = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                } else {
+                    bottomPadding = 0
+                }
+
+                mainContainer.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
+                }
+                UIView.animate(withDuration: animationDuration) { [weak self] in
+                    guard let self = self else { return }
+                    if self.viewModel.outputs.viewableMode == .independent {
+                        mainContainer.backgroundColor = Metrics.floatingBackgroungColor
+                    }
+                    mainContainer.layoutIfNeeded()
                 }
             })
             .disposed(by: disposeBag)
@@ -380,9 +418,19 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                     self.footerView.layoutIfNeeded()
                     self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
+
+                    mainContainer.OWSnp.updateConstraints { make in
+                        make.bottom.equalToSuperviewSafeArea()
+                    }
+                    UIView.animate(withDuration: animationDuration) { [weak self] in
+                        guard let self = self else { return }
+                        mainContainer.backgroundColor = .clear
+                        mainContainer.layoutIfNeeded()
+                    }
                 }
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
 

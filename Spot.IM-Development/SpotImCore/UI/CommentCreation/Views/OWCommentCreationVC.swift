@@ -110,18 +110,28 @@ fileprivate extension OWCommentCreationVC {
                     let expandedKeyboardHeight = notification.keyboardSize?.height,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
-                let bottomPadding: CGFloat
-                if #available(iOS 11.0, *) {
-                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
-                } else {
-                    bottomPadding = 0
-                }
-                self.commentCreationView.OWSnp.updateConstraints { make in
-                    make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
-                }
-                UIView.animate(withDuration: animationDuration) { [weak self] in
-                    guard let self = self else { return }
-                    self.view.layoutIfNeeded()
+                switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                case .regular, .light:
+                    let bottomPadding: CGFloat
+                    if #available(iOS 11.0, *) {
+                        bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                    } else {
+                        bottomPadding = 0
+                    }
+                    self.commentCreationView.OWSnp.updateConstraints { make in
+                        make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
+                    }
+                    UIView.animate(withDuration: animationDuration) { [weak self] in
+                        guard let self = self else { return }
+                        self.view.layoutIfNeeded()
+                    }
+                case .floatingKeyboard:
+                    // floatingKeyboard style handles it's view constraints
+                    UIView.animate(withDuration: animationDuration) { [weak self] in
+                        guard let self = self else { return }
+                        self.view.backgroundColor = Metrics.floatingBackgroungColor
+                        self.view.layoutIfNeeded()
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -134,18 +144,21 @@ fileprivate extension OWCommentCreationVC {
                     let self = self,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
-                self.commentCreationView.OWSnp.updateConstraints { make in
-                    make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-                }
-
-                UIView.animate(withDuration: animationDuration) { [weak self] in
-                    guard let self = self else { return }
-                    self.view.layoutIfNeeded()
-                    switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                    case .floatingKeyboard:
+                switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                case .regular, .light:
+                    self.commentCreationView.OWSnp.updateConstraints { make in
+                        make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                    }
+                    UIView.animate(withDuration: animationDuration) { [weak self] in
+                        guard let self = self else { return }
+                        self.view.layoutIfNeeded()
+                    }
+                case .floatingKeyboard:
+                    // floatingKeyboard style handles it's view constraints
+                    UIView.animate(withDuration: animationDuration) { [weak self] in
+                        guard let self = self else { return }
                         self.view.backgroundColor = .clear
-                    default:
-                        break
+                        self.view.layoutIfNeeded()
                     }
                 }
             })
