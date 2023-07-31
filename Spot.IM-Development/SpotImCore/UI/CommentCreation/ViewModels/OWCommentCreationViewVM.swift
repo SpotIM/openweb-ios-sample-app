@@ -20,6 +20,8 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
+    var commentCreated: Observable<OWComment> { get }
+    var commentCreationSubmitted: Observable<Void> { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -32,10 +34,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let viewableMode: OWViewableMode
 
     fileprivate lazy var postId = OWManager.manager.postId
+
+    fileprivate lazy var _commentCreated = PublishSubject<OWComment>()
+    var commentCreated: Observable<OWComment> {
+        _commentCreated
+            .asObservable()
+    }
 
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
@@ -109,11 +118,132 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         self.viewableMode = viewableMode
         setupObservers()
     }
+
+    lazy var commentCreationSubmitted: Observable<Void> = {
+        // TODO - add floating view cta hadling
+        return Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
+            .map { [weak self] commentCreationData -> OWNetworkParameters? in
+                // 1 - get create comment request params
+                guard let self = self else { return nil }
+                return self.getParametersForCreateCommentRequest(from: commentCreationData)
+            }
+            .unwrap()
+            .flatMapLatest { [weak self] networkParameters -> Observable<Event<OWComment>> in
+                // 2 - perform create comment request
+                guard let self = self else { return .empty() }
+
+                let conversationApi = self.servicesProvider.netwokAPI().conversation
+
+                let commentNetworkResponse: OWNetworkResponse<OWComment>
+                switch self.commentCreationData.commentCreationType {
+                case .comment, .replyToComment:
+                    commentNetworkResponse = conversationApi.commentPost(parameters: networkParameters)
+                case .edit:
+                    commentNetworkResponse = conversationApi.commentUpdate(parameters: networkParameters)
+                }
+
+                return commentNetworkResponse
+                    .response
+                    .materialize()
+            }
+            .map { [weak self] event -> OWComment? in
+                // 3 - handle network response
+                guard let self = self else { return nil }
+                switch event {
+                case .next(let comment):
+                    return comment
+                case .error(_):
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .do(onNext: { [weak self] _ in
+                // 4 - clear cached comment if exists
+                guard let self = self,
+                      let postId = self.postId
+                else { return }
+                let commentCacheService = self.servicesProvider.commentsInMemoryCacheService()
+                switch self.commentCreationData.commentCreationType {
+                case .comment:
+                    commentCacheService.remove(forKey: .comment(postId: postId))
+                case .replyToComment(originComment: let originComment):
+                    guard let originCommentId = originComment.id else { return }
+                    commentCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
+                case .edit:
+                    break
+                }
+            })
+            .do(onNext: { [weak self] comment in
+                // 5 - comment created
+                guard let self = self else { return }
+                self._commentCreated.onNext(comment)
+            })
+            .voidify()
+            .share()
+    }()
 }
 
 fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
 
+    }
+
+    func getParametersForCreateCommentRequest(from commentCreationData: OWCommentCreationCtaData) -> OWNetworkParameters {
+        var metadata: [String: Any] = [:]
+
+        if let bundleId = Bundle.main.bundleIdentifier {
+            metadata["app_bundle_id"] = bundleId
+        }
+
+        var parameters: [String: Any] = [
+            "content": self.getContentRequestParam(from: commentCreationData)
+        ]
+
+        if !commentCreationData.commentLabelIds.isEmpty {
+            parameters["additional_data"] = [
+                "labels": [
+                    "section": self.commentCreationData.article.additionalSettings.section,
+                    "ids": commentCreationData.commentLabelIds
+                ] as [String: Any]
+            ]
+        }
+
+        switch self.commentCreationData.commentCreationType {
+        case .comment:
+            break
+        case .edit(let comment):
+            if let messageId = comment.id {
+                parameters["message_id"] = messageId
+            }
+        case .replyToComment(let originComment):
+            let commentId = originComment.id
+            let rootCommentId = originComment.rootComment
+            let isRootComment = commentId == rootCommentId
+            if !isRootComment {
+                metadata["reply_to"] = ["reply_id": commentId]
+            }
+            parameters["conversation_id"] = postId
+            parameters["parent_id"] = rootCommentId ?? commentId
+        }
+
+        parameters["metadata"] = metadata
+
+        return parameters
+    }
+
+    func getContentRequestParam(from commentCreationData: OWCommentCreationCtaData) -> [[String: Any]] {
+        var content: [[String: Any]] = []
+
+        if !commentCreationData.text.isEmpty {
+            content.append([
+                "type": "text",
+                "text": commentCreationData.text
+            ])
+        }
+
+        return content
     }
 
     func cacheComment(text commentText: String) {

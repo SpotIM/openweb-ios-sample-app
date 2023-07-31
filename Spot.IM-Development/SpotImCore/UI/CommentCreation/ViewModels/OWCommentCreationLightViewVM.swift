@@ -25,6 +25,7 @@ protocol OWCommentCreationLightViewViewModelingOutputs {
     var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
+    var performCta: Observable<OWCommentCreationCtaData> { get }
 }
 
 protocol OWCommentCreationLightViewViewModeling {
@@ -125,6 +126,14 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         }
 
         return replyToComment?.text?.text != nil
+    }
+
+    var performCta: Observable<OWCommentCreationCtaData> {
+        footerViewModel.outputs.performCtaAction
+            .withLatestFrom(commentCreationContentVM.outputs.commentTextOutput)
+            .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
+            .map { OWCommentCreationCtaData(text: $0, commentLabelIds: $1) }
+            .asObservable()
     }
 
     init (commentCreationData: OWCommentCreationRequiredData,
