@@ -16,10 +16,15 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
 
     fileprivate var customizationTitleMapper: [OWSortOption: String] = [:]
 
-    var initialOption: OWInitialSortStrategy = .useServerConfig
+    var initialOption: OWInitialSortStrategy = .useServerConfig {
+        didSet {
+            sendEvent(for: .configuredInitialSort(initialSort: initialOption))
+        }
+    }
 
     func setTitle(_ title: String, forOption sortOption: OWSortOption) {
         customizationTitleMapper[sortOption] = title
+        sendEvent(for: .configureSortTitle(sort: sortOption, title: title))
     }
 
     func customizedTitle(forOption sortOption: OWSortOption) -> OWCustomizedSortTitle {
@@ -28,5 +33,24 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
         }
 
         return .customized(title: title)
+    }
+}
+
+fileprivate extension OWSortingCustomizer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return OWSharedServicesProvider.shared
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "", // ??
+                layoutStyle: .view, // TODO: !!??
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        OWSharedServicesProvider.shared
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

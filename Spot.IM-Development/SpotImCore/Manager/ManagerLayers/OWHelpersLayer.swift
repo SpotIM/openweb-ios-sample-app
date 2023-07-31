@@ -56,6 +56,7 @@ extension OWHelpersLayer {
         set(newLanguageStrategy) {
             _languageStrategy = newLanguageStrategy
             localizationManager.changeLanguage(strategy: _languageStrategy)
+            sendEvent(for: .configureLanguageStrategy(strategy: newLanguageStrategy))
         }
     }
 
@@ -66,6 +67,26 @@ extension OWHelpersLayer {
         set(newLocaleStrategy) {
             _localeStrategy = newLocaleStrategy
             localizationManager.changeLocale(strategy: newLocaleStrategy)
+            sendEvent(for: .localeStrategy(strategy: newLocaleStrategy))
         }
+    }
+}
+
+fileprivate extension OWHelpersLayer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return OWSharedServicesProvider.shared
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "", // ??
+                layoutStyle: .view, // TODO: !!??
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        OWSharedServicesProvider.shared
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

@@ -26,6 +26,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newFamily) {
             _fontFamily = newFamily
+            sendEvent(for: .configuredFontFamily(font: newFamily))
             OWFontBook.shared.configure(fontFamilyGroup: newFamily)
         }
     }
@@ -40,6 +41,12 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newEnforcement) {
             _themeEnforcement = newEnforcement
+            switch (newEnforcement) {
+            case .none:
+                sendEvent(for: .configureThemeEnforcement(theme: nil))
+            case let .theme(theme):
+                sendEvent(for: .configureThemeEnforcement(theme: theme))
+            }
             OWSharedServicesProvider.shared.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
         }
     }
@@ -74,4 +81,23 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
+}
+
+fileprivate extension OWCustomizationsLayer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return OWSharedServicesProvider.shared
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "", // ??
+                layoutStyle: .view, // TODO: !!??
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        OWSharedServicesProvider.shared
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
+    }
 }
