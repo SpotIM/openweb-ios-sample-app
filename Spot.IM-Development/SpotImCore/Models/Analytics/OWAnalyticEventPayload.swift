@@ -16,7 +16,7 @@ struct OWAnalyticEventPayload: Encodable {
     }
 
     func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: AnyStringKey.self)
+        var container = encoder.container(keyedBy: OWStringKey.self)
 
         // Encode each value in the payload dictionary
         for (key, value) in payloadDictionary {
@@ -26,12 +26,12 @@ struct OWAnalyticEventPayload: Encodable {
 }
 
 fileprivate extension OWAnalyticEventPayload {
-    func encode(value: Encodable, forKey key: String, container: inout KeyedEncodingContainer<AnyStringKey>) {
-        try? container.encode(value, forKey: AnyStringKey(stringValue: key))
+    func encode(value: Encodable, forKey key: String, container: inout KeyedEncodingContainer<OWStringKey>) {
+        try? container.encode(value, forKey: OWStringKey(stringValue: key))
     }
 }
 
-struct AnyStringKey: CodingKey, Hashable, ExpressibleByStringLiteral {
+struct OWStringKey: CodingKey, Hashable, ExpressibleByStringLiteral {
     var stringValue: String
     init(stringValue: String) {
         self.stringValue = stringValue
