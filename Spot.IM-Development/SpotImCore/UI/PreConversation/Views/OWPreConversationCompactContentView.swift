@@ -13,7 +13,6 @@ import RxCocoa
 class OWPreConversationCompactContentView: UIView {
     fileprivate struct Metrics {
         static let avatarSize: CGFloat = 40
-        static let fontSize: CGFloat = 13
         static let numberOfLines: Int = 2
         static let imageIconSize: CGFloat = 24
         static let imageLeftPadding: CGFloat = 12
@@ -22,6 +21,7 @@ class OWPreConversationCompactContentView: UIView {
         static let skelatonLinesTopPaddig: CGFloat = 5
         static let skelatonSpaceBetweenLines: CGFloat = 8
         static let skelatonLinesLeadingPaddig: CGFloat = 12
+
         static let identifier = "pre_conversation_compact_content_view_id"
         static let textLabelIdentifier = "pre_conversation_compact_text_label_id"
     }
@@ -31,32 +31,38 @@ class OWPreConversationCompactContentView: UIView {
         avatar.configure(with: self.viewModel.outputs.avatarVM)
         return avatar
     }()
+
     fileprivate lazy var closedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
         return imageView
     }()
+
     fileprivate lazy var emptyConversationImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
         return imageView
     }()
+
     fileprivate lazy var leftViewContainer: UIView = {
         return UIView()
     }()
+
     fileprivate lazy var textLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .numberOfLines(Metrics.numberOfLines)
             .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .enforceSemanticAttribute()
     }()
+
     fileprivate lazy var cameraIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
         return imageView
     }()
+
     fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
         view.enforceSemanticAttribute()
@@ -84,6 +90,7 @@ class OWPreConversationCompactContentView: UIView {
         }
         return view
     }()
+
     fileprivate lazy var avatarSkeleton: UIView = {
         let view = UIView()
             .corner(radius: Metrics.avatarSize / 2)
@@ -92,6 +99,7 @@ class OWPreConversationCompactContentView: UIView {
 
         return view
     }()
+
     fileprivate lazy var messageLinesSkeleton: [UIView] = {
         let color = OWColorPalette.shared.color(type: .skeletonColor,
                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)

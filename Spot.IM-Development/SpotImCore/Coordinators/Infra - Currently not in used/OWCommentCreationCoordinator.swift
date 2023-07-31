@@ -92,7 +92,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: Complete when we would like to support comment creation as a view
         let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
-                                                                                                      viewableMode: .independent)
+                                                                                                viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
         setupObservers(forViewModel: commentCreationViewVM)
         setupViewActionsCallbacks(forViewModel: commentCreationViewVM)

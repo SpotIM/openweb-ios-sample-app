@@ -12,15 +12,16 @@ import RxCocoa
 
 class OWCommunityGuidelinesView: UIView {
     fileprivate struct Metrics {
+        static let containerCorderRadius: CGFloat = 8
+        static let containerHeight: CGFloat = 44
+        static let horizontalOffset: CGFloat = 16
+        static let verticalOffset: CGFloat = 14
+        static let horizontalPadding: CGFloat = 10
+        static let iconSize: CGFloat = 16
+        static let sideOffset: CGFloat = 20
+
         static let identifier = "community_guidelines_id"
         static let communityGuidelinesTextViewIdentifier = "community_guidelines_text_view_id"
-        static let containerCorderRadius: CGFloat = 8.0
-        static let containerHeight: CGFloat = 44
-        static let horizontalOffset: CGFloat = 16.0
-        static let verticalOffset: CGFloat = 14.0
-        static let horizontalPadding: CGFloat = 10.0
-        static let iconSize: CGFloat = 16.0
-        static let sideOffset: CGFloat = 20.0
     }
 
     fileprivate lazy var titleTextView: UITextView = {
@@ -33,11 +34,14 @@ class OWCommunityGuidelinesView: UIView {
             .isScrollEnabled(false)
             .wrapContent(axis: .vertical)
             .hugContent(axis: .vertical)
+            .font(OWFontBook.shared.font(typography: .bodySpecial))
             .dataDetectorTypes([.link])
             .textContainerInset(.zero)
 
         textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                                       NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
+                                       NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+                                       NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodySpecial)]
+
         textView.textContainer.lineFragmentPadding = 0
         textView.sizeToFit()
         return textView
@@ -54,9 +58,11 @@ class OWCommunityGuidelinesView: UIView {
     fileprivate lazy var guidelinesIcon: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
+            .wrapContent()
             .image(UIImage(spNamed: "guidelinesIcon", supportDarkMode: false)!)
     }()
 
+    fileprivate var heightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
@@ -124,6 +130,7 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
             }
         }
     }
@@ -133,6 +140,13 @@ fileprivate extension OWCommunityGuidelinesView {
             .map { !$0 }
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
+
+        if let heightConstraint = heightConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: heightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         viewModel.outputs.communityGuidelinesHtmlAttributedString
             .bind(to: titleTextView.rx.attributedText)

@@ -17,8 +17,8 @@ protocol OWPreConversationSummaryViewModelingInputs {
 protocol OWPreConversationSummaryViewModelingOutputs {
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
     var commentsCount: Observable<String> { get }
-    var titleFontSize: CGFloat { get }
-    var counterFontSize: CGFloat { get }
+    var titleFontTypography: OWFontTypography { get }
+    var counterFontTypography: OWFontTypography { get }
     var showNextArrow: Bool { get }
     var isVisible: Bool { get }
     var customizeTitleLabelUI: Observable<UILabel> { get }
@@ -34,10 +34,10 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
                                          OWPreConversationSummaryViewModelingInputs,
                                          OWPreConversationSummaryViewModelingOutputs {
     fileprivate struct Metrics {
-        static let titleFontSize: CGFloat = 24
-        static let titleFontSizeCompact: CGFloat = 15
-        static let counterFontSize: CGFloat = 15
-        static let counterFontSizeCompact: CGFloat = 13
+        static let titleFontTypography: OWFontTypography = .titleLarge
+        static let titleFontTypographyCompact: OWFontTypography = .bodyContext
+        static let counterFontTypography: OWFontTypography = .bodyText
+        static let counterFontTypographyCompact: OWFontTypography = .footnoteText
     }
 
     var inputs: OWPreConversationSummaryViewModelingInputs { return self }
@@ -81,12 +81,12 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
             .asObservable()
     }
 
-    lazy var titleFontSize: CGFloat = {
-        return style == .compact ? Metrics.titleFontSizeCompact : Metrics.titleFontSize
+    lazy var titleFontTypography: OWFontTypography = {
+        return style == .compact ? Metrics.titleFontTypographyCompact : Metrics.titleFontTypography
     }()
 
-    lazy var counterFontSize: CGFloat = {
-        return style == .compact ? Metrics.counterFontSizeCompact : Metrics.counterFontSize
+    lazy var counterFontTypography: OWFontTypography = {
+        return style == .compact ? Metrics.counterFontTypographyCompact : Metrics.counterFontTypography
     }()
 
     lazy var showNextArrow: Bool = {

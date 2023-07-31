@@ -37,7 +37,7 @@ class OWTextView: UIView {
 
     fileprivate lazy var textView: UITextView = {
         return UITextView()
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.textViewFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
@@ -49,7 +49,7 @@ class OWTextView: UIView {
 
     fileprivate lazy var charectersCountLabel: UILabel = {
         return UILabel()
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.charectersFontSize))
+                .font(OWFontBook.shared.font(typography: .footnoteText))
                 .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .text("0/" + "\(self.viewModel.outputs.textViewMaxCharecters)")
                 .enforceSemanticAttribute()
@@ -57,7 +57,7 @@ class OWTextView: UIView {
 
     fileprivate lazy var textViewPlaceholder: UILabel = {
         return UILabel()
-                .font(OWFontBook.shared.font(style: .regular, size: Metrics.textViewFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
                 .enforceSemanticAttribute()

@@ -43,9 +43,17 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentCreationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        setupViews()
-        setupObservers()
-        applyAccessibility()
+    }
+
+    var didSetupView = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if !didSetupView {
+            didSetupView = true
+            setupViews()
+            applyAccessibility()
+            setupObservers()
+        }
     }
 
     private func applyAccessibility() {
@@ -75,7 +83,8 @@ fileprivate extension OWCommentCreationView {
 
         self.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperviewSafeArea()
         }
     }
 

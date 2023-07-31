@@ -36,7 +36,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                                         OWCommunityGuidelinesViewModelingInputs,
                                         OWCommunityGuidelinesViewModelingOutputs {
     struct Metrics {
-        static let communityGuidelinesFontSize = 15.0
         static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "Read our")
         static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "Community Guidelines").lowercased()
     }
@@ -129,7 +128,8 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         _communityGuidelinesTitle
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                self._shouldShowView.onNext(text != nil)
+                let shouldShow = (text != nil) && (self.style != .none)
+                self._shouldShowView.onNext(shouldShow)
             })
             .disposed(by: disposeBag)
 
@@ -174,7 +174,7 @@ fileprivate extension OWCommunityGuidelinesViewModel {
             )
             htmlMutableAttributedString.addAttribute(
                 .font,
-                value: OWFontBook.shared.font(style: .regular, size: Metrics.communityGuidelinesFontSize),
+                value: OWFontBook.shared.font(typography: .bodyText),
                 range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(

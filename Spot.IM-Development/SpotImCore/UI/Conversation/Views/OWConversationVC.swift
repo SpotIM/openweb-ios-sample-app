@@ -12,7 +12,6 @@ import RxCocoa
 
 class OWConversationVC: UIViewController {
     fileprivate struct Metrics {
-        static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonImageName: String = "closeButton"
     }
 
@@ -80,7 +79,7 @@ fileprivate extension OWConversationVC {
 
             // Setup Title
             let navigationTitleTextAttributes = [
-                NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
+                NSAttributedString.Key.font: OWFontBook.shared.font(typography: .titleSmall),
                 NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
             ]
 
