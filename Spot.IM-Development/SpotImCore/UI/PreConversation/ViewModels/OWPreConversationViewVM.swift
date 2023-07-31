@@ -733,6 +733,22 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe on read more click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWCommentId> in
+                let readMoreClickObservable: [Observable<OWCommentId>] = commentCellsVms.map { commentCellVm -> Observable<OWCommentId> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.readMoreTap
+                        .map { commentCellVm.outputs.commentVM.outputs.comment.id ?? "" }
+                }
+                return Observable.merge(readMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId in
+                self?.sendEvent(for: .commentReadMoreClicked(commentId: commentId))
+            })
+            .disposed(by: disposeBag)
+
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
             .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
