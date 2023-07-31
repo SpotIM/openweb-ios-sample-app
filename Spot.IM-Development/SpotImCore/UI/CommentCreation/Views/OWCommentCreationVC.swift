@@ -126,7 +126,7 @@ fileprivate extension OWCommentCreationVC {
                         self.view.layoutIfNeeded()
                     }
                 case .floatingKeyboard:
-                    // floatingKeyboard style handles it's view constraints
+                    // floatingKeyboard style handles it's own constraints
                     UIView.animate(withDuration: animationDuration) { [weak self] in
                         guard let self = self else { return }
                         self.view.backgroundColor = Metrics.floatingBackgroungColor
@@ -154,7 +154,7 @@ fileprivate extension OWCommentCreationVC {
                         self.view.layoutIfNeeded()
                     }
                 case .floatingKeyboard:
-                    // floatingKeyboard style handles it's view constraints
+                    // floatingKeyboard style handles it's own constraints
                     UIView.animate(withDuration: animationDuration) { [weak self] in
                         guard let self = self else { return }
                         self.view.backgroundColor = .clear
