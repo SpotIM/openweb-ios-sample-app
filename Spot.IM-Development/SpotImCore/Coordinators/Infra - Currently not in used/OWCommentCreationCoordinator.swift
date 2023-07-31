@@ -11,7 +11,7 @@ import RxSwift
 
 enum OWCommentCreationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
-    case commentCreated(comment: SPComment)
+    case commentCreated(comment: OWComment)
     case loadedToScreen
 
     var loadedToScreen: Bool {
@@ -58,7 +58,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         setupObservers(forViewModel: commentCreationVM)
         setupViewActionsCallbacks(forViewModel: commentCreationVM)
 
-        let commentCreatedObservable = commentCreationVM.outputs.commentCreated
+        let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreated
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
 
@@ -86,8 +86,10 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
-        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
-        viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
+
+        let commentCreationViewVM = viewModel.outputs.commentCreationViewVM
+        Observable.merge(commentCreationViewVM.outputs.closeButtonTapped, commentCreationViewVM.outputs.commentCreationSubmitted)
+            .observe(on: MainScheduler.instance)
             .subscribe { [weak self] _ in
                 self?.router.pop(popStyle: .dismissStyle, animated: false)
             }
