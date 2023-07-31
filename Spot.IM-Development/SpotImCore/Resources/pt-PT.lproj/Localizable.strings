@@ -23,6 +23,9 @@
 "Read More" = " Ler Mais ";
 "Read Less" = " Ler Menos ";
 "OK" = "OK";
+"Yes" = "Si";
+"No" = "No";
+"Close editor?" = "Close editor?";
 "Log Out" = "Terminar Sessão";
 "Log In" = "Iniciar Sessão";
 "Cancel" = "Cancelar";
