@@ -21,11 +21,13 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let textViewHorizontalPadding: CGFloat = 10
         static let textViewVerticalPadding: CGFloat = 12
         static let sendButtonHorizontalPadding: CGFloat = 5
+        static let closeCrossIcon = "closeCrossIcon"
         static let sendImageIcon = "sendCommentIcon"
         static let editImageIcon = "commentCreationEditIcon"
         static let replyImageIcon = "commentCreationReplyIcon"
         static let sendButtonSize: CGFloat = 35
         static let sendButtonImageSize: CGFloat = 24
+        static let closeHeaderDuration = 0.2 // seconds
         static let delayCloseDuration = 400 // miliseconds
         static let toolbarAnimationMilisecondsDuration = 400 // miliseconds
         static let toolbarAnimationSecondsDuration = CGFloat(toolbarAnimationMilisecondsDuration) / 1000 // seconds
@@ -33,7 +35,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let underFooterHeight: CGFloat = 300
         static let headerIconLeadingPadding: CGFloat = 20
         static let headerTitleLeadingPadding: CGFloat = 14
-        static let headerTrailingPadding: CGFloat = 10
+        static let headerTrailingPadding: CGFloat = 20
         static let headerTitleFontSize: CGFloat = 15
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
@@ -50,6 +52,13 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
     fileprivate lazy var underFooterView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var headerCloseButton: UIButton = {
+        let closeButton = UIButton()
+            .image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
+            .contentMode(.center)
+        return closeButton
     }()
 
     fileprivate lazy var headerTitleLabel: UILabel = {
@@ -94,6 +103,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
 
         headerView.addSubview(headerIconView)
         headerView.addSubview(headerTitleLabel)
+        headerView.addSubview(headerCloseButton)
 
         headerIconView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().inset(Metrics.headerIconLeadingPadding)
@@ -103,7 +113,12 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
 
         headerTitleLabel.OWSnp.makeConstraints { make in
             make.leading.equalTo(headerIconView.OWSnp.trailing).offset(Metrics.headerTitleLeadingPadding)
-            make.trailing.greaterThanOrEqualToSuperview().inset(Metrics.headerTrailingPadding)
+            make.trailing.greaterThanOrEqualTo(headerCloseButton.OWSnp.leading).inset(Metrics.headerTrailingPadding)
+            make.centerY.equalToSuperview()
+        }
+
+        headerCloseButton.OWSnp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(Metrics.headerTrailingPadding)
             make.centerY.equalToSuperview()
         }
         return headerView
@@ -277,7 +292,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         mainContainer.addSubview(underFooterView)
         underFooterView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainContainer.OWSnp.bottom).inset(Metrics.textViewVerticalPadding)
+            make.top.equalTo(mainContainer.OWSnp.bottom)
             make.height.equalTo(Metrics.underFooterHeight)
         }
     }
@@ -312,6 +327,20 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 self.headerTitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.underFooterView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.headerCloseButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
+            })
+            .disposed(by: disposeBag)
+
+        headerCloseButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.headerView.OWSnp.updateConstraints { make in
+                    make.bottom.equalTo(self.footerView.OWSnp.top).inset(Metrics.headerHeight)
+                }
+                UIView.animate(withDuration: Metrics.closeHeaderDuration) { [weak self] in
+                    guard let self = self else { return }
+                    self.mainContainer.layoutIfNeeded()
+                }
             })
             .disposed(by: disposeBag)
 
