@@ -10,13 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentThreadVC: UIViewController {
+class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
 
     }
 
     fileprivate let viewModel: OWCommentThreadViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var commentThreadView: OWCommentThreadView = {
         let commentThreadView = OWCommentThreadView(viewModel: viewModel.outputs.commentThreadViewVM)
@@ -65,12 +65,6 @@ fileprivate extension OWCommentThreadVC {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.statusBarStyleService()
-            .forceStatusBarUpdate
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.setNeedsStatusBarAppearanceUpdate()
-            })
-            .disposed(by: disposeBag)
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }

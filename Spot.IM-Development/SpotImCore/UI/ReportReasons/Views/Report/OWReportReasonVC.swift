@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonVC: UIViewController {
+class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
         static let closeButtonSize: CGFloat = 40
 
@@ -19,7 +19,7 @@ class OWReportReasonVC: UIViewController {
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonView: OWReportReasonView = {
         let reportReasonView = OWReportReasonView(viewModel: viewModel.outputs.reportReasonViewViewModel)
@@ -132,13 +132,7 @@ fileprivate extension OWReportReasonVC {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.statusBarStyleService()
-            .forceStatusBarUpdate
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.setNeedsStatusBarAppearanceUpdate()
-            })
-            .disposed(by: disposeBag)
+        self.setupStatusBarStyleUpdaterObservers()
 
         closeButton.rx.tap
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)

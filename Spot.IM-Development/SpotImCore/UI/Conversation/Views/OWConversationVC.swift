@@ -10,13 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationVC: UIViewController {
+class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
         static let closeButtonImageName: String = "closeButton"
     }
 
     fileprivate let viewModel: OWConversationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var conversationView: OWConversationView = {
         return OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
@@ -118,13 +118,7 @@ fileprivate extension OWConversationVC {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.statusBarStyleService()
-            .forceStatusBarUpdate
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.setNeedsStatusBarAppearanceUpdate()
-            })
-            .disposed(by: disposeBag)
+        self.setupStatusBarStyleUpdaterObservers()
     }
 
     func updateCustomUI() {
