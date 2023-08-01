@@ -36,8 +36,6 @@ struct OWColor {
         case green
         case brandColor
         case cursorColor
-        case systemBackground
-        case systemText
 
         var `default`: OWColor {
             switch self {
@@ -110,13 +108,6 @@ struct OWColor {
             case .brandColor:
                 return OWColor(lightThemeColor: UIColor(red: 39.0/255, green: 120.0/255, blue: 206.0/255, alpha: 1.0),
                                darkThemeColor: UIColor(red: 39.0/255, green: 120.0/255, blue: 206.0/255, alpha: 1.0))
-
-            case .systemBackground:
-                return OWColor(lightThemeColor: OWDesignColors.SystemB1,
-                               darkThemeColor: OWDesignColors.SystemB2)
-            case .systemText:
-                return OWColor(lightThemeColor: OWDesignColors.SystemT1,
-                               darkThemeColor: OWDesignColors.SystemT2)
             }
         }
 
