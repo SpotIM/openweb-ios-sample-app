@@ -177,6 +177,8 @@ fileprivate extension OWTextView {
         }
 
         viewModel.outputs.textViewText
+            // This delay fixes the textView from flickering when text is inserted
+            .delay(.milliseconds(5), scheduler: MainScheduler.instance)
             .bind(to: textView.rx.text)
             .disposed(by: disposeBag)
 

@@ -27,7 +27,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let sendButtonSize: CGFloat = 35
         static let sendButtonImageSize: CGFloat = 24
         static let delayCloseDuration = 400 // miliseconds
-        static let toolbarAnimationMilisecondsDuration = 300 // miliseconds
+        static let toolbarAnimationMilisecondsDuration = 400 // miliseconds
         static let toolbarAnimationSecondsDuration = CGFloat(toolbarAnimationMilisecondsDuration) / 1000 // seconds
         static let delayKeyboard = 0 // No delay
         static let underFooterHeight: CGFloat = 300
@@ -187,7 +187,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
                 guard let self = self else { return }
                 self.updateToolbarConstraints(hidden: false)
-                mainContainer.layoutIfNeeded()
+                self.mainContainer.layoutIfNeeded()
             }
         } else if !firstLayoutSubviewsDone {
             firstLayoutSubviewsDone = true
@@ -267,7 +267,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         if let toolbar = toolbar {
             mainContainer.addSubview(toolbar)
             toolbar.OWSnp.makeConstraints { make in
-                toolbarBottomConstraint = make.bottom.equalToSuperview().constraint
+                toolbarBottomConstraint = make.bottom.equalTo(mainContainer.OWSnp.bottom).constraint
                 make.top.equalTo(textViewObject.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
             }
@@ -322,7 +322,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.updateToolbarConstraints(hidden: true)
                     UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
                         guard let self = self else { return }
-                        mainContainer.layoutIfNeeded()
+                        self.mainContainer.layoutIfNeeded()
                     }
                     return Observable.just(()).delay(.milliseconds(Metrics.delayKeyboard), scheduler: MainScheduler.instance)
                 }
@@ -360,6 +360,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                     self.footerView.layoutIfNeeded()
                 }
+
                 switch self.viewModel.outputs.commentType {
                 case .edit(comment: let comment):
                     if let editText = comment.text?.text {
@@ -379,15 +380,15 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     bottomPadding = 0
                 }
 
-                mainContainer.OWSnp.updateConstraints { make in
+                self.mainContainer.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
                     if self.viewModel.outputs.viewableMode == .independent {
-                        mainContainer.backgroundColor = Metrics.floatingBackgroungColor
+                        self.backgroundColor = Metrics.floatingBackgroungColor
                     }
-                    mainContainer.layoutIfNeeded()
+                    self.mainContainer.layoutIfNeeded()
                 }
             })
             .disposed(by: disposeBag)
@@ -419,13 +420,18 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.footerView.layoutIfNeeded()
                     self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
 
-                    mainContainer.OWSnp.updateConstraints { make in
+                    self.mainContainer.OWSnp.updateConstraints { make in
                         make.bottom.equalToSuperviewSafeArea()
                     }
                     UIView.animate(withDuration: animationDuration) { [weak self] in
                         guard let self = self else { return }
-                        mainContainer.backgroundColor = .clear
-                        mainContainer.layoutIfNeeded()
+                        self.backgroundColor = .clear
+                        self.mainContainer.layoutIfNeeded()
+                    } completion: { [weak self] finished in
+                        guard let self = self else { return }
+                        if finished && self.viewModel.outputs.viewableMode == .independent {
+                            self.firstLayoutSubviewsDone = false
+                        }
                     }
                 }
             })
