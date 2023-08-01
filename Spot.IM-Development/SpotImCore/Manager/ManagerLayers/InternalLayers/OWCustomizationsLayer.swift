@@ -44,6 +44,16 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
+    var statusBarEnforcement: OWStatusBarEnforcement {
+        get {
+            return _statusBarEnforcement
+        }
+        set(newEnforcement) {
+            _statusBarEnforcement = newEnforcement
+            OWSharedServicesProvider.shared.statusBarStyleService().setEnforcement(enforcement: _statusBarEnforcement)
+        }
+    }
+
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback) {
         guard callbacks.count < Metrics.maxCustomizableElementCallbacksNumber else {
             let logger = OWSharedServicesProvider.shared.logger()
@@ -73,5 +83,6 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     fileprivate var _fontFamily: OWFontGroupFamily = .default
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
+    fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
 }
