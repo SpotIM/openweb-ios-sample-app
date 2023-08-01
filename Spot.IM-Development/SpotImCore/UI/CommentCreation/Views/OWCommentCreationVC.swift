@@ -50,6 +50,10 @@ class OWCommentCreationVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWCommentCreationVC {
@@ -69,6 +73,14 @@ fileprivate extension OWCommentCreationVC {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.statusBarStyleService()
+            .forceStatusBarUpdate
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setNeedsStatusBarAppearanceUpdate()
             })
             .disposed(by: disposeBag)
 

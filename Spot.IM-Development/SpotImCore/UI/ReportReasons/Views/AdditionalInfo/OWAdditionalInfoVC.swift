@@ -12,6 +12,7 @@ import RxCocoa
 
 class OWAdditionalInfoVC: UIViewController {
     fileprivate let additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var additionalInfoView: OWAdditionalInfoView = {
         return OWAdditionalInfoView(viewModel: additionalInfoViewViewModel)
@@ -29,6 +30,11 @@ class OWAdditionalInfoVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -40,5 +46,15 @@ fileprivate extension OWAdditionalInfoVC {
         additionalInfoView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.statusBarStyleService()
+            .forceStatusBarUpdate
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+            .disposed(by: disposeBag)
     }
 }

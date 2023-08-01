@@ -12,6 +12,7 @@ import RxCocoa
 
 class OWReportReasonSubmittedVC: UIViewController {
     let reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonSubmittedView: OWReportReasonSubmittedView = {
         return OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewViewModel)
@@ -29,10 +30,15 @@ class OWReportReasonSubmittedVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -44,5 +50,15 @@ fileprivate extension OWReportReasonSubmittedVC {
         reportReasonSubmittedView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.statusBarStyleService()
+            .forceStatusBarUpdate
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+            .disposed(by: disposeBag)
     }
 }
