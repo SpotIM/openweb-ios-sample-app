@@ -227,7 +227,7 @@ extension OWUILayer {
 #if BETA
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol? = nil,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -394,7 +394,7 @@ extension OWUILayer {
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 
@@ -425,7 +425,7 @@ extension OWUILayer {
 
 #if BETA
     func testingPlayground(postId: OWPostId,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWViewCompletion) {
 

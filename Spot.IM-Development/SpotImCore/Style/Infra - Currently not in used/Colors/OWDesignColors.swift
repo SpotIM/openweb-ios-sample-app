@@ -26,4 +26,44 @@ struct OWDesignColors {
     static let D2: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.30)
     static let D3: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.65)
     static let D4: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
+
+    static let SystemB1: UIColor = {
+        let color: UIColor
+        if #available(iOS 13.0, *) {
+            color = .systemBackground
+        } else {
+            color = .white
+        }
+        return color
+    }()
+
+    static let SystemB2: UIColor = {
+        let color: UIColor
+        if #available(iOS 13.0, *) {
+            color = .systemBackground
+        } else {
+            color = .black
+        }
+        return color
+    }()
+
+    static let SystemT1: UIColor = {
+        let color: UIColor
+        if #available(iOS 13.0, *) {
+            color = .label
+        } else {
+            color = .black
+        }
+        return color
+    }()
+
+    static let SystemT2: UIColor = {
+        let color: UIColor
+        if #available(iOS 13.0, *) {
+            color = .label
+        } else {
+            color = .white
+        }
+        return color
+    }()
 }
