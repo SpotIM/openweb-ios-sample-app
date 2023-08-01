@@ -463,8 +463,7 @@ extension GeneralSettingsVM {
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
                 var customizations = self.manager.ui.customizations
-                //TODO : change this
-//                customizations.themeEnforcement = .themeStyle(fromIndex: index)
+                customizations.statusBarEnforcement = .statusBarStyle(fromIndex: index)
             })
             .disposed(by: disposeBag)
 
