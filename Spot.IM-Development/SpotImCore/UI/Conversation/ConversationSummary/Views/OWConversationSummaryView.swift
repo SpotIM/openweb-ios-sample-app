@@ -65,7 +65,6 @@ class OWConversationSummaryView: UIView {
     fileprivate lazy var commentsCountLabel: UILabel = {
         return UILabel()
             .enforceSemanticAttribute()
-            .wrapContent()
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))

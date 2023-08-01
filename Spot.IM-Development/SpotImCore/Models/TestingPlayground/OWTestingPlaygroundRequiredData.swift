@@ -11,7 +11,7 @@ import Foundation
 #if BETA
 
 struct OWTestingPlaygroundRequiredData {
-    let settings: OWTestingPlaygroundSettingsProtocol?
+    let settings: OWTestingPlaygroundSettingsProtocol
 }
 
 #endif

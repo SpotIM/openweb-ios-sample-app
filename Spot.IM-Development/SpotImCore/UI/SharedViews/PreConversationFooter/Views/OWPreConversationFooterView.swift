@@ -16,8 +16,6 @@ internal class OWPreConversationFooterView: UIView {
         static let privacyButtonIdentifier = "pre_conversation_footer_show_privacy_button_id"
         static let poweredByOWButtonIdentifier = "pre_conversation_footer_powered_by_ow_button_id"
 
-        static let fontSize: CGFloat = 13
-        static let poweredByFontSize: CGFloat = 11
         static let iconSize: CGSize = CGSize(width: 76.5, height: 17)
         static let iconLeadingPadding: CGFloat = 5
         static let separatorPadding: CGFloat = 10
@@ -27,19 +25,19 @@ internal class OWPreConversationFooterView: UIView {
         return OWLocalizationManager.shared.localizedString(key: "Terms")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.spOpenSans(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
     private lazy var separator: UILabel = {
         "|"
             .label
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.spOpenSans(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
     private lazy var privacyButton: UIButton = {
         return OWLocalizationManager.shared.localizedString(key: "Privacy")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.spOpenSans(style: .regular, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
     }()
     private lazy var openWebIconImageView: UIImageView = {
         return UIImageView(image: UIImage(spNamed: "OpenWeb-logo", supportDarkMode: true))
@@ -48,7 +46,7 @@ internal class OWPreConversationFooterView: UIView {
         let btn = OWLocalizationManager.shared.localizedString(key: "Powered by")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
-            .font(.spOpenSans(style: .regular, of: Metrics.poweredByFontSize))
+            .font(OWFontBook.shared.font(typography: .metaText))
             .enforceSemanticAttribute()
         return btn
     }()
