@@ -10,9 +10,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonSubmittedVC: UIViewController {
+class OWReportReasonSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     let reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonSubmittedView: OWReportReasonSubmittedView = {
         return OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewViewModel)
@@ -53,12 +53,6 @@ fileprivate extension OWReportReasonSubmittedVC {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.statusBarStyleService()
-            .forceStatusBarUpdate
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.setNeedsStatusBarAppearanceUpdate()
-            })
-            .disposed(by: disposeBag)
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }
