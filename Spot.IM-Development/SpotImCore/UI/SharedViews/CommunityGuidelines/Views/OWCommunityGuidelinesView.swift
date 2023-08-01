@@ -110,19 +110,18 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
-                make.height.equalTo(Metrics.containerHeight)
             }
 
             guidelinesContainer.addSubview(guidelinesIcon)
             guidelinesIcon.OWSnp.makeConstraints { make in
                 make.size.equalTo(Metrics.iconSize)
-                make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
+                make.centerY.equalToSuperview().inset(Metrics.verticalOffset)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             }
 
             guidelinesContainer.addSubview(titleTextView)
             titleTextView.OWSnp.makeConstraints { make in
-                make.centerY.equalTo(guidelinesIcon)
+                make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
                 make.leading.equalTo(guidelinesIcon.OWSnp.trailing).offset(Metrics.horizontalPadding)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             }

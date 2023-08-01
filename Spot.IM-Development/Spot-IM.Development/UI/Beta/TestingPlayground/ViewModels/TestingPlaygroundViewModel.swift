@@ -117,7 +117,7 @@ fileprivate extension TestingPlaygroundViewModel {
 
                 flows.testingPlayground(postId: postId,
                                         presentationalMode: presentationalMode,
-                                        additionalSettings: nil,
+                                        additionalSettings: OWTestingPlaygroundSettings(),
                                         callbacks: nil,
                                         completion: { [weak self] result in
                     guard let self = self else { return }
