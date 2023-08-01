@@ -24,6 +24,7 @@ class OWStatusBarStyleService: OWStatusBarStyleServicing {
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        setupObservers()
     }
 
     func setEnforcement(enforcement: OWStatusBarEnforcement) {

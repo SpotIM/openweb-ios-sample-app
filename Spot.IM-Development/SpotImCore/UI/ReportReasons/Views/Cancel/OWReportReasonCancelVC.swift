@@ -16,6 +16,7 @@ class OWReportReasonCancelVC: UIViewController {
     }
 
     fileprivate let viewModel: OWReportReasonCancelViewModeling
+    fileprivate let disposeBag = DisposeBag()
 
     init(reportReasonCancelViewModel: OWReportReasonCancelViewModeling) {
         self.viewModel = reportReasonCancelViewModel
@@ -25,6 +26,11 @@ class OWReportReasonCancelVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -37,5 +43,15 @@ fileprivate extension OWReportReasonCancelVC {
         reportReasonCancelView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.statusBarStyleService()
+            .forceStatusBarUpdate
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+            .disposed(by: disposeBag)
     }
 }

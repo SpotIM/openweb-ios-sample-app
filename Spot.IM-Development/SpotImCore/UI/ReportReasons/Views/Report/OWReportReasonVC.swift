@@ -59,6 +59,10 @@ class OWReportReasonVC: UIViewController {
         // Enable navigation back by swipe
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWReportReasonVC {
@@ -125,6 +129,14 @@ fileprivate extension OWReportReasonVC {
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
                 self.setupNavControllerUI(currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.statusBarStyleService()
+            .forceStatusBarUpdate
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setNeedsStatusBarAppearanceUpdate()
             })
             .disposed(by: disposeBag)
 
