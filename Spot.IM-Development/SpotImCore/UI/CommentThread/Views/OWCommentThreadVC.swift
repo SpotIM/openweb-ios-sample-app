@@ -35,11 +35,16 @@ class OWCommentThreadVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.inputs.viewDidLoad.onNext()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -57,5 +62,15 @@ fileprivate extension OWCommentThreadVC {
         let navController = self.navigationController
 
         title = OWLocalizationManager.shared.localizedString(key: "Replies")
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.statusBarStyleService()
+            .forceStatusBarUpdate
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+            .disposed(by: disposeBag)
     }
 }
