@@ -72,9 +72,14 @@ class OWConversationViewModel: OWConversationViewModeling,
     }()
 
     var shouldCustomizeNavigationBar: Bool {
-        guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
-              viewableMode == .partOfFlow else { return false }
-        return true
+        let isSampleAppNavigationController: Bool = OWHostApplicationHelper.isOpenWebSampleApp()
+        var isInternalPresentModeNavigationController: Bool = false
+        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
+           viewableMode == .partOfFlow {
+            isInternalPresentModeNavigationController = true
+        }
+
+        return isInternalPresentModeNavigationController || isSampleAppNavigationController
     }
 
     var shouldShowCloseButton: Bool {

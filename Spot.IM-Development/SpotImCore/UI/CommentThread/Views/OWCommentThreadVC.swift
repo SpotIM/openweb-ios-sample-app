@@ -10,13 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentThreadVC: UIViewController {
+class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
 
     }
 
     fileprivate let viewModel: OWCommentThreadViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var commentThreadView: OWCommentThreadView = {
         let commentThreadView = OWCommentThreadView(viewModel: viewModel.outputs.commentThreadViewVM)
@@ -35,11 +35,16 @@ class OWCommentThreadVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.inputs.viewDidLoad.onNext()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -57,5 +62,9 @@ fileprivate extension OWCommentThreadVC {
         let navController = self.navigationController
 
         title = OWLocalizationManager.shared.localizedString(key: "Replies")
+    }
+
+    func setupObservers() {
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }
