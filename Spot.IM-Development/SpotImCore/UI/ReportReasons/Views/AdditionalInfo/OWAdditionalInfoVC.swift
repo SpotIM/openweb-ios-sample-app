@@ -10,9 +10,9 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class OWAdditionalInfoVC: UIViewController {
+class OWAdditionalInfoVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate let additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var additionalInfoView: OWAdditionalInfoView = {
         return OWAdditionalInfoView(viewModel: additionalInfoViewViewModel)
@@ -49,12 +49,6 @@ fileprivate extension OWAdditionalInfoVC {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.statusBarStyleService()
-            .forceStatusBarUpdate
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.setNeedsStatusBarAppearanceUpdate()
-            })
-            .disposed(by: disposeBag)
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }

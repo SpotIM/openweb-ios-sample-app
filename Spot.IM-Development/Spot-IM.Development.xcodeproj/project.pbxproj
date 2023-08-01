@@ -317,6 +317,7 @@
 		3D20A39727B022D7003F8513 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39627B022D7003F8513 /* UIView+Extensions.swift */; };
 		3D20A39927B0243D003F8513 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39827B0243D003F8513 /* Debugging.swift */; };
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
+		3D242A932A79A8D6000486DA /* OWStatusBarStyleUpdaterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D242A922A79A8D6000486DA /* OWStatusBarStyleUpdaterProtocol.swift */; };
 		3D263CE429BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */; };
 		3D263CE629BDE59A0013C532 /* OWUserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CE529BDE59A0013C532 /* OWUserAction.swift */; };
 		3D263CE829BDE6D90013C532 /* OWAuthenticationLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */; };
@@ -1291,6 +1292,7 @@
 		3D20A39627B022D7003F8513 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20A39827B0243D003F8513 /* Debugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
 		3D20A39A27B0258D003F8513 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
+		3D242A922A79A8D6000486DA /* OWStatusBarStyleUpdaterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWStatusBarStyleUpdaterProtocol.swift; sourceTree = "<group>"; };
 		3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInternalUserAuthenticationStatus.swift; sourceTree = "<group>"; };
 		3D263CE529BDE59A0013C532 /* OWUserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserAction.swift; sourceTree = "<group>"; };
 		3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationLevel.swift; sourceTree = "<group>"; };
@@ -3585,6 +3587,7 @@
 			children = (
 				3DB1D5A52A7911850012388E /* OWStatusBarStyleService.swift */,
 				3DB1D5A72A7914DC0012388E /* UIStatusBarStyle+Extensions.swift */,
+				3D242A922A79A8D6000486DA /* OWStatusBarStyleUpdaterProtocol.swift */,
 			);
 			path = StatusBarStyleService;
 			sourceTree = "<group>";
@@ -6166,6 +6169,7 @@
 				249DF2A3296D95C500F5D69A /* OWImageProvider.swift in Sources */,
 				24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */,
 				3D08E06C2875BAEC00E6F1AC /* OWUI.swift in Sources */,
+				3D242A932A79A8D6000486DA /* OWStatusBarStyleUpdaterProtocol.swift in Sources */,
 				3D611BB928C8AC3C003960CE /* OWConversationSettingsBuilder.swift in Sources */,
 				3DDA9A7B29196CC200FE3B86 /* OWAuthenticationFlowCallback.swift in Sources */,
 				8D99C6842A0B68FF00DAB542 /* OWConversationEmptyStateView.swift in Sources */,
