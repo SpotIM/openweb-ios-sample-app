@@ -20,8 +20,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
-    var commentCreated: Observable<OWComment> { get }
-    var commentCreationSubmitted: Observable<Void> { get }
+    var commentCreationSubmitted: Observable<OWComment> { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -39,12 +38,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate let viewableMode: OWViewableMode
 
     fileprivate lazy var postId = OWManager.manager.postId
-
-    fileprivate lazy var _commentCreated = PublishSubject<OWComment>()
-    var commentCreated: Observable<OWComment> {
-        _commentCreated
-            .asObservable()
-    }
 
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
@@ -119,7 +112,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         setupObservers()
     }
 
-    lazy var commentCreationSubmitted: Observable<Void> = {
+    lazy var commentCreationSubmitted: Observable<OWComment> = {
         // TODO - add floating view cta hadling
         return Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
             .map { [weak self] commentCreationData -> OWNetworkParameters? in
@@ -180,10 +173,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 guard let self = self,
                       let postId = self.postId
                 else { return }
-                self._commentCreated.onNext(comment)
                 self.servicesProvider.commentUpdaterService().update(comments: [comment], postId: postId)
             })
-            .voidify()
             .share()
     }()
 }
