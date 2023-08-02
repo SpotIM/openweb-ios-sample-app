@@ -177,8 +177,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             })
             .do(onNext: { [weak self] comment in
                 // 5 - comment created
-                guard let self = self else { return }
+                guard let self = self,
+                      let postId = self.postId
+                else { return }
                 self._commentCreated.onNext(comment)
+                self.servicesProvider.commentUpdaterService().update(comments: [comment], postId: postId)
             })
             .voidify()
             .share()
