@@ -11,16 +11,18 @@ import RxSwift
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
+    var ctaTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
-    var sendCommentIcon: UIImage? { get }
+    var ctaIcon: UIImage? { get }
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
     var servicesProvider: OWSharedServicesProviding { get }
     var viewableMode: OWViewableMode { get }
+    var performCtaAction: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -35,7 +37,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     fileprivate struct Metrics {
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "What do you think?")
-        static let sendCommentIcon = "sendCommentIcon"
+        static let ctaIconName = "sendCommentIcon"
     }
 
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
@@ -51,6 +53,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeButtonTap = PublishSubject<Void>()
+    var ctaTap = PublishSubject<Void>()
+
     var imageURLProvider: OWImageProviding
     var sharedServiceProvider: OWSharedServicesProviding
 
@@ -58,11 +62,22 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         return OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
-    lazy var sendCommentIcon: UIImage? = {
-        return UIImage(spNamed: Metrics.sendCommentIcon)
+    lazy var ctaIcon: UIImage? = {
+        return UIImage(spNamed: Metrics.ctaIconName)
     }()
 
     let textViewVM: OWTextViewViewModeling
+
+    var performCtaAction: Observable<Void> {
+        ctaTap
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
+            }
+            .filter { !$0 } // Do not continue if needed to authenticate
+            .map { _ -> Void in () }
+    }
 
     init(commentCreationData: OWCommentCreationRequiredData,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
