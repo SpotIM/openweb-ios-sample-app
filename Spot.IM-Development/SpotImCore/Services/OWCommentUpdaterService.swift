@@ -9,20 +9,24 @@
 import Foundation
 import RxSwift
 
+enum OWCommentUpdateType {
+    case insert(comments: [OWComment])
+    case update(commentId: OWCommentId, withComment: OWComment)
+}
+
 protocol OWCommentUpdaterServicing {
-    func update(comments: [OWComment], postId: OWPostId)
-    func getUpdatedComments(for postId: OWPostId) -> Observable<[OWComment]>
+    func update(_ updateType: OWCommentUpdateType, postId: OWPostId)
+    func getUpdatedComments(for postId: OWPostId) -> Observable<OWCommentUpdateType>
 }
 
 class OWCommentUpdaterService: OWCommentUpdaterServicing {
+    var _updatedCommentsWithPostId = PublishSubject<(OWCommentUpdateType, OWPostId)>()
 
-    var _updatedCommentsWithPostId = PublishSubject<([OWComment], OWPostId)>()
-
-    func update(comments: [OWComment], postId: OWPostId) {
-        _updatedCommentsWithPostId.onNext((comments, postId))
+    func update(_ updateType: OWCommentUpdateType, postId: OWPostId) {
+        _updatedCommentsWithPostId.onNext((updateType, postId))
     }
 
-    func getUpdatedComments(for postId: OWPostId) -> Observable<[OWComment]> {
+    func getUpdatedComments(for postId: OWPostId) -> RxSwift.Observable<OWCommentUpdateType> {
         return _updatedCommentsWithPostId
             .filter { $0.1 == postId }
             .map { $0.0 }

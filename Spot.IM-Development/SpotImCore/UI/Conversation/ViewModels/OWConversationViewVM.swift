@@ -514,24 +514,6 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        self.servicesProvider.commentUpdaterService()
-            .getUpdatedComments(for: postId)
-            .subscribe(onNext: { [weak self] comments in
-                guard let self = self else { return }
-                self.servicesProvider.commentsService().set(comments: comments, postId: self.postId)
-                let updatedCommentsPresentationData = comments.map { comment in
-                    OWCommentPresentationData(
-                        id: comment.id!,
-                        repliesIds: [],
-                        totalRepliesCount: 0,
-                        repliesOffset: 0,
-                        repliesPresentation: []
-                    )
-                }
-                self._commentsPresentationData.insert(updatedCommentsPresentationData[0], at: 0)
-            })
-            .disposed(by: disposeBag)
-
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
             .sortDictateService()
@@ -829,7 +811,7 @@ fileprivate extension OWConversationViewViewModel {
 
                  return Observable.just(commentCellsVms)
             }
-            .share()
+            .share(replay: 1)
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
@@ -1082,6 +1064,38 @@ fileprivate extension OWConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        self.servicesProvider.commentUpdaterService()
+            .getUpdatedComments(for: postId)
+            .flatMap { updateType -> Observable<(OWCommentUpdateType, [OWCommentCellViewModeling])> in
+                return commentCellsVmsObservable
+                    .filter { !$0.isEmpty }
+                    .take(1)
+                    .map { (updateType, $0) }
+            }
+            .delay(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] (updateType, commentCellsVms) in
+                guard let self = self else { return }
+                switch updateType {
+                case .insert(let comments):
+                    self.servicesProvider.commentsService().set(comments: comments, postId: self.postId)
+                    let updatedCommentsPresentationData = comments.map { comment in
+                        OWCommentPresentationData(
+                            id: comment.id!,
+                            repliesIds: [],
+                            totalRepliesCount: 0,
+                            repliesOffset: 0,
+                            repliesPresentation: []
+                        )
+                    }
+                    // TODO - Support insert multiple comments
+                    self._commentsPresentationData.insert(updatedCommentsPresentationData[0], at: 0)
+                case let .update(commentId, withComment):
+                    // TODO - Implementation
+                    break
+                }
             })
             .disposed(by: disposeBag)
 
