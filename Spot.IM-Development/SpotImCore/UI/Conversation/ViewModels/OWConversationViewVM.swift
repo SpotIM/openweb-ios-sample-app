@@ -528,7 +528,7 @@ fileprivate extension OWConversationViewViewModel {
                         repliesPresentation: []
                     )
                 }
-                self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+                self._commentsPresentationData.insert(updatedCommentsPresentationData[0], at: 0)
             })
             .disposed(by: disposeBag)
 
