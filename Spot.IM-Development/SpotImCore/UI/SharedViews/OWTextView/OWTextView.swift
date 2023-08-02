@@ -38,7 +38,6 @@ class OWTextView: UIView {
     fileprivate lazy var textView: UITextView = {
         return UITextView()
                 .font(OWFontBook.shared.font(typography: .bodyText))
-                .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
