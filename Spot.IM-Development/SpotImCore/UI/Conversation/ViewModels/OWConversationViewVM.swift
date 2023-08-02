@@ -1076,7 +1076,7 @@ fileprivate extension OWConversationViewViewModel {
                     .map { (updateType, $0) }
             }
             .delay(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] (updateType, commentCellsVms) in
+            .subscribe(onNext: { [weak self] (updateType, _) in
                 guard let self = self else { return }
                 switch updateType {
                 case .insert(let comments):
