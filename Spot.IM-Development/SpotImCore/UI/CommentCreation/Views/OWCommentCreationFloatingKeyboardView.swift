@@ -20,13 +20,12 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let userAvatarSize: CGFloat = 40
         static let textViewHorizontalPadding: CGFloat = 10
         static let textViewVerticalPadding: CGFloat = 12
-        static let sendButtonHorizontalPadding: CGFloat = 5
+        static let ctaButtonHorizontalPadding: CGFloat = 5
         static let closeCrossIcon = "closeCrossIcon"
-        static let sendImageIcon = "sendCommentIcon"
         static let editImageIcon = "commentCreationEditIcon"
         static let replyImageIcon = "commentCreationReplyIcon"
-        static let sendButtonSize: CGFloat = 35
-        static let sendButtonImageSize: CGFloat = 24
+        static let ctaButtonSize: CGFloat = 35
+        static let ctaButtonImageSize: CGFloat = 24
         static let closeHeaderDuration = 0.2 // seconds
         static let delayCloseDuration = 400 // miliseconds
         static let toolbarAnimationMilisecondsDuration = 400 // miliseconds
@@ -147,11 +146,10 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var sendButton: UIButton = {
-        let image = UIImage(spNamed: Metrics.sendImageIcon, supportDarkMode: false)
+    fileprivate lazy var ctaButton: UIButton = {
         return UIButton()
-            .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: Metrics.sendButtonSize - Metrics.sendButtonImageSize,
+            .image(viewModel.outputs.ctaIcon, state: .normal)
+            .imageEdgeInsets(UIEdgeInsets(top: Metrics.ctaButtonSize - Metrics.ctaButtonImageSize,
                                           left: 0,
                                           bottom: 0,
                                           right: 0))
@@ -266,11 +264,11 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.size.equalTo(Metrics.userAvatarSize)
         }
 
-        footerView.addSubview(sendButton)
-        sendButton.OWSnp.makeConstraints { make in
+        footerView.addSubview(ctaButton)
+        ctaButton.OWSnp.makeConstraints { make in
             make.leading.equalTo(textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
-            make.size.equalTo(Metrics.sendButtonSize)
+            make.trailing.equalToSuperview().inset(-Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
+            make.size.equalTo(Metrics.ctaButtonSize)
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
         }
 
@@ -365,6 +363,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)
 
+        ctaButton.rx.tap
+            .bind(to: viewModel.inputs.ctaTap)
+            .disposed(by: disposeBag)
+
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
@@ -376,9 +378,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 else { return }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
-                    self.sendButton.alpha(1)
-                    self.sendButton.OWSnp.updateConstraints { make in
-                        make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.sendButtonHorizontalPadding)
+                    self.ctaButton.alpha(1)
+                    self.ctaButton.OWSnp.updateConstraints { make in
+                        make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.ctaButtonHorizontalPadding)
                         make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
                     }
                     if case .comment = self.viewModel.outputs.commentType {} else {
@@ -435,10 +437,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     guard let self = self else { return }
                     self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1,
                                                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
-                    self.sendButton.alpha(0)
-                    self.sendButton.OWSnp.updateConstraints { make in
+                    self.ctaButton.alpha(0)
+                    self.ctaButton.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-                        make.trailing.equalToSuperview().inset(-Metrics.sendButtonSize + Metrics.textViewHorizontalPadding)
+                        make.trailing.equalToSuperview().inset(-Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
                     }
                     if case .comment = self.viewModel.outputs.commentType {} else {
                         self.headerView.OWSnp.updateConstraints { make in
