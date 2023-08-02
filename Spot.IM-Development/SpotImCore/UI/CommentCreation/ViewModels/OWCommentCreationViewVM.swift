@@ -115,13 +115,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     lazy var commentCreationSubmitted: Observable<OWComment> = {
         // TODO - add floating view cta hadling
         return Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
-            .map { [weak self] commentCreationData -> OWNetworkParameters? in
+            .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
                 guard let self = self else { return nil }
-                return self.getParametersForCreateCommentRequest(from: commentCreationData)
+                return (commentCreationData, self.getParametersForCreateCommentRequest(from: commentCreationData))
             }
             .unwrap()
-            .flatMapLatest { [weak self] networkParameters -> Observable<Event<OWComment>> in
+            .flatMapLatest { [weak self] commentCreationData, networkParameters -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // 2 - perform create comment request
                 guard let self = self else { return .empty() }
 
@@ -138,13 +138,14 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 return commentNetworkResponse
                     .response
                     .materialize()
+                    .map { (commentCreationData, $0) }
             }
-            .map { [weak self] event -> OWComment? in
+            .map { [weak self] (commentCreationData, event) -> (OWCommentCreationCtaData, OWComment)? in
                 // 3 - handle network response
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let comment):
-                    return comment
+                    return (commentCreationData, comment)
                 case .error(_):
                     return nil
                 default:
@@ -168,8 +169,32 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     break
                 }
             })
+            .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
+            .map { [weak self] commentCreationData, comment, userAvailability -> OWComment? in
+                // 5 - populate local comment data
+                guard let self = self,
+                      case let .user(user) = userAvailability
+                else { return nil }
+
+                var additionalData = OWComment.AdditionalData()
+                if !commentCreationData.commentLabelIds.isEmpty {
+                    additionalData.labels = OWComment.CommentLabel(
+                        section: self.commentCreationData.article.additionalSettings.section,
+                        ids: commentCreationData.commentLabelIds
+                    )
+                }
+
+                return self.servicesProvider.localCommentDataPopulator()
+                    .populate(
+                        commentResponse: comment,
+                        with: additionalData,
+                        user: user,
+                        commentCreationType: self.commentCreationData.commentCreationType
+                    )
+            }
+            .unwrap()
             .do(onNext: { [weak self] comment in
-                // 5 - comment created
+                // 6 - comment created
                 guard let self = self,
                       let postId = self.postId
                 else { return }
