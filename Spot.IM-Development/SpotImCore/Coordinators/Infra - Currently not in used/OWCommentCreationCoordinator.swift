@@ -31,6 +31,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     fileprivate let router: OWRoutering!
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let commentCreationPopped = PublishSubject<Void>()
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentCreation)
     }()
@@ -48,8 +49,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel(commentCreationData: commentCreationData, viewableMode: .partOfFlow)
         let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
 
-        let commentCreationPopped = PublishSubject<Void>()
-
         router.push(commentCreationVC,
                     pushStyle: .presentStyle,
                     animated: true,
@@ -58,11 +57,18 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         setupObservers(forViewModel: commentCreationVM)
         setupViewActionsCallbacks(forViewModel: commentCreationVM)
 
-        let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreated
+        let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
 
-        let commentCreationPoppedObservable = commentCreationPopped
+        let poppedFromBackButtonObservable = commentCreationPopped
+            .map { OWCommentCreationCoordinatorResult.popped }
+            .asObservable()
+
+        let commentCreationViewVM = commentCreationVM.outputs.commentCreationViewVM
+        let closeButtonPopped = commentCreationViewVM.outputs.closeButtonTapped
+
+        let poppedFromCloseButtonObservable = closeButtonPopped
             .map { OWCommentCreationCoordinatorResult.popped }
             .asObservable()
 
@@ -70,7 +76,13 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .map { OWCommentCreationCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        return Observable.merge(commentCreationPoppedObservable, commentCreatedObservable, commentCreationLoadedToScreenObservable)
+        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable)
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                self?.router.pop(popStyle: .dismissStyle, animated: false)
+            })
+
+        return Observable.merge(resultsWithPopAnimation, commentCreationLoadedToScreenObservable, poppedFromBackButtonObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -86,14 +98,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
-
-        let commentCreationViewVM = viewModel.outputs.commentCreationViewVM
-        Observable.merge(commentCreationViewVM.outputs.closeButtonTapped, commentCreationViewVM.outputs.commentCreationSubmitted)
-            .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] _ in
-                self?.router.pop(popStyle: .dismissStyle, animated: false)
-            }
-            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewModeling) {
