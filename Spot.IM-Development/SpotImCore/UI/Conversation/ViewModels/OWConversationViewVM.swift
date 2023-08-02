@@ -514,6 +514,24 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        self.servicesProvider.commentUpdaterService()
+            .getUpdatedComments(for: postId)
+            .subscribe(onNext: { [weak self] comments in
+                guard let self = self else { return }
+                self.servicesProvider.commentsService().set(comments: comments, postId: self.postId)
+                let updatedCommentsPresentationData = comments.map { comment in
+                    OWCommentPresentationData(
+                        id: comment.id!,
+                        repliesIds: [],
+                        totalRepliesCount: 0,
+                        repliesOffset: 0,
+                        repliesPresentation: []
+                    )
+                }
+                self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+            })
+            .disposed(by: disposeBag)
+
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
             .sortDictateService()
