@@ -201,7 +201,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
                     self.servicesProvider.commentUpdaterService().update(.insert(comments: [comment]), postId: postId)
-                case .edit(comment: let comment):
+                case .edit:
                     guard let commentId = comment.id else { return }
                     self.servicesProvider.commentUpdaterService().update(.update(commentId: commentId, withComment: comment), postId: postId)
                 case .replyToComment(originComment: let originComment):

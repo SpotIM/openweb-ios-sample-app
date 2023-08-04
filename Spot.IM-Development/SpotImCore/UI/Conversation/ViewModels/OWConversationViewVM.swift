@@ -1076,7 +1076,8 @@ fileprivate extension OWConversationViewViewModel {
                     .map { (updateType, $0) }
             }
             .delay(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] (updateType, _) in
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] (updateType, commentCellsVms) in
                 guard let self = self else { return }
                 switch updateType {
                 case .insert(let comments):
@@ -1093,8 +1094,11 @@ fileprivate extension OWConversationViewViewModel {
                     // TODO - Support insert multiple comments
                     self._commentsPresentationData.insert(updatedCommentsPresentationData[0], at: 0)
                 case let .update(commentId, withComment):
-                    // TODO - Implementation
-                    break
+                    if let commentCellVM = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
+                        self.servicesProvider.commentsService().set(comments: [withComment], postId: self.postId)
+                        commentCellVM.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: withComment)
+                        self._performTableViewAnimation.onNext()
+                    }
                 }
             })
             .disposed(by: disposeBag)
