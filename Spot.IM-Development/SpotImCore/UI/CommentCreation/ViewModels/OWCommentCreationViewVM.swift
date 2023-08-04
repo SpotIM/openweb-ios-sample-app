@@ -198,14 +198,20 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 guard let self = self,
                       let postId = self.postId
                 else { return }
+                let commentUpdateType: OWCommentUpdateType?
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
-                    self.servicesProvider.commentUpdaterService().update(.insert(comments: [comment]), postId: postId)
+                    commentUpdateType = .insert(comments: [comment])
                 case .edit:
                     guard let commentId = comment.id else { return }
-                    self.servicesProvider.commentUpdaterService().update(.update(commentId: commentId, withComment: comment), postId: postId)
+                    commentUpdateType = .update(commentId: commentId, withComment: comment)
                 case .replyToComment(originComment: let originComment):
-                    break
+                    guard let commentId = originComment.id else { return }
+                    commentUpdateType = .reply(comment: comment, toCommentId: commentId)                }
+                if let updateType = commentUpdateType {
+                    self.servicesProvider
+                        .commentUpdaterService()
+                        .update(updateType, postId: postId)
                 }
             })
             .share()
