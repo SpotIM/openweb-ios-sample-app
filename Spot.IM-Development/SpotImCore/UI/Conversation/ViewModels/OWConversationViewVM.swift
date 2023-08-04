@@ -1081,24 +1081,30 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 switch updateType {
                 case .insert(let comments):
-                    self.servicesProvider.commentsService().set(comments: comments, postId: self.postId)
-                    let updatedCommentsPresentationData = comments.map { comment in
-                        OWCommentPresentationData(
-                            id: comment.id!,
-                            repliesIds: [],
-                            totalRepliesCount: 0,
-                            repliesOffset: 0,
-                            repliesPresentation: []
-                        )
-                    }
+                    let commentsIds = comments.map { $0.id }.unwrap()
+                    let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
                     // TODO - Support insert multiple comments
                     self._commentsPresentationData.insert(updatedCommentsPresentationData[0], at: 0)
                 case let .update(commentId, withComment):
-                    if let commentCellVM = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
-                        self.servicesProvider.commentsService().set(comments: [withComment], postId: self.postId)
-                        commentCellVM.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: withComment)
+                    if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
+                        commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: withComment)
                         self._performTableViewAnimation.onNext()
                     }
+                case let .reply(comment, toCommentId):
+                    guard let commentId = comment.id,
+                          let parentCommentPresentationData = _commentsPresentationData.first(where: { $0.id == toCommentId })
+                    else { return }
+                    let newCommentPresentationData = OWCommentPresentationData(id: commentId)
+                    let existingRepliesPresentationData: [OWCommentPresentationData]
+                    if (parentCommentPresentationData.repliesPresentation.count == 0) {
+                        existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
+                    } else {
+                        existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation
+                    }
+                    parentCommentPresentationData.repliesIds.insert(commentId, at: 0)
+                    parentCommentPresentationData.setTotalRepliesCount(parentCommentPresentationData.totalRepliesCount + 1)
+                    parentCommentPresentationData.setRepliesPresentation([newCommentPresentationData] + existingRepliesPresentationData)
+                    parentCommentPresentationData.update.onNext()
                 }
             })
             .disposed(by: disposeBag)
