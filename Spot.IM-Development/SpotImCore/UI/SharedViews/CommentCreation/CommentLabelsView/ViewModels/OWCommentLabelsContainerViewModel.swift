@@ -11,6 +11,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentLabelsContainerViewModelingInputs {
+    func updateEditedCommentLocally(_ comment: OWComment)
 }
 
 protocol OWCommentLabelsContainerViewModelingOutputs {
@@ -54,6 +55,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             _comment.onNext(comment)
         }
         self.setupObservers()
+    }
+
+    func updateEditedCommentLocally(_ comment: OWComment) {
+        _comment.onNext(comment)
     }
 
     init(servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
