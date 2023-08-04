@@ -32,6 +32,8 @@ class OWLocalCommentDataPopulator: OWLocalCommentDataPopulating {
             updatedComment.parentId = originComment.id
             updatedComment.rootComment = originComment.rootComment
             updatedComment.depth = (originComment.depth ?? 0) + 1
+        case .edit:
+            updatedComment.setIsEdited(true)
         default:
             updatedComment.rootComment = updatedComment.id
             updatedComment.depth = 0
