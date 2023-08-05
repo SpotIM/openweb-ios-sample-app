@@ -49,8 +49,18 @@ fileprivate extension OWCommentUpdaterService {
             commentsToCache = comments
         case .update(_, let withComment):
             commentsToCache = [withComment]
-        case .reply(let comment, _):
+        case .reply(let comment, let parentCommentId):
             commentsToCache = [comment]
+            if var parentComment = self.servicesProvider.commentsService().get(commentId: parentCommentId, postId: postId) {
+                if let replies = parentComment.replies {
+                    parentComment.replies = [comment] + replies
+                } else {
+                    parentComment.replies = [comment]
+                }
+                parentComment.repliesCount = (parentComment.repliesCount ?? 0) + 1
+                parentComment.totalRepliesCount = (parentComment.totalRepliesCount ?? 0) + 1
+                self.servicesProvider.commentsService().set(comments: [parentComment], postId: postId)
+            }
         }
         self.servicesProvider.commentsService().set(comments: commentsToCache, postId: postId)
     }

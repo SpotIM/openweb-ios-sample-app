@@ -242,5 +242,23 @@ fileprivate extension OWConversationView {
                 self.tableView.setContentOffset(.zero, animated: true)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                guard let self = self else { return }
+
+                CATransaction.begin()
+                tableView.beginUpdates()
+                CATransaction.setCompletionBlock {
+                    // Code to be executed upon completion
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+                self.tableView.setContentOffset(.zero, animated: true)
+                tableView.endUpdates()
+                CATransaction.commit()
+            })
+            .disposed(by: disposeBag)
     }
 }
