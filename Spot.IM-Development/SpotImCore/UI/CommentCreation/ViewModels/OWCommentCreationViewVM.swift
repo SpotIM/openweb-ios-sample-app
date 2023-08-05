@@ -128,7 +128,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
         case .edit:
             // We are not caching edit comment text
-            return
+            break
         }
     }
 
