@@ -14,7 +14,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
 }
 
@@ -34,7 +34,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
 
-    let commentType: OWCommentCreationType
+    let commentType: OWCommentCreationTypeInternal
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeButtonTap = PublishSubject<Void>()

@@ -14,7 +14,7 @@ typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPr
 
 protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
-    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var viewInitialized: PublishSubject<Void> { get }
 }
 
@@ -27,7 +27,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var urlClickedOutput: Observable<URL> { get }
     var summaryTopPadding: Observable<CGFloat> { get }
@@ -219,8 +219,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentCreation: Observable<OWCommentCreationType> {
+    var commentCreationTap = PublishSubject<OWCommentCreationTypeInternal>()
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> {
         return commentCreationTap
             .asObservable()
     }

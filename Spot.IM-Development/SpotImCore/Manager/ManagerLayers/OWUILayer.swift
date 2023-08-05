@@ -32,11 +32,14 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactR
     fileprivate let _customizations: OWCustomizations
     fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
+    fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init(flowsSdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         flowsSdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
          viewsSdkCoordinator: OWViewsSDKCoordinator = OWViewsSDKCoordinator(),
          customizations: OWCustomizations = OWCustomizationsLayer(),
          authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
+        self.servicesProvider = servicesProvider
         self.flowsSdkCoordinator = flowsSdkCoordinator
         self.viewsSdkCoordinator = viewsSdkCoordinator
         self._customizations = customizations
@@ -331,7 +334,59 @@ extension OWUILayer {
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.preConversationView
+            let error: OWError = err as? OWError ?? OWError.conversationView
+            completion(.failure(error))
+        })
+    }
+
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         commentCreationType: OWCommentCreationType,
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion) {
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let internalCommentCreationType: OWCommentCreationTypeInternal
+        switch commentCreationType {
+        case .comment:
+            internalCommentCreationType = .comment
+        case .edit(let commentId), .replyTo(let commentId):
+            // TODO - The comment might not be found in the service, we should fetch it somehow
+            if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
+                internalCommentCreationType = .edit(comment: comment)
+            } else {
+                completion(.failure(.commentCreationView))
+                return
+            }
+        }
+
+        let commentCreationData = OWCommentCreationRequiredData(
+            article: article,
+            settings: additionalSettings,
+            commentCreationType: internalCommentCreationType,
+            presentationalStyle: .none
+        )
+
+        _ = viewsSdkCoordinator.commentCreationView(commentCreationData: commentCreationData,
+                                                    callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .independent)
+        })
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.commentCreationView
             completion(.failure(error))
         })
     }
