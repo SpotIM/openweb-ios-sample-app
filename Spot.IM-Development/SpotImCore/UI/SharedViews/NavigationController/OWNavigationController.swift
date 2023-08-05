@@ -17,7 +17,10 @@ protocol OWNavigationControllerProtocol {
 class OWNavigationController: UINavigationController, OWNavigationControllerProtocol {
 
     // We need to create a shared nav controller so it will stay in the memory, Router layer "holds" nav controller in a weak reference
-    static let shared = OWNavigationController()
+    static let shared: OWNavigationController = {
+        let navController = OWNavigationController()
+        return navController
+    }()
 
     fileprivate let _dismissed = PublishSubject<Void>()
     var dismissed: Observable<Void> {
@@ -27,6 +30,15 @@ class OWNavigationController: UINavigationController, OWNavigationControllerProt
 
     func clear() {
         self.setViewControllers([], animated: false)
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        if let topVC = topViewController {
+            return topVC.preferredStatusBarStyle
+        } else {
+            let statusBarService = OWSharedServicesProvider.shared.statusBarStyleService()
+            return statusBarService.currentStyle
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
