@@ -14,7 +14,7 @@ enum OWCachedCommentKey: Hashable {
 }
 
 extension OWCachedCommentKey: Equatable {
-    public static func == (lhs: OWCachedCommentKey, rhs: OWCachedCommentKey) -> Bool {
+    static func == (lhs: OWCachedCommentKey, rhs: OWCachedCommentKey) -> Bool {
         switch (lhs, rhs) {
         case (let .comment(lhsPostId), let .comment(rhsPostId)):
             return lhsPostId == rhsPostId

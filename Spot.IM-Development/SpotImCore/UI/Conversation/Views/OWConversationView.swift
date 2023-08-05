@@ -13,7 +13,6 @@ import RxCocoa
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
-        static let commentingCTAHeight: CGFloat = 64
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
@@ -173,7 +172,6 @@ fileprivate extension OWConversationView {
             make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
             make.leading.trailing.equalToSuperview().inset(20)
             make.bottom.equalTo(self.safeAreaLayoutGuide)
-            make.height.equalTo(Metrics.commentingCTAHeight)
         }
     }
 

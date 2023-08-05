@@ -227,7 +227,7 @@ extension OWUILayer {
 #if BETA
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol? = nil,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -360,6 +360,7 @@ extension OWUILayer {
         case .comment:
             internalCommentCreationType = .comment
         case .edit(let commentId), .replyTo(let commentId):
+            // TODO - The comment might not be found in the service, we should fetch it somehow
             if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
                 internalCommentCreationType = .edit(comment: comment)
             } else {
@@ -393,7 +394,7 @@ extension OWUILayer {
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 
@@ -424,7 +425,7 @@ extension OWUILayer {
 
 #if BETA
     func testingPlayground(postId: OWPostId,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWViewCompletion) {
 

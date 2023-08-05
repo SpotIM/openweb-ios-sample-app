@@ -114,8 +114,8 @@ fileprivate extension OWCommentCreationContentViewModel {
             }
         }
 
-        if let initialText = initialText {
-            self.inputs.commentText.onNext(initialText)
+        if let text = initialText {
+            self.inputs.commentText.onNext(text)
         }
     }
 
