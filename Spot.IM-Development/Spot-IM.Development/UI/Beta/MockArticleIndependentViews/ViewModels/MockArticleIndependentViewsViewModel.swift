@@ -339,7 +339,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                     observer.onCompleted()
                 case .failure(let error):
                     let message = error.description
-                    DLog("Calling retrieveConversation error: \(message)")
+                    DLog("Calling retrieveCommentCreation error: \(message)")
                     observer.onError(error)
                 }
             })
