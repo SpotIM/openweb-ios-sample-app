@@ -35,7 +35,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var outputs: OWCommentCreationFooterViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationType: OWCommentCreationType
+    fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
     var tapCta = PublishSubject<Void>()
     var tapAction = PublishSubject<Void>()
@@ -96,7 +96,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         return Observable.just(false)
     }
 
-    init(commentCreationType: OWCommentCreationType,
+    init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationType = commentCreationType

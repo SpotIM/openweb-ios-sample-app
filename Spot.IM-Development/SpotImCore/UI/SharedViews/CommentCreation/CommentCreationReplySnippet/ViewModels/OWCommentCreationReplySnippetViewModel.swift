@@ -31,7 +31,7 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationType: OWCommentCreationType
+    fileprivate let commentCreationType: OWCommentCreationTypeInternal
     fileprivate let shouldShowSeparator: Bool
 
     var replySnippetText: Observable<String> {
@@ -59,7 +59,7 @@ class OWCommentCreationReplySnippetViewModel: OWCommentCreationReplySnippetViewM
         Observable.just(shouldShowSeparator)
     }
 
-    init(commentCreationType: OWCommentCreationType,
+    init(commentCreationType: OWCommentCreationTypeInternal,
          shouldShowSeparator: Bool = true,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
