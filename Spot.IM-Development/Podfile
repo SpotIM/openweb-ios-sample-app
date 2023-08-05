@@ -18,6 +18,10 @@ abstract_target 'Shared' do
     target 'Spot-IM.Development'
   end
 
+  target 'OpenWebCoreTests' do
+    pod 'RxTest', '~> 6.5.0'
+    pod 'RxBlocking', '~> 6.5.0'
+  end
 end
 
 post_install do |installer|
