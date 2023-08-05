@@ -14,7 +14,7 @@ protocol OWCommentCreationRegularViewViewModelingInputs {
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var shouldShowReplySnippet: Bool { get }
     var titleAttributedString: Observable<NSAttributedString> { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
@@ -40,7 +40,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     fileprivate lazy var postId = OWManager.manager.postId
 
-    var commentType: OWCommentCreationType
+    var commentType: OWCommentCreationTypeInternal
 
     var closeButtonTap = PublishSubject<Void>()
 
