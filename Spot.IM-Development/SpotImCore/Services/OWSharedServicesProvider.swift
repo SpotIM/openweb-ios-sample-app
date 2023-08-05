@@ -19,6 +19,7 @@ protocol OWSharedServicesProviderConfigure {
 protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func themeStyleService() -> OWThemeStyleServicing
+    func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
     func netwokAPI() -> OWNetworkAPIProtocol
@@ -57,6 +58,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
+    }()
+
+    fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
+        return OWStatusBarStyleService()
     }()
 
     fileprivate lazy var _imageCacheService: OWCacheService<String, UIImage> = {
@@ -169,6 +174,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
+    }
+
+    func statusBarStyleService() -> OWStatusBarStyleServicing {
+        return _statusBarStyleService
     }
 
     func imageCacheService() -> OWCacheService<String, UIImage> {
