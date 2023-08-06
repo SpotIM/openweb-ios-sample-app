@@ -683,9 +683,8 @@ fileprivate extension OWPreConversationViewViewModel {
                             section: self.preConversationData.article.additionalSettings.section
                         ))
                     }.unwrap()
-                    let viewModels = self._cellsViewModels
-                    // TODO - Support insert multiple comments
-                    viewModels.insert(OWPreConversationCellOption.comment(viewModel: commentsVms[0]), at: 0)
+                    var viewModels = self._cellsViewModels
+                    viewModels.insert(contentsOf: commentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
                     let numOfComments = self.preConversationStyle.numberOfComments
                     self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))
                 case let .update(commentId, withComment):
