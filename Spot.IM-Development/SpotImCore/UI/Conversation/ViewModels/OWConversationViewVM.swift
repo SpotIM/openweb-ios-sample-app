@@ -1133,8 +1133,7 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { comments in
                 let commentsIds = comments.map { $0.id }.unwrap()
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
-                // TODO - Support insert multiple comments
-                self._commentsPresentationData.insert(updatedCommentsPresentationData[0], at: 0)
+                self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
             })
             .disposed(by: disposeBag)
 
