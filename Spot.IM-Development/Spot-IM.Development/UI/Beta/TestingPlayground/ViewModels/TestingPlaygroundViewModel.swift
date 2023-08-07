@@ -64,7 +64,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
             .asObservable()
     }
 
-    var presentStyle: OWModalPresentationStyle {
+    var present: OWModalPresentationStyle {
         // swiftlint:disable line_length
         return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
         // swiftlint:enable line_length
@@ -100,7 +100,7 @@ fileprivate extension TestingPlaygroundViewModel {
             .asObservable()
             .map { [weak self] _ -> PresentationalModeCompact? in
                 guard let self = self else { return nil }
-                return PresentationalModeCompact.present(style: self.presentStyle)
+                return PresentationalModeCompact.present(style: self.present)
             }
             .unwrap()
 
