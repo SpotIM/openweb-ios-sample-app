@@ -8,6 +8,6 @@
 
 import Foundation
 
-enum OWProductSource: Encodable {
+enum OWProductSource: String, Encodable {
     case conversation
 }
