@@ -11,12 +11,12 @@ import Foundation
 struct OWAnalyticEventPayload: Encodable {
     var payloadDictionary: [String: Encodable] = [:]
 
-    enum CodingKeys: CodingKey {
-            case payloadDictionary
-        }
+    enum CodingKeys: String, CodingKey {
+        case payloadDictionary
+    }
 
     func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
+        var container = encoder.container(keyedBy: OWStringKey.self)
 
         // Encode each value in the payload dictionary
         for (key, value) in payloadDictionary {
@@ -26,9 +26,24 @@ struct OWAnalyticEventPayload: Encodable {
 }
 
 fileprivate extension OWAnalyticEventPayload {
-    func encode(value: Encodable, forKey key: String, container: inout KeyedEncodingContainer<CodingKeys>) {
-        if let codingKey = CodingKeys(stringValue: key) {
-            try? container.encode(value, forKey: codingKey)
-        }
+    func encode(value: Encodable, forKey key: String, container: inout KeyedEncodingContainer<OWStringKey>) {
+        try? container.encode(value, forKey: OWStringKey(stringValue: key))
+    }
+}
+
+struct OWStringKey: CodingKey, Hashable, ExpressibleByStringLiteral {
+    var stringValue: String
+    init(stringValue: String) {
+        self.stringValue = stringValue
+    }
+    init(_ stringValue: String) {
+        self.init(stringValue: stringValue)
+    }
+    var intValue: Int?
+    init?(intValue: Int) {
+        return nil
+    }
+    init(stringLiteral value: String) {
+        self.init(value)
     }
 }
