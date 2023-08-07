@@ -672,15 +672,22 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
+                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
+                        .map { url, type in
+                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
+                        }
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] url in
+            .subscribe(onNext: { [weak self] url, type, userId in
                 self?._openProfile.onNext(url)
+                switch type {
+                case .currentUser: self?.sendEvent(for: .myProfileClicked(source: .comment))
+                case .otherUser: self?.sendEvent(for: .userProfileClicked(userId: userId))
+                }
             })
             .disposed(by: disposeBag)
 
