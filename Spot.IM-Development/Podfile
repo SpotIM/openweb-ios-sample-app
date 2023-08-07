@@ -2,7 +2,7 @@ platform :ios, '11.0'
 inhibit_all_warnings!
 
 abstract_target 'Shared' do
-  use_frameworks! :linkage => :static
+  use_frameworks!
 
   pod 'RxSwift', '~> 6.5'
   pod 'RxCocoa', '~> 6.5'
@@ -21,6 +21,8 @@ abstract_target 'Shared' do
   target 'OpenWebCoreTests' do
     pod 'RxTest', '~> 6.5.0'
     pod 'RxBlocking', '~> 6.5.0'
+    pod 'Quick'
+    pod 'Nimble'
   end
 end
 

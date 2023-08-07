@@ -11,94 +11,109 @@ import UIKit
 import RxSwift
 import RxTest
 import RxBlocking
+import Quick
+import Nimble
+
 @testable import SpotImCore
 
-class OWRxAppLifeCycleTests: XCTestCase {
-
-    var disposeBag: DisposeBag!
-
-    override func setUp() {
-        super.setUp()
-        disposeBag = DisposeBag()
-    }
-
-    override func tearDown() {
-        disposeBag = nil
-        super.tearDown()
-    }
+final class OWRxAppLifeCycleTests: QuickSpec {
     
-    func testWillTerminate() {
-        let expectation = XCTestExpectation(description: "will terminate expectation")
-        let notificationCenter = NotificationCenter()
-        let appLifeCycle = OWRxAppLifeCycle(
-            notificationCenter: notificationCenter,
-            queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
-        )
+    override func spec() {
+        describe("OWRxAppLifeCycle") {
+            var disposeBag: DisposeBag!
 
-        appLifeCycle.willTerminate.subscribe { _ in expectation.fulfill() }.disposed(by: disposeBag)
+            beforeEach {
+                disposeBag = DisposeBag()
+            }
 
-        notificationCenter.post(name: UIApplication.willTerminateNotification, object: nil)
+            afterEach {
+                disposeBag = nil
+            }
 
-        wait(for: [expectation], timeout: 1.0)
-    }
-    
-    func testDidBecomeActive() {
-        let expectation = XCTestExpectation(description: "did become active expectation")
-        let notificationCenter = NotificationCenter()
-        let appLifeCycle = OWRxAppLifeCycle(
-            notificationCenter: notificationCenter,
-            queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
-        )
+            it("should receive 'willTerminate' notification") {
+                let expectation = QuickSpec.current.expectation(description: "will terminate expectation")
+                let notificationCenter = NotificationCenter()
+                let appLifeCycle = OWRxAppLifeCycle(
+                    notificationCenter: notificationCenter,
+                    queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
+                )
 
-        appLifeCycle.didBecomeActive.subscribe { _ in expectation.fulfill() }.disposed(by: disposeBag)
+                appLifeCycle.willTerminate.subscribe { _ in
+                    expectation.fulfill()
+                }.disposed(by: disposeBag)
 
-        notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
+                notificationCenter.post(name: UIApplication.willTerminateNotification, object: nil)
 
-        wait(for: [expectation], timeout: 1.0)
-    }
-    
-    func testDidEnterBackground() {
-        let expectation = XCTestExpectation(description: "did enter background expectation")
-        let notificationCenter = NotificationCenter()
-        let appLifeCycle = OWRxAppLifeCycle(
-            notificationCenter: notificationCenter,
-            queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
-        )
+                QuickSpec.current.waitForExpectations(timeout: 1.0, handler: nil)
+            }
 
-        appLifeCycle.didEnterBackground.subscribe { _ in expectation.fulfill() }.disposed(by: disposeBag)
+            it("should receive 'didBecomeActive' notification") {
+                let expectation = QuickSpec.current.expectation(description: "did become active expectation")
+                let notificationCenter = NotificationCenter()
+                let appLifeCycle = OWRxAppLifeCycle(
+                    notificationCenter: notificationCenter,
+                    queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
+                )
 
-        notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+                appLifeCycle.didBecomeActive.subscribe { _ in
+                    expectation.fulfill()
+                }.disposed(by: disposeBag)
 
-        wait(for: [expectation], timeout: 1.0)
-    }
-    
-    func testWillEnterForeground() {
-        let expectation = XCTestExpectation(description: "will enter foreground expectation")
-        let notificationCenter = NotificationCenter()
-        let appLifeCycle = OWRxAppLifeCycle(
-            notificationCenter: notificationCenter,
-            queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
-        )
+                notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
-        appLifeCycle.willEnterForeground.subscribe { _ in expectation.fulfill() }.disposed(by: disposeBag)
+                QuickSpec.current.waitForExpectations(timeout: 1.0, handler: nil)
+            }
 
-        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+            it("should receive 'didEnterBackground' notification") {
+                let expectation = QuickSpec.current.expectation(description: "did enter background expectation")
+                let notificationCenter = NotificationCenter()
+                let appLifeCycle = OWRxAppLifeCycle(
+                    notificationCenter: notificationCenter,
+                    queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
+                )
 
-        wait(for: [expectation], timeout: 1.0)
-    }
-    
-    func testWillResignActiveNotification() {
-        let expectation = XCTestExpectation(description: "will resign active expectation")
-        let notificationCenter = NotificationCenter()
-        let appLifeCycle = OWRxAppLifeCycle(
-            notificationCenter: notificationCenter,
-            queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
-        )
+                appLifeCycle.didEnterBackground.subscribe { _ in
+                    expectation.fulfill()
+                }.disposed(by: disposeBag)
 
-        appLifeCycle.willResignActive.subscribe { _ in expectation.fulfill() }.disposed(by: disposeBag)
+                notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
-        notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
+                QuickSpec.current.waitForExpectations(timeout: 1.0, handler: nil)
+            }
 
-        wait(for: [expectation], timeout: 1.0)
+            it("should receive 'willEnterForeground' notification") {
+                let expectation = QuickSpec.current.expectation(description: "will enter foreground expectation")
+                let notificationCenter = NotificationCenter()
+                let appLifeCycle = OWRxAppLifeCycle(
+                    notificationCenter: notificationCenter,
+                    queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
+                )
+
+                appLifeCycle.willEnterForeground.subscribe { _ in
+                    expectation.fulfill()
+                }.disposed(by: disposeBag)
+
+                notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+
+                QuickSpec.current.waitForExpectations(timeout: 1.0, handler: nil)
+            }
+
+            it("should receive 'willResignActive' notification") {
+                let expectation = QuickSpec.current.expectation(description: "will resign active expectation")
+                let notificationCenter = NotificationCenter()
+                let appLifeCycle = OWRxAppLifeCycle(
+                    notificationCenter: notificationCenter,
+                    queueScheduler: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: UUID().uuidString)
+                )
+
+                appLifeCycle.willResignActive.subscribe { _ in
+                    expectation.fulfill()
+                }.disposed(by: disposeBag)
+
+                notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
+
+                QuickSpec.current.waitForExpectations(timeout: 1.0, handler: nil)
+            }
+        }
     }
 }

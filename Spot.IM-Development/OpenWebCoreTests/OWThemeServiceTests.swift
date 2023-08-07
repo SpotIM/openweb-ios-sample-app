@@ -10,88 +10,93 @@ import XCTest
 import RxSwift
 import RxTest
 import RxBlocking
+import Quick
+import Nimble
+
 @testable import SpotImCore
 
-final class OWThemeServiceTests: XCTestCase {
+final class OWThemeServiceTests: QuickSpec {
+    
+    override func spec() {
+        var disposeBag: DisposeBag!
 
-    var disposeBag: DisposeBag!
-
-    override func setUp() {
-        super.setUp()
-        disposeBag = DisposeBag()
-    }
-
-    override func tearDown() {
-        disposeBag = nil
-        super.tearDown()
-    }
-
-    func testInitialStyle() {
-        let scheduler = TestScheduler(initialClock: 0)
-        let observer = scheduler.createObserver(OWThemeStyle.self)
-
-        let themeStyleService = OWThemeStyleService()
-        themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
-
-        scheduler.start()
-
-        XCTAssertEqual(observer.events, [.next(0, .light)])
-    }
-
-    func testSetStyle() {
-        let scheduler = TestScheduler(initialClock: 0)
-        let observer = scheduler.createObserver(OWThemeStyle.self)
-
-        let themeStyleService = OWThemeStyleService()
-        themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
-
-        scheduler.scheduleAt(10) {
-            themeStyleService.setStyle(style: .dark)
+        beforeEach {
+            disposeBag = DisposeBag()
         }
 
-        scheduler.scheduleAt(20) {
-            themeStyleService.setStyle(style: .light)
+        afterEach {
+            disposeBag = nil
         }
 
-        scheduler.start()
+        describe("OWThemeService") {
+            it("should have an initial style") {
+                let scheduler = TestScheduler(initialClock: 0)
+                let observer = scheduler.createObserver(OWThemeStyle.self)
 
-        let expectedEvents: [Recorded<Event<OWThemeStyle>>] = [
-            .next(0, .light),
-            .next(10, .dark),
-            .next(20, .light)
-        ]
+                let themeStyleService = OWThemeStyleService()
+                themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
 
-        XCTAssertEqual(observer.events, expectedEvents)
-    }
+                scheduler.start()
 
-    func testSetEnforcement() {
-        let scheduler = TestScheduler(initialClock: 0)
-        let observer = scheduler.createObserver(OWThemeStyle.self)
+                expect(observer.events).to(equal([.next(0, .light)]))
+            }
 
-        let themeStyleService = OWThemeStyleService()
-        themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
+            it("should allow for styles to be set") {
+                let scheduler = TestScheduler(initialClock: 0)
+                let observer = scheduler.createObserver(OWThemeStyle.self)
 
-        scheduler.scheduleAt(10) {
-            themeStyleService.setEnforcement(enforcement: .theme(.dark))
+                let themeStyleService = OWThemeStyleService()
+                themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
+
+                scheduler.scheduleAt(10) {
+                    themeStyleService.setStyle(style: .dark)
+                }
+
+                scheduler.scheduleAt(20) {
+                    themeStyleService.setStyle(style: .light)
+                }
+
+                scheduler.start()
+
+                let expectedEvents: [Recorded<Event<OWThemeStyle>>] = [
+                    .next(0, .light),
+                    .next(10, .dark),
+                    .next(20, .light)
+                ]
+
+                expect(observer.events).to(equal(expectedEvents))
+            }
+
+            it("should enforce a style if applicable regardless of what is set") {
+                let scheduler = TestScheduler(initialClock: 0)
+                let observer = scheduler.createObserver(OWThemeStyle.self)
+
+                let themeStyleService = OWThemeStyleService()
+                themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
+
+                scheduler.scheduleAt(10) {
+                    themeStyleService.setEnforcement(enforcement: .theme(.dark))
+                }
+
+                scheduler.scheduleAt(20) {
+                    themeStyleService.setStyle(style: .light)
+                }
+
+                scheduler.scheduleAt(30) {
+                    observer.onCompleted()
+                }
+
+                scheduler.start()
+
+                let expectedEvents: [Recorded<Event<OWThemeStyle>>] = [
+                    .next(0, .light),
+                    .next(10, .dark),
+                    // .next(20, .light) is NOT expected here due to enforcement of dark before.
+                    .completed(30)
+                ]
+
+                expect(observer.events).to(equal(expectedEvents))
+            }
         }
-        
-        scheduler.scheduleAt(20) {
-            themeStyleService.setStyle(style: .light)
-        }
-        
-        scheduler.scheduleAt(30) {
-            observer.onCompleted()
-        }
-
-        scheduler.start()
-
-        let expectedEvents: [Recorded<Event<OWThemeStyle>>] = [
-            .next(0, .light),
-            .next(10, .dark),
-            // .next(20, .light) is NOT expected here. due to enforcement of dark before.
-            .completed(30)
-        ]
-
-        XCTAssertEqual(observer.events, expectedEvents)
     }
 }

@@ -960,13 +960,14 @@
 		F92DD7BB2A7E8B9E00A2BE5B /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		F92DD7CD2A7E98F300A2BE5B /* OWThemeServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92DD7CC2A7E98F300A2BE5B /* OWThemeServiceTests.swift */; };
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
-		F9529B252A7EEB350070EDC2 /* OWUserDefaultsRxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B242A7EEB350070EDC2 /* OWUserDefaultsRxTests.swift */; };
 		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
 		F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */; };
 		F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift */; };
 		F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */; };
 		F9529B362A7F01E70070EDC2 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */; };
 		F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */; };
+		F99EC4962A810DCB00099DB4 /* MockEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99EC4952A810DCB00099DB4 /* MockEndpoints.swift */; };
+		F99EC4982A810DFD00099DB4 /* MockUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99EC4972A810DFD00099DB4 /* MockUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2015,13 +2016,14 @@
 		F92DD7B72A7E8B9E00A2BE5B /* OpenWebCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWebCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F92DD7CC2A7E98F300A2BE5B /* OWThemeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeServiceTests.swift; sourceTree = "<group>"; };
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
-		F9529B242A7EEB350070EDC2 /* OWUserDefaultsRxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsRxTests.swift; sourceTree = "<group>"; };
 		F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringServiceTests.swift; sourceTree = "<group>"; };
 		F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelperTests.swift; sourceTree = "<group>"; };
 		F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests.swift; sourceTree = "<group>"; };
 		F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAPITests.swift; sourceTree = "<group>"; };
 		F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkInterceptor.swift; sourceTree = "<group>"; };
+		F99EC4952A810DCB00099DB4 /* MockEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEndpoints.swift; sourceTree = "<group>"; };
+		F99EC4972A810DFD00099DB4 /* MockUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUser.swift; sourceTree = "<group>"; };
 		FA6BF31548693DB019E7E2E6 /* Pods_Shared_SpotImNoAds.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImNoAds.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBD4C1ED8C83A232E2DDF25B /* Pods-Shared-SpotImCore.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasepublic.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -5905,7 +5907,6 @@
 				F9529B372A7F01EC0070EDC2 /* Mocks */,
 				F92DD7CC2A7E98F300A2BE5B /* OWThemeServiceTests.swift */,
 				F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */,
-				F9529B242A7EEB350070EDC2 /* OWUserDefaultsRxTests.swift */,
 				F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */,
 				F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */,
 				F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift */,
@@ -5919,6 +5920,8 @@
 			children = (
 				F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */,
 				F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */,
+				F99EC4952A810DCB00099DB4 /* MockEndpoints.swift */,
+				F99EC4972A810DFD00099DB4 /* MockUser.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -5966,7 +5969,7 @@
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
 				8D455ADB296C13CA0091A027 /* ShellScript */,
-				C20199B70C1AE251BA5F8B51 /* [CP] Embed Pods Frameworks */,
+				977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -5986,7 +5989,7 @@
 				5D697A4B22B65108001AD556 /* Sources */,
 				5D697A4C22B65108001AD556 /* Frameworks */,
 				5D697A4D22B65108001AD556 /* Resources */,
-				AEB97386113ABDAFA77A2061 /* [CP] Embed Pods Frameworks */,
+				11A34FF8EB924B97CD5D4392 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -6006,7 +6009,7 @@
 				F92DD7B32A7E8B9E00A2BE5B /* Sources */,
 				F92DD7B42A7E8B9E00A2BE5B /* Frameworks */,
 				F92DD7B52A7E8B9E00A2BE5B /* Resources */,
-				04327F0B1D3D1139BC464A4B /* [CP] Embed Pods Frameworks */,
+				00DBB773F49D7DCABBAC26B2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -6127,7 +6130,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		04327F0B1D3D1139BC464A4B /* [CP] Embed Pods Frameworks */ = {
+		00DBB773F49D7DCABBAC26B2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -6164,6 +6167,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		11A34FF8EB924B97CD5D4392 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6D5DB15923CF5D73003F9D46 /* ShellScript */ = {
@@ -6222,24 +6242,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AEB97386113ABDAFA77A2061 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C20199B70C1AE251BA5F8B51 /* [CP] Embed Pods Frameworks */ = {
+		977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7233,14 +7236,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F99EC4982A810DFD00099DB4 /* MockUser.swift in Sources */,
 				F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */,
 				F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */,
+				F99EC4962A810DCB00099DB4 /* MockEndpoints.swift in Sources */,
 				F9529B362A7F01E70070EDC2 /* MockURLProtocol.swift in Sources */,
 				F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */,
 				F92DD7CD2A7E98F300A2BE5B /* OWThemeServiceTests.swift in Sources */,
 				F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */,
 				F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift in Sources */,
-				F9529B252A7EEB350070EDC2 /* OWUserDefaultsRxTests.swift in Sources */,
 				F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

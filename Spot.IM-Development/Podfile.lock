@@ -39,7 +39,9 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - Nimble (10.0.0)
   - PromisesObjC (2.1.1)
+  - Quick (5.0.1)
   - RxBlocking (6.5.0):
     - RxSwift (= 6.5.0)
   - RxCocoa (6.5.0):
@@ -55,6 +57,8 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 5.6.2)
   - Google-Mobile-Ads-SDK (= 8.0)
+  - Nimble
+  - Quick
   - RxBlocking (~> 6.5.0)
   - RxCocoa (~> 6.5)
   - RxSwift (~> 6.5)
@@ -69,7 +73,9 @@ SPEC REPOS:
     - GoogleUserMessagingPlatform
     - GoogleUtilities
     - nanopb
+    - Nimble
     - PromisesObjC
+    - Quick
     - RxBlocking
     - RxCocoa
     - RxRelay
@@ -84,7 +90,9 @@ SPEC CHECKSUMS:
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
+  Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
   RxBlocking: 04b5fd28bb5ea49f7d64b80db8bbfe50d9cc1c7d
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
@@ -92,6 +100,6 @@ SPEC CHECKSUMS:
   RxTest: eb2d23adefc5a5ebf5779c7792fa3edfe6ebcc17
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 6c5e48fb4bfb8fe2729c00fa22ed26927e169da5
+PODFILE CHECKSUM: cbd34a94a87b2e68c26f22c57db0a4399631fea7
 
 COCOAPODS: 1.11.2
