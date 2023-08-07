@@ -66,7 +66,7 @@ class TestingPlaygroundViewModel: TestingPlaygroundViewModeling,
 
     var presentStyle: OWModalPresentationStyle {
         // swiftlint:disable line_length
-        return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.defaultIndex))
+        return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index))
         // swiftlint:enable line_length
     }
 
@@ -117,7 +117,7 @@ fileprivate extension TestingPlaygroundViewModel {
 
                 flows.testingPlayground(postId: postId,
                                         presentationalMode: presentationalMode,
-                                        additionalSettings: nil,
+                                        additionalSettings: OWTestingPlaygroundSettings(),
                                         callbacks: nil,
                                         completion: { [weak self] result in
                     guard let self = self else { return }

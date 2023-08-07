@@ -22,16 +22,23 @@ public protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         commentCreationType: OWCommentCreationType,
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
+
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
 #if BETA
     func testingPlayground(postId: OWPostId,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol,
                            callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWViewCompletion)
 #endif
@@ -50,10 +57,17 @@ protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         commentCreationType: OWCommentCreationType,
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
+
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 }

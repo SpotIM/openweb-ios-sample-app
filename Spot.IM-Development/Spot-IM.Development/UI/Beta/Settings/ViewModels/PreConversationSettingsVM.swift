@@ -51,10 +51,10 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     var inputs: PreConversationSettingsViewModelingInputs { return self }
     var outputs: PreConversationSettingsViewModelingOutputs { return self }
 
-    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
+    var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWPreConversationStyle.defaultIndex)
     var customStyleModeSelectedNumberOfComments = BehaviorSubject<Int>(value: 0)
-    var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.defaultIndex)
-    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.defaultIndex)
+    var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.default.index)
+    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
@@ -103,18 +103,9 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
             .map { preConversationStyle in
                 switch preConversationStyle {
                 case .custom(_, let communityGuidelinesStyle, _):
-                    switch communityGuidelinesStyle {
-                    case .none:
-                        return 0
-                    case .regular:
-                        return 1
-                    case .compact:
-                        return 2
-                    default:
-                        return OWCommunityGuidelinesStyle.defaultIndex
-                    }
+                    return communityGuidelinesStyle.index
                 default:
-                    return OWCommunityGuidelinesStyle.defaultIndex
+                    return OWCommunityGuidelinesStyle.default.index
                 }
             }
             .asObservable()
@@ -125,18 +116,9 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
             .map { preConversationStyle in
                 switch preConversationStyle {
                 case .custom(_, _, let communityQuestionStyle):
-                    switch communityQuestionStyle {
-                    case .none:
-                        return 0
-                    case .regular:
-                        return 1
-                    case .compact:
-                        return 2
-                    default:
-                        return OWCommunityQuestionStyle.defaultIndex
-                    }
+                    return communityQuestionStyle.index
                 default:
-                    return OWCommunityQuestionStyle.defaultIndex
+                    return OWCommunityQuestionStyle.default.index
                 }
             }
             .asObservable()

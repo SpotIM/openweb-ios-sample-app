@@ -10,16 +10,16 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonVC: UIViewController {
+class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
-        static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonSize: CGFloat = 40
+
         static let closeButtonIdentidier = "report_reason_close_button_id"
         static let closeCrossIcon = "closeCrossIcon"
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonView: OWReportReasonView = {
         let reportReasonView = OWReportReasonView(viewModel: viewModel.outputs.reportReasonViewViewModel)
@@ -59,6 +59,10 @@ class OWReportReasonVC: UIViewController {
         // Enable navigation back by swipe
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWReportReasonVC {
@@ -94,7 +98,7 @@ fileprivate extension OWReportReasonVC {
 
         // Setup Title
         let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
+            NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext),
             NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
         ]
 
@@ -127,6 +131,8 @@ fileprivate extension OWReportReasonVC {
                 self.setupNavControllerUI(currentStyle)
             })
             .disposed(by: disposeBag)
+
+        self.setupStatusBarStyleUpdaterObservers()
 
         closeButton.rx.tap
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)

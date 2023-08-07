@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public typealias OWManipulateTextCompletion = (Result<String, OWError>) -> String
+public typealias OWManipulateTextCompletion = (Result<OWManipulateTextModel, OWError>) -> String
 #else
-typealias OWManipulateTextCompletion = (Result<String, OWError>) -> String
+typealias OWManipulateTextCompletion = (Result<OWManipulateTextModel, OWError>) -> String
 #endif
