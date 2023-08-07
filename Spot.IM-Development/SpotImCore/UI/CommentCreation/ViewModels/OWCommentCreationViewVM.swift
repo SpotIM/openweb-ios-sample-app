@@ -17,7 +17,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling { get }
     var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling { get }
     var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling { get }
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
 }
@@ -33,14 +33,52 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+    fileprivate let viewableMode: OWViewableMode
+
+    fileprivate lazy var postId = OWManager.manager.postId
 
     lazy var closeButtonTapped: Observable<Void> = {
-        return Observable.merge(
-            commentCreationRegularViewVm.inputs.closeButtonTap,
-            commentCreationLightViewVm.inputs.closeButtonTap,
-            commentCreationFloatingKeyboardViewVm.inputs.closeButtonTap
-        )
-        .asObservable()
+        let commentTextAfterTapObservable: Observable<String>
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            commentTextAfterTapObservable = commentCreationRegularViewVm.inputs.closeButtonTap
+                .withLatestFrom(commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+        case .light:
+            commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
+                .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+        case .floatingKeyboard:
+            commentTextAfterTapObservable = Observable.never()
+        }
+        return commentTextAfterTapObservable
+            .flatMap { [weak self] commentText -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let hasText = !commentText.isEmpty
+                guard hasText else {
+                    self.clearCachedCommentIfNeeded()
+                    return Observable.just(())
+                }
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Yes"), type: OWCloseEditorAlert.yes),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
+                ]
+                return self.servicesProvider.presenterService()
+                    // TODO - Localization
+                    .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: self.viewableMode)
+                    .flatMap { result -> Observable<Void> in
+                        switch result {
+                        case .completion:
+                            return Observable.empty()
+                        case .selected(let action):
+                            switch action.type {
+                            case OWCloseEditorAlert.yes:
+                                self.cacheComment(text: commentText)
+                                return Observable.just(())
+                            default:
+                                return Observable.empty()
+                            }
+                        }
+                    }
+            }
     }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
@@ -55,7 +93,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData)
     }()
 
-    lazy var commentType: OWCommentCreationType = {
+    lazy var commentType: OWCommentCreationTypeInternal = {
         return self.commentCreationData.commentCreationType
     }()
 
@@ -65,9 +103,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          viewableMode: OWViewableMode = .independent) {
+          viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }
@@ -75,6 +114,36 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
 
+    }
+
+    func cacheComment(text commentText: String) {
+        guard let postId = self.postId else { return }
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+
+        switch commentCreationData.commentCreationType {
+        case .comment:
+            commentsCacheService[.comment(postId: postId)] = commentText
+        case .replyToComment(let originComment):
+            guard let originCommentId = originComment.id else { return }
+            commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
+        case .edit:
+            // We are not caching edit comment text
+            break
+        }
+    }
+
+    func clearCachedCommentIfNeeded() {
+        guard let postId = self.postId else { return }
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+        switch commentCreationData.commentCreationType {
+        case .comment:
+            commentsCacheService.remove(forKey: .comment(postId: postId))
+        case .replyToComment(originComment: let originComment):
+            guard let originCommentId = originComment.id else { return }
+            commentsCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
+        case .edit:
+            break
+        }
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {

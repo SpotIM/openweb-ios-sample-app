@@ -60,6 +60,8 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - large_tuple
   - line_length
   - explicit_init
+  - explicit_self
+  - init_with_class_name
 
 included: # paths to include during linting. `excluded` paths are still ignored.
   - ../Spot-IM.Development
@@ -100,3 +102,13 @@ type_name:
 function_parameter_count:
     warning: 7
     error: 8
+
+init_with_class_name:
+    name: "Init With Class Name"
+    message: "Prefer let object = Class() instead of let object: Class = .init()"
+    included: ".*.swift"
+    regex: '(?<!self|super)\.init\('
+    match_kinds:
+      - identifier
+      - keyword
+    severity: error

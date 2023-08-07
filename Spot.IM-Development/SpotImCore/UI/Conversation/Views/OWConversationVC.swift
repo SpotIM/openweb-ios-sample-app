@@ -10,14 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationVC: UIViewController {
+class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
-        static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonImageName: String = "closeButton"
     }
 
     fileprivate let viewModel: OWConversationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var conversationView: OWConversationView = {
         return OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
@@ -52,6 +51,10 @@ class OWConversationVC: UIViewController {
 
         viewModel.inputs.viewDidLoad.onNext()
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWConversationVC {
@@ -65,8 +68,6 @@ fileprivate extension OWConversationVC {
     }
 
     func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-        let navController = self.navigationController
-
         // Setup close button
         if viewModel.outputs.shouldShowCloseButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
@@ -74,13 +75,15 @@ fileprivate extension OWConversationVC {
 
         title = OWLocalizationManager.shared.localizedString(key: "Conversation")
 
+        guard let navController = self.navigationController else { return }
+
         if viewModel.outputs.shouldCustomizeNavigationBar {
-            navController?.navigationBar.isTranslucent = false
+            navController.navigationBar.isTranslucent = false
             let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
             // Setup Title
             let navigationTitleTextAttributes = [
-                NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
+                NSAttributedString.Key.font: OWFontBook.shared.font(typography: .titleSmall),
                 NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
             ]
 
@@ -95,11 +98,11 @@ fileprivate extension OWConversationVC {
                 backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
                 appearance.backButtonAppearance = backButtonAppearance
 
-                navController?.navigationBar.standardAppearance = appearance
-                navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
+                navController.navigationBar.standardAppearance = appearance
+                navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
             } else {
-                navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-                navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+                navController.navigationBar.backgroundColor = navigationBarBackgroundColor
+                navController.navigationBar.titleTextAttributes = navigationTitleTextAttributes
             }
         }
     }
@@ -109,11 +112,13 @@ fileprivate extension OWConversationVC {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: currentStyle == .dark), state: .normal)
                 self.setupNavControllerUI(currentStyle)
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+
+        self.setupStatusBarStyleUpdaterObservers()
     }
 
     func updateCustomUI() {

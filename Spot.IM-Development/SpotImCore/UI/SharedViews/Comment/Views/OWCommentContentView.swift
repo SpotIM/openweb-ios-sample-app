@@ -12,12 +12,11 @@ import RxCocoa
 
 class OWCommentContentView: UIView {
     internal struct Metrics {
-        static let fontSize: CGFloat = 15.0
-        static let editedFontSize: CGFloat = 13.0
         static let commentMediaTopPadding: CGFloat = 6.0
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
         static let editedTopPadding: CGFloat = 4.0
+
         static let identifier = "comment_content_view_id"
         static let textLabelIdentifier = "comment_content_text_label_id"
         static let mediaViewIdentifier = "comment_media_view_id"
@@ -36,7 +35,7 @@ class OWCommentContentView: UIView {
 
     fileprivate lazy var editedLabel: UILabel = {
        return UILabel()
-            .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteSpecial))
             .text(OWLocalizationManager.shared.localizedString(key: "Edited"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .enforceSemanticAttribute()

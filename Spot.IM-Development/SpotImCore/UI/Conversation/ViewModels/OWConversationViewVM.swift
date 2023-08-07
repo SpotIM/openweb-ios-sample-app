@@ -19,7 +19,7 @@ protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
     var pullToRefresh: PublishSubject<Void> { get }
-    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -42,7 +42,7 @@ protocol OWConversationViewViewModelingOutputs {
     var performTableViewAnimation: Observable<Void> { get }
 
     var urlClickedOutput: Observable<URL> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
@@ -83,8 +83,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentCreation: Observable<OWCommentCreationType> {
+    var commentCreationTap = PublishSubject<OWCommentCreationTypeInternal>()
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> {
         return commentCreationTap
             .asObservable()
     }
@@ -489,7 +489,8 @@ fileprivate extension OWConversationViewViewModel {
             comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
-            collapsableTextLineLimit: Metrics.collapsableTextLineLimit
+            collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
+            section: self.conversationData.article.additionalSettings.section
         ))
     }
 
