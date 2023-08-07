@@ -711,6 +711,25 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe on rank click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(OWCommentId, SPRankChange)> in
+                let rankClickObservable: [Observable<(OWCommentId, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentId, SPRankChange)> in
+                    let commentRankVm = commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.votingVM
+
+                    return commentRankVm.outputs.rankChanged
+                        .map { (commentCellVm.outputs.commentVM.outputs.comment.id ?? "", $0) }
+                }
+                return Observable.merge(rankClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId, rank in
+                guard let self = self,
+                      let eventType = rank.analyticsEventType(commentId: commentId)
+                else { return }
+                self.sendEvent(for: eventType)
+            })
+            .disposed(by: disposeBag)
+
         // Observe on read more click
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<OWCommentId> in
