@@ -684,7 +684,11 @@ fileprivate extension OWPreConversationViewViewModel {
                         ))
                     }.unwrap()
                     var viewModels = self._cellsViewModels
-                    viewModels.insert(contentsOf: commentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
+                    let filteredCommentsVms = commentsVms.filter { commentVm in
+                        // making sure we are not adding an existing comment
+                        !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })
+                    }
+                    viewModels.insert(contentsOf: filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
                     let numOfComments = self.preConversationStyle.numberOfComments
                     self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))
                 case let .update(commentId, withComment):
