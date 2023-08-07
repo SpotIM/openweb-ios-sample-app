@@ -10,7 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
-    var closeButtonTap: PublishSubject<Void> { get }
+    var closeWithDelay: PublishSubject<Void> { get }
+    var closeInstantly: PublishSubject<Void> { get }
     var ctaTap: PublishSubject<Void> { get }
 }
 
@@ -23,6 +24,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var servicesProvider: OWSharedServicesProviding { get }
     var viewableMode: OWViewableMode { get }
     var performCtaAction: Observable<Void> { get }
+    var closedWithDelay: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -52,8 +54,13 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     let commentType: OWCommentCreationTypeInternal
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
-    var closeButtonTap = PublishSubject<Void>()
+    var closeInstantly = PublishSubject<Void>()
     var ctaTap = PublishSubject<Void>()
+    var closeWithDelay = PublishSubject<Void>()
+    var closedWithDelay: Observable<Void> {
+        return closeWithDelay
+            .asObservable()
+    }
 
     var imageURLProvider: OWImageProviding
     var sharedServiceProvider: OWSharedServicesProviding

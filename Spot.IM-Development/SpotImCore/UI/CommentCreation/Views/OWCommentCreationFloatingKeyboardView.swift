@@ -146,8 +146,8 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             .backgroundColor(.clear)
     }()
 
-    fileprivate lazy var ctaButton: UIButton = {
-        return UIButton()
+    fileprivate lazy var ctaButton: OWLoaderButton = {
+        return OWLoaderButton()
             .image(viewModel.outputs.ctaIcon, state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: Metrics.ctaButtonSize - Metrics.ctaButtonImageSize,
                                           left: 0,
@@ -342,7 +342,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             })
             .disposed(by: disposeBag)
 
-        closeButton.rx.tap
+        Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .flatMap({ [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 if self.toolbar != nil {
@@ -358,9 +358,14 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.outputs.textViewVM.inputs.resignFirstResponderCall)
             .disposed(by: disposeBag)
 
-        closeButton.rx.tap
+        Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
-            .bind(to: viewModel.inputs.closeButtonTap)
+            .bind(to: viewModel.inputs.closeInstantly)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.closedWithDelay
+            .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
         ctaButton.rx.tap
@@ -433,6 +438,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
 
+                self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
                     self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1,
@@ -449,7 +455,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         self.headerView.layoutIfNeeded()
                     }
                     self.footerView.layoutIfNeeded()
-                    self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
 
                     self.mainContainer.OWSnp.updateConstraints { make in
                         make.bottom.equalToSuperviewSafeArea()

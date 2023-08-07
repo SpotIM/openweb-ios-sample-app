@@ -45,7 +45,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
-            return commentCreationFloatingKeyboardViewVm.inputs.closeButtonTap
+            return commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
         }
         return commentTextAfterTapObservable
             .map { !$0.isEmpty }

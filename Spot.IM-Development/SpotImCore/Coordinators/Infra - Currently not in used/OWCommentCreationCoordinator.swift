@@ -50,25 +50,19 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
         let commentCreationPopped = PublishSubject<Void>()
 
-        let present: Bool = {
+        let pushStyle: OWScreenPushStyle = {
             switch commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-            case .regular:
-                return false
-            case .light:
-                return false
+            case .regular, .light:
+                return .present
             case .floatingKeyboard:
-                return true
+                return .presentOverFullScreen
             }
         }()
 
-        if present {
-            router.present(commentCreationVC, presentStyle: .fade, dismissCompletion: commentCreationPopped)
-        } else {
-            router.push(commentCreationVC,
-                        pushStyle: .presentStyle,
-                        animated: true,
-                        popCompletion: commentCreationPopped)
-        }
+        router.push(commentCreationVC,
+                    pushStyle: pushStyle,
+                    animated: true,
+                    popCompletion: commentCreationPopped)
 
         setupObservers(forViewModel: commentCreationVM)
         setupViewActionsCallbacks(forViewModel: commentCreationVM)
@@ -105,22 +99,15 @@ fileprivate extension OWCommentCreationCoordinator {
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
             .subscribe { [weak self] _ in
                 guard let self = self else { return }
-                let dismiss: Bool = {
+                let popStyle: OWScreenPopStyle = {
                     switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                    case .regular:
-                        return false
-                    case .light:
-                        return false
+                    case .regular, .light:
+                        return .dismiss
                     case .floatingKeyboard:
-                        return true
+                        return .dismissOverFullScreen
                     }
                 }()
-
-                if dismiss {
-                    self.router.dismiss(dismissStyle: .fade, completion: nil)
-                } else {
-                    self.router.pop(popStyle: .regular, animated: true)
-                }
+                self.router.pop(popStyle: popStyle, animated: true)
             }
             .disposed(by: disposeBag)
     }

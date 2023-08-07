@@ -13,6 +13,8 @@ import RxCocoa
 class OWCommentCreationVC: UIViewController {
     fileprivate struct Metrics {
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
+        static let navBarTitleFadeDuration = 0.3
+        static let floatingOverNavBarOffset: CGFloat = -100
     }
 
     fileprivate let viewModel: OWCommentCreationViewModeling
@@ -48,12 +50,51 @@ class OWCommentCreationVC: UIViewController {
         viewModel.inputs.viewDidLoad.onNext()
     }
 
+    lazy var floatingNavigationBarOverlayButton = {
+        return UIButton()
+            .backgroundColor(Metrics.floatingBackgroungColor)
+            .alpha(0)
+    }()
+
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        super.viewWillAppear(animated)
+        var navigationBarHidden = true
+        if case .floatingKeyboard = viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            navigationBarHidden = false
+            // Fix navigation title flicker
+            let fadeTextAnimation = CATransition()
+            fadeTextAnimation.duration = 0
+            fadeTextAnimation.type = .fade
+            navigationController?.navigationBar.layer.add(fadeTextAnimation, forKey: "fixNavigationTitleFlicker")
+
+            // This code is here on purpose and not in setupViews since we need to do this also going
+            // back from extra screens that can be pushed after this VC like for example authentication screen
+            self.navigationController?.navigationBar.addSubviews(floatingNavigationBarOverlayButton)
+            floatingNavigationBarOverlayButton.OWSnp.makeConstraints { make in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.top.equalToSuperview().offset(Metrics.floatingOverNavBarOffset)
+            }
+            self.navigationController?.navigationBar.layoutIfNeeded()
+        }
+        navigationController?.setNavigationBarHidden(navigationBarHidden, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
+
+        if case .floatingKeyboard = viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            // Fix navigation title flicker
+            let fadeTextAnimation = CATransition()
+            fadeTextAnimation.duration = Metrics.navBarTitleFadeDuration
+            fadeTextAnimation.type = .fade
+            navigationController?.navigationBar.layer.add(fadeTextAnimation, forKey: "fixNavigationTitleFlicker")
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        floatingNavigationBarOverlayButton.removeFromSuperview()
     }
 }
 
@@ -101,6 +142,12 @@ fileprivate extension OWCommentCreationVC {
             })
             .disposed(by: disposeBag)
 
+        if case .floatingKeyboard = viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            floatingNavigationBarOverlayButton.rx.tap
+                .bind(to: viewModel.outputs.commentCreationViewVM.outputs.commentCreationFloatingKeyboardViewVm.inputs.closeWithDelay)
+                .disposed(by: disposeBag)
+        }
+
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
@@ -130,6 +177,7 @@ fileprivate extension OWCommentCreationVC {
                     UIView.animate(withDuration: animationDuration) { [weak self] in
                         guard let self = self else { return }
                         self.view.backgroundColor = Metrics.floatingBackgroungColor
+                        self.floatingNavigationBarOverlayButton.alpha = 1
                         self.view.layoutIfNeeded()
                     }
                 }
@@ -158,6 +206,7 @@ fileprivate extension OWCommentCreationVC {
                     UIView.animate(withDuration: animationDuration) { [weak self] in
                         guard let self = self else { return }
                         self.view.backgroundColor = .clear
+                        self.floatingNavigationBarOverlayButton.alpha = 0
                         self.view.layoutIfNeeded()
                     }
                 }
