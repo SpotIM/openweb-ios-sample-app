@@ -958,6 +958,10 @@ fileprivate extension OWCommentThreadViewViewModel {
                       let commentId = comment.id,
                       let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(_commentsPresentationData))
                 else { return }
+                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(_commentsPresentationData)) == nil else {
+                    // making sure we are not adding an existing reply
+                    return
+                }
                 let newCommentPresentationData = OWCommentPresentationData(id: commentId)
                 let existingRepliesPresentationData: [OWCommentPresentationData]
                 if (parentCommentPresentationData.repliesPresentation.count == 0) {

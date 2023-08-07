@@ -1129,10 +1129,17 @@ fileprivate extension OWConversationViewViewModel {
                     .map { _ in comments }
             }
             .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
-            .subscribe(onNext: { comments in
+            .subscribe(onNext: { [weak self] comments in
+                guard let self = self else { return }
                 let commentsIds = comments.map { $0.id }.unwrap()
+                    .filter {
+                        // making sure we are not adding an existing comment
+                        self.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                    }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
-                self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+                if (!updatedCommentsPresentationData.isEmpty) {
+                    self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1154,6 +1161,10 @@ fileprivate extension OWConversationViewViewModel {
                       let commentId = comment.id,
                       let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(_commentsPresentationData))
                 else { return }
+                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(_commentsPresentationData)) == nil else {
+                    // making sure we are not adding an existing reply
+                    return
+                }
                 let newCommentPresentationData = OWCommentPresentationData(id: commentId)
                 let existingRepliesPresentationData: [OWCommentPresentationData]
                 if (parentCommentPresentationData.repliesPresentation.count == 0) {
