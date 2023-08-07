@@ -253,7 +253,12 @@ fileprivate extension OWConversationView {
                     // Code to be executed upon completion
                     self.viewModel.inputs.scrolledToCellIndex.onNext(index)
                 }
-                self.tableView.setContentOffset(.zero, animated: true)
+                if (index > 0) {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                } else {
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
                 tableView.endUpdates()
                 CATransaction.commit()
             })
