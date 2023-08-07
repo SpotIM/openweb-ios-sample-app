@@ -606,19 +606,34 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
-        let commentAvatarClickObservable: Observable<URL> = commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
-                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+        let commentAvatarClickObservable: Observable<(URL, OWUserProfileType, String)> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
+                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
+                        .map { url, type in
+                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
+                        }
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
 
-        Observable.merge(commentAvatarClickObservable,
-                         commentingCTAViewModel.outputs.openProfile)
+        commentAvatarClickObservable
+            .subscribe(onNext: { [weak self] url, type, userId in
+                guard let self = self  else { return }
+                self._openProfile.onNext(url)
+                switch type {
+                case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
+                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: userId))
+                }
+            })
+            .disposed(by: disposeBag)
+
+        commentingCTAViewModel.outputs.openProfile
             .subscribe(onNext: { [weak self] url in
-                self?._openProfile.onNext(url)
+                guard let self = self  else { return }
+                self._openProfile.onNext(url)
+                self.sendEvent(for: .myProfileClicked(source: .commentCTA))
             })
             .disposed(by: disposeBag)
 

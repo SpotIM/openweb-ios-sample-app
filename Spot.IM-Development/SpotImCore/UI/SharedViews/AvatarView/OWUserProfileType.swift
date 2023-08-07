@@ -1,0 +1,14 @@
+//
+//  OWUserProfileType.swift
+//  SpotImCore
+//
+//  Created by  Nogah Melamed on 07/08/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
+//
+
+import Foundation
+
+enum OWUserProfileType {
+    case currentUser
+    case otherUser
+}
