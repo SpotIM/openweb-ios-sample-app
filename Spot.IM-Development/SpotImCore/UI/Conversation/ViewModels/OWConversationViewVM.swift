@@ -519,10 +519,9 @@ fileprivate extension OWConversationViewViewModel {
             if (commentPresentationData.id == commentId) {
                 return commentPresentationData
             }
-            if (commentPresentationData.repliesPresentation.isEmpty) {
-                continue
+            if let res = findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation) {
+                return res
             }
-            return findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation)
         }
         return nil
     }
