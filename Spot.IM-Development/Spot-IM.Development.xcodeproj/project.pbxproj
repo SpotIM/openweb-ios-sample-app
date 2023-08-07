@@ -851,6 +851,7 @@
 		9E0C60532A780246001B8D5D /* OWPresentationalModeExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604D2A780246001B8D5D /* OWPresentationalModeExtended.swift */; };
 		9E0C60542A780246001B8D5D /* OWScreenPresentStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604E2A780246001B8D5D /* OWScreenPresentStyle.swift */; };
 		9E0C60552A780246001B8D5D /* OWScreenPushStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604F2A780246001B8D5D /* OWScreenPushStyle.swift */; };
+		9E0C60582A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */; };
 		9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */; };
 		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
 		9E2857B22A14DBBD0066D726 /* OWLoaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */; };
@@ -1856,6 +1857,7 @@
 		9E0C604D2A780246001B8D5D /* OWPresentationalModeExtended.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPresentationalModeExtended.swift; sourceTree = "<group>"; };
 		9E0C604E2A780246001B8D5D /* OWScreenPresentStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPresentStyle.swift; sourceTree = "<group>"; };
 		9E0C604F2A780246001B8D5D /* OWScreenPushStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPushStyle.swift; sourceTree = "<group>"; };
+		9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPushOverFullScreenAnimationTransitioning.swift; sourceTree = "<group>"; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
 		9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWLoaderButton.swift; sourceTree = "<group>"; };
@@ -2816,6 +2818,7 @@
 		3D08E0562874951D00E6F1AC /* Infra */ = {
 			isa = PBXGroup;
 			children = (
+				9E0C60562A7A9AFC001B8D5D /* TransitionAnimations */,
 				3DCAE3EE29D2FA7F005B9189 /* Routers */,
 				3DF95BD227CE546A0008A380 /* OWPresentable.swift */,
 				3DE0FE4427D75A9E0097B17B /* OWShowable.swift */,
@@ -5364,6 +5367,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		9E0C60562A7A9AFC001B8D5D /* TransitionAnimations */ = {
+			isa = PBXGroup;
+			children = (
+				9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */,
+			);
+			path = TransitionAnimations;
+			sourceTree = "<group>";
+		};
 		9E2857B02A14DBA90066D726 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -6732,6 +6743,7 @@
 				44F247A52379B23100B36F12 /* SPBaseScrollView.swift in Sources */,
 				3D20A39127B0219A003F8513 /* OWConstraintRelatableTarget.swift in Sources */,
 				3DB3D17A281FC60C008654CF /* SPLogLevel.swift in Sources */,
+				9E0C60582A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift in Sources */,
 				3DA264762951E3B200688FFF /* OWNetworkEventMonitor.swift in Sources */,
 				2473A2752A49B7530086B339 /* OWVersion.swift in Sources */,
 				8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */,

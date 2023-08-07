@@ -48,7 +48,7 @@ class OWLoaderButton: UIButton {
         } else {
             spinner.stopAnimating()
             titleLabel?.alpha = 1
-            imageView?.alpha = 0
+            imageView?.alpha = 1
             isEnabled = true
         }
     }

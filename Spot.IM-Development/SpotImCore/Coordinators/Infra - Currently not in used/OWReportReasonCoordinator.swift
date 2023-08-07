@@ -62,7 +62,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             router.setRoot(reportReasonVC, animated: false, dismissCompletion: reportReasonPopped)
         } else {
             router.push(reportReasonVC,
-                        pushStyle: .presentStyle,
+                        pushStyle: .present,
                         animated: true,
                         popCompletion: reportReasonPopped)
         }
@@ -294,7 +294,7 @@ fileprivate extension OWReportReasonCoordinator {
                 if hasOnlyOneViewController {
                     router.dismiss(animated: true, completion: self.reportReasonPopped)
                 } else {
-                    router.pop(popStyle: .dismissStyle, animated: true)
+                    router.pop(popStyle: .dismiss, animated: true)
                 }
             })
             .disposed(by: disposeBag)
