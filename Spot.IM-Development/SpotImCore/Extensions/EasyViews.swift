@@ -81,10 +81,6 @@ extension UIView {
 }
 
 extension UILabel {
-    @discardableResult func font(_ font: UIFont) -> Self {
-        self.font = font
-        return self
-    }
 
     @discardableResult func minimumFontSize(_ size: CGFloat) -> UILabel {
         self.minimumScaleFactor = size / self.font.pointSize
@@ -160,10 +156,6 @@ extension UILabel {
 }
 
 extension UIButton {
-    @discardableResult func font(_ font: UIFont) -> Self {
-        self.titleLabel?.font = font
-        return self
-    }
 
     @discardableResult func textColor(_ color: UIColor, forState state: UIControl.State = .normal) -> Self {
         self.setTitleColor(color, for: state)
@@ -207,16 +199,6 @@ extension UIButton {
 
     @discardableResult func setTitle(_ title: String?, state: UIControl.State) -> Self {
         self.setTitle(title, for: state)
-        return self
-    }
-
-    @discardableResult func setTitleColor(_ color: UIColor?, state: UIControl.State) -> Self {
-        self.setTitleColor(color, for: state)
-        return self
-    }
-
-    @discardableResult func setTitleFont(_ font: UIFont?) -> Self {
-        self.titleLabel?.font = font
         return self
     }
 
@@ -359,11 +341,6 @@ extension UITextView {
         return self
     }
 
-    @discardableResult func font(_ font: UIFont) -> Self {
-        self.font = font
-        return self
-    }
-
     @discardableResult func textColor(_ textColor: UIColor) -> Self {
         self.textColor = textColor
         return self
@@ -371,6 +348,11 @@ extension UITextView {
 
     @discardableResult func textContainerInset(_ textContainerInset: UIEdgeInsets) -> Self {
         self.textContainerInset = textContainerInset
+        return self
+    }
+
+    @discardableResult func textAlignment(_ textAlignment: NSTextAlignment) -> Self {
+        self.textAlignment = textAlignment
         return self
     }
 }
@@ -386,13 +368,13 @@ extension UIStackView {
         return self
     }
 
-    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
-        self.spacing = spacing
+    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
+        self.distribution = distribution
         return self
     }
 
-    @discardableResult func distribution(_ distribution: UIStackView.Distribution) -> Self {
-        self.distribution = distribution
+    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
+        self.spacing = spacing
         return self
     }
 }

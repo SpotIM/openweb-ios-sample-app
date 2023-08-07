@@ -23,6 +23,9 @@
 "Read More" = " عرض المزيد ";
 "Read Less" = " عرض اقل ";
 "OK" = "OK";
+"Yes" = "نعم";
+"No" = "لا";
+"Close editor?" = "Close editor?";
 "Log Out" = "تسجيل الخروج";
 "Log In" = "تسجيل الدخول";
 "Cancel" = "الغاء";

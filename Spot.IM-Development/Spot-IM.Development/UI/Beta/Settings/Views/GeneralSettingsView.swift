@@ -20,6 +20,7 @@ class GeneralSettingsView: UIView {
         static let segmentedArticleHeaderStyleIdentifier = "article_header_style"
         static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
+        static let segmentedStatusBarStyleIdentifier = "status_bar_style"
         static let segmentedModalStyleIdentifier = "modal_style"
         static let segmentedInitialSortIdentifier = "initial_sort"
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
@@ -79,6 +80,15 @@ class GeneralSettingsView: UIView {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedStatusBarStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.statusBarStyleTitle
+        let items = viewModel.outputs.statusBarStyleSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedStatusBarStyleIdentifier,
                                        items: items)
     }()
 
@@ -187,6 +197,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
+        stackView.addArrangedSubview(segmentedStatusBarStyle)
         stackView.addArrangedSubview(segmentedModalStyle)
         stackView.addArrangedSubview(segmentedInitialSort)
         stackView.addArrangedSubview(segmentedFontGroupType)
@@ -197,8 +208,8 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(textFieldArticleURL)
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
-
         viewModel.outputs.articleHeaderStyle
             .map { $0.index }
             .bind(to: segmentedArticleHeaderStyle.rx.selectedSegmentIndex)
@@ -214,6 +225,10 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.themeModeIndex
             .bind(to: segmentedThemeMode.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.statusBarStyleIndex
+            .bind(to: segmentedStatusBarStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.modalStyleIndex
@@ -251,6 +266,10 @@ fileprivate extension GeneralSettingsView {
 
         segmentedThemeMode.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.themeModeSelectedIndex)
+            .disposed(by: disposeBag)
+
+        segmentedStatusBarStyle.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.statusBarStyleSelectedIndex)
             .disposed(by: disposeBag)
 
         segmentedModalStyle.rx.selectedSegmentIndex

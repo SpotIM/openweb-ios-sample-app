@@ -17,6 +17,7 @@ protocol GeneralSettingsViewModelingInputs {
     var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
+    var statusBarStyleSelectedIndex: PublishSubject<Int> { get }
     var modalStyleSelectedIndex: PublishSubject<Int> { get }
     var initialSortSelectedIndex: PublishSubject<Int> { get }
     var fontGroupTypeSelectedIndex: BehaviorSubject<Int> { get }
@@ -34,6 +35,8 @@ protocol GeneralSettingsViewModelingOutputs {
     var readOnlySettings: [String] { get }
     var themeModeTitle: String { get }
     var themeModeSettings: [String] { get }
+    var statusBarStyleTitle: String { get }
+    var statusBarStyleSettings: [String] { get }
     var modalStyleTitle: String { get }
     var modalStyleSettings: [String] { get }
     var initialSortTitle: String { get }
@@ -43,6 +46,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var elementsCustomizationStyleIndex: Observable<Int> { get }
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
+    var statusBarStyleIndex: Observable<Int> { get }
     var modalStyleIndex: Observable<Int> { get }
     var initialSortIndex: Observable<Int> { get }
     var fontGroupTypeIndex: Observable<Int> { get }
@@ -83,6 +87,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
+    var statusBarStyleSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
     var initialSortSelectedIndex = PublishSubject<Int>()
     var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: 0)
@@ -90,7 +95,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var articleAssociatedSelectedURL = PublishSubject<String>()
     var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
-    var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.defaultLocaleIndex)
+    var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
@@ -126,19 +131,23 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var readOnlyModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex)
+        return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.default.index)
     }
 
     var themeModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.defaultIndex)
+        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index)
+    }
+
+    var statusBarStyleIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .statusBarStyleIndex, defaultValue: OWStatusBarEnforcement.default.index)
     }
 
     var modalStyleIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.defaultIndex)
+        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: OWModalPresentationStyle.default.index)
     }
 
     var initialSortIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.defaultIndex)
+        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index)
     }
 
     var fontGroupTypeIndex: Observable<Int> {
@@ -195,7 +204,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                 case .useServerConfig:
                     return 1
                 default:
-                    return OWLocaleStrategy.defaultLocaleIndex
+                    return OWLocaleStrategy.default.index
                 }
             }
             .asObservable()
@@ -271,6 +280,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("ThemeMode", comment: "")
     }()
 
+    lazy var statusBarStyleTitle: String = {
+        return NSLocalizedString("StatusBarStyle", comment: "")
+    }()
+
     lazy var articleHeaderStyleSettings: [String] = {
         let _none = NSLocalizedString("None", comment: "")
         let _regular = NSLocalizedString("Regular", comment: "")
@@ -292,6 +305,18 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _dark = NSLocalizedString("Dark", comment: "")
 
         return [_default, _light, _dark]
+    }()
+
+    lazy var statusBarStyleSettings: [String] = {
+        let _matchTheme = NSLocalizedString("MatchTheme", comment: "")
+        let _light = NSLocalizedString("Light", comment: "")
+        let _dark = NSLocalizedString("Dark", comment: "")
+
+        if #available(iOS 13.0, *) {
+            return [_matchTheme, _light, _dark]
+        } else {
+            return [_matchTheme, _light]
+        }
     }()
 
     lazy var modalStyleTitle: String = {
@@ -396,6 +421,12 @@ extension GeneralSettingsVM {
             .setValues(key: UserDefaultsProvider.UDKey<Int>.themeModeIndex))
             .disposed(by: disposeBag)
 
+        statusBarStyleSelectedIndex
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.statusBarStyleIndex))
+            .disposed(by: disposeBag)
+
         modalStyleSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
@@ -425,6 +456,14 @@ extension GeneralSettingsVM {
                 guard let self = self else { return }
                 var customizations = self.manager.ui.customizations
                 customizations.themeEnforcement = .themeStyle(fromIndex: index)
+            })
+            .disposed(by: disposeBag)
+
+        statusBarStyleSelectedIndex // 0. matchTheme 1. light 2. dark
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                var customizations = self.manager.ui.customizations
+                customizations.statusBarEnforcement = .statusBarStyle(fromIndex: index)
             })
             .disposed(by: disposeBag)
 

@@ -16,7 +16,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let commentingCTAHeight: CGFloat = 72
         static let horizontalOffset: CGFloat = 16.0
         static let btnFullConversationCornerRadius: CGFloat = 6
-        static let btnFullConversationFontSize: CGFloat = 15
         static let btnFullConversationTextPadding: CGFloat = 12
         static let btnFullConversationTopPadding: CGFloat = 24
         static let bottomPadding: CGFloat = 24
@@ -55,7 +54,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
+            .wrapContent()
     }()
+
     fileprivate var commentingCTAZeroHeightConstraint: OWConstraint? = nil
 
     fileprivate lazy var tableView: UITableView = {
@@ -84,8 +85,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.btnFullConversationFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyContext))
     }()
+
     fileprivate var ctaZeroHeightConstraint: OWConstraint? = nil
 
     fileprivate lazy var footerTopDevider: UIView = {
@@ -203,7 +205,6 @@ fileprivate extension OWPreConversationView {
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom).offset(Metrics.commentingCTATopPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-            make.height.equalTo(0)
         }
 
         self.addSubview(tableView)
@@ -273,39 +274,40 @@ fileprivate extension OWPreConversationView {
 
         guard !viewModel.outputs.shouldShowComapactView else { return }
 
-        viewModel.outputs
-            .communityQuestionViewModel.outputs
-            .shouldShowView
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.communityQuestionView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.preConversationSummary.OWSnp.bottom).offset(isVisible ? Metrics.communityQuestionTopPadding : 0)
-                }
-                self.communityQuestionBottomDevider.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.communityQuestionView.OWSnp.bottom).offset(isVisible ? Metrics.communityQuestionDeviderPadding : 0)
-                    make.height.equalTo(isVisible ? Metrics.separatorHeight : 0)
-                }
-            })
-            .disposed(by: disposeBag)
-
-        viewModel
+        let shouldShowQuestion = viewModel
             .outputs.communityQuestionViewModel
             .outputs.shouldShowView
-            .map { !$0 }
-            .bind(to: communityQuestionBottomDevider.rx.isHidden)
-            .disposed(by: disposeBag)
 
-        viewModel
+        let shouldShowGuidelines = viewModel
             .outputs.communityGuidelinesViewModel
             .outputs.shouldShowView
+
+        Observable.combineLatest(shouldShowQuestion, shouldShowGuidelines)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shouldShow in
+            .do(onNext: { [weak self] (shouldShowQuestion, shouldShowGuidelines) in
+                // Update Question and Guidelines constraints
                 guard let self = self else { return }
+                self.communityQuestionView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.preConversationSummary.OWSnp.bottom).offset(shouldShowQuestion ? Metrics.communityQuestionTopPadding : 0)
+                }
                 self.communityGuidelinesView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(shouldShow ? Metrics.communityQuestionDeviderPadding : 0)
+                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(shouldShowGuidelines ? Metrics.communityQuestionDeviderPadding : 0)
                 }
             })
+            .flatMap { (shouldShowQuestion, shouldShowGuidelines) -> Observable<Bool> in
+                // Return devider Obsevable
+                return Observable.just(shouldShowQuestion && shouldShowGuidelines)
+            }
+            .do(onNext: { [weak self] shouldShowDevider in
+                // Update devider constraints
+                guard let self = self else { return }
+                self.communityQuestionBottomDevider.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.communityQuestionView.OWSnp.bottom).offset(shouldShowDevider ? Metrics.communityQuestionDeviderPadding : 0)
+                    make.height.equalTo(shouldShowDevider ? Metrics.separatorHeight : 0)
+                }
+                self.communityQuestionBottomDevider.isHidden = !shouldShowDevider
+            })
+            .subscribe()
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationCTAButtonTitle
@@ -344,7 +346,6 @@ fileprivate extension OWPreConversationView {
                 guard let self = self else { return }
                 self.commentingCTAView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityGuidelinesView.OWSnp.bottom).offset(shouldShow ? Metrics.commentingCTATopPadding : 0)
-                    make.height.equalTo(shouldShow ? Metrics.commentingCTAHeight : 0)
                 }
             })
             .disposed(by: disposeBag)
