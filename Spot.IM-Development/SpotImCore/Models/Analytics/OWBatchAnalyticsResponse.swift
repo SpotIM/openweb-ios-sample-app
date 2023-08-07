@@ -9,10 +9,10 @@
 import Foundation
 
 struct OWBatchAnalyticsResponse: Codable {
-    var failures: [BatchError]?
+    var failures: [OWBatchError]?
 }
 
-struct BatchError: Codable {
+struct OWBatchError: Codable {
     var index: Int
     var error: String
 }
