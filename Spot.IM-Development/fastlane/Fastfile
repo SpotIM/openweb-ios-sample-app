@@ -37,7 +37,12 @@ platform :ios do
     scan(
       scheme: "Spot-IM.DevelopmentTests",
       workspace: "Spot-IM.Development.xcworkspace",
-      device: "iPhone 12 Pro",
+      device: "iPhone 13 Pro",
+    )
+    scan(
+      scheme: "OpenWebCoreTests",
+      workspace: "Spot-IM.Development.xcworkspace",
+      device: "iPhone 13 Pro",
     )
   end
 
