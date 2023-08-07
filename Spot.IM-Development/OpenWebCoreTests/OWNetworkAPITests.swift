@@ -43,7 +43,7 @@ final class OWNetworkAPITests: QuickSpec {
         describe("OWNetworkAPI") {
             it("should perform a successful request") {
                 let request = try! URLRequest(
-                    url: environment.baseURL.appending(path: MockUserEndpoint.userData.path),
+                    url: environment.baseURL.appendingPathComponent(MockUserEndpoint.userData.path),
                     method: .get
                 )
                 
