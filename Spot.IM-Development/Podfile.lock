@@ -57,8 +57,8 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 5.6.2)
   - Google-Mobile-Ads-SDK (= 8.0)
-  - Nimble
-  - Quick
+  - Nimble (~> 10.0.0)
+  - Quick (~> 5.0.1)
   - RxBlocking (~> 6.5.0)
   - RxCocoa (~> 6.5)
   - RxSwift (~> 6.5)
@@ -100,6 +100,6 @@ SPEC CHECKSUMS:
   RxTest: eb2d23adefc5a5ebf5779c7792fa3edfe6ebcc17
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: cbd34a94a87b2e68c26f22c57db0a4399631fea7
+PODFILE CHECKSUM: 1dc00e018accc9379d0ddaa4d524435888231527
 
 COCOAPODS: 1.11.2
