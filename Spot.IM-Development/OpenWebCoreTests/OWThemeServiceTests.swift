@@ -8,8 +8,6 @@
 
 import XCTest
 import RxSwift
-import RxTest
-import RxBlocking
 import Quick
 import Nimble
 
@@ -30,72 +28,44 @@ final class OWThemeServiceTests: QuickSpec {
 
         describe("OWThemeService") {
             it("should have an initial style") {
-                let scheduler = TestScheduler(initialClock: 0)
-                let observer = scheduler.createObserver(OWThemeStyle.self)
-
                 let themeStyleService = OWThemeStyleService()
-                themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
+                var observedStyle: OWThemeStyle?
 
-                scheduler.start()
+                themeStyleService.style.subscribe(onNext: { style in
+                    observedStyle = style
+                }).disposed(by: disposeBag)
 
-                expect(observer.events).to(equal([.next(0, .light)]))
+                expect(observedStyle).toEventually(equal(.light))
             }
 
             it("should allow for styles to be set") {
-                let scheduler = TestScheduler(initialClock: 0)
-                let observer = scheduler.createObserver(OWThemeStyle.self)
-
                 let themeStyleService = OWThemeStyleService()
-                themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
+                var observedStyles: [OWThemeStyle] = []
 
-                scheduler.scheduleAt(10) {
-                    themeStyleService.setStyle(style: .dark)
-                }
+                themeStyleService.style.subscribe(onNext: { style in
+                    observedStyles.append(style)
+                }).disposed(by: disposeBag)
 
-                scheduler.scheduleAt(20) {
-                    themeStyleService.setStyle(style: .light)
-                }
+                themeStyleService.setStyle(style: .dark)
+                expect(observedStyles).toEventually(contain([.light, .dark]), timeout: .seconds(1))
 
-                scheduler.start()
-
-                let expectedEvents: [Recorded<Event<OWThemeStyle>>] = [
-                    .next(0, .light),
-                    .next(10, .dark),
-                    .next(20, .light)
-                ]
-
-                expect(observer.events).to(equal(expectedEvents))
+                themeStyleService.setStyle(style: .light)
+                expect(observedStyles).toEventually(equal([.light, .dark, .light]), timeout: .seconds(1))
             }
 
             it("should enforce a style if applicable regardless of what is set") {
-                let scheduler = TestScheduler(initialClock: 0)
-                let observer = scheduler.createObserver(OWThemeStyle.self)
-
                 let themeStyleService = OWThemeStyleService()
-                themeStyleService.style.subscribe(observer).disposed(by: disposeBag)
+                var observedStyles: [OWThemeStyle] = []
 
-                scheduler.scheduleAt(10) {
-                    themeStyleService.setEnforcement(enforcement: .theme(.dark))
-                }
+                themeStyleService.style.subscribe(onNext: { style in
+                    observedStyles.append(style)
+                }).disposed(by: disposeBag)
 
-                scheduler.scheduleAt(20) {
-                    themeStyleService.setStyle(style: .light)
-                }
+                themeStyleService.setEnforcement(enforcement: .theme(.dark))
+                expect(observedStyles).toEventually(contain([.light, .dark]), timeout: .seconds(1))
 
-                scheduler.scheduleAt(30) {
-                    observer.onCompleted()
-                }
-
-                scheduler.start()
-
-                let expectedEvents: [Recorded<Event<OWThemeStyle>>] = [
-                    .next(0, .light),
-                    .next(10, .dark),
-                    // .next(20, .light) is NOT expected here due to enforcement of dark before.
-                    .completed(30)
-                ]
-
-                expect(observer.events).to(equal(expectedEvents))
+                themeStyleService.setStyle(style: .light)
+                expect(observedStyles).toEventually(equal([.light, .dark]), timeout: .seconds(1))
             }
         }
     }
