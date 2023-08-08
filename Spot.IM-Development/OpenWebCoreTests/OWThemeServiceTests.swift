@@ -14,7 +14,7 @@ import Nimble
 @testable import SpotImCore
 
 final class OWThemeServiceTests: QuickSpec {
-    
+
     override func spec() {
         var disposeBag: DisposeBag!
 

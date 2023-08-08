@@ -15,16 +15,16 @@ import Nimble
 
 @testable import SpotImCore
 
+fileprivate enum OWTestKey: String, OWRawableKey {
+    typealias T = String // swiftlint:disable:this type_name
+
+    case key1
+    case key2
+    case key3
+    case key4
+}
+
 final class OWPersistenceRxHelperTests: QuickSpec {
-    
-    private enum OWTestKey: String, OWRawableKey {
-        typealias T = String
-        
-        case key1
-        case key2
-        case key3
-        case key4
-    }
 
     override func spec() {
         describe("OWPersistenceRxHelper") {

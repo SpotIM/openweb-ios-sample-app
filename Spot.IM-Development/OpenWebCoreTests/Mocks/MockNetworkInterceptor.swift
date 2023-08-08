@@ -13,5 +13,5 @@ import RxBlocking
 @testable import SpotImCore
 
 class MockNetworkInterceptor: OWNetworkRequestInterceptor {
-    
+
 }
