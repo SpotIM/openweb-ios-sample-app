@@ -84,6 +84,8 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
     func conversation(postId: OWPostId, article: OWArticleProtocol,
@@ -126,6 +128,8 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
     func commentCreation(postId: OWPostId, article: OWArticleProtocol,
@@ -173,6 +177,8 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
     func commentThread(postId: OWPostId,
@@ -222,6 +228,8 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
 #if BETA
@@ -302,6 +310,8 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.preConversationView
             completion(.failure(error))
         })
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
     func conversation(postId: OWPostId,
@@ -337,6 +347,8 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.conversationView
             completion(.failure(error))
         })
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
     func commentCreation(postId: OWPostId,
@@ -389,6 +401,8 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.commentCreationView
             completion(.failure(error))
         })
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
     func reportReason(postId: OWPostId,
@@ -421,6 +435,8 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.missingImplementation
             completion(.failure(error))
         })
+
+        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
 #if BETA
@@ -489,5 +505,30 @@ fileprivate extension OWUILayer {
         case .partOfFlow:
             activeRouteringMode = .routering(routering: self.routering)
         }
+    }
+}
+
+fileprivate extension OWUILayer {
+    func event(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "",
+                layoutStyle: OWLayoutStyle(from: presentationalStyle),
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) {
+        let event = event(for: eventType, presentationalStyle: presentationalStyle)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
+    }
+
+    func sendStyleConfigureEvents(additionalSettings: OWAdditionalSettingsProtocol, presentationalStyle: OWPresentationalModeCompact) {
+        self.sendEvent(for: .configuredPreConversationStyle(style: additionalSettings.preConversationSettings.style), presentationalStyle: presentationalStyle)
+        self.sendEvent(for: .configuredCommentCreationStyle(style: additionalSettings.commentCreationSettings.style), presentationalStyle: presentationalStyle)
+        self.sendEvent(for: .configuredFullConversationStyle(style: additionalSettings.fullConversationSettings.style), presentationalStyle: presentationalStyle)
     }
 }
