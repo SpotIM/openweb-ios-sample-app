@@ -350,6 +350,7 @@
 		3D26B5BE28CE492A00A1DAD2 /* OWModalPresentationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */; };
 		3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */; };
 		3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */; };
+		3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */; };
 		3D3150502A4D929E00EF6575 /* OWAccessoryViewStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D31504F2A4D929E00EF6575 /* OWAccessoryViewStrategy.swift */; };
 		3D3150532A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3150522A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift */; };
 		3D3150562A4DD74000EF6575 /* OWRouteringModeInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3150552A4DD74000EF6575 /* OWRouteringModeInternal.swift */; };
@@ -962,7 +963,7 @@
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
 		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
 		F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */; };
-		F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift */; };
+		F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift */; };
 		F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */; };
 		F9529B362A7F01E70070EDC2 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */; };
 		F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */; };
@@ -1354,6 +1355,7 @@
 		3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWModalPresentationStyle.swift; sourceTree = "<group>"; };
 		3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentSSOAuthentication.swift; sourceTree = "<group>"; };
+		3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleServiceTests.swift; sourceTree = "<group>"; };
 		3D31504F2A4D929E00EF6575 /* OWAccessoryViewStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAccessoryViewStrategy.swift; sourceTree = "<group>"; };
 		3D3150522A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		3D3150552A4DD74000EF6575 /* OWRouteringModeInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouteringModeInternal.swift; sourceTree = "<group>"; };
@@ -2018,7 +2020,7 @@
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
 		F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringServiceTests.swift; sourceTree = "<group>"; };
 		F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelperTests.swift; sourceTree = "<group>"; };
-		F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests.swift; sourceTree = "<group>"; };
+		F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests_v1.swift; sourceTree = "<group>"; };
 		F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAPITests.swift; sourceTree = "<group>"; };
 		F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkInterceptor.swift; sourceTree = "<group>"; };
@@ -5905,11 +5907,12 @@
 			isa = PBXGroup;
 			children = (
 				F9529B372A7F01EC0070EDC2 /* Mocks */,
+				3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */,
 				F92DD7CC2A7E98F300A2BE5B /* OWThemeServiceTests.swift */,
 				F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */,
 				F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */,
 				F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */,
-				F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift */,
+				F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift */,
 				F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */,
 			);
 			path = OpenWebCoreTests;
@@ -7236,6 +7239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */,
 				F99EC4982A810DFD00099DB4 /* MockUser.swift in Sources */,
 				F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */,
 				F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */,
@@ -7244,7 +7248,7 @@
 				F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */,
 				F92DD7CD2A7E98F300A2BE5B /* OWThemeServiceTests.swift in Sources */,
 				F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */,
-				F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests.swift in Sources */,
+				F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift in Sources */,
 				F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
