@@ -16,7 +16,7 @@ import Nimble
 @testable import SpotImCore
 
 final class OWTimeMeasuringServiceTests: QuickSpec {
-    
+
     override func spec() {
         describe("OWTimeMeasuringService") {
             it("should measure time") {

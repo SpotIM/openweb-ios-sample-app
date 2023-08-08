@@ -10,5 +10,5 @@
 
 struct MockUser: Codable, Equatable {
     var name: String
-    var age : Int
+    var age: Int
 }
