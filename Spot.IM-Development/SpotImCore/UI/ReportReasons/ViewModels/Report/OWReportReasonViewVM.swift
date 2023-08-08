@@ -200,10 +200,11 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
-        self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
-                                              placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
-                                              charectersLimitEnabled: false,
-                                              isEditable: false)
+        let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
+                                          placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
+                                          charectersLimitEnabled: false,
+                                          isEditable: false)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers()
     }
 
