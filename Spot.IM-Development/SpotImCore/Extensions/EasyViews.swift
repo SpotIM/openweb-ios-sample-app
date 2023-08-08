@@ -365,6 +365,16 @@ extension UITextView {
         self.textAlignment = textAlignment
         return self
     }
+
+    @discardableResult func autocorrectionType(_ autocorrectionType: UITextAutocorrectionType) -> Self {
+        self.autocorrectionType = autocorrectionType
+        return self
+    }
+
+    @discardableResult func spellCheckingType(_ spellCheckingType: UITextSpellCheckingType) -> Self {
+        self.spellCheckingType = spellCheckingType
+        return self
+    }
 }
 
 extension UIStackView {

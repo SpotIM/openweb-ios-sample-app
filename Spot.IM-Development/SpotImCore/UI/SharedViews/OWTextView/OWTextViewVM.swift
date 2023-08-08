@@ -33,6 +33,7 @@ protocol OWTextViewViewModelingOutputs {
     var textViewText: Observable<String> { get }
     var charectersLimitEnabled: Bool { get }
     var isAutoExpandable: Bool { get }
+    var hasSuggestionsBar: Bool { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -47,6 +48,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
     let isEditable: Bool
     let isAutoExpandable: Bool
+    let hasSuggestionsBar: Bool
     var textViewMaxCharecters: Int
     var textViewMaxCharectersChange = PublishSubject<Int>()
 
@@ -99,18 +101,14 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
             .map { $0 > 0 }
     }
 
-    init(textViewMaxCharecters: Int = 0,
-         placeholderText: String,
-         textViewText: String = "",
-         charectersLimitEnabled: Bool,
-         isEditable: Bool,
-         isAutoExpandable: Bool = false) {
-        self.textViewMaxCharecters = textViewMaxCharecters
-        self.placeholderTextChange = BehaviorSubject(value: placeholderText)
-        self.textViewTextChange = BehaviorSubject(value: textViewText)
-        self.isEditable = isEditable
-        self.charectersLimitEnabled = charectersLimitEnabled
-        self.isAutoExpandable = isAutoExpandable
+    init(textViewData: OWTextViewData) {
+        self.textViewMaxCharecters = textViewData.textViewMaxCharecters
+        self.placeholderTextChange = BehaviorSubject(value: textViewData.placeholderText)
+        self.textViewTextChange = BehaviorSubject(value: textViewData.textViewText)
+        self.isEditable = textViewData.isEditable
+        self.charectersLimitEnabled = textViewData.charectersLimitEnabled
+        self.isAutoExpandable = textViewData.isAutoExpandable
+        self.hasSuggestionsBar = textViewData.hasSuggestionsBar
         self.setupObservers()
     }
 }
