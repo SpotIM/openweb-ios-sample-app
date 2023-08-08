@@ -64,10 +64,10 @@
             </objects>
             <point key="canvasLocation" x="585" y="1431"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Sample App Navigation Controller-->
         <scene sceneID="LwD-dU-fQI">
             <objects>
-                <navigationController id="McX-mg-5RD" sceneMemberID="viewController">
+                <navigationController id="McX-mg-5RD" customClass="SampleAppNavigationController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UlD-cN-qNW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

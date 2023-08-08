@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonVC: UIViewController {
+class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
         static let closeButtonSize: CGFloat = 40
 
@@ -19,7 +19,7 @@ class OWReportReasonVC: UIViewController {
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonView: OWReportReasonView = {
         let reportReasonView = OWReportReasonView(viewModel: viewModel.outputs.reportReasonViewViewModel)
@@ -58,6 +58,10 @@ class OWReportReasonVC: UIViewController {
         super.viewWillDisappear(animated)
         // Enable navigation back by swipe
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -127,6 +131,8 @@ fileprivate extension OWReportReasonVC {
                 self.setupNavControllerUI(currentStyle)
             })
             .disposed(by: disposeBag)
+
+        self.setupStatusBarStyleUpdaterObservers()
 
         closeButton.rx.tap
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
