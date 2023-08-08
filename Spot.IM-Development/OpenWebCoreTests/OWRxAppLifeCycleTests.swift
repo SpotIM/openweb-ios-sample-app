@@ -17,7 +17,7 @@ import Nimble
 @testable import SpotImCore
 
 final class OWRxAppLifeCycleTests: QuickSpec {
-    
+
     override func spec() {
         describe("OWRxAppLifeCycle") {
             var disposeBag: DisposeBag!
