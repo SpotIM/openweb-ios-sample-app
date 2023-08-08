@@ -15,26 +15,27 @@ import Nimble
 class OWThemeStyleServiceTests: QuickSpec {
 
     override func spec() {
-        // `sut` stands for `Subject Under Test`
-        var sut: OWThemeStyleService!
-        var disposeBag: DisposeBag!
-        var stylesResults: [OWThemeStyle]!
-
-        beforeEach {
-            sut = OWThemeStyleService()
-            disposeBag = DisposeBag()
-            stylesResults = []
-
-            sut.style
-                .subscribe(onNext: { style in
-                    stylesResults.append(style)
-                })
-                .disposed(by: disposeBag)
-        }
-
-        afterEach {}
-
         describe("theme style service") {
+
+            // `sut` stands for `Subject Under Test`
+            var sut: OWThemeStyleService!
+            var disposeBag: DisposeBag!
+            var stylesResults: [OWThemeStyle]!
+
+            beforeEach {
+                sut = OWThemeStyleService()
+                disposeBag = DisposeBag()
+                stylesResults = []
+
+                sut.style
+                    .subscribe(onNext: { style in
+                        stylesResults.append(style)
+                    })
+                    .disposed(by: disposeBag)
+            }
+
+            afterEach {}
+
             context("1. when initially interacting with the service without `enforcment` changes") {
                 it("should have a `light` style") {
                     expect(sut.currentStyle).to(equal(.light))
