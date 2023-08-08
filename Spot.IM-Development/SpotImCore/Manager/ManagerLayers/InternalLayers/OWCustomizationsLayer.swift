@@ -100,8 +100,8 @@ fileprivate extension OWCustomizationsLayer {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: "", // ??
-                layoutStyle: .view, // TODO: !!??
+                articleUrl: "",
+                layoutStyle: .none,
                 component: .none)
     }
 

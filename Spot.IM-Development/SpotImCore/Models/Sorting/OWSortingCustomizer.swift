@@ -42,8 +42,8 @@ fileprivate extension OWSortingCustomizer {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: "", // ??
-                layoutStyle: .view, // TODO: !!??
+                articleUrl: "",
+                layoutStyle: .none,
                 component: .none)
     }
 
