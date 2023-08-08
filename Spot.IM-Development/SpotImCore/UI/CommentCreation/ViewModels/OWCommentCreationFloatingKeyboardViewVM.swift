@@ -96,11 +96,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         self._commentCreationData.onNext(commentCreationData)
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
-        self.textViewVM = OWTextViewViewModel(placeholderText: Metrics.textViewPlaceholderText,
-                                              textViewText: "",
-                                              charectersLimitEnabled: false,
-                                              isEditable: true,
-                                              isAutoExpandable: true)
+        let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
+                                          charectersLimitEnabled: false,
+                                          isEditable: true,
+                                          isAutoExpandable: true,
+                                          hasSuggestionsBar: false)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         commentType = commentCreationData.commentCreationType
 
         // Setting accessoryViewStrategy

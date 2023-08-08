@@ -37,14 +37,16 @@ class OWTextView: UIView {
 
     fileprivate lazy var textView: UITextView = {
         return UITextView()
-                .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
-                                          left: Metrics.textViewLeadingTrailingPadding,
-                                          bottom: Metrics.textViewTopBottomPadding,
-                                          right: Metrics.textViewLeadingTrailingPadding))
-                .enforceSemanticAttribute()
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
+                                      left: Metrics.textViewLeadingTrailingPadding,
+                                      bottom: Metrics.textViewTopBottomPadding,
+                                      right: Metrics.textViewLeadingTrailingPadding))
+            .enforceSemanticAttribute()
+            .spellCheckingType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
+            .autocorrectionType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
     }()
 
     fileprivate lazy var charectersCountLabel: UILabel = {
@@ -207,7 +209,7 @@ fileprivate extension OWTextView {
     }
 }
 
-extension UITextView {
+fileprivate extension UITextView {
     func newHeight(withBaseHeight baseHeight: CGFloat, maxLines: Int) -> CGFloat {
         // Calculate the required size of the textview
         let fixedWidth = frame.size.width
