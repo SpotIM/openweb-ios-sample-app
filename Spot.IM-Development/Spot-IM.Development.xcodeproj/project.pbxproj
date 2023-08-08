@@ -351,6 +351,7 @@
 		3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */; };
 		3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */; };
 		3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */; };
+		3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */; };
 		3D3150502A4D929E00EF6575 /* OWAccessoryViewStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D31504F2A4D929E00EF6575 /* OWAccessoryViewStrategy.swift */; };
 		3D3150532A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3150522A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift */; };
 		3D3150562A4DD74000EF6575 /* OWRouteringModeInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3150552A4DD74000EF6575 /* OWRouteringModeInternal.swift */; };
@@ -1356,6 +1357,7 @@
 		3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentSSOAuthentication.swift; sourceTree = "<group>"; };
 		3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleServiceTests.swift; sourceTree = "<group>"; };
+		3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests.swift; sourceTree = "<group>"; };
 		3D31504F2A4D929E00EF6575 /* OWAccessoryViewStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAccessoryViewStrategy.swift; sourceTree = "<group>"; };
 		3D3150522A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		3D3150552A4DD74000EF6575 /* OWRouteringModeInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouteringModeInternal.swift; sourceTree = "<group>"; };
@@ -5908,6 +5910,7 @@
 			children = (
 				F9529B372A7F01EC0070EDC2 /* Mocks */,
 				3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */,
+				3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */,
 				F92DD7CC2A7E98F300A2BE5B /* OWThemeServiceTests.swift */,
 				F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */,
 				F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */,
@@ -7249,6 +7252,7 @@
 				F92DD7CD2A7E98F300A2BE5B /* OWThemeServiceTests.swift in Sources */,
 				F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */,
 				F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift in Sources */,
+				3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */,
 				F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
