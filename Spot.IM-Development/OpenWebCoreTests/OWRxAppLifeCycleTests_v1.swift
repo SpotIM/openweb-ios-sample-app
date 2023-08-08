@@ -16,7 +16,7 @@ import Nimble
 
 @testable import SpotImCore
 
-final class OWRxAppLifeCycleTests: QuickSpec {
+final class OWRxAppLifeCycleTests_v1: QuickSpec {
 
     override func spec() {
         describe("OWRxAppLifeCycle") {
