@@ -10,12 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonCancelVC: UIViewController {
+class OWReportReasonCancelVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     fileprivate let viewModel: OWReportReasonCancelViewModeling
+    let disposeBag = DisposeBag()
 
     init(reportReasonCancelViewModel: OWReportReasonCancelViewModeling) {
         self.viewModel = reportReasonCancelViewModel
@@ -25,6 +26,11 @@ class OWReportReasonCancelVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -37,5 +43,9 @@ fileprivate extension OWReportReasonCancelVC {
         reportReasonCancelView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }

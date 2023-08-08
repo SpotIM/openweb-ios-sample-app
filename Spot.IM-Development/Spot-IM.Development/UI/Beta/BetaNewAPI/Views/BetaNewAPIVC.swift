@@ -165,6 +165,8 @@ class BetaNewAPIVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+        // Re-setuping navigation controller colors to be set by the regular OS theme mode
+        setupNavControllerUI()
     }
 
     override func loadView() {
@@ -200,8 +202,6 @@ fileprivate extension BetaNewAPIVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-
-        setupNavControllerUI()
 
         // Adding scroll view
         view.addSubview(scrollView)

@@ -35,6 +35,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
+    fileprivate lazy var postId = OWManager.manager.postId
+
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
         switch commentCreationData.settings.commentCreationSettings.style {
@@ -48,10 +50,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             return commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
         }
         return commentTextAfterTapObservable
-            .map { !$0.isEmpty }
-            .flatMap { [weak self] hasText -> Observable<Void> in
+            .flatMap { [weak self] commentText -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                guard hasText else { return Observable.just(()) }
+                let hasText = !commentText.isEmpty
+                guard hasText else {
+                    self.clearCachedCommentIfNeeded()
+                    return Observable.just(())
+                }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Yes"), type: OWCloseEditorAlert.yes),
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
@@ -66,7 +71,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         case .selected(let action):
                             switch action.type {
                             case OWCloseEditorAlert.yes:
-                                // TODO - save comment to cache
+                                self.cacheComment(text: commentText)
                                 return Observable.just(())
                             default:
                                 return Observable.empty()
@@ -109,6 +114,36 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
 
+    }
+
+    func cacheComment(text commentText: String) {
+        guard let postId = self.postId else { return }
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+
+        switch commentCreationData.commentCreationType {
+        case .comment:
+            commentsCacheService[.comment(postId: postId)] = commentText
+        case .replyToComment(let originComment):
+            guard let originCommentId = originComment.id else { return }
+            commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
+        case .edit:
+            // We are not caching edit comment text
+            break
+        }
+    }
+
+    func clearCachedCommentIfNeeded() {
+        guard let postId = self.postId else { return }
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+        switch commentCreationData.commentCreationType {
+        case .comment:
+            commentsCacheService.remove(forKey: .comment(postId: postId))
+        case .replyToComment(originComment: let originComment):
+            guard let originCommentId = originComment.id else { return }
+            commentsCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
+        case .edit:
+            break
+        }
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
