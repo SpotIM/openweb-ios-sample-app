@@ -28,6 +28,16 @@ class OWFontBook: OWFontBookProtocol, OWFontBookProtocolConfigurable {
     static let shared: OWFontBookProtocol & OWFontBookProtocolConfigurable = OWFontBook()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var fontFamilyGroup: OWFontGroupFamily = .default
+    fileprivate let preferredContentSizeCategory: UIContentSizeCategory = {
+        switch UIApplication.shared.preferredContentSizeCategory {
+        case .extraSmall, .small, .medium:
+            return .large
+        case .accessibilityExtraLarge, .accessibilityExtraExtraLarge, .accessibilityExtraExtraExtraLarge:
+            return .accessibilityLarge
+        default:
+            return UIApplication.shared.preferredContentSizeCategory
+        }
+    }()
 
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -97,7 +107,12 @@ fileprivate extension OWFontBook {
     }
 
     func adjustDynamic(font: UIFont, style: UIFont.TextStyle) -> UIFont {
-        return UIFontMetrics(forTextStyle: style).scaledFont(for: font)
+        let traitCollection = UITraitCollection(preferredContentSizeCategory: self.preferredContentSizeCategory)
+        let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: traitCollection)
+        let fontMetrics = UIFontMetrics(forTextStyle: style)
+        let font = font.withSize(fontDescriptor.pointSize)
+
+        return fontMetrics.scaledFont(for: font, maximumPointSize: fontDescriptor.pointSize, compatibleWith: traitCollection)
     }
 
     func fontFilename(family: OWFontGroupFamily, style: OWFontStyle) -> String {
