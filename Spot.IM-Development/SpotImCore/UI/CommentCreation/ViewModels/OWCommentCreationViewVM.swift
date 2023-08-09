@@ -31,8 +31,14 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
+
+    // This is the original commentCreationData since
+    // the commentCreationData Can be chaged by sub VMs
+    fileprivate var originCommentCreationData: OWCommentCreationRequiredData
+
     fileprivate var commentCreationData: OWCommentCreationRequiredData
 
     fileprivate lazy var postId = OWManager.manager.postId
@@ -114,6 +120,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     init(commentCreationData: OWCommentCreationRequiredData,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          viewableMode: OWViewableMode) {
+        self.originCommentCreationData = commentCreationData
         self.commentCreationData = commentCreationData
         self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
@@ -123,7 +130,14 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
 fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
-
+        if case .floatingKeyboard = commentCreationData.settings.commentCreationSettings.style {
+            commentCreationFloatingKeyboardViewVm.outputs.resetTypeToNewCommentChanged
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.commentCreationData.commentCreationType = .comment
+                })
+                .disposed(by: disposeBag)
+        }
     }
 
     func cacheComment(text commentText: String) {
@@ -133,12 +147,12 @@ fileprivate extension OWCommentCreationViewViewModel {
         switch commentCreationData.commentCreationType {
         case .comment:
             commentsCacheService[.comment(postId: postId)] = commentText
+            commentsCacheService[.edit(postId: postId)] = nil
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
-        case .edit(comment: let originComment):
-            guard let originCommentId = originComment.id else { return }
-            commentsCacheService[.edit(postId: postId, commentId: originCommentId)] = commentText
+        case .edit:
+            commentsCacheService[.edit(postId: postId)] = commentText
         }
     }
 
