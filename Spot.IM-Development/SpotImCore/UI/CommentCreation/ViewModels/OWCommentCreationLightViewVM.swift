@@ -158,11 +158,5 @@ fileprivate extension OWCommentCreationLightViewViewModel {
             .map { !$0.isEmpty }
             .bind(to: footerViewModel.inputs.ctaEnabled)
             .disposed(by: disposeBag)
-
-        footerViewModel.outputs.performCtaAction
-            .subscribe(onNext: { _ in
-                // TODO - handle post / edit comment
-            })
-            .disposed(by: disposeBag)
     }
 }
