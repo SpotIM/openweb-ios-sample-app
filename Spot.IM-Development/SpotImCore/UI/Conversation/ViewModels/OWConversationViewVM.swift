@@ -1159,9 +1159,9 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
-                      let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(_commentsPresentationData))
+                      let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
                 else { return }
-                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(_commentsPresentationData)) == nil else {
+                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
                     // making sure we are not adding an existing reply
                     return
                 }

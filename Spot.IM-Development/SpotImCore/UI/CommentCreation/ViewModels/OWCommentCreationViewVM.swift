@@ -65,7 +65,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 ]
                 return self.servicesProvider.presenterService()
                     // TODO - Localization
-                    .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: viewableMode)
+                    .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: self.viewableMode)
                     .flatMap { result -> Observable<Void> in
                         switch result {
                         case .completion:
