@@ -30,8 +30,6 @@ class OWFontBook: OWFontBookProtocol, OWFontBookProtocolConfigurable {
     fileprivate var fontFamilyGroup: OWFontGroupFamily = .default
     fileprivate let preferredContentSizeCategory: UIContentSizeCategory = {
         switch UIApplication.shared.preferredContentSizeCategory {
-        case .extraSmall, .small, .medium:
-            return .large
         case .accessibilityExtraLarge, .accessibilityExtraExtraLarge, .accessibilityExtraExtraExtraLarge:
             return .accessibilityLarge
         default:
