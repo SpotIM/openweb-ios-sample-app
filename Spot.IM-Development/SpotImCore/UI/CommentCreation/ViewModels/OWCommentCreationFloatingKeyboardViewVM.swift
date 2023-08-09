@@ -13,7 +13,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var closeWithDelay: PublishSubject<Void> { get }
     var closeInstantly: PublishSubject<String> { get }
     var ctaTap: PublishSubject<Void> { get }
-    var textBeforeClosedChanged: PublishSubject<String> { get }
+    var textBeforeClosedChange: PublishSubject<String> { get }
     var resetTypeToNewCommentChange: PublishSubject<Void> { get }
 }
 
@@ -27,8 +27,9 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var performCtaAction: Observable<Void> { get }
     var closedWithDelay: Observable<Void> { get }
-    var textBeforeClosed: Observable<String> { get }
+    var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
+    var resetTypeToNewCommentChanged: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -57,7 +58,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     let servicesProvider: OWSharedServicesProviding
     fileprivate var commentCreationData: OWCommentCreationRequiredData
 
-    var commentType: OWCommentCreationTypeInternal = .comment
+    var commentType: OWCommentCreationTypeInternal {
+        return commentCreationData.commentCreationType
+    }
+
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeInstantly = PublishSubject<String>()
@@ -69,14 +73,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }
 
     var resetTypeToNewCommentChange = PublishSubject<Void>()
-    var resetTypeToNewComment: Observable<Void> {
+    var resetTypeToNewCommentChanged: Observable<Void> {
         return resetTypeToNewCommentChange
             .asObservable()
     }
 
-    var textBeforeClosedChanged = PublishSubject<String>()
-    var textBeforeClosed: Observable<String> {
-        return textBeforeClosedChanged
+    var textBeforeClosedChange = PublishSubject<String>()
+    var textBeforeClosedChanged: Observable<String> {
+        return textBeforeClosedChange
             .asObservable()
     }
 
@@ -130,14 +134,21 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         } else {
             accessoryViewStrategy = OWAccessoryViewStrategy.default
         }
-        setupObservers()
 
-        self.setupInitialTextAndTypeIfNeeded()
+        setupInitialTextAndTypeFromCacheIfNeeded()
+
+        // updating inout commentCreationData so that CommentCreationViewVM will have the updated type
+        // after being changed in setupInitialTextAndTypeFromCacheIfNeeded
+        commentCreationData.commentCreationType = self.commentCreationData.commentCreationType
+
+        setupObservers()
     }
 
-    fileprivate func setupInitialTextAndTypeIfNeeded() {
+    fileprivate func setupInitialTextAndTypeFromCacheIfNeeded() {
         let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
         guard let postId = self.postId else { return }
+
+        let originalCommentType =  commentCreationData.commentCreationType
 
         if case .comment = commentCreationData.commentCreationType {
             if let lastCommentType = lastCommentTypeInCacheService.value(forKey: postId) {
@@ -145,21 +156,22 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             }
         }
 
-        commentType = commentCreationData.commentCreationType
-
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentType {
         case .comment:
             guard let text = commentsCacheService[.comment(postId: postId)] else { return }
-                initialText = text
+            initialText = text
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
                   let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
             else { return }
-                initialText = text
+            initialText = text
         case .edit(comment: let comment):
-            if let commentText = comment.text?.text {
+            if case .edit = originalCommentType,
+               let commentText = comment.text?.text {
                 initialText = commentText
+            } else if let text = commentsCacheService[.edit(postId: postId)] {
+                initialText = text
             }
         }
     }
@@ -169,11 +181,11 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
             switch commentType {
             case .comment:
-                lastCommentTypeInCacheService.insert(.comment, forKey: postId)
+                lastCommentTypeInCacheService.insert(.newComment, forKey: postId)
             case .edit(comment: let comment):
                 lastCommentTypeInCacheService.insert(.edit(comment: comment), forKey: postId)
             case .replyToComment(originComment: let originComment):
-                lastCommentTypeInCacheService.insert(.reply(comment: originComment), forKey: postId)
+                lastCommentTypeInCacheService.insert(.reply(originComment: originComment), forKey: postId)
             }
         }
     }
@@ -219,10 +231,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        resetTypeToNewComment
+        resetTypeToNewCommentChanged
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.commentType = .comment
                 self.commentCreationData.commentCreationType = .comment
                 self.updateCachedLastCommentType()
             })

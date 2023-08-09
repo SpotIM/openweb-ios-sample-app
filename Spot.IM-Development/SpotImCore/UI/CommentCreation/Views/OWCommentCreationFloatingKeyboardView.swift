@@ -364,13 +364,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
-            .withLatestFrom(viewModel.outputs.textBeforeClosed)
+            .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
         viewModel.outputs.closedWithDelay
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
-            .withLatestFrom(viewModel.outputs.textBeforeClosed)
+            .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
@@ -441,7 +441,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
 
-                self.viewModel.inputs.textBeforeClosedChanged.onNext(textViewText)
+                self.viewModel.inputs.textBeforeClosedChange.onNext(textViewText)
                 self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }

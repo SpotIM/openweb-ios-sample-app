@@ -8,14 +8,14 @@
 
 import Foundation
 
-enum OWCachedLastCommentTypeKey {
-    case comment
-    case reply(comment: OWComment)
+enum OWCachedLastCommentType {
+    case newComment
+    case reply(originComment: OWComment)
     case edit(comment: OWComment)
 }
 
-extension OWCachedLastCommentTypeKey: Equatable {
-    static func == (lhs: OWCachedLastCommentTypeKey, rhs: OWCachedLastCommentTypeKey) -> Bool {
+extension OWCachedLastCommentType: Equatable {
+    static func == (lhs: OWCachedLastCommentType, rhs: OWCachedLastCommentType) -> Bool {
         switch (lhs, rhs) {
         case (let .reply(lhsComment), let .reply(rhsComment)):
             return lhsComment.id == rhsComment.id
@@ -26,12 +26,12 @@ extension OWCachedLastCommentTypeKey: Equatable {
     }
 }
 
-extension OWCachedLastCommentTypeKey {
+extension OWCachedLastCommentType {
     var toCommentCreationTypeInternal: OWCommentCreationTypeInternal {
         switch self {
-        case .comment:
+        case .newComment:
             return .comment
-        case .reply(comment: let comment):
+        case .reply(originComment: let comment):
             return .replyToComment(originComment: comment)
         case .edit(comment: let comment):
             return .edit(comment: comment)
