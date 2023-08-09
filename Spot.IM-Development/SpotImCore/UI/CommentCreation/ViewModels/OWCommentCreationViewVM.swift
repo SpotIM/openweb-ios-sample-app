@@ -33,7 +33,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
+    fileprivate var commentCreationData: OWCommentCreationRequiredData
 
     fileprivate lazy var postId = OWManager.manager.postId
 
@@ -48,6 +48,16 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
+                .flatMap { [weak self] commentText -> Observable<Void> in
+                    guard let self = self else { return .empty() }
+                    let hasText = !commentText.isEmpty
+                    guard hasText else {
+                        self.clearCachedCommentIfNeeded()
+                        return Observable.just(())
+                    }
+                    self.cacheComment(text: commentText)
+                    return Observable.just(())
+                }
         }
         return commentTextAfterTapObservable
             .flatMap { [weak self] commentText -> Observable<Void> in
@@ -90,7 +100,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
-        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData, viewableMode: viewableMode)
+        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: &self.commentCreationData, viewableMode: viewableMode)
     }()
 
     lazy var commentType: OWCommentCreationTypeInternal = {
@@ -126,9 +136,9 @@ fileprivate extension OWCommentCreationViewViewModel {
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
-        case .edit:
-            // We are not caching edit comment text
-            break
+        case .edit(comment: let originComment):
+            guard let originCommentId = originComment.id else { return }
+            commentsCacheService[.edit(postId: postId, commentId: originCommentId)] = commentText
         }
     }
 

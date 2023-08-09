@@ -11,8 +11,10 @@ import RxSwift
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var closeWithDelay: PublishSubject<Void> { get }
-    var closeInstantly: PublishSubject<Void> { get }
+    var closeInstantly: PublishSubject<String> { get }
     var ctaTap: PublishSubject<Void> { get }
+    var textBeforeClosedChanged: PublishSubject<String> { get }
+    var resetTypeToNewCommentChange: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -25,6 +27,8 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var performCtaAction: Observable<Void> { get }
     var closedWithDelay: Observable<Void> { get }
+    var textBeforeClosed: Observable<String> { get }
+    var initialText: String { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -48,17 +52,31 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
-    let servicesProvider: OWSharedServicesProviding
-    fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
+    fileprivate lazy var postId = OWManager.manager.postId
 
-    let commentType: OWCommentCreationTypeInternal
+    let servicesProvider: OWSharedServicesProviding
+    fileprivate var commentCreationData: OWCommentCreationRequiredData
+
+    var commentType: OWCommentCreationTypeInternal = .comment
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
-    var closeInstantly = PublishSubject<Void>()
+    var closeInstantly = PublishSubject<String>()
     var ctaTap = PublishSubject<Void>()
     var closeWithDelay = PublishSubject<Void>()
     var closedWithDelay: Observable<Void> {
         return closeWithDelay
+            .asObservable()
+    }
+
+    var resetTypeToNewCommentChange = PublishSubject<Void>()
+    var resetTypeToNewComment: Observable<Void> {
+        return resetTypeToNewCommentChange
+            .asObservable()
+    }
+
+    var textBeforeClosedChanged = PublishSubject<String>()
+    var textBeforeClosed: Observable<String> {
+        return textBeforeClosedChanged
             .asObservable()
     }
 
@@ -86,14 +104,16 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .map { _ -> Void in () }
     }
 
-    init(commentCreationData: OWCommentCreationRequiredData,
+    var initialText = ""
+
+    init(commentCreationData: inout OWCommentCreationRequiredData,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          viewableMode: OWViewableMode,
          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider(),
          sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.commentCreationData = commentCreationData
         self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
-        self._commentCreationData.onNext(commentCreationData)
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
         let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
@@ -102,7 +122,6 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                                           isAutoExpandable: true,
                                           hasSuggestionsBar: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
-        commentType = commentCreationData.commentCreationType
 
         // Setting accessoryViewStrategy
         let style = commentCreationData.settings.commentCreationSettings.style
@@ -112,6 +131,51 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             accessoryViewStrategy = OWAccessoryViewStrategy.default
         }
         setupObservers()
+
+        self.setupInitialTextAndTypeIfNeeded()
+    }
+
+    fileprivate func setupInitialTextAndTypeIfNeeded() {
+        let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
+        guard let postId = self.postId else { return }
+
+        if case .comment = commentCreationData.commentCreationType {
+            if let lastCommentType = lastCommentTypeInCacheService.value(forKey: postId) {
+                commentCreationData.commentCreationType = lastCommentType.toCommentCreationTypeInternal
+            }
+        }
+
+        commentType = commentCreationData.commentCreationType
+
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+        switch commentType {
+        case .comment:
+            guard let text = commentsCacheService[.comment(postId: postId)] else { return }
+                initialText = text
+        case .replyToComment(originComment: let originComment):
+            guard let originCommentId = originComment.id,
+                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
+            else { return }
+                initialText = text
+        case .edit(comment: let comment):
+            if let commentText = comment.text?.text {
+                initialText = commentText
+            }
+        }
+    }
+
+    fileprivate func updateCachedLastCommentType() {
+        if let postId = self.postId {
+            let lastCommentTypeInCacheService = self.servicesProvider.lastCommentTypeInMemoryCacheService()
+            switch commentType {
+            case .comment:
+                lastCommentTypeInCacheService.insert(.comment, forKey: postId)
+            case .edit(comment: let comment):
+                lastCommentTypeInCacheService.insert(.edit(comment: comment), forKey: postId)
+            case .replyToComment(originComment: let originComment):
+                lastCommentTypeInCacheService.insert(.reply(comment: originComment), forKey: postId)
+            }
+        }
     }
 }
 
@@ -145,6 +209,22 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                     let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
                     self.textViewVM.inputs.textViewTextChange.onNext(newRequestedText)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        closeInstantly
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.updateCachedLastCommentType()
+            })
+            .disposed(by: disposeBag)
+
+        resetTypeToNewComment
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.commentType = .comment
+                self.commentCreationData.commentCreationType = .comment
+                self.updateCachedLastCommentType()
             })
             .disposed(by: disposeBag)
     }
