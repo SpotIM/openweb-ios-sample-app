@@ -248,7 +248,7 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
 
                 CATransaction.begin()
-                tableView.beginUpdates()
+                self.tableView.beginUpdates()
                 CATransaction.setCompletionBlock {
                     // Code to be executed upon completion
                     self.viewModel.inputs.scrolledToCellIndex.onNext(index)
@@ -259,7 +259,7 @@ fileprivate extension OWConversationView {
                     // it looks like set the content offset behave better when scroll to top
                     self.tableView.setContentOffset(.zero, animated: true)
                 }
-                tableView.endUpdates()
+                self.tableView.endUpdates()
                 CATransaction.commit()
             })
             .disposed(by: disposeBag)
