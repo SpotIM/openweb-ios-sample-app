@@ -93,7 +93,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             }
             var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
 
-            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyInteraction)]
+            let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             let boldUserNameString = NSMutableAttributedString(string: name, attributes: attrs)
 
             attributedString.append(boldUserNameString)
@@ -342,6 +342,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             })
             .disposed(by: disposeBag)
 
+        headerCloseButton.rx.tap
+            .bind(to: viewModel.inputs.resetTypeToNewCommentChange)
+            .disposed(by: disposeBag)
+
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .flatMap({ [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
@@ -360,11 +364,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
+            .withLatestFrom(viewModel.outputs.textBeforeClosed)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
         viewModel.outputs.closedWithDelay
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
+            .withLatestFrom(viewModel.outputs.textBeforeClosed)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
@@ -397,16 +403,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.footerView.layoutIfNeeded()
                 }
 
-                switch self.viewModel.outputs.commentType {
-                case .edit(comment: let comment):
-                    if let editText = comment.text?.text {
-                        self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext(editText)
-                    }
-                case .comment:
-                    // TODO check if last comment exists and what type it is, then show the type and load the last text
-                    break
-                case .replyToComment:
-                    break
+                // Set the initial text to the textView in this animation stage
+                if !viewModel.outputs.initialText.isEmpty {
+                    self.viewModel.outputs.textViewVM
+                        .inputs.textViewTextChange.onNext(viewModel.outputs.initialText)
                 }
 
                 let bottomPadding: CGFloat
@@ -432,12 +432,16 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         // keyboard will hide
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
-            .subscribe(onNext: { [weak self] notification in
+            .withLatestFrom(viewModel.outputs.textViewVM.outputs.textViewText) { ($0, $1) }
+            .subscribe(onNext: { [weak self] result in
+                let notification = result.0
+                let textViewText = result.1
                 guard
                     let self = self,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
 
+                self.viewModel.inputs.textBeforeClosedChanged.onNext(textViewText)
                 self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
@@ -475,4 +479,3 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
     }
     // swiftlint:enable function_body_length
 }
-
