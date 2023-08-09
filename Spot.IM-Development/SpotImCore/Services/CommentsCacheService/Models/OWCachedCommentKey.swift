@@ -11,6 +11,7 @@ import Foundation
 enum OWCachedCommentKey: Hashable {
     case comment(postId: OWPostId)
     case reply(postId: OWPostId, commentId: OWCommentId)
+    case edit(postId: OWPostId, commentId: OWCommentId)
 }
 
 extension OWCachedCommentKey: Equatable {
@@ -19,6 +20,8 @@ extension OWCachedCommentKey: Equatable {
         case (let .comment(lhsPostId), let .comment(rhsPostId)):
             return lhsPostId == rhsPostId
         case (let .reply(lhsPostId, lhsCommentId), let .reply(rhsPostId, rhsCommentId)):
+            return lhsPostId == rhsPostId && lhsCommentId == rhsCommentId
+        case (let .edit(lhsPostId, lhsCommentId), let .edit(rhsPostId, rhsCommentId)):
             return lhsPostId == rhsPostId && lhsCommentId == rhsCommentId
         default: return false
         }
