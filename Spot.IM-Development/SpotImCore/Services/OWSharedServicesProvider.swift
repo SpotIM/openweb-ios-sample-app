@@ -165,7 +165,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
-        return OWCommentUpdaterService()
+        return OWCommentUpdaterService(servicesProvider: self)
     }()
 
     fileprivate lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
