@@ -28,8 +28,9 @@ class OWTextView: UIView {
         static let textViewFontSize: CGFloat = 15
         static let charectersFontSize: CGFloat = 13
         static let baseTextViewHeight: CGFloat = 30
-        static let maxNumberOfLines = 4
+        static let maxNumberOfLines = 5
         static let expandAnimationDuration: CGFloat = 0.1
+        static let heightConstraintPriority: CGFloat = 500
     }
 
     let viewModel: OWTextViewViewModeling
@@ -112,7 +113,7 @@ fileprivate extension OWTextView {
             }
             if viewModel.outputs.isAutoExpandable {
                 make.height.equalTo(textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                       maxLines: Metrics.maxNumberOfLines))
+                                                       maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
             }
         }
 
@@ -156,7 +157,7 @@ fileprivate extension OWTextView {
                         UIView.animate(withDuration: Metrics.expandAnimationDuration) {
                             self.textView.OWSnp.updateConstraints { make in
                                 make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                                            maxLines: Metrics.maxNumberOfLines))
+                                                                            maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
                             }
                             self.layoutIfNeeded()
                         }

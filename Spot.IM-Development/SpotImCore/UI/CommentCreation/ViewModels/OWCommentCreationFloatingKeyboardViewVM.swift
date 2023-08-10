@@ -13,9 +13,10 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var closeWithDelay: PublishSubject<Void> { get }
     var closeInstantly: PublishSubject<String> { get }
     var ctaTap: PublishSubject<Void> { get }
-    var textBeforeClosedChange: PublishSubject<String> { get }
+    var textBeforeClosedChange: BehaviorSubject<String> { get }
     var resetTypeToNewCommentChange: PublishSubject<Void> { get }
     var isSendingChange: BehaviorSubject<Bool> { get }
+    var initialTextUsed: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -81,13 +82,15 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .share()
     }
 
+    var initialTextUsed = PublishSubject<Void>()
+
     var resetTypeToNewCommentChange = PublishSubject<Void>()
     var resetTypeToNewCommentChanged: Observable<Void> {
         return resetTypeToNewCommentChange
             .asObservable()
     }
 
-    var textBeforeClosedChange = PublishSubject<String>()
+    var textBeforeClosedChange = BehaviorSubject<String>(value: "")
     var textBeforeClosedChanged: Observable<String> {
         return textBeforeClosedChange
             .asObservable()
@@ -258,6 +261,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                 guard let self = self else { return }
                 self.commentCreationData.commentCreationType = .comment
                 self.updateCachedLastCommentType()
+            })
+            .disposed(by: disposeBag)
+
+        initialTextUsed
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.initialText = ""
             })
             .disposed(by: disposeBag)
     }

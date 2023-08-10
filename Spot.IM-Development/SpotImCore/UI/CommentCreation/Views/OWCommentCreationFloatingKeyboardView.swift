@@ -241,6 +241,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(mainContainer.OWSnp.bottom)
+            make.top.equalToSuperview()
         }
 
         switch viewModel.outputs.commentType {
@@ -253,6 +254,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 make.bottom.equalTo(footerView.OWSnp.top).inset(Metrics.headerHeight)
                 make.leading.trailing.equalToSuperview()
                 make.height.equalTo(Metrics.headerHeight)
+                make.top.greaterThanOrEqualToSuperview()
             }
         }
         footerView.addSubview(textViewObject)
@@ -395,7 +397,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
-            .subscribe(onNext: { [weak self] notification in
+            .withLatestFrom(viewModel.outputs.textBeforeClosedChanged) { ($0, $1) }
+            .subscribe(onNext: { [weak self] (notification, textBeforeClosed) in
                 guard
                    let self = self,
                    let expandedKeyboardHeight = notification.keyboardSize?.height,
@@ -403,6 +406,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 else { return }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
+                    self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .brandColor,
+                                                                                        themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
                     self.ctaButton.alpha(1)
                     self.ctaButton.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.ctaButtonHorizontalPadding)
@@ -418,9 +423,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 }
 
                 // Set the initial text to the textView in this animation stage
-                if !viewModel.outputs.initialText.isEmpty {
+                if viewModel.outputs.initialText.isEmpty {
+                    self.viewModel.outputs.textViewVM
+                        .inputs.textViewTextChange.onNext(textBeforeClosed)
+                } else {
                     self.viewModel.outputs.textViewVM
                         .inputs.textViewTextChange.onNext(viewModel.outputs.initialText)
+                    viewModel.inputs.initialTextUsed.onNext()
                 }
 
                 let bottomPadding: CGFloat
