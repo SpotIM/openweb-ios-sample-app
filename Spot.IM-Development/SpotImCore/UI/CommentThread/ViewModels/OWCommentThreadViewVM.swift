@@ -43,6 +43,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
+        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -913,7 +914,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .take(1)
                     .map { _ in updateType }
             }
-            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {

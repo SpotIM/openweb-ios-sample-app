@@ -65,6 +65,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayAfterScrolledToIndex: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -1089,7 +1091,7 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
                     .map { _ in updateType }
             }
-            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
@@ -1116,7 +1118,7 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
                     .map { _ in comments }
             }
-            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterScrolledToIndex), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] comments in
                 guard let self = self else { return }
                 let commentsIds = comments.map { $0.id }.unwrap()
