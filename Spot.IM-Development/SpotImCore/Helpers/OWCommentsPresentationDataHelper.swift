@@ -8,13 +8,18 @@
 
 import Foundation
 
-class OWCommentsPresentationDataHelper {
+protocol OWCommentsPresentationDataHelperProtocol {
+    func findVisibleCommentPresentationData(
+        with commentId: OWCommentId,
+        in commentsPresentationData: [OWCommentPresentationData]
+    ) -> OWCommentPresentationData?
+}
 
-    fileprivate static let shared = OWCommentsPresentationDataHelper()
-
-    private init() {}
-
-    static func findVisibleCommentPresentationData(with commentId: OWCommentId, in commentsPresentationData: [OWCommentPresentationData]) -> OWCommentPresentationData? {
+class OWCommentsPresentationDataHelper: OWCommentsPresentationDataHelperProtocol {
+    func findVisibleCommentPresentationData(
+        with commentId: OWCommentId,
+        in commentsPresentationData: [OWCommentPresentationData]
+    ) -> OWCommentPresentationData? {
         for commentPresentationData in commentsPresentationData {
             if (commentPresentationData.id == commentId) {
                 return commentPresentationData
