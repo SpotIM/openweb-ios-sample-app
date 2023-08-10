@@ -513,18 +513,6 @@ fileprivate extension OWConversationViewViewModel {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
     }
-
-    func findVisibleCommentPresentationData(with commentId: OWCommentId, in commentsPresentationData: [OWCommentPresentationData]) -> OWCommentPresentationData? {
-        for commentPresentationData in commentsPresentationData {
-            if (commentPresentationData.id == commentId) {
-                return commentPresentationData
-            }
-            if let res = findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation) {
-                return res
-            }
-        }
-        return nil
-    }
 }
 
 fileprivate extension OWConversationViewViewModel {
@@ -1134,7 +1122,7 @@ fileprivate extension OWConversationViewViewModel {
                 let commentsIds = comments.map { $0.id }.unwrap()
                     .filter {
                         // making sure we are not adding an existing comment
-                        self.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                        OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
                     }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
                 if (!updatedCommentsPresentationData.isEmpty) {
@@ -1159,9 +1147,9 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
-                      let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
+                      let parentCommentPresentationData = OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
                 else { return }
-                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
+                guard OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
                     // making sure we are not adding an existing reply
                     return
                 }
