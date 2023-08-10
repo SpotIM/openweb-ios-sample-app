@@ -8,13 +8,18 @@
 
 import Foundation
 
-class OWCommentCreatorNetworkHelper {
+protocol OWCommentCreatorNetworkHelperProtocol {
+    func getParametersForCreateCommentRequest(
+        from commentCreationData: OWCommentCreationCtaData,
+        section: String,
+        commentCreationType: OWCommentCreationTypeInternal,
+        postId: OWPostId
+    ) -> OWNetworkParameters
+}
 
-    fileprivate static let shared = OWCommentCreatorNetworkHelper()
+class OWCommentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol {
 
-    private init() {}
-
-    static func getParametersForCreateCommentRequest(
+    func getParametersForCreateCommentRequest(
         from commentCreationData: OWCommentCreationCtaData,
         section: String,
         commentCreationType: OWCommentCreationTypeInternal,
@@ -61,8 +66,10 @@ class OWCommentCreatorNetworkHelper {
 
         return parameters
     }
+}
 
-    static func getContentRequestParam(from commentCreationData: OWCommentCreationCtaData) -> [[String: Any]] {
+fileprivate extension OWCommentCreatorNetworkHelper {
+    func getContentRequestParam(from commentCreationData: OWCommentCreationCtaData) -> [[String: Any]] {
         var content: [[String: Any]] = []
 
         if !commentCreationData.text.isEmpty {
