@@ -63,6 +63,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         return Observable.just(())
                     }
                     self.cacheComment(text: commentText)
+                    // floatingKeyboard style does not neet a close confirmation therfore we return here
                     return Observable.just(())
                 }
         }
@@ -130,7 +131,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     lazy var commentCreationSubmitted: Observable<OWComment> = {
         // TODO - add floating view cta hadling
-        return Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
+        return Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta, commentCreationFloatingKeyboardViewVm.outputs.performCta)
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
                 guard let self = self else { return nil }
@@ -182,7 +183,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     guard let originCommentId = originComment.id else { return }
                     commentCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
                 case .edit:
-                    break
+                    commentCacheService.remove(forKey: .edit(postId: postId))
                 }
             })
             .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
@@ -229,6 +230,16 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         .commentUpdaterService()
                         .update(updateType, postId: postId)
                 }
+            })
+            .flatMap({ [weak self] comment -> Observable<OWComment> in
+                guard let self = self,
+                      case .floatingKeyboard = self.commentCreationData.settings.commentCreationSettings.style
+                else { return Observable.just(comment) }
+                self.commentCreationFloatingKeyboardViewVm.inputs.closeWithDelay.onNext()
+                return self.commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
+                    .map { _ -> OWComment in
+                        return comment
+                    }
             })
             .share()
     }()

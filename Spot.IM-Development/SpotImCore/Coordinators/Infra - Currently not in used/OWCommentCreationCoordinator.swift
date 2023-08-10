@@ -69,6 +69,22 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         setupViewActionsCallbacks(forViewModel: commentCreationVM)
 
         let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
+            .filter { _ in
+                if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    return false
+                }
+                return true
+            }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
+            .asObservable()
+
+        let commentCreatedByFloatingKeyboardStyleObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
+            .filter { _ in
+                if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    return true
+                }
+                return false
+            }
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
 
@@ -93,7 +109,10 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                 self?.router.pop(popStyle: .dismiss, animated: false)
             })
 
-        return Observable.merge(resultsWithPopAnimation, commentCreationLoadedToScreenObservable, poppedFromBackButtonObservable)
+                return Observable.merge(resultsWithPopAnimation.take(1),
+                                        commentCreationLoadedToScreenObservable.take(1),
+                                        poppedFromBackButtonObservable.take(1),
+                                        commentCreatedByFloatingKeyboardStyleObservable.take(1))
     }
 
     override func showableComponent() -> Observable<OWShowable> {
