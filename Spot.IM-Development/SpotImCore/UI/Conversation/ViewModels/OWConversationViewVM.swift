@@ -1368,6 +1368,13 @@ fileprivate extension OWConversationViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+
+            pullToRefresh
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                })
+                .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
