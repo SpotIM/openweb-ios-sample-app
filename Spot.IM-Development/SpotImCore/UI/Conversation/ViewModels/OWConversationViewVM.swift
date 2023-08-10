@@ -99,14 +99,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
-    fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
-    fileprivate var _loadMoreComments = PublishSubject<Int>()
-    fileprivate var isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
+    fileprivate let _loadMoreComments = PublishSubject<Int>()
+    fileprivate let isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
 
-    fileprivate var _insertNewLocalComments = PublishSubject<[OWComment]>()
-    fileprivate var _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate var _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate var _scrollToCellIndex = PublishSubject<Int>()
+    fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
+    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _scrollToCellIndex = PublishSubject<Int>()
     var scrolledToCellIndex = PublishSubject<Int>()
 
     var scrollToCellIndex: Observable<Int> {
@@ -1109,7 +1109,7 @@ fileprivate extension OWConversationViewViewModel {
                     self._insertNewLocalComments.onNext(comments)
                 case let .update(commentId, withComment):
                     self._updateLocalComment.onNext((withComment, commentId))
-                case let .reply(comment, toCommentId):
+                case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 }
             })

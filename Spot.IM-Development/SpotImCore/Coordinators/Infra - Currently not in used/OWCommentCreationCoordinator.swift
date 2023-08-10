@@ -31,7 +31,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     fileprivate let router: OWRoutering!
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let commentCreationPopped = PublishSubject<Void>()
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentCreation)
     }()
@@ -48,6 +47,8 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
         let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel(commentCreationData: commentCreationData, viewableMode: .partOfFlow)
         let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
+
+        let commentCreationPopped = PublishSubject<Void>()
 
         router.push(commentCreationVC,
                     pushStyle: .presentStyle,
