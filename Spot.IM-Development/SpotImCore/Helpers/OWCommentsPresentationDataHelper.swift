@@ -19,6 +19,7 @@ class OWCommentsPresentationDataHelper {
             if (commentPresentationData.id == commentId) {
                 return commentPresentationData
             }
+            // Replies recursion
             if let res = findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation) {
                 return res
             }
