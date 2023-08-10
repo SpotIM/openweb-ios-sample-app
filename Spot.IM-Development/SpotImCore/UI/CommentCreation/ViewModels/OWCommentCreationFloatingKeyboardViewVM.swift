@@ -15,6 +15,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var ctaTap: PublishSubject<Void> { get }
     var textBeforeClosedChange: PublishSubject<String> { get }
     var resetTypeToNewCommentChange: PublishSubject<Void> { get }
+    var isSendingChange: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -25,11 +26,12 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
     var servicesProvider: OWSharedServicesProviding { get }
     var viewableMode: OWViewableMode { get }
-    var performCtaAction: Observable<Void> { get }
+    var performCta: Observable<OWCommentCreationCtaData> { get }
     var closedWithDelay: Observable<Void> { get }
     var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
+    var isSendingChanged: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -72,6 +74,13 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .asObservable()
     }
 
+    var isSendingChange = BehaviorSubject<Bool>(value: false)
+    var isSendingChanged: Observable<Bool> {
+        return isSendingChange
+            .asObservable()
+            .share()
+    }
+
     var resetTypeToNewCommentChange = PublishSubject<Void>()
     var resetTypeToNewCommentChanged: Observable<Void> {
         return resetTypeToNewCommentChange
@@ -97,15 +106,23 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     let textViewVM: OWTextViewViewModeling
 
-    var performCtaAction: Observable<Void> {
+    var performCta: Observable<OWCommentCreationCtaData> {
         ctaTap
             .asObservable()
             .flatMap { [weak self] _ -> Observable<Bool> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
             }
+            .map { [weak self] needsAuthentication -> Bool in
+                guard let self = self else { return needsAuthentication }
+                self.isSendingChange.onNext(!needsAuthentication)
+                return needsAuthentication
+            }
             .filter { !$0 } // Do not continue if needed to authenticate
-            .map { _ -> Void in () }
+            .withLatestFrom(textViewVM.outputs.textViewText)
+            .map { text -> OWCommentCreationCtaData in ()
+                return OWCommentCreationCtaData(text: text, commentLabelIds: [])
+            }
     }
 
     var initialText = ""
@@ -225,8 +242,12 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
             .disposed(by: disposeBag)
 
         closeInstantly
-            .subscribe(onNext: { [weak self] _ in
+            .withLatestFrom(textBeforeClosedChanged)
+            .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
+                if text.isEmpty {
+                    self.commentCreationData.commentCreationType = .comment
+                }
                 self.updateCachedLastCommentType()
             })
             .disposed(by: disposeBag)

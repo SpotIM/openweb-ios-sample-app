@@ -347,6 +347,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
 
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
+            .observe(on: MainScheduler.instance)
             .flatMap({ [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 if self.toolbar != nil {
@@ -363,12 +364,18 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
 
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
+            .observe(on: MainScheduler.instance)
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.isSendingChanged
+            .bind(to: ctaButton.rx.isLoading)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.closedWithDelay
+            .observe(on: MainScheduler.instance)
             .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .bind(to: viewModel.inputs.closeInstantly)
@@ -376,6 +383,13 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         ctaButton.rx.tap
             .bind(to: viewModel.inputs.ctaTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.textViewVM.outputs.textViewText
+            .map { text -> Bool in
+                return !text.isEmpty
+            }
+            .bind(to: ctaButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
         // keyboard will show
@@ -433,15 +447,14 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
             .withLatestFrom(viewModel.outputs.textViewVM.outputs.textViewText) { ($0, $1) }
-            .subscribe(onNext: { [weak self] result in
-                let notification = result.0
-                let textViewText = result.1
+            .withLatestFrom(viewModel.outputs.isSendingChanged) { ($0.0, $0.1, $1) }
+            .subscribe(onNext: { [weak self] (notification, textViewText, isSendingComment) in
                 guard
                     let self = self,
                     let animationDuration = notification.keyboardAnimationDuration
                     else { return }
 
-                self.viewModel.inputs.textBeforeClosedChange.onNext(textViewText)
+                self.viewModel.inputs.textBeforeClosedChange.onNext(isSendingComment ? "" : textViewText)
                 self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }

@@ -30,7 +30,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
@@ -42,11 +42,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
-         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.router = router
         self.conversationData = conversationData
         self.actionsCallbacks = actionsCallbacks
-        self.authenticationManager = authenticationManager
+        self.servicesProvider = servicesProvider
     }
 
     // swiftlint:disable function_body_length
@@ -137,7 +137,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .do(onNext: { result in
                 switch result {
                 case .commentCreated:
-                    // Nothing - already taken care in report VM in which we update the comment updater service
+                    // Nothing - already taken care in comment creation VM in which we update the comment updater service
                     break
                 case .loadedToScreen:
                     break
@@ -269,7 +269,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationPoppedObservable = Observable.merge(conversationPopped,
                                                             indipendentConversationClosedObservable,
                                                             partOfFlowPresentedConversationClosedObservable)
-            .map { OWConversationCoordinatorResult.popped }
+            .map { [weak self] in
+                guard let self = self,
+                      let postId = OWManager.manager.postId
+                else { return OWConversationCoordinatorResult.popped }
+                self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: postId)
+                return OWConversationCoordinatorResult.popped
+            }
             .asObservable()
 
         let conversationLoadedObservable = conversationVM.outputs.loadedToScreen
