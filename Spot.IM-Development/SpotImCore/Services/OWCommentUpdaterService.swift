@@ -9,12 +9,6 @@
 import Foundation
 import RxSwift
 
-enum OWCommentUpdateType {
-    case insert(comments: [OWComment])
-    case update(commentId: OWCommentId, withComment: OWComment)
-    case insertReply(comment: OWComment, toParentCommentId: OWCommentId)
-}
-
 protocol OWCommentUpdaterServicing {
     func update(_ updateType: OWCommentUpdateType, postId: OWPostId)
     func getUpdatedComments(for postId: OWPostId) -> Observable<OWCommentUpdateType>
