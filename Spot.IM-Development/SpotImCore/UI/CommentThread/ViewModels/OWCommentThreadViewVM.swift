@@ -132,6 +132,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
+    fileprivate var _insertNewLocalComments = PublishSubject<[OWComment]>()
+    fileprivate var _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate var _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+
     fileprivate var _performHighlightAnimationCellIndex = PublishSubject<Int>()
     var scrolledToCellIndex = PublishSubject<Int>()
 
@@ -345,6 +349,18 @@ fileprivate extension OWCommentThreadViewViewModel {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
     }
+
+    func findVisibleCommentPresentationData(with commentId: OWCommentId, in commentsPresentationData: [OWCommentPresentationData]) -> OWCommentPresentationData? {
+        for commentPresentationData in commentsPresentationData {
+            if (commentPresentationData.id == commentId) {
+                return commentPresentationData
+            }
+            if let res = findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation) {
+                return res
+            }
+        }
+        return nil
+    }
 }
 
 fileprivate extension OWCommentThreadViewViewModel {
@@ -538,7 +554,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                  return Observable.just(commentCellsVms)
             }
-            .share()
+            .share(replay: 1)
 
         // Responding to comments which are just reported
         let reportService = servicesProvider.reportedCommentsService()
@@ -900,6 +916,65 @@ fileprivate extension OWCommentThreadViewViewModel {
             .map { $0.outputs.comment.userId }
             .unwrap()
             .share()
+
+        self.servicesProvider.commentUpdaterService()
+            .getUpdatedComments(for: postId)
+            .flatMap { updateType -> Observable<OWCommentUpdateType> in
+                // Making sure comment cells are visible
+                return commentCellsVmsObservable
+                    .filter { !$0.isEmpty }
+                    .take(1)
+                    .map { _ in updateType }
+            }
+            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .subscribe(onNext: { [weak self] updateType in
+                guard let self = self else { return }
+                switch updateType {
+                case .insert(let comments):
+                    self._insertNewLocalComments.onNext(comments)
+                case let .update(commentId, withComment):
+                    self._updateLocalComment.onNext((withComment, commentId))
+                case let .reply(comment, toCommentId):
+                    self._replyToLocalComment.onNext((comment, toCommentId))
+                }
+            })
+            .disposed(by: disposeBag)
+
+        _updateLocalComment
+            .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { comment, commentId, commentCellsVms in
+                if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
+                    commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: comment)
+                    self._performTableViewAnimation.onNext()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        _replyToLocalComment
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] comment, parentCommentId in
+                guard let self = self,
+                      let commentId = comment.id,
+                      let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
+                else { return }
+                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
+                    // making sure we are not adding an existing reply
+                    return
+                }
+                let newCommentPresentationData = OWCommentPresentationData(id: commentId)
+                let existingRepliesPresentationData: [OWCommentPresentationData]
+                if (parentCommentPresentationData.repliesPresentation.count == 0) {
+                    existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
+                } else {
+                    existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation
+                }
+                parentCommentPresentationData.repliesIds.insert(commentId, at: 0)
+                parentCommentPresentationData.setTotalRepliesCount(parentCommentPresentationData.totalRepliesCount + 1)
+                parentCommentPresentationData.setRepliesPresentation([newCommentPresentationData] + existingRepliesPresentationData)
+                parentCommentPresentationData.update.onNext()
+            })
+            .disposed(by: disposeBag)
 
         // Handling mute user from network
         muteUserObservable
