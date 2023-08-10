@@ -944,7 +944,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
-                      let parentCommentPresentationData = OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
+                      let parentCommentPresentationData = OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(
+                        with: parentCommentId,
+                        in: Array(self._commentsPresentationData)
+                      )
                 else { return }
                 guard OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
                     // making sure we are not adding an existing reply
