@@ -33,6 +33,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
     fileprivate let disposeBag = DisposeBag()
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let viewableMode: OWViewableMode
@@ -105,8 +106,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol = OWCommentCreatorNetworkHelper(),
           viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
+        self.commentCreatorNetworkHelper = commentCreatorNetworkHelper
         self.commentCreationData = commentCreationData
         self.viewableMode = viewableMode
         setupObservers()
@@ -120,7 +123,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 guard let self = self,
                       let postId = self.postId
                 else { return nil }
-                return (commentCreationData, OWCommentCreatorNetworkHelper.getParametersForCreateCommentRequest(
+                return (commentCreationData, self.commentCreatorNetworkHelper.getParametersForCreateCommentRequest(
                     from: commentCreationData,
                     section: self.commentCreationData.article.additionalSettings.section,
                     commentCreationType: self.commentCreationData.commentCreationType,

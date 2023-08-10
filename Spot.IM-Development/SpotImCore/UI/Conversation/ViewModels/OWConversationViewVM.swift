@@ -320,16 +320,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let imageProvider: OWImageProviding
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
           imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
           conversationData: OWConversationRequiredData,
           viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
+        self.commentPresentationDataHelper = commentPresentationDataHelper
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
@@ -1124,7 +1127,7 @@ fileprivate extension OWConversationViewViewModel {
                 let commentsIds = comments.map { $0.id }.unwrap()
                     .filter {
                         // making sure we are not adding an existing comment
-                        OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                        self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
                     }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
                 if (!updatedCommentsPresentationData.isEmpty) {
@@ -1149,12 +1152,12 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
-                      let parentCommentPresentationData = OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(
+                      let parentCommentPresentationData = self.commentPresentationDataHelper.findVisibleCommentPresentationData(
                         with: parentCommentId,
                         in: Array(self._commentsPresentationData)
                       )
                 else { return }
-                guard OWCommentsPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
+                guard self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
                     // making sure we are not adding an existing reply
                     return
                 }
