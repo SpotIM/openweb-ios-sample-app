@@ -336,6 +336,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.viewableMode = viewableMode
             self.populateInitialUI()
             setupObservers()
+
+            let event = event(for: .preConversationLoaded)
+            servicesProvider.analyticsService()
+                .sendAnalyticEvents(events: [event])
     }
 
     func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
@@ -660,6 +664,46 @@ fileprivate extension OWPreConversationViewViewModel {
             .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
+
+        self.servicesProvider.commentUpdaterService()
+            .getUpdatedComments(for: postId)
+            .withLatestFrom(commentCellsVmsObservable) { ($0, $1) }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] updateType, commentCellsVms in
+                guard let self = self else { return }
+                switch updateType {
+                case .insert(let comments):
+                    let commentsVms: [OWCommentCellViewModel] = comments.map { comment -> OWCommentCellViewModel? in
+                        guard let userId = comment.userId,
+                              let user = self.servicesProvider.usersService().get(userId: userId)
+                        else { return nil }
+                        return OWCommentCellViewModel(data: OWCommentRequiredData(
+                            comment: comment,
+                            user: user,
+                            replyToUser: nil,
+                            collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
+                            section: self.preConversationData.article.additionalSettings.section
+                        ))
+                    }.unwrap()
+                    var viewModels = self._cellsViewModels
+                    let filteredCommentsVms = commentsVms.filter { commentVm in
+                        // making sure we are not adding an existing comment
+                        !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })
+                    }
+                    viewModels.insert(contentsOf: filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
+                    let numOfComments = self.preConversationStyle.numberOfComments
+                    self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))
+                case let .update(commentId, withComment):
+                    if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
+                        commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: withComment)
+                        self._performTableViewAnimation.onNext()
+                    }
+                case .reply:
+                    // We are not showing replies in pre conversation
+                    break
+                }
             })
             .disposed(by: disposeBag)
 

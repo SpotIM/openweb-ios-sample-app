@@ -11,6 +11,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentHeaderViewModelingInputs {
+    func updateEditedCommentLocally(_ comment: OWComment)
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
     var shouldReportCommentLocally: BehaviorSubject<Bool> { get }
@@ -86,6 +87,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         servicesProvider = OWSharedServicesProvider.shared
         userBadgeService = OWUserBadgeService()
         setupObservers()
+    }
+
+    func updateEditedCommentLocally(_ comment: OWComment) {
+        _model.onNext(comment)
     }
 
     var avatarVM: OWAvatarViewModeling = {
