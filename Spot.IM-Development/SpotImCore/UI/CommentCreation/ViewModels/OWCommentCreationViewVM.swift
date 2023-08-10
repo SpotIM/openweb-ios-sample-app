@@ -114,7 +114,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     lazy var commentCreationSubmitted: Observable<OWComment> = {
         // TODO - add floating view cta hadling
-        return Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
+        let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
                 guard let self = self else { return nil }
@@ -147,12 +147,15 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 case .next(let comment):
                     return (commentCreationData, comment)
                 case .error(_):
+                    // TODO - Handle error
                     return nil
                 default:
                     return nil
                 }
             }
             .unwrap()
+
+        let prepareLocalCommentObservable = commentCreationNetworkObservable
             .do(onNext: { [weak self] _ in
                 // 4 - clear cached comment if exists
                 guard let self = self,
@@ -193,6 +196,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     )
             }
             .unwrap()
+
+        return prepareLocalCommentObservable
             .do(onNext: { [weak self] comment in
                 // 6 - comment created
                 guard let self = self,
@@ -207,7 +212,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .update(commentId: commentId, withComment: comment)
                 case .replyToComment(originComment: let originComment):
                     guard let commentId = originComment.id else { return }
-                    commentUpdateType = .reply(comment: comment, toCommentId: commentId)                }
+                    commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
                 if let updateType = commentUpdateType {
                     self.servicesProvider
                         .commentUpdaterService()

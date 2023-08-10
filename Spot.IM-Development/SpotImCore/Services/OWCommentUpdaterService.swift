@@ -12,7 +12,7 @@ import RxSwift
 enum OWCommentUpdateType {
     case insert(comments: [OWComment])
     case update(commentId: OWCommentId, withComment: OWComment)
-    case reply(comment: OWComment, toCommentId: OWCommentId)
+    case insertReply(comment: OWComment, toParentCommentId: OWCommentId)
 }
 
 protocol OWCommentUpdaterServicing {
@@ -21,8 +21,14 @@ protocol OWCommentUpdaterServicing {
 }
 
 class OWCommentUpdaterService: OWCommentUpdaterServicing {
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate var _updatedCommentsWithPostId = PublishSubject<(OWCommentUpdateType, OWPostId)>()
-    fileprivate var servicesProvider: OWSharedServicesProviding
+
+    fileprivate lazy var _updatedCommentsWithPostIdShared: Observable<(OWCommentUpdateType, OWPostId)> = {
+        _updatedCommentsWithPostId
+            .asObservable()
+            .share()
+    }()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -34,10 +40,9 @@ class OWCommentUpdaterService: OWCommentUpdaterServicing {
     }
 
     func getUpdatedComments(for postId: OWPostId) -> RxSwift.Observable<OWCommentUpdateType> {
-        return _updatedCommentsWithPostId
+        return _updatedCommentsWithPostIdShared
             .filter { $0.1 == postId }
             .map { $0.0 }
-            .asObservable()
     }
 }
 
@@ -49,7 +54,7 @@ fileprivate extension OWCommentUpdaterService {
             commentsToCache = comments
         case .update(_, let withComment):
             commentsToCache = [withComment]
-        case .reply(let comment, let parentCommentId):
+        case .insertReply(let comment, let parentCommentId):
             commentsToCache = [comment]
             if var parentComment = self.servicesProvider.commentsService().get(commentId: parentCommentId, postId: postId) {
                 if let replies = parentComment.replies {

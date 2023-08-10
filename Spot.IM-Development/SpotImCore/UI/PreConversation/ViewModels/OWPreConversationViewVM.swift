@@ -700,7 +700,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: withComment)
                         self._performTableViewAnimation.onNext()
                     }
-                case .reply:
+                case .insertReply:
                     // We are not showing replies in pre conversation
                     break
                 }

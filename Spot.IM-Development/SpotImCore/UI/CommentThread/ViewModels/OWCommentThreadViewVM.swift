@@ -132,11 +132,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    fileprivate var _insertNewLocalComments = PublishSubject<[OWComment]>()
-    fileprivate var _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate var _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
-    fileprivate var _performHighlightAnimationCellIndex = PublishSubject<Int>()
+    fileprivate let _performHighlightAnimationCellIndex = PublishSubject<Int>()
     var scrolledToCellIndex = PublishSubject<Int>()
 
     var scrollToCellIndex: Observable<Int> {
@@ -930,11 +929,12 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
-                case .insert(let comments):
-                    self._insertNewLocalComments.onNext(comments)
+                case .insert:
+                    // Not relevant in comment thread
+                    break
                 case let .update(commentId, withComment):
                     self._updateLocalComment.onNext((withComment, commentId))
-                case let .reply(comment, toCommentId):
+                case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 }
             })
