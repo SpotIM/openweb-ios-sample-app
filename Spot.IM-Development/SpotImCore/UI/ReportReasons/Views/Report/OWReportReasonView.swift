@@ -210,6 +210,11 @@ fileprivate extension OWReportReasonView {
             })
             .disposed(by: disposeBag)
 
+        tableViewReasons.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.changeReportOffset)
+            .disposed(by: disposeBag)
+
         // Views Binding
         OWSharedServicesProvider.shared.themeStyleService()
             .style
