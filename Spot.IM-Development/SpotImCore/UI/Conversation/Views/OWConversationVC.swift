@@ -84,6 +84,7 @@ fileprivate extension OWConversationVC {
             navController.navigationBar.prefersLargeTitles = true
 
             let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
+            navController.navigationBar.tintColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
 
             // Setup Title
             let navigationTitleTextAttributes = [
