@@ -16,6 +16,7 @@ protocol OWConversationViewModelingInputs {
     var highlightComment: PublishSubject<String> { get }
     var viewDidLoad: PublishSubject<Void> { get }
     var closeConversationTapped: PublishSubject<Void> { get }
+    var changeIsLargeTitleDisplay: PublishSubject<Bool> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
@@ -27,6 +28,7 @@ protocol OWConversationViewModelingOutputs {
     var shouldCustomizeNavigationBar: Bool { get }
     var shouldShowCloseButton: Bool { get }
     var closeConversation: Observable<Void> { get }
+    var isLargeTitleDisplay: Observable<Bool> { get }
 }
 
 protocol OWConversationViewModeling {
@@ -108,6 +110,15 @@ class OWConversationViewModel: OWConversationViewModeling,
         return closeConversationTapped.asObservable()
     }
 
+    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+        return BehaviorSubject<Bool>(value: true)
+    }()
+
+    var changeIsLargeTitleDisplay = PublishSubject<Bool>()
+    var isLargeTitleDisplay: Observable<Bool> {
+        return _isLargeTitleDisplay
+    }
+
     init (conversationData: OWConversationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode) {
@@ -136,6 +147,10 @@ fileprivate extension OWConversationViewModel {
 
         triggerCustomizeNavigationBarUI
             .bind(to: _triggerCustomizeNavigationBarUI)
+            .disposed(by: disposeBag)
+
+        changeIsLargeTitleDisplay
+            .bind(to: _isLargeTitleDisplay)
             .disposed(by: disposeBag)
     }
 }
