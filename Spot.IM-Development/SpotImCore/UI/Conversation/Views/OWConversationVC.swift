@@ -62,7 +62,7 @@ fileprivate extension OWConversationVC {
     func setupUI() {
         self.title = viewModel.outputs.title
         self.navigationItem.largeTitleDisplayMode = .always
-        
+
         view.addSubview(conversationView)
         conversationView.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea()
@@ -70,49 +70,11 @@ fileprivate extension OWConversationVC {
         }
 
         addingCloseButtonIfNeeded()
-        setupNavControllerUI()
     }
 
     func addingCloseButtonIfNeeded() {
         if viewModel.outputs.shouldShowCloseButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
-        }
-    }
-
-    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-
-        guard let navController = self.navigationController else { return }
-
-        if viewModel.outputs.shouldCustomizeNavigationBar {
-
-            navController.navigationBar.prefersLargeTitles = true
-
-            let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
-            navController.navigationBar.tintColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
-
-            // Setup Title
-            let navigationTitleTextAttributes = [
-                NSAttributedString.Key.font: OWFontBook.shared.font(typography: .titleSmall),
-                NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
-            ]
-
-            if #available(iOS 13.0, *) {
-                let appearance = UINavigationBarAppearance()
-                appearance.configureWithOpaqueBackground()
-                appearance.backgroundColor = navigationBarBackgroundColor
-                appearance.titleTextAttributes = navigationTitleTextAttributes
-
-                // Setup Back button
-                let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-                backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-                appearance.backButtonAppearance = backButtonAppearance
-
-                navController.navigationBar.standardAppearance = appearance
-                navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
-            } else {
-                navController.navigationBar.backgroundColor = navigationBarBackgroundColor
-                navController.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-            }
         }
     }
 
@@ -123,7 +85,6 @@ fileprivate extension OWConversationVC {
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: currentStyle == .dark), state: .normal)
-                self.setupNavControllerUI(currentStyle)
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
