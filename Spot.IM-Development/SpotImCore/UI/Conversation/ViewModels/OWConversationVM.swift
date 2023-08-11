@@ -25,7 +25,6 @@ protocol OWConversationViewModelingOutputs {
     var conversationViewVM: OWConversationViewViewModeling { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
-    var shouldCustomizeNavigationBar: Bool { get }
     var shouldShowCloseButton: Bool { get }
     var closeConversation: Observable<Void> { get }
     var isLargeTitleDisplay: Observable<Bool> { get }
@@ -77,17 +76,6 @@ class OWConversationViewModel: OWConversationViewModeling,
         return OWConversationViewViewModel(conversationData: conversationData,
                                            viewableMode: self.viewableMode)
     }()
-
-    var shouldCustomizeNavigationBar: Bool {
-        let isSampleAppNavigationController: Bool = OWHostApplicationHelper.isOpenWebSampleApp()
-        var isInternalPresentModeNavigationController: Bool = false
-        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
-           viewableMode == .partOfFlow {
-            isInternalPresentModeNavigationController = true
-        }
-
-        return isInternalPresentModeNavigationController || isSampleAppNavigationController
-    }
 
     var shouldShowCloseButton: Bool {
         guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle else { return false }

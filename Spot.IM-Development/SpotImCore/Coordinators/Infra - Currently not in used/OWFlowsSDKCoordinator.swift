@@ -11,6 +11,11 @@ import RxSwift
 
 class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     fileprivate var router: OWRoutering!
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
 
     var routering: OWRoutering {
         return router
@@ -118,22 +123,31 @@ fileprivate extension OWFlowsSDKCoordinator {
     func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
         invalidateExistingFlows()
 
-        let navigationController: UINavigationController
+        let navController: UINavigationController
+        var shouldCustomizeNavController = false
         let presentationalModeExtended: OWPresentationalModeExtended
 
         switch presentationalMode {
         case .present(let viewController, let style):
-            navigationController = OWNavigationController.shared
-            navigationController.modalPresentationStyle = style.toOSModalPresentationStyle
+            shouldCustomizeNavController = true // Always customize internal nav controller
+            navController = OWNavigationController.shared
+            navController.modalPresentationStyle = style.toOSModalPresentationStyle
             presentationalModeExtended = OWPresentationalModeExtended.present(viewController: viewController,
                                                                               style: style,
                                                                               animated: presentAnimated)
-        case .push(let navController):
-            navigationController = navController
+        case .push(let navigationController):
+            navController = navigationController
             presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
+
+            shouldCustomizeNavController = true // TODO: According to the API 
         }
 
-        router = OWRouter(navigationController: navigationController, presentationalMode: presentationalModeExtended)
+        if shouldCustomizeNavController {
+            let navCustomizerService = servicesProvider.navigationControllerCustomizer()
+            navCustomizerService.activeNavigationController(navigationController: navController)
+        }
+
+        router = OWRouter(navigationController: navController, presentationalMode: presentationalModeExtended)
     }
 
     func cleanRouter(presentationalMode: OWPresentationalMode) {
