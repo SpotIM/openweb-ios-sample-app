@@ -104,7 +104,7 @@ class OWConversationViewModel: OWConversationViewModeling,
     }
 
     fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
-        return BehaviorSubject<Bool>(value: true)
+        return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
     }()
 
     var changeIsLargeTitleDisplay = PublishSubject<Bool>()
