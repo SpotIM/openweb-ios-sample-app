@@ -14,6 +14,7 @@ import UIKit
 typealias OWRangeURLsMapper = [NSRange: URL]
 
 protocol OWCommentTextViewModelingInputs {
+    func updateEditedCommentLocally(_ comment: OWComment)
     var width: BehaviorSubject<CGFloat> { get }
     var labelClickIndex: PublishSubject<Int> { get }
     func shouldTapBeHandeled(at index: Int) -> Bool
@@ -58,6 +59,10 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         setupObservers()
     }
 
+    func updateEditedCommentLocally(_ comment: OWComment) {
+        _comment.onNext(comment)
+    }
+
     fileprivate lazy var _themeStyleObservable: Observable<OWThemeStyle> = {
         OWSharedServicesProvider.shared.themeStyleService().style
     }()
@@ -68,9 +73,8 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
-        _themeStyleObservable
-            .withLatestFrom(comment) { style, comment -> (OWThemeStyle, String)? in
-                guard let text = comment.text?.text else { return nil }
+        Observable.combineLatest(_themeStyleObservable, _comment) { style, comment -> (OWThemeStyle, String)? in
+                guard let text = comment?.text?.text else { return nil }
                 return (style, text)
             }
             .unwrap()
