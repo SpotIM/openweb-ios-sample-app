@@ -16,6 +16,7 @@ class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
         static let closeButtonIdentidier = "report_reason_close_button_id"
         static let closeCrossIcon = "closeCrossIcon"
+        static let animationTimeForLargeTitle: Double = 0.15
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
@@ -68,10 +69,12 @@ class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 fileprivate extension OWReportReasonVC {
     func setupViews() {
         self.title = viewModel.outputs.title
+        self.navigationItem.largeTitleDisplayMode = .always
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(reportReasonView)
         reportReasonView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
 
         closeButton.OWSnp.makeConstraints { make in
@@ -92,6 +95,7 @@ fileprivate extension OWReportReasonVC {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
         title = viewModel.outputs.title
+        navController?.navigationBar.prefersLargeTitles = true
 
         let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
@@ -135,6 +139,37 @@ fileprivate extension OWReportReasonVC {
 
         closeButton.rx.tap
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
+            .disposed(by: disposeBag)
+
+        let reportOffset = viewModel.outputs.reportReasonViewViewModel
+            .outputs.reportOffset
+            .share()
+
+        let shouldShouldChangeToLargeTitleDisplay = reportOffset
+            .filter { $0.y <= 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { !$0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.always }
+
+        let shouldShouldChangeToRegularTitleDisplay = reportOffset
+            .filter { $0.y > 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { $0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.never }
+
+        Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
+            .subscribe(onNext: { [weak self] displayMode in
+                guard let self = self else { return }
+
+                let isLargeTitleGoingToBeDisplay = displayMode == .always
+                self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
+                self.navigationItem.largeTitleDisplayMode = displayMode
+                UIView.animate(withDuration: Metrics.animationTimeForLargeTitle, animations: {
+                    self.navigationController?.navigationBar.layoutIfNeeded()
+                })
+            })
             .disposed(by: disposeBag)
     }
 

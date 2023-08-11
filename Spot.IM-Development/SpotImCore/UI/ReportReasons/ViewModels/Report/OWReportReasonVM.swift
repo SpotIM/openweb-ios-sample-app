@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWReportReasonViewModelingInputs {
     var viewDidLoad: PublishSubject<Void> { get }
+    var changeIsLargeTitleDisplay: PublishSubject<Bool> { get }
 }
 
 protocol OWReportReasonViewModelingOutputs {
@@ -18,6 +19,7 @@ protocol OWReportReasonViewModelingOutputs {
     var loadedToScreen: Observable<Void> { get }
     var title: String { get }
     var viewableMode: OWViewableMode { get }
+    var isLargeTitleDisplay: Observable<Bool> { get }
 }
 
 protocol OWReportReasonViewModeling {
@@ -28,6 +30,8 @@ protocol OWReportReasonViewModeling {
 class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewModelingInputs, OWReportReasonViewModelingOutputs {
     var inputs: OWReportReasonViewModelingInputs { return self }
     var outputs: OWReportReasonViewModelingOutputs { return self }
+
+    fileprivate let disposeBag = DisposeBag()
 
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
@@ -49,11 +53,29 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
 
     fileprivate let reportData: OWReportReasonsRequiredData
 
+    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+        return BehaviorSubject<Bool>(value: true)
+    }()
+
+    var changeIsLargeTitleDisplay = PublishSubject<Bool>()
+    var isLargeTitleDisplay: Observable<Bool> {
+        return _isLargeTitleDisplay
+    }
+
     init(reportData: OWReportReasonsRequiredData,
          viewableMode: OWViewableMode,
          presentMode: OWPresentationalModeCompact) {
         self.reportData = reportData
         self.viewableMode = viewableMode
         self.presentationalMode = presentMode
+        setupObservers()
+    }
+}
+
+fileprivate extension OWReportReasonViewModel {
+    func setupObservers() {
+        changeIsLargeTitleDisplay
+            .bind(to: _isLargeTitleDisplay)
+            .disposed(by: disposeBag)
     }
 }
