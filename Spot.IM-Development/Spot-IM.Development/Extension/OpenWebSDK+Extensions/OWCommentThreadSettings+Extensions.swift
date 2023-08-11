@@ -12,7 +12,7 @@ import SpotImCore
 #if NEW_API
 
 extension OWCommentThreadSettings {
-    static var defaultCommentId = "sp_eCIlROSD_sdk1_c_2LE7TOJIGuzxgkRhyByPUFA73oq_r_2N0Kd6WueGMtK5LYvjTcm4hEMom"
+    static var defaultCommentId = "sp_eCIlROSD_sdk1_c_2LSbAw2Pgx9WyPHfM2H7rZi5ylP_r_2TWBYVj3ySnP9PhQHVDHfelqtjK"
 }
 
 #endif
