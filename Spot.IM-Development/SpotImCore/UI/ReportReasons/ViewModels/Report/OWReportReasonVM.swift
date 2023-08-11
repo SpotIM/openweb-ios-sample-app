@@ -40,6 +40,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
 
     let viewableMode: OWViewableMode
     let presentationalMode: OWPresentationalModeCompact
+    fileprivate let servicesProvider: OWSharedServicesProviding
 
     lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
         return OWReportReasonViewViewModel(reportData: reportData,
@@ -54,7 +55,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     fileprivate let reportData: OWReportReasonsRequiredData
 
     fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
-        return BehaviorSubject<Bool>(value: true)
+        return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
     }()
 
     var changeIsLargeTitleDisplay = PublishSubject<Bool>()
@@ -64,10 +65,13 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
 
     init(reportData: OWReportReasonsRequiredData,
          viewableMode: OWViewableMode,
-         presentMode: OWPresentationalModeCompact) {
+         presentMode: OWPresentationalModeCompact,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.reportData = reportData
         self.viewableMode = viewableMode
         self.presentationalMode = presentMode
+        self.servicesProvider = servicesProvider
+
         setupObservers()
     }
 }
