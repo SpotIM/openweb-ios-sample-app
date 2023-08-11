@@ -463,6 +463,7 @@ fileprivate extension BetaNewAPIVC {
         let navController = self.navigationController
 
         let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
+        navController?.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
 
         // Setup Title font
         let navigationTitleTextAttributes = [
