@@ -45,6 +45,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
     func commentUpdaterService() -> OWCommentUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
+    func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -172,6 +173,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWLocalCommentDataPopulator()
     }()
 
+    fileprivate lazy var _navigationControllerCustomizer: OWNavigationControllerCustomizing = {
+        return OWNavigationControllerCustomizer(servicesProvider: self)
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -278,6 +283,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating {
         return _localCommentDataPopulator
+    }
+
+    func navigationControllerCustomizer() -> OWNavigationControllerCustomizing {
+        return _navigationControllerCustomizer
     }
 }
 
