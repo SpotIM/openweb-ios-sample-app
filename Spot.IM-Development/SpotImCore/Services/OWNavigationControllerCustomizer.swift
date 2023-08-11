@@ -16,6 +16,10 @@ protocol OWNavigationControllerCustomizing {
 
 class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
 
+    struct Metrics {
+        static let animationTimeForLargeTitle: Double = 0.15
+    }
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let customizationsLayer: OWCustomizationsInternalProtocol

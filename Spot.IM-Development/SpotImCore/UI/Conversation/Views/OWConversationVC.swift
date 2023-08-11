@@ -13,7 +13,6 @@ import RxCocoa
 class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
         static let closeButtonImageName: String = "closeButton"
-        static let animationTimeForLargeTitle: Double = 0.15
     }
 
     fileprivate let viewModel: OWConversationViewModeling
@@ -61,7 +60,10 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 fileprivate extension OWConversationVC {
     func setupUI() {
         self.title = viewModel.outputs.title
-        self.navigationItem.largeTitleDisplayMode = .always
+        let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+        if navControllerCustomizer.isLargeTitlesEnabled() {
+            self.navigationItem.largeTitleDisplayMode = .always
+        }
 
         view.addSubview(conversationView)
         conversationView.OWSnp.makeConstraints { make in
@@ -91,11 +93,11 @@ fileprivate extension OWConversationVC {
 
         self.setupStatusBarStyleUpdaterObservers()
 
+        // Large titles related observables
         let conversationOffset = viewModel.outputs.conversationViewVM
             .outputs.conversationOffset
             .share()
 
-        // Large titles related observables
         let shouldShouldChangeToLargeTitleDisplay = conversationOffset
             .filter { $0.y <= 0 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
@@ -118,7 +120,7 @@ fileprivate extension OWConversationVC {
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
                 self.navigationItem.largeTitleDisplayMode = displayMode
-                UIView.animate(withDuration: Metrics.animationTimeForLargeTitle, animations: {
+                UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
                     self.navigationController?.navigationBar.layoutIfNeeded()
                 })
             })

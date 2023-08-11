@@ -16,7 +16,6 @@ class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
         static let closeButtonIdentidier = "report_reason_close_button_id"
         static let closeCrossIcon = "closeCrossIcon"
-        static let animationTimeForLargeTitle: Double = 0.15
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
@@ -69,7 +68,10 @@ class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 fileprivate extension OWReportReasonVC {
     func setupViews() {
         self.title = viewModel.outputs.title
-        self.navigationItem.largeTitleDisplayMode = .always
+        let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+        if navControllerCustomizer.isLargeTitlesEnabled() {
+            self.navigationItem.largeTitleDisplayMode = .always
+        }
 
         setupNavControllerSettings()
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
@@ -111,11 +113,11 @@ fileprivate extension OWReportReasonVC {
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
             .disposed(by: disposeBag)
 
+        // Large titles related observables
         let reportOffset = viewModel.outputs.reportReasonViewViewModel
             .outputs.reportOffset
             .share()
 
-        // Large titles related observables
         let shouldShouldChangeToLargeTitleDisplay = reportOffset
             .filter { $0.y <= 0 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
@@ -138,7 +140,7 @@ fileprivate extension OWReportReasonVC {
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
                 self.navigationItem.largeTitleDisplayMode = displayMode
-                UIView.animate(withDuration: Metrics.animationTimeForLargeTitle, animations: {
+                UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
                     self.navigationController?.navigationBar.layoutIfNeeded()
                 })
             })
