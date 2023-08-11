@@ -115,6 +115,7 @@ fileprivate extension OWReportReasonVC {
             .outputs.reportOffset
             .share()
 
+        // Large titles related observables
         let shouldShouldChangeToLargeTitleDisplay = reportOffset
             .filter { $0.y <= 0 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
@@ -131,7 +132,8 @@ fileprivate extension OWReportReasonVC {
 
         Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
             .subscribe(onNext: { [weak self] displayMode in
-                guard let self = self else { return }
+                let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
 
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
