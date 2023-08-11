@@ -13,6 +13,7 @@ import RxCocoa
 class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
         static let closeButtonImageName: String = "closeButton"
+        static let animationTimeForLargeTitle: Double = 0.15
     }
 
     fileprivate let viewModel: OWConversationViewModeling
@@ -61,7 +62,8 @@ fileprivate extension OWConversationVC {
     func setupUI() {
         view.addSubview(conversationView)
         conversationView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
 
         setupNavControllerUI()
@@ -78,7 +80,9 @@ fileprivate extension OWConversationVC {
         guard let navController = self.navigationController else { return }
 
         if viewModel.outputs.shouldCustomizeNavigationBar {
-            navController.navigationBar.isTranslucent = false
+
+            navController.navigationBar.prefersLargeTitles = true
+
             let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
             // Setup Title
@@ -112,6 +116,7 @@ fileprivate extension OWConversationVC {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: currentStyle == .dark), state: .normal)
                 self.setupNavControllerUI(currentStyle)
                 self.updateCustomUI()
@@ -119,6 +124,37 @@ fileprivate extension OWConversationVC {
             .disposed(by: disposeBag)
 
         self.setupStatusBarStyleUpdaterObservers()
+
+        let conversationOffset = viewModel.outputs.conversationViewVM
+            .outputs.conversationOffset
+            .share()
+
+        let shouldShouldChangeToLargeTitleDisplay = conversationOffset
+            .filter { $0.y <= 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { !$0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.always }
+
+        let shouldShouldChangeToRegularTitleDisplay = conversationOffset
+            .filter { $0.y > 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { $0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.never }
+
+        Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
+            .subscribe(onNext: { [weak self] displayMode in
+                guard let self = self else { return }
+
+                let isLargeTitleGoingToBeDisplay = displayMode == .always
+                self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
+                self.navigationItem.largeTitleDisplayMode = displayMode
+                UIView.animate(withDuration: Metrics.animationTimeForLargeTitle, animations: {
+                    self.navigationController?.navigationBar.layoutIfNeeded()
+                })
+            })
+            .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {

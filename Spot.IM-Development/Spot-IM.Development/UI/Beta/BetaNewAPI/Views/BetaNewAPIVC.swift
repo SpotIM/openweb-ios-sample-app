@@ -462,7 +462,6 @@ fileprivate extension BetaNewAPIVC {
     func setupNavControllerUI() {
         let navController = self.navigationController
 
-        navController?.navigationBar.isTranslucent = false
         let navigationBarBackgroundColor = ColorPalette.shared.color(type: .background)
 
         // Setup Title font
