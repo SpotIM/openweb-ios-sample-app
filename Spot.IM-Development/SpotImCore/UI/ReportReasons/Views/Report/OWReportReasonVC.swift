@@ -93,7 +93,6 @@ fileprivate extension OWReportReasonVC {
 
         title = viewModel.outputs.title
 
-        navController?.navigationBar.isTranslucent = false
         let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
         // Setup Title
