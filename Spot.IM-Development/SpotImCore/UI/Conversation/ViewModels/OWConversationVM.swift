@@ -29,6 +29,7 @@ protocol OWConversationViewModelingOutputs {
     var shouldShowCloseButton: Bool { get }
     var closeConversation: Observable<Void> { get }
     var isLargeTitleDisplay: Observable<Bool> { get }
+    var title: String { get }
 }
 
 protocol OWConversationViewModeling {
@@ -55,6 +56,10 @@ class OWConversationViewModel: OWConversationViewModeling,
 
     var triggerCustomizeNavigationItemUI = PublishSubject<UINavigationItem>()
     var triggerCustomizeNavigationBarUI = PublishSubject<UINavigationBar>()
+
+    lazy var title: String = {
+        return OWLocalizationManager.shared.localizedString(key: "Conversation")
+    }()
 
     var customizeNavigationItemUI: Observable<UINavigationItem> {
         return _triggerCustomizeNavigationItemUI
