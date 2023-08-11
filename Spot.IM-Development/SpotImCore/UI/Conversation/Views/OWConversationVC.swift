@@ -60,22 +60,26 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
 fileprivate extension OWConversationVC {
     func setupUI() {
+        self.title = viewModel.outputs.title
+        self.navigationItem.largeTitleDisplayMode = .always
+        
         view.addSubview(conversationView)
         conversationView.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea()
             make.leading.trailing.bottom.equalToSuperview()
         }
 
+        addingCloseButtonIfNeeded()
         setupNavControllerUI()
     }
 
-    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-        // Setup close button
+    func addingCloseButtonIfNeeded() {
         if viewModel.outputs.shouldShowCloseButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
+    }
 
-        title = OWLocalizationManager.shared.localizedString(key: "Conversation")
+    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
 
         guard let navController = self.navigationController else { return }
 
