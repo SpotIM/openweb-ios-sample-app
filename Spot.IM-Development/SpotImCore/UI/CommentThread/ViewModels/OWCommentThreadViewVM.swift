@@ -15,6 +15,7 @@ protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
+    var changeThreadOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -27,6 +28,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var scrollToCellIndex: Observable<Int> { get }
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
+    var threadOffset: Observable<CGPoint> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -178,6 +180,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
+            .asObservable()
+    }
+
+    var changeThreadOffset = PublishSubject<CGPoint>()
+    var threadOffset: Observable<CGPoint> {
+        return changeThreadOffset
             .asObservable()
     }
 

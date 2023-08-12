@@ -21,6 +21,7 @@ protocol OWConversationViewViewModelingInputs {
     var pullToRefresh: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
+    var changeConversationOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -48,6 +49,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var conversationOffset: Observable<CGPoint> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -316,6 +318,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
+            .asObservable()
+    }
+
+    var changeConversationOffset = PublishSubject<CGPoint>()
+    var conversationOffset: Observable<CGPoint> {
+        return changeConversationOffset
             .asObservable()
     }
 

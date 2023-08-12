@@ -21,6 +21,7 @@ class GeneralSettingsView: UIView {
         static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedStatusBarStyleIdentifier = "status_bar_style"
+        static let segmentedNavigationBarStyleIdentifier = "navigation_bar_style"
         static let segmentedModalStyleIdentifier = "modal_style"
         static let segmentedInitialSortIdentifier = "initial_sort"
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
@@ -89,6 +90,15 @@ class GeneralSettingsView: UIView {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedStatusBarStyleIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedNavigationBarStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.navigationBarStyleTitle
+        let items = viewModel.outputs.navigationBarStyleSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedNavigationBarStyleIdentifier,
                                        items: items)
     }()
 
@@ -198,6 +208,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
         stackView.addArrangedSubview(segmentedStatusBarStyle)
+        stackView.addArrangedSubview(segmentedNavigationBarStyle)
         stackView.addArrangedSubview(segmentedModalStyle)
         stackView.addArrangedSubview(segmentedInitialSort)
         stackView.addArrangedSubview(segmentedFontGroupType)
@@ -229,6 +240,10 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.statusBarStyleIndex
             .bind(to: segmentedStatusBarStyle.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.navigationBarStyleIndex
+            .bind(to: segmentedNavigationBarStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.modalStyleIndex
@@ -270,6 +285,10 @@ fileprivate extension GeneralSettingsView {
 
         segmentedStatusBarStyle.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.statusBarStyleSelectedIndex)
+            .disposed(by: disposeBag)
+
+        segmentedNavigationBarStyle.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.navigationBarStyleSelectedIndex)
             .disposed(by: disposeBag)
 
         segmentedModalStyle.rx.selectedSegmentIndex
