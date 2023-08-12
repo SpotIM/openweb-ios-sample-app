@@ -82,11 +82,19 @@ fileprivate extension OWNavigationControllerCustomizer {
             NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
         ]
 
+        // Setup Large Title
+        let navigationLargeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
+        ]
+
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = navigationBarBackgroundColor
             appearance.titleTextAttributes = navigationTitleTextAttributes
+            if self.isLargeTitlesEnabled() {
+                appearance.largeTitleTextAttributes = navigationLargeTitleTextAttributes
+            }
 
             // Setup Back button
             let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
