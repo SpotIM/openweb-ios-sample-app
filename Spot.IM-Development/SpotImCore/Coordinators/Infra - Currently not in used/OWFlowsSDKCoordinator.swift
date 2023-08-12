@@ -126,6 +126,7 @@ fileprivate extension OWFlowsSDKCoordinator {
         let navController: UINavigationController
         var shouldCustomizeNavController = false
         let presentationalModeExtended: OWPresentationalModeExtended
+        let navCustomizerService = servicesProvider.navigationControllerCustomizer()
 
         switch presentationalMode {
         case .present(let viewController, let style):
@@ -138,12 +139,11 @@ fileprivate extension OWFlowsSDKCoordinator {
         case .push(let navigationController):
             navController = navigationController
             presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
-
-            shouldCustomizeNavController = true // TODO: According to the API 
+            shouldCustomizeNavController = navCustomizerService.shouldCustomizeNavigationController()
         }
 
+        // Customize navigation controller if needed
         if shouldCustomizeNavController {
-            let navCustomizerService = servicesProvider.navigationControllerCustomizer()
             navCustomizerService.activeNavigationController(navigationController: navController)
         }
 
