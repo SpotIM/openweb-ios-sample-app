@@ -89,7 +89,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     }
 }
 
-extension CommentCreationSettingsVM {
+fileprivate extension CommentCreationSettingsVM {
     func setupObservers() {
         styleModeObservable
             .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
@@ -100,7 +100,6 @@ extension CommentCreationSettingsVM {
     }
 }
 
-extension CommentCreationSettingsVM: SettingsGroupVMProtocol {
+extension CommentCreationSettingsVM: SettingsGroupVMProtocol { }
 
-}
 #endif
