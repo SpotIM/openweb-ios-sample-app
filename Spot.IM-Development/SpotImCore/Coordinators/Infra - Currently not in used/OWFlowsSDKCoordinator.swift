@@ -124,7 +124,7 @@ fileprivate extension OWFlowsSDKCoordinator {
         invalidateExistingFlows()
 
         let navController: UINavigationController
-        var shouldCustomizeNavController = false
+        let shouldCustomizeNavController: Bool
         let presentationalModeExtended: OWPresentationalModeExtended
         let navCustomizerService = servicesProvider.navigationControllerCustomizer()
 
