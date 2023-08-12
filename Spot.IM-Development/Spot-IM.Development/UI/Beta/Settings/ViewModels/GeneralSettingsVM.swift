@@ -448,6 +448,12 @@ fileprivate extension GeneralSettingsVM {
             .setValues(key: UserDefaultsProvider.UDKey<Int>.statusBarStyleIndex))
             .disposed(by: disposeBag)
 
+        navigationBarStyleSelectedIndex
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.navigationBarStyleIndex))
+            .disposed(by: disposeBag)
+
         modalStyleSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
