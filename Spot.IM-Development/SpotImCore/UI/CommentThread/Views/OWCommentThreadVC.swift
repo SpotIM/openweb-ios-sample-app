@@ -50,21 +50,61 @@ class OWCommentThreadVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
 fileprivate extension OWCommentThreadVC {
     func setupViews() {
-        view.addSubview(commentThreadView)
-        commentThreadView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        self.title = viewModel.outputs.title
+        let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+        if navControllerCustomizer.isLargeTitlesEnabled() {
+            self.navigationItem.largeTitleDisplayMode = .always
         }
 
-        self.setupNavControllerUI()
-    }
-
-    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-        let navController = self.navigationController
-
-        title = OWLocalizationManager.shared.localizedString(key: "Replies")
+        view.addSubview(commentThreadView)
+        commentThreadView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
+        }
     }
 
     func setupObservers() {
         self.setupStatusBarStyleUpdaterObservers()
+
+        // Large titles related observables
+        let threadOffset = viewModel.outputs.commentThreadViewVM
+            .outputs.threadOffset
+            .share()
+
+        let shouldShouldChangeToLargeTitleDisplay = threadOffset
+            .filter { $0.y <= 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { !$0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.always }
+
+        let shouldShouldChangeToRegularTitleDisplay = threadOffset
+            .filter { $0.y > 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { $0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.never }
+
+        Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
+            .subscribe(onNext: { [weak self] displayMode in
+                let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
+
+                let isLargeTitleGoingToBeDisplay = displayMode == .always
+                self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
+                self.navigationItem.largeTitleDisplayMode = displayMode
+                UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
+                    self.navigationController?.navigationBar.layoutIfNeeded()
+                })
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }

@@ -331,7 +331,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
     }
 }
 
-extension ConversationSettingsVM {
+fileprivate extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
@@ -343,7 +343,6 @@ extension ConversationSettingsVM {
     }
 }
 
-extension ConversationSettingsVM: SettingsGroupVMProtocol {
+extension ConversationSettingsVM: SettingsGroupVMProtocol { }
 
-}
 #endif
