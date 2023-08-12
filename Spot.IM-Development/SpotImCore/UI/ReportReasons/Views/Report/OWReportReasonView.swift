@@ -183,6 +183,7 @@ fileprivate extension OWReportReasonView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // TableView binding
         viewModel.outputs.reportReasonCellViewModels
