@@ -42,12 +42,11 @@ class IAUSettingsVM: IAUSettingsViewModeling, IAUSettingsViewModelingInputs, IAU
     }
 }
 
-extension IAUSettingsVM {
+fileprivate extension IAUSettingsVM {
     func setupObservers() {
     }
 }
 
-extension IAUSettingsVM: SettingsGroupVMProtocol {
+extension IAUSettingsVM: SettingsGroupVMProtocol { }
 
-}
 #endif

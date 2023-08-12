@@ -204,7 +204,7 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
     }
 }
 
-extension PreConversationSettingsVM {
+fileprivate extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
             .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
@@ -215,7 +215,6 @@ extension PreConversationSettingsVM {
     }
 }
 
-extension PreConversationSettingsVM: SettingsGroupVMProtocol {
+extension PreConversationSettingsVM: SettingsGroupVMProtocol { }
 
-}
 #endif
