@@ -12,6 +12,7 @@ import RxSwift
 protocol OWNavigationControllerCustomizing {
     func activeNavigationController(navigationController: UINavigationController)
     func isLargeTitlesEnabled() -> Bool
+    func shouldCustomizeNavigationController() -> Bool
 }
 
 class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
@@ -22,12 +23,11 @@ class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let customizationsLayer: OWCustomizationsInternalProtocol
+    fileprivate let customizationsLayer: OWCustomizations
     fileprivate weak var activeNavigationController: UINavigationController?
 
-    // swiftlint:disable force_cast
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         customizationsLayer: OWCustomizationsInternalProtocol = OpenWeb.manager.ui.customizations as! OWCustomizationsInternalProtocol) {
+         customizationsLayer: OWCustomizations = OpenWeb.manager.ui.customizations) {
         self.servicesProvider = servicesProvider
         self.customizationsLayer = customizationsLayer
         setupObservers()
@@ -40,7 +40,17 @@ class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
     }
 
     func isLargeTitlesEnabled() -> Bool {
-        return true
+        if case OWNavigationBarEnforcement.style(let style) = customizationsLayer.navigationBarEnforcement,
+           style == .largeTitles {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    func shouldCustomizeNavigationController() -> Bool {
+        let shouldKeepOriginal = customizationsLayer.navigationBarEnforcement == .keepOriginal
+        return !shouldKeepOriginal
     }
 }
 
