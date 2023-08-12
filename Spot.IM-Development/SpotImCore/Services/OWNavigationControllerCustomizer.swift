@@ -71,9 +71,7 @@ fileprivate extension OWNavigationControllerCustomizer {
     func setupNavController(style: OWThemeStyle) {
         guard let navController = activeNavigationController else { return }
 
-        if self.isLargeTitlesEnabled() {
-            navController.navigationBar.prefersLargeTitles = true
-        }
+        navController.navigationBar.prefersLargeTitles = self.isLargeTitlesEnabled()
 
         let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
         navController.navigationBar.tintColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: style)

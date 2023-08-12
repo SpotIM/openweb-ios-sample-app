@@ -359,6 +359,7 @@
 		3D301BDE2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */; };
 		3D301BE02A87940D0012B526 /* OWNavigationBarEnforcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDF2A87940D0012B526 /* OWNavigationBarEnforcement.swift */; };
 		3D301BE22A87946C0012B526 /* OWNavigationBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BE12A87946C0012B526 /* OWNavigationBarStyle.swift */; };
+		3D301BE42A8799D60012B526 /* OWNavigationBarEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BE32A8799D60012B526 /* OWNavigationBarEnforcement+Extensions.swift */; };
 		3D3150502A4D929E00EF6575 /* OWAccessoryViewStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D31504F2A4D929E00EF6575 /* OWAccessoryViewStrategy.swift */; };
 		3D3150532A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3150522A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift */; };
 		3D3150562A4DD74000EF6575 /* OWRouteringModeInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3150552A4DD74000EF6575 /* OWRouteringModeInternal.swift */; };
@@ -1350,6 +1351,7 @@
 		3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationControllerCustomizer.swift; sourceTree = "<group>"; };
 		3D301BDF2A87940D0012B526 /* OWNavigationBarEnforcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationBarEnforcement.swift; sourceTree = "<group>"; };
 		3D301BE12A87946C0012B526 /* OWNavigationBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationBarStyle.swift; sourceTree = "<group>"; };
+		3D301BE32A8799D60012B526 /* OWNavigationBarEnforcement+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWNavigationBarEnforcement+Extensions.swift"; sourceTree = "<group>"; };
 		3D31504F2A4D929E00EF6575 /* OWAccessoryViewStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAccessoryViewStrategy.swift; sourceTree = "<group>"; };
 		3D3150522A4D997500EF6575 /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		3D3150552A4DD74000EF6575 /* OWRouteringModeInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouteringModeInternal.swift; sourceTree = "<group>"; };
@@ -5742,6 +5744,7 @@
 				1642C3DE2A2790BD00559AA9 /* OWCommentThreadSettings+Extensions.swift */,
 				8DBC16792A406C290010759E /* OWArticleHeaderStyle+Extensions.swift */,
 				3DB1D5A22A785C880012388E /* OWStatusBarEnforcement+Extensions.swift */,
+				3D301BE32A8799D60012B526 /* OWNavigationBarEnforcement+Extensions.swift */,
 			);
 			path = "OpenWebSDK+Extensions";
 			sourceTree = "<group>";
@@ -6974,6 +6977,7 @@
 				3DB1D5A32A785C880012388E /* OWStatusBarEnforcement+Extensions.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleFlowsVC.swift in Sources */,
 				9EBE5C2C29AE16B1001150DA /* OWConversationStyle+Extensions.swift in Sources */,
+				3D301BE42A8799D60012B526 /* OWNavigationBarEnforcement+Extensions.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
 				9EA0F83929AB7AA8008FD7A6 /* SettingsGroupType.swift in Sources */,
 				3DF941882A56D8F900A687BD /* AutomationViewModel.swift in Sources */,
