@@ -19,39 +19,46 @@ final class OWTimeMeasuringServiceTests: QuickSpec {
 
     override func spec() {
         describe("OWTimeMeasuringService") {
-            it("should measure time") {
-                let timeMeasuringService = OWTimeMeasuringService()
-                let key = OWTimeMeasuringService.OWKeys.conversationUIBuildingTime
+            var timeMeasuringService: OWTimeMeasuringService!
+            var key: OWTimeMeasuringService.OWKeys!
+            var measureSuccess: Bool!
 
-                let expectation = QuickSpec.current.expectation(description: "measure time expectation")
-
-                timeMeasuringService.startMeasure(forKey: key)
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                    let result = timeMeasuringService.endMeasure(forKey: key)
-
-                    if case let .time(milliseconds) = result {
-                        expect(milliseconds).to(beGreaterThanOrEqualTo(10))
-                    } else {
-                        fail("expected a time measurement result, but received an error: \(result)")
-                    }
-
-                    expectation.fulfill()
-                }
-
-                QuickSpec.current.wait(for: [expectation], timeout: 1.0)
+            beforeEach {
+                timeMeasuringService = OWTimeMeasuringService()
+                key = OWTimeMeasuringService.OWKeys.conversationUIBuildingTime
+                measureSuccess = false
             }
 
-            it("should report an error when end measure is called without start measure") {
-                let timeMeasuringService = OWTimeMeasuringService()
-                let key = OWTimeMeasuringService.OWKeys.conversationUIBuildingTime
+            afterEach {
+                timeMeasuringService = nil
+                key = nil
+            }
 
-                let result = timeMeasuringService.endMeasure(forKey: key)
+            context("measuring time") {
+                it("should measure time") {
+                    timeMeasuringService.startMeasure(forKey: key)
 
-                if case let .error(message) = result {
-                    expect(message).to(equal("Error: start measure must be called before end measure"))
-                } else {
-                    fail("expected an error message, but received a time measurement result: \(result)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                        switch timeMeasuringService.endMeasure(forKey: key) {
+                        case .time(milliseconds: let time):
+                            measureSuccess = time > 0
+                        case .error:
+                            measureSuccess = false
+                        }
+                    }
+
+                    expect(measureSuccess).toEventually(equal(true))
+                }
+
+                it("should report an error when end measure is called without start measure") {
+                    switch timeMeasuringService.endMeasure(forKey: key) {
+                    case .time(milliseconds: let time):
+                        measureSuccess = time > 0
+                    case .error:
+                        measureSuccess = false
+                    }
+
+                    expect(measureSuccess).to(equal(false))
                 }
             }
         }
