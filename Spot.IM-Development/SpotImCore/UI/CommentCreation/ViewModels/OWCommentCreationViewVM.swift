@@ -83,7 +83,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 return self.servicesProvider.presenterService()
                     // TODO - Localization
                     .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: self.viewableMode)
-                    .flatMap { result -> Observable<Void> in
+                    .flatMap { [weak self] result -> Observable<Void> in
+                        guard let self = self else { return .empty() }
                         switch result {
                         case .completion:
                             return Observable.empty()
@@ -93,6 +94,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                                 self.cacheComment(text: commentText)
                                 return Observable.just(())
                             default:
+                                self.commentCreationRegularViewVm.inputs.becomeFirstResponder.onNext()
+                                self.commentCreationLightViewVm.inputs.becomeFirstResponder.onNext()
                                 return Observable.empty()
                             }
                         }
