@@ -228,6 +228,15 @@ fileprivate extension OWCommentVotingView {
         rankDownButton.rx.tap
             .bind(to: viewModel.inputs.tapRankDown)
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

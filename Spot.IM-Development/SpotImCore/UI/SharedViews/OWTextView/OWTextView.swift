@@ -168,5 +168,15 @@ fileprivate extension OWTextView {
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textView.font = OWFontBook.shared.font(typography: .bodyText)
+                self.charectersCountLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.textViewPlaceholder.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
     }
 }
