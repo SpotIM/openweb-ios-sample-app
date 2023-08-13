@@ -181,6 +181,15 @@ fileprivate extension OWArticleDescriptionView {
                                                                         themeStyle: currentStyle)
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.authorLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
