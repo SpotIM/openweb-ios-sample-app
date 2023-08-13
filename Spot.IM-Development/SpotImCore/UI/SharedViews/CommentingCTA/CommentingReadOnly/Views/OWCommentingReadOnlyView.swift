@@ -77,6 +77,14 @@ fileprivate extension OWCommentingReadOnlyView {
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.label.font = OWFontBook.shared.font(typography: .bodyContext)
+            })
+            .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {

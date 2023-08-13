@@ -303,6 +303,19 @@ fileprivate extension OWCommentHeaderView {
                 }
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.userNameLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
+                self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoCaption)
+                self.subtitleLabel.font = OWFontBook.shared.font(typography: .metaText)
+                self.seperatorBetweenSubtitleAndDateLabel.font = OWFontBook.shared.font(typography: .metaText)
+                self.dateLabel.font = OWFontBook.shared.font(typography: .metaText)
+                self.hiddenCommentReasonLabel.font = OWFontBook.shared.font(typography: .bodySpecial)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
