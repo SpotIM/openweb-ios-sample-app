@@ -17,11 +17,7 @@ import Nimble
 
 fileprivate enum OWTestKey: String, OWRawableKey {
     typealias T = String // swiftlint:disable:this type_name
-
-    case key1
-    case key2
-    case key3
-    case key4
+    case key
 }
 
 final class OWPersistenceRxHelperTests: QuickSpec {
@@ -29,57 +25,61 @@ final class OWPersistenceRxHelperTests: QuickSpec {
     override func spec() {
         describe("OWPersistenceRxHelper") {
             var disposeBag: DisposeBag!
+            var persistenceHelper: OWPersistenceRxHelper!
+            var expectedValue: Int!
+            var results: [Int]!
 
-            beforeEach {
-                disposeBag = DisposeBag()
+            let defaultValue = 123456
+            let key = OWRxHelperKey<Int>(key: OWTestKey.key)
+
+            context("no default providing") {
+                beforeEach {
+                    expectedValue = Int.random(in: 0..<999_999)
+                    results = []
+                    disposeBag = DisposeBag()
+                    persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
+                    persistenceHelper.observable(key: key, value: try? JSONEncoder().encode(expectedValue), defaultValue: nil).subscribe { event in
+                        results.append(event)
+                    }.disposed(by: disposeBag)
+                }
+
+                afterEach {
+                    persistenceHelper = nil
+                    disposeBag = nil
+                }
+
+                it("should provide an observable with no default value") {
+                    expect(results).toEventually(equal([expectedValue]))
+                }
+
+                it("should provide an observable with data") {
+                    let newValue = Int.random(in: 0..<999_999)
+                    persistenceHelper.onNext(key: key, data: try? JSONEncoder().encode(newValue))
+                    expect(results).toEventually(equal([expectedValue, newValue]))
+                }
             }
 
-            afterEach {
-                disposeBag = nil
-            }
+            context("default providing") {
 
-            it("should provide an observable with data") {
-                let persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
-                let key = OWRxHelperKey<String>(key: OWTestKey.key1)
-                let expectedValue = UUID().uuidString
-                let data = try? JSONEncoder().encode(expectedValue)
-                let observable = persistenceHelper.observable(key: key, value: data, defaultValue: nil)
+                beforeEach {
+                    expectedValue = Int.random(in: 0..<999_999)
+                    results = []
+                    disposeBag = DisposeBag()
+                    persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
+                    persistenceHelper.observable(key: key, value: try? JSONEncoder().encode(expectedValue), defaultValue: defaultValue).subscribe { event in
+                        results.append(event)
+                    }.disposed(by: disposeBag)
+                }
 
-                let result = try? observable.toBlocking().first()
+                it("should provide an observable with a default value") {
+                    expect(results).to(equal([expectedValue]))
+                }
 
-                expect(result).to(equal(expectedValue))
-            }
-
-            it("should provide an observable with a default value") {
-                let persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
-                let key = OWRxHelperKey<String>(key: OWTestKey.key2)
-                let defaultValue = UUID().uuidString
-                let observable = persistenceHelper.observable(key: key, value: nil, defaultValue: defaultValue)
-
-                let result = try? observable.toBlocking().first()
-
-                expect(result).to(equal(defaultValue))
-            }
-
-            it("should notify observers on onNext") {
-                let scheduler = TestScheduler(initialClock: 0)
-                let persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
-                let key = OWRxHelperKey<String>(key: OWTestKey.key4)
-                let expectedValue = UUID().uuidString
-                let data = try? JSONEncoder().encode(expectedValue)
-                let observable = persistenceHelper.observable(key: key, value: nil)
-                let observer = scheduler.createObserver(String.self)
-
-                observable.subscribe(observer).disposed(by: disposeBag)
-
-                persistenceHelper.onNext(key: key, data: data)
-                scheduler.start()
-
-                let expectedEvents: [Recorded<Event<String>>] = [
-                    .next(0, expectedValue)
-                ]
-
-                expect(observer.events).to(equal(expectedEvents))
+                it("should provide an observable with an expected value") {
+                    let newValue = Int.random(in: 0..<999_999)
+                    persistenceHelper.onNext(key: key, data: try? JSONEncoder().encode(newValue))
+                    expect(results).toEventually(equal([expectedValue, newValue]))
+                }
             }
         }
     }
