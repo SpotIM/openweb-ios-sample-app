@@ -101,5 +101,14 @@ fileprivate extension OWTitleSubtitleIconView {
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .titleMedium)
+                self.subtitleLabel.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
     }
 }

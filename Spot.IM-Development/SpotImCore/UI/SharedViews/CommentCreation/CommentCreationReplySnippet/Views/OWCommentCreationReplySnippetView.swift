@@ -86,6 +86,14 @@ fileprivate extension OWCommentCreationReplySnippetView {
             .bind(to: bottomSeparatorView.rx.isHidden)
             .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.replySnippetLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            })
+            .disposed(by: disposeBag)
+
     }
 
     func applyAccessibility() {
