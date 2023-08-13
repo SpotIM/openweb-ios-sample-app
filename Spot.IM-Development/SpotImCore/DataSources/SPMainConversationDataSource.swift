@@ -340,7 +340,7 @@ internal final class SPMainConversationDataSource {
 
         if let userComment = comment {
             let maybeReplyComment = cellData.flatMap { $0 }.first { $0.commentId == userComment.parentCommentId }
-            
+
             if userComment.isAReply(), let replyComment = maybeReplyComment {
                 replyModel = SPReplyCommentDTO(
                     authorName: replyComment.displayName,
