@@ -33,7 +33,6 @@ platform :ios do
 
   desc "Run unit tests"
   lane :unit_tests do |options|
-    cocoapods()
     scan(
       scheme: "OpenWebCoreTests",
       workspace: "Spot-IM.Development.xcworkspace",
