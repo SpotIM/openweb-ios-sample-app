@@ -397,7 +397,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func configureLoginPromptView() {
         loginPromptView.OWSnp.makeConstraints { make in
-            make.top.equalTo(topLayoutGuide.OWSnp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
         }
         loginPromptView.delegate = self

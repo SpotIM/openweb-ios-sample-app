@@ -104,9 +104,9 @@ struct OWNetworkDataTask<Value> {
         get async {
             if shouldAutomaticallyCancel {
                 return await withTaskCancellationHandler {
-                    self.cancel()
-                } operation: {
                     await task.value
+                } onCancel: {
+                    self.cancel()
                 }
             } else {
                 return await task.value
@@ -274,13 +274,13 @@ extension OWNetworkDataRequest {
     -> OWNetworkDataTask<Value> {
         let task = Task {
             await withTaskCancellationHandler {
-                self.cancel()
-            } operation: {
                 await withCheckedContinuation { continuation in
                     onResponse {
                         continuation.resume(returning: $0)
                     }
                 }
+            } onCancel: {
+                self.cancel()
             }
         }
 
@@ -298,9 +298,9 @@ struct OWNetworkDownloadTask<Value> {
         get async {
             if shouldAutomaticallyCancel {
                 return await withTaskCancellationHandler {
-                    self.cancel()
-                } operation: {
                     await task.value
+                } onCancel: {
+                    self.cancel()
                 }
             } else {
                 return await task.value
@@ -486,13 +486,13 @@ extension OWNetworkDownloadRequest {
     -> OWNetworkDownloadTask<Value> {
         let task = Task {
             await withTaskCancellationHandler {
-                self.cancel()
-            } operation: {
                 await withCheckedContinuation { continuation in
                     onResponse {
                         continuation.resume(returning: $0)
                     }
                 }
+            } onCancel: {
+                self.cancel()
             }
         }
 
