@@ -21,6 +21,7 @@ protocol OWConversationViewViewModelingInputs {
     var pullToRefresh: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
+    var changeConversationOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -48,6 +49,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var conversationOffset: Observable<CGPoint> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -65,6 +67,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayAfterScrolledToIndex: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -99,14 +103,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
-    fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
-    fileprivate var _loadMoreComments = PublishSubject<Int>()
-    fileprivate var isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
+    fileprivate let _loadMoreComments = PublishSubject<Int>()
+    fileprivate let isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
 
-    fileprivate var _insertNewLocalComments = PublishSubject<[OWComment]>()
-    fileprivate var _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate var _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate var _scrollToCellIndex = PublishSubject<Int>()
+    fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
+    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _scrollToCellIndex = PublishSubject<Int>()
     var scrolledToCellIndex = PublishSubject<Int>()
 
     var scrollToCellIndex: Observable<Int> {
@@ -317,17 +321,26 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    var changeConversationOffset = PublishSubject<CGPoint>()
+    var conversationOffset: Observable<CGPoint> {
+        return changeConversationOffset
+            .asObservable()
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let imageProvider: OWImageProviding
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
           imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
           conversationData: OWConversationRequiredData,
           viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
+        self.commentPresentationDataHelper = commentPresentationDataHelper
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
@@ -512,18 +525,6 @@ fileprivate extension OWConversationViewViewModel {
         if let responseUsers = response.conversation?.users {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
-    }
-
-    func findVisibleCommentPresentationData(with commentId: OWCommentId, in commentsPresentationData: [OWCommentPresentationData]) -> OWCommentPresentationData? {
-        for commentPresentationData in commentsPresentationData {
-            if (commentPresentationData.id == commentId) {
-                return commentPresentationData
-            }
-            if let res = findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation) {
-                return res
-            }
-        }
-        return nil
     }
 }
 
@@ -1101,7 +1102,7 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
                     .map { _ in updateType }
             }
-            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
@@ -1109,7 +1110,7 @@ fileprivate extension OWConversationViewViewModel {
                     self._insertNewLocalComments.onNext(comments)
                 case let .update(commentId, withComment):
                     self._updateLocalComment.onNext((withComment, commentId))
-                case let .reply(comment, toCommentId):
+                case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 }
             })
@@ -1128,13 +1129,13 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
                     .map { _ in comments }
             }
-            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterScrolledToIndex), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] comments in
                 guard let self = self else { return }
                 let commentsIds = comments.map { $0.id }.unwrap()
                     .filter {
                         // making sure we are not adding an existing comment
-                        self.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                        self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
                     }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
                 if (!updatedCommentsPresentationData.isEmpty) {
@@ -1159,9 +1160,12 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
-                      let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
+                      let parentCommentPresentationData = self.commentPresentationDataHelper.findVisibleCommentPresentationData(
+                        with: parentCommentId,
+                        in: Array(self._commentsPresentationData)
+                      )
                 else { return }
-                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
+                guard self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
                     // making sure we are not adding an existing reply
                     return
                 }

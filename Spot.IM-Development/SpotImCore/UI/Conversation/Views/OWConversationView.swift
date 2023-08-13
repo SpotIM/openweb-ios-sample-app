@@ -241,6 +241,11 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
+        tableView.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.changeConversationOffset)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.scrollToCellIndex
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in

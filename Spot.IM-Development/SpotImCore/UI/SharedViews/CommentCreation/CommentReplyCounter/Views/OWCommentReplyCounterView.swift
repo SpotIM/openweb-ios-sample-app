@@ -76,6 +76,14 @@ fileprivate extension OWCommentReplyCounterView {
                 }
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.counterLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

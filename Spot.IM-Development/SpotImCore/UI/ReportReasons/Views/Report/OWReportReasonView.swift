@@ -183,6 +183,7 @@ fileprivate extension OWReportReasonView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // TableView binding
         viewModel.outputs.reportReasonCellViewModels
@@ -208,6 +209,11 @@ fileprivate extension OWReportReasonView {
                 guard let self = self else { return }
                 self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
             })
+            .disposed(by: disposeBag)
+
+        tableViewReasons.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.changeReportOffset)
             .disposed(by: disposeBag)
 
         // Views Binding
