@@ -8,7 +8,11 @@
 
 import Foundation
 
-class OWHostApplicationHelper {
+protocol OWHostApplicationHelperProtocol {
+    static func isOpenWebSampleApp() -> Bool
+}
+
+class OWHostApplicationHelper: OWHostApplicationHelperProtocol {
     fileprivate struct Metrics {
         static let openWebSampleAppScheme: String = "im.spot.demo"
     }

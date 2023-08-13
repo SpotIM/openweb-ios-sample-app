@@ -158,6 +158,14 @@ fileprivate extension OWCommentContentView {
                 guard let self = self else { return }
                 self.editedLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.editedLabel.font = OWFontBook.shared.font(typography: .footnoteSpecial)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
