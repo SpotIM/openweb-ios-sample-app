@@ -35,11 +35,6 @@ platform :ios do
   lane :unit_tests do |options|
     cocoapods()
     scan(
-      scheme: "Spot-IM.DevelopmentTests",
-      workspace: "Spot-IM.Development.xcworkspace",
-      device: "iPhone 13 Pro",
-    )
-    scan(
       scheme: "OpenWebCoreTests",
       workspace: "Spot-IM.Development.xcworkspace",
       device: "iPhone 13 Pro",
