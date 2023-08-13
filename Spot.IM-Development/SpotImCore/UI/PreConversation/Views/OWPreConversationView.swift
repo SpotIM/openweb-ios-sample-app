@@ -440,6 +440,14 @@ fileprivate extension OWPreConversationView {
                 self.viewModel.inputs.fullConversationTap.onNext()
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.btnCTAConversation.titleLabel?.font = OWFontBook.shared.font(typography: .bodyContext)
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 }

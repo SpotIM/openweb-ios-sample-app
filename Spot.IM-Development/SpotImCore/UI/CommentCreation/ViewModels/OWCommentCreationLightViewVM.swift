@@ -25,6 +25,7 @@ protocol OWCommentCreationLightViewViewModelingOutputs {
     var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
+    var performCta: Observable<OWCommentCreationCtaData> { get }
 }
 
 protocol OWCommentCreationLightViewViewModeling {
@@ -127,6 +128,14 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         return replyToComment?.text?.text != nil
     }
 
+    var performCta: Observable<OWCommentCreationCtaData> {
+        footerViewModel.outputs.performCtaAction
+            .withLatestFrom(commentCreationContentVM.outputs.commentTextOutput)
+            .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
+            .map { OWCommentCreationCtaData(text: $0, commentLabelIds: $1) }
+            .asObservable()
+    }
+
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           viewableMode: OWViewableMode = .independent) {
@@ -148,12 +157,6 @@ fileprivate extension OWCommentCreationLightViewViewModel {
         commentCreationContentVM.outputs.commentTextOutput
             .map { !$0.isEmpty }
             .bind(to: footerViewModel.inputs.ctaEnabled)
-            .disposed(by: disposeBag)
-
-        footerViewModel.outputs.performCtaAction
-            .subscribe(onNext: { _ in
-                // TODO - handle post / edit comment
-            })
             .disposed(by: disposeBag)
     }
 }

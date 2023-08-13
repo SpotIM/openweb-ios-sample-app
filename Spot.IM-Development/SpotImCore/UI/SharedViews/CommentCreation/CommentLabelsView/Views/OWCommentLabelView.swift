@@ -131,6 +131,14 @@ fileprivate extension OWCommentLabelView {
         tapGesture.rx.event.voidify()
             .bind(to: viewModel.inputs.labelClicked)
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.label.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
+            .disposed(by: disposeBag)
     }
 
     func setUIColors(state: OWLabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {

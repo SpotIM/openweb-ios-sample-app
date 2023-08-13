@@ -240,5 +240,33 @@ fileprivate extension OWConversationView {
                 self.tableView.setContentOffset(.zero, animated: true)
             })
             .disposed(by: disposeBag)
+
+        tableView.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.changeConversationOffset)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                guard let self = self else { return }
+
+                CATransaction.begin()
+                self.tableView.beginUpdates()
+                CATransaction.setCompletionBlock {
+                    // Code to be executed upon completion
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+                if (index > 0) {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                } else {
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
+                self.tableView.endUpdates()
+                CATransaction.commit()
+            })
+            .disposed(by: disposeBag)
     }
 }

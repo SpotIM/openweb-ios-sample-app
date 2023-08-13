@@ -38,7 +38,8 @@ fileprivate extension OWTestingRxTableViewAnimationsVC {
     func setupUI() {
         view.addSubview(testingRxTableViewAnimationsView)
         testingRxTableViewAnimationsView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 }

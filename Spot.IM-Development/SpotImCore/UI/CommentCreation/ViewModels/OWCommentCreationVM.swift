@@ -15,7 +15,6 @@ protocol OWCommentCreationViewModelingInputs {
 
 protocol OWCommentCreationViewModelingOutputs {
     var commentCreationViewVM: OWCommentCreationViewViewModeling { get }
-    var commentCreated: Observable<SPComment> { get }
     var loadedToScreen: Observable<Void> { get }
 }
 
@@ -36,11 +35,6 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
         return OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
                                               viewableMode: viewableMode)
     }()
-
-    var commentCreated: Observable<SPComment> {
-        // TODO: Complete
-        return .never()
-    }
 
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {

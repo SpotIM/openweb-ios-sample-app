@@ -230,6 +230,14 @@ fileprivate extension OWPreConversationCompactContentView {
                 self.cameraIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func getViewForContent(type: OWCompactContentType) -> UIView {
