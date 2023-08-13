@@ -64,7 +64,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         return Observable.just(())
                     }
                     self.cacheComment(text: commentText)
-                    // floatingKeyboard style does not neet a close confirmation therfore we return here
+                    // floatingKeyboard style does not neet a close confirmation mesage, therfore we return here
                     return Observable.just(())
                 }
         }
@@ -253,7 +253,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                       case .floatingKeyboard = self.commentCreationData.settings.commentCreationSettings.style
                 else { return Observable.just(comment) }
                 self.commentCreationFloatingKeyboardViewVm.inputs.closeWithDelay.onNext()
-                return self.commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
+                return self.commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
                     .map { _ -> OWComment in
                         return comment
                     }
@@ -281,7 +281,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         switch commentCreationData.commentCreationType {
         case .comment:
             commentsCacheService[.comment(postId: postId)] = commentText
-            commentsCacheService[.edit(postId: postId)] = nil
+            commentsCacheService.remove(forKey: .edit(postId: postId))
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
