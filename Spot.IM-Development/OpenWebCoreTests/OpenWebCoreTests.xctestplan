@@ -9,15 +9,9 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : {
-      "targets" : [
-        {
-          "containerPath" : "container:Spot-IM.Development.xcodeproj",
-          "identifier" : "44C8788C23608BC100E0E662",
-          "name" : "SpotImCore"
-        }
-      ]
-    }
+    "testExecutionOrdering" : "random",
+    "threadSanitizerEnabled" : true,
+    "undefinedBehaviorSanitizerEnabled" : true
   },
   "testTargets" : [
     {
