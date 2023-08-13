@@ -67,6 +67,14 @@ fileprivate extension OWCommentStatusIndicationView {
         viewModel.outputs.indicationText
             .bind(to: statusTextLabel.rx.text)
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.statusTextLabel.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupUI() {
