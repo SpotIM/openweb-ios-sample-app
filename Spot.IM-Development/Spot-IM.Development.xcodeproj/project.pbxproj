@@ -968,7 +968,6 @@
 		F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */; };
 		F9529B272A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */; };
 		F9529B302A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */; };
-		F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift */; };
 		F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */; };
 		F9529B362A7F01E70070EDC2 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */; };
 		F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */; };
@@ -2022,7 +2021,6 @@
 		F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaultsTests.swift; sourceTree = "<group>"; };
 		F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringServiceTests.swift; sourceTree = "<group>"; };
 		F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelperTests.swift; sourceTree = "<group>"; };
-		F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests_v1.swift; sourceTree = "<group>"; };
 		F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAPITests.swift; sourceTree = "<group>"; };
 		F9529B352A7F01E70070EDC2 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		F9529B382A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkInterceptor.swift; sourceTree = "<group>"; };
@@ -5894,7 +5892,6 @@
 				F9529B222A7EEAB10070EDC2 /* OWUserDefaultsTests.swift */,
 				F9529B262A7EEC710070EDC2 /* OWTimeMeasuringServiceTests.swift */,
 				F9529B2F2A7EEF6A0070EDC2 /* OWPersistenceRxHelperTests.swift */,
-				F9529B312A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift */,
 				F9529B332A7EFA230070EDC2 /* OWNetworkAPITests.swift */,
 			);
 			path = OpenWebCoreTests;
@@ -7157,7 +7154,6 @@
 				F9529B232A7EEAB10070EDC2 /* OWUserDefaultsTests.swift in Sources */,
 				F92DD7CD2A7E98F300A2BE5B /* OWThemeServiceTests.swift in Sources */,
 				F9529B342A7EFA230070EDC2 /* OWNetworkAPITests.swift in Sources */,
-				F9529B322A7EF4350070EDC2 /* OWRxAppLifeCycleTests_v1.swift in Sources */,
 				3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */,
 				F9529B392A7FAF8C0070EDC2 /* MockNetworkInterceptor.swift in Sources */,
 			);
