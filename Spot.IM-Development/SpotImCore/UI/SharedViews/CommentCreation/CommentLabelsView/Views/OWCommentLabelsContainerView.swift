@@ -118,6 +118,14 @@ fileprivate extension OWCommentLabelsContainerView {
                 commentLabelsViews.forEach { self.labelsContainerStackView.addArrangedSubview($0) }
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

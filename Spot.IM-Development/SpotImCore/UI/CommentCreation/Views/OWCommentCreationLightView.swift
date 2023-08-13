@@ -187,6 +187,15 @@ fileprivate extension OWCommentCreationLightView {
             })
             .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
+                self.replyToLabel.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
+
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)
