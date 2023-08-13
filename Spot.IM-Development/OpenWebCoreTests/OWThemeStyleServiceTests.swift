@@ -48,7 +48,7 @@ class OWThemeStyleServiceTests: QuickSpec {
                     expect(stylesResults).toEventually(equal([.light, .dark]))
                 }
 
-                it("re-setting the same `style` multiple times should NOT triggering the eturned observable style") {
+                it("re-setting the same `style` multiple times should NOT triggering the returned observable style") {
                     sut.setStyle(style: .light)
                     sut.setStyle(style: .light)
                     sut.setStyle(style: .light)
@@ -71,7 +71,7 @@ class OWThemeStyleServiceTests: QuickSpec {
                 }
             }
 
-            context("2. when interacting with the service after `enforcment` changes") {
+            context("2. when interacting with the service after `enforcement` changes") {
                 it("should keep enforcment regardless of style changes") {
                     sut.setEnforcement(enforcement: .theme(.dark))
                     sut.setStyle(style: .light)
@@ -79,7 +79,7 @@ class OWThemeStyleServiceTests: QuickSpec {
                     expect(stylesResults).toEventually(equal([.light, .dark]))
                 }
 
-                it("should respect different enforcment during runtime and allow or disallow style changes accordingly") {
+                it("should respect different enforcement during runtime and allow or disallow style changes accordingly") {
                     sut.setEnforcement(enforcement: .theme(.light))
                     sut.setStyle(style: .dark)
                     expect(sut.currentStyle).to(equal(.light))
