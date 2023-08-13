@@ -29,6 +29,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var closedWithDelay: Observable<Void> { get }
+    var closedInstantly: Observable<String> { get }
     var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
@@ -68,6 +69,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     let accessoryViewStrategy: OWAccessoryViewStrategy
 
     var closeInstantly = PublishSubject<String>()
+    var closedInstantly: Observable<String> {
+        return closeInstantly
+            .asObservable()
+    }
     var ctaTap = PublishSubject<Void>()
     var closeWithDelay = PublishSubject<Void>()
     var closedWithDelay: Observable<Void> {

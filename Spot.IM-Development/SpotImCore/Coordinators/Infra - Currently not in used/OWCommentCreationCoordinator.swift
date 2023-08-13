@@ -127,7 +127,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
-        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
             .subscribe { [weak self] _ in
                 guard let self = self else { return }
