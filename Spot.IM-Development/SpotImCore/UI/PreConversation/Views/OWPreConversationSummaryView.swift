@@ -148,6 +148,15 @@ fileprivate extension OWPreConversationSummaryView {
                 self.nextArrow.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: self.viewModel.outputs.titleFontTypography)
+                self.counterLabel.font = OWFontBook.shared.font(typography: self.viewModel.outputs.counterFontTypography)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
