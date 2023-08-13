@@ -31,16 +31,19 @@ class OWTextView: UIView {
         static let maxNumberOfLines = 5
         static let expandAnimationDuration: CGFloat = 0.1
         static let heightConstraintPriority: CGFloat = 500
+        static let didBeginEditDelay = 1
+        static let delayTextViewTextChange = 5
     }
 
     let viewModel: OWTextViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var textView: UITextView = {
+        let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
         return UITextView()
             .font(OWFontBook.shared.font(typography: .bodyText))
-            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-            .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle))
+            .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle))
             .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
                                       left: Metrics.textViewLeadingTrailingPadding,
                                       bottom: Metrics.textViewTopBottomPadding,
@@ -69,9 +72,7 @@ class OWTextView: UIView {
     init(viewModel: OWTextViewViewModeling, prefixIdentifier: String) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-
         self.enforceSemanticAttribute()
-
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: prefixIdentifier)
@@ -170,7 +171,7 @@ fileprivate extension OWTextView {
                 .disposed(by: disposeBag)
 
             textView.rx.didBeginEditing
-                .delay(.microseconds(1), scheduler: MainScheduler.asyncInstance)
+                .delay(.microseconds(Metrics.didBeginEditDelay), scheduler: MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
                     self.textView.resignFirstResponder()
@@ -180,7 +181,7 @@ fileprivate extension OWTextView {
 
         viewModel.outputs.textViewText
             // This delay fixes the textView from flickering when text is inserted
-            .delay(.milliseconds(5), scheduler: MainScheduler.instance)
+            .delay(.milliseconds(Metrics.delayTextViewTextChange), scheduler: MainScheduler.instance)
             .bind(to: textView.rx.text)
             .disposed(by: disposeBag)
 

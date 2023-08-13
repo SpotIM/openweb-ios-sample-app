@@ -71,11 +71,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             switch deepLink {
             case .commentCreation(let commentCreationData):
                 switch commentCreationData.settings.commentCreationSettings.style {
-                case .regular:
+                case .regular, .light:
                     animated = false
-                case .light:
-                    animated = false
-                case .floatingKeyboard(_):
+                case .floatingKeyboard:
                     animated = true
                 }
                 deepLinkToCommentCreation.onNext(commentCreationData)
