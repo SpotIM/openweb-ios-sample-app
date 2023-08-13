@@ -11,6 +11,8 @@ import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
     var commentText: BehaviorSubject<String> { get }
+    var becomeFirstResponder: PublishSubject<Void> { get }
+    var resignFirstResponder: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
@@ -18,6 +20,8 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
+    var resignFirstResponderCalled: Observable<Void> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -80,6 +84,18 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         default:
             return Observable.just(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
         }
+    }
+
+    var becomeFirstResponder = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponder
+            .asObservable()
+    }
+
+    var resignFirstResponder = PublishSubject<Void>()
+    var resignFirstResponderCalled: Observable<Void> {
+        return resignFirstResponder
+            .asObservable()
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,
