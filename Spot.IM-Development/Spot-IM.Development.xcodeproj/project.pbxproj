@@ -766,13 +766,11 @@
 		44F247A12379ADC500B36F12 /* SPBaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A02379ADC500B36F12 /* SPBaseButton.swift */; };
 		44F247A32379B0F900B36F12 /* SPBaseUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A22379B0F900B36F12 /* SPBaseUIImageView.swift */; };
 		44F247A52379B23100B36F12 /* SPBaseScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A42379B23100B36F12 /* SPBaseScrollView.swift */; };
-		5AC97F8972F515387BC5855C /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B68A2990C05E97CCA3BB018 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		5D00B74422E9B7A600EFC1B0 /* DemoUserAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoUserAuthentication.swift */; };
 		5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		5D697A4122B65106001AD556 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
-		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
 		5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
 		5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB97791236B25A400E9D547 /* SPNameInputView.swift */; };
 		5DBD33E42397F98F003DE0BF /* SPBaseStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E22397F98F003DE0BF /* SPBaseStackView.swift */; };
@@ -954,10 +952,6 @@
 		9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77D297E84F100814648 /* TextFieldSetting.swift */; };
 		9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE780297E851400814648 /* UIColor+Extensions.swift */; };
 		A921BFE929B318850E5667DE /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9092AFEF259BAEE0B10299 /* Pods_Shared_SpotImCore.framework */; };
-		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
-		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
-		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
-		E685ACD125CAEE84008FECDB /* sp_config_response_google_true.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */; };
 		E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		F92DD7CD2A7E98F300A2BE5B /* OWThemeServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92DD7CC2A7E98F300A2BE5B /* OWThemeServiceTests.swift */; };
@@ -979,13 +973,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 44C8788C23608BC100E0E662;
 			remoteInfo = SpotImCore;
-		};
-		5D697A5022B65108001AD556 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5D697A3A22B65106001AD556;
-			remoteInfo = "Spot-IM.Development";
 		};
 		F92DD7BC2A7E8B9E00A2BE5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1785,9 +1772,6 @@
 		5D697A4022B65106001AD556 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5D697A4522B65108001AD556 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D697A4A22B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5D697A4F22B65108001AD556 /* Spot-IM.DevelopmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Spot-IM.DevelopmentTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot_IM_DevelopmentTests.swift; sourceTree = "<group>"; };
-		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5DB97791236B25A400E9D547 /* SPNameInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPNameInputView.swift; sourceTree = "<group>"; };
 		5DBD33E22397F98F003DE0BF /* SPBaseStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseStackView.swift; sourceTree = "<group>"; };
@@ -2006,10 +1990,6 @@
 		DAF4043CAD3F71F4DBD608F1 /* Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		E3E01D2E95BE3559589E690E /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
 		E685AC2925C97DC4008FECDB /* GoogleAdsV7Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsV7Provider.swift; sourceTree = "<group>"; };
-		E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spot_IM_ConfigApiTests.swift; sourceTree = "<group>"; };
-		E685ACB825CAE6C3008FECDB /* sp_config_response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sp_config_response.json; sourceTree = "<group>"; };
-		E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SPTestsUtils.swift; path = "Spot-IM.DevelopmentTests/SPTestsUtils.swift"; sourceTree = SOURCE_ROOT; };
-		E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sp_config_response_google_true.json; sourceTree = "<group>"; };
 		E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoginPromptView.swift; sourceTree = "<group>"; };
 		EAA1F44D7038F3EE06511A47 /* Pods-Shared-OpenWebCoreTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.internal.xcconfig"; sourceTree = "<group>"; };
 		EC02F081B23E5E8F32A60405 /* Pods-Shared-OpenWebCoreTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.public.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.public.xcconfig"; sourceTree = "<group>"; };
@@ -2047,14 +2027,6 @@
 			files = (
 				44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */,
 				1A03B291BFAA531F8124E188 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5D697A4C22B65108001AD556 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5AC97F8972F515387BC5855C /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4891,7 +4863,6 @@
 				8D5D7A63297560FC0082A7C6 /* swiftlint */,
 				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D697A3D22B65106001AD556 /* Spot-IM.Development */,
-				5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */,
 				44C8788E23608BC100E0E662 /* SpotImCore */,
 				F92DD7B82A7E8B9E00A2BE5B /* OpenWebCoreTests */,
 				5D697A3C22B65106001AD556 /* Products */,
@@ -4904,7 +4875,6 @@
 			isa = PBXGroup;
 			children = (
 				5D697A3B22B65106001AD556 /* Spot-IM.Development.app */,
-				5D697A4F22B65108001AD556 /* Spot-IM.DevelopmentTests.xctest */,
 				44C8788D23608BC100E0E662 /* SpotImCore.framework */,
 				F92DD7B72A7E8B9E00A2BE5B /* OpenWebCoreTests.xctest */,
 			);
@@ -4924,18 +4894,6 @@
 				E666D01E25E39F0A009F04D4 /* Resources */,
 			);
 			path = "Spot-IM.Development";
-			sourceTree = "<group>";
-		};
-		5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */ = {
-			isa = PBXGroup;
-			children = (
-				E685ACB725CAE6C3008FECDB /* mock_responses */,
-				5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */,
-				E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */,
-				E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */,
-				5D697A5522B65108001AD556 /* Info.plist */,
-			);
-			path = "Spot-IM.DevelopmentTests";
 			sourceTree = "<group>";
 		};
 		5D697A6A22B6586C001AD556 /* Frameworks */ = {
@@ -5824,15 +5782,6 @@
 			path = SpotImAdsProvider;
 			sourceTree = "<group>";
 		};
-		E685ACB725CAE6C3008FECDB /* mock_responses */ = {
-			isa = PBXGroup;
-			children = (
-				E685ACB825CAE6C3008FECDB /* sp_config_response.json */,
-				E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */,
-			);
-			path = mock_responses;
-			sourceTree = "<group>";
-		};
 		E6A1EC74263169C3006E1517 /* LoginPromptView */ = {
 			isa = PBXGroup;
 			children = (
@@ -5987,26 +5936,6 @@
 			productReference = 5D697A3B22B65106001AD556 /* Spot-IM.Development.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5D697A4E22B65108001AD556 /* Spot-IM.DevelopmentTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5D697A5B22B65108001AD556 /* Build configuration list for PBXNativeTarget "Spot-IM.DevelopmentTests" */;
-			buildPhases = (
-				8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */,
-				5D697A4B22B65108001AD556 /* Sources */,
-				5D697A4C22B65108001AD556 /* Frameworks */,
-				5D697A4D22B65108001AD556 /* Resources */,
-				11A34FF8EB924B97CD5D4392 /* [CP] Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5D697A5122B65108001AD556 /* PBXTargetDependency */,
-			);
-			name = "Spot-IM.DevelopmentTests";
-			productName = "Spot-IM.DevelopmentTests";
-			productReference = 5D697A4F22B65108001AD556 /* Spot-IM.DevelopmentTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		F92DD7B62A7E8B9E00A2BE5B /* OpenWebCoreTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F92DD7C42A7E8B9E00A2BE5B /* Build configuration list for PBXNativeTarget "OpenWebCoreTests" */;
@@ -6043,10 +5972,6 @@
 					5D697A3A22B65106001AD556 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
-					5D697A4E22B65108001AD556 = {
-						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = 5D697A3A22B65106001AD556;
-					};
 					F92DD7B62A7E8B9E00A2BE5B = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
@@ -6071,7 +5996,6 @@
 			projectRoot = "";
 			targets = (
 				5D697A3A22B65106001AD556 /* Spot-IM.Development */,
-				5D697A4E22B65108001AD556 /* Spot-IM.DevelopmentTests */,
 				44C8788C23608BC100E0E662 /* SpotImCore */,
 				6D5DB15823CF5D73003F9D46 /* Package SpotImCoreSDK */,
 				F92DD7B62A7E8B9E00A2BE5B /* OpenWebCoreTests */,
@@ -6114,15 +6038,6 @@
 				3DB3D18E282A7DD0008654CF /* Localizable.strings in Resources */,
 				3DDA9A3F28F5919600FE3B86 /* Roboto-Medium.ttf in Resources */,
 				4416C654237ABDE700D3F7B9 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5D697A4D22B65108001AD556 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E685ACD125CAEE84008FECDB /* sp_config_response_google_true.json in Resources */,
-				E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6175,23 +6090,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		11A34FF8EB924B97CD5D4392 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6D5DB15923CF5D73003F9D46 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6225,28 +6123,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
-		};
-		8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-Spot-IM.DevelopmentTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 		977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7228,16 +7104,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5D697A4B22B65108001AD556 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */,
-				5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */,
-				E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F92DD7B32A7E8B9E00A2BE5B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7264,11 +7130,6 @@
 			isa = PBXTargetDependency;
 			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
 			targetProxy = 44C8789223608BC100E0E662 /* PBXContainerItemProxy */;
-		};
-		5D697A5122B65108001AD556 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5D697A3A22B65106001AD556 /* Spot-IM.Development */;
-			targetProxy = 5D697A5022B65108001AD556 /* PBXContainerItemProxy */;
 		};
 		F92DD7BD2A7E8B9E00A2BE5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7391,31 +7252,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Public;
-		};
-		3D09249528A9464F00183082 /* Public */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 908516EA439B74859BFC244A /* Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.18.5;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
 			};
 			name = Public;
 		};
@@ -7571,31 +7407,6 @@
 			};
 			name = Beta;
 		};
-		3D611B7228BF8F42003960CE /* Beta */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.18.5;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
-			};
-			name = Beta;
-		};
 		3D611B7328BF8F42003960CE /* Beta */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D4E3E3D1AB99F359267ECE78 /* Pods-Shared-SpotImCore.beta.xcconfig */;
@@ -7742,31 +7553,6 @@
 			};
 			name = ReleaseBeta;
 		};
-		3D674E03298C54030049960D /* ReleaseBeta */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D3D52F869DFDC900B8BAEE56 /* Pods-Shared-Spot-IM.DevelopmentTests.releasebeta.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.18.5;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
-			};
-			name = ReleaseBeta;
-		};
 		3D674E04298C54030049960D /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6AF9855F9DF110842B41692F /* Pods-Shared-SpotImCore.releasebeta.xcconfig */;
@@ -7910,31 +7696,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = ReleasePublic;
-		};
-		3D674E08298C541A0049960D /* ReleasePublic */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9FDF8F0928ACBD345EF47F2F /* Pods-Shared-Spot-IM.DevelopmentTests.releasepublic.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.18.5;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
 			};
 			name = ReleasePublic;
 		};
@@ -8261,56 +8022,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = ReleaseInternal;
-		};
-		5D697A5C22B65108001AD556 /* Internal */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 82E5D19AFE4DC00AC8DD537C /* Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.18.5;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
-			};
-			name = Internal;
-		};
-		5D697A5D22B65108001AD556 /* ReleaseInternal */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.18.5;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
 			};
 			name = ReleaseInternal;
 		};
@@ -8762,19 +8473,6 @@
 				5D697A5A22B65108001AD556 /* ReleaseInternal */,
 				3D674E02298C54030049960D /* ReleaseBeta */,
 				3D674E07298C541A0049960D /* ReleasePublic */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = ReleaseInternal;
-		};
-		5D697A5B22B65108001AD556 /* Build configuration list for PBXNativeTarget "Spot-IM.DevelopmentTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5D697A5C22B65108001AD556 /* Internal */,
-				3D611B7228BF8F42003960CE /* Beta */,
-				3D09249528A9464F00183082 /* Public */,
-				5D697A5D22B65108001AD556 /* ReleaseInternal */,
-				3D674E03298C54030049960D /* ReleaseBeta */,
-				3D674E08298C541A0049960D /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = ReleaseInternal;
