@@ -138,6 +138,14 @@ fileprivate extension OWCommentCreationFooterView {
             .bind(to: addImageButton.rx.isHidden)
             .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.ctaButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
+
     }
 
     func applyAccessibility() {

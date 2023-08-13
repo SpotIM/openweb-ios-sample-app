@@ -102,6 +102,14 @@ fileprivate extension OWReportReasonSubmittedView {
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.confirmButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

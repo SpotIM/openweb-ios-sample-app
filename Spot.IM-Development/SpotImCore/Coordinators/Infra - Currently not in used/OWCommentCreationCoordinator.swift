@@ -31,7 +31,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     fileprivate let router: OWRoutering!
     fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let commentCreationPopped = PublishSubject<Void>()
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentCreation)
     }()

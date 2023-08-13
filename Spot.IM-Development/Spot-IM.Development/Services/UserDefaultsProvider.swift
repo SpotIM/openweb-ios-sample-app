@@ -94,6 +94,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case statusBarStyleIndex = "statusBarStyleIndex"
+        case navigationBarStyleIndex = "navigationBarStyleIndex"
         case modalStyleIndex = "modalStyleIndex"
         case initialSortIndex = "initialSortIndex"
         case fontGroupType = "fontGroupType"
@@ -148,6 +149,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the theme mode (default, light, dark)"
         case .statusBarStyleIndex:
             return "Key which stores the status bar style (matchTheme, lightContent, darkContent)"
+        case .navigationBarStyleIndex:
+            return "Key which stores the navigation bar style (largeTitles, regular, keepOriginal)"
         case .modalStyleIndex:
             return "Key which stores modal style (full screen, page sheet)"
         case .initialSortIndex:

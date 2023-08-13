@@ -15,6 +15,7 @@ protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
+    var changeThreadOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -27,6 +28,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var scrollToCellIndex: Observable<Int> { get }
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
+    var threadOffset: Observable<CGPoint> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -43,6 +45,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
+        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -52,6 +55,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
@@ -132,11 +136,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    fileprivate var _insertNewLocalComments = PublishSubject<[OWComment]>()
-    fileprivate var _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
-    fileprivate var _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
-    fileprivate var _performHighlightAnimationCellIndex = PublishSubject<Int>()
+    fileprivate let _performHighlightAnimationCellIndex = PublishSubject<Int>()
     var scrolledToCellIndex = PublishSubject<Int>()
 
     var scrollToCellIndex: Observable<Int> {
@@ -180,8 +183,19 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, viewableMode: OWViewableMode = .independent) {
+    var changeThreadOffset = PublishSubject<CGPoint>()
+    var threadOffset: Observable<CGPoint> {
+        return changeThreadOffset
+            .asObservable()
+    }
+
+    init (commentThreadData: OWCommentThreadRequiredData,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
+          viewableMode: OWViewableMode = .independent
+    ) {
         self.servicesProvider = servicesProvider
+        self.commentPresentationDataHelper = commentPresentationDataHelper
         self.viewableMode = viewableMode
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
@@ -348,18 +362,6 @@ fileprivate extension OWCommentThreadViewViewModel {
         if let responseUsers = response.conversation?.users {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
-    }
-
-    func findVisibleCommentPresentationData(with commentId: OWCommentId, in commentsPresentationData: [OWCommentPresentationData]) -> OWCommentPresentationData? {
-        for commentPresentationData in commentsPresentationData {
-            if (commentPresentationData.id == commentId) {
-                return commentPresentationData
-            }
-            if let res = findVisibleCommentPresentationData(with: commentId, in: commentPresentationData.repliesPresentation) {
-                return res
-            }
-        }
-        return nil
     }
 }
 
@@ -926,15 +928,16 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .take(1)
                     .map { _ in updateType }
             }
-            .delay(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
-                case .insert(let comments):
-                    self._insertNewLocalComments.onNext(comments)
+                case .insert:
+                    // Not relevant in comment thread
+                    break
                 case let .update(commentId, withComment):
                     self._updateLocalComment.onNext((withComment, commentId))
-                case let .reply(comment, toCommentId):
+                case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 }
             })
@@ -956,9 +959,12 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
-                      let parentCommentPresentationData = self.findVisibleCommentPresentationData(with: parentCommentId, in: Array(self._commentsPresentationData))
+                      let parentCommentPresentationData = self.commentPresentationDataHelper.findVisibleCommentPresentationData(
+                        with: parentCommentId,
+                        in: Array(self._commentsPresentationData)
+                      )
                 else { return }
-                guard self.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
+                guard self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
                     // making sure we are not adding an existing reply
                     return
                 }

@@ -17,6 +17,7 @@ protocol OWReportReasonViewViewModelingInputs {
     var textViewTextChange: PublishSubject<String> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
     var isSubmitEnabledChange: PublishSubject<Bool> { get }
+    var changeReportOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
@@ -43,6 +44,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
     var reportReasonSubmittedSuccessfully: Observable<OWCommentId> { get }
+    var reportOffset: Observable<CGPoint> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -350,6 +352,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .voidify()
             .share()
     }()
+
+    var changeReportOffset = PublishSubject<CGPoint>()
+    var reportOffset: Observable<CGPoint> {
+        return changeReportOffset
+            .asObservable()
+    }
 }
 
 fileprivate extension OWReportReasonViewViewModel {

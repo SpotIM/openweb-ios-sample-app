@@ -128,6 +128,14 @@ fileprivate extension OWCommentThreadActionsView {
             })
             .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.actionLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.actionLabelText
             .bind(to: actionLabel.rx.text)
             .disposed(by: disposeBag)

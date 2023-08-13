@@ -86,6 +86,14 @@ fileprivate extension OWTitleView {
             })
             .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
+            })
+            .disposed(by: disposeBag)
+
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeTap)
             .disposed(by: disposeBag)
