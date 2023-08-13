@@ -339,16 +339,17 @@ internal final class SPMainConversationDataSource {
         var editModel: SPEditCommentDTO?
 
         if let userComment = comment {
-            if userComment.isAReply(),
-               let replyComment = cellData.flatMap { $0 }.first { $0.commentId == userComment.parentCommentId } {
-                   replyModel = SPReplyCommentDTO(
+            let maybeReplyComment = cellData.flatMap { $0 }.first { $0.commentId == userComment.parentCommentId }
+            
+            if userComment.isAReply(), let replyComment = maybeReplyComment {
+                replyModel = SPReplyCommentDTO(
                     authorName: replyComment.displayName,
                     commentText: replyComment.commentText,
                     commentId: replyComment.commentId ?? "",
                     rootCommentId: replyComment.rootCommentId,
                     parentDepth: replyComment.depth
-                   )
-               }
+                )
+            }
 
             editModel = gatherEditModelData(comment: userComment)
             return createSPCommentDTO(replyModel: replyModel, editModel: editModel)

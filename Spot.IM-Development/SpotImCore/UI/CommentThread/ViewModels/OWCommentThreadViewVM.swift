@@ -763,7 +763,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         case .completion:
                             // Do nothing
                             break
-                        case .selected(let action):
+                        case .selected:
                             // TODO: handle selection
                             break
                         }

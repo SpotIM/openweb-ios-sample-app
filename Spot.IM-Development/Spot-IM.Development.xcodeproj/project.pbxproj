@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -6066,6 +6066,7 @@
 		};
 		8D455ADB296C13CA0091A027 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -6505,7 +6506,6 @@
 				4454181423685144001D0ED0 /* SPMainConversationFooterView.swift in Sources */,
 				16D5A20529D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift in Sources */,
 				16D5A1E529C9A73800914AD7 /* OWCommentPresentationData.swift in Sources */,
-				24BB7C1A290FD50900F49BAA /* OWPreConversationSummaryViewModel.swift in Sources */,
 				24BB7C1A290FD50900F49BAA /* OWPreConversationSummaryViewModel.swift in Sources */,
 				3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */,
 				3DB3B95429F4695F00C50192 /* OWTestingPlaygroundSettings.swift in Sources */,
