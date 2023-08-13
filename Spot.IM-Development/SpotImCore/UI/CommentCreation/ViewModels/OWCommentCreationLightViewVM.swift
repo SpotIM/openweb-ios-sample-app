@@ -12,6 +12,7 @@ import UIKit
 
 protocol OWCommentCreationLightViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
+    var becomeFirstResponder: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationLightViewViewModelingOutputs {
@@ -26,6 +27,7 @@ protocol OWCommentCreationLightViewViewModelingOutputs {
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
 }
 
 protocol OWCommentCreationLightViewViewModeling {
@@ -70,6 +72,12 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }()
 
     var closeButtonTap = PublishSubject<Void>()
+
+    var becomeFirstResponder = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponder
+            .asObservable()
+    }
 
     var titleText: Observable<String> {
         switch commentCreationData.commentCreationType {
@@ -157,6 +165,14 @@ fileprivate extension OWCommentCreationLightViewViewModel {
         commentCreationContentVM.outputs.commentTextOutput
             .map { !$0.isEmpty }
             .bind(to: footerViewModel.inputs.ctaEnabled)
+            .disposed(by: disposeBag)
+
+        becomeFirstResponderCalled
+            .bind(to: commentCreationContentVM.inputs.becomeFirstResponder)
+            .disposed(by: disposeBag)
+
+        closeButtonTap
+            .bind(to: commentCreationContentVM.inputs.resignFirstResponder)
             .disposed(by: disposeBag)
     }
 }
