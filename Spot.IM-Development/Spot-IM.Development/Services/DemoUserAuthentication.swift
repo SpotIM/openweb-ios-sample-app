@@ -34,7 +34,7 @@ internal class DemoUserAuthentication {
         struct Response: Codable {
             var token: String
         }
-        
+
         AF.request(url,
                    method: .post,
                    parameters: params,
@@ -68,7 +68,7 @@ internal class DemoUserAuthentication {
         struct Response: Codable {
             var codeB: String
         }
-        
+
         AF.request(url,
                    method: .post,
                    parameters: params,
