@@ -16,6 +16,7 @@ protocol OWConversationViewModelingInputs {
     var highlightComment: PublishSubject<String> { get }
     var viewDidLoad: PublishSubject<Void> { get }
     var closeConversationTapped: PublishSubject<Void> { get }
+    var changeIsLargeTitleDisplay: PublishSubject<Bool> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
@@ -24,9 +25,10 @@ protocol OWConversationViewModelingOutputs {
     var conversationViewVM: OWConversationViewViewModeling { get }
     var highlightedComment: Observable<String> { get }
     var loadedToScreen: Observable<Void> { get }
-    var shouldCustomizeNavigationBar: Bool { get }
     var shouldShowCloseButton: Bool { get }
     var closeConversation: Observable<Void> { get }
+    var isLargeTitleDisplay: Observable<Bool> { get }
+    var title: String { get }
 }
 
 protocol OWConversationViewModeling {
@@ -54,6 +56,10 @@ class OWConversationViewModel: OWConversationViewModeling,
     var triggerCustomizeNavigationItemUI = PublishSubject<UINavigationItem>()
     var triggerCustomizeNavigationBarUI = PublishSubject<UINavigationBar>()
 
+    lazy var title: String = {
+        return OWLocalizationManager.shared.localizedString(key: "Conversation")
+    }()
+
     var customizeNavigationItemUI: Observable<UINavigationItem> {
         return _triggerCustomizeNavigationItemUI
             .unwrap()
@@ -70,17 +76,6 @@ class OWConversationViewModel: OWConversationViewModeling,
         return OWConversationViewViewModel(conversationData: conversationData,
                                            viewableMode: self.viewableMode)
     }()
-
-    var shouldCustomizeNavigationBar: Bool {
-        let isSampleAppNavigationController: Bool = OWHostApplicationHelper.isOpenWebSampleApp()
-        var isInternalPresentModeNavigationController: Bool = false
-        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle,
-           viewableMode == .partOfFlow {
-            isInternalPresentModeNavigationController = true
-        }
-
-        return isInternalPresentModeNavigationController || isSampleAppNavigationController
-    }
 
     var shouldShowCloseButton: Bool {
         guard case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle else { return false }
@@ -106,6 +101,15 @@ class OWConversationViewModel: OWConversationViewModeling,
     var closeConversationTapped = PublishSubject<Void>()
     var closeConversation: Observable<Void> {
         return closeConversationTapped.asObservable()
+    }
+
+    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+        return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
+    }()
+
+    var changeIsLargeTitleDisplay = PublishSubject<Bool>()
+    var isLargeTitleDisplay: Observable<Bool> {
+        return _isLargeTitleDisplay
     }
 
     init (conversationData: OWConversationRequiredData,
@@ -136,6 +140,10 @@ fileprivate extension OWConversationViewModel {
 
         triggerCustomizeNavigationBarUI
             .bind(to: _triggerCustomizeNavigationBarUI)
+            .disposed(by: disposeBag)
+
+        changeIsLargeTitleDisplay
+            .bind(to: _isLargeTitleDisplay)
             .disposed(by: disposeBag)
     }
 }

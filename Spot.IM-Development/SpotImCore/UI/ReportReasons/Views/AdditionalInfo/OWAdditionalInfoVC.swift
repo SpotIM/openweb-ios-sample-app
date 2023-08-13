@@ -41,10 +41,12 @@ class OWAdditionalInfoVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 fileprivate extension OWAdditionalInfoVC {
     func setupViews() {
         self.title = additionalInfoViewViewModel.outputs.titleText
+        self.navigationItem.largeTitleDisplayMode = .always
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(additionalInfoView)
         additionalInfoView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 
