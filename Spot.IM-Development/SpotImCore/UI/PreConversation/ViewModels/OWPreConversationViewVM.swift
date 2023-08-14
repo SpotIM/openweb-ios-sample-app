@@ -340,7 +340,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             self.populateInitialUI()
             setupObservers()
 
-            sendEvent(for: .preConversationLoaded)
+            sendEvent(for: .preConversationViewed)
     }
 
     func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
@@ -460,6 +460,14 @@ fileprivate extension OWPreConversationViewViewModel {
 
         conversationFetchedObservable
             .bind(to: compactCommentVM.inputs.conversationFetched)
+            .disposed(by: disposeBag)
+
+        // First conversation load - send event
+        conversationFetchedObservable
+            .take(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .preConversationLoaded)
+            })
             .disposed(by: disposeBag)
 
         // Binding to community question component
