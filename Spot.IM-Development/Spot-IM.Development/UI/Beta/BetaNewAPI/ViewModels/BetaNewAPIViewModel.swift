@@ -277,7 +277,7 @@ fileprivate extension BetaNewAPIViewModel {
     func setupBICallaback() {
         let analytics: OWAnalytics = OpenWeb.manager.analytics
 
-        let BIClosure: OWAnalyticEventCallback = { event in
+        let BIClosure: OWBIAnalyticEventCallback = { event, additionalData, postId in
             print(event)
         }
 
