@@ -16,8 +16,6 @@ class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnim
         static let orientationChangeDelay = 10
     }
 
-    static let shared = OWPushOverFullScreenAnimationTransitioning()
-
     fileprivate let disposeBag = DisposeBag()
     fileprivate var viewFromOrientation: UIView?
     fileprivate var viewToOrientation: UIView?
