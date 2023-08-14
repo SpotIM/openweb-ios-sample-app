@@ -37,7 +37,7 @@ final class OWUserDefaultsTests: QuickSpec {
 
             afterEach {}
 
-            context("using the regular api") {
+            context("1. using the regular api") {
                 it("should save and get value") {
                     userDefaults.save(value: expectedValue, forKey: key)
                     expect(userDefaults.get(key: key)).to(equal(expectedValue))
@@ -55,7 +55,7 @@ final class OWUserDefaultsTests: QuickSpec {
                 }
             }
 
-            context("using the reactive api") {
+            context("2. using the reactive api") {
                 it("should observe default values") {
                     expect(results).toEventually(equal([defaultValue]))
                 }
