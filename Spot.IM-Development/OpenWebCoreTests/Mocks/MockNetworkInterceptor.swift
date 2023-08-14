@@ -8,8 +8,6 @@
 
 import XCTest
 import RxSwift
-import RxTest
-import RxBlocking
 @testable import SpotImCore
 
 class MockNetworkInterceptor: OWNetworkRequestInterceptor {

@@ -18,8 +18,6 @@ abstract_target 'Shared' do
   end
 
   target 'OpenWebCoreTests' do
-    pod 'RxTest', '~> 6.5.0'
-    pod 'RxBlocking', '~> 6.5.0'
     pod 'Quick', '~> 5.0.1'
     pod 'Nimble', '~> 10.0.0'
   end
