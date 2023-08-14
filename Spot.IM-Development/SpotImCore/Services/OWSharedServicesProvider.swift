@@ -43,6 +43,9 @@ protocol OWSharedServicesProviding: AnyObject {
     func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
+    func commentUpdaterService() -> OWCommentUpdaterServicing
+    func localCommentDataPopulator() -> OWLocalCommentDataPopulating
+    func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -162,6 +165,18 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCommentCreationRequestsService()
     }()
 
+    fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
+        return OWCommentUpdaterService(servicesProvider: self)
+    }()
+
+    fileprivate lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
+        return OWLocalCommentDataPopulator()
+    }()
+
+    fileprivate lazy var _navigationControllerCustomizer: OWNavigationControllerCustomizing = {
+        return OWNavigationControllerCustomizer(servicesProvider: self)
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -260,6 +275,18 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing {
         return _commentCreationRequestsService
+    }
+
+    func commentUpdaterService() -> OWCommentUpdaterServicing {
+        return _commentUpdaterService
+    }
+
+    func localCommentDataPopulator() -> OWLocalCommentDataPopulating {
+        return _localCommentDataPopulator
+    }
+
+    func navigationControllerCustomizer() -> OWNavigationControllerCustomizing {
+        return _navigationControllerCustomizer
     }
 }
 

@@ -61,6 +61,15 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
+    var navigationBarEnforcement: OWNavigationBarEnforcement {
+        get {
+            return _navigationBarEnforcement
+        }
+        set(newEnforcement) {
+            _navigationBarEnforcement = newEnforcement
+        }
+    }
+
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback) {
         guard callbacks.count < Metrics.maxCustomizableElementCallbacksNumber else {
             let logger = OWSharedServicesProvider.shared.logger()
@@ -91,6 +100,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
+    fileprivate var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
 }
 

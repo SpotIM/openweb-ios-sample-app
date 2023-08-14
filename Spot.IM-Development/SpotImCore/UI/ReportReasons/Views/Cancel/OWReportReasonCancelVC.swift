@@ -41,7 +41,8 @@ fileprivate extension OWReportReasonCancelVC {
         let reportReasonCancelView = OWReportReasonCancelView(viewModel: viewModel.outputs.reportReasonCancelViewViewModel)
         view.addSubview(reportReasonCancelView)
         reportReasonCancelView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 
