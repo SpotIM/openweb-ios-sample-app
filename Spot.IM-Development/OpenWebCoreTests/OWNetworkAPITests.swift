@@ -55,13 +55,11 @@ final class OWNetworkAPITests: QuickSpec {
     }
 
     private static func userDataRequest(with environment: OWEnvironment) -> (URLRequest, MockURLProtocol.RequestHandler) {
-        // swiftlint:disable:next force_try
         return (
-            try! URLRequest(
+            try! URLRequest( // swiftlint:disable:this force_try
                 url: environment.baseURL.appendingPathComponent(MockUserEndpoint.userData.path),
                 method: .get
-            ),
-            { request in
+            ), { request in
                 let data = """
                     {
                         "name": "John Doe",
