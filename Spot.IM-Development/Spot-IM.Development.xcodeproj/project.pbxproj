@@ -2348,18 +2348,10 @@
 		1640F2C128AD053600FB863B /* CommentCreationEntry - Old */ = {
 			isa = PBXGroup;
 			children = (
-				1640F2C228AD055000FB863B /* Models */,
 				1640F2C328AD055700FB863B /* ViewModels */,
 				1640F2C428AD056000FB863B /* Views */,
 			);
 			path = "CommentCreationEntry - Old";
-			sourceTree = "<group>";
-		};
-		1640F2C228AD055000FB863B /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		1640F2C328AD055700FB863B /* ViewModels */ = {
@@ -3250,14 +3242,6 @@
 				3DDE2AD52A6032FF007684C8 /* OWCommentCreationSettingsProtocol+Extensions.swift */,
 			);
 			path = CommentCreation;
-			sourceTree = "<group>";
-		};
-		3D26B5B228CA391700A1DAD2 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3D29A2DA283BA421002BE318 /* Services */ = {
@@ -4885,6 +4869,7 @@
 				5D697A3C22B65106001AD556 /* Products */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
+				9E0C60622A89410F001B8D5D /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -5478,6 +5463,14 @@
 				9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */,
 			);
 			path = TransitionAnimations;
+			sourceTree = "<group>";
+		};
+		9E0C60622A89410F001B8D5D /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		9E2857B02A14DBA90066D726 /* Buttons */ = {
