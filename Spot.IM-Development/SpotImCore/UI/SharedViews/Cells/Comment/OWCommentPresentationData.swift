@@ -14,15 +14,15 @@ class OWCommentPresentationData: OWUpdaterProtocol {
 
     var update: PublishSubject<Void> = PublishSubject()
 
-    let id: String
-    var repliesIds: [String]
-    let totalRepliesCount: Int
+    let id: OWCommentId
+    var repliesIds: [OWCommentId]
+    var totalRepliesCount: Int
     var repliesOffset: Int
     fileprivate(set) var repliesPresentation: [OWCommentPresentationData]
 
     init(
-        id: String,
-        repliesIds: [String],
+        id: OWCommentId,
+        repliesIds: [OWCommentId],
         totalRepliesCount: Int,
         repliesOffset: Int,
         repliesPresentation: [OWCommentPresentationData]) {
@@ -33,6 +33,14 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         self.repliesOffset = repliesOffset
         self.repliesPresentation = repliesPresentation
         self.updateRepliesPresentationObservers()
+    }
+
+    init(id: OWCommentId) {
+        self.id = id
+        self.repliesIds = []
+        self.totalRepliesCount = 0
+        self.repliesOffset = 0
+        self.repliesPresentation = []
     }
 }
 
@@ -49,6 +57,10 @@ extension OWCommentPresentationData {
     func setRepliesPresentation(_ repliesPresentation: [OWCommentPresentationData]) {
         self.repliesPresentation = repliesPresentation
         self.updateRepliesPresentationObservers()
+    }
+
+    func setTotalRepliesCount(_ count: Int) {
+        self.totalRepliesCount = count
     }
 }
 

@@ -130,6 +130,15 @@ fileprivate extension OWConversationSortView {
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.sortByLabel.font = OWFontBook.shared.font(typography: .bodyText)
+                self.sortLabel.font = OWFontBook.shared.font(typography: .bodyContext)
+            })
+            .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {

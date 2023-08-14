@@ -131,6 +131,17 @@ fileprivate extension OWPreConversationFooterView {
                 self.poweredByOWButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.termsButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.separator.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.privacyButton.titleLabel?.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.poweredByOWButton.titleLabel?.font = OWFontBook.shared.font(typography: .metaText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

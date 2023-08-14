@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWReportReasonViewModelingInputs {
     var viewDidLoad: PublishSubject<Void> { get }
+    var changeIsLargeTitleDisplay: PublishSubject<Bool> { get }
 }
 
 protocol OWReportReasonViewModelingOutputs {
@@ -18,6 +19,7 @@ protocol OWReportReasonViewModelingOutputs {
     var loadedToScreen: Observable<Void> { get }
     var title: String { get }
     var viewableMode: OWViewableMode { get }
+    var isLargeTitleDisplay: Observable<Bool> { get }
 }
 
 protocol OWReportReasonViewModeling {
@@ -29,6 +31,8 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
     var inputs: OWReportReasonViewModelingInputs { return self }
     var outputs: OWReportReasonViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
+
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
@@ -36,6 +40,7 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
 
     let viewableMode: OWViewableMode
     let presentationalMode: OWPresentationalModeCompact
+    fileprivate let servicesProvider: OWSharedServicesProviding
 
     lazy var reportReasonViewViewModel: OWReportReasonViewViewModeling = {
         return OWReportReasonViewViewModel(reportData: reportData,
@@ -43,17 +48,38 @@ class OWReportReasonViewModel: OWReportReasonViewModeling, OWReportReasonViewMod
                                            presentationalMode: presentationalMode)
     }()
 
-    var title: String {
+    lazy var title: String = {
         return OWLocalizationManager.shared.localizedString(key: "ReportReasonTitle")
-    }
+    }()
 
     fileprivate let reportData: OWReportReasonsRequiredData
 
+    fileprivate lazy var _isLargeTitleDisplay: BehaviorSubject<Bool> = {
+        return BehaviorSubject<Bool>(value: servicesProvider.navigationControllerCustomizer().isLargeTitlesEnabled())
+    }()
+
+    var changeIsLargeTitleDisplay = PublishSubject<Bool>()
+    var isLargeTitleDisplay: Observable<Bool> {
+        return _isLargeTitleDisplay
+    }
+
     init(reportData: OWReportReasonsRequiredData,
          viewableMode: OWViewableMode,
-         presentMode: OWPresentationalModeCompact) {
+         presentMode: OWPresentationalModeCompact,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.reportData = reportData
         self.viewableMode = viewableMode
         self.presentationalMode = presentMode
+        self.servicesProvider = servicesProvider
+
+        setupObservers()
+    }
+}
+
+fileprivate extension OWReportReasonViewModel {
+    func setupObservers() {
+        changeIsLargeTitleDisplay
+            .bind(to: _isLargeTitleDisplay)
+            .disposed(by: disposeBag)
     }
 }
