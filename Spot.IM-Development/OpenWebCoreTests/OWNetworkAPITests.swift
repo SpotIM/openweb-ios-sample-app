@@ -45,15 +45,13 @@ final class OWNetworkAPITests: QuickSpec {
                 let response = Self.userDataResponse(with: api)
 
                 session.register(handler: requestHandler, for: request)
-                
+
                 response.response
                     .subscribe(onNext: { userResponse in
                         responseArray.append(userResponse)
                     })
                     .disposed(by: disposeBag)
 
-                // swiftlint:disable:next force_try
-//                let result = try! response.response.toBlocking().first()
                 expect(responseArray).toEventually(equal([MockUser(name: "John Doe", age: 30)]))
             }
         }
