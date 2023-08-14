@@ -36,11 +36,11 @@ internal final class SPUserNameView: SPBaseView {
     fileprivate var viewModel: SPUserNameViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    private let userNameLabel: SPBaseLabel = .init()
-    private let badgeTagLabel: SPBaseLabel = .init()
+    private let userNameLabel = SPBaseLabel()
+    private let badgeTagLabel = SPBaseLabel()
     private let nameAndBadgeStackview = UIStackView()
-    private let subtitleLabel: SPBaseLabel = .init()
-    private let dateLabel: SPBaseLabel = .init()
+    private let subtitleLabel = SPBaseLabel()
+    private let dateLabel = SPBaseLabel()
     private lazy var moreButton: SPBaseButton = {
         let btn = SPBaseButton()
         return btn

@@ -27,10 +27,10 @@ struct EmptyActionDataModel {
 
 final class SPEmptyConversationActionView: SPBaseView {
 
-    private let iconView: SPBaseUIImageView = .init()
-    let messageLabel: SPBaseLabel = .init()
-    private let actionButton: SPBaseButton = .init()
-    private let containerView: SPBaseView = .init()
+    private let iconView = SPBaseUIImageView()
+    let messageLabel = SPBaseLabel()
+    private let actionButton = SPBaseButton()
+    private let containerView = SPBaseView()
     private var action: (() -> Void)?
 
     override init(frame: CGRect) {

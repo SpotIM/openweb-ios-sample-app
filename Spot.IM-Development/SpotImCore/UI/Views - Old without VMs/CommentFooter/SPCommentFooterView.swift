@@ -24,10 +24,10 @@ final class SPCommentFooterView: SPBaseView {
         static let postButtonIdentifier = "comment_footer_view_post_button_id"
         static let addImageButtonIdentifier = "comment_footer_view_add_image_button_id"
     }
-    private let postButton: SPBaseButton = .init()
-    private let footerSeperator: SPBaseView = .init()
+    private let postButton = SPBaseButton()
+    private let footerSeperator = SPBaseView()
 
-    private let addImageButton: SPBaseButton = .init()
+    private let addImageButton = SPBaseButton()
 
     typealias PostButtonAction = () -> Void
     private var postButtonAction: PostButtonAction?
