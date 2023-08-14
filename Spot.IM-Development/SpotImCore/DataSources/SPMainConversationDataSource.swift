@@ -338,10 +338,9 @@ internal final class SPMainConversationDataSource {
         var replyModel: SPReplyCommentDTO?
         var editModel: SPEditCommentDTO?
 
-        if let userComment = comment {
+        if let userComment = comment, userComment.isAReply() {
             let maybeReplyComment = cellData.flatMap { $0 }.first { $0.commentId == userComment.parentCommentId }
-
-            if userComment.isAReply(), let replyComment = maybeReplyComment {
+            if let replyComment = maybeReplyComment {
                 replyModel = SPReplyCommentDTO(
                     authorName: replyComment.displayName,
                     commentText: replyComment.commentText,
