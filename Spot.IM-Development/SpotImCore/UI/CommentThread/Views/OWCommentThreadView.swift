@@ -171,5 +171,10 @@ fileprivate extension OWCommentThreadView {
                     }
                 })
                 .disposed(by: disposeBag)
+
+        tableView.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.changeThreadOffset)
+            .disposed(by: disposeBag)
     }
 }
