@@ -320,7 +320,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.viewableMode = viewableMode
         setupObservers()
 
-        sendEvent(for: .fullConversationLoaded)
+        sendEvent(for: .fullConversationViewed)
     }
 }
 
@@ -553,6 +553,14 @@ fileprivate extension OWConversationViewViewModel {
             }
             .unwrap()
             .share()
+
+        // First conversation load - send event
+        conversationFetchedObservable
+            .take(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .fullConversationLoaded)
+            })
+            .disposed(by: disposeBag)
 
         // first load comments or refresh comments
         conversationFetchedObservable
