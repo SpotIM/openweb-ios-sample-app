@@ -42,11 +42,10 @@ final class OWNetworkAPITests: QuickSpec {
 
         describe("OWNetworkAPI") {
             it("should perform a successful user data request") {
-                let request = Self.userDataRequest(with: environment)
-                let handler = Self.userDataRequestHandler(request)
+                let (request, requestHandler) = Self.userDataRequest(with: environment)
                 let response = Self.userDataResponse(with: api)
 
-                session.register(handler: handler, for: request)
+                session.register(handler: requestHandler, for: request)
 
                 // swiftlint:disable:next force_try
                 let result = try! response.response.toBlocking().first()
@@ -55,33 +54,32 @@ final class OWNetworkAPITests: QuickSpec {
         }
     }
 
+    private static func userDataRequest(with environment: OWEnvironment) -> (URLRequest, MockURLProtocol.RequestHandler) {
+        // swiftlint:disable:next force_try
+        return (
+            try! URLRequest(
+                url: environment.baseURL.appendingPathComponent(MockUserEndpoint.userData.path),
+                method: .get
+            ),
+            { request in
+                let data = """
+                    {
+                        "name": "John Doe",
+                        "age": 30
+                    }
+                    """.data(using: .utf8)! // swiftlint:disable:this force_try
+
+                // swiftlint:disable:next force_try
+                let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: "2.0", headerFields: nil)!
+                return (response, data)
+            }
+        )
+    }
+
     private static func userDataResponse(with api: OWNetworkAPI) -> OWNetworkResponse<MockUser> {
         return api.performRequest(
             route: api.request(for: MockUserEndpoint.userData),
             decoder: JSONDecoder()
         )
-    }
-
-    private static func userDataRequest(with environment: OWEnvironment) -> URLRequest {
-        // swiftlint:disable:next force_try
-        return try! URLRequest(
-            url: environment.baseURL.appendingPathComponent(MockUserEndpoint.userData.path),
-            method: .get
-        )
-    }
-
-    private static func userDataRequestHandler(_ request: URLRequest) -> MockURLProtocol.RequestHandler {
-        return { request in
-            let data = """
-                {
-                    "name": "John Doe",
-                    "age": 30
-                }
-                """.data(using: .utf8)! // swiftlint:disable:this force_try
-
-            // swiftlint:disable:next force_try
-            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: "2.0", headerFields: nil)!
-            return (response, data)
-        }
     }
 }
