@@ -44,10 +44,7 @@ final class OWNetworkAPITests: QuickSpec {
             it("should perform a successful user data request") {
                 let request = Self.userDataRequest(with: environment)
                 let handler = Self.userDataRequestHandler(request)
-                let response: OWNetworkResponse<MockUser> = api.performRequest(
-                    route: api.request(for: MockUserEndpoint.userData),
-                    decoder: JSONDecoder()
-                )
+                let response = Self.userDataResponse(with: api)
 
                 session.register(handler: handler, for: request)
 
@@ -56,6 +53,13 @@ final class OWNetworkAPITests: QuickSpec {
                 expect(result).to(equal(MockUser(name: "John Doe", age: 30)))
             }
         }
+    }
+
+    private static func userDataResponse(with api: OWNetworkAPI) -> OWNetworkResponse<MockUser> {
+        return api.performRequest(
+            route: api.request(for: MockUserEndpoint.userData),
+            decoder: JSONDecoder()
+        )
     }
 
     private static func userDataRequest(with environment: OWEnvironment) -> URLRequest {
