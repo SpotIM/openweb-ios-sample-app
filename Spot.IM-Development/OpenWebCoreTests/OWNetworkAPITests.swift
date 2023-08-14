@@ -39,7 +39,7 @@ final class OWNetworkAPITests: QuickSpec {
 
         afterEach {}
 
-        describe("OWNetworkAPI") {
+        describe("network api") {
             it("should perform a successful user data request") {
                 let (request, requestHandler) = Self.userDataRequest(with: environment)
                 let response = Self.userDataResponse(with: api)

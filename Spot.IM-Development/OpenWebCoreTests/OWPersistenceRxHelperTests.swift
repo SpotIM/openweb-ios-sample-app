@@ -23,7 +23,7 @@ fileprivate enum OWTestKey: String, OWRawableKey {
 final class OWPersistenceRxHelperTests: QuickSpec {
 
     override func spec() {
-        describe("OWPersistenceRxHelper") {
+        describe("persistence rx helper") {
             var disposeBag: DisposeBag!
             var persistenceHelper: OWPersistenceRxHelper!
             var expectedValue: Int!
@@ -32,7 +32,7 @@ final class OWPersistenceRxHelperTests: QuickSpec {
             let defaultValue = 123456
             let key = OWRxHelperKey<Int>(key: OWTestKey.key)
 
-            context("no default providing") {
+            context("1. when no defaults are not provided") {
                 beforeEach {
                     expectedValue = Int.random(in: 0..<999_999)
                     results = []
@@ -56,7 +56,7 @@ final class OWPersistenceRxHelperTests: QuickSpec {
                 }
             }
 
-            context("default providing") {
+            context("2. when defaults are provided") {
 
                 beforeEach {
                     expectedValue = Int.random(in: 0..<999_999)
