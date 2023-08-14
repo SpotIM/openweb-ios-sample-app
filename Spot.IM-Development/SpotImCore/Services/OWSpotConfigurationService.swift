@@ -99,7 +99,5 @@ fileprivate extension OWSpotConfigurationService {
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .dark)
         }
-        // Locale
-//        let locale = config.mobileSdk.locale ?? "en"
     }
 }
