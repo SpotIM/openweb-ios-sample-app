@@ -35,11 +35,7 @@ final class OWUserDefaultsTests: QuickSpec {
                 userDefaults.values(key: key, defaultValue: defaultValue).subscribe { results.append($0) }.disposed(by: disposeBag)
             }
 
-            afterEach {
-                disposeBag = nil
-                expectedValue = -1
-                userDefaults = nil
-            }
+            afterEach {}
 
             context("using the regular api") {
                 it("should save and get value") {
