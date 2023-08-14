@@ -331,3 +331,10 @@ extension OWAnalyticEventType {
         }
     }
 }
+
+// BI related
+extension OWAnalyticEventType {
+    var shouldSendBI: Bool {
+        return true // TODO
+    }
+}
