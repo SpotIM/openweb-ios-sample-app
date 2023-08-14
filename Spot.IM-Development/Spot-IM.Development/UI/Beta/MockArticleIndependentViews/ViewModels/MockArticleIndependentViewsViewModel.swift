@@ -74,6 +74,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         }
 
         setupCustomizationsCallaback()
+        setupBICallaback()
         setupObservers()
     }
 
@@ -224,6 +225,16 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         }
 
         customizations.addElementCallback(customizableClosure)
+    }
+
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWAnalyticEventCallback = { event in
+            print(event)
+        }
+
+        analytics.addBICallback(BIClosure)
     }
 
     func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
