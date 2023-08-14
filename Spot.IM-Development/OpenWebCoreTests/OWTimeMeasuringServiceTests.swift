@@ -31,7 +31,7 @@ final class OWTimeMeasuringServiceTests: QuickSpec {
 
             afterEach {}
 
-            context("measuring time") {
+            context("1. measuring time") {
                 it("should measure time") {
                     timeMeasuringService.startMeasure(forKey: key)
 
