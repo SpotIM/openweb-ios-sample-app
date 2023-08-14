@@ -288,7 +288,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             } else {
                 hideEmptyStateView()
             }
-            self.tableView.scrollRectToVisible(.init(x: 0, y: 0, width: 1, height: 1), animated: true)
+            self.tableView.scrollRectToVisible(CGRect(origin: .zero, size: CGSize(width: 1.0, height: 1.0)), animated: true)
         }
         logger.log(level: .verbose, "FirstComment: Calling reload on table view")
         self.tableView.reloadData()

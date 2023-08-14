@@ -20,8 +20,8 @@ internal final class SPCommunityGuidelinesView: SPBaseView {
         static let titleTextIdentifier = "community_guidelines_title_text_id"
     }
 
-    private lazy var titleTextView: SPBaseTextView = .init()
-    private lazy var separatorView: SPBaseView = .init()
+    private lazy var titleTextView = SPBaseTextView()
+    private lazy var separatorView = SPBaseView()
 
     private var titleBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?

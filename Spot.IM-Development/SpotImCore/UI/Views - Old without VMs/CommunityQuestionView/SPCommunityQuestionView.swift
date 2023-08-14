@@ -14,8 +14,8 @@ internal final class SPCommunityQuestionView: SPBaseView {
         static let identifier = "community_question_id"
     }
 
-    private lazy var questionTextView: SPBaseTextView = .init()
-    private lazy var separatorView: SPBaseView = .init()
+    private lazy var questionTextView = SPBaseTextView()
+    private lazy var separatorView = SPBaseView()
 
     private var questionBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
