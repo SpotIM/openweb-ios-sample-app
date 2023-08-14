@@ -21,6 +21,8 @@ final class OWNetworkAPITests: QuickSpec {
         var api: OWNetworkAPI!
         var session: OWSession!
         var environment: OWEnvironment!
+        var responseArray: [MockUser]!
+        var disposeBag: DisposeBag!
 
         beforeEach {
             session = {
@@ -31,14 +33,11 @@ final class OWNetworkAPITests: QuickSpec {
             }()
             environment = OWEnvironment(scheme: "http", domain: "localhost")
             api = OWNetworkAPI(environment: environment, session: session)
+            responseArray = []
+            disposeBag = DisposeBag()
         }
 
-        afterEach {
-            session.deregisterAllHandlers()
-            session = nil
-            environment = nil
-            api = nil
-        }
+        afterEach {}
 
         describe("OWNetworkAPI") {
             it("should perform a successful user data request") {
@@ -46,10 +45,16 @@ final class OWNetworkAPITests: QuickSpec {
                 let response = Self.userDataResponse(with: api)
 
                 session.register(handler: requestHandler, for: request)
+                
+                response.response
+                    .subscribe(onNext: { userResponse in
+                        responseArray.append(userResponse)
+                    })
+                    .disposed(by: disposeBag)
 
                 // swiftlint:disable:next force_try
-                let result = try! response.response.toBlocking().first()
-                expect(result).to(equal(MockUser(name: "John Doe", age: 30)))
+//                let result = try! response.response.toBlocking().first()
+                expect(responseArray).toEventually(equal([MockUser(name: "John Doe", age: 30)]))
             }
         }
     }

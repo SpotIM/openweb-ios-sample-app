@@ -43,10 +43,7 @@ final class OWPersistenceRxHelperTests: QuickSpec {
                     }.disposed(by: disposeBag)
                 }
 
-                afterEach {
-                    persistenceHelper = nil
-                    disposeBag = nil
-                }
+                afterEach {}
 
                 it("should provide an observable with no default value") {
                     expect(results).toEventually(equal([expectedValue]))
