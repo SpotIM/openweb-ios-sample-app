@@ -15,13 +15,6 @@ public typealias OWCustomBIData = [String: String]
 typealias OWCustomBIData = [String: String]
 #endif
 
-// TODO: what event we want here?
-#if NEW_API
-public typealias OWAnalyticEventCallback = (String) -> Void
-#else
-typealias OWAnalyticEventCallback = (String) -> Void
-#endif
-
 protocol OWAnalyticsInternalProtocol {
     func triggerBICallback(_ event: String)
     func clearCallbacks()
@@ -33,9 +26,9 @@ class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
     }
 
     var customBIData: OWCustomBIData = [:]
-    fileprivate var callbacks = [OWOptionalEncapsulation<OWAnalyticEventCallback>]()
+    fileprivate var callbacks = [OWOptionalEncapsulation<OWBIAnalyticEventCallback>]()
 
-    func addBICallback(_ callback: @escaping OWAnalyticEventCallback) {
+    func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback) {
         guard callbacks.count < Metrics.maxBIEventsCallbacksNumber else {
             let logger = OWSharedServicesProvider.shared.logger()
             logger.log(level: .error,
@@ -48,11 +41,11 @@ class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
     }
 
     func triggerBICallback(_ event: String) { // TODO: propper data - not string
-        let postId = OWManager.manager.postId
+        guard let postId = OWManager.manager.postId else { return }
 
         callbacks.forEach { optionalCallback in
             guard let actualCallback = optionalCallback.value() else { return }
-            actualCallback(event)
+            actualCallback(.a, OWBIAnalyticAdditionalInfo(customBIData: customBIData), postId) // TODO: create BI event from event
         }
     }
 
