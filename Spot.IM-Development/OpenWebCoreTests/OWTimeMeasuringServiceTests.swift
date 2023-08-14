@@ -29,10 +29,7 @@ final class OWTimeMeasuringServiceTests: QuickSpec {
                 measureSuccess = false
             }
 
-            afterEach {
-                timeMeasuringService = nil
-                key = nil
-            }
+            afterEach {}
 
             context("measuring time") {
                 it("should measure time") {
