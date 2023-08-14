@@ -58,7 +58,7 @@ class OWRouter: NSObject, OWRoutering {
     weak var navigationController: UINavigationController?
     fileprivate let presentationalMode: OWPresentationalModeExtended
     fileprivate var navDisposedBag: DisposeBag!
-
+    fileprivate lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
     var rootViewController: UIViewController? {
         return navigationController?.viewControllers.first
     }
@@ -193,13 +193,13 @@ extension OWRouter: UINavigationControllerDelegate {
             if let style = pushedVCStyles[toVC],
                style == .presentOverFullScreen {
                 toVC.title = fromVC.title
-                return OWPushOverFullScreenAnimationTransitioning.shared.presenting(true)
+                return pushOverFullScreenAnimationTransitioning.presenting(true)
             }
         } else {
             if let style = pushedVCStyles[fromVC],
                style == .presentOverFullScreen {
                 pushedVCStyles.removeValue(forKey: fromVC)
-                return OWPushOverFullScreenAnimationTransitioning.shared.presenting(false)
+                return pushOverFullScreenAnimationTransitioning.presenting(false)
             }
         }
         return nil
