@@ -335,6 +335,6 @@ extension OWAnalyticEventType {
 // BI related
 extension OWAnalyticEventType {
     var shouldSendBI: Bool {
-        return true // TODO
+        return true // TODO (not config etc)
     }
 }
