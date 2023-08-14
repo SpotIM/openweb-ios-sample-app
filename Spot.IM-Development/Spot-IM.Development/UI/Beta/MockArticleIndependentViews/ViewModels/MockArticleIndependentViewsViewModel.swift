@@ -230,7 +230,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
     func setupBICallaback() {
         let analytics: OWAnalytics = OpenWeb.manager.analytics
 
-        let BIClosure: OWBIAnalyticEventCallback = { event, additionalData, postId in
+        let BIClosure: OWBIAnalyticEventCallback = { event, _, _ in
             print(event)
         }
 
