@@ -139,6 +139,12 @@ fileprivate extension OWTextView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.textViewText
+            // This delay fixes the textView from flickering when text is inserted
+            .delay(.milliseconds(Metrics.delayTextViewTextChange), scheduler: MainScheduler.instance)
+            .bind(to: textView.rx.text)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.placeholderText
             .subscribe(onNext: { [weak self] placeholderText in
                 guard let self = self else { return }
@@ -178,12 +184,6 @@ fileprivate extension OWTextView {
                 })
                 .disposed(by: disposeBag)
         }
-
-        viewModel.outputs.textViewText
-            // This delay fixes the textView from flickering when text is inserted
-            .delay(.milliseconds(Metrics.delayTextViewTextChange), scheduler: MainScheduler.instance)
-            .bind(to: textView.rx.text)
-            .disposed(by: disposeBag)
 
         viewModel.outputs.becomeFirstResponderCalled
             .subscribe(onNext: { [weak self] _ in
