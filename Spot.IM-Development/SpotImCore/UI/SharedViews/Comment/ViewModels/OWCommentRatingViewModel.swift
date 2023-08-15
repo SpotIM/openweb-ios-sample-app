@@ -22,9 +22,9 @@ protocol OWCommentRatingViewModelingOutputs {
     var voteTypes: Observable<[VoteType]> { get }
     var rankUpSelected: Observable<Bool> { get }
     var rankDownSelected: Observable<Bool> { get }
-
     var votingUpImages: Observable<VotingImages> { get }
     var votingDownImages: Observable<VotingImages> { get }
+    var rankChanged: Observable<SPRankChange> { get }
 }
 
 protocol OWCommentRatingViewModeling {
@@ -57,6 +57,12 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                 else { return .like }
                 return sharedConfig.votesType
             }
+            .asObservable()
+    }
+
+    fileprivate var _rankChanged = PublishSubject<SPRankChange>()
+    var rankChanged: Observable<SPRankChange> {
+        _rankChanged
             .asObservable()
     }
 
@@ -245,6 +251,7 @@ fileprivate extension OWCommentRatingViewModel {
                       let operation = rankChange.operation
                 else { return .empty() }
 
+                self._rankChanged.onNext(rankChange)
                 return self.sharedServiceProvider
                     .netwokAPI()
                     .conversation

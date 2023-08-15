@@ -1,14 +1,21 @@
 //
-//  OWViewSourceType+Extensions.swift
+//  OWAnalyticSourceType.swift
 //  SpotImCore
 //
-//  Created by  Nogah Melamed on 18/07/2023.
+//  Created by  Nogah Melamed on 15/08/2023.
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
 import Foundation
 
-extension OWViewSourceType {
+enum OWAnalyticSourceType {
+    case preConversation
+    case conversation
+    case commentCreation
+    case commentThread
+    case reportReason
+    case none
+
     var analyticsComponentName: String {
         switch(self) {
         case .commentCreation:
@@ -21,6 +28,8 @@ extension OWViewSourceType {
             return "comment_thread"
         case .reportReason:
             return "report_reason"
+        case .none:
+            return "none"
         }
     }
 }
