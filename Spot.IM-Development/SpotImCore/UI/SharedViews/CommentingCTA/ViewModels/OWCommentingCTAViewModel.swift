@@ -148,7 +148,7 @@ fileprivate extension OWCommentingCTAViewModel {
             .avatarViewVM
             .outputs
             .openProfile
-            .subscribe(onNext: { [weak self] url in
+            .subscribe(onNext: { [weak self] url, _ in
                 guard let self = self else { return }
                 self._openProfile.onNext(url)
             })
