@@ -15,11 +15,21 @@ protocol OWSortingCustomizationsInternal {
 class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInternal {
 
     fileprivate var customizationTitleMapper: [OWSortOption: String] = [:]
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
-    var initialOption: OWInitialSortStrategy = .useServerConfig
+    init(sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServicesProvider = sharedServicesProvider
+    }
+
+    var initialOption: OWInitialSortStrategy = .useServerConfig {
+        didSet {
+            sendEvent(for: .configuredInitialSort(initialSort: initialOption))
+        }
+    }
 
     func setTitle(_ title: String, forOption sortOption: OWSortOption) {
         customizationTitleMapper[sortOption] = title
+        sendEvent(for: .configureSortTitle(sort: sortOption, title: title))
     }
 
     func customizedTitle(forOption sortOption: OWSortOption) -> OWCustomizedSortTitle {
@@ -28,5 +38,24 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
         }
 
         return .customized(title: title)
+    }
+}
+
+fileprivate extension OWSortingCustomizer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return sharedServicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "",
+                layoutStyle: .none,
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        sharedServicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }
