@@ -17,7 +17,7 @@ class OWUserDefaultsTests: QuickSpec {
 
     override func spec() {
         describe("Testing user defaults") {
-            
+
             var disposeBag: DisposeBag!
             // `sut` stands for `Subject Under Test`
             var sut: OWUserDefaults!
