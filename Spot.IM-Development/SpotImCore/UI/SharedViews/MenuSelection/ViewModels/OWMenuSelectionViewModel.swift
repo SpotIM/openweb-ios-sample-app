@@ -36,7 +36,7 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
     var menuDismissed = PublishSubject<Void>()
     fileprivate var menuDismissedObservable: Observable<Void> {
         return menuDismissed
-            .asObserver()
+            .asObservable()
     }
 
     var cellSelected = PublishSubject<Int>()
