@@ -75,7 +75,9 @@ extension OWUILayer {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -112,7 +114,9 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -159,7 +163,9 @@ extension OWUILayer {
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -208,7 +214,9 @@ extension OWUILayer {
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -294,7 +302,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -329,7 +339,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -381,7 +393,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -415,6 +429,10 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
@@ -489,5 +507,30 @@ fileprivate extension OWUILayer {
         case .partOfFlow:
             activeRouteringMode = .routering(routering: self.routering)
         }
+    }
+}
+
+fileprivate extension OWUILayer {
+    func event(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "",
+                layoutStyle: OWLayoutStyle(from: presentationalStyle),
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) {
+        let event = event(for: eventType, presentationalStyle: presentationalStyle)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
+    }
+
+    func sendStyleConfigureEvents(additionalSettings: OWAdditionalSettingsProtocol, presentationalStyle: OWPresentationalModeCompact) {
+        self.sendEvent(for: .configuredPreConversationStyle(style: additionalSettings.preConversationSettings.style), presentationalStyle: presentationalStyle)
+        self.sendEvent(for: .configuredCommentCreationStyle(style: additionalSettings.commentCreationSettings.style), presentationalStyle: presentationalStyle)
+        self.sendEvent(for: .configuredFullConversationStyle(style: additionalSettings.fullConversationSettings.style), presentationalStyle: presentationalStyle)
     }
 }
