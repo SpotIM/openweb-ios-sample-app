@@ -53,9 +53,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             commentTextAfterTapObservable = Observable.never()
         }
         return commentTextAfterTapObservable
+            .do(onNext: { [weak self] _ in
+                self?.sendEvent(for: .commentCreationClosePage)
+            })
             .flatMap { [weak self] commentText -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                self.sendEvent(for: .commentCreationClosePage)
                 let hasText = !commentText.isEmpty
                 guard hasText else {
                     self.clearCachedCommentIfNeeded()

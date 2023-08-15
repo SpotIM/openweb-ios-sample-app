@@ -595,9 +595,11 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(replyClickOutputObservable)
             }
+            .do(onNext: { [weak self] comment in
+                self?.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+            })
             .subscribe(onNext: { [weak self] comment in
                 guard let self = self else { return }
-                self.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
                 self.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
@@ -614,9 +616,11 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _, commentVm in
+                self?.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMap { [weak self] shareUrl, commentVm -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
-                self.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
 
@@ -832,9 +836,11 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
+            .do(onNext: { [weak self] (actions, sender, commentVm) in
+                self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
-                self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
