@@ -14,14 +14,22 @@ import SpotImCore
 extension OWModalPresentationStyle {
     static func presentationStyle(fromIndex index: Int) -> OWModalPresentationStyle {
         switch index {
-        case 0: return .fullScreen
-        case 1: return .pageSheet
-        default: return .fullScreen
+        case OWModalPresentationStyle.fullScreen.index: return .fullScreen
+        case OWModalPresentationStyle.pageSheet.index: return .pageSheet
+        default: return `default`
         }
     }
 
-    static var defaultIndex: Int {
-        return 0
+    static var `default`: OWModalPresentationStyle {
+        return .fullScreen
+    }
+
+    var index: Int {
+        switch self {
+        case .fullScreen: return 0
+        case .pageSheet: return 1
+        default: return OWModalPresentationStyle.`default`.index
+        }
     }
 }
 

@@ -14,7 +14,6 @@ class OWCommentRatingView: UIView {
 
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 24.0
-        static let fontSize: CGFloat = 12.0
         static let stackviewHeight: CGFloat = 24.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
@@ -55,7 +54,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankUpLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -63,7 +62,7 @@ class OWCommentRatingView: UIView {
     fileprivate lazy var rankDownLabel: UILabel = {
         return UILabel()
             .textAlignment(.center)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .hugContent(axis: .horizontal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
@@ -221,6 +220,15 @@ fileprivate extension OWCommentRatingView {
                     self.rankUpButton.brandColor = brandColor
                     self.rankDownButton.brandColor = brandColor
                 }
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.rankUpLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.rankDownLabel.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)
     }

@@ -19,7 +19,9 @@ protocol OWConversationViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
     var pullToRefresh: PublishSubject<Void> { get }
-    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
+    var scrolledToCellIndex: PublishSubject<Int> { get }
+    var changeConversationOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -40,12 +42,14 @@ protocol OWConversationViewViewModelingOutputs {
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
+    var scrollToCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
-    var openCommentCreation: Observable<OWCommentCreationType> { get }
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var conversationOffset: Observable<CGPoint> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -63,6 +67,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 4
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayAfterScrolledToIndex: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -83,8 +89,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    var commentCreationTap = PublishSubject<OWCommentCreationType>()
-    var openCommentCreation: Observable<OWCommentCreationType> {
+    var commentCreationTap = PublishSubject<OWCommentCreationTypeInternal>()
+    var openCommentCreation: Observable<OWCommentCreationTypeInternal> {
         return commentCreationTap
             .asObservable()
     }
@@ -97,9 +103,20 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
-    fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
-    fileprivate var _loadMoreComments = PublishSubject<Int>()
-    fileprivate var isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
+    fileprivate let _loadMoreComments = PublishSubject<Int>()
+    fileprivate let isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+
+    fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
+    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+    fileprivate let _scrollToCellIndex = PublishSubject<Int>()
+    var scrolledToCellIndex = PublishSubject<Int>()
+
+    var scrollToCellIndex: Observable<Int> {
+        _scrollToCellIndex
+            .asObservable()
+    }
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: conversationData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -304,21 +321,32 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    var changeConversationOffset = PublishSubject<CGPoint>()
+    var conversationOffset: Observable<CGPoint> {
+        return changeConversationOffset
+            .asObservable()
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let imageProvider: OWImageProviding
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
           imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
           conversationData: OWConversationRequiredData,
           viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
+        self.commentPresentationDataHelper = commentPresentationDataHelper
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
         setupObservers()
+
+        sendEvent(for: .fullConversationViewed)
     }
 }
 
@@ -487,7 +515,8 @@ fileprivate extension OWConversationViewViewModel {
             comment: commentWithUpdatedStatus,
             user: user,
             replyToUser: replyToUser,
-            collapsableTextLineLimit: Metrics.collapsableTextLineLimit
+            collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
+            section: self.conversationData.article.additionalSettings.section
         ))
     }
 
@@ -560,6 +589,14 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
             .share()
 
+        // First conversation load - send event
+        conversationFetchedObservable
+            .take(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .fullConversationLoaded)
+            })
+            .disposed(by: disposeBag)
+
         // first load comments or refresh comments
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
@@ -618,8 +655,13 @@ fileprivate extension OWConversationViewViewModel {
         commentingCTAViewModel
             .outputs
             .commentCreationTapped
+            .do(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.sendEvent(for: .createCommentCTAClicked)
+            })
             .subscribe(onNext: { [weak self] in
-                self?.commentCreationTap.onNext(.comment)
+                guard let self = self else { return }
+                self.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
 
@@ -819,7 +861,7 @@ fileprivate extension OWConversationViewViewModel {
 
                  return Observable.just(commentCellsVms)
             }
-            .share()
+            .share(replay: 1)
 
         // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
@@ -832,23 +874,31 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(replyClickOutputObservable)
             }
+            .do(onNext: { [weak self] comment in
+                self?.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+            })
             .subscribe(onNext: { [weak self] comment in
-                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+                guard let self = self else { return }
+                self.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
 
         // Responding to share url from comment cells VMs
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWCommentViewModeling)> in
+                let shareClickOutputObservable: [Observable<(URL, OWCommentViewModeling)>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.shareCommentUrl
+                        .map { ($0, commentVM) }
                 }
                 return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+            .do(onNext: { [weak self] _, commentVm in
+                self?.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
+            .flatMap { [weak self] shareUrl, _ -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
@@ -911,9 +961,11 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 switch mode {
                 case .collapse:
+                    self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
                     commentPresentationData.setRepliesPresentation([])
                     commentPresentationData.update.onNext()
                 case .expand:
+                    self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
@@ -939,6 +991,10 @@ fileprivate extension OWConversationViewViewModel {
                 return (rowIndex > (cellsVMs.count - Metrics.tableViewPaginationCellsOffset))
             }
             .filter { $0 }
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.sendEvent(for: .loadMoreComments(paginationOffset: self.paginationOffset))
+            })
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.isLoadingMoreComments.onNext(true)
@@ -958,6 +1014,10 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
+            .do(onNext: { [weak self] (_, _, commentVm) in
+                guard let self = self else { return }
+                self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
@@ -969,21 +1029,60 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 switch result {
                 case .completion:
-                    break
+                    self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
+                        self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
+                        self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
+                        self.sendEvent(for: .commentMenuEditClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
                     case OWCommentOptionsMenu.muteUser:
+                        self.sendEvent(for: .commentMenuMuteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.muteCommentUser.onNext(commentVm)
                     default:
                         return
                     }
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // Observe on read more click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWCommentId> in
+                let readMoreClickObservable: [Observable<OWCommentId>] = commentCellsVms.map { commentCellVm -> Observable<OWCommentId> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.readMoreTap
+                        .map { commentCellVm.outputs.commentVM.outputs.comment.id ?? "" }
+                }
+                return Observable.merge(readMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId in
+                self?.sendEvent(for: .commentReadMoreClicked(commentId: commentId))
+            })
+            .disposed(by: disposeBag)
+
+        // Observe on rank click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(OWCommentId, SPRankChange)> in
+                let rankClickObservable: [Observable<(OWCommentId, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentId, SPRankChange)> in
+                    let commentRankVm = commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.votingVM
+
+                    return commentRankVm.outputs.rankChanged
+                        .map { (commentCellVm.outputs.commentVM.outputs.comment.id ?? "", $0) }
+                }
+                return Observable.merge(rankClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId, rank in
+                guard let self = self,
+                      let eventType = rank.analyticsEventType(commentId: commentId)
+                else { return }
+                self.sendEvent(for: eventType)
             })
             .disposed(by: disposeBag)
 
@@ -1015,8 +1114,15 @@ fileprivate extension OWConversationViewViewModel {
 
         // Open sort option menu
         conversationSummaryViewModel.outputs.conversationSortVM.outputs.openSort
-            .flatMapLatest { [weak self] sender -> Observable<OWRxPresenterResponseType> in
+            .withLatestFrom(sortOptionObservable) { sender, currentSort -> (OWUISource, OWSortOption) in
+                return (sender, currentSort)
+            }
+            .do(onNext: { [weak self] _, currentSort in
+                self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
+            })
+            .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
+
                 let sortDictateService = self.servicesProvider.sortDictateService()
                 let actions = [
                     OWRxPresenterAction(title: sortDictateService.sortTextTitle(perOption: .best), type: OWSortMenu.sortBest),
@@ -1026,37 +1132,58 @@ fileprivate extension OWConversationViewViewModel {
 
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
+                    .map { ($0, currentSort) }
 
             }
-            .subscribe(onNext: { [weak self] typy in
+            .subscribe(onNext: { [weak self] typy, currentSort in
                 guard let self = self else { return }
                 switch (typy) {
                 case .completion:
+                    self.sendEvent(for: .sortByClosed(currentSort: currentSort))
                     return
                 case .selected(action: let action):
                     let sortDictateService = self.servicesProvider.sortDictateService()
+                    var newSort: OWSortOption = .best
                     switch (action.type) {
-                    case OWSortMenu.sortBest: sortDictateService.update(sortOption: .best, perPostId: self.postId)
-                    case OWSortMenu.sortNewest: sortDictateService.update(sortOption: .newest, perPostId: self.postId)
-                    case OWSortMenu.sortOldest: sortDictateService.update(sortOption: .oldest, perPostId: self.postId)
+                    case OWSortMenu.sortBest: newSort = .best
+                    case OWSortMenu.sortNewest: newSort = .newest
+                    case OWSortMenu.sortOldest: newSort = .oldest
                     default:
-                        return
+                        break
                     }
+                    self.sendEvent(for: .sortByChanged(previousSort: currentSort, selectedSort: newSort))
+                    sortDictateService.update(sortOption: newSort, perPostId: self.postId)
                 }
             })
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
+                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
+                        .map { url, type in
+                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
+                        }
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] url in
-                self?._openProfile.onNext(url)
+            .subscribe(onNext: { [weak self] url, type, userId in
+                guard let self = self else { return }
+                self._openProfile.onNext(url)
+                switch type {
+                case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
+                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: userId))
+                }
+            })
+            .disposed(by: disposeBag)
+
+        commentingCTAViewModel
+            .outputs
+            .openProfile
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .myProfileClicked(source: .commentCTA))
             })
             .disposed(by: disposeBag)
 
@@ -1072,6 +1199,96 @@ fileprivate extension OWConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        self.servicesProvider.commentUpdaterService()
+            .getUpdatedComments(for: postId)
+            .flatMap { updateType -> Observable<OWCommentUpdateType> in
+                // Making sure comment cells are visible
+                return commentCellsVmsObservable
+                    .filter { !$0.isEmpty }
+                    .take(1)
+                    .map { _ in updateType }
+            }
+            .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .subscribe(onNext: { [weak self] updateType in
+                guard let self = self else { return }
+                switch updateType {
+                case .insert(let comments):
+                    self._insertNewLocalComments.onNext(comments)
+                case let .update(commentId, withComment):
+                    self._updateLocalComment.onNext((withComment, commentId))
+                case let .insertReply(comment, toCommentId):
+                    self._replyToLocalComment.onNext((comment, toCommentId))
+                }
+            })
+            .disposed(by: disposeBag)
+
+        _insertNewLocalComments
+            .do(onNext: { [weak self] _ in
+                // scroll to top
+                guard let self = self else { return }
+                self._scrollToCellIndex.onNext(0)
+            })
+            .flatMapLatest { comments -> Observable<[OWComment]> in
+                // waiting for scroll to top
+                return self.scrolledToCellIndex
+                    .filter { $0 == 0 }
+                    .take(1)
+                    .map { _ in comments }
+            }
+            .delay(.milliseconds(Metrics.delayAfterScrolledToIndex), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .subscribe(onNext: { [weak self] comments in
+                guard let self = self else { return }
+                let commentsIds = comments.map { $0.id }.unwrap()
+                    .filter {
+                        // making sure we are not adding an existing comment
+                        self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                    }
+                let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
+                if (!updatedCommentsPresentationData.isEmpty) {
+                    self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        _updateLocalComment
+            .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { comment, commentId, commentCellsVms in
+                if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
+                    commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: comment)
+                    self._performTableViewAnimation.onNext()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        _replyToLocalComment
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] comment, parentCommentId in
+                guard let self = self,
+                      let commentId = comment.id,
+                      let parentCommentPresentationData = self.commentPresentationDataHelper.findVisibleCommentPresentationData(
+                        with: parentCommentId,
+                        in: Array(self._commentsPresentationData)
+                      )
+                else { return }
+                guard self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: commentId, in: Array(self._commentsPresentationData)) == nil else {
+                    // making sure we are not adding an existing reply
+                    return
+                }
+                let newCommentPresentationData = OWCommentPresentationData(id: commentId)
+                let existingRepliesPresentationData: [OWCommentPresentationData]
+                if (parentCommentPresentationData.repliesPresentation.count == 0) {
+                    existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
+                } else {
+                    existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation
+                }
+                parentCommentPresentationData.repliesIds.insert(commentId, at: 0)
+                parentCommentPresentationData.setTotalRepliesCount(parentCommentPresentationData.totalRepliesCount + 1)
+                parentCommentPresentationData.setRepliesPresentation([newCommentPresentationData] + existingRepliesPresentationData)
+                parentCommentPresentationData.update.onNext()
             })
             .disposed(by: disposeBag)
 
@@ -1103,7 +1320,7 @@ fileprivate extension OWConversationViewViewModel {
 
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
@@ -1115,15 +1332,16 @@ fileprivate extension OWConversationViewViewModel {
                         message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
                         actions: actions,
                         viewableMode: self.viewableMode
-                    )
+                    ).map { ($0, commentVm) }
             }
-            .map { result -> Bool in
+            .map { result, commentVm -> Bool in
                 switch result {
                 case .completion:
                     return false
                 case .selected(let action):
                     switch action.type {
                     case OWCommentDeleteAlert.delete:
+                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         return true
                     default:
                         return false
@@ -1274,5 +1492,12 @@ fileprivate extension OWConversationViewViewModel {
                 articleUrl: conversationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

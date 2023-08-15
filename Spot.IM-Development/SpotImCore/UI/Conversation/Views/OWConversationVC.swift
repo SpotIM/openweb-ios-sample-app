@@ -10,14 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationVC: UIViewController {
+class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
-        static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonImageName: String = "closeButton"
     }
 
     fileprivate let viewModel: OWConversationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var conversationView: OWConversationView = {
         return OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
@@ -52,55 +51,32 @@ class OWConversationVC: UIViewController {
 
         viewModel.inputs.viewDidLoad.onNext()
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWConversationVC {
     func setupUI() {
+        self.title = viewModel.outputs.title
+        let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+        if navControllerCustomizer.isLargeTitlesEnabled() {
+            self.navigationItem.largeTitleDisplayMode = .always
+        }
+
         view.addSubview(conversationView)
         conversationView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
 
-        setupNavControllerUI()
+        addingCloseButtonIfNeeded()
     }
 
-    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-        let navController = self.navigationController
-
-        // Setup close button
+    func addingCloseButtonIfNeeded() {
         if viewModel.outputs.shouldShowCloseButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
-        }
-
-        title = OWLocalizationManager.shared.localizedString(key: "Conversation")
-
-        if viewModel.outputs.shouldCustomizeNavigationBar {
-            navController?.navigationBar.isTranslucent = false
-            let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
-
-            // Setup Title
-            let navigationTitleTextAttributes = [
-                NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
-                NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
-            ]
-
-            if #available(iOS 13.0, *) {
-                let appearance = UINavigationBarAppearance()
-                appearance.configureWithOpaqueBackground()
-                appearance.backgroundColor = navigationBarBackgroundColor
-                appearance.titleTextAttributes = navigationTitleTextAttributes
-
-                // Setup Back button
-                let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-                backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-                appearance.backButtonAppearance = backButtonAppearance
-
-                navController?.navigationBar.standardAppearance = appearance
-                navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
-            } else {
-                navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-                navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-            }
         }
     }
 
@@ -109,9 +85,44 @@ fileprivate extension OWConversationVC {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
-                self.setupNavControllerUI(currentStyle)
+                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: currentStyle == .dark), state: .normal)
                 self.updateCustomUI()
+            })
+            .disposed(by: disposeBag)
+
+        self.setupStatusBarStyleUpdaterObservers()
+
+        // Large titles related observables
+        let conversationOffset = viewModel.outputs.conversationViewVM
+            .outputs.conversationOffset
+            .share()
+
+        let shouldShouldChangeToLargeTitleDisplay = conversationOffset
+            .filter { $0.y <= 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { !$0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.always }
+
+        let shouldShouldChangeToRegularTitleDisplay = conversationOffset
+            .filter { $0.y > 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { $0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.never }
+
+        Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
+            .subscribe(onNext: { [weak self] displayMode in
+                let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
+
+                let isLargeTitleGoingToBeDisplay = displayMode == .always
+                self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
+                self.navigationItem.largeTitleDisplayMode = displayMode
+                UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
+                    self.navigationController?.navigationBar.layoutIfNeeded()
+                })
             })
             .disposed(by: disposeBag)
     }

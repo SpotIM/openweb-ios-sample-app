@@ -83,7 +83,7 @@ fileprivate extension TestingPlaygroundIndependentViewModel {
                 }
 
                 views.testingPlayground(postId: postId,
-                                    additionalSettings: nil,
+                                    additionalSettings: OWTestingPlaygroundSettings(),
                                     callbacks: actionsCallbacks,
                                     completion: { [weak self] result in
                     guard let self = self else { return }

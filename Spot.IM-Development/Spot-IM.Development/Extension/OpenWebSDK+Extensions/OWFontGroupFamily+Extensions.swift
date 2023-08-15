@@ -14,9 +14,10 @@ import SpotImCore
 extension OWFontGroupFamily {
     static func fontGroupFamily(fromIndex index: Int, name: String = "") -> OWFontGroupFamily {
         switch index {
-        case 0: return .`default`
-        case 1: return .custom(fontFamily: name)
-        default: return .`default`
+        case OWFontGroupFamilyIndexer.`default`.index: return .`default`
+        case OWFontGroupFamilyIndexer.custom.index: return .custom(fontFamily: name)
+        default:
+            return .`default`
         }
     }
 

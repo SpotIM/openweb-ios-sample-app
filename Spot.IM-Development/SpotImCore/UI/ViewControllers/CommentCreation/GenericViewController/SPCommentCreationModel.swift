@@ -61,12 +61,12 @@ class SPCommentCreationModel {
         articleHeaderVM = SPArticleHeaderViewModel(articleMetadata: articleMetadate)
         setupCommentLabels()
 
-        let commentIdentifier: String = getCommentIdentifierForCommentType()
+        let cachedCommentKey: OWCachedCommentKey = getCachedCommentKeyForCommentType()
 
         if let text = commentCreationDTO.editModel?.commentText {
             commentText = text
         } else {
-            commentText = OWSharedServicesProvider.shared.commentsInMemoryCacheService()[commentIdentifier] ?? ""
+            commentText = OWSharedServicesProvider.shared.commentsInMemoryCacheService()[cachedCommentKey] ?? ""
         }
 
         if let image = commentCreationDTO.editModel?.commentImage {
@@ -97,15 +97,15 @@ class SPCommentCreationModel {
                 guard let self = self else { return }
 
                 var responseData = self.populateResponseFields(response)
-                let commentIdentifier: String = self.getCommentIdentifierForCommentType()
+                let cachedCommentKey: OWCachedCommentKey = self.getCachedCommentKeyForCommentType()
 
                 // set new comment status after "/status" call
                 self.commentService.commentStatus(conversationId: self.dataModel.postId, commentId: responseData.id ?? "", success: { status in
                     responseData.rawStatus = status["status"]
-                    OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
+                    OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: cachedCommentKey)
                     self.postCompletionHandler?(responseData)
                 }, failure: {_ in
-                    OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
+                    OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: cachedCommentKey)
                     self.postCompletionHandler?(responseData)
                 })
 
@@ -125,7 +125,7 @@ class SPCommentCreationModel {
 
                 var responseData = self.populateResponseFields(response)
                 responseData.setIsEdited(true)
-                OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: self.dataModel.postId)
+                OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: .comment(postId: self.dataModel.postId))
                 self.postCompletionHandler?(responseData)
             },
             failure: { [weak self] error in
@@ -206,8 +206,8 @@ class SPCommentCreationModel {
             responseData.depth = 0
         }
 
-        let commentIdentifier: String = self.getCommentIdentifierForCommentType()
-        OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
+        let cachedCommentKey: OWCachedCommentKey = self.getCachedCommentKeyForCommentType()
+        OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: cachedCommentKey)
 
         return responseData
     }
@@ -228,16 +228,17 @@ class SPCommentCreationModel {
     private func saveCommentTextInCache() {
         guard !isInEditMode() && commentText.count >= commentCacheMinCount else { return } // do not save edited message in cache
 
-        let commentIdentifier: String = getCommentIdentifierForCommentType()
-        OWSharedServicesProvider.shared.commentsInMemoryCacheService()[commentIdentifier] = commentText
+        let cachedCommentKey: OWCachedCommentKey = getCachedCommentKeyForCommentType()
+        OWSharedServicesProvider.shared.commentsInMemoryCacheService()[cachedCommentKey] = commentText
     }
 
-    private func getCommentIdentifierForCommentType() -> String {
-        if let commentIdentifier: String = dataModel.replyModel?.commentId {
-            return commentIdentifier
+    private func getCachedCommentKeyForCommentType() -> OWCachedCommentKey {
+        let postId = dataModel.postId
+        if let commentId: String = dataModel.replyModel?.commentId {
+            return .reply(postId: postId, commentId: commentId)
         }
 
-        return dataModel.postId
+        return .comment(postId: postId)
     }
 
     func shouldDisplayImageUploadButton() -> Bool {

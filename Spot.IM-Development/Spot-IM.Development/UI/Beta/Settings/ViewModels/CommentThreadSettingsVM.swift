@@ -54,7 +54,7 @@ class CommentThreadSettingsVM: CommentThreadSettingsViewModeling, CommentThreadS
     }
 }
 
-extension CommentThreadSettingsVM {
+fileprivate extension CommentThreadSettingsVM {
     func setupObservers() {
         openCommentIdSelected
             .skip(1)
@@ -64,7 +64,6 @@ extension CommentThreadSettingsVM {
     }
 }
 
-extension CommentThreadSettingsVM: SettingsGroupVMProtocol {
+extension CommentThreadSettingsVM: SettingsGroupVMProtocol { }
 
-}
 #endif

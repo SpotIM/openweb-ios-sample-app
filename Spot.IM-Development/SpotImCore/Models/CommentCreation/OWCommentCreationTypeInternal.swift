@@ -1,5 +1,5 @@
 //
-//  OWCommentCreationType.swift
+//  OWCommentCreationTypeInternal.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 03/01/2023.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWCommentCreationType {
+enum OWCommentCreationTypeInternal {
     case comment
     case edit(comment: OWComment)
     case replyToComment(originComment: OWComment)

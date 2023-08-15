@@ -10,13 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationVC: UIViewController {
+class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
 
     }
 
     fileprivate let viewModel: OWCommentCreationViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var commentCreationView: OWCommentCreationView = {
         let commentCreationView = OWCommentCreationView(viewModel: viewModel.outputs.commentCreationViewVM)
@@ -50,6 +50,10 @@ class OWCommentCreationVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWCommentCreationVC {
@@ -71,6 +75,8 @@ fileprivate extension OWCommentCreationVC {
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+
+        self.setupStatusBarStyleUpdaterObservers()
 
         // keyboard will show
         NotificationCenter.default.rx

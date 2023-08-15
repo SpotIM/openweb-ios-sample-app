@@ -18,7 +18,6 @@ class OWCommentThreadActionsView: UIView {
         static let topOffset: CGFloat = 4.0
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
-        static let fontSize: CGFloat = 15.0
         static let cellHeight: CGFloat = 40.0
         static let textToImageSpacing: CGFloat = 6.5
     }
@@ -82,7 +81,7 @@ class OWCommentThreadActionsView: UIView {
     fileprivate lazy var actionLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -126,6 +125,14 @@ fileprivate extension OWCommentThreadActionsView {
                     self.disclosureImageView.tintColor = brandColor
                     self.activityIndicator.color = brandColor
                 }
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.actionLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
 

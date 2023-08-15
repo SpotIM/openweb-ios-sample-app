@@ -10,8 +10,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonSubmittedVC: UIViewController {
+class OWReportReasonSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     let reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonSubmittedView: OWReportReasonSubmittedView = {
         return OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewViewModel)
@@ -29,10 +30,15 @@ class OWReportReasonSubmittedVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
@@ -42,7 +48,12 @@ fileprivate extension OWReportReasonSubmittedVC {
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(reportReasonSubmittedView)
         reportReasonSubmittedView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }

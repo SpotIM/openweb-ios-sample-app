@@ -25,7 +25,6 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
         static let buttonsHeight: CGFloat = 40
         static let bottomPadding: CGFloat = 20
         static let trashIconPadding: CGFloat = 10
-        static let buttonsFontSize: CGFloat = 15
         static let closeButtonPadding: CGFloat = 20
         static let closeCrossIcon = "closeCrossIcon"
     }
@@ -52,7 +51,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .setTitle(viewModel.outputs.continueButtonText, state: .normal)
-            .font(OWFontBook.shared.font(style: .semiBold, size: Metrics.buttonsFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .corner(radius: Metrics.buttonsRadius)
     }()
 
@@ -62,7 +61,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(OWDesignColors.G4)
             .border(width: 1, color: OWDesignColors.G4)
             .setTitle(viewModel.outputs.cancelButtonText, state: .normal)
-            .font(OWFontBook.shared.font(style: .semiBold, size: Metrics.buttonsFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .corner(radius: Metrics.buttonsRadius)
             .image(UIImage(spNamed: viewModel.outputs.trashIconName), state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Metrics.trashIconPadding))
@@ -140,6 +139,15 @@ fileprivate extension OWReportReasonCancelView {
                 self.continueButton
                     .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
                     .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.continueButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
+                self.cancelButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
     }

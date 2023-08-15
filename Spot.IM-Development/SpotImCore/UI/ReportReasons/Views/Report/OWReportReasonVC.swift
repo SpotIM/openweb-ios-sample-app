@@ -10,16 +10,16 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonVC: UIViewController {
+class OWReportReasonVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate struct Metrics {
-        static let navigationTitleFontSize: CGFloat = 18.0
         static let closeButtonSize: CGFloat = 40
+
         static let closeButtonIdentidier = "report_reason_close_button_id"
         static let closeCrossIcon = "closeCrossIcon"
     }
 
     fileprivate let viewModel: OWReportReasonViewModeling
-    fileprivate let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var reportReasonView: OWReportReasonView = {
         let reportReasonView = OWReportReasonView(viewModel: viewModel.outputs.reportReasonViewViewModel)
@@ -59,15 +59,26 @@ class OWReportReasonVC: UIViewController {
         // Enable navigation back by swipe
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
 }
 
 fileprivate extension OWReportReasonVC {
     func setupViews() {
         self.title = viewModel.outputs.title
+        let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+        if navControllerCustomizer.isLargeTitlesEnabled() {
+            self.navigationItem.largeTitleDisplayMode = .always
+        }
+
+        setupNavControllerSettings()
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(reportReasonView)
         reportReasonView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
 
         closeButton.OWSnp.makeConstraints { make in
@@ -75,9 +86,7 @@ fileprivate extension OWReportReasonVC {
         }
     }
 
-    func setupNavControllerUI(_ style: OWThemeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle) {
-        let navController = self.navigationController
-
+    func setupNavControllerSettings() {
         // Setup close button
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
 
@@ -86,35 +95,6 @@ fileprivate extension OWReportReasonVC {
 
         // Disable navigation back by swipe
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-
-        title = viewModel.outputs.title
-
-        navController?.navigationBar.isTranslucent = false
-        let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
-
-        // Setup Title
-        let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: OWFontBook.shared.font(style: .bold, size: Metrics.navigationTitleFontSize),
-            NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
-        ]
-
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
-
-            // Setup Back button
-            let backButtonAppearance = UIBarButtonItemAppearance(style: .plain)
-            backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            appearance.backButtonAppearance = backButtonAppearance
-
-            navController?.navigationBar.standardAppearance = appearance
-            navController?.navigationBar.scrollEdgeAppearance = navController?.navigationBar.standardAppearance
-        } else {
-            navController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-            navController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
     }
 
     func setupObservers() {
@@ -123,13 +103,47 @@ fileprivate extension OWReportReasonVC {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
-                self.setupNavControllerUI(currentStyle)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: currentStyle == .dark), state: .normal)
             })
             .disposed(by: disposeBag)
 
+        self.setupStatusBarStyleUpdaterObservers()
+
         closeButton.rx.tap
             .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
+            .disposed(by: disposeBag)
+
+        // Large titles related observables
+        let reportOffset = viewModel.outputs.reportReasonViewViewModel
+            .outputs.reportOffset
+            .share()
+
+        let shouldShouldChangeToLargeTitleDisplay = reportOffset
+            .filter { $0.y <= 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { !$0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.always }
+
+        let shouldShouldChangeToRegularTitleDisplay = reportOffset
+            .filter { $0.y > 0 }
+            .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
+            .filter { $0 }
+            .voidify()
+            .map { return UINavigationItem.LargeTitleDisplayMode.never }
+
+        Observable.merge(shouldShouldChangeToLargeTitleDisplay, shouldShouldChangeToRegularTitleDisplay)
+            .subscribe(onNext: { [weak self] displayMode in
+                let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
+                guard let self = self, navControllerCustomizer.isLargeTitlesEnabled() else { return }
+
+                let isLargeTitleGoingToBeDisplay = displayMode == .always
+                self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
+                self.navigationItem.largeTitleDisplayMode = displayMode
+                UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
+                    self.navigationController?.navigationBar.layoutIfNeeded()
+                })
+            })
             .disposed(by: disposeBag)
     }
 
