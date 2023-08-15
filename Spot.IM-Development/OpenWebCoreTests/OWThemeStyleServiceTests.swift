@@ -15,7 +15,7 @@ import Nimble
 class OWThemeStyleServiceTests: QuickSpec {
 
     override func spec() {
-        describe("theme style service") {
+        describe("Testing theme style service") {
 
             // `sut` stands for `Subject Under Test`
             var sut: OWThemeStyleService!
