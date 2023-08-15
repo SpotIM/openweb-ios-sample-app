@@ -12,3 +12,9 @@ struct MockUser: Codable, Equatable {
     var name: String
     var age: Int
 }
+
+extension MockUser {
+    static func stub() -> MockUser {
+        return MockUser(name: "John Doe", age: 30)
+    }
+}

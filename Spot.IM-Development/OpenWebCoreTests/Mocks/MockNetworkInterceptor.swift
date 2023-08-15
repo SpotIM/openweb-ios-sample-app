@@ -10,6 +10,4 @@ import XCTest
 import RxSwift
 @testable import SpotImCore
 
-class MockNetworkInterceptor: OWNetworkRequestInterceptor {
-
-}
+class MockNetworkInterceptor: OWNetworkRequestInterceptor { }
