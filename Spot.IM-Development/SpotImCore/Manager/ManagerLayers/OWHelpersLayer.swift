@@ -19,9 +19,12 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
     fileprivate var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
     fileprivate var _languageStrategy: OWLanguageStrategy = OWLanguageStrategy.default
     fileprivate var _localeStrategy: OWLocaleStrategy = OWLocaleStrategy.default
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
-    init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared) {
+    init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared,
+         sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.localizationManager = localizationManager
+        self.sharedServicesProvider = sharedServicesProvider
     }
 
     var shouldSuppressFinmbFilter: Bool {
@@ -74,7 +77,7 @@ extension OWHelpersLayer {
 
 fileprivate extension OWHelpersLayer {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
-        return OWSharedServicesProvider.shared
+        return sharedServicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
@@ -85,7 +88,7 @@ fileprivate extension OWHelpersLayer {
 
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
-        OWSharedServicesProvider.shared
+        sharedServicesProvider
             .analyticsService()
             .sendAnalyticEvents(events: [event])
     }
