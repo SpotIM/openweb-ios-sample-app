@@ -53,8 +53,8 @@ class OWAnalyticsService: OWAnalyticsServicing {
 
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
         events.forEach { event in
-            if (event.type.shouldSendBI) {
-                analyticsLayer.triggerBICallback(event.type.eventName) // TODO: send propper data
+            if let biEvent = event.type.biAnalyticEvent {
+                analyticsLayer.triggerBICallback(biEvent)
             }
         }
         analyticsEvents.append(contentsOf: events)
