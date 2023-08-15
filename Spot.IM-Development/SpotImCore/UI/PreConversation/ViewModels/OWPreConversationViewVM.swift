@@ -515,9 +515,11 @@ fileprivate extension OWPreConversationViewViewModel {
         commentingCTAViewModel
             .outputs
             .commentCreationTapped
+            .do(onNext: { [weak self] in
+                self?.sendEvent(for: .createCommentCTAClicked)
+            })
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.sendEvent(for: .createCommentCTAClicked)
                 self.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
@@ -575,9 +577,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 return Observable.merge(replyClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] comment in
+            .do(onNext: { [weak self] comment in
                 guard let self = self else { return }
                 self.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+            })
+            .subscribe(onNext: { [weak self] comment in
+                guard let self = self else { return }
                 self.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
@@ -594,12 +599,14 @@ fileprivate extension OWPreConversationViewViewModel {
                 return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _, commentVm in
+                guard let self = self else { return }
+                self.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMap { [weak self] shareUrl, commentVm -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
-                self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
-
             }
             .subscribe { result in
                 switch result {
@@ -638,10 +645,12 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         commentingCTAViewModel.outputs.openProfile
+            .do(onNext: { [weak self] _ in
+                self?.sendEvent(for: .myProfileClicked(source: .commentCTA))
+            })
             .subscribe(onNext: { [weak self] url in
                 guard let self = self  else { return }
                 self._openProfile.onNext(url)
-                self.sendEvent(for: .myProfileClicked(source: .commentCTA))
             })
             .disposed(by: disposeBag)
 
@@ -764,9 +773,11 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
+            .do(onNext: { [weak self] (_, _, commentVm) in
+                self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
-                self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
