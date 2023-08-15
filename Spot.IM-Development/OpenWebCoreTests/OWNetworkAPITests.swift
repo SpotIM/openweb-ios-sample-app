@@ -18,7 +18,8 @@ class OWNetworkAPITests: QuickSpec {
     override func spec() {
         describe("Testing network api") {
 
-            var api: OWNetworkAPI!
+            // `sut` stands for `Subject Under Test`
+            var sut: OWNetworkAPI!
             var session: OWSession!
             var environment: OWEnvironment!
             var responseArray: [MockUser]!
@@ -34,7 +35,7 @@ class OWNetworkAPITests: QuickSpec {
                     return mockSession
                 }()
                 environment = OWEnvironment(scheme: "http", domain: "localhost")
-                api = OWNetworkAPI(environment: environment, middlewares: [], session: session)
+                sut = OWNetworkAPI(environment: environment, middlewares: [], session: session)
                 responseArray = []
                 networkTestingUtil = NetworkTestingUtil()
                 disposeBag = DisposeBag()
@@ -47,7 +48,7 @@ class OWNetworkAPITests: QuickSpec {
                     let encodedUserData = try! encoder.encode(userData)
                     
                     let (request, requestHandler) = networkTestingUtil.requestHandler(for: environment, with: encodedUserData, endpoint: MockUserEndpoint.userData)
-                    let response = networkTestingUtil.response(with: api, for: MockUserEndpoint.userData)
+                    let response = networkTestingUtil.response(with: sut, for: MockUserEndpoint.userData)
 
                     session.register(handler: requestHandler, for: request)
 
@@ -82,7 +83,7 @@ class OWNetworkAPITests: QuickSpec {
                     let encodedUserData = try! encoder.encode(userData)
 
                     let (request, requestHandler) = networkTestingUtil.requestHandler(for: environment, with: encodedUserData, endpoint: MockUserEndpoint.userData, statusCode: 400, method: .get)
-                    let response = networkTestingUtil.response(with: api, for: MockUserEndpoint.userData)
+                    let response = networkTestingUtil.response(with: sut, for: MockUserEndpoint.userData)
 
                     session.register(handler: requestHandler, for: request)
 

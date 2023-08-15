@@ -22,8 +22,10 @@ class OWPersistenceRxHelperTests: QuickSpec {
 
     override func spec() {
         describe("Testing persistence rx helper") {
+            
             var disposeBag: DisposeBag!
-            var persistenceHelper: OWPersistenceRxHelper!
+            // `sut` stands for `Subject Under Test`
+            var sut: OWPersistenceRxHelper!
             var randomGenerator: RandomGenerator!
             var expectedValue: Int!
             var results: [Int]!
@@ -40,12 +42,12 @@ class OWPersistenceRxHelperTests: QuickSpec {
                 disposeBag = DisposeBag()
                 decoder = JSONDecoder()
                 encoder = JSONEncoder()
-                persistenceHelper = OWPersistenceRxHelper(decoder: decoder, encoder: encoder)
+                sut = OWPersistenceRxHelper(decoder: decoder, encoder: encoder)
             }
 
             context("1. when no defaults are not provided") {
                 beforeEach {
-                    persistenceHelper.observable(key: key,
+                    sut.observable(key: key,
                                                  value: try? encoder.encode(expectedValue),
                                                  defaultValue: nil)
                     .subscribe { event in
@@ -60,7 +62,7 @@ class OWPersistenceRxHelperTests: QuickSpec {
 
                 it("should provide an observable with data") {
                     let newValue = randomGenerator.randomInt()
-                    persistenceHelper.onNext(key: key, data: try? encoder.encode(newValue))
+                    sut.onNext(key: key, data: try? encoder.encode(newValue))
                     expect(results).toEventually(equal([expectedValue, newValue]))
                 }
             }
@@ -68,7 +70,7 @@ class OWPersistenceRxHelperTests: QuickSpec {
             context("2. when default value is provided") {
 
                 beforeEach {
-                    persistenceHelper.observable(key: key,
+                    sut.observable(key: key,
                                                  value: try? encoder.encode(expectedValue),
                                                  defaultValue: defaultValue)
                     .subscribe { event in
@@ -83,7 +85,7 @@ class OWPersistenceRxHelperTests: QuickSpec {
 
                 it("should provide an observable with an expected value") {
                     let newValue = randomGenerator.randomInt()
-                    persistenceHelper.onNext(key: key, data: try? encoder.encode(newValue))
+                    sut.onNext(key: key, data: try? encoder.encode(newValue))
                     expect(results).toEventually(equal([expectedValue, newValue]))
                 }
             }
