@@ -20,6 +20,7 @@ protocol OWTextViewViewModelingInputs {
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
     var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
+    var cursorRangeChange: BehaviorSubject<Range<String.Index>> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -35,6 +36,7 @@ protocol OWTextViewViewModelingOutputs {
     var charectersLimitEnabled: Bool { get }
     var isAutoExpandable: Bool { get }
     var hasSuggestionsBar: Bool { get }
+    var cursorRange: Observable<Range<String.Index>> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -96,6 +98,12 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     }
 
     var _textViewText: BehaviorSubject<String>
+
+    lazy var cursorRangeChange = BehaviorSubject<Range<String.Index>>(value: "".range(from: NSRange(location: 0, length: 0))!)
+    var cursorRange: Observable<Range<String.Index>> {
+        return cursorRangeChange
+            .asObservable()
+    }
 
     var textExternalChange = PublishSubject<String>()
     var textInternalChange = PublishSubject<String>()
