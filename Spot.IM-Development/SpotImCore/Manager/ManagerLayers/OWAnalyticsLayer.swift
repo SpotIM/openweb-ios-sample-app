@@ -8,13 +8,6 @@
 
 import Foundation
 
-// TODO: move to new files
-#if NEW_API
-public typealias OWCustomBIData = [String: String]
-#else
-typealias OWCustomBIData = [String: String]
-#endif
-
 protocol OWAnalyticsInternalProtocol {
     func triggerBICallback(_ event: OWBIAnalyticEvent)
     func clearCallbacks()
