@@ -17,12 +17,14 @@ class OWTimeMeasuringServiceTests: QuickSpec {
 
     override func spec() {
         describe("Testing time measuring service") {
-            var timeMeasuringService: OWTimeMeasuringService!
+
+            // `sut` stands for `Subject Under Test`
+            var sut: OWTimeMeasuringService!
             var key: OWTimeMeasuringService.OWKeys!
             var measureSuccess: Bool!
 
             beforeEach {
-                timeMeasuringService = OWTimeMeasuringService()
+                sut = OWTimeMeasuringService()
                 key = OWTimeMeasuringService.OWKeys.conversationUIBuildingTime
                 measureSuccess = false
             }
@@ -31,10 +33,10 @@ class OWTimeMeasuringServiceTests: QuickSpec {
 
             context("1. measuring time") {
                 it("should measure time") {
-                    timeMeasuringService.startMeasure(forKey: key)
+                    sut.startMeasure(forKey: key)
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                        switch timeMeasuringService.endMeasure(forKey: key) {
+                        switch sut.endMeasure(forKey: key) {
                         case .time(milliseconds: let time):
                             measureSuccess = time > 0
                         case .error:
@@ -46,7 +48,7 @@ class OWTimeMeasuringServiceTests: QuickSpec {
                 }
 
                 it("should report an error when end measure is called without start measure") {
-                    switch timeMeasuringService.endMeasure(forKey: key) {
+                    switch sut.endMeasure(forKey: key) {
                     case .time(milliseconds: let time):
                         measureSuccess = time > 0
                     case .error:
