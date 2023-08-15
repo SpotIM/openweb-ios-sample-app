@@ -17,8 +17,10 @@ class OWUserDefaultsTests: QuickSpec {
 
     override func spec() {
         describe("Testing user defaults") {
+            
             var disposeBag: DisposeBag!
-            var userDefaults: OWUserDefaults!
+            // `sut` stands for `Subject Under Test`
+            var sut: OWUserDefaults!
             var randomGenerator: RandomGenerator!
             var results: [Int]!
 
@@ -28,10 +30,10 @@ class OWUserDefaultsTests: QuickSpec {
             beforeEach {
                 results = []
                 disposeBag = DisposeBag()
-                userDefaults = OWUserDefaults(userDefaults: UserDefaults(suiteName: UUID().uuidString)!)
+                sut = OWUserDefaults(userDefaults: UserDefaults(suiteName: UUID().uuidString)!)
                 randomGenerator = RandomGenerator()
 
-                userDefaults.values(key: key, defaultValue: defaultValue)
+                sut.values(key: key, defaultValue: defaultValue)
                     .subscribe(onNext: { value in
                         results.append(value)
                     })
@@ -43,20 +45,20 @@ class OWUserDefaultsTests: QuickSpec {
             context("1. using the regular api") {
                 it("should save and get value") {
                     let randomValue = randomGenerator.randomInt()
-                    userDefaults.save(value: randomValue, forKey: key)
-                    expect(userDefaults.get(key: key)).to(equal(randomValue))
+                    sut.save(value: randomValue, forKey: key)
+                    expect(sut.get(key: key)).to(equal(randomValue))
                 }
 
                 it("should get default value") {
-                    expect(userDefaults.get(key: key, defaultValue: defaultValue)).to(equal(defaultValue))
+                    expect(sut.get(key: key, defaultValue: defaultValue)).to(equal(defaultValue))
                 }
 
                 it("should remove value") {
                     let randomValue = randomGenerator.randomInt()
-                    userDefaults.save(value: randomValue, forKey: key)
-                    expect(userDefaults.get(key: key)).to(equal(randomValue))
-                    userDefaults.remove(key: key)
-                    expect(userDefaults.get(key: key)).to(beNil())
+                    sut.save(value: randomValue, forKey: key)
+                    expect(sut.get(key: key)).to(equal(randomValue))
+                    sut.remove(key: key)
+                    expect(sut.get(key: key)).to(beNil())
                 }
             }
 
@@ -68,8 +70,8 @@ class OWUserDefaultsTests: QuickSpec {
                 it("should set values") {
                     let firstRandomValue = randomGenerator.randomInt()
                     let secondRandomValue = randomGenerator.randomInt()
-                    userDefaults.save(value: firstRandomValue, forKey: key)
-                    userDefaults.save(value: secondRandomValue, forKey: key)
+                    sut.save(value: firstRandomValue, forKey: key)
+                    sut.save(value: secondRandomValue, forKey: key)
                     expect(results).toEventually(equal([defaultValue, firstRandomValue, secondRandomValue]))
                 }
             }
