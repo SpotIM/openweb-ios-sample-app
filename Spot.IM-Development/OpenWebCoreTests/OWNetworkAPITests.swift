@@ -45,9 +45,11 @@ class OWNetworkAPITests: QuickSpec {
             context("1. when the network response is valid") {
                 it("should perform a successful user data request") {
                     let userData = MockUser.stub()
-                    let encodedUserData = try! encoder.encode(userData)
-                    
-                    let (request, requestHandler) = networkTestingUtil.requestHandler(for: environment, with: encodedUserData, endpoint: MockUserEndpoint.userData)
+                    let encodedUserData = try! encoder.encode(userData) // swiftlint:disable:this force_try
+
+                    let (request, requestHandler) = networkTestingUtil.requestHandler(for: environment,
+                                                                                      with: encodedUserData,
+                                                                                      endpoint: MockUserEndpoint.userData)
                     let response = networkTestingUtil.response(with: sut, for: MockUserEndpoint.userData)
 
                     session.register(handler: requestHandler, for: request)
@@ -80,9 +82,13 @@ class OWNetworkAPITests: QuickSpec {
 
                     var didReceiveError = false
                     let userData = MockUser.stub()
-                    let encodedUserData = try! encoder.encode(userData)
+                    let encodedUserData = try! encoder.encode(userData) // swiftlint:disable:this force_try
 
-                    let (request, requestHandler) = networkTestingUtil.requestHandler(for: environment, with: encodedUserData, endpoint: MockUserEndpoint.userData, statusCode: 400, method: .get)
+                    let (request, requestHandler) = networkTestingUtil.requestHandler(for: environment,
+                                                                                      with: encodedUserData,
+                                                                                      endpoint: MockUserEndpoint.userData,
+                                                                                      statusCode: 400,
+                                                                                      method: .get)
                     let response = networkTestingUtil.response(with: sut, for: MockUserEndpoint.userData)
 
                     session.register(handler: requestHandler, for: request)

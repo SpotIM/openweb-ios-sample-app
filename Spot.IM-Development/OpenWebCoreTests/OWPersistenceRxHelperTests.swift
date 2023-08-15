@@ -22,7 +22,7 @@ class OWPersistenceRxHelperTests: QuickSpec {
 
     override func spec() {
         describe("Testing persistence rx helper") {
-            
+
             var disposeBag: DisposeBag!
             // `sut` stands for `Subject Under Test`
             var sut: OWPersistenceRxHelper!
@@ -48,8 +48,8 @@ class OWPersistenceRxHelperTests: QuickSpec {
             context("1. when no defaults are not provided") {
                 beforeEach {
                     sut.observable(key: key,
-                                                 value: try? encoder.encode(expectedValue),
-                                                 defaultValue: nil)
+                                   value: try? encoder.encode(expectedValue),
+                                   defaultValue: nil)
                     .subscribe { event in
                         results.append(event)
                     }
@@ -71,8 +71,8 @@ class OWPersistenceRxHelperTests: QuickSpec {
 
                 beforeEach {
                     sut.observable(key: key,
-                                                 value: try? encoder.encode(expectedValue),
-                                                 defaultValue: defaultValue)
+                                   value: try? encoder.encode(expectedValue),
+                                   defaultValue: defaultValue)
                     .subscribe { event in
                         results.append(event)
                     }
