@@ -48,7 +48,7 @@ enum OWAnalyticEventType {
     case configuredFullConversationStyle(style: OWConversationStyle)
     case configuredCommentCreationStyle(style: OWCommentCreationStyle)
     case configuredFontFamily(font: OWFontGroupFamily)
-    case configureThemeEnforcement(theme: OWThemeStyle?)
+    case configureThemeEnforcement(enforcement: OWThemeStyleEnforcement)
     case configuredInitialSort(initialSort: OWInitialSortStrategy)
     case configureSortTitle(sort: OWSortOption, title: String)
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
@@ -315,8 +315,8 @@ extension OWAnalyticEventType {
             return style.analyticsPayload
         case .configuredFontFamily(let font):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.font: font])
-        case .configureThemeEnforcement(let theme):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.theme: theme?.rawValue])
+        case .configureThemeEnforcement(let enforcement):
+            return enforcement.analyticsPayload
         case .configuredInitialSort(let sort):
             return sort.analyticsPayload
         case .configureSortTitle(let sort, let title):

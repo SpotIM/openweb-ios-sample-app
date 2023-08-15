@@ -47,12 +47,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newEnforcement) {
             _themeEnforcement = newEnforcement
-            switch (newEnforcement) {
-            case .none:
-                sendEvent(for: .configureThemeEnforcement(theme: nil))
-            case let .theme(theme):
-                sendEvent(for: .configureThemeEnforcement(theme: theme))
-            }
+            sendEvent(for: .configureThemeEnforcement(enforcement: newEnforcement))
             sharedServicesProvider.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
         }
     }

@@ -429,7 +429,7 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
-        .do(onNext: { [weak self] in
+        .do(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
