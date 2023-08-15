@@ -15,7 +15,7 @@ import Nimble
 class OWRxAppLifeCycleTests: QuickSpec {
 
     override func spec() {
-        describe("app life cycle service") {
+        describe("Testing app life cycle service") {
 
             // `sut` stands for `Subject Under Test`
             var sut: OWRxAppLifeCycle!
