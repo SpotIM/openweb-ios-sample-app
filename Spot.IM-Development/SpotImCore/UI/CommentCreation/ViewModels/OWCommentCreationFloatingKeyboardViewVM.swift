@@ -244,7 +244,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                     let cursorRange: Range<String.Index> = currentText.endIndex..<currentText.endIndex
                     let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: cursorRange)
                     let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
-                    self.textViewVM.inputs.textViewTextChange.onNext(newRequestedText)
+                    self.textViewVM.inputs.textExternalChange.onNext(newRequestedText)
                 }
             })
             .disposed(by: disposeBag)

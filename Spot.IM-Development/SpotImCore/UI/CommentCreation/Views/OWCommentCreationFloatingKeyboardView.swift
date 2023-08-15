@@ -41,6 +41,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
     }
 
+    fileprivate var keyboardWasHidden = true
     fileprivate var toolbarBottomConstraint: OWConstraint?
 
     fileprivate lazy var mainContainer: UIView = {
@@ -423,13 +424,15 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 }
 
                 // Set the initial text to the textView in this animation stage
-                if viewModel.outputs.initialText.isEmpty {
-                    self.viewModel.outputs.textViewVM
-                        .inputs.textViewTextChange.onNext(textBeforeClosed)
-                } else {
-                    self.viewModel.outputs.textViewVM
-                        .inputs.textViewTextChange.onNext(viewModel.outputs.initialText)
-                    viewModel.inputs.initialTextUsed.onNext()
+                if keyboardWasHidden {
+                    if viewModel.outputs.initialText.isEmpty {
+                        self.viewModel.outputs.textViewVM
+                            .inputs.textExternalChange.onNext(textBeforeClosed)
+                    } else {
+                        self.viewModel.outputs.textViewVM
+                            .inputs.textExternalChange.onNext(viewModel.outputs.initialText)
+                        viewModel.inputs.initialTextUsed.onNext()
+                    }
                 }
 
                 let bottomPadding: CGFloat
@@ -449,6 +452,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                     self.mainContainer.layoutIfNeeded()
                 }
+                keyboardWasHidden = false
             })
             .disposed(by: disposeBag)
 
@@ -464,7 +468,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     else { return }
 
                 self.viewModel.inputs.textBeforeClosedChange.onNext(isSendingComment ? "" : textViewText)
-                self.viewModel.outputs.textViewVM.inputs.textViewTextChange.onNext("")
+                self.viewModel.outputs.textViewVM.inputs.textExternalChange.onNext("")
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
                     self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1,
@@ -496,6 +500,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         }
                     }
                 }
+                keyboardWasHidden = true
             })
             .disposed(by: disposeBag)
     }
