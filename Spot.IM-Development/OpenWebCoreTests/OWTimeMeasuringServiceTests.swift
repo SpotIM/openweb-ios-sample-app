@@ -13,10 +13,10 @@ import Nimble
 
 @testable import SpotImCore
 
-final class OWTimeMeasuringServiceTests: QuickSpec {
+class OWTimeMeasuringServiceTests: QuickSpec {
 
     override func spec() {
-        describe("OWTimeMeasuringService") {
+        describe("Testing time measuring service") {
             var timeMeasuringService: OWTimeMeasuringService!
             var key: OWTimeMeasuringService.OWKeys!
             var measureSuccess: Bool!

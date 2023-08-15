@@ -18,52 +18,63 @@ fileprivate enum OWTestKey: String, OWRawableKey {
     case key
 }
 
-final class OWPersistenceRxHelperTests: QuickSpec {
+class OWPersistenceRxHelperTests: QuickSpec {
 
     override func spec() {
-        describe("persistence rx helper") {
+        describe("Testing persistence rx helper") {
             var disposeBag: DisposeBag!
             var persistenceHelper: OWPersistenceRxHelper!
+            var randomGenerator: RandomGenerator!
             var expectedValue: Int!
             var results: [Int]!
+            var decoder: JSONDecoder!
+            var encoder: JSONEncoder!
 
             let defaultValue = 123456
             let key = OWRxHelperKey<Int>(key: OWTestKey.key)
 
+            beforeEach {
+                randomGenerator = RandomGenerator()
+                expectedValue = randomGenerator.randomInt()
+                results = []
+                disposeBag = DisposeBag()
+                decoder = JSONDecoder()
+                encoder = JSONEncoder()
+                persistenceHelper = OWPersistenceRxHelper(decoder: decoder, encoder: encoder)
+            }
+
             context("1. when no defaults are not provided") {
                 beforeEach {
-                    expectedValue = Int.random(in: 0..<999_999)
-                    results = []
-                    disposeBag = DisposeBag()
-                    persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
-                    persistenceHelper.observable(key: key, value: try? JSONEncoder().encode(expectedValue), defaultValue: nil).subscribe { event in
+                    persistenceHelper.observable(key: key,
+                                                 value: try? encoder.encode(expectedValue),
+                                                 defaultValue: nil)
+                    .subscribe { event in
                         results.append(event)
-                    }.disposed(by: disposeBag)
+                    }
+                    .disposed(by: disposeBag)
                 }
-
-                afterEach {}
 
                 it("should provide an observable with no default value") {
                     expect(results).toEventually(equal([expectedValue]))
                 }
 
                 it("should provide an observable with data") {
-                    let newValue = Int.random(in: 0..<999_999)
-                    persistenceHelper.onNext(key: key, data: try? JSONEncoder().encode(newValue))
+                    let newValue = randomGenerator.randomInt()
+                    persistenceHelper.onNext(key: key, data: try? encoder.encode(newValue))
                     expect(results).toEventually(equal([expectedValue, newValue]))
                 }
             }
 
-            context("2. when defaults are provided") {
+            context("2. when default value is provided") {
 
                 beforeEach {
-                    expectedValue = Int.random(in: 0..<999_999)
-                    results = []
-                    disposeBag = DisposeBag()
-                    persistenceHelper = OWPersistenceRxHelper(decoder: JSONDecoder(), encoder: JSONEncoder())
-                    persistenceHelper.observable(key: key, value: try? JSONEncoder().encode(expectedValue), defaultValue: defaultValue).subscribe { event in
+                    persistenceHelper.observable(key: key,
+                                                 value: try? encoder.encode(expectedValue),
+                                                 defaultValue: defaultValue)
+                    .subscribe { event in
                         results.append(event)
-                    }.disposed(by: disposeBag)
+                    }
+                    .disposed(by: disposeBag)
                 }
 
                 it("should provide an observable with a default value") {
@@ -71,8 +82,8 @@ final class OWPersistenceRxHelperTests: QuickSpec {
                 }
 
                 it("should provide an observable with an expected value") {
-                    let newValue = Int.random(in: 0..<999_999)
-                    persistenceHelper.onNext(key: key, data: try? JSONEncoder().encode(newValue))
+                    let newValue = randomGenerator.randomInt()
+                    persistenceHelper.onNext(key: key, data: try? encoder.encode(newValue))
                     expect(results).toEventually(equal([expectedValue, newValue]))
                 }
             }
