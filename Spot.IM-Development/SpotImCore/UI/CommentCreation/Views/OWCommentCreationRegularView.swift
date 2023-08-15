@@ -13,13 +13,23 @@ import RxCocoa
 class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_regular_view_id"
+
+        static let horizontalOffset: CGFloat = 16.0
+        static let closeButtonSize: CGFloat = 40.0
+        static let closeButtonTrailingOffset: CGFloat = 5.0
+        static let topContainerHeight: CGFloat = 68.0
+        static let footerHeight: CGFloat = 72.0
+        static let commentLabelsSpacing: CGFloat = 15.0
+
+        static let closeButtomImageName: String = "closeCrossIcon"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: 15.0))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .text(OWLocalizationManager.shared.localizedString(key: "Commenting on"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .numberOfLines(1)
             .enforceSemanticAttribute()
     }()
 
@@ -30,18 +40,20 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var topContainerView: UIView = {
         let topContainerView = UIView()
-
-        topContainerView.addSubview(titleLabel)
-        titleLabel.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(topContainerView.OWSnp.centerY)
-            make.leading.equalToSuperview().offset(16.0)
-        }
+            .enforceSemanticAttribute()
 
         topContainerView.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(topContainerView.OWSnp.centerY)
-            make.trailing.equalToSuperview().offset(-5.0)
-            make.size.equalTo(40.0)
+            make.trailing.equalToSuperview().offset(-Metrics.closeButtonTrailingOffset)
+            make.size.equalTo(Metrics.closeButtonSize)
+        }
+
+        topContainerView.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(topContainerView.OWSnp.centerY)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalTo(closeButton.OWSnp.leading).offset(-Metrics.horizontalOffset)
         }
 
         return topContainerView
@@ -52,8 +64,21 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var textInput: UITextView = {
-        return UITextView()
+    fileprivate lazy var replySnippetView: OWCommentCreationReplySnippetView = {
+        return OWCommentCreationReplySnippetView(with: self.viewModel.outputs.replySnippetViewModel)
+            .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var contentView: OWCommentCreationContentView = {
+        return OWCommentCreationContentView(with: self.viewModel.outputs.commentCreationContentVM)
+    }()
+
+    fileprivate lazy var commentReplyCounterView: OWCommentReplyCounterView = {
+        return OWCommentReplyCounterView(with: viewModel.outputs.commentCounterViewModel)
+    }()
+
+    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+        return OWCommentLabelsContainerView()
     }()
 
     fileprivate lazy var footerView: OWCommentCreationFooterView = {
@@ -70,6 +95,9 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentCreationRegularViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+
+        commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
+
         setupViews()
         setupObservers()
         applyAccessibility()
@@ -82,47 +110,81 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWCommentCreationRegularView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
+        self.addSubview(topContainerView)
+        topContainerView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.topContainerHeight)
+        }
+
+        if viewModel.outputs.shouldShowReplySnippet {
+            self.addSubview(replySnippetView)
+            replySnippetView.OWSnp.makeConstraints { make in
+                make.top.equalTo(topContainerView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+        } else {
+            self.addSubview(articleDescriptionView)
+            articleDescriptionView.OWSnp.makeConstraints { make in
+                make.top.equalTo(topContainerView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+        }
+
+        self.addSubview(footerView)
+        footerView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(Metrics.footerHeight)
+        }
+
+        self.addSubview(commentLabelsContainerView)
+        commentLabelsContainerView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(footerView.OWSnp.top).offset(-Metrics.commentLabelsSpacing)
+            make.leading.equalToSuperview().offset(Metrics.commentLabelsSpacing)
+            make.trailing.lessThanOrEqualToSuperview()
+        }
+
+        self.addSubview(commentReplyCounterView)
+        commentReplyCounterView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(commentLabelsContainerView.OWSnp.top)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+        }
+
+        self.addSubview(contentView)
+        contentView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(viewModel.outputs.shouldShowReplySnippet ? replySnippetView.OWSnp.bottom : articleDescriptionView.OWSnp.bottom)
+            make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
+        }
+    }
+
+    func setupObservers() {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtomImageName, supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
 
-        self.addSubview(topContainerView)
-        topContainerView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(68.0)
-        }
-
-        self.addSubview(articleDescriptionView)
-        articleDescriptionView.OWSnp.makeConstraints { make in
-            make.top.equalTo(topContainerView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
-        }
-
-        self.addSubview(footerView)
-        footerView.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(72.0)
-        }
-
-        self.addSubview(textInput)
-        textInput.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(12.0)
-            make.bottom.equalTo(footerView.OWSnp.top)
-        }
-    }
-
-    func setupObservers() {
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeButtonTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.titleAttributedString
+            .bind(to: titleLabel.rx.attributedText)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyText)
+            })
             .disposed(by: disposeBag)
     }
 }

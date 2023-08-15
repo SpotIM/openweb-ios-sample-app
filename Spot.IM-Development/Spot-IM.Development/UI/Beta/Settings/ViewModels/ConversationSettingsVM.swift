@@ -63,8 +63,8 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
     var outputs: ConversationSettingsViewModelingOutputs { return self }
 
     var styleModeSelectedIndex = BehaviorSubject<Int>(value: OWConversationStyle.defaultIndex)
-    var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.defaultIndex)
-    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.defaultIndex)
+    var communityGuidelinesStyleSelectedIndex = BehaviorSubject<Int>(value: OWCommunityGuidelinesStyle.default.index)
+    var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
     var conversationSpacingSelectedIndex = BehaviorSubject<Int>(value: OWConversationSpacing.defaultIndex)
     var betweenCommentsSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
     var belowHeaderSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)")
@@ -78,11 +78,11 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
             .map { conversationStyle in
                 switch conversationStyle {
                 case .regular:
-                    return 0
+                    return OWConversationStyleIndexer.regular.index
                 case .compact:
-                    return 1
+                    return OWConversationStyleIndexer.compact.index
                 case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: _):
-                    return 2
+                    return OWConversationStyleIndexer.custom.index
                 default:
                     return OWConversationStyle.defaultIndex
                 }
@@ -95,18 +95,9 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
             .map { conversationStyle in
                 switch conversationStyle {
                 case .custom(communityGuidelinesStyle: let communityGuidelines, communityQuestionsStyle: _, spacing: _):
-                    switch communityGuidelines {
-                    case .none:
-                        return 0
-                    case .regular:
-                        return 1
-                    case .compact:
-                        return 2
-                    default:
-                        return OWCommunityGuidelinesStyle.defaultIndex
-                    }
+                    return communityGuidelines.index
                 default:
-                    return OWCommunityGuidelinesStyle.defaultIndex
+                    return OWCommunityGuidelinesStyle.default.index
                 }
             }
             .asObservable()
@@ -117,18 +108,9 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
             .map { conversationStyle in
                 switch conversationStyle {
                 case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: let communityQuestions, spacing: _):
-                    switch communityQuestions {
-                    case .none:
-                        return 0
-                    case .regular:
-                        return 1
-                    case .compact:
-                        return 2
-                    default:
-                        return OWCommunityQuestionStyle.defaultIndex
-                    }
+                    return communityQuestions.index
                 default:
-                    return OWCommunityQuestionStyle.defaultIndex
+                    return OWCommunityQuestionStyle.default.index
                 }
             }
             .asObservable()
@@ -141,11 +123,11 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                 case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
                     switch spacingMode {
                     case .regular:
-                        return 0
+                        return OWConversationSpacingIndexer.regular.index
                     case .compact:
-                        return 1
-                    case .custom(betweenComments: _, belowHeader: _, belowCommunityGuidelines: _, belowCommunityQuestions: _):
-                        return 2
+                        return OWConversationSpacingIndexer.compact.index
+                    case .custom:
+                        return OWConversationSpacingIndexer.custom.index
                     default:
                         return OWConversationSpacing.defaultIndex
                     }
@@ -300,13 +282,13 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
 
     var showCustomStyleOptions: Observable<Bool> {
         return styleModeIndex
-            .map { $0 == OWConversationStyle.customIndex } // Custom Style
+            .map { $0 == OWConversationStyleIndexer.custom.index } // Custom Style
             .asObservable()
     }
 
     var showSpacingOptions: Observable<Bool> {
         return conversationSpacingSelectedIndex
-            .map { $0 == OWConversationStyle.customIndex } // Custom Spacing
+            .map { $0 == OWConversationStyleIndexer.custom.index } // Custom Spacing
             .asObservable()
     }
 
@@ -349,7 +331,7 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
     }
 }
 
-extension ConversationSettingsVM {
+fileprivate extension ConversationSettingsVM {
     func setupObservers() {
         // Conversation style mode data binder to persistence key conversationStyle
         styleModeObservable
@@ -361,7 +343,6 @@ extension ConversationSettingsVM {
     }
 }
 
-extension ConversationSettingsVM: SettingsGroupVMProtocol {
+extension ConversationSettingsVM: SettingsGroupVMProtocol { }
 
-}
 #endif

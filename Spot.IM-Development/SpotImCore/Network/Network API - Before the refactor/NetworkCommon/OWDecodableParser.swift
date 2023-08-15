@@ -15,7 +15,7 @@ final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
     let decoder: JSONDecoder
     fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init(keyPath: String? = nil, decoder: JSONDecoder = defaultDecoder,
+    init(keyPath: String? = nil, decoder: JSONDecoder = OWDecoder.default,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.decoder = decoder
         self.servicesProvider = servicesProvider

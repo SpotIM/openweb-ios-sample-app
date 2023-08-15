@@ -32,11 +32,14 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactR
     fileprivate let _customizations: OWCustomizations
     fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
+    fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init(flowsSdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         flowsSdkCoordinator: OWFlowsSDKCoordinator = OWFlowsSDKCoordinator(),
          viewsSdkCoordinator: OWViewsSDKCoordinator = OWViewsSDKCoordinator(),
          customizations: OWCustomizations = OWCustomizationsLayer(),
          authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
+        self.servicesProvider = servicesProvider
         self.flowsSdkCoordinator = flowsSdkCoordinator
         self.viewsSdkCoordinator = viewsSdkCoordinator
         self._customizations = customizations
@@ -72,7 +75,9 @@ extension OWUILayer {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -109,7 +114,9 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -156,7 +163,9 @@ extension OWUILayer {
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -205,7 +214,9 @@ extension OWUILayer {
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -224,7 +235,7 @@ extension OWUILayer {
 #if BETA
     func testingPlayground(postId: OWPostId,
                            presentationalMode: OWPresentationalMode,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol? = nil,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
@@ -291,7 +302,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -326,12 +339,68 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.preConversationView
+            let error: OWError = err as? OWError ?? OWError.conversationView
+            completion(.failure(error))
+        })
+    }
+
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
+                         commentCreationType: OWCommentCreationType,
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion) {
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let internalCommentCreationType: OWCommentCreationTypeInternal
+        switch commentCreationType {
+        case .comment:
+            internalCommentCreationType = .comment
+        case .edit(let commentId), .replyTo(let commentId):
+            // TODO - The comment might not be found in the service, we should fetch it somehow
+            if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
+                internalCommentCreationType = .edit(comment: comment)
+            } else {
+                completion(.failure(.commentCreationView))
+                return
+            }
+        }
+
+        let commentCreationData = OWCommentCreationRequiredData(
+            article: article,
+            settings: additionalSettings,
+            commentCreationType: internalCommentCreationType,
+            presentationalStyle: .none
+        )
+
+        _ = viewsSdkCoordinator.commentCreationView(commentCreationData: commentCreationData,
+                                                    callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.commentCreationView
             completion(.failure(error))
         })
     }
@@ -339,7 +408,7 @@ extension OWUILayer {
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol?,
+                      additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 
@@ -360,6 +429,10 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
@@ -370,7 +443,7 @@ extension OWUILayer {
 
 #if BETA
     func testingPlayground(postId: OWPostId,
-                           additionalSettings: OWTestingPlaygroundSettingsProtocol?,
+                           additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWViewCompletion) {
 
@@ -434,5 +507,30 @@ fileprivate extension OWUILayer {
         case .partOfFlow:
             activeRouteringMode = .routering(routering: self.routering)
         }
+    }
+}
+
+fileprivate extension OWUILayer {
+    func event(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "",
+                layoutStyle: OWLayoutStyle(from: presentationalStyle),
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType, presentationalStyle: OWPresentationalModeCompact) {
+        let event = event(for: eventType, presentationalStyle: presentationalStyle)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
+    }
+
+    func sendStyleConfigureEvents(additionalSettings: OWAdditionalSettingsProtocol, presentationalStyle: OWPresentationalModeCompact) {
+        self.sendEvent(for: .configuredPreConversationStyle(style: additionalSettings.preConversationSettings.style), presentationalStyle: presentationalStyle)
+        self.sendEvent(for: .configuredCommentCreationStyle(style: additionalSettings.commentCreationSettings.style), presentationalStyle: presentationalStyle)
+        self.sendEvent(for: .configuredFullConversationStyle(style: additionalSettings.fullConversationSettings.style), presentationalStyle: presentationalStyle)
     }
 }

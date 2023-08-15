@@ -12,11 +12,9 @@ import RxCocoa
 
 class OWConversationSortView: UIView {
     fileprivate struct Metrics {
-        static let titleFontSize: CGFloat = 15.0
-        static let buttonFontSize: CGFloat = 15.0
-        static let verticalMarginBetweenSortLabelAndSortIcon: CGFloat = 10.0
-        static let verticalMarginBetweenSortLabelAndSortButton: CGFloat = 5.0
-        static let sortButtonImageSize: CGFloat = 16
+        static let verticalMarginBetweenSortLabelAndSortIcon: CGFloat = 2
+        static let verticalMarginBetweenSortLabelAndSortButton: CGFloat = 5
+
         static let sortByLabelIdentifier = "conversation_sort_by_label_id"
         static let sortViewIdentifier = "conversation_sort_view_id"
     }
@@ -26,20 +24,23 @@ class OWConversationSortView: UIView {
 
     fileprivate lazy var sortByLabel: UILabel = {
         return UILabel()
+            .wrapContent()
             .text(OWLocalizationManager.shared.localizedString(key: "Sort by"))
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.titleFontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var sortIcon: UIImageView = {
         return UIImageView()
+            .wrapContent()
             .image(UIImage(spNamed: "sort")!)
     }()
 
     fileprivate lazy var sortLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .bold, size: Metrics.titleFontSize))
+            .wrapContent()
+            .font(OWFontBook.shared.font(typography: .bodyContext))
             .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -61,6 +62,7 @@ class OWConversationSortView: UIView {
         }
 
         return view
+            .wrapContent()
             .enforceSemanticAttribute()
     }()
 
@@ -126,6 +128,15 @@ fileprivate extension OWConversationSortView {
                                                                            themeStyle: currentStyle))
                 self.sortIcon.image(UIImage(spNamed: "sort", supportDarkMode: true)!)
                 self.updateCustomUI()
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.sortByLabel.font = OWFontBook.shared.font(typography: .bodyText)
+                self.sortLabel.font = OWFontBook.shared.font(typography: .bodyContext)
             })
             .disposed(by: disposeBag)
     }

@@ -12,6 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentViewModelingInputs {
+    func updateEditedCommentLocally(updatedComment: OWComment)
     func reportCommentLocally()
     func deleteCommentLocally()
     func muteCommentLocally()
@@ -80,10 +81,16 @@ class OWCommentViewModel: OWCommentViewModeling,
         self.commentHeaderVM.inputs.shouldMuteCommentLocally.onNext(true)
     }
 
+    func updateEditedCommentLocally(updatedComment: OWComment) {
+        self.comment = updatedComment
+        self.contentVM.inputs.updateEditedCommentLocally(updatedComment)
+        self.commentLabelsContainerVM.inputs.updateEditedCommentLocally(updatedComment)
+    }
+
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
-        commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
+        commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment

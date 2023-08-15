@@ -19,8 +19,9 @@ protocol OWSharedServicesProviderConfigure {
 protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func themeStyleService() -> OWThemeStyleServicing
+    func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
-    func commentsInMemoryCacheService() -> OWCacheService<String, String>
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
@@ -42,6 +43,9 @@ protocol OWSharedServicesProviding: AnyObject {
     func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
+    func commentUpdaterService() -> OWCommentUpdaterServicing
+    func localCommentDataPopulator() -> OWLocalCommentDataPopulating
+    func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -57,12 +61,16 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWThemeStyleService()
     }()
 
+    fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
+        return OWStatusBarStyleService()
+    }()
+
     fileprivate lazy var _imageCacheService: OWCacheService<String, UIImage> = {
         return OWCacheService<String, UIImage>()
     }()
 
-    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<String, String> = {
-        return OWCacheService<String, String>()
+    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, String> = {
+        return OWCacheService<OWCachedCommentKey, String>()
     }()
 
     fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
@@ -157,15 +165,31 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCommentCreationRequestsService()
     }()
 
+    fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
+        return OWCommentUpdaterService(servicesProvider: self)
+    }()
+
+    fileprivate lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
+        return OWLocalCommentDataPopulator()
+    }()
+
+    fileprivate lazy var _navigationControllerCustomizer: OWNavigationControllerCustomizing = {
+        return OWNavigationControllerCustomizer(servicesProvider: self)
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
+    }
+
+    func statusBarStyleService() -> OWStatusBarStyleServicing {
+        return _statusBarStyleService
     }
 
     func imageCacheService() -> OWCacheService<String, UIImage> {
         return _imageCacheService
     }
 
-    func commentsInMemoryCacheService() -> OWCacheService<String, String> {
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String> {
         return _commentsInMemoryCacheService
     }
 
@@ -251,6 +275,18 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing {
         return _commentCreationRequestsService
+    }
+
+    func commentUpdaterService() -> OWCommentUpdaterServicing {
+        return _commentUpdaterService
+    }
+
+    func localCommentDataPopulator() -> OWLocalCommentDataPopulating {
+        return _localCommentDataPopulator
+    }
+
+    func navigationControllerCustomizer() -> OWNavigationControllerCustomizing {
+        return _navigationControllerCustomizer
     }
 }
 

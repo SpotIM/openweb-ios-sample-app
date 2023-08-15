@@ -12,17 +12,17 @@ import SpotImCore
 #if NEW_API
 
 extension OWLanguageStrategy {
-    static func languageStrategy(fromIndex index: Int, language: OWSupportedLanguage = .defaultLanguage) -> OWLanguageStrategy {
+    static func languageStrategy(fromIndex index: Int, language: OWSupportedLanguage) -> OWLanguageStrategy {
         switch index {
-        case 0: return .useDevice
-        case 1: return .useServerConfig
-        case 2: return .use(language: language)
+        case OWLanguageStrategyIndexer.useDevice.index: return .useDevice
+        case OWLanguageStrategyIndexer.useServerConfig.index: return .useServerConfig
+        case OWLanguageStrategyIndexer.use.index: return .use(language: language)
         default: return `default`
         }
     }
 
     static var defaultStrategyIndex: Int {
-        return 0
+        return OWLanguageStrategyIndexer.useDevice.index
     }
 
     static var `default`: OWLanguageStrategy {

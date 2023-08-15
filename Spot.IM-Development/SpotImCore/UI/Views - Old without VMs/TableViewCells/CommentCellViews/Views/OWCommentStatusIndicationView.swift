@@ -19,8 +19,6 @@ class OWCommentStatusIndicationView: UIView {
         static let textVerticalPadding: CGFloat = 12
         static let statusTextHorizontalOffset: CGFloat = 8
 
-        static let fontSize: CGFloat = 15
-
         static let identifier = "comment_status_indication_view_id"
     }
 
@@ -32,7 +30,7 @@ class OWCommentStatusIndicationView: UIView {
     private let statusTextLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate var viewModel: OWCommentStatusIndicationViewModeling!
@@ -68,6 +66,14 @@ fileprivate extension OWCommentStatusIndicationView {
 
         viewModel.outputs.indicationText
             .bind(to: statusTextLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.statusTextLabel.font = OWFontBook.shared.font(typography: .bodyText)
+            })
             .disposed(by: disposeBag)
     }
 

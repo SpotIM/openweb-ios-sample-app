@@ -10,8 +10,9 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class OWAdditionalInfoVC: UIViewController {
+class OWAdditionalInfoVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     fileprivate let additionalInfoViewViewModel: OWAdditionalInfoViewViewModeling
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var additionalInfoView: OWAdditionalInfoView = {
         return OWAdditionalInfoView(viewModel: additionalInfoViewViewModel)
@@ -29,16 +30,27 @@ class OWAdditionalInfoVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupObservers()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
 }
 
 fileprivate extension OWAdditionalInfoVC {
     func setupViews() {
         self.title = additionalInfoViewViewModel.outputs.titleText
+        self.navigationItem.largeTitleDisplayMode = .always
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         view.addSubview(additionalInfoView)
         additionalInfoView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperviewSafeArea()
+            make.leading.trailing.bottom.equalToSuperview()
         }
+    }
+
+    func setupObservers() {
+        self.setupStatusBarStyleUpdaterObservers()
     }
 }
