@@ -603,7 +603,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 self.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
-            .flatMap { [weak self] shareUrl, commentVm -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] shareUrl, _ -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
