@@ -35,6 +35,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var outputs: OWCommentCreationFooterViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
     var tapCta = PublishSubject<Void>()
@@ -92,8 +93,13 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     }
 
     var showAddImageButton: Observable<Bool> {
-        // TODO - Support adding an image
-        return Observable.just(false)
+        guard self.servicesProvider.permissionsService().hasRequiredFieldsInInfoPlist(for: .camera) else {
+            return Observable.just(false)
+        }
+        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+            .map {
+                $0.conversation?.disableImageUploadButton != true
+            }
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,
@@ -107,6 +113,16 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
 fileprivate extension OWCommentCreationFooterViewModel {
     func setupObservers() {
-
+        // TODO: Remove - from debugging
+        tapAction
+            .flatMap { _ in
+                self.servicesProvider
+                    .permissionsService()
+                    .requestPermission(for: .camera, viewableMode: .partOfFlow)
+            }
+            .subscribe(onNext: { isAuthorized in
+                print(isAuthorized)
+            })
+            .disposed(by: disposeBag)
     }
 }
