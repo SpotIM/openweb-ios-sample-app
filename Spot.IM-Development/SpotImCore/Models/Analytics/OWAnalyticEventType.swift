@@ -19,6 +19,7 @@ enum OWAnalyticEventType {
     case commentMenuDeleteClicked(commentId: OWCommentId)
     case commentMenuConfirmDeleteClicked(commentId: OWCommentId)
     case commentMenuEditClicked(commentId: OWCommentId)
+    case commentMenuMuteClicked(commentId: OWCommentId)
     case editCommentClicked(commentId: OWCommentId)
     case postCommentClicked
     case postReplyClicked(replyToCommentId: OWCommentId)
@@ -29,7 +30,7 @@ enum OWAnalyticEventType {
     case commentRankDownButtonClicked(commentId: OWCommentId)
     case commentRankUpUndoButtonClicked(commentId: OWCommentId)
     case commentRankDownUndoButtonClicked(commentId: OWCommentId)
-    case loadMoreComments(page: Int, commentsPerPage: Int)
+    case loadMoreComments(paginationOffset: Int)
     case loadMoreRepliesClicked(commentId: OWCommentId)
     case hideMoreRepliesClicked(commentId: OWCommentId)
     case sortByClicked(currentSort: OWSortOption)
@@ -47,8 +48,8 @@ enum OWAnalyticEventType {
     case configuredFullConversationStyle(style: OWConversationStyle)
     case configuredCommentCreationStyle(style: OWCommentCreationStyle)
     case configuredFontFamily(font: OWFontGroupFamily)
-    case configureThemeEnforcement(theme: OWThemeStyle)
-    case configuredInitialSort(initialSort: OWSortOption)
+    case configureThemeEnforcement(enforcement: OWThemeStyleEnforcement)
+    case configuredInitialSort(initialSort: OWInitialSortStrategy)
     case configureSortTitle(sort: OWSortOption, title: String)
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
@@ -84,6 +85,8 @@ extension OWAnalyticEventType {
             return "commentMenuConfirmDeleteClicked"
         case .commentMenuEditClicked:
             return "commentMenuEditClicked"
+        case .commentMenuMuteClicked:
+            return "commentMenuMuteClicked"
         case .editCommentClicked:
             return "editCommentClicked"
         case .postCommentClicked:
@@ -183,7 +186,8 @@ extension OWAnalyticEventType {
              .commentMenuReportClicked,
              .commentMenuDeleteClicked,
              .commentMenuConfirmDeleteClicked,
-             .commentMenuEditClicked:
+             .commentMenuEditClicked,
+             .commentMenuMuteClicked:
             return .commentMenu
         case .editCommentClicked,
              .postCommentClicked,
@@ -264,6 +268,8 @@ extension OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentMenuEditClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .commentMenuMuteClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .editCommentClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .postReplyClicked(let replyToCommentId):
@@ -280,10 +286,8 @@ extension OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .commentRankDownUndoButtonClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
-        case .loadMoreComments(let page, let commentsPerPage):
-            return OWAnalyticEventPayload(payloadDictionary: [
-                OWAnalyticEventPayloadKeys.page: page,
-                OWAnalyticEventPayloadKeys.commentsPerPage: commentsPerPage])
+        case .loadMoreComments(let paginationOffset):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.paginationOffset: paginationOffset])
         case .loadMoreRepliesClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         case .hideMoreRepliesClicked(let commentId):
@@ -311,10 +315,10 @@ extension OWAnalyticEventType {
             return style.analyticsPayload
         case .configuredFontFamily(let font):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.font: font])
-        case .configureThemeEnforcement(let theme):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.theme: theme.rawValue])
+        case .configureThemeEnforcement(let enforcement):
+            return enforcement.analyticsPayload
         case .configuredInitialSort(let sort):
-            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.initialSort: sort.rawValue])
+            return sort.analyticsPayload
         case .configureSortTitle(let sort, let title):
             return OWAnalyticEventPayload(payloadDictionary: [
                 OWAnalyticEventPayloadKeys.sort: sort.rawValue,
