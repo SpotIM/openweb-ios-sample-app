@@ -16,7 +16,7 @@ typealias OWCustomBIData = [String: String]
 #endif
 
 protocol OWAnalyticsInternalProtocol {
-    func triggerBICallback(_ event: String)
+    func triggerBICallback(_ event: OWBIAnalyticEvent)
     func clearCallbacks()
 }
 
@@ -40,12 +40,12 @@ class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
         callbacks.append(optionalCallback)
     }
 
-    func triggerBICallback(_ event: String) { // TODO: propper data - not string
+    func triggerBICallback(_ event: OWBIAnalyticEvent) {
         guard let postId = OWManager.manager.postId else { return }
 
         callbacks.forEach { optionalCallback in
             guard let actualCallback = optionalCallback.value() else { return }
-            actualCallback(.a, OWBIAnalyticAdditionalInfo(customBIData: customBIData), postId) // TODO: create BI event from event
+            actualCallback(event, OWBIAnalyticAdditionalInfo(customBIData: customBIData), postId)
         }
     }
 
