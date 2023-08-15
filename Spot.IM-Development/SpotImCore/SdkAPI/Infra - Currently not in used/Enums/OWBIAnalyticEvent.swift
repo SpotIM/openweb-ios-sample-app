@@ -8,7 +8,6 @@
 
 import Foundation
 
-// TODO: init with eventType
 #if NEW_API
 public enum OWBIAnalyticEvent {
     case fullConversationLoaded
