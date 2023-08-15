@@ -17,6 +17,7 @@ protocol OWReportReasonViewViewModelingInputs {
     var textViewTextChange: PublishSubject<String> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
     var isSubmitEnabledChange: PublishSubject<Bool> { get }
+    var changeReportOffset: PublishSubject<CGPoint> { get }
 }
 
 protocol OWReportReasonViewViewModelingOutputs {
@@ -43,6 +44,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
     var reportReasonSubmittedSuccessfully: Observable<OWCommentId> { get }
+    var reportOffset: Observable<CGPoint> { get }
 }
 
 protocol OWReportReasonViewViewModeling {
@@ -54,7 +56,6 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
 
     fileprivate struct Metrics {
         static let defaultTextViewMaxCharecters = 280
-        static let headerTextFontSize: CGFloat = 15
     }
 
     fileprivate var postId: OWPostId {
@@ -107,8 +108,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsTitle")
                     .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
-                    .font(OWFontBook.shared.font(style: .regular,
-                                                        size: Metrics.headerTextFontSize))
+                    .font(OWFontBook.shared.font(typography: .bodyText))
                     .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
                                   forText: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
             }
@@ -351,6 +351,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .voidify()
             .share()
     }()
+
+    var changeReportOffset = PublishSubject<CGPoint>()
+    var reportOffset: Observable<CGPoint> {
+        return changeReportOffset
+            .asObservable()
+    }
 }
 
 fileprivate extension OWReportReasonViewViewModel {

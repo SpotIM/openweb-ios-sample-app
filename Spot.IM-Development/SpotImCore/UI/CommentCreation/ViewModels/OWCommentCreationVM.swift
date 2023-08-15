@@ -15,7 +15,6 @@ protocol OWCommentCreationViewModelingInputs {
 
 protocol OWCommentCreationViewModelingOutputs {
     var commentCreationViewVM: OWCommentCreationViewViewModeling { get }
-    var commentCreated: Observable<SPComment> { get }
     var loadedToScreen: Observable<Void> { get }
 }
 
@@ -30,26 +29,24 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+    fileprivate let viewableMode: OWViewableMode
 
     lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
         return OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
-                                              viewableMode: .partOfFlow)
+                                              viewableMode: viewableMode)
     }()
-
-    var commentCreated: Observable<SPComment> {
-        // TODO: Complete
-        return .never()
-    }
 
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
     }
 
-    init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentCreationData: OWCommentCreationRequiredData,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }

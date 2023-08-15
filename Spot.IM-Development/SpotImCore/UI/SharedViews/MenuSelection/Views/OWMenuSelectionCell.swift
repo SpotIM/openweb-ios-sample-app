@@ -23,7 +23,7 @@ class OWMenuSelectionCell: UITableViewCell {
 
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor5, themeStyle: .light))
     }()
 
@@ -75,6 +75,14 @@ fileprivate extension OWMenuSelectionCell {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.label.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
     }

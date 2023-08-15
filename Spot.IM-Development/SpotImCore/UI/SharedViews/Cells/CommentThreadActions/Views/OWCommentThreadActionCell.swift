@@ -12,6 +12,7 @@ import RxSwift
 
 class OWCommentThreadActionCell: UITableViewCell {
     fileprivate struct Metrics {
+        static let maxDepth: Int = 4
         static let depthOffset: CGFloat = 23
     }
 
@@ -38,8 +39,9 @@ class OWCommentThreadActionCell: UITableViewCell {
 
         commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
 
+        let depth = min(self.viewModel.outputs.depth, Metrics.maxDepth)
         commentThreadActionsView.OWSnp.updateConstraints { make in
-            make.leading.equalToSuperview().offset(CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
+            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset)
         }
 
         self.setupObservers()

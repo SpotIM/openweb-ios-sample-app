@@ -111,3 +111,8 @@
 "Automation" = "Automation";
 "Fonts" = "Fonts";
 "UserInformation" = "User information";
+"StatusBarStyle" = "Status bar style";
+"MatchTheme" = "Match theme";
+"NavigationBarStyle" = "Navigation bar style";
+"LargeTitles" = "Large titles";
+"KeepOriginal" = "Keep original";

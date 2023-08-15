@@ -14,6 +14,7 @@ import UIKit
 typealias OWRangeURLsMapper = [NSRange: URL]
 
 protocol OWCommentTextViewModelingInputs {
+    func updateEditedCommentLocally(_ comment: OWComment)
     var width: BehaviorSubject<CGFloat> { get }
     var labelClickIndex: PublishSubject<Int> { get }
     func shouldTapBeHandeled(at index: Int) -> Bool
@@ -23,6 +24,7 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
+    var readMoreTap: Observable<Void> { get }
 }
 
 protocol OWCommentTextViewModeling {
@@ -58,6 +60,10 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         setupObservers()
     }
 
+    func updateEditedCommentLocally(_ comment: OWComment) {
+        _comment.onNext(comment)
+    }
+
     fileprivate lazy var _themeStyleObservable: Observable<OWThemeStyle> = {
         OWSharedServicesProvider.shared.themeStyleService().style
     }()
@@ -68,9 +74,8 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
-        _themeStyleObservable
-            .withLatestFrom(comment) { style, comment -> (OWThemeStyle, String)? in
-                guard let text = comment.text?.text else { return nil }
+        Observable.combineLatest(_themeStyleObservable, _comment) { style, comment -> (OWThemeStyle, String)? in
+                guard let text = comment?.text?.text else { return nil }
                 return (style, text)
             }
             .unwrap()
@@ -100,6 +105,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate var _textState = BehaviorSubject<OWTextState>(value: .collapsed)
+    lazy var readMoreTap: Observable<Void> = {
+        _textState
+            .asObservable()
+            .filter { $0 == .expanded }
+            .voidify()
+    }()
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
@@ -181,7 +192,7 @@ fileprivate extension OWCommentTextViewModel {
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
-            .font: OWFontBook.shared.font(style: .regular, size: OWCommentContentView.Metrics.fontSize),
+            .font: OWFontBook.shared.font(typography: .bodyText),
             .foregroundColor: OWColorPalette.shared.color(type: .textColor4, themeStyle: style),
             .paragraphStyle: paragraphStyle
         ]
@@ -191,7 +202,7 @@ fileprivate extension OWCommentTextViewModel {
 
     func readMoreStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
-        attributes[.font] = OWFontBook.shared.font(style: .bold, size: OWCommentContentView.Metrics.fontSize)
+        attributes[.font] = OWFontBook.shared.font(typography: .bodyContext)
 
         return attributes
     }

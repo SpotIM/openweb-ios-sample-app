@@ -15,7 +15,6 @@ class OWCommentLabelView: UIView {
         static let labelIdentifier = "comment_label_label_id"
         static let cornerRaius: CGFloat = 3
         static let horizontalMargin: CGFloat = 10.0
-        static let fontSize: CGFloat = 13.0
         static let iconImageHeight: CGFloat = 24.0
         static let iconImageWidth: CGFloat = 14.0
         static let iconTrailingOffset: CGFloat = 5.0
@@ -29,6 +28,7 @@ class OWCommentLabelView: UIView {
 
     fileprivate lazy var labelContainer: UIView = {
         return UIView()
+            .userInteractionEnabled(true)
             .corner(radius: Metrics.cornerRaius)
     }()
     fileprivate lazy var iconImageView: UIImageView = {
@@ -40,11 +40,11 @@ class OWCommentLabelView: UIView {
     }()
     fileprivate lazy var label: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
     }()
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
-        self.addGestureRecognizer(tapGesture)
+        labelContainer.addGestureRecognizer(tapGesture)
         return tapGesture
     }()
 
@@ -130,6 +130,14 @@ fileprivate extension OWCommentLabelView {
 
         tapGesture.rx.event.voidify()
             .bind(to: viewModel.inputs.labelClicked)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.label.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
             .disposed(by: disposeBag)
     }
 

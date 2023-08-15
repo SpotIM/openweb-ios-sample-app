@@ -75,6 +75,7 @@ fileprivate extension OWMenuSelectionView {
     func setupObservers() {
 
         viewModel.outputs.cellsViewModels
+            .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: OWMenuSelectionCell.identifierName,
                                          cellType: OWMenuSelectionCell.self)) { [weak self] index, viewModel, cell in
                 guard let self = self else { return }

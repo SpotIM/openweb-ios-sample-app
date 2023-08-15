@@ -12,16 +12,18 @@ import RxSwift
 
 class OWArticleDescriptionView: UIView {
     fileprivate struct Metrics {
+        static let imageCornerRadius: CGFloat = 10
+        static let separatorHeight: CGFloat = 0.5
+        static let imageSize: CGFloat = 62
+        static let paddingBetweenImageAndLabels: CGFloat = 10
+        static let LabelsPadding: CGFloat = 8
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 16, right: 16)
+
         static let identifier = "article_header_id"
         static let conversationImageIdentifier = "article_header_conversation_image_id"
         static let conversationTitleIdentifier = "article_header_conversation_title_id"
         static let conversationAuthorIdentifier = "article_header_conversation_author_id"
-        static let fontSize = 13.0
-        static let imageCornerRadius = 10.0
-        static let separatorHeight = 0.5
-        static let imagePadding = 12.0
-        static let imageSize = 62.0
-        static let descriptionLabelsPadding = 8.0
     }
 
     fileprivate lazy var topSeparatorView: UIView = {
@@ -43,8 +45,7 @@ class OWArticleDescriptionView: UIView {
             .enforceSemanticAttribute()
             .wrapContent()
             .numberOfLines(2)
-            .font(OWFontBook.shared.font(style: .regular,
-                                         size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -54,8 +55,7 @@ class OWArticleDescriptionView: UIView {
             .enforceSemanticAttribute()
             .wrapContent()
             .numberOfLines(1)
-            .font(OWFontBook.shared.font(style: .regular,
-                                         size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .footnoteText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -103,15 +103,16 @@ fileprivate extension OWArticleDescriptionView {
         // Setup article image
         self.addSubview(conversationImageView)
         conversationImageView.OWSnp.makeConstraints { make in
-            make.top.equalTo(topSeparatorView.OWSnp.bottom).offset(Metrics.imagePadding)
-            make.leading.equalToSuperview().offset(Metrics.imagePadding)
+            make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.imageSize)
+            make.top.greaterThanOrEqualTo(topSeparatorView.OWSnp.bottom).offset(Metrics.margins.top)
+            make.leading.equalToSuperview().offset(Metrics.margins.left)
         }
 
         // Setup bottom separator
         self.addSubview(bottomSeparatorView)
         bottomSeparatorView.OWSnp.makeConstraints { make in
-            make.top.equalTo(conversationImageView.OWSnp.bottom).offset(Metrics.imagePadding)
+            make.top.greaterThanOrEqualTo(conversationImageView.OWSnp.bottom).offset(-Metrics.margins.bottom)
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
@@ -119,9 +120,10 @@ fileprivate extension OWArticleDescriptionView {
         // Setup bottom separator
         self.addSubview(titlesContainer)
         titlesContainer.OWSnp.makeConstraints { make in
-            make.leading.equalTo(conversationImageView.OWSnp.trailing).offset(Metrics.imagePadding)
-            make.trailing.equalToSuperview().offset(-Metrics.imagePadding)
-            make.centerY.equalTo(conversationImageView)
+            make.leading.equalTo(conversationImageView.OWSnp.trailing).offset(Metrics.paddingBetweenImageAndLabels)
+            make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+            make.top.equalTo(topSeparatorView.OWSnp.bottom).offset(Metrics.margins.top)
+            make.bottom.equalTo(bottomSeparatorView.OWSnp.top).offset(-Metrics.margins.bottom)
         }
 
         titlesContainer.addSubview(titleLabel)
@@ -131,7 +133,7 @@ fileprivate extension OWArticleDescriptionView {
 
         titlesContainer.addSubview(authorLabel)
         authorLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(titleLabel.OWSnp.bottom).offset(Metrics.descriptionLabelsPadding)
+            make.top.equalTo(titleLabel.OWSnp.bottom).offset(Metrics.LabelsPadding)
             make.bottom.leading.trailing.equalToSuperview()
         }
 
@@ -179,6 +181,15 @@ fileprivate extension OWArticleDescriptionView {
                                                                         themeStyle: currentStyle)
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+                self.authorLabel.font = OWFontBook.shared.font(typography: .footnoteText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

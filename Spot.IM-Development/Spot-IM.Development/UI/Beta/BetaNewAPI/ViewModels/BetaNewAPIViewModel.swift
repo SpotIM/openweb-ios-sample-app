@@ -258,10 +258,14 @@ fileprivate extension BetaNewAPIViewModel {
         manager.spotId = spotId
         var customizations = manager.ui.customizations
         // swiftlint:disable line_length
-        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.defaultIndex))
+        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: OWThemeStyleEnforcement.default.index))
+        // swiftlint:disable line_length
+        customizations.statusBarEnforcement = .statusBarStyle(fromIndex: UserDefaultsProvider.shared.get(key: .statusBarStyleIndex, defaultValue: OWStatusBarEnforcement.default.index))
+        // swiftlint:disable line_length
+        customizations.navigationBarEnforcement = .navigationBarEnforcement(fromIndex: UserDefaultsProvider.shared.get(key: .navigationBarStyleIndex, defaultValue: OWNavigationBarEnforcement.default.index))
         // swiftlint:enable line_length
         var sorting = customizations.sorting
-        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.defaultIndex))
+        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: OWInitialSortStrategy.default.index))
         customizations.fontFamily = UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: OWFontGroupFamily.default)
         var helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)

@@ -12,7 +12,6 @@ import RxCocoa
 
 class OWCommentingReadOnlyView: UIView {
     fileprivate struct Metrics {
-        static let fontSize: CGFloat = 15
         static let labelLeadingOffset: CGFloat = 4
         static let iconSize: CGFloat = 24
     }
@@ -26,8 +25,10 @@ class OWCommentingReadOnlyView: UIView {
        return UILabel()
             .text(OWLocalizationManager.shared.localizedString(key: "Commenting on this article has ended"))
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyContext))
+            .numberOfLines(0)
             .enforceSemanticAttribute()
+            .wrapContent()
     }()
 
     fileprivate var viewModel: OWCommentingReadOnlyViewModeling!
@@ -58,8 +59,10 @@ fileprivate extension OWCommentingReadOnlyView {
 
         self.addSubview(label)
         label.OWSnp.makeConstraints { make in
+            make.top.greaterThanOrEqualToSuperview()
+            make.bottom.greaterThanOrEqualToSuperview()
             make.trailing.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(iconImageView)
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.labelLeadingOffset)
         }
     }
@@ -69,10 +72,17 @@ fileprivate extension OWCommentingReadOnlyView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.iconImageView.image = UIImage(spNamed: "commentingReadOnlyIcon", supportDarkMode: true)
                 self.updateCustomUI()
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.label.font = OWFontBook.shared.font(typography: .bodyContext)
             })
             .disposed(by: disposeBag)
     }

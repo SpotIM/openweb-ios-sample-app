@@ -74,7 +74,7 @@ class CommonCreatorService: CommonCreatorServicing {
         let articleStub = OWArticle.stub()
 
         let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
-                                                                                                           defaultValue: OWReadOnlyMode.defaultIndex))
+                                                                                                           defaultValue: OWReadOnlyMode.default.index))
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 

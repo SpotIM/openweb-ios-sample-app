@@ -12,11 +12,7 @@ import RxCocoa
 
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-        static let conversationTitleHeaderHeight: CGFloat = 56
-        static let articleDescriptionHeight: CGFloat = 86
-        static let conversationSummaryHeight: CGFloat = 44
         static let tableViewAnimationDuration: Double = 0.25
-        static let commentingCTAHeight: CGFloat = 64
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
@@ -119,7 +115,6 @@ fileprivate extension OWConversationView {
             self.addSubview(conversationTitleHeaderView)
             conversationTitleHeaderView.OWSnp.makeConstraints { make in
                 make.top.leading.trailing.equalToSuperview()
-                make.height.equalTo(Metrics.conversationTitleHeaderHeight)
             }
         }
 
@@ -133,7 +128,6 @@ fileprivate extension OWConversationView {
                     make.top.equalToSuperview()
                 }
                 make.leading.trailing.equalToSuperview()
-                make.height.equalTo(Metrics.articleDescriptionHeight)
             }
         }
 
@@ -149,7 +143,6 @@ fileprivate extension OWConversationView {
                 }
             }
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.conversationSummaryHeight)
         }
 
         // After building the other views, position the table view in the appropriate place
@@ -179,7 +172,6 @@ fileprivate extension OWConversationView {
             make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
             make.leading.trailing.equalToSuperview().inset(20)
             make.bottom.equalTo(self.safeAreaLayoutGuide)
-            make.height.equalTo(Metrics.commentingCTAHeight)
         }
     }
 
@@ -246,6 +238,34 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
                 self.tableView.setContentOffset(.zero, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        tableView.rx.contentOffset
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.changeConversationOffset)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                guard let self = self else { return }
+
+                CATransaction.begin()
+                self.tableView.beginUpdates()
+                CATransaction.setCompletionBlock {
+                    // Code to be executed upon completion
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+                if (index > 0) {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                } else {
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
+                self.tableView.endUpdates()
+                CATransaction.commit()
             })
             .disposed(by: disposeBag)
     }

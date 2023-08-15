@@ -13,6 +13,7 @@ enum OWLayoutStyle: String {
     case presentFull = "present_full"
     case pageSheet = "present_page_sheet"
     case view = "view"
+    case none = "none"
 
     init(from presentationalStyle: OWPresentationalModeCompact) {
         switch presentationalStyle {

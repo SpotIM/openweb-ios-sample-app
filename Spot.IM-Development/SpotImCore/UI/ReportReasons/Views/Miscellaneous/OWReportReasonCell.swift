@@ -18,8 +18,6 @@ class OWReportReasonCell: UITableViewCell {
         static let titleLabelIdentifier = "report_reason_cell_title_label_id"
         static let subtitleLabelIdentifier = "report_reason_cell_subtitle_label_id"
         static let checkboxIdentifier = "report_reason_cell_checkbox_id"
-        static let titleFontSize: CGFloat = 15
-        static let subtitleFontSize: CGFloat = 13
         static let checkboxTrailingPadding: CGFloat = 10
         static let checkboxLeadingPadding: CGFloat = 16
         static let verticalTextSpace: CGFloat = 2
@@ -38,7 +36,7 @@ class OWReportReasonCell: UITableViewCell {
         let lblTitle = UILabel()
         return lblTitle
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .font(.spOpenSans(style: .regular, of: Metrics.titleFontSize))
+                .font(OWFontBook.shared.font(typography: .bodyText))
                 .lineBreakMode(.byWordWrapping)
     }()
 
@@ -46,7 +44,7 @@ class OWReportReasonCell: UITableViewCell {
         let lblSubtitle = UILabel()
         return lblSubtitle
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .font(.spOpenSans(style: .regular, of: Metrics.subtitleFontSize))
+                .font(OWFontBook.shared.font(typography: .footnoteText))
                 .numberOfLines(2)
                 .lineBreakMode(.byTruncatingMiddle)
     }()
@@ -143,6 +141,15 @@ fileprivate extension OWReportReasonCell {
                 guard let self = self else { return }
                 self.lblTitle.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.lblSubtitle.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.lblTitle.font = OWFontBook.shared.font(typography: .bodyText)
+                self.lblSubtitle.font = OWFontBook.shared.font(typography: .footnoteText)
             })
             .disposed(by: disposeBag)
     }

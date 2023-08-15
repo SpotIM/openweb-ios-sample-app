@@ -14,9 +14,16 @@ protocol OWCommentCreationRegularViewViewModelingInputs {
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
-    var commentType: OWCommentCreationType { get }
+    var commentType: OWCommentCreationTypeInternal { get }
+    var shouldShowReplySnippet: Bool { get }
+    var titleAttributedString: Observable<NSAttributedString> { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
+    var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling { get }
     var footerViewModel: OWCommentCreationFooterViewModeling { get }
+    var commentCounterViewModel: OWCommentReplyCounterViewModeling { get }
+    var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
+    var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
+    var performCta: Observable<OWCommentCreationCtaData> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -28,10 +35,13 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     var inputs: OWCommentCreationRegularViewViewModelingInputs { return self }
     var outputs: OWCommentCreationRegularViewViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
-    var commentType: OWCommentCreationType
+    fileprivate lazy var postId = OWManager.manager.postId
+
+    var commentType: OWCommentCreationTypeInternal
 
     var closeButtonTap = PublishSubject<Void>()
 
@@ -39,9 +49,83 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         return OWArticleDescriptionViewModel(article: commentCreationData.article)
     }()
 
-    lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
-        return OWCommentCreationFooterViewModel()
+    lazy var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling = {
+        return OWCommentCreationReplySnippetViewModel(commentCreationType: commentType)
     }()
+
+    lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
+        return OWCommentCreationFooterViewModel(commentCreationType: commentCreationData.commentCreationType)
+    }()
+
+    lazy var commentCounterViewModel: OWCommentReplyCounterViewModeling = {
+        return OWCommentReplyCounterViewModel()
+    }()
+
+    lazy var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling = {
+        return OWCommentLabelsContainerViewModel(section: commentCreationData.article.additionalSettings.section)
+    }()
+
+    lazy var commentCreationContentVM: OWCommentCreationContentViewModeling = {
+        return OWCommentCreationContentViewModel(commentCreationType: commentCreationData.commentCreationType)
+    }()
+
+    lazy var titleAttributedString: Observable<NSAttributedString> = {
+        let commentingOnText = OWLocalizationManager.shared.localizedString(key: "Commenting on")
+
+        var replyToComment: OWComment? = nil
+        switch commentCreationData.commentCreationType {
+        case .edit(let comment):
+            if let postId = self.postId,
+               let parentId = comment.parentId,
+               let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+                replyToComment = parentComment
+            }
+        case .replyToComment(let originComment):
+            replyToComment = originComment
+        default:
+            break
+        }
+
+        guard let userId = replyToComment?.userId,
+              let user = self.servicesProvider.usersService().get(userId: userId),
+              let displayName = user.displayName
+        else { return Observable.just(NSAttributedString(string: commentingOnText)) }
+
+        var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+
+        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
+        let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)
+
+        attributedString.append(boldUserNameString)
+
+        return Observable.just(attributedString)
+    }()
+
+    var shouldShowReplySnippet: Bool {
+        guard let postId = self.postId else { return false }
+        var replyToComment: OWComment? = nil
+        switch commentType {
+        case .edit(let comment):
+            if let parentId = comment.parentId,
+               let parentComment = servicesProvider.commentsService().get(commentId: parentId, postId: postId) {
+                replyToComment = parentComment
+            }
+        case .replyToComment(let originComment):
+            replyToComment = originComment
+        default:
+            break
+        }
+
+        return replyToComment?.text?.text != nil
+    }
+
+    var performCta: Observable<OWCommentCreationCtaData> {
+        footerViewModel.outputs.performCtaAction
+            .withLatestFrom(commentCreationContentVM.outputs.commentTextOutput)
+            .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
+            .map { OWCommentCreationCtaData(text: $0, commentLabelIds: $1) }
+            .asObservable()
+    }
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -55,6 +139,15 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
 fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
+        commentCreationContentVM.outputs.commentTextOutput
+            .map { $0.count }
+            .unwrap()
+            .bind(to: commentCounterViewModel.inputs.commentTextCount)
+            .disposed(by: disposeBag)
 
+        commentCreationContentVM.outputs.commentTextOutput
+            .map { !$0.isEmpty }
+            .bind(to: footerViewModel.inputs.ctaEnabled)
+            .disposed(by: disposeBag)
     }
 }

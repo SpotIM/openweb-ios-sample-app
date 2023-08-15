@@ -11,7 +11,6 @@ import RxSwift
 
 class OWConversationEmptyStateView: UIView {
     fileprivate struct Metrics {
-        static let fontSize: CGFloat = 15
         static let titleLabelTopOffset: CGFloat = 10
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
@@ -25,7 +24,7 @@ class OWConversationEmptyStateView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
        return UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(style: .medium, size: Metrics.fontSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
             .textAlignment(.center)
             .numberOfLines(Metrics.titleLabelNumberOfLines)
             .hugContent(axis: .horizontal)
@@ -104,6 +103,14 @@ fileprivate extension OWConversationEmptyStateView {
             self.updateCustomUI()
         })
         .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {

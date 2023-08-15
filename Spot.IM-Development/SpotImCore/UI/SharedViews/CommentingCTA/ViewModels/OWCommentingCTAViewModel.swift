@@ -23,6 +23,7 @@ protocol OWCommentingCTAViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var commentCreationTapped: Observable<Void> { get }
     var openPublisherProfile: Observable<String> { get }
+    var shouldShowView: Observable<Bool> { get }
 }
 
 protocol OWCommentingCTAViewModeling {
@@ -86,6 +87,14 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
             .asObservable()
     }()
 
+    var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
+    var shouldShowView: Observable<Bool> {
+        _shouldShowView
+            .unwrap()
+            .asObservable()
+            .share(replay: 0)
+    }
+
     fileprivate let _openProfile = PublishSubject<URL>()
     var openProfile: Observable<URL> {
         _openProfile
@@ -122,6 +131,7 @@ fileprivate extension OWCommentingCTAViewModel {
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self._style.onNext(style)
+                self._shouldShowView.onNext(true)
             })
             .disposed(by: disposeBag)
 
@@ -138,7 +148,7 @@ fileprivate extension OWCommentingCTAViewModel {
             .avatarViewVM
             .outputs
             .openProfile
-            .subscribe(onNext: { [weak self] url in
+            .subscribe(onNext: { [weak self] url, _ in
                 guard let self = self else { return }
                 self._openProfile.onNext(url)
             })
