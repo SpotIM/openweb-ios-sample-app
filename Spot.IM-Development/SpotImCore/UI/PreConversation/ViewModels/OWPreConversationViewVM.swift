@@ -1010,7 +1010,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         fullConversationCTATap
-            .asObserver()
+            .asObservable()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.sendEvent(for: .showMoreComments)
