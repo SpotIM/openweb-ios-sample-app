@@ -123,6 +123,8 @@
 		16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */; };
 		16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */; };
 		16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */; };
+		16D996C52A8B709200748E46 /* OWPermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C42A8B709200748E46 /* OWPermissionsService.swift */; };
+		16D996C72A8B762800748E46 /* OWOpenSettingsAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */; };
 		16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */; };
 		16F66EBD2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */; };
 		16F66EBF2A2CCC470089E70E /* OWRxPresenterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */; };
@@ -1106,6 +1108,8 @@
 		16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVM.swift; sourceTree = "<group>"; };
 		16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentViewModel.swift; sourceTree = "<group>"; };
 		16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentContentViewModel.swift; sourceTree = "<group>"; };
+		16D996C42A8B709200748E46 /* OWPermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPermissionsService.swift; sourceTree = "<group>"; };
+		16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenSettingsAlert.swift; sourceTree = "<group>"; };
 		16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadSettings.swift; sourceTree = "<group>"; };
 		16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterResponseType.swift; sourceTree = "<group>"; };
 		16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterAction.swift; sourceTree = "<group>"; };
@@ -2590,6 +2594,7 @@
 				16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */,
 				16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */,
 				162B83542A715729002290EE /* OWCloseEditorAlert.swift */,
+				16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */,
 			);
 			path = MenuTypes;
 			sourceTree = "<group>";
@@ -4780,6 +4785,7 @@
 				3DDE2AD72A60333C007684C8 /* OWCommentCreationRequestsService.swift */,
 				162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */,
 				3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */,
+				16D996C42A8B709200748E46 /* OWPermissionsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -6829,6 +6835,8 @@
 				1679DB1429B88DD400604A3D /* OWCommentThreadCellOption.swift in Sources */,
 				3DFA6B9F29216E8D0047E313 /* OWAuthentication.swift in Sources */,
 				3DB3B98129F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift in Sources */,
+				16D996C72A8B762800748E46 /* OWOpenSettingsAlert.swift in Sources */,
+				16D996C52A8B709200748E46 /* OWPermissionsService.swift in Sources */,
 				3D31FB9429AB744B002B88E0 /* OWLanguageStrategy+Extensions.swift in Sources */,
 				4454181923685144001D0ED0 /* SPReplyCell.swift in Sources */,
 				4454180223685144001D0ED0 /* SPAvatarView.swift in Sources */,
