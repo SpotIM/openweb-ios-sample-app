@@ -646,9 +646,12 @@ fileprivate extension OWConversationViewViewModel {
         commentingCTAViewModel
             .outputs
             .commentCreationTapped
-            .subscribe(onNext: { [weak self] in
+            .do(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.sendEvent(for: .createCommentCTAClicked)
+            })
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
@@ -862,9 +865,11 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(replyClickOutputObservable)
             }
+            .do(onNext: { [weak self] comment in
+                self?.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+            })
             .subscribe(onNext: { [weak self] comment in
                 guard let self = self else { return }
-                self.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
                 self.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
@@ -881,9 +886,11 @@ fileprivate extension OWConversationViewViewModel {
                 return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _, commentVm in
+                self?.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMap { [weak self] shareUrl, commentVm -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
-                self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
 
@@ -975,9 +982,12 @@ fileprivate extension OWConversationViewViewModel {
                 return (rowIndex > (cellsVMs.count - Metrics.tableViewPaginationCellsOffset))
             }
             .filter { $0 }
-            .subscribe(onNext: { [weak self] _ in
+            .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.sendEvent(for: .loadMoreComments(paginationOffset: self.paginationOffset))
+            })
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.isLoadingMoreComments.onNext(true)
                 self._loadMoreComments.onNext(self.paginationOffset)
             })
@@ -995,9 +1005,12 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
+            .do(onNext: { [weak self] (_, _, commentVm) in
+                guard let self = self else { return }
+                self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
-                self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
@@ -1095,9 +1108,11 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(sortOptionObservable) { sender, currentSort -> (OWUISource, OWSortOption) in
                 return (sender, currentSort)
             }
+            .do(onNext: { [weak self] _, currentSort in
+                self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
+            })
             .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
-                self.sendEvent(for: .sortByClicked(currentSort: currentSort))
 
                 let sortDictateService = self.servicesProvider.sortDictateService()
                 let actions = [
