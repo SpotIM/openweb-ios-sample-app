@@ -32,13 +32,19 @@ class OWRxAppLifeCycleTests: QuickSpec {
                 disposeBag = DisposeBag()
                 notificationsResults = []
 
-                let willTerminateObservable = sut.willTerminate.map { UIApplication.willTerminateNotification}
-                let didBecomeActiveObservable = sut.didBecomeActive.map { UIApplication.didBecomeActiveNotification}
-                let didEnterBackgroundObservable = sut.didEnterBackground.map { UIApplication.didEnterBackgroundNotification}
-                let willEnterForegroundObservable = sut.willEnterForeground.map { UIApplication.willEnterForegroundNotification}
-                let willResignActiveObservable = sut.willResignActive.map { UIApplication.willResignActiveNotification}
+                let willTerminateObservable = sut.willTerminate.map { UIApplication.willTerminateNotification }
+                let didBecomeActiveObservable = sut.didBecomeActive.map { UIApplication.didBecomeActiveNotification }
+                let didEnterBackgroundObservable = sut.didEnterBackground.map { UIApplication.didEnterBackgroundNotification }
+                let willEnterForegroundObservable = sut.willEnterForeground.map { UIApplication.willEnterForegroundNotification }
+                let willResignActiveObservable = sut.willResignActive.map { UIApplication.willResignActiveNotification }
+                let didChangeContentSizeCategoryObservable = sut.didChangeContentSizeCategory.map { UIContentSizeCategory.didChangeNotification }
 
-                Observable.merge(willTerminateObservable, didBecomeActiveObservable, didEnterBackgroundObservable, willEnterForegroundObservable, willResignActiveObservable)
+                Observable.merge(willTerminateObservable,
+                                 didBecomeActiveObservable,
+                                 didEnterBackgroundObservable,
+                                 willEnterForegroundObservable,
+                                 willResignActiveObservable,
+                                 didChangeContentSizeCategoryObservable)
                     .subscribe(onNext: { notification in
                         notificationsResults.append(notification)
                     })
@@ -67,12 +73,14 @@ class OWRxAppLifeCycleTests: QuickSpec {
 
             context("3. triggering multiple notifications") {
                 it("should receive all the notifications in the same order") {
+                    notificationCenter.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
                     notificationCenter.post(name: UIApplication.willTerminateNotification, object: nil)
                     notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
                     notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
                     notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
                     notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
-                    expect(notificationsResults).toEventually(equal([UIApplication.willTerminateNotification,
+                    expect(notificationsResults).toEventually(equal([UIContentSizeCategory.didChangeNotification,
+                                                                     UIApplication.willTerminateNotification,
                                                                      UIApplication.didBecomeActiveNotification,
                                                                      UIApplication.didEnterBackgroundNotification,
                                                                      UIApplication.willEnterForegroundNotification,
