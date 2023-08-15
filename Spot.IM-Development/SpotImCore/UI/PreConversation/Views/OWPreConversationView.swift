@@ -332,7 +332,7 @@ fileprivate extension OWPreConversationView {
 
         btnCTAConversation.rx.tap
             .voidify()
-            .bind(to: viewModel.inputs.fullConversationTap)
+            .bind(to: viewModel.inputs.fullConversationCTATap)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowCommentingCTAView
