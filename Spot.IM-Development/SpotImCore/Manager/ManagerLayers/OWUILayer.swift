@@ -75,7 +75,9 @@ extension OWUILayer {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -84,8 +86,6 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
     func conversation(postId: OWPostId, article: OWArticleProtocol,
@@ -114,7 +114,9 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -128,8 +130,6 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
     func commentCreation(postId: OWPostId, article: OWArticleProtocol,
@@ -163,7 +163,9 @@ extension OWUILayer {
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -177,8 +179,6 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
     func commentThread(postId: OWPostId,
@@ -214,7 +214,9 @@ extension OWUILayer {
                                                     callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .partOfFlow)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .partOfFlow)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
         })
         .subscribe(onNext: { result in
             switch result {
@@ -228,8 +230,6 @@ extension OWUILayer {
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: presentationalMode.style)
     }
 
 #if BETA
@@ -302,7 +302,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -310,8 +312,6 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.preConversationView
             completion(.failure(error))
         })
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
     func conversation(postId: OWPostId,
@@ -339,7 +339,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -347,8 +349,6 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.conversationView
             completion(.failure(error))
         })
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
     func commentCreation(postId: OWPostId,
@@ -393,7 +393,9 @@ extension OWUILayer {
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
-            self?.setActiveRouter(for: .independent)
+            guard let self = self else { return }
+            self.setActiveRouter(for: .independent)
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
         })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
@@ -401,8 +403,6 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.commentCreationView
             completion(.failure(error))
         })
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
     func reportReason(postId: OWPostId,
@@ -429,14 +429,16 @@ extension OWUILayer {
                                                  callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
             let error: OWError = err as? OWError ?? OWError.missingImplementation
             completion(.failure(error))
         })
-
-        self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
     }
 
 #if BETA
