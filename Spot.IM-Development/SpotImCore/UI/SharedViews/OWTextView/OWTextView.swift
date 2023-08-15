@@ -126,6 +126,15 @@ fileprivate extension OWTextView {
     }
 
     func setupObservers() {
+        textView.rx.didChangeSelection
+            .map { [weak self] _ -> Range<String.Index>? in
+                guard let self = self else { return nil }
+                return self.textView.text.range(from: self.textView.selectedRange)
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.cursorRangeChange)
+            .disposed(by: disposeBag)
+
         textView.rx.text
             .unwrap()
             .bind(to: viewModel.inputs.textInternalChange)

@@ -236,14 +236,12 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
 
         commentCreationRequestsService.newRequest
             .withLatestFrom(textViewVM.outputs.textViewText) { ($0, $1) }
-            .subscribe(onNext: { [weak self] tuple in
+            .withLatestFrom(textViewVM.outputs.cursorRange) { ($0.0, $0.1, $1) }
+            .subscribe(onNext: { [weak self] (request, currentText, currentSelectedRange) in
                 guard let self = self else { return }
-                let request = tuple.0
-                let currentText = tuple.1
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
-                    let cursorRange: Range<String.Index> = currentText.endIndex..<currentText.endIndex
-                    let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: cursorRange)
+                    let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: currentSelectedRange)
                     let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
                     self.textViewVM.inputs.textExternalChange.onNext(newRequestedText)
                 }
