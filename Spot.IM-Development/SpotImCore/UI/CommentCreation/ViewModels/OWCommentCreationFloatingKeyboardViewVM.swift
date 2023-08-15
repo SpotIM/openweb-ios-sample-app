@@ -218,17 +218,18 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
     func setupObservers() {
-        sharedServiceProvider.authenticationManager()
+        servicesProvider
+            .authenticationManager()
             .activeUserAvailability
-            .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
-                switch (availability) {
-                case .notAvailable:
-                    self.avatarViewVM.inputs.userInput.onNext(nil)
+            .map { availability -> SPUser? in
+                switch availability {
                 case .user(let user):
-                    self.avatarViewVM.inputs.userInput.onNext(user)
+                    return user
+                case .notAvailable:
+                    return nil
                 }
-            })
+            }
+            .bind(to: avatarViewVM.inputs.userInput)
             .disposed(by: disposeBag)
 
         let commentCreationRequestsService = servicesProvider.commentCreationRequestsService()
