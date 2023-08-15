@@ -127,22 +127,16 @@ fileprivate extension OWTextView {
 
     func setupObservers() {
         textView.rx.text
-            .skip(1)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                if self.viewModel.outputs.charectersLimitEnabled {
-                    self.textView.text = String(self.textView.text.prefix(self.viewModel.outputs.textViewMaxCharecters))
-                }
-                self.viewModel.inputs.textViewCharectersCount.onNext(self.textView.text.count)
-                self.charectersCountLabel.text = "\(self.textView.text.count)/" + "\(self.viewModel.outputs.textViewMaxCharecters)"
-                self.viewModel.inputs.textViewTextChange.onNext(self.textView.text ?? "")
-            })
+            .unwrap()
+            .bind(to: viewModel.inputs.textInternalChange)
             .disposed(by: disposeBag)
 
         viewModel.outputs.textViewText
-            // This delay fixes the textView from flickering when text is inserted
-            .delay(.milliseconds(Metrics.delayTextViewTextChange), scheduler: MainScheduler.instance)
             .bind(to: textView.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.textViewTextCount
+            .bind(to: charectersCountLabel.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.placeholderText
