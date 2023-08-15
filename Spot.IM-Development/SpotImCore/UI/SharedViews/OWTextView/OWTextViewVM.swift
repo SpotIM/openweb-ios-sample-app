@@ -15,7 +15,8 @@ protocol OWTextViewViewModelingInputs {
     var resignFirstResponderCall: PublishSubject<Void> { get }
     var textViewTap: PublishSubject<Void> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
-    var textViewTextChange: BehaviorSubject<String> { get }
+    var textExternalChange: PublishSubject<String> { get }
+    var textInternalChange: PublishSubject<String> { get }
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
     var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
@@ -28,7 +29,7 @@ protocol OWTextViewViewModelingOutputs {
     var textViewMaxCharecters: Int { get }
     var isEditable: Bool { get }
     var placeholderText: Observable<String> { get }
-    var textViewTextCount: Observable<Int> { get }
+    var textViewTextCount: Observable<String> { get }
     var hidePlaceholder: Observable<Bool> { get }
     var textViewText: Observable<String> { get }
     var charectersLimitEnabled: Bool { get }
@@ -42,6 +43,7 @@ protocol OWTextViewViewModeling {
 }
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
+
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
@@ -79,9 +81,12 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     }
 
     var textViewCharectersCount = BehaviorSubject<Int>(value: 0)
-    var textViewTextCount: Observable<Int> {
+    var textViewTextCount: Observable<String> {
         return textViewCharectersCount
-                .asObservable()
+            .map { [weak self] count in
+                guard let self = self else { return "" }
+                return "\(count)/" + "\(self.textViewMaxCharecters)"
+            }
     }
 
     var placeholderTextChange: BehaviorSubject<String>
@@ -90,10 +95,14 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
                 .asObservable()
     }
 
-    var textViewTextChange: BehaviorSubject<String>
+    var _textViewText: BehaviorSubject<String>
+
+    var textExternalChange = PublishSubject<String>()
+    var textInternalChange = PublishSubject<String>()
+
     var textViewText: Observable<String> {
-        return textViewTextChange
-                .asObservable()
+        return _textViewText
+            .asObservable()
     }
 
     var hidePlaceholder: Observable<Bool> {
@@ -104,7 +113,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     init(textViewData: OWTextViewData) {
         self.textViewMaxCharecters = textViewData.textViewMaxCharecters
         self.placeholderTextChange = BehaviorSubject(value: textViewData.placeholderText)
-        self.textViewTextChange = BehaviorSubject(value: textViewData.textViewText)
+        self._textViewText = BehaviorSubject(value: textViewData.textViewText)
         self.isEditable = textViewData.isEditable
         self.charectersLimitEnabled = textViewData.charectersLimitEnabled
         self.isAutoExpandable = textViewData.isAutoExpandable
@@ -128,5 +137,34 @@ fileprivate extension OWTextViewViewModel {
                 self.charectersLimitEnabled = show && self.isEditable
             })
             .disposed(by: disposeBag)
+
+        textViewText
+            .map { $0.count }
+            .bind(to: textViewCharectersCount)
+            .disposed(by: disposeBag)
+
+        let textInternalChangeObservable = textInternalChange
+            .flatMap { [weak self] internalText -> Observable<String> in
+                guard let self = self else { return .empty() }
+                return self.textViewText
+                    .take(1)
+                    .filter { internalText != $0 }
+                    .map { _ -> String in
+                        return internalText
+                    }
+            }
+
+        Observable.merge(textInternalChangeObservable, textExternalChange)
+            .map { [weak self] text -> String in
+                // Length validation
+                guard let self = self else { return text }
+                if self.charectersLimitEnabled {
+                    return String(text.prefix(self.textViewMaxCharecters))
+                }
+                return text
+            }
+            .bind(to: _textViewText)
+            .disposed(by: disposeBag)
+
     }
 }
