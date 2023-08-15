@@ -42,6 +42,7 @@ class OWPresenterService: OWPresenterServicing {
 
             let menuVM = OWMenuSelectionViewModel(items: menuItems, onDismiss: {
                 observer.onNext(.completion)
+                observer.onCompleted()
             })
 
             // calculate constraints for menu
