@@ -19,6 +19,12 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         static let maxCustomizableElementCallbacksNumber: Int = 10
     }
 
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+
+    init(sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServicesProvider = sharedServicesProvider
+    }
+
     // Prefer to expose computed property and internally work with filprivate vars
     var fontFamily: OWFontGroupFamily {
         get {
@@ -47,7 +53,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
             case let .theme(theme):
                 sendEvent(for: .configureThemeEnforcement(theme: theme))
             }
-            OWSharedServicesProvider.shared.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
+            sharedServicesProvider.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
         }
     }
 
@@ -57,7 +63,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newEnforcement) {
             _statusBarEnforcement = newEnforcement
-            OWSharedServicesProvider.shared.statusBarStyleService().setEnforcement(enforcement: _statusBarEnforcement)
+            sharedServicesProvider.statusBarStyleService().setEnforcement(enforcement: _statusBarEnforcement)
         }
     }
 
@@ -72,7 +78,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback) {
         guard callbacks.count < Metrics.maxCustomizableElementCallbacksNumber else {
-            let logger = OWSharedServicesProvider.shared.logger()
+            let logger = sharedServicesProvider.logger()
             logger.log(level: .error,
                        "`addElementCallback` function can accept up to \(Metrics.maxCustomizableElementCallbacksNumber) different callbacks. This number was already reached.")
             return
@@ -83,7 +89,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     }
 
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType) {
-        let themeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
+        let themeStyle = sharedServicesProvider.themeStyleService().currentStyle
         let postId = OWManager.manager.postId
 
         callbacks.forEach { optionalCallback in
@@ -106,7 +112,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
 fileprivate extension OWCustomizationsLayer {
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
-        return OWSharedServicesProvider.shared
+        return sharedServicesProvider
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
@@ -117,7 +123,7 @@ fileprivate extension OWCustomizationsLayer {
 
     func sendEvent(for eventType: OWAnalyticEventType) {
         let event = event(for: eventType)
-        OWSharedServicesProvider.shared
+        sharedServicesProvider
             .analyticsService()
             .sendAnalyticEvents(events: [event])
     }
