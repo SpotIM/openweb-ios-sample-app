@@ -619,7 +619,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .do(onNext: { [weak self] _, commentVm in
                 self?.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
-            .flatMap { [weak self] shareUrl, commentVm -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] shareUrl, _ -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
@@ -836,7 +836,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
-            .do(onNext: { [weak self] (actions, sender, commentVm) in
+            .do(onNext: { [weak self] (_, _, commentVm) in
                 self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
