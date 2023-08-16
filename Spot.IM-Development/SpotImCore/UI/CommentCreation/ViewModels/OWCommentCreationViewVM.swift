@@ -85,11 +85,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
-        return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData)
+        return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData, viewableMode: viewableMode)
     }()
 
     lazy var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling = {
-        return OWCommentCreationLightViewViewModel(commentCreationData: self.commentCreationData)
+        return OWCommentCreationLightViewViewModel(commentCreationData: self.commentCreationData, viewableMode: viewableMode)
     }()
 
     lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
