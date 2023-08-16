@@ -11,10 +11,22 @@ import RxSwift
 import UIKit
 
 protocol OWPresenterServicing {
-    func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showAlert(title: String, message: String, actions: [OWRxPresenterAction], preferredStyle: UIAlertController.Style, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
+}
+
+extension OWPresenterServicing {
+    func showAlert(
+        title: String,
+        message: String,
+        actions: [OWRxPresenterAction],
+        preferredStyle: UIAlertController.Style = .alert,
+        viewableMode: OWViewableMode
+    ) -> Observable<OWRxPresenterResponseType> {
+        showAlert(title: title, message: message, actions: actions, preferredStyle: preferredStyle, viewableMode: viewableMode)
+    }
 }
 
 class OWPresenterService: OWPresenterServicing {
@@ -23,12 +35,18 @@ class OWPresenterService: OWPresenterServicing {
         RxImagePickerDelegateProxy.register { RxImagePickerDelegateProxy(imagePicker: $0) }
     }
 
-    func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
+    func showAlert(
+        title: String,
+        message: String,
+        actions: [OWRxPresenterAction],
+        preferredStyle: UIAlertController.Style = .alert,
+        viewableMode: OWViewableMode
+    ) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
         else { return .empty() }
 
         return UIAlertController.rx.show(onViewController: presenterVC,
-                                         preferredStyle: .alert,
+                                         preferredStyle: preferredStyle,
                                          title: title,
                                          message: message,
                                          actions: actions)
