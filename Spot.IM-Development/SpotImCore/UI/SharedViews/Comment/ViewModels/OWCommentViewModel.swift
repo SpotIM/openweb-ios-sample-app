@@ -22,6 +22,7 @@ protocol OWCommentViewModelingOutputs {
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
 
+    var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
@@ -53,6 +54,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         return OWCommentActionsViewModel()
     }()
 
+    var commentStatusVM: OWCommentStatusViewModeling
     var commentHeaderVM: OWCommentHeaderViewModeling
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
@@ -89,6 +91,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
+        commentStatusVM = OWCommentStatusViewModel(status: .pending) // TODO: use data from init
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
@@ -99,6 +102,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
+        commentStatusVM = OWCommentStatusViewModel(status: .none)
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()

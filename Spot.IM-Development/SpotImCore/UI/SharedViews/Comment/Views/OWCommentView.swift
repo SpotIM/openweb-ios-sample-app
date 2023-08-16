@@ -21,6 +21,9 @@ class OWCommentView: UIView {
         static let commentActionsTopPadding: CGFloat = 15.0
     }
 
+    fileprivate lazy var commentStatusView: OWCommentStatusView = {
+        return OWCommentStatusView()
+    }()
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
@@ -50,6 +53,7 @@ class OWCommentView: UIView {
     func configure(with viewModel: OWCommentViewModeling) {
         self.disposedBag = DisposeBag()
         self.viewModel = viewModel
+        self.commentStatusView.configure(with: viewModel.outputs.commentStatusVM)
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
         self.commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
@@ -68,10 +72,17 @@ fileprivate extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
 
+        self.addSubviews(commentStatusView)
+        commentStatusView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+        }
+
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+//            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(14) // TODO
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
         }
     }
