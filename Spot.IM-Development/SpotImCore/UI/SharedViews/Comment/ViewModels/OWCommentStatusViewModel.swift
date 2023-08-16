@@ -11,11 +11,14 @@ import RxSwift
 import UIKit
 
 protocol OWCommentStatusViewModelingInputs {
+    var learnMoreTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentStatusViewModelingOutputs {
     var iconImage: Observable<UIImage?> { get } // TODO: not null?
     var messageAttributedText: Observable<NSAttributedString> { get }
+    var learnMoreClickableString: String { get }
+    var learnMoreClicked: Observable<Void> { get }
 }
 
 protocol OWCommentStatusViewModeling {
@@ -32,7 +35,10 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
 
     fileprivate let _status = BehaviorSubject<OWCommentStatus>(value: .none)
 
-    init (status: OWCommentStatus) {
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+
+    init (status: OWCommentStatus, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServicesProvider = sharedServicesProvider
         _status.onNext(status)
     }
 
@@ -44,7 +50,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     lazy var iconImage: Observable<UIImage?> = {
         Observable.combineLatest(
             status,
-            OWSharedServicesProvider.shared.themeStyleService().style) { [weak self] status, _ in
+            sharedServicesProvider.themeStyleService().style) { [weak self] status, _ in
                 switch(status) {
                 case .none: return nil
                 case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: false)
@@ -53,9 +59,10 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             }
     }()
 
-    lazy var learnMoreAttributedString: NSAttributedString = {
+    let learnMoreClickableString = OWLocalizationManager.shared.localizedString(key: "Learn more")
+    fileprivate lazy var learnMoreAttributedString: NSAttributedString = {
         // TODO: subdcribe also for accesability change
-        return OWLocalizationManager.shared.localizedString(key: "Learn more")
+        return learnMoreClickableString
             .attributedString
             .underline(1)
             .font(OWFontBook.shared.font(typography: .footnoteText))
@@ -66,7 +73,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
         // TODO: subdcribe also for accesability change
         Observable.combineLatest(
             status,
-            OWSharedServicesProvider.shared.themeStyleService().style) { [weak self] status, style in
+            sharedServicesProvider.themeStyleService().style) { [weak self] status, style in
                 guard let self = self else { return nil }
                 let messageString: String
                 switch(status) {
@@ -84,6 +91,12 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 return attributedString
             }
             .unwrap()
+    }
+
+    var learnMoreTap = PublishSubject<Void>()
+    var learnMoreClicked: Observable<Void> {
+        return learnMoreTap
+            .asObservable()
     }
 }
 

@@ -83,6 +83,18 @@ fileprivate extension OWCommentStatusView {
             .bind(to: messageLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.messageAttributedText
+            .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self else { return }
+                self.messageLabel
+                    .attributedText(attributedText)
+                    .addRangeGesture(targetRange: self.viewModel.outputs.learnMoreClickableString) { [weak self] in
+                        guard let self = self else { return }
+                        self.viewModel.inputs.learnMoreTap.onNext()
+                    }
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
