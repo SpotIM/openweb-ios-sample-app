@@ -20,6 +20,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaButtonEnabled: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
+    var loginToPostClick: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFooterViewModeling {
@@ -58,6 +59,12 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         }
     }()
 
+    var _loginToPostClick = PublishSubject<Void>()
+    var loginToPostClick: Observable<Void> {
+        _loginToPostClick
+            .asObservable()
+    }
+
     var performCtaAction: Observable<Void> {
         tapCta
             .asObservable()
@@ -65,7 +72,12 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
             }
-            .filter { !$0 } // Do not continue if needed to authenticate
+            .do(onNext: { [weak self] loginToPost in
+                guard let self = self,
+                      loginToPost == true else { return }
+                self._loginToPostClick.onNext()
+            })
+            .filter { !$0 } // Do not continue if authentication needed
             .map { _ -> Void in () }
     }
 
