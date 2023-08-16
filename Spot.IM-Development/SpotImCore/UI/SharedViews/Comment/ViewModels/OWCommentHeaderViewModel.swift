@@ -173,12 +173,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                                  shouldReportCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
             // TODO: handle reported
             let localizationKey: String
-            if model.deleted || shouldDeleteCommentLocally {
-                localizationKey = "This message was deleted."
-            } else if user.isMuted || shouldMuteCommentLocally {
+            if user.isMuted || shouldMuteCommentLocally {
                 localizationKey = "This user is muted."
             } else if model.reported || shouldReportCommentLocally {
                 localizationKey = "This message was reported."
+            } else if (model.status == .block || model.status == .reject) {
+                localizationKey = "This comment violated our policy."
+            } else if model.deleted || shouldDeleteCommentLocally {
+                localizationKey = "This message was deleted."
             } else {
                 return ""
             }
