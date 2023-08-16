@@ -125,6 +125,8 @@
 		16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */; };
 		16D996C52A8B709200748E46 /* OWPermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C42A8B709200748E46 /* OWPermissionsService.swift */; };
 		16D996C72A8B762800748E46 /* OWOpenSettingsAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */; };
+		16D996C92A8CCA7900748E46 /* UIImagePickerController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */; };
+		16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */; };
 		16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */; };
 		16F66EBD2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */; };
 		16F66EBF2A2CCC470089E70E /* OWRxPresenterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */; };
@@ -1110,6 +1112,8 @@
 		16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentContentViewModel.swift; sourceTree = "<group>"; };
 		16D996C42A8B709200748E46 /* OWPermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPermissionsService.swift; sourceTree = "<group>"; };
 		16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenSettingsAlert.swift; sourceTree = "<group>"; };
+		16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Rx.swift"; sourceTree = "<group>"; };
+		16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImagePickerPresenterResponseType.swift; sourceTree = "<group>"; };
 		16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadSettings.swift; sourceTree = "<group>"; };
 		16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterResponseType.swift; sourceTree = "<group>"; };
 		16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterAction.swift; sourceTree = "<group>"; };
@@ -2581,6 +2585,8 @@
 				16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */,
 				16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */,
 				16F66EC02A2CCC810089E70E /* OWMenuTypeProtocol.swift */,
+				16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */,
+				16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */,
 			);
 			path = "Presenter+Rx";
 			sourceTree = "<group>";
@@ -6211,6 +6217,7 @@
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
 				3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
+				16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */,
 				5DBD33E723980D6A003DE0BF /* SPBaseTextField.swift in Sources */,
 				9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */,
 				8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */,
@@ -6850,6 +6857,7 @@
 				3D08E0BA287AF3BC00E6F1AC /* OWObservableArray.swift in Sources */,
 				8D7FC66029A3AA510047DA22 /* OWConversationSummaryView.swift in Sources */,
 				3DFC32D128916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift in Sources */,
+				16D996C92A8CCA7900748E46 /* UIImagePickerController+Rx.swift in Sources */,
 				3DDA9A90291A7C7300FE3B86 /* OWCustomizationsLayer.swift in Sources */,
 				445418B423685154001D0ED0 /* IndexPath+SPExtensions.swift in Sources */,
 				44F247A52379B23100B36F12 /* SPBaseScrollView.swift in Sources */,
