@@ -14,13 +14,18 @@ import SpotImCore
 
 protocol CommentCreationSettingsViewModelingInputs {
     var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
+    var accessoryViewSelectedIndex: BehaviorSubject<Int> { get }
 }
 
 protocol CommentCreationSettingsViewModelingOutputs {
     var title: String { get }
     var styleModeTitle: String { get }
+    var accessoryViewTitle: String { get }
     var styleModeIndex: Observable<Int> { get }
+    var accessoryViewIndex: Observable<Int> { get }
     var styleModeSettings: [String] { get }
+    var accessoryViewSettings: [String] { get }
+    var hideAccessoryViewOptions: Observable<Bool> { get }
 }
 
 protocol CommentCreationSettingsViewModeling {
@@ -37,11 +42,32 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
     var outputs: CommentCreationSettingsViewModelingOutputs { return self }
 
     var customStyleModeSelectedIndex = BehaviorSubject<Int>(value: 0)
+    var accessoryViewSelectedIndex = BehaviorSubject<Int>(value: 0)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
+    var accessoryViewIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
+            .map { commentCreationStyle in
+                switch commentCreationStyle {
+                case .floatingKeyboard(let accessoryViewStrategy):
+                    switch accessoryViewStrategy {
+                    case .none:
+                        return 0
+                    case .bottomToolbar:
+                        return 1
+                    default:
+                        return 0
+                    }
+                default:
+                    return 0
+                }
+            }
+            .asObservable()
+    }
+
     var styleModeIndex: Observable<Int> {
-        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        return userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
             .map { commentCreationStyle in
                 switch commentCreationStyle {
                 case .regular:
@@ -50,9 +76,20 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
                     return 1
                 case .floatingKeyboard:
                     return 2
-                @unknown default:
+                default:
                     return 0
                 }
+            }
+            .asObservable()
+    }
+
+    var hideAccessoryViewOptions: Observable<Bool> {
+        return customStyleModeSelectedIndex
+            .map {
+                if case .floatingKeyboard = OWCommentCreationStyle.commentCreationStyle(fromIndex: $0) {
+                    return false
+                }
+                return true
             }
             .asObservable()
     }
@@ -67,6 +104,10 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return NSLocalizedString("StyleModeTitle", comment: "")
     }()
 
+    lazy var accessoryViewTitle: String = {
+        return NSLocalizedString("AccessoryView", comment: "")
+    }()
+
     lazy var styleModeSettings: [String] = {
         let _regular = NSLocalizedString("Regular", comment: "")
         let _light = NSLocalizedString("Light", comment: "")
@@ -75,10 +116,23 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
         return [_regular, _light, _floatingKeyboard]
     }()
 
+    lazy var accessoryViewSettings: [String] = {
+        let _none = NSLocalizedString("None", comment: "")
+        let _toolbar = NSLocalizedString("Toolbar", comment: "")
+
+        return [_none, _toolbar]
+    }()
+
     fileprivate lazy var styleModeObservable: Observable<OWCommentCreationStyle> = {
-        return customStyleModeSelectedIndex
-            .map { customStyleModeIndex -> OWCommentCreationStyle in
-                return OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
+        return Observable.combineLatest(customStyleModeSelectedIndex,
+                                        accessoryViewSelectedIndex)
+            .map { (customStyleModeIndex, accessoryViewIndex) -> OWCommentCreationStyle in
+                var style = OWCommentCreationStyle.commentCreationStyle(fromIndex: customStyleModeIndex)
+                if case .floatingKeyboard = style {
+                    let accessoryViewStrategy = OWAccessoryViewStrategy(index: accessoryViewIndex)
+                    style = .floatingKeyboard(accessoryViewStrategy: accessoryViewStrategy)
+                }
+                return style
             }
             .asObservable()
     }()
@@ -94,7 +148,7 @@ fileprivate extension CommentCreationSettingsVM {
         styleModeObservable
             .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
             .skip(1)
-            .bind(to: userDefaultsProvider.rxProtocol
+            .bind(to: self.userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWCommentCreationStyle>.commentCreationStyle))
             .disposed(by: disposeBag)
     }
