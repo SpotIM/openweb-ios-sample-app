@@ -126,11 +126,45 @@ fileprivate extension OWCommentCreationFooterViewModel {
             }
             .filter { $0 == true }
             .voidify()
-            .flatMap { [weak self] _ -> Observable<OWImagePickerPresenterResponseType> in
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Take a Photo"), type: OWPickImageActionSheet.takePhoto),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Choose from Gallery"), type: OWPickImageActionSheet.chooseFromGallery),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWPickImageActionSheet.cancel, style: .cancel)
+                ]
+                return self.servicesProvider
+                    .presenterService()
+                    .showAlert(
+                        title: nil,
+                        message: nil,
+                        actions: actions,
+                        preferredStyle: .actionSheet,
+                        viewableMode: viewableMode
+                    )
+            }
+            .map { response -> UIImagePickerController.SourceType? in
+                switch response {
+                case .completion:
+                    return nil
+                case .selected(let action):
+                    switch action.type {
+                    case OWPickImageActionSheet.takePhoto:
+                        return .camera
+                    case OWPickImageActionSheet.chooseFromGallery:
+                        return .photoLibrary
+                    default:
+                        return nil
+                    }
+                }
+            }
+            .unwrap()
+            .flatMap { [weak self] sourceType -> Observable<OWImagePickerPresenterResponseType> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .presenterService()
-                    .showImagePicker(mediaTypes: ["public.image"], sourceType: .camera, viewableMode: viewableMode)
+                    .showImagePicker(mediaTypes: ["public.image"], sourceType: sourceType, viewableMode: viewableMode)
             }
             .map { response -> UIImage? in
                 switch response {
