@@ -11,7 +11,7 @@ import RxSwift
 import UIKit
 
 protocol OWPresenterServicing {
-    func showAlert(title: String, message: String, actions: [OWRxPresenterAction], preferredStyle: UIAlertController.Style, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showAlert(title: String?, message: String?, actions: [OWRxPresenterAction], preferredStyle: UIAlertController.Style, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
@@ -19,8 +19,8 @@ protocol OWPresenterServicing {
 
 extension OWPresenterServicing {
     func showAlert(
-        title: String,
-        message: String,
+        title: String?,
+        message: String?,
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
@@ -36,8 +36,8 @@ class OWPresenterService: OWPresenterServicing {
     }
 
     func showAlert(
-        title: String,
-        message: String,
+        title: String?,
+        message: String?,
         actions: [OWRxPresenterAction],
         preferredStyle: UIAlertController.Style = .alert,
         viewableMode: OWViewableMode
