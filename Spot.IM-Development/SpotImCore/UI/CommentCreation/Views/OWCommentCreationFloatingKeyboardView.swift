@@ -242,7 +242,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(mainContainer.OWSnp.bottom)
-            make.top.equalToSuperview()
+            make.top.greaterThanOrEqualToSuperview()
         }
 
         switch viewModel.outputs.commentType {

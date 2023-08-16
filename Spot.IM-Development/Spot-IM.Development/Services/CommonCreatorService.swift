@@ -37,11 +37,11 @@ class CommonCreatorService: CommonCreatorServicing {
         let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
 
         // 3. Comment creation related
-        var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         // Inject toolbar if needed
         var newToolbarVM: CommentCreationToolbarViewModeling? = nil
-        if case let OWCommentCreationStyle.floatingKeyboard(accessoryViewStrategy) = commentCreationStyle,
-           case OWAccessoryViewStrategy.bottomToolbar(_) = accessoryViewStrategy {
+        if case OWCommentCreationStyle.floatingKeyboard(let accessoryViewStrategy) = commentCreationStyle,
+           case OWAccessoryViewStrategy.bottomToolbar = accessoryViewStrategy {
             // Since we can't actually save the toolbar UIView in the memory, we will re-create it
             let floatingBottomToolbarTuple = self.commentCreationFloatingBottomToolbar()
             let newToolbar = floatingBottomToolbarTuple.1

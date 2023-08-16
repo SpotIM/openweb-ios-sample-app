@@ -153,7 +153,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     fileprivate lazy var commentCreationStyleChanged: Observable<Void> = {
-        return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
                 guard let self = self else { return .empty() }
