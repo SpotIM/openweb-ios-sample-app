@@ -16,15 +16,21 @@ class OWCommentStatusView: UIView {
         static let cornerRadius: CGFloat = 4
         static let horizontalPadding: CGFloat = 10
         static let verticalPadding: CGFloat = 8
+        static let iconSize: CGFloat = 20
         static let identifier = "comment_status_view_id"
     }
-    
+
     fileprivate var viewModel: OWCommentStatusViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
     fileprivate lazy var iconImageView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
+    }()
+
+    fileprivate lazy var messageLabel: UILabel = {
+        return UILabel()
+            .numberOfLines(0)
     }()
 
     init() {
@@ -57,10 +63,26 @@ fileprivate extension OWCommentStatusView {
         iconImageView.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().inset(Metrics.verticalPadding)
             make.leading.equalToSuperview().inset(Metrics.horizontalPadding)
+            make.size.equalTo(Metrics.iconSize)
+        }
+
+        self.addSubview(messageLabel)
+        messageLabel.OWSnp.makeConstraints { make in
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(2) // TODO: metric
+            make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
+            make.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
         }
     }
 
     func setupObservers() {
+        viewModel.outputs.iconImage
+            .bind(to: iconImageView.rx.image)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.messageAttributedText
+            .bind(to: messageLabel.rx.attributedText)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

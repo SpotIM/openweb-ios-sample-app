@@ -15,6 +15,7 @@ protocol OWCommentStatusViewModelingInputs {
 
 protocol OWCommentStatusViewModelingOutputs {
     var iconImage: Observable<UIImage?> { get } // TODO: not null?
+    var messageAttributedText: Observable<NSAttributedString> { get }
 }
 
 protocol OWCommentStatusViewModeling {
@@ -41,15 +42,49 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }()
 
     lazy var iconImage: Observable<UIImage?> = {
-        self.status
-            .map { status in
+        Observable.combineLatest(
+            status,
+            OWSharedServicesProvider.shared.themeStyleService().style) { [weak self] status, _ in
                 switch(status) {
                 case .none: return nil
-                case .rejected: return UIImage(spNamed: "verifyIcon", supportDarkMode: false)
-                case .pending: return UIImage(spNamed: "verifyIcon", supportDarkMode: false)
+                case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: true)
+                case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
                 }
             }
     }()
+
+    lazy var learnMoreAttributedString: NSAttributedString = {
+        // TODO: subdcribe also for accesability change
+        return OWLocalizationManager.shared.localizedString(key: "Learn more")
+            .attributedString
+            .underline(1)
+            .font(OWFontBook.shared.font(typography: .footnoteText))
+            .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+    }()
+
+    var messageAttributedText: Observable<NSAttributedString> {
+        // TODO: subdcribe also for accesability change
+        Observable.combineLatest(
+            status,
+            OWSharedServicesProvider.shared.themeStyleService().style) { [weak self] status, style in
+                guard let self = self else { return nil }
+                let messageString: String
+                switch(status) {
+                case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "Your comment was rejected.")
+                case .pending: messageString = OWLocalizationManager.shared.localizedString(key: "Hold on, your comment is waiting for approval.")
+                case .none: return nil
+                }
+
+                let attributedString = (messageString + " ")
+                    .attributedString
+                    .font(OWFontBook.shared.font(typography: .footnoteText))
+                    .color(OWColorPalette.shared.color(type: .textColor3, themeStyle: style))
+                attributedString.append(self.learnMoreAttributedString)
+
+                return attributedString
+            }
+            .unwrap()
+    }
 }
 
 enum OWCommentStatus {
