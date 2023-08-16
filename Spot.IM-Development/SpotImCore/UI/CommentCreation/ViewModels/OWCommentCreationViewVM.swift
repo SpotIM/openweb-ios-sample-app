@@ -69,6 +69,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 }
         }
         return commentTextAfterTapObservable
+            .do(onNext: { [weak self] _ in
+                self?.sendEvent(for: .commentCreationClosePage)
+            })
             .flatMap { [weak self] commentText -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let hasText = !commentText.isEmpty
@@ -92,10 +95,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                             switch action.type {
                             case OWCloseEditorAlert.yes:
                                 self.cacheComment(text: commentText)
+                                self.sendEvent(for: .commentCreationLeavePage)
                                 return Observable.just(())
                             default:
                                 self.commentCreationRegularViewVm.inputs.becomeFirstResponder.onNext()
                                 self.commentCreationLightViewVm.inputs.becomeFirstResponder.onNext()
+                                self.sendEvent(for: .commentCreationContinueWriting)
                                 return Observable.empty()
                             }
                         }
@@ -140,6 +145,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta,
                                                                 commentCreationLightViewVm.outputs.performCta,
                                                                 commentCreationFloatingKeyboardViewVm.outputs.performCta)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                switch self.commentCreationData.commentCreationType {
+                case .comment:
+                    self.sendEvent(for: .postCommentClicked)
+                case .edit(let comment):
+                    self.sendEvent(for: .editCommentClicked(commentId: comment.id ?? ""))
+                case .replyToComment(let originComment):
+                    self.sendEvent(for: .postReplyClicked(replyToCommentId: originComment.id ?? ""))
+                }
+            })
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
                 guard let self = self,
@@ -275,6 +291,16 @@ fileprivate extension OWCommentCreationViewViewModel {
                 })
                 .disposed(by: disposeBag)
         }
+
+        Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.loginToPostClick,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.loginToPostClick,
+            commentCreationFloatingKeyboardViewVm.outputs.loginToPostClick
+        )
+        .subscribe(onNext: { [weak self] in
+            self?.sendEvent(for: .signUpToPostClicked)
+        })
+        .disposed(by: disposeBag)
     }
 
     func cacheComment(text commentText: String) {
@@ -315,5 +341,12 @@ fileprivate extension OWCommentCreationViewViewModel {
                 articleUrl: commentCreationData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
                 component: .commentCreation)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

@@ -34,6 +34,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
     var isSendingChanged: Observable<Bool> { get }
+    var loginToPostClick: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -67,6 +68,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }
 
     let accessoryViewStrategy: OWAccessoryViewStrategy
+
+    var _loginToPostClick = PublishSubject<Void>()
+    var loginToPostClick: Observable<Void> {
+        _loginToPostClick
+            .asObservable()
+    }
 
     var closeInstantly = PublishSubject<String>()
     var closedInstantly: Observable<String> {
@@ -126,7 +133,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                 self.isSendingChange.onNext(!needsAuthentication)
                 return needsAuthentication
             }
-            .filter { !$0 } // Do not continue if needed to authenticate
+            .do(onNext: { [weak self] loginToPost in
+                guard let self = self,
+                      loginToPost == true else { return }
+                self._loginToPostClick.onNext()
+            })
+            .filter { !$0 } // Do not continue if authentication needed 
             .withLatestFrom(textViewVM.outputs.textViewText)
             .map { text -> OWCommentCreationCtaData in ()
                 return OWCommentCreationCtaData(text: text, commentLabelIds: [])
