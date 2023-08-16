@@ -14,9 +14,14 @@ protocol OWPresenterServicing {
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
+    func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
 }
 
 class OWPresenterService: OWPresenterServicing {
+
+    init() {
+        RxImagePickerDelegateProxy.register { RxImagePickerDelegateProxy(imagePicker: $0) }
+    }
 
     func showAlert(title: String, message: String, actions: [OWRxPresenterAction], viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode)
@@ -72,9 +77,17 @@ class OWPresenterService: OWPresenterServicing {
     }
 
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
-        guard let presenterVC = getPresenterVC(for: viewableMode)
-        else { return .empty() }
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
         return UIActivityViewController.rx.show(onViewController: presenterVC, activityItems: activityItems, applicationActivities: applicationActivities)
+    }
+
+    func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType> {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
+        return UIImagePickerController.rx.show(
+            onViewController: presenterVC,
+            mediaTypes: mediaTypes,
+            sourceType: sourceType
+        )
     }
 }
 
