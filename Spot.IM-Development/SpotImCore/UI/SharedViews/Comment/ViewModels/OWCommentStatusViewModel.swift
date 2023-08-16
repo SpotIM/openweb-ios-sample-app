@@ -47,7 +47,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             OWSharedServicesProvider.shared.themeStyleService().style) { [weak self] status, _ in
                 switch(status) {
                 case .none: return nil
-                case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: true)
+                case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: false)
                 case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
                 }
             }
