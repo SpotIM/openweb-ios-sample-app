@@ -156,3 +156,6 @@
 "AdditionalInfoTitle" = "מידע נוסף";
 "ReportSubmissionFailedTitle" = "הגשת הדיווח נכשלה";
 "ReportSubmissionFailedMessage" = "לא ניתן היה להגיש את הדיווח שלך. אנא בדוק את חיבור האינטרנט שלך ונסה שוב מאוחר יותר.";
+"Learn more" = "למד עוד";
+"Your comment was rejected." = "תגובתך נדחתה.";
+"Hold on, your comment is waiting for approval." = "המתן בסבלנות, תגובתך ממתינה לאישור.";
