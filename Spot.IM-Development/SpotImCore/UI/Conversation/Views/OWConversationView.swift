@@ -76,7 +76,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
-        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            guard let self = self else { return .reload }
+            return self.viewModel.outputs.dataSourceTransition
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
@@ -87,6 +90,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
         let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
         dataSource.animationConfiguration = animationConfiguration
+
         return dataSource
     }()
 
@@ -178,18 +182,18 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
                                  tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
-            .filter { $0.0 }
-            .map { $0.1 }
-            .unwrap()
-            .map { $0.height }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
-                }
-            })
-            .disposed(by: disposeBag)
+        .filter { $0.0 }
+        .map { $0.1 }
+        .unwrap()
+        .map { $0.height }
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { [weak self] height in
+            guard let self = self else { return }
+            self.conversationEmptyStateView.OWSnp.updateConstraints { make in
+                make.top.equalTo(self.tableView.OWSnp.top).offset(height)
+            }
+        })
+        .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
@@ -200,17 +204,17 @@ fileprivate extension OWConversationView {
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
+                OWSharedServicesProvider.shared.themeStyleService()
+                .style
+                .subscribe(onNext: { [weak self] currentStyle in
+                    guard let self = self else { return }
 
-                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
-            })
-            .disposed(by: disposeBag)
+                    self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                    self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
+                })
+                .disposed(by: disposeBag)
 
-        viewModel.outputs.performTableViewAnimation
+                viewModel.outputs.performTableViewAnimation
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
@@ -221,23 +225,31 @@ fileprivate extension OWConversationView {
                 })
                 .disposed(by: disposeBag)
 
-        tableView.rx.willDisplayCell
-            .observe(on: MainScheduler.instance)
-            .bind(to: viewModel.inputs.willDisplayCell)
-            .disposed(by: disposeBag)
+                tableView.rx.willDisplayCell
+                .observe(on: MainScheduler.instance)
+                .bind(to: viewModel.inputs.willDisplayCell)
+                .disposed(by: disposeBag)
 
-        tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
-            .flatMapLatest { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
-                return self.tableView.rx.didEndDecelerating
-                    .asObservable()
-                    .take(1)
-            }
+                tableViewRefreshControl.rx.controlEvent(UIControl.Event.valueChanged)
+                .flatMapLatest { [weak self] _ -> Observable<Void> in
+                    guard let self = self else { return .empty() }
+                    return self.tableView.rx.didEndDecelerating
+                        .asObservable()
+                        .take(1)
+                }
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.viewModel.inputs.pullToRefresh.onNext()
+                    self.tableView.setContentOffset(.zero, animated: true)
+                })
+                .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationDataJustReceived
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.viewModel.inputs.pullToRefresh.onNext()
-                self.tableView.setContentOffset(.zero, animated: true)
+                self.tableView.setContentOffset(.zero, animated: false)
             })
             .disposed(by: disposeBag)
 
