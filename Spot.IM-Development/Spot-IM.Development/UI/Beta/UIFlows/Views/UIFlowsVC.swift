@@ -110,6 +110,7 @@ fileprivate extension UIFlowsVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
+        self.navigationItem.largeTitleDisplayMode = .never
 
         // Adding scroll view
         view.addSubview(scrollView)
