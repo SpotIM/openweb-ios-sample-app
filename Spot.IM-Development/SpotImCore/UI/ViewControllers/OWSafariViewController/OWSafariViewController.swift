@@ -15,7 +15,7 @@ class OWSafariViewController: SFSafariViewController {
 
     init(viewModel: OWSafariViewModel) {
         self.viewModel = viewModel
-        super.init(url: viewModel.outputs.options.url, configuration: .init())
+        super.init(url: viewModel.outputs.options.url, configuration: SFSafariViewController.Configuration())
     }
 
     override func viewDidLoad() {

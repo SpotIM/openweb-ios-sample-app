@@ -89,7 +89,7 @@ extension OWConversationCellOption: Equatable {
             return viewModel.outputs.id
         case .commentThreadActions(let viewModel):
             return viewModel.outputs.id
-        case .ad(let viewModel):
+        case .ad:
             return ""
 //            return viewModel.outputs.id
         case .spacer(let viewModel):

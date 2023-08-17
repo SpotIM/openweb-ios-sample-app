@@ -34,7 +34,8 @@ enum OWProfileEndpoints: OWEndpoints {
             let networkCredentials = OWSharedServicesProvider.shared.authenticationManager().networkCredentials
             let accessToken = networkCredentials.authorization
             let owToken = networkCredentials.openwebToken
-            var requestParams: OWNetworkParameters = ["access_token": accessToken?.replacingOccurrences(of: "Bearer ", with: "")]
+            let token = accessToken?.replacingOccurrences(of: "Bearer ", with: "") ?? ""
+            var requestParams: OWNetworkParameters = ["access_token": token]
             if let owToken = owToken {
                 requestParams["open_web_token"] = owToken
             }

@@ -73,7 +73,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        automaticallyAdjustsScrollViewInsets = false
+        tableView.contentInsetAdjustmentBehavior = .never
         setupUI()
         addLongTouchHandler()
     }
