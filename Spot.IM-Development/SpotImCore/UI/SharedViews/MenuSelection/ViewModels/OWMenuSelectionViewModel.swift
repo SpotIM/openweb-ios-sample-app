@@ -10,6 +10,7 @@ import RxSwift
 
 protocol OWMenuSelectionViewModelingInputs {
     var cellSelected: PublishSubject<Int> { get }
+    var menuDismissed: PublishSubject<Void> { get }
 }
 
 protocol OWMenuSelectionViewModelingOutputs {
@@ -32,10 +33,16 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
             .share(replay: 1)
     }
 
+    var menuDismissed = PublishSubject<Void>()
+    fileprivate var menuDismissedObservable: Observable<Void> {
+        return menuDismissed
+            .asObservable()
+    }
+
     var cellSelected = PublishSubject<Int>()
     var disposeBag = DisposeBag()
 
-    init(items: [OWMenuSelectionItem]) {
+    init(items: [OWMenuSelectionItem], onDismiss: @escaping () -> Void) {
         let vms = items.map {
             OWMenuSelectionCellViewModel(title: $0.title,
                                          titleIdentifier: $0.titleIdentifier)
@@ -49,6 +56,11 @@ class OWMenuSelectionViewModel: OWMenuSelectionViewModeling, OWMenuSelectionView
             })
             .disposed(by: disposeBag)
 
+        menuDismissedObservable
+            .subscribe(onNext: {
+                onDismiss()
+            })
+            .disposed(by: disposeBag)
     }
 }
 

@@ -13,5 +13,5 @@ struct OWAnalyticEvent: OWUpdaterProtocol {
     let timestamp: Double
     let articleUrl: String
     let layoutStyle: OWLayoutStyle
-    let component: OWViewSourceType
+    let component: OWAnalyticSourceType
 }

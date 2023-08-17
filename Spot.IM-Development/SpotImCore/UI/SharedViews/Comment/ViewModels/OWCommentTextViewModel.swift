@@ -24,6 +24,7 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
+    var readMoreTap: Observable<Void> { get }
 }
 
 protocol OWCommentTextViewModeling {
@@ -104,6 +105,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate var _textState = BehaviorSubject<OWTextState>(value: .collapsed)
+    lazy var readMoreTap: Observable<Void> = {
+        _textState
+            .asObservable()
+            .filter { $0 == .expanded }
+            .voidify()
+    }()
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
