@@ -66,7 +66,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let numberOfSkeletonComments: Int = 4
+        static let numberOfSkeletonComments: Int = 5
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
@@ -611,8 +611,9 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // first load comments or refresh comments
+        // first load comments / refresh comments / sorted changed
         conversationFetchedObservable
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
@@ -814,6 +815,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // append new comments on load more
         loadMoreCommentsReadFetched
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
@@ -1183,6 +1185,8 @@ fileprivate extension OWConversationViewViewModel {
                     // Changing the sort in the service
                     let sortDictateService = self.servicesProvider.sortDictateService()
                     sortDictateService.update(sortOption: newSort, perPostId: self.postId)
+                    // Remove all comments to show skeletons while loading new comments according to the new sort
+                    self._commentsPresentationData.removeAll()
                 }
             })
             .disposed(by: disposeBag)
