@@ -50,6 +50,8 @@ protocol OWConversationViewViewModelingOutputs {
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var conversationOffset: Observable<CGPoint> { get }
+    var dataSourceTransition: OWViewTransition { get }
+    var conversationDataJustReceived: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -69,6 +71,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -133,6 +136,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _openPublisherProfile = PublishSubject<String>()
     var openPublisherProfile: Observable<String> {
         return _openPublisherProfile
+            .asObservable()
+    }
+
+    fileprivate var _conversationDataJustReceived = PublishSubject<Void>()
+    var conversationDataJustReceived: Observable<Void> {
+        return _conversationDataJustReceived
             .asObservable()
     }
 
@@ -326,6 +335,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return changeConversationOffset
             .asObservable()
     }
+
+    var dataSourceTransition: OWViewTransition = .reload
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
@@ -549,6 +560,10 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -585,6 +600,14 @@ fileprivate extension OWConversationViewViewModel {
             .take(1)
             .subscribe(onNext: { [weak self] _ in
                 self?.sendEvent(for: .fullConversationLoaded)
+            })
+            .disposed(by: disposeBag)
+
+        // Each time the whole conversation loaded with new data except the first time
+        conversationFetchedObservable
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?._conversationDataJustReceived.onNext(())
             })
             .disposed(by: disposeBag)
 
@@ -628,6 +651,16 @@ fileprivate extension OWConversationViewViewModel {
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
+
+        // After conversation fetched - i.e By the user changing sort option / pull to refresh / or initial load
+        // Re-enabling animations in the conversation table view
+        conversationFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
@@ -1133,16 +1166,22 @@ fileprivate extension OWConversationViewViewModel {
                     self.sendEvent(for: .sortByClosed(currentSort: currentSort))
                     return
                 case .selected(action: let action):
-                    let sortDictateService = self.servicesProvider.sortDictateService()
-                    var newSort: OWSortOption = .best
+                    let newSort: OWSortOption
                     switch (action.type) {
                     case OWSortMenu.sortBest: newSort = .best
                     case OWSortMenu.sortNewest: newSort = .newest
                     case OWSortMenu.sortOldest: newSort = .oldest
                     default:
-                        break
+                        newSort = .best
                     }
+
+                    // Make sure the sort acutually changed
+                    guard currentSort != newSort else { return }
+
+                    // Event
                     self.sendEvent(for: .sortByChanged(previousSort: currentSort, selectedSort: newSort))
+                    // Changing the sort in the service
+                    let sortDictateService = self.servicesProvider.sortDictateService()
                     sortDictateService.update(sortOption: newSort, perPostId: self.postId)
                 }
             })
