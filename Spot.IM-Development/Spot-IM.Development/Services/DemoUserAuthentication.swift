@@ -67,6 +67,11 @@ internal class DemoUserAuthentication {
 
         struct Response: Codable {
             var codeB: String
+
+            // swiftlint:disable nesting
+            enum CodingKeys: String, CodingKey {
+                case codeB = "code_b"
+            }
         }
 
         AF.request(url,
