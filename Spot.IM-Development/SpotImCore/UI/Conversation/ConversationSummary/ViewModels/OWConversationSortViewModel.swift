@@ -10,7 +10,6 @@ import Foundation
 import RxSwift
 
 protocol OWConversationSortViewModelingInputs {
-    var changeSelectedSortOption: PublishSubject<OWSortOption> { get }
     var sortTapped: PublishSubject<OWUISource> { get }
     var sortSelected: PublishSubject<OWSortOption> { get }
     var triggerCustomizeSortByLabelUI: PublishSubject<UILabel> { get }
@@ -37,7 +36,6 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
     fileprivate let _triggerCustomizeSortByLabelUI = BehaviorSubject<UILabel?>(value: nil)
 
     var triggerCustomizeSortByLabelUI = PublishSubject<UILabel>()
-    var changeSelectedSortOption = PublishSubject<OWSortOption>()
     var sortTapped = PublishSubject<OWUISource>()
     var sortSelected = PublishSubject<OWSortOption>()
 
@@ -83,14 +81,6 @@ fileprivate extension OWConversationSortViewModel {
             guard let self = self else { return }
 
             self._selectedSortOption.onNext(sortOption)
-        })
-        .disposed(by: disposeBag)
-
-        // Update selected sort option
-        changeSelectedSortOption.subscribe(onNext: { [weak self] sortOption in
-            guard let self = self else { return }
-
-            self.servicesProvider.sortDictateService().update(sortOption: sortOption, perPostId: self.postId)
         })
         .disposed(by: disposeBag)
 
