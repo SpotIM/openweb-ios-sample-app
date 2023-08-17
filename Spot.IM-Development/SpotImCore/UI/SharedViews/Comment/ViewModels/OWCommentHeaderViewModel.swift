@@ -171,7 +171,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                                  shouldDeleteCommentLocally,
                                  shouldMuteCommentLocally,
                                  shouldReportCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
-            // TODO: handle reported
             let localizationKey: String
             if user.isMuted || shouldMuteCommentLocally {
                 localizationKey = "This user is muted."
