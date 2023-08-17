@@ -19,9 +19,12 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
     fileprivate var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
     fileprivate var _languageStrategy: OWLanguageStrategy = OWLanguageStrategy.default
     fileprivate var _localeStrategy: OWLocaleStrategy = OWLocaleStrategy.default
+    fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
-    init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared) {
+    init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared,
+         sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.localizationManager = localizationManager
+        self.sharedServicesProvider = sharedServicesProvider
     }
 
     var shouldSuppressFinmbFilter: Bool {
@@ -56,6 +59,7 @@ extension OWHelpersLayer {
         set(newLanguageStrategy) {
             _languageStrategy = newLanguageStrategy
             localizationManager.changeLanguage(strategy: _languageStrategy)
+            sendEvent(for: .configureLanguageStrategy(strategy: newLanguageStrategy))
         }
     }
 
@@ -66,6 +70,26 @@ extension OWHelpersLayer {
         set(newLocaleStrategy) {
             _localeStrategy = newLocaleStrategy
             localizationManager.changeLocale(strategy: newLocaleStrategy)
+            sendEvent(for: .localeStrategy(strategy: newLocaleStrategy))
         }
+    }
+}
+
+fileprivate extension OWHelpersLayer {
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return sharedServicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: "",
+                layoutStyle: .none,
+                component: .none)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        sharedServicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

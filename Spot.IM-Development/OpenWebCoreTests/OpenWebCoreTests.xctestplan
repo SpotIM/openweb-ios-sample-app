@@ -1,0 +1,27 @@
+{
+  "configurations" : [
+    {
+      "id" : "A38F409A-C86E-4DD8-BB13-7E1C5D6CFA4B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random",
+    "threadSanitizerEnabled" : true,
+    "undefinedBehaviorSanitizerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Spot-IM.Development.xcodeproj",
+        "identifier" : "F92DD7B62A7E8B9E00A2BE5B",
+        "name" : "OpenWebCoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}
