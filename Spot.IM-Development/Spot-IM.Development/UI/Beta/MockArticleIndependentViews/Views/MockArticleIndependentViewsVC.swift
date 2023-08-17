@@ -99,6 +99,7 @@ fileprivate extension MockArticleIndependentViewsVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
+        self.navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(articleView)
         articleView.snp.makeConstraints { make in
