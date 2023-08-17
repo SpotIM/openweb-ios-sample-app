@@ -38,8 +38,8 @@ internal class OWImagePicker: NSObject {
             self.pickerController.sourceType = type
             if type == .camera {
                 SPPermissionsProvider.requestPermission(type: .camera, onAuthorized: {
-                    DispatchQueue.main.async {
-                        presentPickerController()
+                    DispatchQueue.main.async { [weak self] in
+                        self?.presentPickerController()
                     }
                 })
             } else {

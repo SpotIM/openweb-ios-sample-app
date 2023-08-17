@@ -15,11 +15,11 @@ protocol SPCommentLabelsContainerViewDelegate {
 
 internal final class SPCommentLabelsContainerView: SPBaseView, UIGestureRecognizerDelegate {
 
-    var container: SPBaseStackView = .init()
-    var labelsViews: [CommentLabelView] = .init()
-    var guidelineTextLabel: SPBaseLabel = .init()
+    var container = SPBaseStackView()
+    var labelsViews: [CommentLabelView] = []
+    var guidelineTextLabel = SPBaseLabel()
     var maxLabels: Int = 1
-    var selectedLabelsIds: [String] = .init()
+    var selectedLabelsIds: [String] = []
 
     var delegate: SPCommentLabelsContainerViewDelegate?
 

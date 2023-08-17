@@ -505,7 +505,7 @@ enum OWNetworkURLEncodedFormComponent {
                 }
                 set(&child, to: value, at: Array(path[1...]))
             } else {
-                child = context.object?.first { $0.key == end.stringValue }?.value ?? .object(.init())
+                child = context.object?.first { $0.key == end.stringValue }?.value ?? .object([])
                 set(&child, to: value, at: Array(path[1...]))
             }
         default: fatalError("Unreachable")
