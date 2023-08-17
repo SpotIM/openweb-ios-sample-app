@@ -36,10 +36,14 @@ class OWTextView: UIView {
                 .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .textContainerInset(.init(top: Metrics.textViewTopBottomPadding,
-                                          left: Metrics.textViewLeadingTrailingPadding,
-                                          bottom: Metrics.textViewTopBottomPadding,
-                                          right: Metrics.textViewLeadingTrailingPadding))
+                .textContainerInset(
+                    UIEdgeInsets(
+                        top: Metrics.textViewTopBottomPadding,
+                        left: Metrics.textViewLeadingTrailingPadding,
+                        bottom: Metrics.textViewTopBottomPadding,
+                        right: Metrics.textViewLeadingTrailingPadding
+                    )
+                )
     }()
 
     fileprivate lazy var charectersCountLabel: UILabel = {

@@ -16,8 +16,8 @@ internal class CommentMediaView: SPBaseView {
         static let imageIdentifier = "comment_image_view_id"
     }
 
-    private let gifWebView: GifWebView = .init()
-    private let imageView: SPBaseUIImageView = .init()
+    private let gifWebView = GifWebView()
+    private let imageView = SPBaseUIImageView()
 
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var imageViewWidthConstraint: NSLayoutConstraint?

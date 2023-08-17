@@ -52,12 +52,12 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
         case .viewMoreReplies(count: let count):
             let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
             _actionLabelText.onNext(String(format: repliesString, count))
-            _disclosureTransform.onNext(.init(rotationAngle: .pi))
+            _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
 
         case .viewMoreRepliesRange(from: let from, to: let to):
             let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
             _actionLabelText.onNext(String(format: repliesString, from, to))
-            _disclosureTransform.onNext(.init(rotationAngle: .pi))
+            _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
         }
     }
 
