@@ -60,20 +60,13 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }()
 
     let learnMoreClickableString = OWLocalizationManager.shared.localizedString(key: "Learn more")
-    fileprivate lazy var learnMoreAttributedString: NSAttributedString = {
-        // TODO: subdcribe also for accesability change
-        return learnMoreClickableString
-            .attributedString
-            .underline(1)
-            .font(OWFontBook.shared.font(typography: .footnoteText))
-            .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
-    }()
 
     var messageAttributedText: Observable<NSAttributedString> {
         // TODO: subdcribe also for accesability change
         Observable.combineLatest(
             status,
-            sharedServicesProvider.themeStyleService().style) { [weak self] status, style in
+            sharedServicesProvider.themeStyleService().style,
+            sharedServicesProvider.appLifeCycle().didChangeContentSizeCategory) { [weak self] status, style, _ in
                 guard let self = self else { return nil }
                 let messageString: String
                 switch(status) {
@@ -82,13 +75,20 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 case .none: return nil
                 }
 
-                let attributedString = (messageString + " ")
+                let messageAttributedString = (messageString + " ")
                     .attributedString
                     .font(OWFontBook.shared.font(typography: .footnoteText))
                     .color(OWColorPalette.shared.color(type: .textColor3, themeStyle: style))
-                attributedString.append(self.learnMoreAttributedString)
 
-                return attributedString
+                let learnMoreAttributedString = self.learnMoreClickableString
+                    .attributedString
+                    .underline(1)
+                    .font(OWFontBook.shared.font(typography: .footnoteText))
+                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+
+                messageAttributedString.append(learnMoreAttributedString)
+
+                return messageAttributedString
             }
             .unwrap()
     }
