@@ -29,6 +29,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
     var threadOffset: Observable<CGPoint> { get }
+    var dataSourceTransition: OWViewTransition { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -46,6 +47,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -188,6 +190,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return changeThreadOffset
             .asObservable()
     }
+
+    var dataSourceTransition: OWViewTransition = .reload
 
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -371,6 +375,10 @@ fileprivate extension OWCommentThreadViewViewModel {
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -437,6 +445,15 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 self._commentsPresentationData.removeAll()
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
+        // Re-enabling animations in the pre conversation table view
+        commentThreadFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
