@@ -42,7 +42,7 @@ class OWAnalyticsEventCreatorService: OWAnalyticsEventCreatorServicing {
             spotId: OWManager.manager.spotId,
             postId: OWManager.manager.postId ?? "",
             articleUrl: event.articleUrl,
-            pageViewId: "", // TODO: we should create the correct logic for pageViewId in OWAnalyticsService
+            pageViewId: servicesProvider.pageViewIdHolder().pageViewId,
             userStatus: userStatus,
             userId: userId,
             deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "",
