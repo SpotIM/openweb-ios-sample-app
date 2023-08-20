@@ -432,6 +432,7 @@
 		3D7E3D6E28884B7000DDBE0B /* OWHelpersLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6D28884B7000DDBE0B /* OWHelpersLayer.swift */; };
 		3D7E3D7028884D5B00DDBE0B /* SPAdditionalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */; };
 		3D7F28BA2998FA3B00E9E69E /* OWInitialSortStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */; };
+		3D8209C32A9276AE003FF453 /* OWRandomGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8209C22A9276AE003FF453 /* OWRandomGenerator.swift */; };
 		3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A6E286B081D001A939C /* OWRealtimeService.swift */; };
 		3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A70286B18E7001A939C /* OpenWeb.swift */; };
 		3D894A73286C5222001A939C /* OWRealtimeEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */; };
@@ -1441,6 +1442,7 @@
 		3D7E3D6D28884B7000DDBE0B /* OWHelpersLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWHelpersLayer.swift; sourceTree = "<group>"; };
 		3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdditionalConfiguration.swift; sourceTree = "<group>"; };
 		3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInitialSortStrategy.swift; sourceTree = "<group>"; };
+		3D8209C22A9276AE003FF453 /* OWRandomGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRandomGenerator.swift; sourceTree = "<group>"; };
 		3D894A6E286B081D001A939C /* OWRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeService.swift; sourceTree = "<group>"; };
 		3D894A70286B18E7001A939C /* OpenWeb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeb.swift; sourceTree = "<group>"; };
 		3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeEndpoints.swift; sourceTree = "<group>"; };
@@ -4817,6 +4819,7 @@
 				3DDE2AD72A60333C007684C8 /* OWCommentCreationRequestsService.swift */,
 				162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */,
 				3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */,
+				3D8209C22A9276AE003FF453 /* OWRandomGenerator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -6448,6 +6451,7 @@
 				8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */,
 				3D20A36727B00E7D003F8513 /* OWConstraintConstantTarget.swift in Sources */,
 				3D0AFC9C29C7398A002670D1 /* OWSSOProviderResponse.swift in Sources */,
+				3D8209C32A9276AE003FF453 /* OWRandomGenerator.swift in Sources */,
 				9E4163C329F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift in Sources */,
 				3DB3B95229F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift in Sources */,
 				445418A923685154001D0ED0 /* UIFont+Extensions.swift in Sources */,
