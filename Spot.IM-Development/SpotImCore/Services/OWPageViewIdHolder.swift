@@ -12,7 +12,6 @@ import Foundation
  I chose to create an holder / simple service for that which will be in the shared service provider.
 */
 
-
 protocol OWPageViewIdHolderProtocol {
     func generateNewPageViewId()
     // Initially the returned page view id will be an empty string
@@ -27,7 +26,6 @@ class OWPageViewIdHolder: OWPageViewIdHolderProtocol {
     init(randomGenerator: OWRandomGeneratorProtocol = OWRandomGenerator()) {
         self.randomGenerator = randomGenerator
     }
-
 
     func generateNewPageViewId() {
         _pageViewId = randomGenerator.generateSuperiorUUID()
