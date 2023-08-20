@@ -151,5 +151,12 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
             .map { !$0.isEmpty }
             .bind(to: footerViewModel.inputs.ctaEnabled)
             .disposed(by: disposeBag)
+
+        footerViewModel.outputs.imagePicked
+            .subscribe(onNext: { image in
+                // TODO: Handle
+                print(image)
+            })
+            .disposed(by: disposeBag)
     }
 }

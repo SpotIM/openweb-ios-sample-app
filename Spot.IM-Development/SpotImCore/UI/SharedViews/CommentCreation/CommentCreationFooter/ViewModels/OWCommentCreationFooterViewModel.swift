@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWCommentCreationFooterViewModelingInputs {
     var tapCta: PublishSubject<Void> { get }
-    var tapAction: PublishSubject<Void> { get }
+    var tapAddImage: PublishSubject<Void> { get }
     var ctaEnabled: BehaviorSubject<Bool> { get }
 }
 
@@ -20,6 +20,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaButtonEnabled: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
+    var imagePicked: Observable<UIImage> { get }
 }
 
 protocol OWCommentCreationFooterViewModeling {
@@ -40,7 +41,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
     var tapCta = PublishSubject<Void>()
-    var tapAction = PublishSubject<Void>()
+    var tapAddImage = PublishSubject<Void>()
 
     fileprivate lazy var _shouldSignUpToPostComment: Observable<Bool> = {
         return Observable.combineLatest(
@@ -103,21 +104,8 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             }
     }
 
-    init(commentCreationType: OWCommentCreationTypeInternal,
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         viewableMode: OWViewableMode) {
-        self.servicesProvider = servicesProvider
-        self.commentCreationType = commentCreationType
-        self.viewableMode = viewableMode
-
-        setupObservers()
-    }
-}
-
-fileprivate extension OWCommentCreationFooterViewModel {
-    func setupObservers() {
-        // TODO: Remove - from debugging
-        tapAction
+    var imagePicked: Observable<UIImage> {
+        tapAddImage
             .flatMap { [weak self] _ -> Observable<Bool> in
                 guard let self = self else { return Observable.just(false) }
                 return self.servicesProvider
@@ -178,9 +166,20 @@ fileprivate extension OWCommentCreationFooterViewModel {
                 }
             }
             .unwrap()
-            .subscribe(onNext: { image in
-                print(image)
-            })
-            .disposed(by: disposeBag)
+    }
+
+    init(commentCreationType: OWCommentCreationTypeInternal,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         viewableMode: OWViewableMode) {
+        self.servicesProvider = servicesProvider
+        self.commentCreationType = commentCreationType
+        self.viewableMode = viewableMode
+
+        setupObservers()
+    }
+}
+
+fileprivate extension OWCommentCreationFooterViewModel {
+    func setupObservers() {
     }
 }
