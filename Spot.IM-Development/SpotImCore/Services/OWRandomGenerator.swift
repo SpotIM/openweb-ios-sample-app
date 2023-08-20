@@ -19,7 +19,7 @@ extension OWRandomGeneratorProtocol {
     }
 }
 
-class OWRandomGenerator {
+class OWRandomGenerator: OWRandomGeneratorProtocol {
     fileprivate struct Metrics {
         static let defaultEpochSuffixLength: Int = 8
         static let minEpochSuffixLength: Int = 1
@@ -38,7 +38,7 @@ class OWRandomGenerator {
         let stringEpoch = String(format: "%.0f", epoch)
         let lengthFromEpoch = (min(max(Metrics.minEpochSuffixLength, epochSuffixLength),
                                    Metrics.maxEpochSuffixLength))
-        let epochSuffix = stringEpoch.suffix(epochSuffixLength)
+        let epochSuffix = stringEpoch.suffix(lengthFromEpoch)
         finalIdentifier = "\(randomUUID)-\(epochSuffix)"
         return finalIdentifier
     }
