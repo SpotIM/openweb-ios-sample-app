@@ -153,9 +153,9 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
             .disposed(by: disposeBag)
 
         footerViewModel.outputs.imagePicked
-            .subscribe(onNext: { image in
+            .subscribe(onNext: { [weak self] image in
                 // TODO: Handle
-                print(image)
+                self?.commentCreationContentVM.outputs.imagePreviewVM.inputs.image.onNext(image)
             })
             .disposed(by: disposeBag)
     }
