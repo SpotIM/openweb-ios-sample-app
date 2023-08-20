@@ -18,6 +18,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
+    var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -40,6 +41,10 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate lazy var postId = OWManager.manager.postId
 
     var commentText = BehaviorSubject<String>(value: "")
+
+    lazy var imagePreviewVM: OWCommentCreationImagePreviewViewModeling = {
+        return OWCommentCreationImagePreviewViewModel(servicesProvider: servicesProvider)
+    }()
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
         OWAvatarViewModel(imageURLProvider: imageURLProvider)
