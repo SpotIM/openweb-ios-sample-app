@@ -28,6 +28,7 @@ protocol OWCommentViewModelingOutputs {
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
     var shouldHideCommentContent: Observable<Bool> { get }
+    var shouldShowCommentStatus: Observable<Bool> { get }
 
     var comment: OWComment { get }
 }
@@ -64,6 +65,13 @@ class OWCommentViewModel: OWCommentViewModeling,
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
+            .asObservable()
+    }
+
+    // TODO: real logic
+    fileprivate let _shouldShowCommentStatus = BehaviorSubject<Bool>(value: true)
+    var shouldShowCommentStatus: Observable<Bool> {
+        _shouldShowCommentStatus
             .asObservable()
     }
 

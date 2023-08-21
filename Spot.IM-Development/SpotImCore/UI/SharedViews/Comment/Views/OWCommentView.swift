@@ -15,6 +15,7 @@ class OWCommentView: UIView {
         static let leadingOffset: CGFloat = 16.0
         static let bottomOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
+        static let commentStatusBottomPadding: CGFloat = 12.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let horizontalOffset: CGFloat = 16.0
         static let messageContainerTopOffset: CGFloat = 4.0
@@ -41,6 +42,7 @@ class OWCommentView: UIView {
     fileprivate var disposedBag = DisposeBag()
 
     fileprivate var commentHeaderBottomConstraint: OWConstraint? = nil
+    fileprivate var commentStatusZeroHeightConstraint: OWConstraint? = nil
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -76,13 +78,13 @@ fileprivate extension OWCommentView {
         commentStatusView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+            commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-//            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
-            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(14) // TODO
+            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
         }
     }
@@ -128,5 +130,16 @@ fileprivate extension OWCommentView {
                 .bind(to: commentHeaderBottomConstraint.rx.isActive)
                 .disposed(by: disposedBag)
         }
+
+        viewModel.outputs.shouldShowCommentStatus
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                self.commentHeaderView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
+                }
+                self.commentStatusView.isHidden = !shouldShow
+                self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
+            })
+            .disposed(by: disposedBag)
     }
 }
