@@ -36,10 +36,9 @@ class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
 
     func triggerBICallback(_ event: OWBIAnalyticEvent) {
         guard let postId = OWManager.manager.postId else { return }
-
-        callbacks.forEach { optionalCallback in
-            guard let actualCallback = optionalCallback.value() else { return }
-            queue.async {
+        queue.async {
+            self.callbacks.forEach { optionalCallback in
+                guard let actualCallback = optionalCallback.value() else { return }
                 actualCallback(event, OWBIAnalyticAdditionalInfo(customBIData: self.customBIData), postId)
             }
         }
