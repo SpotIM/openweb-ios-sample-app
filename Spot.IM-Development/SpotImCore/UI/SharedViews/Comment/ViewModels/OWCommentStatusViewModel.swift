@@ -61,12 +61,18 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
 
     let learnMoreClickableString = OWLocalizationManager.shared.localizedString(key: "Learn more")
 
+    lazy private var accessibilityChange: Observable<Bool> = {
+        sharedServicesProvider.appLifeCycle()
+            .didChangeContentSizeCategory
+            .map { true }
+            .startWith(false)
+    }()
+
     var messageAttributedText: Observable<NSAttributedString> {
-        // TODO: subdcribe also for accesability change
         Observable.combineLatest(
             status,
             sharedServicesProvider.themeStyleService().style,
-            sharedServicesProvider.appLifeCycle().didChangeContentSizeCategory) { [weak self] status, style, _ in
+            accessibilityChange) { [weak self] status, style, _ in
                 guard let self = self else { return nil }
                 let messageString: String
                 switch(status) {
