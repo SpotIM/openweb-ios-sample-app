@@ -231,7 +231,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         let analytics: OWAnalytics = OpenWeb.manager.analytics
 
         let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
-            let log = "BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
             self?.loggerViewModel.inputs.log(text: log)
         }
 

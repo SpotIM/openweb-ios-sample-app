@@ -20,6 +20,7 @@ class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
 
     var customBIData: OWCustomBIData = [:]
     fileprivate var callbacks = [OWOptionalEncapsulation<OWBIAnalyticEventCallback>]()
+    fileprivate let queue = DispatchQueue(label: "OpenWebSDKBIEventCallback", qos: .utility)
 
     func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback) {
         guard callbacks.count < Metrics.maxBIEventsCallbacksNumber else {
@@ -38,7 +39,9 @@ class OWAnalyticsLayer: OWAnalytics, OWAnalyticsInternalProtocol {
 
         callbacks.forEach { optionalCallback in
             guard let actualCallback = optionalCallback.value() else { return }
-            actualCallback(event, OWBIAnalyticAdditionalInfo(customBIData: customBIData), postId)
+            queue.async {
+                actualCallback(event, OWBIAnalyticAdditionalInfo(customBIData: self.customBIData), postId)
+            }
         }
     }
 
