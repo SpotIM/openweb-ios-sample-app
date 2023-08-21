@@ -15,6 +15,8 @@ protocol OWClarityDetailsViewModelingInputs {
 
 protocol OWClarityDetailsViewModelingOutputs {
     var topParagraphAttributedString: NSAttributedString { get }
+    var detailsTitleText: String { get }
+    var paragraphItems: [OWClarityParagraphItem] { get }
 }
 
 protocol OWClarityDetailsViewModeling {
@@ -31,6 +33,7 @@ class OWClarityDetailsViewModel: OWClarityDetailsViewModeling,
 
     fileprivate var type: OWClarityDetailsType = .rejected // TODO: get in init
 
+    // TODO: translations!
     lazy var topParagraphAttributedString: NSAttributedString = {
         switch type {
         case .rejected:
@@ -42,10 +45,44 @@ class OWClarityDetailsViewModel: OWClarityDetailsViewModeling,
         }
     }()
 
+    lazy var detailsTitleText: String = {
+        switch type {
+        case .rejected:
+            return "How do we reach our decisions?"
+        case .pending:
+            return ""
+        }
+    }()
+
+    lazy var paragraphItems: [OWClarityParagraphItem] = {
+        switch type {
+        case .rejected:
+            return [
+                OWClarityParagraphItem(
+                    icon: UIImage(spNamed: "heart-icon"),
+                    text: "All of our decisions are designed to ensure civil, open and inclusive discourse within the community."),
+                OWClarityParagraphItem(
+                    icon: UIImage(spNamed: "info-icon"),
+                    text: "We use advanced machine learning technology combined with unbiased human moderation to review all questionable content."),
+                OWClarityParagraphItem(
+                    icon: UIImage(spNamed: "megaphone-icon"),
+                    text: "We do not censor. Our mission is to help build thriving communities and encourage open and civil conversations.")
+            ]
+        case .pending:
+            return []
+        }
+    }()
+
 }
 
 // TODO: new file
 enum OWClarityDetailsType {
     case rejected
     case pending
+}
+
+// TODO: new file
+struct OWClarityParagraphItem {
+    let icon: UIImage?
+    let text: String // attributes?
 }
