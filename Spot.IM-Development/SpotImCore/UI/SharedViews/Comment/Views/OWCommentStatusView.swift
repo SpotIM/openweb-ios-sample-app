@@ -16,6 +16,7 @@ class OWCommentStatusView: UIView {
         static let cornerRadius: CGFloat = 4
         static let horizontalPadding: CGFloat = 10
         static let verticalPadding: CGFloat = 8
+        static let iconTrailingPadding: CGFloat = 2
         static let iconSize: CGFloat = 20
         static let identifier = "comment_status_view_id"
     }
@@ -68,7 +69,7 @@ fileprivate extension OWCommentStatusView {
 
         self.addSubview(messageLabel)
         messageLabel.OWSnp.makeConstraints { make in
-            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(2) // TODO: metric
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.iconTrailingPadding)
             make.top.bottom.equalToSuperview().inset(Metrics.verticalPadding)
             make.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
         }
