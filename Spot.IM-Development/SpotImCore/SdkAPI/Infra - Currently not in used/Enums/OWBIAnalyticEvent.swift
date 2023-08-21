@@ -44,7 +44,6 @@ public enum OWBIAnalyticEvent {
     case commentCreationLeavePage
     case commentCreationContinueWriting
     case loginPromptClicked
-    case readingTime(milliseconds: Int)
     case commentViewed(commentId: String)
     case cameraIconClickedOpen
     case cameraIconClickedTakePhoto
@@ -89,7 +88,6 @@ enum OWBIAnalyticEvent {
     case commentCreationLeavePage
     case commentCreationContinueWriting
     case loginPromptClicked
-    case readingTime(milliseconds: Int)
     case commentViewed(commentId: String)
     case cameraIconClickedOpen
     case cameraIconClickedTakePhoto
