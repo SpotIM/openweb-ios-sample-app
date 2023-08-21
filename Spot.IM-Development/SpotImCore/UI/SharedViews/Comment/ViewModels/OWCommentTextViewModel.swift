@@ -73,12 +73,9 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
-        Observable.combineLatest(_themeStyleObservable, _comment) { style, comment -> (OWThemeStyle, String)? in
-                guard let text = comment?.text?.text else { return nil }
-                return (style, text)
-            }
-            .unwrap()
-            .map { [weak self] (style, messageText) in
+        Observable.combineLatest(_themeStyleObservable, _comment)
+            .map { [weak self] (style, comment) in
+                guard let messageText = comment?.text?.text else { return NSMutableAttributedString() }
                 guard let self = self else { return nil }
                 return NSMutableAttributedString(
                     string: messageText,
