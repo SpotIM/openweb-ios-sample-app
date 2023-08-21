@@ -79,6 +79,15 @@ fileprivate extension OWCommentCreatorNetworkHelper {
             ])
         }
 
+        if let imageContent = commentCreationData.commentContent.image {
+            content.append([
+                "type": "image",
+                "imageId": imageContent.imageId,
+                "originalWidth": imageContent.originalWidth,
+                "originalHeight": imageContent.originalHeight
+            ])
+        }
+
         return content
     }
 }
