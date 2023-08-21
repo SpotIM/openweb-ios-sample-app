@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
     var commentText: BehaviorSubject<String> { get }
-    var image: BehaviorSubject<UIImage?> { get }
+    var image: PublishSubject<UIImage> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
@@ -20,6 +20,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
+    var commentContent: Observable<OWCommentCreationContent> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -35,6 +36,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var outputs: OWCommentCreationContentViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
+    fileprivate var uploadImageDisposeBag = DisposeBag()
     fileprivate let imageURLProvider: OWImageProviding
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationType: OWCommentCreationTypeInternal
@@ -42,7 +44,16 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate lazy var postId = OWManager.manager.postId
 
     var commentText = BehaviorSubject<String>(value: "")
-    var image = BehaviorSubject<UIImage?>(value: nil)
+    var image = PublishSubject<UIImage>()
+
+    fileprivate let _imageContent = BehaviorSubject<OWComment.Content.Image?>(value: nil)
+
+    var commentContent: Observable<OWCommentCreationContent> {
+        Observable.combineLatest(commentTextOutput, _imageContent.asObservable())
+            .map { text, image in
+                OWCommentCreationContent(text: text, image: image)
+            }
+    }
 
     lazy var imagePreviewVM: OWCommentCreationImagePreviewViewModeling = {
         return OWCommentCreationImagePreviewViewModel(servicesProvider: servicesProvider)
@@ -127,6 +138,8 @@ fileprivate extension OWCommentCreationContentViewModel {
     }
 
     func setupObservers() {
+        setupImageObserver()
+
         servicesProvider.authenticationManager()
             .activeUserAvailability
             .subscribe(onNext: { [weak self] availability in
@@ -140,16 +153,85 @@ fileprivate extension OWCommentCreationContentViewModel {
             })
             .disposed(by: disposeBag)
 
+        self.imagePreviewVM.outputs.removeButtonTapped
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.uploadImageDisposeBag = DisposeBag()
+                self.setupImageObserver()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func setupImageObserver() {
         image
             .do(onNext: { [weak self] image in
                 guard let self = self else { return }
                 self.imagePreviewVM.inputs.image.onNext(image)
+                self.imagePreviewVM.inputs.isUploadingImage.onNext(true)
+            })
+            .flatMapLatest { [weak self] image -> Observable<(Event<SPSignResponse>, UIImage, String, String)> in
+                guard let self = self else { return .empty() }
+                let imageId = UUID().uuidString
+                let timestamp = String(format: "%.3f", NSDate().timeIntervalSince1970)
+                return self.servicesProvider
+                    .netwokAPI()
+                    .images
+                    .login(publicId: imageId, timestamp: timestamp)
+                    .response
+                    .materialize()
+                    .map { ($0, image, imageId, timestamp) }
+            }
+            .map { event, image, imageId, timestamp -> (String, UIImage, String, String)? in
+                switch event {
+                case .next(let signResponse):
+                    return (signResponse.signature, image, imageId, timestamp)
+                case .error(_):
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<Event<CloudinaryUploadResponse>> in
+                guard let self = self,
+                      let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
+                else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .images
+                    .upload(
+                        signature: cloudinarySignature,
+                        publicId: imageId,
+                        timestamp: timestamp,
+                        imageData: imageData
+                    )
+                    .response
+                    .materialize()
+            }
+            .map { event -> OWComment.Content.Image? in
+                switch event {
+                case .next(let uploadResponse):
+                    return OWComment.Content.Image(
+                        originalWidth: uploadResponse.width,
+                        originalHeight: uploadResponse.height,
+                        imageId: uploadResponse.assetId
+                    )
+                case .error(_):
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
             })
             .unwrap()
-            .subscribe(onNext: { [weak self] image in
+            .subscribe(onNext: { [weak self] imageContent in
                 guard let self = self else { return }
+                self._imageContent.onNext(imageContent)
             })
-            .disposed(by: disposeBag)
+            .disposed(by: uploadImageDisposeBag)
     }
 }
 

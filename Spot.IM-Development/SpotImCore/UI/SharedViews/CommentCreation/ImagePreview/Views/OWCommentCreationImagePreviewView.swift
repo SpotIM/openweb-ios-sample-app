@@ -122,6 +122,7 @@ fileprivate extension OWCommentCreationImagePreviewView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowLoadingState
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowLoader in
                 guard let self = self else { return }
                 self.loaderView.isHidden = !shouldShowLoader
