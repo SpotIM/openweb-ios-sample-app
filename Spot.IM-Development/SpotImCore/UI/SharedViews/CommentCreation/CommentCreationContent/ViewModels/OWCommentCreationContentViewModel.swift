@@ -192,7 +192,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 }
             }
             .unwrap()
-            .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<Event<CloudinaryUploadResponse>> in
+            .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<(Event<CloudinaryUploadResponse>, String)> in
                 guard let self = self,
                       let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
                 else { return .empty() }
@@ -207,14 +207,15 @@ fileprivate extension OWCommentCreationContentViewModel {
                     )
                     .response
                     .materialize()
+                    .map { ($0, imageId) }
             }
-            .map { event -> OWComment.Content.Image? in
+            .map { event, imageId -> OWComment.Content.Image? in
                 switch event {
                 case .next(let uploadResponse):
                     return OWComment.Content.Image(
                         originalWidth: uploadResponse.width,
                         originalHeight: uploadResponse.height,
-                        imageId: uploadResponse.assetId
+                        imageId: imageId
                     )
                 case .error(_):
                     return nil
