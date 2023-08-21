@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
     var commentText: BehaviorSubject<String> { get }
+    var image: BehaviorSubject<UIImage?> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
@@ -41,6 +42,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate lazy var postId = OWManager.manager.postId
 
     var commentText = BehaviorSubject<String>(value: "")
+    var image = BehaviorSubject<UIImage?>(value: nil)
 
     lazy var imagePreviewVM: OWCommentCreationImagePreviewViewModeling = {
         return OWCommentCreationImagePreviewViewModel(servicesProvider: servicesProvider)
@@ -138,6 +140,16 @@ fileprivate extension OWCommentCreationContentViewModel {
             })
             .disposed(by: disposeBag)
 
+        image
+            .do(onNext: { [weak self] image in
+                guard let self = self else { return }
+                self.imagePreviewVM.inputs.image.onNext(image)
+            })
+            .unwrap()
+            .subscribe(onNext: { [weak self] image in
+                guard let self = self else { return }
+            })
+            .disposed(by: disposeBag)
     }
 }
 
