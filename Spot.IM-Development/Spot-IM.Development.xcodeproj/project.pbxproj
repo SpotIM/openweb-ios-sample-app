@@ -137,6 +137,7 @@
 		16F66EC72A2CCCA80089E70E /* OWSortMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EC62A2CCCA80089E70E /* OWSortMenu.swift */; };
 		16F8A7462A922C680023B96B /* OWCommentCreationImagePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */; };
 		16F8A7482A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F8A7472A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift */; };
+		16F8A74B2A93AF680023B96B /* OWCommentCreationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
 		2405BA3D2A398FD900986B52 /* OWMenuSelectionEncapsulationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2405BA3C2A398FD900986B52 /* OWMenuSelectionEncapsulationView.swift */; };
 		2414F82D27EC682000722D2B /* SPAvatarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414F82C27EC682000722D2B /* SPAvatarViewModel.swift */; };
@@ -1127,6 +1128,7 @@
 		16F66EC62A2CCCA80089E70E /* OWSortMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortMenu.swift; sourceTree = "<group>"; };
 		16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationImagePreviewView.swift; sourceTree = "<group>"; };
 		16F8A7472A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationImagePreviewViewModel.swift; sourceTree = "<group>"; };
+		16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationContent.swift; sourceTree = "<group>"; };
 		1A22EE731738D885057978C0 /* Pods-Shared-SpotImCore.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
@@ -2163,6 +2165,7 @@
 		161655602A531575004EBF6F /* CommentCreationContent */ = {
 			isa = PBXGroup;
 			children = (
+				16F8A7492A93AF560023B96B /* Models */,
 				161655622A53158B004EBF6F /* ViewModels */,
 				161655612A531584004EBF6F /* Views */,
 			);
@@ -2636,6 +2639,14 @@
 				16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		16F8A7492A93AF560023B96B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		2414F82927EC67B000722D2B /* AvatarView - Old */ = {
@@ -6573,6 +6584,7 @@
 				6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */,
 				9E8278792A4DAEC500EAA88E /* OWReportReasonCancelVM.swift in Sources */,
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
+				16F8A74B2A93AF680023B96B /* OWCommentCreationContent.swift in Sources */,
 				16BEFD452A4C3254007A51D5 /* OWCommentDeleteAlert.swift in Sources */,
 				3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */,
 				9EC88D8D29FAB82400EBD165 /* OWReportReasonSubmittedView.swift in Sources */,
