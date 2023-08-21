@@ -52,6 +52,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
     }
 
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
+        // Triggering BI events immediately
         events.forEach { event in
             if let biEvent = event.type.biAnalyticEvent {
                 analyticsLayer.triggerBICallback(biEvent)
