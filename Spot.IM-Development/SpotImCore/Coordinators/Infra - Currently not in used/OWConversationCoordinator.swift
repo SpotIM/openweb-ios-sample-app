@@ -63,7 +63,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
         let deepLinkToReportReason = BehaviorSubject<OWReportReasonsRequiredData?>(value: nil)
-        let deepLinkToClarityDetails = BehaviorSubject<Void?>(value: nil)
+        let deepLinkToClarityDetails = BehaviorSubject<OWClarityDetailsType?>(value: nil)
 
         var animated = true
 
@@ -81,9 +81,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             case .reportReason(let reportData):
                 animated = false
                 deepLinkToReportReason.onNext(reportData)
-            case .clarityDetails:
+            case .clarityDetails(let type):
                 animated = false
-                deepLinkToClarityDetails.onNext(())
+                deepLinkToClarityDetails.onNext(type)
             default:
                 break
             }
@@ -197,13 +197,14 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             deepLinkToClarityDetails.unwrap(),
             clarityDetailsFromConversationObservable)
             .asObservable()
-            .filter { [weak self] in
+            .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] ֿ_ -> Observable<OWClarityDetailsCoordinatorResult> in
+            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(router: self.router,
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                                                                            router: self.router,
                                                                             actionsCallbacks: self.actionsCallbacks,
                                                                             presentationalMode: self.conversationData.presentationalStyle)
                 return self.coordinate(to: clarityDetailsCoordinator)
