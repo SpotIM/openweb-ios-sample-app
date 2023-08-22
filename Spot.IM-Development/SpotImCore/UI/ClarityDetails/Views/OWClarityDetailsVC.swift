@@ -1,5 +1,5 @@
 //
-//  OWClarityDetilsVC.swift
+//  OWClarityDetailsVC.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 22/08/2023.
@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWClarityDetilsVC: UIViewController {
+class OWClarityDetailsVC: UIViewController {
     fileprivate struct Metrics {
         static let closeButtonSize: CGFloat = 40
         static let closeButtonIdentidier = "clarity_details_close_button_id"
@@ -24,6 +24,13 @@ class OWClarityDetilsVC: UIViewController {
         return UIButton()
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
             .contentMode(.center)
+    }()
+
+    fileprivate lazy var navigationTitle: UILabel = {
+        return UILabel()
+            .text("Awaiting Review")
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
+            .font(OWFontBook.shared.font(typography: .bodyContext))
     }()
 
     fileprivate let viewModel: OWClarityDetailsViewModeling
@@ -44,11 +51,11 @@ class OWClarityDetilsVC: UIViewController {
 
 }
 
-fileprivate extension OWClarityDetilsVC {
+fileprivate extension OWClarityDetailsVC {
     func setupViews() {
         self.title = "Awaiting Review" // TODO: from VM according to type
         setupNavControllerSettings()
-        
+
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         view.addSubview(clarityDetailsView)

@@ -53,7 +53,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         guard let router = router else { return .empty() }
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(viewableMode: .partOfFlow)
 //        , presentMode: self.presentationalMode TODO: is it needed?
-        let clarityDetailsVC = OWClarityDetilsVC(viewModel: clarityDetailsVM)
+        let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
         if router.isEmpty() {
             router.start()
