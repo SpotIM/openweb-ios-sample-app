@@ -18,9 +18,9 @@ protocol TotalTypingIndicationViewDelegate: AnyObject {
 final class TotalTypingIndicationView: SPBaseView {
 
     weak var delegate: TotalTypingIndicationViewDelegate?
-    private let animationImageView: SPBaseUIImageView = .init()
-    private let typingLabel: SPBaseLabel = .init()
-    private let newCommentsArrowImageView: SPBaseUIImageView = .init()
+    private let animationImageView = SPBaseUIImageView()
+    private let typingLabel = SPBaseLabel()
+    private let newCommentsArrowImageView = SPBaseUIImageView()
 
     private var panGesture: UIPanGestureRecognizer?
     private var animationImageWidthConstraint: OWConstraint?

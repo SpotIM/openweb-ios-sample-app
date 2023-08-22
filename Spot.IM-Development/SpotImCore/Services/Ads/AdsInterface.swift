@@ -74,7 +74,7 @@ public protocol AdsProvider: AnyObject {
 
 internal final class AdsManager {
 
-    private static var adsViewTracker: SPAdsViewTracker = .init()
+    private static var adsViewTracker = SPAdsViewTracker()
     private let spotId: String
 
     init(spotId: String) {
@@ -100,7 +100,7 @@ internal final class AdsManager {
 
 internal final class SPAdsViewTracker {
 
-    var viewedConversations: Set<String> = .init()
+    var viewedConversations = Set<String>()
 
     func trackView(conversation id: String?) {
         guard let id = id else { return }

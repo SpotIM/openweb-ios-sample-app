@@ -16,12 +16,12 @@ final class SPCommentReplyHeaderView: SPBaseView {
         static let commentAuthorLabelIdentifier = "comment_reply_header_view_comment_author_label_id"
         static let commentLabelIdentifier = "comment_reply_header_view_comment_label_id"
     }
-    let closeButton: SPBaseButton = .init()
+    let closeButton = SPBaseButton()
 
-    private let replyingLabel: SPBaseLabel = .init()
-    private let commentAuthorLabel: SPBaseLabel = .init()
-    private let commentLabel: SPBaseLabel = .init()
-    private let separatorView: SPBaseView = .init()
+    private let replyingLabel = SPBaseLabel()
+    private let commentAuthorLabel = SPBaseLabel()
+    private let commentLabel = SPBaseLabel()
+    private let separatorView = SPBaseView()
 
     private var commentLabelTopConstraint: OWConstraint? = nil
 

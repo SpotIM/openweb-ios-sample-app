@@ -15,10 +15,10 @@ final class SPMainConversationFooterView: SPBaseView {
         static let readOnlyLabelIdentifier = "main_conversation_footer_readOnly_label_id"
     }
 
-    let commentCreationEntryView: SPCommentCreationEntryView = .init()
+    let commentCreationEntryView = SPCommentCreationEntryView()
 
-    private lazy var separatorView: SPBaseView = .init()
-    private lazy var bannerContainerView: SPBaseView = .init()
+    private lazy var separatorView = SPBaseView()
+    private lazy var bannerContainerView = SPBaseView()
 
     private var bannerView: UIView?
     private var bannerContainerHeight: OWConstraint?

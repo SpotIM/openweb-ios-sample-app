@@ -28,9 +28,9 @@ final class SPAvatarView: SPBaseView {
 
     weak var delegate: OWAvatarViewDelegate?
 
-    private let avatarImageView: SPBaseUIImageView = .init()
-    private let onlineIndicatorView: SPBaseView = .init()
-    private let avatarButton: SPBaseButton = .init()
+    private let avatarImageView = SPBaseUIImageView()
+    private let onlineIndicatorView = SPBaseView()
+    private let avatarButton = SPBaseButton()
 
     fileprivate lazy var defaultAvatar: UIImage = {
         let image = UIImage(spNamed: "defaultAvatar", supportDarkMode: true)!
