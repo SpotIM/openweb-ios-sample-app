@@ -40,7 +40,7 @@ class OWClarityDetailsViewModel: OWClarityDetailsViewModeling,
             return "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
                 .attributedString // TODO: add community guidelines link
         case .pending:
-            return "Your comment may have been sent for review for one of the following reasons:"
+            return OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle")
                 .attributedString
         }
     }()
@@ -54,6 +54,7 @@ class OWClarityDetailsViewModel: OWClarityDetailsViewModeling,
         }
     }()
 
+    // TODO: translations!
     lazy var paragraphItems: [OWClarityParagraphItem] = {
         switch type {
         case .rejected:
