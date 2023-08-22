@@ -31,7 +31,11 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     var inputs: OWClarityDetailsViewViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
-    fileprivate var type: OWClarityDetailsType = .rejected // TODO: get in init
+    fileprivate let type: OWClarityDetailsType
+
+    init(type: OWClarityDetailsType) {
+        self.type = type
+    }
 
     // TODO: translations!
     lazy var topParagraphAttributedString: NSAttributedString = {
@@ -74,12 +78,6 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         }
     }()
 
-}
-
-// TODO: new file
-enum OWClarityDetailsType {
-    case rejected
-    case pending
 }
 
 // TODO: new file
