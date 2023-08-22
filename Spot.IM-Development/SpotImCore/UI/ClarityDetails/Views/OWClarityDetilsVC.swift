@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWClarityDetilsVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
+class OWClarityDetilsVC: UIViewController {
     fileprivate struct Metrics {
         static let closeButtonSize: CGFloat = 40
         static let closeButtonIdentidier = "clarity_details_close_button_id"
@@ -47,10 +47,6 @@ class OWClarityDetilsVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 fileprivate extension OWClarityDetilsVC {
     func setupViews() {
         self.title = "Awaiting Review" // TODO: from VM according to type
-        let navControllerCustomizer = OWSharedServicesProvider.shared.navigationControllerCustomizer()
-        if navControllerCustomizer.isLargeTitlesEnabled() {
-            self.navigationItem.largeTitleDisplayMode = .always
-        }
         setupNavControllerSettings()
         
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
@@ -86,8 +82,6 @@ fileprivate extension OWClarityDetilsVC {
                 self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
-
-        self.setupStatusBarStyleUpdaterObservers()
 
 //        closeButton.rx.tap
 //            .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
