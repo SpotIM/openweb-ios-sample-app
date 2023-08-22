@@ -49,6 +49,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var openClarityDetails: Observable<Void> { get } // TODO: type
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var conversationDataJustReceived: Observable<Void> { get }
@@ -327,6 +328,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var openClarityDetailsChange = PublishSubject<Void>()
+    var openClarityDetails: Observable<Void> {
+        return openClarityDetailsChange
             .asObservable()
     }
 
@@ -1060,7 +1067,8 @@ fileprivate extension OWConversationViewViewModel {
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
-                        self.openReportReasonChange.onNext(commentVm)
+//                        self.openReportReasonChange.onNext(commentVm)
+                        self.openClarityDetailsChange.onNext(())
                     case OWCommentOptionsMenu.deleteComment:
                         self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
