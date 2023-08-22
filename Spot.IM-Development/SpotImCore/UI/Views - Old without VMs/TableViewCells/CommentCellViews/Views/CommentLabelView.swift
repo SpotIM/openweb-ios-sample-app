@@ -13,14 +13,14 @@ internal final class CommentLabelView: SPBaseView {
         static let identifier = "comment_label_id"
     }
 
-    private let labelContainer: SPBaseView = .init()
-    private let iconImageView: SPBaseUIImageView = .init()
-    private let label: SPBaseLabel = .init()
+    private let labelContainer = SPBaseView()
+    private let iconImageView = SPBaseUIImageView()
+    private let label = SPBaseLabel()
 
     private var commentLabelColor: UIColor = .clear
     private var state: OWLabelState = .readOnly
 
-    var id: String = .init()
+    var id = ""
 
     override init(frame: CGRect) {
         super.init(frame: frame)

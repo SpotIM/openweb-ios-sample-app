@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWAvatarSource: Encodable {
+enum OWAvatarSource: String, Encodable {
     case comment
     case commentCreation
     case commentCTA

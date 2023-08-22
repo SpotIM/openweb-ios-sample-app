@@ -97,7 +97,7 @@ enum OWConversationEndpoints: OWEndpoints {
             }
             return params
         case .commentRankChange(let conversationId, let operation, let commentId):
-            let spotKey = SPClientSettings.main.spotKey
+            let spotKey = SPClientSettings.main.spotKey ?? ""
             return [
                 "conversation_id": "\(spotKey)_\(conversationId)",
                 "operation": operation,

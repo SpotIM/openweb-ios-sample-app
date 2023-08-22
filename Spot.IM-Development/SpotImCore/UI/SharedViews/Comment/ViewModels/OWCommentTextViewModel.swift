@@ -175,7 +175,8 @@ fileprivate extension OWCommentTextViewModel {
     }
 
     func getActiveUrl(at index: Int) -> URL? {
-        if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
+        let maybeActiveUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value
+        if let activeUrl = maybeActiveUrl {
             return activeUrl
         }
         return nil

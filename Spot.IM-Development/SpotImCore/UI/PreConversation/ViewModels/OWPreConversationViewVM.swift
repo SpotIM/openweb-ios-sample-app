@@ -46,6 +46,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
+    var dataSourceTransition: OWViewTransition { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -60,6 +61,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -328,6 +330,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWManager.manager.postId ?? ""
     }
 
+    var dataSourceTransition: OWViewTransition = .reload
+
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
@@ -387,6 +391,10 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -501,6 +509,15 @@ fileprivate extension OWPreConversationViewViewModel {
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
+
+        // Re-enabling animations in the pre conversation table view
+        conversationFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
