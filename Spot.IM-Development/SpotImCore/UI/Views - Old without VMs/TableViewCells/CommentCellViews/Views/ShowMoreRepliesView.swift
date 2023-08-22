@@ -18,8 +18,8 @@ internal final class ShowMoreRepliesView: SPBaseView {
     var expandedTitle: String?
 
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
-    private let showHideRepliesButton: SPBaseButton = .init()
-    private let disclosureIndicator: SPBaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
+    private let showHideRepliesButton = SPBaseButton()
+    private let disclosureIndicator = SPBaseUIImageView(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,7 +58,7 @@ internal final class ShowMoreRepliesView: SPBaseView {
     private func updateDisclosure(with state: RepliesButtonState) {
         switch state {
         case .collapsed:
-            disclosureIndicator.transform = .init(rotationAngle: .pi)
+            disclosureIndicator.transform = CGAffineTransform(rotationAngle: .pi)
         case .expanded:
             disclosureIndicator.transform = .identity
         default: break

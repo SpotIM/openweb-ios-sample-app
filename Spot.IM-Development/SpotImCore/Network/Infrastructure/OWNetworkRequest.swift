@@ -1401,7 +1401,7 @@ final class OWNetworkDataStreamRequest: OWNetworkRequest {
                                             response: self.response,
                                             metrics: self.metrics,
                                             error: self.error)
-                try stream(.init(event: .complete(completion), token: .init(self)))
+                try stream(Stream(event: .complete(completion), token: CancellationToken(self)))
             } catch {
                 // Ignore error, as errors on Completion can't be handled anyway.
             }

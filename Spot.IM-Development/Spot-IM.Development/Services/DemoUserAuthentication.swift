@@ -31,18 +31,20 @@ internal class DemoUserAuthentication {
         let params = ["username": username,
                       "password": password]
 
+        struct Response: Codable {
+            var token: String
+        }
+
         AF.request(url,
                    method: .post,
                    parameters: params,
                    encoding: JSONEncoding.default,
                    headers: nil)
         .validate()
-        .responseJSON { (response) in
-            switch response.result {
-            case .success(let json):
-                let dict = json as? NSDictionary
-                let token = dict?["token"] as? String
-                completion(token, nil)
+        .responseDecodable { (data: DataResponse<Response, AFError>) in
+            switch data.result {
+            case .success(let response):
+                completion(response.token, nil)
             case .failure(let error):
                 completion(nil, error)
             }
@@ -63,18 +65,25 @@ internal class DemoUserAuthentication {
 
         let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
 
+        struct Response: Codable {
+            var codeB: String
+
+            // swiftlint:disable nesting
+            enum CodingKeys: String, CodingKey {
+                case codeB = "code_b"
+            }
+        }
+
         AF.request(url,
                    method: .post,
                    parameters: params,
                    encoding: JSONEncoding.default,
                    headers: headers)
         .validate()
-        .responseJSON { response in
-            switch response.result {
-            case .success(let json):
-                let dict = json as? NSDictionary
-                let codeB = dict?["code_b"] as? String
-                completion(codeB, nil)
+        .responseDecodable { (data: DataResponse<Response, AFError>) in
+            switch data.result {
+            case .success(let response):
+                completion(response.codeB, nil)
             case .failure(let error):
                 completion(nil, error)
             }

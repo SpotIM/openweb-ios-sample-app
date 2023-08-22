@@ -139,6 +139,10 @@ class MockArticleFlowsVC: UIViewController {
         super.viewDidLoad()
         setupObservers()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        applyLargeTitlesIfNeeded()
+    }
 }
 
 fileprivate extension MockArticleFlowsVC {
@@ -150,6 +154,8 @@ fileprivate extension MockArticleFlowsVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         articleScrollView.backgroundColor = ColorPalette.shared.color(type: .background)
+
+        applyLargeTitlesIfNeeded()
 
         view.addSubview(articleScrollView)
         articleScrollView.snp.makeConstraints { make in
