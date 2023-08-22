@@ -1067,8 +1067,7 @@ fileprivate extension OWConversationViewViewModel {
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
-//                        self.openReportReasonChange.onNext(commentVm)
-                        self.openClarityDetailsChange.onNext(())
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
@@ -1082,6 +1081,20 @@ fileprivate extension OWConversationViewViewModel {
                         return
                     }
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // Observe open clarity details
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<Void> in
+                let learnMoreClickObservable: [Observable<Void>] = commentCellsVms.map { commentCellVm -> Observable<Void> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    return commentStatusVm.outputs.learnMoreClicked
+                }
+                return Observable.merge(learnMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] _ in
+                self?.openClarityDetailsChange.onNext(())
             })
             .disposed(by: disposeBag)
 
