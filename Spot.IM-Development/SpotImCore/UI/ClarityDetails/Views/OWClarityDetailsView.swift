@@ -11,7 +11,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class OWClarityDetailsView: UIView {
+class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let horizontalPadding: CGFloat = 16
         static let verticalPadding: CGFloat = 20
@@ -68,6 +68,7 @@ class OWClarityDetailsView: UIView {
         super.init(frame: .zero)
 
         setupViews()
+        setupObservers()
     }
 
     required init?(coder: NSCoder) {
@@ -77,6 +78,8 @@ class OWClarityDetailsView: UIView {
 
 fileprivate extension OWClarityDetailsView {
     func setupViews() {
+        self.useAsThemeStyleInjector()
+
         self.addSubview(topParagraphLabel)
         topParagraphLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().inset(Metrics.verticalPadding)
