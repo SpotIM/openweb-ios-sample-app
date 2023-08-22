@@ -59,10 +59,10 @@ class OWClarityDetailsView: UIView {
             .withPadding(Metrics.buttonTextPadding)
     }()
 
-    fileprivate let viewModel: OWClarityDetailsViewModeling
+    fileprivate let viewModel: OWClarityDetailsViewViewModeling
     fileprivate var disposeBag: DisposeBag
 
-    init(viewModel: OWClarityDetailsViewModeling) {
+    init(viewModel: OWClarityDetailsViewViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
         super.init(frame: .zero)
