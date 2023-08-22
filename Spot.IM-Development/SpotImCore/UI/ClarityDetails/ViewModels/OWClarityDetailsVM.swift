@@ -28,12 +28,14 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
     var inputs: OWClarityDetailsViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewModelingOutputs { return self }
 
+    fileprivate let type: OWClarityDetailsType
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
-        return OWClarityDetailsViewVM() // TODO: pass type
+        return OWClarityDetailsViewVM(type: type) // TODO: pass type
     }()
 
-    init(viewableMode: OWViewableMode) {
+    init(type: OWClarityDetailsType, viewableMode: OWViewableMode) {
         // TODO: viewable mode for navigation title
+        self.type = type
     }
 }
 

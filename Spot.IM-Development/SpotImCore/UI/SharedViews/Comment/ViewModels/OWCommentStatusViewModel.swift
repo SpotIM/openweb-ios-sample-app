@@ -18,7 +18,7 @@ protocol OWCommentStatusViewModelingOutputs {
     var iconImage: Observable<UIImage?> { get } // TODO: not null?
     var messageAttributedText: Observable<NSAttributedString> { get }
     var learnMoreClickableString: String { get }
-    var learnMoreClicked: Observable<Void> { get }
+    var learnMoreClicked: Observable<OWClarityDetailsType> { get }
 }
 
 protocol OWCommentStatusViewModeling {
@@ -100,8 +100,22 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }
 
     var learnMoreTap = PublishSubject<Void>()
-    var learnMoreClicked: Observable<Void> {
+    var learnMoreClicked: Observable<OWClarityDetailsType> {
         return learnMoreTap
+            .withLatestFrom(status) { (_, status) in
+                return status
+            }
+            .map { status -> OWClarityDetailsType? in
+                switch status {
+                case .rejected:
+                    return OWClarityDetailsType.rejected
+                case .pending:
+                    return OWClarityDetailsType.pending
+                case .none:
+                    return nil
+                }
+            }
+            .unwrap()
             .asObservable()
     }
 }
