@@ -10,26 +10,26 @@ import Foundation
 import RxSwift
 import UIKit
 
-protocol OWClarityDetailsViewModelingInputs {
+protocol OWClarityDetailsViewViewModelingInputs {
 }
 
-protocol OWClarityDetailsViewModelingOutputs {
+protocol OWClarityDetailsViewViewModelingOutputs {
     var topParagraphAttributedString: NSAttributedString { get }
     var detailsTitleText: String { get }
     var paragraphItems: [OWClarityParagraphItem] { get }
 }
 
-protocol OWClarityDetailsViewModeling {
-    var inputs: OWClarityDetailsViewModelingInputs { get }
-    var outputs: OWClarityDetailsViewModelingOutputs { get }
+protocol OWClarityDetailsViewViewModeling {
+    var inputs: OWClarityDetailsViewViewModelingInputs { get }
+    var outputs: OWClarityDetailsViewViewModelingOutputs { get }
 }
 
-class OWClarityDetailsViewModel: OWClarityDetailsViewModeling,
-                                 OWClarityDetailsViewModelingInputs,
-                                 OWClarityDetailsViewModelingOutputs {
+class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
+                                 OWClarityDetailsViewViewModelingInputs,
+                                 OWClarityDetailsViewViewModelingOutputs {
 
-    var inputs: OWClarityDetailsViewModelingInputs { return self }
-    var outputs: OWClarityDetailsViewModelingOutputs { return self }
+    var inputs: OWClarityDetailsViewViewModelingInputs { return self }
+    var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
     fileprivate var type: OWClarityDetailsType = .rejected // TODO: get in init
 
