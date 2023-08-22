@@ -17,6 +17,9 @@ class OWClarityDetailsView: UIView {
         static let verticalPadding: CGFloat = 20
         static let titleTopPadding: CGFloat = 12
         static let spaceBetweenParagraphs: CGFloat = 16
+        static let buttonRadius: CGFloat = 6
+        static let buttomBottomPadding: CGFloat = 36
+        static let buttonTextPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
     }
 
     fileprivate lazy var topParagraphLabel: UILabel = {
@@ -44,6 +47,16 @@ class OWClarityDetailsView: UIView {
             stackView.addArrangedSubview(paragraphView)
         }
         return stackView
+    }()
+
+    fileprivate lazy var gotItButton: UIButton = {
+        return UIButton()
+            .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+            .textColor(OWDesignColors.G1)
+            .corner(radius: Metrics.buttonRadius)
+            .setTitle(OWLocalizationManager.shared.localizedString(key: "Got it"), state: .normal)
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
+            .withPadding(Metrics.buttonTextPadding)
     }()
 
     fileprivate let viewModel: OWClarityDetailsViewModeling
@@ -81,6 +94,12 @@ fileprivate extension OWClarityDetailsView {
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
             make.top.equalTo(detailsTitleLabel.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
         }
+
+        self.addSubview(gotItButton)
+        gotItButton.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
+            make.bottom.equalToSuperview().inset(Metrics.buttomBottomPadding)
+        }
     }
 
     func setupObservers() {
@@ -99,6 +118,7 @@ fileprivate extension OWClarityDetailsView {
                 guard let self = self else { return }
                 self.topParagraphLabel.font = OWFontBook.shared.font(typography: .bodyText)
                 self.detailsTitleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
+                self.gotItButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
     }
