@@ -99,7 +99,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        commentStatusVM = OWCommentStatusViewModel(status: .pending) // TODO: use data from init
+        commentStatusVM = OWCommentStatusViewModel(status: .rejected) // TODO: use data from init
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)

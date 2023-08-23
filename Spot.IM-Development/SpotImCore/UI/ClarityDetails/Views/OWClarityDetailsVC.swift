@@ -35,6 +35,11 @@ class OWClarityDetailsVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        viewModel.inputs.viewDidLoad.onNext()
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }

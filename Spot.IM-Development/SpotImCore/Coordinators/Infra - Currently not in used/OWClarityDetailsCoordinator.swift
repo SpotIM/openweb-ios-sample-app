@@ -72,9 +72,9 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .map { OWClarityDetailsCoordinatorResult.popped }
             .asObservable()
 
-//        let commentCreationLoadedToScreenObservable = commentCreationVM.outputs.loadedToScreen
-//            .map { OWCommentCreationCoordinatorResult.loadedToScreen }
-//            .asObservable()
+        let loadedToScreenObservable = clarityDetailsVM.outputs.loadedToScreen
+            .map { OWClarityDetailsCoordinatorResult.loadedToScreen }
+            .asObservable()
 
         let resultsWithPopAnimation = dismissObservable
             .observe(on: MainScheduler.instance)
@@ -83,7 +83,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 self.router?.pop(popStyle: .dismissStyle, animated: false)
             })
 
-        return Observable.merge(resultsWithPopAnimation, dismissObservable)
+        return Observable.merge(resultsWithPopAnimation, dismissObservable, loadedToScreenObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
