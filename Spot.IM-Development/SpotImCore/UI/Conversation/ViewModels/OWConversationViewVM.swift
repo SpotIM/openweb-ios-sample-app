@@ -35,6 +35,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModel { get }
+    var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
 
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
@@ -288,6 +289,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWCommentingCTAViewModel(imageProvider: imageProvider)
     }()
 
+    lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
+        return OWRealtimeIndicationAnimationViewModel()
+    }()
+
     fileprivate lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
         return OWSpacerCellViewModel(style: .none)
     }()
@@ -317,9 +322,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
     var pullToRefresh = PublishSubject<Void>()
 
-    fileprivate var _isEmpty = BehaviorSubject<Bool>(value: false)
+    fileprivate var _isEmpty = BehaviorSubject<Bool?>(value: nil)
     fileprivate lazy var isEmptyObservable: Observable<Bool> = {
         return _isEmpty
+            .unwrap()
             .share(replay: 1)
             .asObservable()
     }()
@@ -623,6 +629,31 @@ fileprivate extension OWConversationViewViewModel {
 
                 self._commentsPresentationData.removeAll()
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
+        // Realtime Indicator
+        conversationFetchedObservable
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeUpdateService().shouldRealtimeUpdate.onNext(.enable)
+            })
+            .disposed(by: disposeBag)
+
+        realtimeIndicationAnimationViewModel.outputs
+            .realtimeIndicationViewModel.outputs
+            .tapped
+            .withLatestFrom(self.servicesProvider.realtimeUpdateService().newComments)
+            .subscribe(onNext: { [weak self] newComments in
+                guard let self = self else { return }
+                self.realtimeIndicationAnimationViewModel.inputs.update(shouldShow: false)
+                let postId = self.postId
+
+                guard newComments.count > 0 else { return }
+                self.servicesProvider
+                    .commentUpdaterService()
+                    .update(.insert(comments: newComments), postId: self.postId)
             })
             .disposed(by: disposeBag)
 

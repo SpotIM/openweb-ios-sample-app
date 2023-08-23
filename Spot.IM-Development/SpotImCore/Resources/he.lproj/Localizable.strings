@@ -156,3 +156,5 @@
 "AdditionalInfoTitle" = "מידע נוסף";
 "ReportSubmissionFailedTitle" = "הגשת הדיווח נכשלה";
 "ReportSubmissionFailedMessage" = "לא ניתן היה להגיש את הדיווח שלך. אנא בדוק את חיבור האינטרנט שלך ונסה שוב מאוחר יותר.";
+"ViewNewComments" = "הצגת %d תגובות חדשות";
+"TypingNow" = "מקלידים עכשיו %d";
