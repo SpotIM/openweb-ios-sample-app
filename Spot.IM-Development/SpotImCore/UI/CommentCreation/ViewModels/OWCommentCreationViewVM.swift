@@ -90,11 +90,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
-        return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData, viewableMode: viewableMode)
+        return OWCommentCreationRegularViewViewModel(commentCreationData: self.commentCreationData)
     }()
 
     lazy var commentCreationLightViewVm: OWCommentCreationLightViewViewModeling = {
-        return OWCommentCreationLightViewViewModel(commentCreationData: self.commentCreationData, viewableMode: viewableMode)
+        return OWCommentCreationLightViewViewModel(commentCreationData: self.commentCreationData)
     }()
 
     lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
@@ -336,7 +336,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         .unwrap()
         .subscribe(onNext: { [weak self] image in
             guard let self = self else { return }
-            switch commentCreationData.settings.commentCreationSettings.style {
+            switch self.commentCreationData.settings.commentCreationSettings.style {
             case .regular:
                 self.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.imagePicked.onNext(image)
             case .light:
