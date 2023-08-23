@@ -11,8 +11,7 @@ import Foundation
 struct OWAnalyticEventPayloadKeys {
     static let commentId = "commentId"
     static let replyToCommentId = "replyToCommentId"
-    static let page = "page"
-    static let commentsPerPage = "commentsPerPage"
+    static let paginationOffset = "paginationOffset"
     static let currentSort = "currentSort"
     static let previousSort = "previousSort"
     static let selectedSort = "selectedSort"

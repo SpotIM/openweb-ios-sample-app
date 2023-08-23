@@ -127,6 +127,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
+        applyLargeTitlesIfNeeded()
 
         // Adding scroll view
         view.addSubview(scrollView)

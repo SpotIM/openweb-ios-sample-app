@@ -15,7 +15,7 @@ final class MessageContainerView: SPBaseView {
     }
 
     weak var delegate: MessageContainerViewDelegate?
-    private let mainTextLabel: SPBaseLabel = .init()
+    private let mainTextLabel = SPBaseLabel()
     private var activeURLs: [NSRange: URL] = [:]
 
     override init(frame: CGRect) {

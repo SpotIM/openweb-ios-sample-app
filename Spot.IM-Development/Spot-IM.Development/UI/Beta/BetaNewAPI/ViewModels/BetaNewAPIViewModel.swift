@@ -271,6 +271,17 @@ fileprivate extension BetaNewAPIViewModel {
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
         helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
         ElementsCustomizationCreatorService.addElementsCustomization()
+        setupBICallaback()
+    }
+
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWBIAnalyticEventCallback = { event, additionalInfo, postId in
+            DLog("Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)")
+        }
+
+        analytics.addBICallback(BIClosure)
     }
 }
 

@@ -128,7 +128,7 @@ fileprivate extension OWTestingRedSecondLevel {
 
         viewModel.outputs.changedCellState
             .skip(1)
-            .map { [weak self] state -> String in
+            .map { state -> String in
                 let text: String
                 switch state {
                 case .collapsed:

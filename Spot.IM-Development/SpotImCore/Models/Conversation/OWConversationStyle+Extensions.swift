@@ -42,8 +42,8 @@ extension OWConversationStyle: Equatable {
             return true
         case (.regular, .regular):
             return true
-        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, let lhsSpacing),
-              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, let rhsSpacing)):
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, _),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, _)):
             return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle && lhsCommunityQuestionStyle == rhsCommunityQuestionStyle// && lhsSpacing == rhsSpacing
         default:
             return false
@@ -56,11 +56,10 @@ extension OWConversationStyle: Equatable {
         switch (lhs, rhs) {
         case (.compact, .compact):
             return true
-            return true
         case (.regular, .regular):
             return true
-        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, let lhsSpacing),
-              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, let rhsSpacing)):
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, _),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, _)):
             return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle && lhsCommunityQuestionStyle == rhsCommunityQuestionStyle// && lhsSpacing == rhsSpacing
         default:
             return false
