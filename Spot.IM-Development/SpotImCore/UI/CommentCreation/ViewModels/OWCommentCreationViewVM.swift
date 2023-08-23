@@ -264,6 +264,10 @@ fileprivate extension OWCommentCreationViewViewModel {
             commentCreationRegularViewVm.outputs.footerViewModel.outputs.addImageTapped,
             commentCreationLightViewVm.outputs.footerViewModel.outputs.addImageTapped
         )
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.sendEvent(for: .cameraIconClickedOpen)
+        })
         .flatMap { [weak self] _ -> Observable<Bool> in
             guard let self = self else { return Observable.just(false) }
             return self.servicesProvider
@@ -290,16 +294,22 @@ fileprivate extension OWCommentCreationViewViewModel {
                     viewableMode: viewableMode
                 )
         }
-        .map { response -> UIImagePickerController.SourceType? in
+        .map { [weak self] response -> UIImagePickerController.SourceType? in
+            guard let self = self else { return nil }
             switch response {
             case .completion:
                 return nil
             case .selected(let action):
                 switch action.type {
                 case OWPickImageActionSheet.takePhoto:
+                    self.sendEvent(for: .cameraIconClickedTakePhoto)
                     return .camera
                 case OWPickImageActionSheet.chooseFromGallery:
+                    self.sendEvent(for: .cameraIconClickedChooseFromGallery)
                     return .photoLibrary
+                case OWPickImageActionSheet.cancel:
+                    self.sendEvent(for: .cameraIconClickedClose)
+                    return nil
                 default:
                     return nil
                 }
