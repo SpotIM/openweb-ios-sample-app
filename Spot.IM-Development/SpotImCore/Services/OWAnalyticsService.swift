@@ -26,27 +26,38 @@ class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
     fileprivate var blockedEvents = BehaviorSubject<[String]>(value: [])
     fileprivate let analyticsEventCreatorService: OWAnalyticsEventCreatorServicing
+    fileprivate let analyticsLayer: OWAnalyticsInternalProtocol
 
     fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
 
+    // swiftlint:disable force_cast
     init(maxEventsForFlush: Int = Metrics.maxEvents,
          appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
-         analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = OWSharedServicesProvider.shared.analyticsEventCreatorService()
+         analyticsEventCreatorService: OWAnalyticsEventCreatorServicing = OWSharedServicesProvider.shared.analyticsEventCreatorService(),
+         analyticsLayer: OWAnalyticsInternalProtocol = OpenWeb.manager.analytics as! OWAnalyticsInternalProtocol
     ) {
         self.maxEventsForFlush = maxEventsForFlush
         self.appLifeCycle = appLifeCycle
         self.analyticsEventCreatorService = analyticsEventCreatorService
+        self.analyticsLayer = analyticsLayer
 
         setupObservers()
         setEventsStrategyConfig(spotId: OWManager.manager.spotId)
     }
+    // swiftlint:enable force_cast
 
     func sendAnalyticEvent(event: OWAnalyticEvent) {
         sendAnalyticEvents(events: [event])
     }
 
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
+        // Triggering BI events immediately
+        events.forEach { event in
+            if let biEvent = event.type.biAnalyticEvent {
+                analyticsLayer.triggerBICallback(biEvent)
+            }
+        }
         analyticsEvents.append(contentsOf: events)
     }
 

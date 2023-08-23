@@ -10,14 +10,12 @@ import Foundation
 
 #if NEW_API
 public protocol OWAnalytics {
-    // TODO: uncomment once `OWCustomBIData` and `OWAnalyticEventCallback` are ready
-//    var customBIData: OWCustomBIData { get set }
-//    func addBICallback(_ callback: OWAnalyticEventCallback)
+    var customBIData: OWCustomBIData { get set }
+    func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback)
 }
 #else
 protocol OWAnalytics {
-    // TODO: uncomment once `OWCustomBIData` and `OWAnalyticEventCallback` are ready
-//    var customBIData: OWCustomBIData { get set }
-//    func addBICallback(_ callback: OWAnalyticEventCallback)
+    var customBIData: OWCustomBIData { get set }
+    func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback)
 }
 #endif

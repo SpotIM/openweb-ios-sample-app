@@ -16,14 +16,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
 
-    let messageView: MessageContainerView = .init()
-    private let userView: OWCommentUserView = .init()
-    private let statusIndicationView: OWCommentStatusIndicationView = .init()
-    private let commentLabelView: CommentLabelView = .init()
-    private let replyActionsView: OWCommentActionsView = .init()
-    private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let commentMediaView: CommentMediaView = .init()
-    private let opacityView: SPBaseView = .init()
+    let messageView = MessageContainerView()
+    private let userView = OWCommentUserView()
+    private let statusIndicationView = OWCommentStatusIndicationView()
+    private let commentLabelView = CommentLabelView()
+    private let replyActionsView = OWCommentActionsView()
+    private let moreRepliesView = ShowMoreRepliesView()
+    private let commentMediaView = CommentMediaView()
+    private let opacityView = SPBaseView()
 
     private var commentId: String?
     private var replyingToId: String?

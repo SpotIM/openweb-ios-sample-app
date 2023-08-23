@@ -100,7 +100,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
-        let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            guard let self = self else { return .reload }
+            return self.viewModel.outputs.dataSourceTransition
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
@@ -332,7 +335,7 @@ fileprivate extension OWPreConversationView {
 
         btnCTAConversation.rx.tap
             .voidify()
-            .bind(to: viewModel.inputs.fullConversationTap)
+            .bind(to: viewModel.inputs.fullConversationCTATap)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowCommentingCTAView

@@ -46,13 +46,13 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     let requestMiddlewares: [OWRequestMiddleware]
     let responseMiddlewares: [OWResponseMiddleware]
     let queue: DispatchQueue
-    let session: OWSession
+    let session: OWSessionProtocol
 
     init(environment: OWEnvironmentProtocol,
          middlewares: [OWMiddleware] = defaultMiddlewares,
          queueName: String = "OpenWebSDKNetworkQueue",
          queuePriority: DispatchQoS = .userInteractive,
-         session: OWSession = OWSession.default) {
+         session: OWSessionProtocol = OWSession.default) {
 
         self.environment = environment
         self.queue = DispatchQueue(label: queueName, qos: queuePriority)

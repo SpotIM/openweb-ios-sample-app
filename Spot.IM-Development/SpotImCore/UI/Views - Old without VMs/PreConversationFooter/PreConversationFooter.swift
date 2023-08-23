@@ -26,20 +26,14 @@ internal final class SPPreConversationFooter: SPBaseView {
         static let spotIMIconIdentifier = "pre_conversation_footer_ow_icon_id"
         static let addSpotIMButtonIdentifier = "pre_conversation_footer_open_ow_web_button_id"
     }
-    private lazy var separatorView: SPBaseView = .init()
-    private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
-    private lazy var termsButton: SPBaseButton = {
-        let btn = SPBaseButton()
-        return btn
-    }()
-    private lazy var dotLabel: SPBaseLabel = .init()
-    private lazy var privacyButton: SPBaseButton = {
-        let btn = SPBaseButton()
-        return btn
-    }()
-    private lazy var spotIMIcon: SPBaseUIImageView = .init()
-    private lazy var addSpotIMButton: SPBaseButton = .init()
-    private lazy var openwebLinkView: SPBaseView = .init()
+    private lazy var separatorView = SPShowCommentsButton()
+    private lazy var showMoreCommentsButton = SPShowCommentsButton()
+    private lazy var termsButton = SPBaseButton()
+    private lazy var dotLabel = SPBaseLabel()
+    private lazy var privacyButton = SPBaseButton()
+    private lazy var spotIMIcon = SPBaseUIImageView()
+    private lazy var addSpotIMButton = SPBaseButton()
+    private lazy var openwebLinkView = SPBaseView()
 
     private var moreCommentsTopConstraint: OWConstraint?
     private var termsBottomConstraint: OWConstraint?
