@@ -67,16 +67,23 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
         setupViewActionsCallbacks(forViewModel: clarityDetailsVM.outputs.clarityDetailsViewViewModel)
 
-        let clarityDetailsPoppedObservable = ClarityDetailsPopped
+        let dismissObservable = clarityDetailsVM.outputs.clarityDetailsViewViewModel
+            .outputs.dismissView
             .map { OWClarityDetailsCoordinatorResult.popped }
             .asObservable()
 
-        // TODO: is it needed?
-//        let reportReasonLoadedToScreenObservable = reportReasonVM.outputs.loadedToScreen
-//            .map { OWReportReasonCoordinatorResult.loadedToScreen }
+//        let commentCreationLoadedToScreenObservable = commentCreationVM.outputs.loadedToScreen
+//            .map { OWCommentCreationCoordinatorResult.loadedToScreen }
 //            .asObservable()
 
-        return Observable.merge(clarityDetailsPoppedObservable)
+        let resultsWithPopAnimation = dismissObservable
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.router?.pop(popStyle: .dismissStyle, animated: false)
+            })
+
+        return Observable.merge(resultsWithPopAnimation, dismissObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -93,6 +100,16 @@ fileprivate extension OWClarityDetailsCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWClarityDetailsViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
         // TODO: cancel, exit, communityGuidelines
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let dismissView = viewModel.outputs.dismissView
+            .map { OWViewActionCallbackType.closeReportReason }
+
+        Observable.merge(dismissView)
+            .subscribe(onNext: { [weak self] viewActionType in
+                self?.viewActionsService.append(viewAction: viewActionType)
+            })
+            .disposed(by: disposeBag)
 
     }
 }

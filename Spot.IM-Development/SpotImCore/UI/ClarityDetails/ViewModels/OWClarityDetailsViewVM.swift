@@ -11,6 +11,8 @@ import RxSwift
 import UIKit
 
 protocol OWClarityDetailsViewViewModelingInputs {
+    var closeClick: PublishSubject<Void> { get }
+    var gotItClick: PublishSubject<Void> { get }
 }
 
 protocol OWClarityDetailsViewViewModelingOutputs {
@@ -18,6 +20,7 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var topParagraphAttributedString: NSAttributedString { get }
     var detailsTitleText: String { get }
     var paragraphItems: [OWClarityParagraphItem] { get }
+    var dismissView: Observable<Void> { get }
 }
 
 protocol OWClarityDetailsViewViewModeling {
@@ -27,8 +30,7 @@ protocol OWClarityDetailsViewViewModeling {
 
 class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
                                  OWClarityDetailsViewViewModelingInputs,
-                                 OWClarityDetailsViewViewModelingOutputs {
-
+                              OWClarityDetailsViewViewModelingOutputs {
     var inputs: OWClarityDetailsViewViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
@@ -88,6 +90,12 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         }
     }()
 
+    var closeClick = PublishSubject<Void>()
+    var gotItClick = PublishSubject<Void>()
+
+    lazy var dismissView: Observable<Void> = {
+        return Observable.merge(closeClick, gotItClick)
+    }()
 }
 
 // TODO: new file
