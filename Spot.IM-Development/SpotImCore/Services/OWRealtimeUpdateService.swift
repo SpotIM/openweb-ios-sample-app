@@ -71,7 +71,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
             }
             .map { shouldUpdate, config in
                 guard let blitzEnabled = config.mobileSdk.blitzEnabled, shouldUpdate == .enable else { return false }
-                return blitzEnabled //TODO: blitzEnabled
+                return blitzEnabled
             }
             .debug("RIVI: isRealtimeIndicatorEnabled")
             .asObservable()
@@ -86,7 +86,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
 
             let updateType: OWRealtimeIndicatorType
 
-            switch (typingCount, newCommentsCount) { //TODO: (typingCount, newCommentsCount)
+            switch (typingCount, newCommentsCount) {
             case let (typing, comments) where typing > 0 && comments > 0:
                 updateType = .all(typingCount: typing, newCommentsCount: comments)
             case let (typing, _) where typing > 0:
