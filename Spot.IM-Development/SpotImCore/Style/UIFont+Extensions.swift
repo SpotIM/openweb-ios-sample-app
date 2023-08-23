@@ -39,6 +39,7 @@ internal extension UIFont {
         spRegisterFontWith(filenameString: "OpenSans-Medium.ttf")
         spRegisterFontWith(filenameString: "OpenSans-Bold.ttf")
         spRegisterFontWith(filenameString: "OpenSans-Italic.ttf")
+        spRegisterFontWith(filenameString: "OpenSans-SemiBold.ttf")
     }()
 
     // MARK: - Make custom font bundle register to framework
