@@ -80,11 +80,13 @@ fileprivate extension UILoggerView {
 
     func setupObservers() {
         viewModel.outputs.loggerText
+            .observe(on: MainScheduler.instance)
             .bind(to: loggerTextView.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.loggerText
             .delay(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.scrollTextViewToBottom(textView: self.loggerTextView)
