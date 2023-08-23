@@ -162,7 +162,7 @@ fileprivate extension OWCommentCreationLightViewViewModel {
             .disposed(by: disposeBag)
 
         footerViewModel.outputs.imagePicked
-            .bind(to: commentCreationContentVM.inputs.image)
+            .bind(to: commentCreationContentVM.inputs.imagePicked)
             .disposed(by: disposeBag)
     }
 }
