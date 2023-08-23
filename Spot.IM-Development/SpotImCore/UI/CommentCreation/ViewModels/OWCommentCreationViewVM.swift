@@ -259,6 +259,84 @@ fileprivate extension OWCommentCreationViewViewModel {
             self?.sendEvent(for: .signUpToPostClicked)
         })
         .disposed(by: disposeBag)
+
+        Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.addImageTapped,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.addImageTapped
+        )
+        .flatMap { [weak self] _ -> Observable<Bool> in
+            guard let self = self else { return Observable.just(false) }
+            return self.servicesProvider
+                .permissionsService()
+                .requestPermission(for: .camera, viewableMode: self.viewableMode)
+        }
+        .filter { $0 == true }
+        .voidify()
+        .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            guard let self = self else { return .empty() }
+
+            let actions = [
+                OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Take a Photo"), type: OWPickImageActionSheet.takePhoto),
+                OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Choose from Gallery"), type: OWPickImageActionSheet.chooseFromGallery),
+                OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWPickImageActionSheet.cancel, style: .cancel)
+            ]
+            return self.servicesProvider
+                .presenterService()
+                .showAlert(
+                    title: nil,
+                    message: nil,
+                    actions: actions,
+                    preferredStyle: .actionSheet,
+                    viewableMode: viewableMode
+                )
+        }
+        .map { response -> UIImagePickerController.SourceType? in
+            switch response {
+            case .completion:
+                return nil
+            case .selected(let action):
+                switch action.type {
+                case OWPickImageActionSheet.takePhoto:
+                    return .camera
+                case OWPickImageActionSheet.chooseFromGallery:
+                    return .photoLibrary
+                default:
+                    return nil
+                }
+            }
+        }
+        .unwrap()
+        .flatMap { [weak self] sourceType -> Observable<OWImagePickerPresenterResponseType> in
+            guard let self = self else { return .empty() }
+            return self.servicesProvider
+                .presenterService()
+                .showImagePicker(mediaTypes: ["public.image"], sourceType: sourceType, viewableMode: viewableMode)
+        }
+        .map { response -> UIImage? in
+            switch response {
+            case .cancled:
+                return nil
+            case .mediaInfo(let dictionary):
+                guard let image = dictionary[.originalImage] as? UIImage else {
+                    return nil
+                }
+                return image
+            }
+        }
+        .unwrap()
+        .subscribe(onNext: { [weak self] image in
+            guard let self = self else { return }
+            switch commentCreationData.settings.commentCreationSettings.style {
+            case .regular:
+                self.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.imagePicked.onNext(image)
+            case .light:
+                self.commentCreationLightViewVm.outputs.commentCreationContentVM.inputs.imagePicked.onNext(image)
+            default:
+                break
+            }
+        })
+        .disposed(by: disposeBag)
+
     }
 
     func cacheComment(text commentText: String) {

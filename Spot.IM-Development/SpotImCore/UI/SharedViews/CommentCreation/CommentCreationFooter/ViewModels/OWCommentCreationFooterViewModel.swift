@@ -20,7 +20,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaButtonEnabled: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
-    var imagePicked: Observable<UIImage> { get }
+    var addImageTapped: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
 }
 
@@ -38,11 +38,15 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewableMode: OWViewableMode
     fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
     var tapCta = PublishSubject<Void>()
     var tapAddImage = PublishSubject<Void>()
+
+    var addImageTapped: Observable<Void> {
+        tapAddImage
+            .asObservable()
+    }
 
     fileprivate lazy var _shouldSignUpToPostComment: Observable<Bool> = {
         return Observable.combineLatest(
@@ -118,76 +122,10 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             }
     }
 
-    var imagePicked: Observable<UIImage> {
-        tapAddImage
-            .flatMap { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return Observable.just(false) }
-                return self.servicesProvider
-                    .permissionsService()
-                    .requestPermission(for: .camera, viewableMode: self.viewableMode)
-            }
-            .filter { $0 == true }
-            .voidify()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
-                guard let self = self else { return .empty() }
-
-                let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Take a Photo"), type: OWPickImageActionSheet.takePhoto),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Choose from Gallery"), type: OWPickImageActionSheet.chooseFromGallery),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWPickImageActionSheet.cancel, style: .cancel)
-                ]
-                return self.servicesProvider
-                    .presenterService()
-                    .showAlert(
-                        title: nil,
-                        message: nil,
-                        actions: actions,
-                        preferredStyle: .actionSheet,
-                        viewableMode: viewableMode
-                    )
-            }
-            .map { response -> UIImagePickerController.SourceType? in
-                switch response {
-                case .completion:
-                    return nil
-                case .selected(let action):
-                    switch action.type {
-                    case OWPickImageActionSheet.takePhoto:
-                        return .camera
-                    case OWPickImageActionSheet.chooseFromGallery:
-                        return .photoLibrary
-                    default:
-                        return nil
-                    }
-                }
-            }
-            .unwrap()
-            .flatMap { [weak self] sourceType -> Observable<OWImagePickerPresenterResponseType> in
-                guard let self = self else { return .empty() }
-                return self.servicesProvider
-                    .presenterService()
-                    .showImagePicker(mediaTypes: ["public.image"], sourceType: sourceType, viewableMode: viewableMode)
-            }
-            .map { response -> UIImage? in
-                switch response {
-                case .cancled:
-                    return nil
-                case .mediaInfo(let dictionary):
-                    guard let image = dictionary[.originalImage] as? UIImage else {
-                        return nil
-                    }
-                    return image
-                }
-            }
-            .unwrap()
-    }
-
     init(commentCreationType: OWCommentCreationTypeInternal,
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         viewableMode: OWViewableMode) {
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationType = commentCreationType
-        self.viewableMode = viewableMode
 
         setupObservers()
     }
