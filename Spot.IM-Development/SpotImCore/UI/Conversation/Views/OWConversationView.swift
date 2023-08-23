@@ -16,6 +16,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
+        static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -48,6 +49,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+        return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
     fileprivate lazy var tableView: UITableView = {
@@ -171,6 +176,13 @@ fileprivate extension OWConversationView {
             make.height.equalTo(Metrics.separatorHeight)
         }
 
+        self.addSubview(self.realtimeIndicationAnimationView)
+        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
+        }
+
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
@@ -192,6 +204,18 @@ fileprivate extension OWConversationView {
                 self.conversationEmptyStateView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableView.OWSnp.top).offset(height)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowConversationEmptyState
+            .filter { !$0 }
+            .observe(on: MainScheduler.instance)
+            .delay(.milliseconds(5000), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.outputs
+                    .realtimeIndicationAnimationViewModel.inputs
+                    .update(shouldShow: true)
             })
             .disposed(by: disposeBag)
 

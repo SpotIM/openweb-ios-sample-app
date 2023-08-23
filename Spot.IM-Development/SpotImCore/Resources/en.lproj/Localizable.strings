@@ -157,3 +157,5 @@
 "View x replies" = "View %d replies";
 "View x reply" = "View %d reply";
 "View x of x replies" = "View %d of %d replies";
+"ViewNewComments" = "View %d new comments";
+"TypingNow" = "%d Typing now";

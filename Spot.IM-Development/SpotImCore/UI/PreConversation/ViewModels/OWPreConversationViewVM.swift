@@ -24,6 +24,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
+    var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
@@ -108,6 +109,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
     }()
 
+    lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
+        return OWRealtimeIndicationAnimationViewModel()
+    }()
+
     lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {
         return OWCommentingCTAViewModel(imageProvider: imageProvider)
     }()
@@ -151,7 +156,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate lazy var commentsCountObservable: Observable<String> = {
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
+                guard let count = try? realtimeData.data?.totalCommentsCount(forConversation: "\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
                 return count
             }
             .unwrap()
@@ -190,7 +195,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var fullConversationCTATap = PublishSubject<Void>()
 
     var openFullConversation: Observable<Void> {
-        return Observable.merge(fullConversationTap, fullConversationCTATap)
+        let tappedObservable = realtimeIndicationAnimationViewModel.outputs
+            .realtimeIndicationViewModel.outputs
+            .tapped
+
+        return Observable.merge(fullConversationTap,
+                                fullConversationCTATap,
+                                tappedObservable)
             .asObservable()
     }
 
@@ -381,6 +392,24 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
+        // Realtime Indicator
+        openFullConversation
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.realtimeIndicationAnimationViewModel.inputs.update(shouldShow: false)
+                self.servicesProvider.realtimeUpdateService().shouldRealtimeUpdate.onNext(.disable)
+
+            })
+            .disposed(by: disposeBag)
+
+        shouldShowComments
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                let realtimeUpdateState: OWRealtimeUpdateState = shouldShow ? .enable : .disable
+                self.servicesProvider.realtimeUpdateService().shouldRealtimeUpdate.onNext(realtimeUpdateState)
             })
             .disposed(by: disposeBag)
 

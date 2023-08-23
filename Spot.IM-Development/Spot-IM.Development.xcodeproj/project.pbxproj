@@ -807,6 +807,19 @@
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
 		81AE39BD0C191131574B6B81 /* Pods_Shared_OpenWebCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10B723F841938E5B640293A5 /* Pods_Shared_OpenWebCoreTests.framework */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
+		8D0DB7152A923D710014AD1B /* OWRealtimeUpdateState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7142A923D710014AD1B /* OWRealtimeUpdateState.swift */; };
+		8D0DB7172A9356A70014AD1B /* OWRealtimeTypingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7162A9356A70014AD1B /* OWRealtimeTypingView.swift */; };
+		8D0DB7192A9358A60014AD1B /* OWRealtimeTypingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7182A9358A60014AD1B /* OWRealtimeTypingViewModel.swift */; };
+		8D0DB71B2A9379450014AD1B /* OWRealtimeNewCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB71A2A9379450014AD1B /* OWRealtimeNewCommentsViewModel.swift */; };
+		8D0DB71D2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB71C2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift */; };
+		8D0DB71F2A94C2140014AD1B /* OWTypingAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB71E2A94C2140014AD1B /* OWTypingAnimationView.swift */; };
+		8D0DB7212A94E1290014AD1B /* OWRealtimeIndicationAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7202A94E1290014AD1B /* OWRealtimeIndicationAnimationView.swift */; };
+		8D0DB7232A94E1C20014AD1B /* OWRealtimeIndicationAnimationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7222A94E1C20014AD1B /* OWRealtimeIndicationAnimationViewModel.swift */; };
+		8D0DB7302A953FB30014AD1B /* OWRealTimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB72F2A953FB30014AD1B /* OWRealTimeError.swift */; };
+		8D0DB7322A953FFE0014AD1B /* OWRealTimeMessagesCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7312A953FFE0014AD1B /* OWRealTimeMessagesCount.swift */; };
+		8D0DB7342A95434A0014AD1B /* OWRealTimeOnlineUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7332A95434A0014AD1B /* OWRealTimeOnlineUser.swift */; };
+		8D0DB7362A95435F0014AD1B /* OWRealTimeTypingUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7352A95435F0014AD1B /* OWRealTimeTypingUsers.swift */; };
+		8D0DB7382A95437A0014AD1B /* OWRealTimeOnlineViewingUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7372A95437A0014AD1B /* OWRealTimeOnlineViewingUsers.swift */; };
 		8D358D4729C8597800E229A3 /* OWViewableMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D358D4629C8597800E229A3 /* OWViewableMode.swift */; };
 		8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D358D4B29C8942E00E229A3 /* OWConversationSortViewModel.swift */; };
 		8D358D5129C9C08D00E229A3 /* OWConversationTitleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D358D5029C9C08D00E229A3 /* OWConversationTitleHeaderViewModel.swift */; };
@@ -830,6 +843,10 @@
 		8D7662C42A6D1909008152BE /* OWCommentCreationStyleIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7662C32A6D1909008152BE /* OWCommentCreationStyleIndexer.swift */; };
 		8D7662C52A6FC5EF008152BE /* OWLanguageStrategyIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC16802A55B8B40010759E /* OWLanguageStrategyIndexer.swift */; };
 		8D7662C72A6FC6C9008152BE /* OWFontSizeEnforcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7662C62A6FC6C9008152BE /* OWFontSizeEnforcement.swift */; };
+		8D7662C92A7A574A008152BE /* OWRealtimeUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7662C82A7A574A008152BE /* OWRealtimeUpdateService.swift */; };
+		8D7662CE2A7A58CA008152BE /* OWRealtimeIndicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7662CD2A7A58CA008152BE /* OWRealtimeIndicationViewModel.swift */; };
+		8D7662D02A7A58E5008152BE /* OWRealtimeIndicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7662CF2A7A58E5008152BE /* OWRealtimeIndicationView.swift */; };
+		8D7662D22A7A5B67008152BE /* OWRealtimeIndicatorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7662D12A7A5B67008152BE /* OWRealtimeIndicatorType.swift */; };
 		8D7FC65E299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7FC65D299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift */; };
 		8D7FC66029A3AA510047DA22 /* OWConversationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7FC65F29A3AA510047DA22 /* OWConversationSummaryView.swift */; };
 		8D99C6772A07D94300DAB542 /* OWCommentingCTAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D99C6762A07D94300DAB542 /* OWCommentingCTAView.swift */; };
@@ -851,6 +868,8 @@
 		8DBC167A2A406C290010759E /* OWArticleHeaderStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC16792A406C290010759E /* OWArticleHeaderStyle+Extensions.swift */; };
 		8DBC167C2A4D8E740010759E /* OWNavigationCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC167B2A4D8E740010759E /* OWNavigationCustomizableElement.swift */; };
 		8DBC16882A5D45610010759E /* OWFontTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC16872A5D45610010759E /* OWFontTypography.swift */; };
+		8DC708E82A838789004B3C9E /* OWRealTimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC708E72A838789004B3C9E /* OWRealTimeData.swift */; };
+		8DC708EB2A8387E3004B3C9E /* OWRealTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC708EA2A8387E3004B3C9E /* OWRealTime.swift */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
@@ -1841,6 +1860,19 @@
 		8AD06A753856558311FC9849 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		8B68A2990C05E97CCA3BB018 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_DevelopmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
+		8D0DB7142A923D710014AD1B /* OWRealtimeUpdateState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeUpdateState.swift; sourceTree = "<group>"; };
+		8D0DB7162A9356A70014AD1B /* OWRealtimeTypingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeTypingView.swift; sourceTree = "<group>"; };
+		8D0DB7182A9358A60014AD1B /* OWRealtimeTypingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeTypingViewModel.swift; sourceTree = "<group>"; };
+		8D0DB71A2A9379450014AD1B /* OWRealtimeNewCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeNewCommentsViewModel.swift; sourceTree = "<group>"; };
+		8D0DB71C2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeNewCommentsView.swift; sourceTree = "<group>"; };
+		8D0DB71E2A94C2140014AD1B /* OWTypingAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTypingAnimationView.swift; sourceTree = "<group>"; };
+		8D0DB7202A94E1290014AD1B /* OWRealtimeIndicationAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicationAnimationView.swift; sourceTree = "<group>"; };
+		8D0DB7222A94E1C20014AD1B /* OWRealtimeIndicationAnimationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicationAnimationViewModel.swift; sourceTree = "<group>"; };
+		8D0DB72F2A953FB30014AD1B /* OWRealTimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeError.swift; sourceTree = "<group>"; };
+		8D0DB7312A953FFE0014AD1B /* OWRealTimeMessagesCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeMessagesCount.swift; sourceTree = "<group>"; };
+		8D0DB7332A95434A0014AD1B /* OWRealTimeOnlineUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeOnlineUser.swift; sourceTree = "<group>"; };
+		8D0DB7352A95435F0014AD1B /* OWRealTimeTypingUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeTypingUsers.swift; sourceTree = "<group>"; };
+		8D0DB7372A95437A0014AD1B /* OWRealTimeOnlineViewingUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeOnlineViewingUsers.swift; sourceTree = "<group>"; };
 		8D358D4629C8597800E229A3 /* OWViewableMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableMode.swift; sourceTree = "<group>"; };
 		8D358D4B29C8942E00E229A3 /* OWConversationSortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSortViewModel.swift; sourceTree = "<group>"; };
 		8D358D5029C9C08D00E229A3 /* OWConversationTitleHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationTitleHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -1864,6 +1896,10 @@
 		8D7662C12A6D1824008152BE /* OWConversationStyleIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationStyleIndexer.swift; sourceTree = "<group>"; };
 		8D7662C32A6D1909008152BE /* OWCommentCreationStyleIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationStyleIndexer.swift; sourceTree = "<group>"; };
 		8D7662C62A6FC6C9008152BE /* OWFontSizeEnforcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontSizeEnforcement.swift; sourceTree = "<group>"; };
+		8D7662C82A7A574A008152BE /* OWRealtimeUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeUpdateService.swift; sourceTree = "<group>"; };
+		8D7662CD2A7A58CA008152BE /* OWRealtimeIndicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicationViewModel.swift; sourceTree = "<group>"; };
+		8D7662CF2A7A58E5008152BE /* OWRealtimeIndicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicationView.swift; sourceTree = "<group>"; };
+		8D7662D12A7A5B67008152BE /* OWRealtimeIndicatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicatorType.swift; sourceTree = "<group>"; };
 		8D7FC65D299CEFAB0047DA22 /* OWConversationSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryViewModel.swift; sourceTree = "<group>"; };
 		8D7FC65F29A3AA510047DA22 /* OWConversationSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryView.swift; sourceTree = "<group>"; };
 		8D99C6762A07D94300DAB542 /* OWCommentingCTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentingCTAView.swift; sourceTree = "<group>"; };
@@ -1886,6 +1922,8 @@
 		8DBC167B2A4D8E740010759E /* OWNavigationCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationCustomizableElement.swift; sourceTree = "<group>"; };
 		8DBC16802A55B8B40010759E /* OWLanguageStrategyIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLanguageStrategyIndexer.swift; sourceTree = "<group>"; };
 		8DBC16872A5D45610010759E /* OWFontTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontTypography.swift; sourceTree = "<group>"; };
+		8DC708E72A838789004B3C9E /* OWRealTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeData.swift; sourceTree = "<group>"; };
+		8DC708EA2A8387E3004B3C9E /* OWRealTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTime.swift; sourceTree = "<group>"; };
 		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
@@ -2884,6 +2922,7 @@
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
+				8D7662CA2A7A5791008152BE /* RealtimeIndication */,
 				163E93312A49817D0091A6C4 /* CommentCreation */,
 				9E5A13BE2A41A1EF00C0FFED /* OWTextView */,
 				9E2857B02A14DBA90066D726 /* Buttons */,
@@ -4657,6 +4696,7 @@
 		4454185423685154001D0ED0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8DC708E92A8387B7004B3C9E /* RealTime */,
 				24E66A212A6555CD00D5F4E9 /* Analytics */,
 				3D3150512A4D995500EF6575 /* AccessoryViewStrategy */,
 				166CCCB52A3A125D00C7143F /* AdditionalSettings */,
@@ -4670,6 +4710,7 @@
 				44689B7B2374145B0024EFC1 /* Conversation */,
 				3D26B5AD28CA36B100A1DAD2 /* CommentCreation */,
 				161270D729ACD442001F9715 /* CommentThread */,
+				8D7662D32A7A76BC008152BE /* RealtimeUpdate */,
 				3DB3B94E29F4630D00C50192 /* TestingPlayground */,
 				44689B7A237414340024EFC1 /* Configs */,
 				4454185523685154001D0ED0 /* SPComment.swift */,
@@ -4817,6 +4858,7 @@
 				3DDE2AD72A60333C007684C8 /* OWCommentCreationRequestsService.swift */,
 				162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */,
 				3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */,
+				8D7662C82A7A574A008152BE /* OWRealtimeUpdateService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -5018,6 +5060,100 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		8D0DB7242A94E2130014AD1B /* RealtimeTyping */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7272A94E27F0014AD1B /* TypingAnimation */,
+				8D0DB72A2A94E2AE0014AD1B /* ViewModels */,
+				8D0DB7292A94E29E0014AD1B /* Views */,
+			);
+			path = RealtimeTyping;
+			sourceTree = "<group>";
+		};
+		8D0DB7252A94E2290014AD1B /* RealtimeNewComments */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB72C2A94E2E50014AD1B /* ViewModels */,
+				8D0DB72B2A94E2DA0014AD1B /* Views */,
+			);
+			path = RealtimeNewComments;
+			sourceTree = "<group>";
+		};
+		8D0DB7262A94E2480014AD1B /* RealtimeIndicationAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB72E2A94E3100014AD1B /* ViewModels */,
+				8D0DB72D2A94E3070014AD1B /* Views */,
+			);
+			path = RealtimeIndicationAnimation;
+			sourceTree = "<group>";
+		};
+		8D0DB7272A94E27F0014AD1B /* TypingAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7282A94E2890014AD1B /* Views */,
+			);
+			path = TypingAnimation;
+			sourceTree = "<group>";
+		};
+		8D0DB7282A94E2890014AD1B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB71E2A94C2140014AD1B /* OWTypingAnimationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D0DB7292A94E29E0014AD1B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7162A9356A70014AD1B /* OWRealtimeTypingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D0DB72A2A94E2AE0014AD1B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7182A9358A60014AD1B /* OWRealtimeTypingViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8D0DB72B2A94E2DA0014AD1B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB71C2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D0DB72C2A94E2E50014AD1B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB71A2A9379450014AD1B /* OWRealtimeNewCommentsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8D0DB72D2A94E3070014AD1B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7202A94E1290014AD1B /* OWRealtimeIndicationAnimationView.swift */,
+				8D7662CF2A7A58E5008152BE /* OWRealtimeIndicationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8D0DB72E2A94E3100014AD1B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7222A94E1C20014AD1B /* OWRealtimeIndicationAnimationViewModel.swift */,
+				8D7662CD2A7A58CA008152BE /* OWRealtimeIndicationViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		8D358D4929C88DB700E229A3 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -5164,6 +5300,25 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		8D7662CA2A7A5791008152BE /* RealtimeIndication */ = {
+			isa = PBXGroup;
+			children = (
+				8D0DB7262A94E2480014AD1B /* RealtimeIndicationAnimation */,
+				8D0DB7242A94E2130014AD1B /* RealtimeTyping */,
+				8D0DB7252A94E2290014AD1B /* RealtimeNewComments */,
+			);
+			path = RealtimeIndication;
+			sourceTree = "<group>";
+		};
+		8D7662D32A7A76BC008152BE /* RealtimeUpdate */ = {
+			isa = PBXGroup;
+			children = (
+				8D7662D12A7A5B67008152BE /* OWRealtimeIndicatorType.swift */,
+				8D0DB7142A923D710014AD1B /* OWRealtimeUpdateState.swift */,
+			);
+			path = RealtimeUpdate;
+			sourceTree = "<group>";
+		};
 		8D99C67029F6B24C00DAB542 /* ConversationEmptyState */ = {
 			isa = PBXGroup;
 			children = (
@@ -5302,6 +5457,20 @@
 				8D7662C32A6D1909008152BE /* OWCommentCreationStyleIndexer.swift */,
 			);
 			path = Indexers;
+			sourceTree = "<group>";
+		};
+		8DC708E92A8387B7004B3C9E /* RealTime */ = {
+			isa = PBXGroup;
+			children = (
+				8DC708E72A838789004B3C9E /* OWRealTimeData.swift */,
+				8DC708EA2A8387E3004B3C9E /* OWRealTime.swift */,
+				8D0DB72F2A953FB30014AD1B /* OWRealTimeError.swift */,
+				8D0DB7312A953FFE0014AD1B /* OWRealTimeMessagesCount.swift */,
+				8D0DB7332A95434A0014AD1B /* OWRealTimeOnlineUser.swift */,
+				8D0DB7352A95435F0014AD1B /* OWRealTimeTypingUsers.swift */,
+				8D0DB7372A95437A0014AD1B /* OWRealTimeOnlineViewingUsers.swift */,
+			);
+			path = RealTime;
 			sourceTree = "<group>";
 		};
 		8DCBE85A293CEF7D00C8677C /* UIFlows */ = {
@@ -6352,6 +6521,7 @@
 				8D99C69C2A246B3300DAB542 /* OWCommentCreationCTACustomizableElement.swift in Sources */,
 				3DFA6BA32921700C0047E313 /* OWProviderSSOHandler.swift in Sources */,
 				24B7A2B62A30ABE700A5D71D /* OWMenuSelectionCell.swift in Sources */,
+				8D0DB71F2A94C2140014AD1B /* OWTypingAnimationView.swift in Sources */,
 				3DA2646F2951E3B200688FFF /* OWNetworkReachabilityManager.swift in Sources */,
 				166CCCAC2A30CDC100C7143F /* OWCommentCreationRegularViewVM.swift in Sources */,
 				3DA2646D2951E3B200688FFF /* OWNetworkURLEncodedFormEncoder.swift in Sources */,
@@ -6438,6 +6608,7 @@
 				24B7A2B42A30823900A5D71D /* OWMenuSelectionViewModel.swift in Sources */,
 				3D20A39327B0222C003F8513 /* OWConstraintRelation.swift in Sources */,
 				8DD33B232A24C453001E0A2E /* OWArticleDescriptionCustomizableElement.swift in Sources */,
+				8D7662D22A7A5B67008152BE /* OWRealtimeIndicatorType.swift in Sources */,
 				3DA264712951E3B200688FFF /* OWNetworkValidation.swift in Sources */,
 				3DFC32C528916760005F1C5A /* OWConversationCellOption.swift in Sources */,
 				3D31FB9629AB8EE1002B88E0 /* OWSupportedLanguage+Extenstions.swift in Sources */,
@@ -6471,6 +6642,7 @@
 				9E8B92A42A1B91F3004480F5 /* OWScreenPopStyle.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
+				8D7662CE2A7A58CA008152BE /* OWRealtimeIndicationViewModel.swift in Sources */,
 				3DB3B98729FAD38E00C50192 /* OWTestingCellsGenerator.swift in Sources */,
 				16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */,
 				3D20A38D27B020E8003F8513 /* OWConstraintPriorityTarget.swift in Sources */,
@@ -6500,6 +6672,7 @@
 				24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */,
 				16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */,
 				3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */,
+				8D0DB7172A9356A70014AD1B /* OWRealtimeTypingView.swift in Sources */,
 				168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */,
 				3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */,
 				241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */,
@@ -6508,6 +6681,7 @@
 				1616555F2A531518004EBF6F /* OWCommentCreationFooterView.swift in Sources */,
 				3D9BF5A42A13DF2600450D06 /* OWArticleSettingsBuilder.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
+				8D0DB7322A953FFE0014AD1B /* OWRealTimeMessagesCount.swift in Sources */,
 				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
 				3DA2646C2951E3B200688FFF /* OWNetworkParameterEncoding.swift in Sources */,
 				449F5F74237C5D7300F81EA3 /* OWMulticastDelegate.swift in Sources */,
@@ -6565,6 +6739,7 @@
 				24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */,
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
+				8D0DB71D2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift in Sources */,
 				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
 				8D99C6892A13516400DAB542 /* OWConversationContentType.swift in Sources */,
 				8DE52F4A29E430F000D3985C /* OWPresentationalModeCompact.swift in Sources */,
@@ -6630,6 +6805,7 @@
 				3D08E09328770AC600E6F1AC /* OWIdentifiableValue.swift in Sources */,
 				249DF29D296C1E7F00F5D69A /* OWUserBadgeService.swift in Sources */,
 				163E02BE2A852C4F00DDB73C /* OWCommentCreatorNetworkHelper.swift in Sources */,
+				8D7662C92A7A574A008152BE /* OWRealtimeUpdateService.swift in Sources */,
 				441165A72375C5B700B781F3 /* OWKeyPathParser.swift in Sources */,
 				3DA264672951E3B200688FFF /* OWNetworkHTTPHeaders.swift in Sources */,
 				9ED2E58729EC015700B39A00 /* OWReportReasonViewVM.swift in Sources */,
@@ -6638,6 +6814,8 @@
 				8D358D4729C8597800E229A3 /* OWViewableMode.swift in Sources */,
 				3DFA6BA7292170510047E313 /* OWSSOFlowType.swift in Sources */,
 				3DFA6BA5292170280047E313 /* OWSSOCompletionHandler.swift in Sources */,
+				8D0DB7232A94E1C20014AD1B /* OWRealtimeIndicationAnimationViewModel.swift in Sources */,
+				8D0DB71B2A9379450014AD1B /* OWRealtimeNewCommentsViewModel.swift in Sources */,
 				3D08E0772875E24100E6F1AC /* OWUILayer.swift in Sources */,
 				445417F823685144001D0ED0 /* Notification+Keyboard.swift in Sources */,
 				4454182423685144001D0ED0 /* SPLoaderView.swift in Sources */,
@@ -6653,6 +6831,7 @@
 				241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */,
 				4454187C23685154001D0ED0 /* SpotImSDKFlowCoordinator.swift in Sources */,
 				3DDE2AD22A602F07007684C8 /* OWCommentCreationRequestOption.swift in Sources */,
+				8D0DB7302A953FB30014AD1B /* OWRealTimeError.swift in Sources */,
 				3DF95BD727CE55C40008A380 /* OWBaseCoordinator.swift in Sources */,
 				164047A829E420D1001DD35B /* OWConversationReadRM.swift in Sources */,
 				3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */,
@@ -6673,6 +6852,7 @@
 				16BD5F8A27144F2C00066505 /* OWCommentImagePreview.swift in Sources */,
 				3D20A38327B01D90003F8513 /* OWConstraintMakerRelatable.swift in Sources */,
 				9ED2E58329EC009F00B39A00 /* OWReportReason.swift in Sources */,
+				8D7662D02A7A58E5008152BE /* OWRealtimeIndicationView.swift in Sources */,
 				4454189D23685154001D0ED0 /* SPCommentDelete.swift in Sources */,
 				1628A75D28EB0E770019B5EC /* OWCommentCreationView.swift in Sources */,
 				9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */,
@@ -6717,6 +6897,7 @@
 				249BCDFA27F5962E00703CC9 /* SPArticleHeaderViewModel.swift in Sources */,
 				3DA264742951E3B200688FFF /* OWNetworkParameterEncoder.swift in Sources */,
 				24F1753B2A5BCFD60078BCF6 /* SPEventsStrategyConfig.swift in Sources */,
+				8D0DB7212A94E1290014AD1B /* OWRealtimeIndicationAnimationView.swift in Sources */,
 				8D358D7729D5854800E229A3 /* OWArticleDescriptionViewModel.swift in Sources */,
 				3DA264722951E3B200688FFF /* OWNetworkSessionDelegate.swift in Sources */,
 				16D5A20329D1B72900914AD7 /* OWCommentThreadActionsView.swift in Sources */,
@@ -6726,6 +6907,7 @@
 				4454181D23685144001D0ED0 /* SPUserNameView.swift in Sources */,
 				3DDCB29F29952D2900B8ED8E /* OWSortDictateService.swift in Sources */,
 				3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */,
+				8DC708EB2A8387E3004B3C9E /* OWRealTime.swift in Sources */,
 				166CCCB42A3A10FB00C7143F /* OWAdditionalSettings.swift in Sources */,
 				8D358D6F29D2FAD800E229A3 /* OWCommunityGuidelinesCell.swift in Sources */,
 				3D263CEF29C0EACB0013C532 /* OWRouteringCompatible.swift in Sources */,
@@ -6786,6 +6968,7 @@
 				3DDA9A792919374C00FE3B86 /* OWUIAuthentication.swift in Sources */,
 				1640F2C028ACDA0100FB863B /* OWCommentCreationCoordinator.swift in Sources */,
 				3DA0AA07292A8BD900CED855 /* OWSettingsWrapper.swift in Sources */,
+				8D0DB7382A95437A0014AD1B /* OWRealTimeOnlineViewingUsers.swift in Sources */,
 				3D08E0892877080300E6F1AC /* OWIdentifiableType.swift in Sources */,
 				3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */,
 				162B835F2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift in Sources */,
@@ -6903,9 +7086,11 @@
 				9E36BFEB29ED353A00478D06 /* OWReportReasonVM.swift in Sources */,
 				3DB3B97929F7DB0B00C50192 /* OWTestingRedCellViewModel.swift in Sources */,
 				3DFA6BAD29217BC20047E313 /* OWUserAuthenticationStatus.swift in Sources */,
+				8D0DB7192A9358A60014AD1B /* OWRealtimeTypingViewModel.swift in Sources */,
 				24C9BD5529DC18DA00D74034 /* Date+OWExtenstion.swift in Sources */,
 				166CCCAA2A30CD7100C7143F /* OWCommentCreationFloatingKeyboardView.swift in Sources */,
 				445418A523685154001D0ED0 /* SPUser.swift in Sources */,
+				8D0DB7342A95434A0014AD1B /* OWRealTimeOnlineUser.swift in Sources */,
 				3DD72C72280EF8A100117946 /* OWMiddleware.swift in Sources */,
 				24D74AE22A6FC8A000F454D5 /* OWBatchAnalyticsResponse.swift in Sources */,
 				445418A323685154001D0ED0 /* SPAnalyticsEvent.swift in Sources */,
@@ -6926,6 +7111,7 @@
 				3D3150562A4DD74000EF6575 /* OWRouteringModeInternal.swift in Sources */,
 				3DD72C7A280EFA0200117946 /* OWNetworkAPI.swift in Sources */,
 				3DFC32E628917942005F1C5A /* OWCellViewModel.swift in Sources */,
+				8D0DB7152A923D710014AD1B /* OWRealtimeUpdateState.swift in Sources */,
 				3D08E0BA287AF3BC00E6F1AC /* OWObservableArray.swift in Sources */,
 				8D7FC66029A3AA510047DA22 /* OWConversationSummaryView.swift in Sources */,
 				3DFC32D128916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift in Sources */,
@@ -6954,6 +7140,7 @@
 				24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */,
 				3DB3B98329F7F01E00C50192 /* OWTestingCellState.swift in Sources */,
 				3D08E0752875CC7500E6F1AC /* OWPresentationalMode.swift in Sources */,
+				8D0DB7362A95435F0014AD1B /* OWRealTimeTypingUsers.swift in Sources */,
 				445418B223685154001D0ED0 /* UIImageView+SPExtensions.swift in Sources */,
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
 				3D7E3D7028884D5B00DDBE0B /* SPAdditionalConfiguration.swift in Sources */,
@@ -7012,6 +7199,7 @@
 				24D37E7A29B8B2A80056450D /* OWPreConversationCompactContentViewModel.swift in Sources */,
 				3D08E0852877070200E6F1AC /* OWSectionModelType.swift in Sources */,
 				24EF864A29CAE8E500327394 /* OWSubscriberIconViewModel.swift in Sources */,
+				8DC708E82A838789004B3C9E /* OWRealTimeData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

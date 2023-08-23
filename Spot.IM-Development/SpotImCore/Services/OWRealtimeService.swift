@@ -12,7 +12,7 @@ import RxSwift
 protocol OWRealtimeServicing {
     func startFetchingData(postId: OWPostId)
     func stopFetchingData()
-    var realtimeData: Observable<RealTimeModel> { get }
+    var realtimeData: Observable<OWRealTime> { get }
 }
 
 class OWRealtimeService: OWRealtimeServicing {
@@ -31,8 +31,8 @@ class OWRealtimeService: OWRealtimeServicing {
         self.scheduler = scheduler
     }
 
-    let _realtimeData = BehaviorSubject<RealTimeModel?>(value: nil)
-    var realtimeData: Observable<RealTimeModel> {
+    let _realtimeData = BehaviorSubject<OWRealTime?>(value: nil)
+    var realtimeData: Observable<OWRealTime> {
         return _realtimeData
             .unwrap()
             .asObservable()
@@ -104,7 +104,7 @@ fileprivate extension OWRealtimeService {
         currentPostId
             .unwrap()
             .observe(on: self.scheduler) // Do the rest of the Rx chain on this class scheduler
-            .flatMap { [weak self] postId -> Observable<RealTimeModel> in
+            .flatMap { [weak self] postId -> Observable<OWRealTime> in
                 guard let self = self else { return .empty() }
                 let api: OWRealtimeAPI = self.servicesProvider.netwokAPI().realtime
                 // Fetch from API
