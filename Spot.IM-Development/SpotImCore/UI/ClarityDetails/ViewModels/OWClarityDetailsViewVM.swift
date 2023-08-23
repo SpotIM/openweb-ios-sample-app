@@ -21,6 +21,7 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var detailsTitleText: String { get }
     var paragraphItems: [OWClarityParagraphItem] { get }
     var dismissView: Observable<Void> { get }
+    var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
 }
 
 protocol OWClarityDetailsViewViewModeling {
@@ -35,9 +36,13 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
     fileprivate let type: OWClarityDetailsType
+    fileprivate var disposeBag: DisposeBag
 
     init(type: OWClarityDetailsType) {
         self.type = type
+        disposeBag = DisposeBag()
+
+        setupObservers()
     }
 
     lazy var navigationTitle: String = {
@@ -53,12 +58,25 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var topParagraphAttributedString: NSAttributedString = {
         switch type {
         case .rejected:
-            return "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
-                .attributedString // TODO: add community guidelines link
+            let string = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
+            let attributedString = NSMutableAttributedString(string: string)
+            if let range = string.range(of: "community guidelines") {
+                let nsRange = NSRange(range, in: string)
+                attributedString.addAttribute(.underlineStyle, value: 1, range: nsRange)
+                attributedString.addAttribute(.foregroundColor, value: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light), range: nsRange)
+            }
+            return attributedString
         case .pending:
             return OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle")
                 .attributedString
         }
+    }()
+
+    var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil) // TODO
+    lazy var topParagraphAttributedStringObservable: Observable<NSAttributedString> = {
+        return _topParagraphAttributedString
+            .unwrap()
+            .asObservable()
     }()
 
     lazy var detailsTitleText: String = {
@@ -96,6 +114,48 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var dismissView: Observable<Void> = {
         return Observable.merge(closeClick, gotItClick)
     }()
+
+    lazy private var accessibilityChange: Observable<Bool> = {
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .map { true }
+            .startWith(false)
+    }()
+}
+
+fileprivate extension OWClarityDetailsViewVM {
+    func setupObservers() {
+        Observable.combineLatest(
+            OWSharedServicesProvider.shared.themeStyleService().style, // TODO: inject sharedServicesProvider
+            accessibilityChange
+        ) { style, _ in
+            return style
+        }
+        .subscribe(onNext: { [weak self] style in
+            guard let self = self else { return }
+            let attString = self.getTopParagraphAttributedString(clarityType: self.type)
+            self._topParagraphAttributedString.onNext(attString)
+        })
+        .disposed(by: disposeBag)
+    }
+
+    func getTopParagraphAttributedString(clarityType: OWClarityDetailsType) -> NSAttributedString {
+        // TODO: add fonts, colors etc
+        switch clarityType {
+        case .rejected:
+            let string = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
+            let attributedString = NSMutableAttributedString(string: string)
+            if let range = string.range(of: "community guidelines") {
+                let nsRange = NSRange(range, in: string)
+                attributedString.addAttribute(.underlineStyle, value: 1, range: nsRange)
+                attributedString.addAttribute(.foregroundColor, value: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light), range: nsRange)
+            }
+            return attributedString
+        case .pending:
+            return OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle")
+                .attributedString
+        }
+    }
 }
 
 // TODO: new file

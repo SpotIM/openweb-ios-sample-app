@@ -10,10 +10,13 @@ import Foundation
 import RxSwift
 import UIKit
 
-protocol OWClarityDetailsViewModelingInputs { }
+protocol OWClarityDetailsViewModelingInputs {
+    var viewDidLoad: PublishSubject<Void> { get }
+}
 
 protocol OWClarityDetailsViewModelingOutputs {
     var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling { get }
+    var loadedToScreen: Observable<Void> { get }
 }
 
 protocol OWClarityDetailsViewModeling {
@@ -27,6 +30,11 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
 
     var inputs: OWClarityDetailsViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewModelingOutputs { return self }
+
+    var viewDidLoad = PublishSubject<Void>()
+    var loadedToScreen: Observable<Void> {
+        return viewDidLoad.asObservable()
+    }
 
     fileprivate let type: OWClarityDetailsType
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
