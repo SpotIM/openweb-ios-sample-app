@@ -14,6 +14,7 @@ protocol OWClarityDetailsViewViewModelingInputs {
 }
 
 protocol OWClarityDetailsViewViewModelingOutputs {
+    var navigationTitle: String { get }
     var topParagraphAttributedString: NSAttributedString { get }
     var detailsTitleText: String { get }
     var paragraphItems: [OWClarityParagraphItem] { get }
@@ -36,6 +37,15 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     init(type: OWClarityDetailsType) {
         self.type = type
     }
+
+    lazy var navigationTitle: String = {
+        switch type {
+        case .rejected:
+            return "Comment rejected"
+        case .pending:
+            return "Awaiting review"
+        }
+    }()
 
     // TODO: translations!
     lazy var topParagraphAttributedString: NSAttributedString = {

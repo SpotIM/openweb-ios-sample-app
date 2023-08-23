@@ -13,6 +13,9 @@ import RxSwift
 
 class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
+        static let closeButtonSize: CGFloat = 28
+        static let navigationTitleTrailingPadding: CGFloat = 8
+        static let navigationBottomPadding: CGFloat = 10
         static let horizontalPadding: CGFloat = 16
         static let verticalPadding: CGFloat = 20
         static let titleTopPadding: CGFloat = 12
@@ -21,6 +24,40 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         static let buttomBottomPadding: CGFloat = 36
         static let buttonTextPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
     }
+
+    fileprivate lazy var titleLabel: UILabel = {
+        return UILabel()
+            .font(OWFontBook.shared.font(typography: .bodyContext))
+            .text(viewModel.outputs.navigationTitle)
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
+            .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var closeButton: UIButton = {
+        return UIButton()
+            .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
+    }()
+
+    fileprivate lazy var topContainerView: UIView = {
+        let topContainerView = UIView()
+            .enforceSemanticAttribute()
+
+        topContainerView.addSubview(closeButton)
+        closeButton.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(Metrics.navigationBottomPadding)
+            make.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
+            make.size.equalTo(Metrics.closeButtonSize)
+        }
+
+        topContainerView.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(Metrics.navigationBottomPadding)
+            make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
+            make.trailing.equalTo(closeButton.OWSnp.leading).inset(Metrics.navigationTitleTrailingPadding)
+        }
+
+        return topContainerView
+    }()
 
     fileprivate lazy var topParagraphLabel: UILabel = {
         return UILabel()
@@ -80,9 +117,14 @@ fileprivate extension OWClarityDetailsView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
+        self.addSubview(topContainerView)
+        topContainerView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+
         self.addSubview(topParagraphLabel)
         topParagraphLabel.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().inset(Metrics.verticalPadding)
+            make.top.equalTo(topContainerView.OWSnp.bottom).offset(Metrics.verticalPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
         }
 
@@ -110,6 +152,8 @@ fileprivate extension OWClarityDetailsView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
                 self.topParagraphLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.detailsTitleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
@@ -119,6 +163,7 @@ fileprivate extension OWClarityDetailsView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
                 self.topParagraphLabel.font = OWFontBook.shared.font(typography: .bodyText)
                 self.detailsTitleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.gotItButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
