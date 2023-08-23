@@ -75,6 +75,24 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             }
     }
 
+    func commentThreadView(commentThreadData: OWCommentThreadRequiredData,
+                           callbacks: OWViewActionsCallbacks?
+    ) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWCommentThreadCoordinatorResult>.self)
+            })
+            .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                guard let self = self else { return .empty() }
+                let commentThreadCoordinator = OWCommentThreadCoordinator(commentThreadData: commentThreadData,
+                                                                          actionsCallbacks: callbacks)
+                self.store(coordinator: commentThreadCoordinator)
+                return commentThreadCoordinator.showableComponent()
+            }
+    }
+
     func reportReasonView(reportData: OWReportReasonsRequiredData,
                           callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
