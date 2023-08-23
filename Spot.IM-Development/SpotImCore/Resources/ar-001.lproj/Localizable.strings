@@ -155,3 +155,5 @@
 "View x replies" = "عرض %d ردود";
 "View x reply" = "عرض %d رد";
 "View x of x replies" = "عرض %d من %d ردود";
+"ViewNewComments" = "عرض %d تعليقات جديدة";
+"TypingNow" = "يكتب الآن %d";

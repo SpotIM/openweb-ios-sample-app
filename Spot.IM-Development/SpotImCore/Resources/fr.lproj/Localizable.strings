@@ -156,3 +156,5 @@
 "View x replies" = "Afficher %d réponses";
 "View x reply" = "Afficher une réponse";
 "View x of x replies" = "Afficher %d sur %d réponses";
+"ViewNewComments" = "Afficher %d nouveaux commentaires";
+"TypingNow" = "%d en train de taper";
