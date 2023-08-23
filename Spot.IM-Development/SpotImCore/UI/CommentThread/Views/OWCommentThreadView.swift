@@ -147,11 +147,21 @@ fileprivate extension OWCommentThreadView {
             .subscribe(onNext: { [weak self] index in
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 guard let self = self else { return }
-                UIView.animate(withDuration: Metrics.highlightScrollAnimationDuration, animations: {
-                    self.tableView.scrollToRow(at: cellIndexPath, at: .middle, animated: false)
-                }) { _ in
+
+                CATransaction.begin()
+                self.tableView.beginUpdates()
+                CATransaction.setCompletionBlock {
+                    // Code to be executed upon completion
                     self.viewModel.inputs.scrolledToCellIndex.onNext(index)
                 }
+                if (index > 0) {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                } else {
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
+                self.tableView.endUpdates()
+                CATransaction.commit()
             })
             .disposed(by: disposeBag)
 
