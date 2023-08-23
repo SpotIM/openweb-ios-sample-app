@@ -20,19 +20,6 @@ class OWClarityDetailsVC: UIViewController {
         return OWClarityDetailsView(viewModel: viewModel.outputs.clarityDetailsViewViewModel)
     }()
 
-    fileprivate lazy var closeButton: UIButton = {
-        return UIButton()
-            .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
-            .contentMode(.center)
-    }()
-
-    fileprivate lazy var navigationTitle: UILabel = {
-        return UILabel()
-            .text("Awaiting Review")
-            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .bodyContext))
-    }()
-
     fileprivate let viewModel: OWClarityDetailsViewModeling
     let disposeBag: DisposeBag = DisposeBag()
 
@@ -42,42 +29,30 @@ class OWClarityDetailsVC: UIViewController {
 
         setupViews()
         setupObservers()
-        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 }
 
 fileprivate extension OWClarityDetailsVC {
     func setupViews() {
-        self.title = "Awaiting Review" // TODO: from VM according to type
-        setupNavControllerSettings()
-
-        view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+        view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: .light)
 
         view.addSubview(clarityDetailsView)
         clarityDetailsView.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea()
             make.leading.trailing.bottom.equalToSuperview()
         }
-
-        closeButton.OWSnp.makeConstraints { make in
-            make.size.equalTo(Metrics.closeButtonSize)
-        }
-    }
-
-    func setupNavControllerSettings() {
-        // Setup close button
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
-
-        // Hide navigation back button
-        navigationItem.setHidesBackButton(true, animated: false)
-
-        // Disable navigation back by swipe
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
 
     func setupObservers() {
@@ -86,16 +61,7 @@ fileprivate extension OWClarityDetailsVC {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
-
-//        closeButton.rx.tap
-//            .bind(to: viewModel.outputs.reportReasonViewViewModel.inputs.cancelReportReasonTap)
-//            .disposed(by: disposeBag)
-    }
-
-    func applyAccessibility() {
-        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentidier
     }
 }

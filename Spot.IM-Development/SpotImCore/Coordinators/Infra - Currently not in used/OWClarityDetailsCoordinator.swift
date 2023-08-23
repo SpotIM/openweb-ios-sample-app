@@ -93,5 +93,6 @@ fileprivate extension OWClarityDetailsCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWClarityDetailsViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
         // TODO: cancel, exit, communityGuidelines
+
     }
 }
