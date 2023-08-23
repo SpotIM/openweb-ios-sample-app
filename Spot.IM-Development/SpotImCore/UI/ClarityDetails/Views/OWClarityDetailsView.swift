@@ -148,6 +148,14 @@ fileprivate extension OWClarityDetailsView {
     }
 
     func setupObservers() {
+        closeButton.rx.tap
+            .bind(to: viewModel.inputs.closeClick)
+            .disposed(by: disposeBag)
+
+        gotItButton.rx.tap
+            .bind(to: viewModel.inputs.gotItClick)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
