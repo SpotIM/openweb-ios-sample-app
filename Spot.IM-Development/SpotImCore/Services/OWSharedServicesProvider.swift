@@ -182,7 +182,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWRealtimeUpdateService(servicesProvider: self)
     }()
 
-
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
