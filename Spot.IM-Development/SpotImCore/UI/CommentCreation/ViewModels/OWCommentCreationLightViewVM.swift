@@ -43,7 +43,6 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let viewableMode: OWViewableMode
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     fileprivate lazy var postId = OWManager.manager.postId
@@ -138,11 +137,9 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }
 
     init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          viewableMode: OWViewableMode) {
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
-        self.viewableMode = viewableMode
         commentType = commentCreationData.commentCreationType
         setupObservers()
     }
