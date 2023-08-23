@@ -55,7 +55,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     lazy var footerViewModel: OWCommentCreationFooterViewModeling = {
-        return OWCommentCreationFooterViewModel(commentCreationType: commentCreationData.commentCreationType, viewableMode: viewableMode)
+        return OWCommentCreationFooterViewModel(commentCreationType: commentCreationData.commentCreationType)
     }()
 
     lazy var commentCounterViewModel: OWCommentReplyCounterViewModeling = {
@@ -150,10 +150,6 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
         commentCreationContentVM.outputs.commentContent
             .map { $0.hasContent() }
             .bind(to: footerViewModel.inputs.ctaEnabled)
-            .disposed(by: disposeBag)
-
-        footerViewModel.outputs.imagePicked
-            .bind(to: commentCreationContentVM.inputs.imagePicked)
             .disposed(by: disposeBag)
     }
 }
