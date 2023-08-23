@@ -11,5 +11,5 @@ import UIKit
 
 enum OWImagePickerPresenterResponseType {
     case cancled
-    case mediaInfo([UIImagePickerController.InfoKey : AnyObject])
+    case mediaInfo([UIImagePickerController.InfoKey: AnyObject])
 }
