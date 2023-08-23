@@ -131,7 +131,7 @@ fileprivate extension OWClarityDetailsViewVM {
         ) { style, _ in
             return style
         }
-        .subscribe(onNext: { [weak self] style in
+        .subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             let attString = self.getTopParagraphAttributedString(clarityType: self.type)
             self._topParagraphAttributedString.onNext(attString)
