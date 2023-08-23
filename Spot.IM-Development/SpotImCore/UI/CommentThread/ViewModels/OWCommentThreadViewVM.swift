@@ -29,6 +29,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
     var threadOffset: Observable<CGPoint> { get }
+    var dataSourceTransition: OWViewTransition { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -46,6 +47,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 1 // second
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -188,6 +190,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return changeThreadOffset
             .asObservable()
     }
+
+    var dataSourceTransition: OWViewTransition = .reload
 
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -371,6 +375,10 @@ fileprivate extension OWCommentThreadViewViewModel {
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -437,6 +445,15 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 self._commentsPresentationData.removeAll()
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
+        // Re-enabling animations in the pre conversation table view
+        commentThreadFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
@@ -595,23 +612,31 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(replyClickOutputObservable)
             }
+            .do(onNext: { [weak self] comment in
+                self?.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+            })
             .subscribe(onNext: { [weak self] comment in
-                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+                guard let self = self else { return }
+                self.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
 
         // Responding to share url from comment cells VMs
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let shareClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWCommentViewModeling)> in
+                let shareClickOutputObservable: [Observable<(URL, OWCommentViewModeling)>] = commentCellsVms.map { commentCellVm in
                     let commentVM = commentCellVm.outputs.commentVM
                     return commentVM.outputs.commentEngagementVM
                         .outputs.shareCommentUrl
+                        .map { ($0, commentVM) }
                 }
                 return Observable.merge(shareClickOutputObservable)
             }
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] shareUrl -> Observable<OWRxPresenterResponseType> in
+            .do(onNext: { [weak self] _, commentVm in
+                self?.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
+            .flatMap { [weak self] shareUrl, _ -> Observable<OWRxPresenterResponseType> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.presenterService()
                     .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
@@ -673,9 +698,11 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return }
                 switch mode {
                 case .collapse:
+                    self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
                     commentPresentationData.setRepliesPresentation([])
                     commentPresentationData.update.onNext()
                 case .expand:
+                    self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
@@ -684,15 +711,22 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Responding to comment avatar click
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<URL> in
-                let avatarClickOutputObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
+                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     return avatarVM.outputs.openProfile
+                        .map { url, type in
+                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
+                        }
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] url in
+            .subscribe(onNext: { [weak self] url, type, userId in
                 self?._openProfile.onNext(url)
+                switch type {
+                case .currentUser: self?.sendEvent(for: .myProfileClicked(source: .comment))
+                case .otherUser: self?.sendEvent(for: .userProfileClicked(userId: userId))
+                }
             })
             .disposed(by: disposeBag)
 
@@ -721,6 +755,41 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .subscribe(onNext: { [weak self] url in
                 self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
+
+        // Observe on rank click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(OWCommentId, SPRankChange)> in
+                let rankClickObservable: [Observable<(OWCommentId, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentId, SPRankChange)> in
+                    let commentRankVm = commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.votingVM
+
+                    return commentRankVm.outputs.rankChanged
+                        .map { (commentCellVm.outputs.commentVM.outputs.comment.id ?? "", $0) }
+                }
+                return Observable.merge(rankClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId, rank in
+                guard let self = self,
+                      let eventType = rank.analyticsEventType(commentId: commentId)
+                else { return }
+                self.sendEvent(for: eventType)
+            })
+            .disposed(by: disposeBag)
+
+        // Observe on read more click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWCommentId> in
+                let readMoreClickObservable: [Observable<OWCommentId>] = commentCellsVms.map { commentCellVm -> Observable<OWCommentId> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.readMoreTap
+                        .map { commentCellVm.outputs.commentVM.outputs.comment.id ?? "" }
+                }
+                return Observable.merge(readMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId in
+                self?.sendEvent(for: .commentReadMoreClicked(commentId: commentId))
             })
             .disposed(by: disposeBag)
 
@@ -763,7 +832,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         case .completion:
                             // Do nothing
                             break
-                        case .selected(let action):
+                        case .selected:
                             // TODO: handle selection
                             break
                         }
@@ -784,6 +853,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(openMenuClickObservable)
             }
+            .do(onNext: { [weak self] (_, _, commentVm) in
+                self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
@@ -795,16 +867,19 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return }
                 switch result {
                 case .completion:
-                    break
+                    self.sendEvent(for: .commentMenuClosed(commentId: commentVm.outputs.comment.id ?? ""))
                 case .selected(action: let action):
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
-                        break
+                        self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
                     case OWCommentOptionsMenu.deleteComment:
+                        self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
                     case OWCommentOptionsMenu.editComment:
+                        self.sendEvent(for: .commentMenuEditClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.commentCreationTap.onNext(.edit(comment: commentVm.outputs.comment))
                     case OWCommentOptionsMenu.muteUser:
+                        self.sendEvent(for: .commentMenuMuteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.muteCommentUser.onNext(commentVm)
                     default:
                         return
@@ -815,7 +890,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Delete"), type: OWCommentDeleteAlert.delete, style: .destructive),
@@ -827,15 +902,16 @@ fileprivate extension OWCommentThreadViewViewModel {
                         message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
                         actions: actions,
                         viewableMode: self.viewableMode
-                    )
+                    ).map { ($0, commentVm) }
             }
-            .map { result -> Bool in
+            .map { result, commentVm -> Bool in
                 switch result {
                 case .completion:
                     return false
                 case .selected(let action):
                     switch action.type {
                     case OWCommentDeleteAlert.delete:
+                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         return true
                     default:
                         return false
@@ -1049,5 +1125,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                 articleUrl: commentThreadData.article.url.absoluteString,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
                 component: .commentCreation)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

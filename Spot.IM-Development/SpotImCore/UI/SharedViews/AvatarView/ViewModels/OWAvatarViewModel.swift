@@ -19,7 +19,7 @@ protocol OWAvatarViewModelingInputs {
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var shouldShowOnlineIndicator: Observable<Bool> { get }
-    var openProfile: Observable<URL> { get }
+    var openProfile: Observable<(URL, OWUserProfileType)> { get }
     var openPublisherProfile: Observable<String> { get }
 }
 
@@ -116,8 +116,8 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         }
     }
 
-    fileprivate var _openAvatarProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openAvatarProfile = PublishSubject<(URL, OWUserProfileType)>()
+    var openProfile: Observable<(URL, OWUserProfileType)> {
         _openAvatarProfile
             .asObservable()
     }
@@ -201,11 +201,19 @@ fileprivate extension OWAvatarViewModel {
             }
             .unwrap()
 
-        Observable.merge(userProfileWithToken, userProfileWithoutToken)
+        userProfileWithToken
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
-                self._openAvatarProfile.onNext(url)
+                self._openAvatarProfile.onNext((url, .currentUser))
+            })
+            .disposed(by: disposeBag)
+
+        userProfileWithoutToken
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] url in
+                guard let self = self else { return }
+                self._openAvatarProfile.onNext((url, .otherUser))
             })
             .disposed(by: disposeBag)
 

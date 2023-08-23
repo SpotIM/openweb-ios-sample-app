@@ -26,10 +26,10 @@ final class OWCommentActionsView: SPBaseView {
 
     private let replyDefaultTitle: String
 
-    private let stackView: SPBaseStackView = .init()
+    private let stackView = SPBaseStackView()
 
-    private let replyButton: SPBaseButton = .init()
-    private let votingView: OWCommentVotingView = .init()
+    private let replyButton = SPBaseButton()
+    private let votingView = OWCommentVotingView()
 
     private var isReadOnlyMode: Bool = false
 

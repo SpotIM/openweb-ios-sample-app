@@ -40,13 +40,13 @@ final class SPCommentCreationNewHeaderView: SPBaseView {
     }
     weak var delegate: SPCommentCreationNewHeaderViewDelegate?
 
-    let closeButton: SPBaseButton = .init()
+    let closeButton = SPBaseButton()
 
-    private let headerTitleLabel: SPBaseLabel = .init()
-    private let replyingLabel: SPBaseLabel = .init()
-    private let commentAuthorLabel: SPBaseLabel = .init()
-    private let commentLabel: SPBaseLabel = .init()
-    private let separatorView: SPBaseView = .init()
+    private let headerTitleLabel = SPBaseLabel()
+    private let replyingLabel = SPBaseLabel()
+    private let commentAuthorLabel = SPBaseLabel()
+    private let commentLabel = SPBaseLabel()
+    private let separatorView = SPBaseView()
 
     private var replyingLabelTopConstraint: OWConstraint? = nil
     private var commentLabelTopConstraint: OWConstraint? = nil

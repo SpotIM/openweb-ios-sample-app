@@ -76,7 +76,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
-        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            guard let self = self else { return .reload }
+            return self.viewModel.outputs.dataSourceTransition
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
@@ -87,6 +90,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
         let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
         dataSource.animationConfiguration = animationConfiguration
+
         return dataSource
     }()
 
@@ -211,15 +215,15 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.performTableViewAnimation
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
-                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
-                        self.tableView.beginUpdates()
-                        self.tableView.endUpdates()
-                    }
-                })
-                .disposed(by: disposeBag)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                    self.tableView.beginUpdates()
+                    self.tableView.endUpdates()
+                }
+            })
+            .disposed(by: disposeBag)
 
         tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
@@ -238,6 +242,14 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
                 self.tableView.setContentOffset(.zero, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationDataJustReceived
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.setContentOffset(.zero, animated: false)
             })
             .disposed(by: disposeBag)
 

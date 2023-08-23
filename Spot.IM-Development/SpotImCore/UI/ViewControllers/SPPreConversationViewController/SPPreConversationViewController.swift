@@ -15,12 +15,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     let adsProvider: AdsProvider
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
-    private lazy var adBannerView: SPAdBannerView = .init()
+    private lazy var adBannerView = SPAdBannerView()
     private lazy var communityQuestionView = SPCommunityQuestionView()
-    private lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
-    private lazy var header: SPPreConversationHeaderView = .init()
-    private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
-    private lazy var footerView: SPPreConversationFooter = .init()
+    private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
+    private lazy var header = SPPreConversationHeaderView()
+    private lazy var whatYouThinkView = SPMainConversationFooterView()
+    private lazy var footerView = SPPreConversationFooter()
 
     private var checkTableViewHeight: CGFloat = 0
     let maxSectionCount: Int

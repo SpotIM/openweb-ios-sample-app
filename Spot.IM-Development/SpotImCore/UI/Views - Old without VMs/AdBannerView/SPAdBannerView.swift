@@ -14,7 +14,7 @@ internal final class SPAdBannerView: SPBaseView {
         static let bannerViewIdentifier = "ad_banner_banner_view_id"
     }
 
-    private lazy var bannerContainerView: SPBaseView = .init()
+    private lazy var bannerContainerView = SPBaseView()
     private var bannerView: UIView?
     private var bannerContainerHeight: OWConstraint?
 
