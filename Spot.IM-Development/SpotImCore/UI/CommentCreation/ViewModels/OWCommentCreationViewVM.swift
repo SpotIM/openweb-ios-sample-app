@@ -291,7 +291,7 @@ fileprivate extension OWCommentCreationViewViewModel {
                     message: nil,
                     actions: actions,
                     preferredStyle: .actionSheet,
-                    viewableMode: viewableMode
+                    viewableMode: self.viewableMode
                 )
         }
         .map { [weak self] response -> UIImagePickerController.SourceType? in
@@ -320,7 +320,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             guard let self = self else { return .empty() }
             return self.servicesProvider
                 .presenterService()
-                .showImagePicker(mediaTypes: ["public.image"], sourceType: sourceType, viewableMode: viewableMode)
+                .showImagePicker(mediaTypes: ["public.image"], sourceType: sourceType, viewableMode: self.viewableMode)
         }
         .map { response -> UIImage? in
             switch response {
