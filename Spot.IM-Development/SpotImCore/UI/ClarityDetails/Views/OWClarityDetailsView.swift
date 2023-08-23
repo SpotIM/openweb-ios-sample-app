@@ -61,9 +61,9 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var topParagraphLabel: UILabel = {
         return UILabel()
-            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .bodyText))
-            .attributedText(viewModel.outputs.topParagraphAttributedString)
+//            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
+//            .font(OWFontBook.shared.font(typography: .bodyText))
+//            .attributedText(viewModel.outputs.topParagraphAttributedString)
             .numberOfLines(0)
     }()
 
@@ -154,6 +154,10 @@ fileprivate extension OWClarityDetailsView {
 
         gotItButton.rx.tap
             .bind(to: viewModel.inputs.gotItClick)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.topParagraphAttributedStringObservable
+            .bind(to: topParagraphLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
