@@ -68,7 +68,7 @@ fileprivate extension OWPermissionsService {
     func handlePermissionDenied(for type: PermissionType, viewableMode: OWViewableMode) {
         let actions = [
             OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWOpenSettingsAlert.cancel),
-            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Open settings"), type: OWOpenSettingsAlert.openSettings)
+            OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OpenSettings"), type: OWOpenSettingsAlert.openSettings)
         ]
 
         self.servicesProvider

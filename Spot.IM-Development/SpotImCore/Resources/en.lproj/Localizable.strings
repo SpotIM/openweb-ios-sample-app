@@ -94,10 +94,10 @@
 "Options menu" = "Options menu";
 "Post a Comment" = "Post a Comment";
 "Show Comments" = "Show Comments";
-"Take a Photo" = "Take a Photo";
-"Choose from Gallery" = "Choose from Gallery";
+"TakeAPhoto" = "Take a Photo";
+"ChooseFromGallery" = "Choose from Gallery";
 "CameraPermissionsAreNeeded" = "Camera permissions are needed";
-"Open settings" = "Open settings";
+"OpenSettings" = "Open settings";
 "Edit" = "Edit";
 "Edited" = " (Edited)";
 "Edit a Comment" = "Edit a Comment";
