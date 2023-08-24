@@ -63,7 +63,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
             .share()
     }()
 
-    fileprivate lazy var newCommentsObservable: Observable<[OWComment]> = {
+    fileprivate var newCommentsObservable: Observable<[OWComment]> {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> [OWComment]? in
                 guard let self = self else { return nil }
@@ -71,8 +71,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
             }
             .unwrap()
             .asObservable()
-            .share()
-    }()
+    }
 
     var newCommentsCount: Observable<Int> {
         return _newCommentsCache.map { $0.keys.count }
