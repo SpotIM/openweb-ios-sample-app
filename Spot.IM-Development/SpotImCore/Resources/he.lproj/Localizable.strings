@@ -94,10 +94,10 @@
 "Options menu" = "Options menu";
 "Post a Comment" = "פרסם תגובה";
 "Show Comments" = "הצג תגובות";
-"Take a Photo" = "צלם תמונה";
-"Choose from Gallery" = "בחר מגלריה";
+"TakeAPhoto" = "צלם תמונה";
+"ChooseFromGallery" = "בחר מגלריה";
 "CameraPermissionsAreNeeded" = "יש צורך בגישה למצלמה";
-"Open settings" = "פתח הגדרות";
+"OpenSettings" = "פתח הגדרות";
 "Edit" = "עריכה";
 "Edited" = " (נערך)";
 "Edit a Comment" = "ערוך תגובה";
