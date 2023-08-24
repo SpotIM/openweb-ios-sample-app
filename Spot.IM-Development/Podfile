@@ -2,7 +2,7 @@ platform :ios, '11.0'
 inhibit_all_warnings!
 
 abstract_target 'Shared' do
-  use_frameworks!
+  use_frameworks! :linkage => :static
 
   pod 'RxSwift', '~> 6.5'
   pod 'RxCocoa', '~> 6.5'
