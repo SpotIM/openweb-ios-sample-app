@@ -9,6 +9,6 @@
 import Foundation
 
 struct OWCommentCreationCtaData {
-    let text: String
+    let commentContent: OWCommentCreationContent
     let commentLabelIds: [String]
 }

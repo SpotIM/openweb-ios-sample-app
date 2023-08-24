@@ -72,10 +72,19 @@ fileprivate extension OWCommentCreatorNetworkHelper {
     func getContentRequestParam(from commentCreationData: OWCommentCreationCtaData) -> [[String: Any]] {
         var content: [[String: Any]] = []
 
-        if !commentCreationData.text.isEmpty {
+        if !commentCreationData.commentContent.text.isEmpty {
             content.append([
                 "type": "text",
-                "text": commentCreationData.text
+                "text": commentCreationData.commentContent.text
+            ])
+        }
+
+        if let imageContent = commentCreationData.commentContent.image {
+            content.append([
+                "type": "image",
+                "imageId": imageContent.imageId,
+                "originalWidth": imageContent.originalWidth,
+                "originalHeight": imageContent.originalHeight
             ])
         }
 
