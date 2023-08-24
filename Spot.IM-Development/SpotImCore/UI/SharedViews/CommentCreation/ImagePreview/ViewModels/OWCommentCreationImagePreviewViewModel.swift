@@ -18,6 +18,7 @@ protocol OWCommentCreationImagePreviewViewModelingInputs {
 protocol OWCommentCreationImagePreviewViewModelingOutputs {
     var imageOutput: Observable<UIImage> { get }
     var shouldShowView: Observable<Bool> { get }
+    var isUploadingImageObservable: Observable<Bool> { get }
     var shouldShowLoadingState: Observable<Bool> { get }
     var removeButtonTapped: Observable<Void> { get }
 }
@@ -54,6 +55,11 @@ class OWCommentCreationImagePreviewViewModel: OWCommentCreationImagePreviewViewM
     }
 
     var shouldShowLoadingState: Observable<Bool> {
+        isUploadingImage
+            .asObservable()
+    }
+
+    var isUploadingImageObservable: Observable<Bool> {
         isUploadingImage
             .asObservable()
     }

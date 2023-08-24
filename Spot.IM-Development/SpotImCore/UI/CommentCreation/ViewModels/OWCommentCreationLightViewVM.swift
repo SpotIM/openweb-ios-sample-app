@@ -153,9 +153,14 @@ fileprivate extension OWCommentCreationLightViewViewModel {
             .bind(to: commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
 
-        commentCreationContentVM.outputs.commentContent
-            .map { $0.hasContent() }
-            .bind(to: footerViewModel.inputs.ctaEnabled)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            commentCreationContentVM.outputs.commentContent,
+            commentCreationContentVM.outputs.imagePreviewVM.outputs.isUploadingImageObservable
+        )
+        .map { commentContent, isUploadingImage -> Bool in
+            return commentContent.hasContent() && !isUploadingImage
+        }
+        .bind(to: footerViewModel.inputs.ctaEnabled)
+        .disposed(by: disposeBag)
     }
 }
