@@ -907,8 +907,8 @@
 		9E4163BF29F6C9C700819BC2 /* OWReportReasonCancelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */; };
 		9E4163C329F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C229F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift */; };
 		9E4163C529F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C429F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift */; };
-		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
@@ -968,8 +968,8 @@
 		9ED2E58D29EC01AD00B39A00 /* OWReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58C29EC01AD00B39A00 /* OWReportReasonView.swift */; };
 		9ED2E58F29EC01E900B39A00 /* OWReportReasonSubmittedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58E29EC01E900B39A00 /* OWReportReasonSubmittedVC.swift */; };
 		9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E59029EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift */; };
-		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDED29798919000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
 		9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */; };
@@ -6004,7 +6004,6 @@
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
 				8D455ADB296C13CA0091A027 /* ShellScript */,
-				977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -6024,7 +6023,6 @@
 				F92DD7B32A7E8B9E00A2BE5B /* Sources */,
 				F92DD7B42A7E8B9E00A2BE5B /* Frameworks */,
 				F92DD7B52A7E8B9E00A2BE5B /* Resources */,
-				00DBB773F49D7DCABBAC26B2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -6132,23 +6130,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00DBB773F49D7DCABBAC26B2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		060C6559D67DB478867B07E8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6205,23 +6186,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
-		};
-		977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7091,12 +7055,12 @@
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
 				3D301BEA2A8E89DC0012B526 /* UIViewController+LargeTitles.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
-				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				3D1D24912A4AF60600692E2A /* ToolbarCollectionCell.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
-				9EE2CDED29798919000C0E38 /* (null) in Sources */,
+				9EE2CDED29798919000C0E38 /* BuildFile in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
 				9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
@@ -7116,7 +7080,7 @@
 				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
-				9E53758C297841C000C85983 /* (null) in Sources */,
+				9E53758C297841C000C85983 /* BuildFile in Sources */,
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				3DF9418A2A56DB6800A687BD /* AutomationVC.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
@@ -7204,7 +7168,7 @@
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleFlowsViewModel.swift in Sources */,
 				9E7D5B122A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift in Sources */,
-				9E53758E2978476900C85983 /* (null) in Sources */,
+				9E53758E2978476900C85983 /* BuildFile in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
