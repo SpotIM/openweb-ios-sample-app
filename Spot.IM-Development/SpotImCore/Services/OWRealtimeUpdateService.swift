@@ -9,14 +9,18 @@
 import RxSwift
 
 protocol OWRealtimeUpdateServicing {
-    var shouldRealtimeUpdate: BehaviorSubject<OWRealtimeUpdateState> { get } // TODO change to func
+    var state: Observable<OWRealtimeUpdateState> { get }
     var realtimeUpdateType: Observable<OWRealtimeIndicatorType> { get }
     var newComments: Observable<[OWComment]> { get }
+    var newCommentsCount: Observable<Int> { get }
+    func update(state: OWRealtimeUpdateState)
+    func cleanCache()
 }
 
 class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
 
-    var shouldRealtimeUpdate = BehaviorSubject<OWRealtimeUpdateState>(value: .disable)
+    fileprivate var _shouldRealtimeUpdate = BehaviorSubject<OWRealtimeUpdateState>(value: .disable)
+    fileprivate var _newCommentsCache = BehaviorSubject<[String: OWComment]>(value: [:])
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -26,6 +30,27 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
         return OWManager.manager.spotId
     }
 
+    fileprivate lazy var isblitzEnabled: Observable<Bool> = {
+        let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
+        return configurationService.config(spotId: self.spotId)
+            .map { [weak self] config -> Bool? in
+                return config.mobileSdk.blitzEnabled
+            }
+            .unwrap()
+            .take(1)
+            .asObservable()
+    }()
+
+    fileprivate lazy var isRealtimeIndicatorEnabled: Observable<Bool> = {
+        return _shouldRealtimeUpdate
+            .withLatestFrom(isblitzEnabled) { shouldUpdate, isblitzEnabled in
+                return isblitzEnabled && shouldUpdate == .enable
+            }
+            .distinctUntilChanged()
+            .asObservable()
+            .share()
+    }()
+
     fileprivate lazy var typingCount: Observable<Int> = {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> Int? in
@@ -34,54 +59,41 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
             }
             .unwrap()
             .distinctUntilChanged()
-            .debug("RIVI: typingCount")
             .asObservable()
             .share()
     }()
 
-    lazy var newComments: Observable<[OWComment]> = {
+    fileprivate lazy var newCommentsObservable: Observable<[OWComment]> = {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> [OWComment]? in
                 guard let self = self else { return nil }
                 return try? realtimeData.data?.newComments(forConversation: ("\(self.spotId)_\(self.postId)"))
             }
             .unwrap()
-            .debug("RIVI: newComments")
             .asObservable()
             .share()
     }()
 
-    fileprivate lazy var newCommentsCount: Observable<Int> = {
-        return newComments
-            .map { $0.count }
+    var newCommentsCount: Observable<Int> {
+        return _newCommentsCache.map { $0.keys.count }
+    }
+
+    var newComments: Observable<[OWComment]> {
+        return _newCommentsCache.map { $0.values.map { $0 } }
+    }
+
+    lazy var state: Observable<OWRealtimeUpdateState> = {
+        return _shouldRealtimeUpdate
             .distinctUntilChanged()
-            .debug("RIVI: newCommentsCount")
             .asObservable()
             .share()
     }()
 
-    fileprivate lazy var isRealtimeIndicatorEnabled: Observable<Bool> = {
-        // Fetch the spot configuration
-        let spotConfigurationObservable = servicesProvider.spotConfigurationService()
-            .config(spotId: self.spotId)
-
-        return shouldRealtimeUpdate
-            .withLatestFrom(spotConfigurationObservable) { shouldUpdate, config in
-                return (shouldUpdate, config)
-            }
-            .map { shouldUpdate, config in
-                guard let blitzEnabled = config.mobileSdk.blitzEnabled, shouldUpdate == .enable else { return false }
-                return blitzEnabled
-            }
-            .debug("RIVI: isRealtimeIndicatorEnabled")
-            .asObservable()
-    }()
-
-    var realtimeUpdateType: Observable<OWRealtimeIndicatorType> {
+    lazy var realtimeUpdateType: Observable<OWRealtimeIndicatorType> = {
         return Observable.combineLatest(isRealtimeIndicatorEnabled,
                                         typingCount,
                                         newCommentsCount)
-        .map { isEnabled, typingCount, newCommentsCount in
+        .map { isEnabled, typingCount, newCommentsCount -> OWRealtimeIndicatorType in
             guard isEnabled else { return .none }
 
             let updateType: OWRealtimeIndicatorType
@@ -99,16 +111,52 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
 
             return updateType
         }
-        .debug("RIVI realtimeUpdateType")
+        .distinctUntilChanged()
         .asObservable()
         .share()
-    }
+    }()
 
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let realtimeService: OWRealtimeServicing
+    fileprivate let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
         self.realtimeService = servicesProvider.realtimeService()
+        self.setupObservers()
+    }
+
+    func update(state: OWRealtimeUpdateState) {
+        _shouldRealtimeUpdate.onNext(state)
+        if state == .disable {
+            cleanCache()
+        }
+    }
+
+    func cleanCache() {
+        _newCommentsCache.onNext([:])
+    }
+}
+
+extension OWRealtimeUpdateService {
+    func setupObservers() {
+        newCommentsObservable
+            .subscribe(onNext: { [weak self] newComments in
+                guard let self = self else { return }
+
+                newComments.forEach { comment in
+                    // make sure comment is not reply and not already in conversation
+                    guard comment.parentId == nil || comment.parentId == "" else { return }
+                    self.addComment(key: comment.id ?? "", comment: comment)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func addComment(key: String, comment: OWComment) {
+        guard let currentCache = try? _newCommentsCache.value() else { return }
+        var updatedCache = currentCache
+        updatedCache[key] = comment
+        _newCommentsCache.onNext(updatedCache)
     }
 }

@@ -41,8 +41,10 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
     let panHorisontalPositionDidChange = PublishSubject<CGFloat>()
     let panHorisontalPositionChangeDidEnd = PublishSubject<Void>()
 
+    fileprivate let _tapped = PublishSubject<Void>()
     var tapped: Observable<Void> {
-        tap.asObservable()
+        _tapped
+            .asObservable()
     }
 
     var horisontalPositionDidChange: Observable<CGFloat> {
@@ -86,29 +88,39 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
 
 extension OWRealtimeIndicationViewModel {
     func setupObservers() {
-
         realtimeUpdateService.realtimeUpdateType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
-                switch type {
-                case .all(_, _):
-                    self._shouldShowTypingLabel.onNext(true)
-                    self._shouldShowNewCommentsLabel.onNext(true)
+                let (shouldShowTyping, shouldShowNewComments) = self.displaySettings(for: type)
 
-                case .newComments(_):
-                    self._shouldShowTypingLabel.onNext(false)
-                    self._shouldShowNewCommentsLabel.onNext(true)
-
-                case .typing(_):
-                    self._shouldShowTypingLabel.onNext(true)
-                    self._shouldShowNewCommentsLabel.onNext(false)
-
-                case .none:
-                    self._shouldShowTypingLabel.onNext(false)
-                    self._shouldShowNewCommentsLabel.onNext(false)
-                }
+                self._shouldShowTypingLabel.onNext(shouldShowTyping)
+                self._shouldShowNewCommentsLabel.onNext(shouldShowNewComments)
             })
             .disposed(by: disposeBag)
+
+        tap
+            .withLatestFrom(realtimeUpdateService.newCommentsCount) { _, newCommentsCount in
+                return newCommentsCount
+            }
+            .subscribe(onNext: { [weak self] newCommentsCount in
+                guard newCommentsCount > 0,
+                      let self = self else { return }
+                self._tapped.onNext()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    private func displaySettings(for type: OWRealtimeIndicatorType) -> (Bool, Bool) {
+        switch type {
+        case .all:
+            return (true, true)
+        case .newComments:
+            return (false, true)
+        case .typing:
+            return (true, false)
+        case .none:
+            return (false, false)
+        }
     }
 }

@@ -25,6 +25,10 @@ struct OWRealTimeData: Decodable {
         case conversationNewMessages = "conversation/new-messages"
     }
 
+    struct Metrics {
+        static let typingCountKey = "Overall"
+    }
+
     let onlineUsers: [String: [OWRealTimeOnlineUser]]?
 
     func totalCommentsCount(forConversation id: String) throws -> Int {
@@ -46,7 +50,7 @@ struct OWRealTimeData: Decodable {
     // Typing count method
     func totalTypingCount(forConversation id: String) throws -> Int {
         guard let typingCountDataArray = conversationTypingV2Users?[id],
-              let count = typingCountDataArray.first(where: { $0.key == "Overall" })?.count else {
+              let count = typingCountDataArray.first(where: { $0.key == Metrics.typingCountKey })?.count else {
             throw RealTimeError.conversationNotFound
         }
         return count

@@ -10,13 +10,11 @@ import Foundation
 import RxSwift
 
 protocol OWRealtimeIndicationAnimationViewModelingInputs {
-    func update(shouldShow: Bool)
-    func update(isShown: Bool)
+    func swiped()
 }
 
 protocol OWRealtimeIndicationAnimationViewModelingOutputs {
     var realtimeIndicationViewModel: OWRealtimeIndicationViewModeling { get }
-    var shouldShow: Observable<Bool> { get }
     var isShown: Observable<Bool> { get }
 }
 
@@ -37,26 +35,20 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
     }()
 
     fileprivate let _shouldShow = BehaviorSubject<Bool>(value: false)
-    var shouldShow: Observable<Bool> {
-        return _shouldShow
-            .distinctUntilChanged()
-            .asObservable()
-    }
-
     fileprivate let _isShown = BehaviorSubject<Bool>(value: false)
-    var isShown: Observable<Bool> {
-        return _isShown
-            .debug("RIVI1")
-            .distinctUntilChanged()
-            .asObservable()
-    }
+    lazy var isShown: Observable<Bool> = {
+        return Observable.combineLatest(_isShown,
+                                        _shouldShow) { isShown, shouldShow -> Bool in
+            guard shouldShow else { return false }
+            return isShown
+        }
+        .distinctUntilChanged()
+        .asObservable()
+        .share(replay: 1)
+    }()
 
-    func update(shouldShow: Bool) {
-        _shouldShow.onNext(shouldShow)
-    }
-
-    func update(isShown: Bool) {
-        _isShown.onNext(isShown)
+    func swiped() {
+        _isShown.onNext(false)
     }
 
     fileprivate var realtimeUpdateService: OWRealtimeUpdateServicing
@@ -74,13 +66,20 @@ extension OWRealtimeIndicationAnimationViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
-                switch type {
-                case .none:
-                    self.update(shouldShow: false)
-                default:
-                    break
+                let isShown = type != .none
+                self._isShown.onNext(isShown)
+            })
+            .disposed(by: disposeBag)
+
+        realtimeUpdateService.state
+            .subscribe(onNext: { [weak self] state in
+                guard let self = self else { return }
+                self._shouldShow.onNext(state == .enable)
+                if state == .disable {
+                    self.realtimeUpdateService.cleanCache()
                 }
             })
             .disposed(by: disposeBag)
+
     }
 }

@@ -12,7 +12,9 @@ import RxSwift
 protocol OWRealtimeServicing {
     func startFetchingData(postId: OWPostId)
     func stopFetchingData()
+    func reset()
     var realtimeData: Observable<OWRealTime> { get }
+    var onlineViewingUsersCount: Observable<Int> { get }
 }
 
 class OWRealtimeService: OWRealtimeServicing {
@@ -30,6 +32,18 @@ class OWRealtimeService: OWRealtimeServicing {
         self.servicesProvider = servicesProvider
         self.scheduler = scheduler
     }
+
+    lazy var onlineViewingUsersCount: Observable<Int> = {
+        return Observable.combineLatest(realtimeData,
+                                        currentPostId.unwrap())
+        .map { realtimeData, postId -> OWRealTimeOnlineViewingUsers? in
+            try? realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
+        }
+        .unwrap()
+        .map { $0.count }
+        .asObservable()
+        .share(replay: 1)
+    }()
 
     let _realtimeData = BehaviorSubject<OWRealTime?>(value: nil)
     var realtimeData: Observable<OWRealTime> {
@@ -92,6 +106,10 @@ class OWRealtimeService: OWRealtimeServicing {
         isCurrentlyFetching.onNext(false)
         // Dispose realtime subscription
         disposeBag = nil
+    }
+
+    func reset() {
+        _realtimeData.onNext(nil)
     }
 }
 

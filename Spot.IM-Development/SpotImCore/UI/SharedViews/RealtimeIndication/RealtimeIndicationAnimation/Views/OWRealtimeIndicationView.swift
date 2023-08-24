@@ -14,6 +14,8 @@ class OWRealtimeIndicationView: UIView {
         static let containerShdowOpacity: Float = 0.20
         static let containerShdowRadius: CGFloat = 20
         static let viewsPadding: CGFloat = 10
+        static let verticalSeparatorWidth: CGFloat = 1
+        static let cornerRadiusDivisor: CGFloat = 2
 
         static let margins: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
 
@@ -97,7 +99,7 @@ class OWRealtimeIndicationView: UIView {
         super.layoutSubviews()
 
         let height = self.frame.size.height
-        container.layer.cornerRadius = height / 2.0
+        container.layer.cornerRadius = height / Metrics.cornerRadiusDivisor
     }
 }
 
@@ -121,7 +123,7 @@ fileprivate extension OWRealtimeIndicationView {
         }
 
         verticalSeparatorBetweenTypingAndNewComments.OWSnp.makeConstraints { make in
-            make.width.equalTo(1)
+            make.width.equalTo(Metrics.verticalSeparatorWidth)
         }
     }
 
@@ -173,8 +175,7 @@ fileprivate extension OWRealtimeIndicationView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.container.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.container.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2,
-                                                                               themeStyle: currentStyle).cgColor
+                self.container.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
                 self.verticalSeparatorBetweenTypingAndNewComments.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2,
                                                                                                                 themeStyle: currentStyle)
             })
