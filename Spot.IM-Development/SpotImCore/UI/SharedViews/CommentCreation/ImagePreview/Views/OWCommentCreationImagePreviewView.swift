@@ -99,6 +99,18 @@ fileprivate extension OWCommentCreationImagePreviewView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.shouldShowView
+            .subscribe(onNext: { [weak self] shouldShowView in
+                guard let self = self else { return }
+                self.isHidden = !shouldShowView
+                if (!shouldShowView) {
+                    self.OWSnp.updateConstraints { make in
+                        make.height.equalTo(0)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.imageOutput
             .bind(to: imageView.rx.image)
             .disposed(by: disposeBag)
@@ -106,13 +118,6 @@ fileprivate extension OWCommentCreationImagePreviewView {
         viewModel.outputs.imageOutput
             .subscribe(onNext: { [weak self] image in
                 guard let self = self else { return }
-                guard let image = image else {
-                    self.OWSnp.updateConstraints { make in
-                        make.height.equalTo(0)
-                    }
-                    return
-                }
-
                 let ratio = image.size.width / image.size.height
                 let newHeight = self.imageView.frame.width / ratio
                 self.OWSnp.updateConstraints { make in

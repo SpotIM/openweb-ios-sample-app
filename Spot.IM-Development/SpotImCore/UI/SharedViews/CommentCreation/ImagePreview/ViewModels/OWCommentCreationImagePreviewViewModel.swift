@@ -10,13 +10,13 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationImagePreviewViewModelingInputs {
-    var image: BehaviorSubject<UIImage?> { get }
+    var image: PublishSubject<UIImage> { get }
     var isUploadingImage: BehaviorSubject<Bool> { get }
     var removeButtonTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationImagePreviewViewModelingOutputs {
-    var imageOutput: Observable<UIImage?> { get }
+    var imageOutput: Observable<UIImage> { get }
     var shouldShowView: Observable<Bool> { get }
     var shouldShowLoadingState: Observable<Bool> { get }
     var removeButtonTapped: Observable<Void> { get }
@@ -39,15 +39,17 @@ class OWCommentCreationImagePreviewViewModel: OWCommentCreationImagePreviewViewM
 
     var removeButtonTap: PublishSubject<Void> = PublishSubject()
     var isUploadingImage: BehaviorSubject<Bool> = BehaviorSubject(value: false)
-    var image: BehaviorSubject<UIImage?> = BehaviorSubject(value: nil)
+    var image: PublishSubject<UIImage> = PublishSubject()
+    var _image: BehaviorSubject<UIImage?> = BehaviorSubject(value: nil)
 
-    var imageOutput: Observable<UIImage?> {
-        image
+    var imageOutput: Observable<UIImage> {
+        _image
+            .unwrap()
             .asObservable()
     }
 
     var shouldShowView: Observable<Bool> {
-        imageOutput
+        _image
             .map { $0 != nil }
     }
 
@@ -70,9 +72,16 @@ class OWCommentCreationImagePreviewViewModel: OWCommentCreationImagePreviewViewM
 
 fileprivate extension OWCommentCreationImagePreviewViewModel {
     func setupObservers() {
+        image
+            .subscribe(onNext: { [weak self] image in
+                guard let self = self else { return }
+                self._image.onNext(image)
+            })
+            .disposed(by: disposeBag)
+
         removeButtonTap.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
-            self.image.onNext(nil)
+            self._image.onNext(nil)
         })
         .disposed(by: disposeBag)
     }
