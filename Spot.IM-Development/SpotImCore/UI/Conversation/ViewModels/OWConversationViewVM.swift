@@ -641,25 +641,19 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let realtimeIndicationTapped = realtimeIndicationAnimationViewModel.outputs
+        realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
             .tapped
-            .do(onNext: { [weak self] _ in
+            .withLatestFrom(self.servicesProvider.realtimeUpdateService().newComments)
+            .subscribe(onNext: { [weak self] newComments in
                 guard let self = self else { return }
-                self.servicesProvider.realtimeUpdateService().update(state: .disable)
+                self.servicesProvider
+                    .commentUpdaterService()
+                    .update(.insert(comments: newComments), postId: self.postId)
+
+                self.servicesProvider.realtimeUpdateService().cleanCache()
             })
-
-        realtimeIndicationTapped
-                .withLatestFrom(self.servicesProvider.realtimeUpdateService().newComments)
-                .subscribe(onNext: { [weak self] newComments in
-                    guard let self = self else { return }
-                    self.servicesProvider
-                        .commentUpdaterService()
-                        .update(.insert(comments: newComments), postId: self.postId)
-
-                    self.servicesProvider.realtimeUpdateService().update(state: .enable)
-                })
-                .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
 
         pullToRefresh
             .subscribe(onNext: { [weak self] in
