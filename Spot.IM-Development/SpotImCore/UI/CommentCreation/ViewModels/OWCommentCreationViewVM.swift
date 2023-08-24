@@ -32,6 +32,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let allowedMediaTypes: [String] = ["public.image"]
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
     fileprivate let disposeBag = DisposeBag()
@@ -322,7 +326,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             guard let self = self else { return .empty() }
             return self.servicesProvider
                 .presenterService()
-                .showImagePicker(mediaTypes: ["public.image"], sourceType: sourceType, viewableMode: self.viewableMode)
+                .showImagePicker(mediaTypes: Metrics.allowedMediaTypes, sourceType: sourceType, viewableMode: self.viewableMode)
         }
         .map { response -> UIImage? in
             switch response {

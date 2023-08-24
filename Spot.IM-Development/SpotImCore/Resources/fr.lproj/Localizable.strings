@@ -96,7 +96,7 @@
 "Show Comments" = "Afficher les commentaires";
 "Take a Photo" = "Prendre une photo";
 "Choose from Gallery" = "Choisir depuis la galerie";
-"Camera permissions are needed" = "Autorisation d'accès à l'appareil photo requise";
+"CameraPermissionsAreNeeded" = "Autorisation d'accès à l'appareil photo requise";
 "Open settings" = "Ouvrir les paramètres";
 "Edit" = "Editer";
 "Edited" = " (Edité)";

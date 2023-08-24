@@ -35,7 +35,7 @@ internal final class SPPermissionsProvider {
     private static func getPermissionDeniedMessage(for type: SPPermissionType) -> String {
         switch type {
         case .camera:
-            return SPLocalizationManager.localizedString(key: "Camera permissions are needed")
+            return SPLocalizationManager.localizedString(key: "CameraPermissionsAreNeeded")
         }
     }
 
