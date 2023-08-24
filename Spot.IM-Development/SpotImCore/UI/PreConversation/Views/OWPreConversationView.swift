@@ -426,18 +426,6 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowComments
-            .filter { $0 }
-            .delay(.milliseconds(5000), scheduler: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.viewModel.outputs
-                    .realtimeIndicationAnimationViewModel.inputs
-                    .update(shouldShow: true)
-            })
-            .disposed(by: disposeBag)
-
         let tableViewContentSizeObservable = tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
 

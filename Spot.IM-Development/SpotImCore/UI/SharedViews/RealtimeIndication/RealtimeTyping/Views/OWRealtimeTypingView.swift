@@ -18,6 +18,7 @@ class OWRealtimeTypingView: UIView {
         static let animationViewHeight: CGFloat = 18
 
         static let font = OWFontBook.shared.font(typography: .footnoteText)
+        static let titleLabelTextColor: OWColor.OWType = .textColor3
     }
 
     fileprivate var viewModel: OWRealtimeTypingViewModeling!
@@ -34,7 +35,7 @@ class OWRealtimeTypingView: UIView {
     fileprivate lazy var typingLabel: UILabel = {
         return UILabel()
             .font(Metrics.font)
-            .textColor(OWColorPalette.shared.color(type: .textColor3,
+            .textColor(OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
@@ -75,7 +76,7 @@ fileprivate extension OWRealtimeTypingView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.typingLabel.textColor = OWColorPalette.shared.color(type: .textColor3,
+                self.typingLabel.textColor = OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                                         themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
