@@ -30,6 +30,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.invalidateExistingFlows()
+                self.generateNewPageViewId()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
@@ -61,7 +62,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                callbacks: OWViewActionsCallbacks?,
                                deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
-
+        generateNewPageViewId()
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
         let conversationCoordinator = OWConversationCoordinator(router: router,
@@ -161,5 +162,10 @@ fileprivate extension OWFlowsSDKCoordinator {
 
     func invalidateExistingFlows() {
         removeAllChildCoordinators()
+    }
+
+    func generateNewPageViewId() {
+        let pageViewIdHolder = servicesProvider.pageViewIdHolder()
+        pageViewIdHolder.generateNewPageViewId()
     }
 }
