@@ -39,10 +39,6 @@ class OWTypingAnimationView: UIView {
         }
     }
 
-    fileprivate var verticalPositionOffset: CGFloat {
-        return (dotDiameter / Metrics.verticalPositionOffsetDivisor) - Metrics.jumpingPositionOffset
-    }
-
     fileprivate var dotDiameter: CGFloat {
         return min(bounds.width / 5, bounds.height)
     }
@@ -125,7 +121,7 @@ fileprivate extension OWTypingAnimationView {
 
         let dotLayer = dotLayers[index]
         let animation = CABasicAnimation(keyPath: Metrics.animationKey)
-        animation.toValue = dotLayer.position.y - self.verticalPositionOffset
+        animation.toValue = dotLayer.position.y - (dotDiameter / Metrics.verticalPositionOffsetDivisor) - Metrics.jumpingPositionOffset
         animation.duration = Metrics.animationSpeed
         animation.autoreverses = true
         animation.repeatCount = 1
