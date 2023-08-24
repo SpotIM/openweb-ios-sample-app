@@ -14,7 +14,7 @@ import UIKit
 class RxImagePickerDelegateProxy
     : RxNavigationControllerDelegateProxy, UIImagePickerControllerDelegate {
 
-    public init(imagePicker: UIImagePickerController) {
+    init(imagePicker: UIImagePickerController) {
         super.init(navigationController: imagePicker)
     }
 

@@ -95,7 +95,7 @@
 "Show Comments" = "Mostrar comentarios";
 "Take a Photo" = "Tómate una Foto";
 "Choose from Gallery" = "Elige de la Galería";
-"Camera permissions are needed" = "Permiso de cámara requerido";
+"CameraPermissionsAreNeeded" = "Permiso de cámara requerido";
 "Open settings" = "Abrir configuración";
 "Edit" = "Editar";
 "Edited" = " (Editado)";

@@ -8,6 +8,8 @@
 
 import Foundation
 
+internal typealias OWCommentImage = OWComment.Content.Image
+
 internal struct OWComment: Decodable, Equatable {
 
     enum CodingKeys: String, CodingKey {

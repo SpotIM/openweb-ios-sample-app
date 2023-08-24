@@ -13,7 +13,7 @@ import AVFoundation
 
 protocol OWPermissionsServicing {
     func requestPermission(for type: OWPermissionsService.PermissionType, viewableMode: OWViewableMode) -> Observable<Bool>
-    func hasRequiredFieldsInInfoPlist(for type: OWPermissionsService.PermissionType) -> Bool
+    func hasInfoPlistContainRequiredDescription(for type: OWPermissionsService.PermissionType) -> Bool
 }
 
 class OWPermissionsService: OWPermissionsServicing {
@@ -44,17 +44,17 @@ class OWPermissionsService: OWPermissionsServicing {
         }
     }
 
-    func hasRequiredFieldsInInfoPlist(for type: PermissionType) -> Bool {
+    func hasInfoPlistContainRequiredDescription(for type: PermissionType) -> Bool {
         switch type {
         case .camera:
-            let hasRequiredFields = Bundle.main.hasCameraUsageDescription && Bundle.main.hasPhotoLibraryUsageDescription
-            if (!hasRequiredFields) {
+            let hasRequiredDescription = Bundle.main.hasCameraUsageDescription && Bundle.main.hasPhotoLibraryUsageDescription
+            if (!hasRequiredDescription) {
                 let message = "Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file"
                 self.servicesProvider
                     .logger()
-                    .log(level: .medium, message)
+                    .log(level: .error, message)
             }
-            return hasRequiredFields
+            return hasRequiredDescription
         }
     }
 }
@@ -79,7 +79,8 @@ fileprivate extension OWPermissionsService {
                 actions: actions,
                 viewableMode: viewableMode
             )
-            .subscribe(onNext: { result in
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .completion:
                     break
@@ -95,7 +96,7 @@ fileprivate extension OWPermissionsService {
     func getPermissionDeniedMessage(for type: PermissionType) -> String {
         switch type {
         case .camera:
-            return OWLocalizationManager.shared.localizedString(key: "Camera permissions are needed")
+            return OWLocalizationManager.shared.localizedString(key: "CameraPermissionsAreNeeded")
         }
     }
 }
@@ -121,6 +122,7 @@ fileprivate extension OWPermissionsService {
             }
 
         default:
+            result(false)
             break
         }
     }
