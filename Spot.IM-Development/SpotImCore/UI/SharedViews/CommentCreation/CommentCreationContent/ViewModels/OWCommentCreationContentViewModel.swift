@@ -46,7 +46,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var commentText = BehaviorSubject<String>(value: "")
     var imagePicked = PublishSubject<UIImage>()
 
-    fileprivate let _imageContent = BehaviorSubject<OWComment.Content.Image?>(value: nil)
+    fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
         Observable.combineLatest(commentTextOutput, _imageContent.asObservable())
@@ -213,7 +213,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 }
             }
             .unwrap()
-            .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<(Event<CloudinaryUploadResponse>, String)> in
+            .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<(Event<OWUploadImageResponse>, String)> in
                 guard let self = self,
                       let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
                 else { return .empty() }
@@ -230,10 +230,10 @@ fileprivate extension OWCommentCreationContentViewModel {
                     .materialize()
                     .map { ($0, imageId) }
             }
-            .map { event, imageId -> OWComment.Content.Image? in
+            .map { event, imageId -> OWCommentImage? in
                 switch event {
                 case .next(let uploadResponse):
-                    return OWComment.Content.Image(
+                    return OWCommentImage(
                         originalWidth: uploadResponse.width,
                         originalHeight: uploadResponse.height,
                         imageId: imageId

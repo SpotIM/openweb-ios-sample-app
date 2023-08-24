@@ -113,7 +113,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     }
 
     var showAddImageButton: Observable<Bool> {
-        guard self.servicesProvider.permissionsService().hasRequiredFieldsInInfoPlist(for: .camera) else {
+        guard self.servicesProvider.permissionsService().hasInfoPlistContainRequiredDescription(for: .camera) else {
             return Observable.just(false)
         }
         return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)

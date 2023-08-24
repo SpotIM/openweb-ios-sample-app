@@ -10,7 +10,7 @@ import Foundation
 
 struct OWCommentCreationContent {
     var text: String
-    var image: OWComment.Content.Image?
+    var image: OWCommentImage?
 
     func hasContent() -> Bool {
         return !text.isEmpty || image != nil
