@@ -123,7 +123,6 @@ fileprivate extension OWPermissionsService {
 
         default:
             result(false)
-            break
         }
     }
 }
