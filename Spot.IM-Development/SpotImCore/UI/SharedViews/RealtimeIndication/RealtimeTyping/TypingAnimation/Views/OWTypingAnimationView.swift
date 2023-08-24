@@ -11,17 +11,24 @@ import RxSwift
 
 class OWTypingAnimationView: UIView {
     struct Metrics {
+        static let verticalPositionOffsetDivisor: CGFloat = 4
+        static let jumpingPositionOffset: CGFloat = 2.0
+        static let numberOfDots: Int = 3
+        static let dotSpacingDivisor: CGFloat = 2
+        static let secondDotOpacity: CGFloat = 0.65
+        static let thirdDotOpacity: CGFloat = 0.30
         static let animationSpeed: Double = 0.2
+        
         static var animationKey = "position.y"
         static var typingLayerAnimationIdentifier = "typingLayerAnimationIdentifier"
         static var typingAnimationIndexKey = "typingAnimationIndex"
     }
 
-    private var dotLayers: [CAShapeLayer] = []
+    fileprivate var dotLayers: [CAShapeLayer] = []
     // swiftlint:disable line_length
-    private var dotColors: [UIColor] = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
-                                        OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(0.65),
-                                        OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(0.30)] {
+    fileprivate var dotColors: [UIColor] = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
+                                            OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.secondDotOpacity),
+                                            OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).withAlphaComponent(Metrics.thirdDotOpacity)] {
         // swiftlint:enable line_lenght
         didSet {
             for (index, dotLayer) in dotLayers.enumerated() {
@@ -32,12 +39,16 @@ class OWTypingAnimationView: UIView {
         }
     }
 
-    private var dotDiameter: CGFloat {
+    fileprivate var verticalPositionOffset: CGFloat {
+        return (dotDiameter / Metrics.verticalPositionOffsetDivisor) - Metrics.jumpingPositionOffset
+    }
+
+    fileprivate var dotDiameter: CGFloat {
         return min(bounds.width / 5, bounds.height)
     }
 
-    private var dotSpacing: CGFloat {
-        return dotDiameter / 2
+    fileprivate var dotSpacing: CGFloat {
+        return dotDiameter / Metrics.dotSpacingDivisor
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -54,15 +65,6 @@ class OWTypingAnimationView: UIView {
         setupObservers()
     }
 
-    private func setupDots() {
-        for index in 0..<3 {
-            let dotLayer = CAShapeLayer()
-            dotLayer.fillColor = dotColors[index].cgColor
-            layer.addSublayer(dotLayer)
-            dotLayers.append(dotLayer)
-        }
-    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -74,20 +76,6 @@ class OWTypingAnimationView: UIView {
 
     func startAnimating() {
         animateDot(at: 0)
-    }
-
-    private func animateDot(at index: Int) {
-        guard index < dotLayers.count else { return }
-
-        let dotLayer = dotLayers[index]
-        let animation = CABasicAnimation(keyPath: Metrics.animationKey)
-        animation.toValue = dotLayer.position.y - (dotDiameter / 4) - 2.0
-        animation.duration = Metrics.animationSpeed
-        animation.autoreverses = true
-        animation.repeatCount = 1
-        animation.delegate = self
-        animation.setValue(index, forKey: Metrics.typingAnimationIndexKey)
-        dotLayer.add(animation, forKey: Metrics.typingLayerAnimationIdentifier)
     }
 
     func stopAnimating() {
@@ -117,9 +105,32 @@ fileprivate extension OWTypingAnimationView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.dotColors = [OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle),
-                                  OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle).withAlphaComponent(0.65),
-                                  OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle).withAlphaComponent(0.30)]
+                                  OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle).withAlphaComponent(Metrics.secondDotOpacity),
+                                  OWColorPalette.shared.color(type: .typingDotsColor, themeStyle: currentStyle).withAlphaComponent(Metrics.thirdDotOpacity)]
             })
             .disposed(by: disposeBag)
+    }
+
+    func setupDots() {
+        for index in 0..<Metrics.numberOfDots {
+            let dotLayer = CAShapeLayer()
+            dotLayer.fillColor = dotColors[index].cgColor
+            layer.addSublayer(dotLayer)
+            dotLayers.append(dotLayer)
+        }
+    }
+
+    func animateDot(at index: Int) {
+        guard index < dotLayers.count else { return }
+
+        let dotLayer = dotLayers[index]
+        let animation = CABasicAnimation(keyPath: Metrics.animationKey)
+        animation.toValue = dotLayer.position.y - self.verticalPositionOffset
+        animation.duration = Metrics.animationSpeed
+        animation.autoreverses = true
+        animation.repeatCount = 1
+        animation.delegate = self
+        animation.setValue(index, forKey: Metrics.typingAnimationIndexKey)
+        dotLayer.add(animation, forKey: Metrics.typingLayerAnimationIdentifier)
     }
 }
