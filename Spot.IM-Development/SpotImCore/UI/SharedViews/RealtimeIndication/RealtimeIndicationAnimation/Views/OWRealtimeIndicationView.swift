@@ -155,19 +155,19 @@ fileprivate extension OWRealtimeIndicationView {
 
         shouldShowTypingLabel
             .map { !$0 }
-            .bind(to: typingView.rx.isHidden)
+            .bind(to: typingView.rx.isHiddenAnimated)
             .disposed(by: disposeBag)
 
         shouldShowNewCommentsLabel
             .map { !$0 }
-            .bind(to: newCommentsView.rx.isHidden)
+            .bind(to: newCommentsView.rx.isHiddenAnimated)
             .disposed(by: disposeBag)
 
         Observable.combineLatest(shouldShowTypingLabel, shouldShowNewCommentsLabel)
             .map { shouldShowTypingLabel, shouldShowNewCommentsLabel -> Bool in
                 return !(shouldShowTypingLabel && shouldShowNewCommentsLabel)
             }
-            .bind(to: verticalSeparatorBetweenTypingAndNewComments.rx.isHidden)
+            .bind(to: verticalSeparatorBetweenTypingAndNewComments.rx.isHiddenAnimated)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
