@@ -183,7 +183,7 @@ fileprivate extension OWCommentCreationContentViewModel {
     }
 
     func setupImageObserver() {
-        imagePicked
+        let imageWithCloudinarySignatureObservable = imagePicked
             .do(onNext: { [weak self] image in
                 guard let self = self else { return }
                 self._imageContent.onNext(nil)
@@ -213,6 +213,8 @@ fileprivate extension OWCommentCreationContentViewModel {
                 }
             }
             .unwrap()
+
+        let imageContentObservable = imageWithCloudinarySignatureObservable
             .flatMapLatest { [weak self] cloudinarySignature, image, imageId, timestamp -> Observable<(Event<OWUploadImageResponse>, String)> in
                 guard let self = self,
                       let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
@@ -249,6 +251,8 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
             })
             .unwrap()
+
+        imageContentObservable
             .subscribe(onNext: { [weak self] imageContent in
                 guard let self = self else { return }
                 self._imageContent.onNext(imageContent)
