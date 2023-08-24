@@ -276,6 +276,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         }
         .filter { $0 == true }
         .voidify()
+        .observe(on: MainScheduler.instance)
         .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
             guard let self = self else { return .empty() }
 
@@ -316,6 +317,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             }
         }
         .unwrap()
+        .observe(on: MainScheduler.instance)
         .flatMap { [weak self] sourceType -> Observable<OWImagePickerPresenterResponseType> in
             guard let self = self else { return .empty() }
             return self.servicesProvider
