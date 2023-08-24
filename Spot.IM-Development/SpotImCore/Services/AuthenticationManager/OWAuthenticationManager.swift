@@ -45,6 +45,7 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
     fileprivate typealias OWUserAvailabilityMapper = [OWSpotId: OWUserAvailability]
     fileprivate unowned let manager: OWManagerProtocol & OWManagerInternalProtocol
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    fileprivate let randomGenerator: OWRandomGeneratorProtocol
     fileprivate let scheduler: SchedulerType
 
     fileprivate struct Metrics {
@@ -55,10 +56,12 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
 
     init (manager: OWManagerProtocol & OWManagerInternalProtocol = OWManager.manager,
           servicesProvider: OWSharedServicesProviding,
+          randomGenerator: OWRandomGeneratorProtocol = OWRandomGenerator(),
           scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKAuthenticationManagerQueue")) {
         self.manager = manager
         self.servicesProvider = servicesProvider
         self.scheduler = scheduler
+        self.randomGenerator = randomGenerator
 
         loadGeneralPersistence()
     }
@@ -447,7 +450,7 @@ fileprivate extension OWAuthenticationManager {
 
         // Generating guid if needed
         if _networkCredentials.guid == nil {
-            let randomGUID = self.generateGUID()
+            let randomGUID = randomGenerator.generateSuperiorUUID()
             let credentials = OWNetworkSessionCredentials(guid: randomGUID,
                                                              openwebToken: _networkCredentials.openwebToken,
                                                              authorization: _networkCredentials.authorization)
@@ -546,12 +549,6 @@ fileprivate extension OWAuthenticationManager {
         case .viewingSelfProfile:
             return levelAccordingToRegistration
         }
-    }
-
-    func generateGUID() -> String {
-        // Returning a simple uuid string, however when looking on hundreds of milion guid, this might be not "randomised" enough.
-        // We should think of adding some "seed" by the date interval for example
-        return UUID().uuidString
     }
 
     func ensureSSORecoveryStatus(for originalUserId: String) {
