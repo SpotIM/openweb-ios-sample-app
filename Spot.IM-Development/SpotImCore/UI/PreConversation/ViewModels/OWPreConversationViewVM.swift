@@ -399,17 +399,24 @@ fileprivate extension OWPreConversationViewViewModel {
         openFullConversation
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.realtimeIndicationAnimationViewModel.inputs.update(shouldShow: false)
-                self.servicesProvider.realtimeUpdateService().shouldRealtimeUpdate.onNext(.disable)
+                self.servicesProvider.realtimeService().stopFetchingData()
+                self.servicesProvider.realtimeUpdateService().update(state: .disable)
 
             })
             .disposed(by: disposeBag)
 
-        shouldShowComments
-            .subscribe(onNext: { [weak self] shouldShow in
+        let realtimeIndicatorUpdateStateObservable = Observable.combineLatest(viewInitialized,
+                                                                              shouldShowComments) { _, shouldShowComments -> Bool in
+            return shouldShowComments
+        }
+            .map { shouldShow -> OWRealtimeUpdateState in
+                return shouldShow ? .enable : .disable
+            }
+
+        realtimeIndicatorUpdateStateObservable
+            .subscribe(onNext: { [weak self] state in
                 guard let self = self else { return }
-                let realtimeUpdateState: OWRealtimeUpdateState = shouldShow ? .enable : .disable
-                self.servicesProvider.realtimeUpdateService().shouldRealtimeUpdate.onNext(realtimeUpdateState)
+                self.servicesProvider.realtimeUpdateService().update(state: state)
             })
             .disposed(by: disposeBag)
 
@@ -777,6 +784,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         // making sure we are not adding an existing comment
                         !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })
                     }
+                    guard !filteredCommentsVms.isEmpty else { return }
                     viewModels.insert(contentsOf: filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
                     let numOfComments = self.preConversationStyle.numberOfComments
                     self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))

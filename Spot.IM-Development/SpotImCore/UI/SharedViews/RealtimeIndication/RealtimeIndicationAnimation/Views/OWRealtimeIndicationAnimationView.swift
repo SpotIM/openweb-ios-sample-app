@@ -76,10 +76,11 @@ fileprivate extension OWRealtimeIndicationAnimationView {
     }
 
     func setupObservers() {
-        viewModel.outputs.shouldShow
-            .subscribe(onNext: { [weak self] shouldShow in
+        viewModel.outputs
+            .isShown
+            .subscribe(onNext: { [weak self] iShown in
                 guard let self = self else { return }
-                self.animate(shouldShow)
+                self.animate(iShown)
             })
             .disposed(by: disposeBag)
 
@@ -118,7 +119,6 @@ fileprivate extension OWRealtimeIndicationAnimationView {
         guard let indicationViewCurrentBottomOffset = self.indicationViewCurrentBottomOffset else { return }
         let offset = isShown ? -indicationViewCurrentBottomOffset/3 : indicationViewCurrentBottomOffset
         self.indicationViewBottomConstraint?.update(offset: offset)
-        self.viewModel.inputs.update(isShown: isShown)
 
         UIView.animate(
             withDuration: Metrics.showAndDismissAnimationDuration,
@@ -140,7 +140,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
         }, completion: { [ weak self] _ in
             guard let self = self else { return }
             self.reset()
-            self.viewModel.inputs.update(isShown: false)
+            self.viewModel.inputs.swiped()
         })
     }
 

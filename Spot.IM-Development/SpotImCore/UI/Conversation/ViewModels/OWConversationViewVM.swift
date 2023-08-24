@@ -637,23 +637,34 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.servicesProvider.realtimeUpdateService().shouldRealtimeUpdate.onNext(.enable)
+                self.servicesProvider.realtimeUpdateService().update(state: .enable)
             })
             .disposed(by: disposeBag)
 
-        realtimeIndicationAnimationViewModel.outputs
+        let realtimeIndicationTapped = realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
             .tapped
-            .withLatestFrom(self.servicesProvider.realtimeUpdateService().newComments)
-            .subscribe(onNext: { [weak self] newComments in
+            .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.realtimeIndicationAnimationViewModel.inputs.update(shouldShow: false)
-                let postId = self.postId
+                self.servicesProvider.realtimeUpdateService().update(state: .disable)
+            })
 
-                guard newComments.count > 0 else { return }
-                self.servicesProvider
-                    .commentUpdaterService()
-                    .update(.insert(comments: newComments), postId: self.postId)
+        realtimeIndicationTapped
+                .withLatestFrom(self.servicesProvider.realtimeUpdateService().newComments)
+                .subscribe(onNext: { [weak self] newComments in
+                    guard let self = self else { return }
+                    self.servicesProvider
+                        .commentUpdaterService()
+                        .update(.insert(comments: newComments), postId: self.postId)
+
+                    self.servicesProvider.realtimeUpdateService().update(state: .enable)
+                })
+                .disposed(by: disposeBag)
+
+        pullToRefresh
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeUpdateService().update(state: .disable)
             })
             .disposed(by: disposeBag)
 
