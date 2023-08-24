@@ -18,7 +18,7 @@ class OWTypingAnimationView: UIView {
         static let secondDotOpacity: CGFloat = 0.65
         static let thirdDotOpacity: CGFloat = 0.30
         static let animationSpeed: Double = 0.2
-        
+
         static var animationKey = "position.y"
         static var typingLayerAnimationIdentifier = "typingLayerAnimationIdentifier"
         static var typingAnimationIndexKey = "typingAnimationIndex"
