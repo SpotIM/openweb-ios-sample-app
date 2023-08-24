@@ -57,10 +57,10 @@ internal class OWImagePicker: NSObject {
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        if let action = self.action(for: .camera, title: SPLocalizationManager.localizedString(key: "Take a Photo")) {
+        if let action = self.action(for: .camera, title: SPLocalizationManager.localizedString(key: "TakeAPhoto")) {
             alertController.addAction(action)
         }
-        if let action = self.action(for: .photoLibrary, title: SPLocalizationManager.localizedString(key: "Choose from Gallery")) {
+        if let action = self.action(for: .photoLibrary, title: SPLocalizationManager.localizedString(key: "ChooseFromGallery")) {
             alertController.addAction(action)
         }
 

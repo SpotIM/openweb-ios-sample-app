@@ -47,6 +47,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
     func realtimeUpdateService() -> OWRealtimeUpdateServicing
+    func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
 }
 
@@ -183,6 +184,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWRealtimeUpdateService(servicesProvider: self)
     }()
 
+    fileprivate lazy var _permissionsService: OWPermissionsServicing = {
+        return OWPermissionsService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _pageViewIdHolder: OWPageViewIdHolderProtocol = {
         return OWPageViewIdHolder()
     }()
@@ -301,6 +306,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func realtimeUpdateService() -> OWRealtimeUpdateServicing {
         return _realtimeUpdateServicre
+    }
+
+    func permissionsService() -> OWPermissionsServicing {
+        return _permissionsService
     }
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
