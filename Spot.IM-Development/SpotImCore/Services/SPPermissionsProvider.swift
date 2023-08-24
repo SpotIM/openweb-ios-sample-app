@@ -42,7 +42,7 @@ internal final class SPPermissionsProvider {
     private static func handlePermissionDenied(for type: SPPermissionType) {
         let alert = UIAlertController(title: nil, message: getPermissionDeniedMessage(for: type), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"), style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: SPLocalizationManager.localizedString(key: "Open settings"), style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: SPLocalizationManager.localizedString(key: "OpenSettings"), style: .default, handler: { _ in
             openAppSettings()
         }))
 

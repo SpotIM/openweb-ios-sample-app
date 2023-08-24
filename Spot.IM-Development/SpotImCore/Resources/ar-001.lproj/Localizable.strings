@@ -93,10 +93,10 @@
 "Options menu" = "Options menu";
 "Post a Comment" = "انشر تعليق";
 "Show Comments" = "إظهار التعليقات";
-"Take a Photo" = "التقاط صورة";
-"Choose from Gallery" = "اختر من المعرض";
+"TakeAPhoto" = "التقاط صورة";
+"ChooseFromGallery" = "اختر من المعرض";
 "CameraPermissionsAreNeeded" = "هناك حاجة إلى أذونات الكاميرا";
-"Open settings" = "أفتح الإعدادات";
+"OpenSettings" = "أفتح الإعدادات";
 "Edit" = "يحرر";
 "Edited" = " (تم تحريره)";
 "Edit a Comment" = "تحرير تعليق";
