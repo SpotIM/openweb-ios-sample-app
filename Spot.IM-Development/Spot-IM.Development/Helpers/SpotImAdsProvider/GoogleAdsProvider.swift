@@ -82,6 +82,8 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
             return kGADAdSizeLargeBanner
         case .large:
             return kGADAdSizeMediumRectangle
+        default:
+            return kGADAdSizeBanner
         }
     }
 

@@ -592,14 +592,14 @@ workflows:
                 - /^release/.*/
                 - /^validate/.*/
                 - /^upload_s3/.*/
-          xcode: "14.3.0"
+          xcode: "14.0.0"
 
       - release_sdk_job:
           filters:
             branches:
               only:
                 - /^release/sdk/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - release_tag:
           filters:
@@ -627,7 +627,7 @@ workflows:
             branches:
               only:
                 - /^release/beta_sdk/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
           buildConfig: "ReleaseBeta"
 
       - release_tag:
@@ -661,7 +661,7 @@ workflows:
             branches:
               only:
                 - /^release/app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - release_beta_app_job:
           context: mobile-automation
@@ -669,7 +669,7 @@ workflows:
             branches:
               only:
                 - /^release/beta_app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - release_public_app_job:
           context: mobile-automation
@@ -677,25 +677,25 @@ workflows:
             branches:
               only:
                 - /^release/public_app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - upload_app_build_to_s3_job:
           context: mobile-automation
           requires:
             - "release_app_job"
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - upload_beta_app_build_to_s3_job:
           context: mobile-automation
           requires:
             - "release_beta_app_job"
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - upload_public_app_build_to_s3_job:
           context: mobile-automation
           requires:
             - "release_public_app_job"
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
   release_multi_workflow:
     jobs:
@@ -704,7 +704,7 @@ workflows:
             branches:
               only:
                 - /^release/multi/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - release_tag:
           requires:
@@ -729,7 +729,7 @@ workflows:
             branches:
               only:
                 - /^upload_s3/app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - upload_app_ipa_to_s3_job:
           context: mobile-automation
@@ -737,7 +737,7 @@ workflows:
             branches:
               only:
                 - /^upload_s3/app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
   upload_beta_app_to_s3_workflow:
     jobs:
@@ -747,7 +747,7 @@ workflows:
             branches:
               only:
                 - /^upload_s3/beta_app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - upload_beta_app_ipa_to_s3_job:
           context: mobile-automation
@@ -755,7 +755,7 @@ workflows:
             branches:
               only:
                 - /^upload_s3/beta_app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
   upload_public_app_to_s3_workflow:
     jobs:
@@ -765,7 +765,7 @@ workflows:
             branches:
               only:
                 - /^upload_s3/public_app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
       - upload_public_app_ipa_to_s3_job:
           context: mobile-automation
@@ -773,7 +773,7 @@ workflows:
             branches:
               only:
                 - /^upload_s3/public_app/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
 
   validate_workflow:
     jobs:
@@ -782,11 +782,11 @@ workflows:
             branches:
               only:
                 - /^validate/cocoapods/sdk/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"
       
       - validate_spm_job:
           filters:
             branches:
               only:
                 - /^validate/spm/sdk/.*/
-          xcode: "14.3.0"
+          xcode: "14.3.1"

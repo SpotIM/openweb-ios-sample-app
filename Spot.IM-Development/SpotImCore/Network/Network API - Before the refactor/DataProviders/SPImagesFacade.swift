@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+internal typealias OWUploadImageResponse = CloudinaryUploadResponse
+
 internal protocol SPImageProvider {
 
     var avatarSize: CGSize? { get set }

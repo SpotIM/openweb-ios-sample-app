@@ -424,14 +424,14 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 }
 
                 // Set the initial text to the textView in this animation stage
-                if keyboardWasHidden {
-                    if viewModel.outputs.initialText.isEmpty {
+                if self.keyboardWasHidden {
+                    if self.viewModel.outputs.initialText.isEmpty {
                         self.viewModel.outputs.textViewVM
                             .inputs.textExternalChange.onNext(textBeforeClosed)
                     } else {
                         self.viewModel.outputs.textViewVM
-                            .inputs.textExternalChange.onNext(viewModel.outputs.initialText)
-                        viewModel.inputs.initialTextUsed.onNext()
+                            .inputs.textExternalChange.onNext(self.viewModel.outputs.initialText)
+                        self.viewModel.inputs.initialTextUsed.onNext()
                     }
                 }
 
@@ -452,7 +452,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                     self.mainContainer.layoutIfNeeded()
                 }
-                keyboardWasHidden = false
+                self.keyboardWasHidden = false
             })
             .disposed(by: disposeBag)
 
@@ -500,7 +500,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         }
                     }
                 }
-                keyboardWasHidden = true
+                self.keyboardWasHidden = true
             })
             .disposed(by: disposeBag)
     }

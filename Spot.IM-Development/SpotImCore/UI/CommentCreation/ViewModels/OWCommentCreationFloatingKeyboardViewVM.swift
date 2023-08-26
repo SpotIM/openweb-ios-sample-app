@@ -141,7 +141,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .filter { !$0 } // Do not continue if authentication needed 
             .withLatestFrom(textViewVM.outputs.textViewText)
             .map { text -> OWCommentCreationCtaData in ()
-                return OWCommentCreationCtaData(text: text, commentLabelIds: [])
+                let commentContent = OWCommentCreationContent(text: text)
+                return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
             }
     }
 

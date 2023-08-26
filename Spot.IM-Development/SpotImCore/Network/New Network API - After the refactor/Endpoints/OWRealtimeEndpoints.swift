@@ -56,7 +56,7 @@ fileprivate extension OWRealtimeEndpoints {
     func fetchDataParameters(fullConversationId: String) -> [String: Any] {
         let timestamp: Int = Int((Date()).timeIntervalSince1970)
         let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: fullConversationId]
-        let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: []]) { first, _ in first }
+        let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: [Any]()]) { first, _ in first }
 
         return [
             RealtimeAPIKeys.timestamp: timestamp,

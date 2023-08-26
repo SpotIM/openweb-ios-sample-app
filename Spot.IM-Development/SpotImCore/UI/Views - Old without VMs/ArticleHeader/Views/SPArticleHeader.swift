@@ -17,11 +17,11 @@ internal final class SPArticleHeader: SPBaseView {
         static let conversationAuthorIdentifier = "article_header_conversation_author_id"
     }
 
-    private lazy var conversationImageView: SPBaseUIImageView = .init()
-    private lazy var conversationTitleLabel: SPBaseLabel = .init()
-    private lazy var conversationAuthorLabel: SPBaseLabel = .init()
-    private lazy var separatorView: SPBaseView = .init()
-    private lazy var titlesContainer: SPBaseView = .init()
+    private lazy var conversationImageView = SPBaseUIImageView()
+    private lazy var conversationTitleLabel = SPBaseLabel()
+    private lazy var conversationAuthorLabel = SPBaseLabel()
+    private lazy var separatorView = SPBaseView()
+    private lazy var titlesContainer = SPBaseView()
 
     fileprivate var viewModel: SPArticleHeaderViewModeling!
     fileprivate var disposeBag: DisposeBag!
