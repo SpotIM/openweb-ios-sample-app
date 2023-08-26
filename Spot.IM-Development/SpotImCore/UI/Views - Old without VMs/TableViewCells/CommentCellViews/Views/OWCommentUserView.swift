@@ -26,7 +26,7 @@ final class OWCommentUserView: SPBaseView {
     fileprivate var disposeBag: DisposeBag!
 
     private let avatarImageView: SPAvatarView = SPAvatarView()
-    private let userNameView: SPUserNameView = .init()
+    private let userNameView = SPUserNameView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)

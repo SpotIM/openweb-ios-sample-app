@@ -153,11 +153,12 @@ class SPCommentCreationModel {
         ]
 
         if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
+            let labels: [String: Any] = [
+                SPRequestKeys.labelsSection: selectedLabels.section,
+                SPRequestKeys.labelsIds: selectedLabels.ids
+            ]
             parameters[SPRequestKeys.additionalData] = [
-                SPRequestKeys.labels: [
-                    SPRequestKeys.labelsSection: selectedLabels.section,
-                    SPRequestKeys.labelsIds: selectedLabels.ids
-                ]
+                SPRequestKeys.labels: labels
             ]
         }
 

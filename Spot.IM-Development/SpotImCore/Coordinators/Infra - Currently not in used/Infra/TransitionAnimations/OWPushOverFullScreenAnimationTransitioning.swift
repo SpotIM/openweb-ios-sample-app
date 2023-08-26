@@ -38,7 +38,7 @@ class OWPushOverFullScreenAnimationTransitioning: NSObject, UIViewControllerAnim
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
         let fromViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)
-        guard let toView = transitionContext.view(forKey: .to) else { return }
+        guard (transitionContext.view(forKey: .to)) != nil else { return }
         guard let vcTo = toViewController,
               let vcFrom = fromViewController else { return }
         let container = transitionContext.containerView

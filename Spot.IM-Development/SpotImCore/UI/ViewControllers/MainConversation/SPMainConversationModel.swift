@@ -42,8 +42,8 @@ final class SPMainConversationModel {
 
     /// MulticastDelegate for events that should be handled simultaneously in different places
     /// Beware of `SPMainConversationDataSource` data changings in this way
-    var delegates: OWMulticastDelegate<MainConversationModelDelegate> = .init()
-    var commentsCounterDelegates: OWMulticastDelegate<CommentsCounterDelegate> = .init()
+    var delegates = OWMulticastDelegate<MainConversationModelDelegate>()
+    var commentsCounterDelegates = OWMulticastDelegate<CommentsCounterDelegate>()
     weak var openUserProfileDelegate: OpenUserProfileDelegate?
 
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"

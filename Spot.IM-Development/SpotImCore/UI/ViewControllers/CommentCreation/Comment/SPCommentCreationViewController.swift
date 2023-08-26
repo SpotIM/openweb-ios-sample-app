@@ -13,9 +13,9 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
 
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
-    private let commentingOnLabel: BaseLabel = .init()
-    private let commentingContainer: UIView = .init()
-    private let closeButton: BaseButton = .init()
+    private let commentingOnLabel = BaseLabel()
+    private let commentingContainer = UIView()
+    private let closeButton = BaseButton()
 
     private var emptyArticleBottomConstarint: NSLayoutConstraint?
     private var filledArticleBottomConstarint: NSLayoutConstraint?
