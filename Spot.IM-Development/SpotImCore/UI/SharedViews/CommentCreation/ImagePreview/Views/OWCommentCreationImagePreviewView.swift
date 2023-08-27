@@ -25,6 +25,7 @@ class OWCommentCreationImagePreviewView: UIView {
     fileprivate lazy var imageView: UIImageView = {
         let imageView = UIImageView()
             .contentMode(.scaleAspectFit)
+            .image(UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false)) // Placeholder
         imageView.addSubviews(imageViewLoadingCoverView)
         imageViewLoadingCoverView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
