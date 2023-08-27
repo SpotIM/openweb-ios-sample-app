@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWTextViewViewModelingInputs {
-    // becomeFirstResponderCall has int milliseconds for delaying the keyboard
-    var becomeFirstResponderCall: PublishSubject<Int> { get }
+    // becomeFirstResponderCallWithDelay has int milliseconds for delaying the keyboard
+    var becomeFirstResponderCallWithDelay: PublishSubject<Int> { get }
     var resignFirstResponderCall: PublishSubject<Void> { get }
     var textViewTap: PublishSubject<Void> { get }
     var placeholderTextChange: BehaviorSubject<String> { get }
@@ -24,7 +24,7 @@ protocol OWTextViewViewModelingInputs {
 }
 
 protocol OWTextViewViewModelingOutputs {
-    var becomeFirstResponderCalled: Observable<Void> { get }
+    var becomeFirstResponderCalledWithDelay: Observable<Void> { get }
     var resignFirstResponderCalled: Observable<Void> { get }
     var textViewTapped: Observable<Void> { get }
     var textViewMaxCharecters: Int { get }
@@ -60,9 +60,9 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     // becomeFirstResponderCall has int milliseconds for delaying the keyboard
-    var becomeFirstResponderCall = PublishSubject<Int>()
-    var becomeFirstResponderCalled: Observable<Void> {
-        return becomeFirstResponderCall
+    var becomeFirstResponderCallWithDelay = PublishSubject<Int>()
+    var becomeFirstResponderCalledWithDelay: Observable<Void> {
+        return becomeFirstResponderCallWithDelay
             .flatMap { delayDuration -> Observable<Void> in
                 return Observable.just(())
                     .delay(.milliseconds(delayDuration),

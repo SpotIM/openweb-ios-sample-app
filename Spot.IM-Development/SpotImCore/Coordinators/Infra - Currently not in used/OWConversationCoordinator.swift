@@ -267,13 +267,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationPoppedObservable = Observable.merge(conversationPopped,
                                                             indipendentConversationClosedObservable,
                                                             partOfFlowPresentedConversationClosedObservable)
-            .map { [weak self] in
+            .do(onNext: { [weak self] in
                 guard let self = self,
                       let postId = OWManager.manager.postId
-                else { return OWConversationCoordinatorResult.popped }
+                else { return }
                 self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: postId)
-                return OWConversationCoordinatorResult.popped
-            }
+            })
+            .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
         let conversationLoadedObservable = conversationVM.outputs.loadedToScreen

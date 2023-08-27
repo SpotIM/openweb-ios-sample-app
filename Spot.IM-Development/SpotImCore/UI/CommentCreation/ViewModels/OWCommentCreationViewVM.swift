@@ -60,24 +60,24 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
-                .flatMap { [weak self] commentText -> Observable<Void> in
-                    guard let self = self else { return .empty() }
+                .do(onNext: { [weak self] commentText in
+                    guard let self = self else { return }
                     let hasText = !commentText.isEmpty
-                    guard hasText else {
+                    if hasText {
+                        self.cacheComment(text: commentText)
+                    } else {
                         self.clearCachedCommentIfNeeded()
-                        return Observable.just(())
                     }
-                    self.cacheComment(text: commentText)
-                    // floatingKeyboard style does not neet a close confirmation mesage, therfore we return here
-                    return Observable.just(())
-                }
+                })
+                .voidify()
+                // floatingKeyboard style does not need a close confirmation mesage, therfore we return the observable of 'commentCreationFloatingKeyboardViewVm' as written above
         }
         return commentTextAfterTapObservable
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
             .flatMap { [weak self] commentText -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 guard hasText else {
                     self.clearCachedCommentIfNeeded()
@@ -88,7 +88,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
-                    // TODO - Localization
                     .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: self.viewableMode)
                     .flatMap { [weak self] result -> Observable<Void> in
                         guard let self = self else { return .empty() }
@@ -145,7 +144,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }
 
     lazy var commentCreationSubmitted: Observable<OWComment> = {
-        // TODO - add floating view cta hadling
         let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta,
                                                                 commentCreationLightViewVm.outputs.performCta,
                                                                 commentCreationFloatingKeyboardViewVm.outputs.performCta)

@@ -84,7 +84,7 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(Metrics.becomeFirstResponderDelay)
+        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.becomeFirstResponderDelay)
     }
 
     required init?(coder: NSCoder) {
