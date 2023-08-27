@@ -27,7 +27,7 @@ class OWTextView: UIView {
         static let textViewTopBottomPadding: CGFloat = 10
         static let textViewFontSize: CGFloat = 15
         static let charectersFontSize: CGFloat = 13
-        static let baseTextViewHeight: CGFloat = 28
+        static let baseTextViewHeight: CGFloat = 30
         static let maxNumberOfLines = 5
         static let expandAnimationDuration: CGFloat = 0.1
         static let heightConstraintPriority: CGFloat = 500
