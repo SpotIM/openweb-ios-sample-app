@@ -10,5 +10,6 @@ import Foundation
 
 enum OWScreenPopStyle {
     case regular
-    case dismissStyle
+    case dismiss
+    case dismissOverFullScreen
 }

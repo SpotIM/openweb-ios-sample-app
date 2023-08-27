@@ -50,7 +50,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         let commentThreadPopped = PublishSubject<Void>()
 
         router.push(commentThreadVC,
-                    pushStyle: .presentStyle,
+                    pushStyle: .present,
                     animated: true,
                     popCompletion: commentThreadPopped)
 
