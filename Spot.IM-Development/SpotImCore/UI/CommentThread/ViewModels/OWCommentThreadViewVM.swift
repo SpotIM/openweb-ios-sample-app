@@ -420,8 +420,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 if let responseComments = response.conversation?.comments {
                     let commentsPresentationData = self.getCommentsPresentationData(of: responseComments)
 
-                    self._commentsPresentationData.removeAll()
-                    self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                    self._commentsPresentationData.replaceAll(with: commentsPresentationData)
                 }
             })
             .disposed(by: disposeBag)
