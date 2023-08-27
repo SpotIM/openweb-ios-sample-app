@@ -14,21 +14,20 @@ import RxCocoa
 
 class ToolbarCollectionCell: UICollectionViewCell {
     fileprivate struct Metrics {
-        static let margin: CGFloat = 10
+        static let margin: CGFloat = 5
         static let size: CGFloat = CommentCreationToolbar.ToolbarMetrics.height
         static let accessibilitySurfix = "toolbar_cell_id"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
         let lbl = UILabel()
-            .font(FontBook.largeHeading)
+            .font(FontBook.mainHeadingBold)
             .textAlignment(.center)
         return lbl
     }()
 
     fileprivate lazy var mainArea: UIView = {
         let view = UIView()
-            .backgroundColor(ColorPalette.shared.color(type: .white))
 
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in

@@ -202,10 +202,11 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         self.servicesProvider = servicesProvider
-        self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
-                                              placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
-                                              charectersLimitEnabled: false,
-                                              isEditable: false)
+        let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
+                                          placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
+                                          charectersLimitEnabled: false,
+                                          isEditable: false)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers()
     }
 
@@ -382,7 +383,7 @@ fileprivate extension OWReportReasonViewViewModel {
         reportReasonsCharectersLimitEnabled
             .subscribe(onNext: { [weak self] show in
                 guard let self = self else { return }
-                self.textViewVM.inputs.charectersLimitEnabledChange.onNext(show)
+                self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(show)
             })
             .disposed(by: disposeBag)
 
@@ -406,12 +407,12 @@ fileprivate extension OWReportReasonViewViewModel {
             .disposed(by: disposeBag)
 
         textViewTextChange
-            .bind(to: textViewVM.inputs.textViewTextChange)
+            .bind(to: textViewVM.inputs.textExternalChange)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(selectedReason, textViewVM.outputs.textViewTextCount)
-            .map { reportReason, textCount -> Bool in
-                return !reportReason.requiredAdditionalInfo || textCount > 0
+        Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText)
+            .map { reportReason, text -> Bool in
+                return !reportReason.requiredAdditionalInfo || text.count > 0
             }
             .bind(to: isSubmitEnabledChange)
             .disposed(by: disposeBag)

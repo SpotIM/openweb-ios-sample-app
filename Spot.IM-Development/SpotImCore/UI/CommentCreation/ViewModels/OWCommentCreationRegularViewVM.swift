@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWCommentCreationRegularViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
+    var becomeFirstResponder: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
@@ -24,6 +25,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -44,6 +46,12 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     var commentType: OWCommentCreationTypeInternal
 
     var closeButtonTap = PublishSubject<Void>()
+
+    var becomeFirstResponder = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponder
+            .asObservable()
+    }
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
         return OWArticleDescriptionViewModel(article: commentCreationData.article)
@@ -153,5 +161,13 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
         }
         .bind(to: footerViewModel.inputs.ctaEnabled)
         .disposed(by: disposeBag)
+
+        becomeFirstResponderCalled
+            .bind(to: commentCreationContentVM.inputs.becomeFirstResponder)
+            .disposed(by: disposeBag)
+
+        closeButtonTap
+            .bind(to: commentCreationContentVM.inputs.resignFirstResponder)
+            .disposed(by: disposeBag)
     }
 }

@@ -25,7 +25,7 @@ extension OWCommentCreationStyle {
         }
     }
 
-    static var `default`: OWConversationStyle {
+    static var `default`: OWCommentCreationStyle {
         return .regular
     }
 }
