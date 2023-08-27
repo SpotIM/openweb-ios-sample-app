@@ -30,6 +30,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let router: OWRoutering!
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
     }()
@@ -44,7 +45,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
-        let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData)
+        viewableMode = .partOfFlow
+        let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadVC = OWCommentThreadVC(viewModel: commentThreadVM)
 
         let commentThreadPopped = PublishSubject<Void>()
@@ -65,6 +67,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             .map { OWCommentThreadCoordinatorResult.loadedToScreen }
             .asObservable()
 
+        // Coordinate to comment creation
         let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
             .flatMap { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
@@ -93,6 +96,49 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 return Observable.never()
             }
 
+        let reportReasonFromCommentThreadObservable = commentThreadVM.outputs.commentThreadViewVM
+            .outputs.openReportReason
+            .map { commentVM -> OWReportReasonsRequiredData? in
+                guard let commentId = commentVM.outputs.comment.id,
+                    let parentId = commentVM.outputs.comment.parentId else {
+                    return nil
+                }
+
+                return OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
+            }
+            .unwrap()
+
+        // Coordinate to report reason
+        let coordinateReportReasonObservable = reportReasonFromCommentThreadObservable
+            .asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] reportData -> Observable<OWReportReasonCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let reportReasonCoordinator = OWReportReasonCoordinator(reportData: reportData,
+                                                                        router: self.router,
+                                                                        actionsCallbacks: self.actionsCallbacks,
+                                                                        presentationalMode: self.commentThreadData.presentationalStyle)
+                return self.coordinate(to: reportReasonCoordinator)
+            }
+            .do(onNext: { coordinatorResult in
+                switch coordinatorResult {
+                case .popped:
+                    // Nothing
+                    break
+                case .submitedReport(_):
+                    // Nothing - already taken care in report VM in which we update the report service
+                    break
+                default:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
@@ -109,11 +155,15 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 return Observable.never()
             }
 
-        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable, coordinateCommentCreationObservable, coordinateToSafariObservables)
+        return Observable.merge(commentThreadPoppedObservable,
+                                commentThreadLoadedToScreenObservable,
+                                coordinateCommentCreationObservable, coordinateToSafariObservables,
+                                coordinateReportReasonObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: .independent)
+        viewableMode = .independent
+        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
         setupObservers(forViewModel: commentThreadViewVM)
         setupViewActionsCallbacks(forViewModel: commentThreadViewVM)

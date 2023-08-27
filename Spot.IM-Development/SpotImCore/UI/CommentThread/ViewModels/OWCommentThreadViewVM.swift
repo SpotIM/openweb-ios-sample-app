@@ -30,6 +30,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var shouldShowError: Observable<Void> { get }
     var threadOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -188,6 +189,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var changeThreadOffset = PublishSubject<CGPoint>()
     var threadOffset: Observable<CGPoint> {
         return changeThreadOffset
+            .asObservable()
+    }
+
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
+        return openReportReasonChange
             .asObservable()
     }
 
@@ -851,6 +858,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
