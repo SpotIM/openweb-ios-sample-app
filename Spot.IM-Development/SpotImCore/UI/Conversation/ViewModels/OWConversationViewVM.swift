@@ -621,8 +621,7 @@ fileprivate extension OWConversationViewViewModel {
 
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                self._commentsPresentationData.removeAll()
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
