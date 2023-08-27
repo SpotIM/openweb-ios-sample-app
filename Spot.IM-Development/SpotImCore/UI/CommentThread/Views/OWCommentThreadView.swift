@@ -52,9 +52,6 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
         tableView.allowsSelection = false
 
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
-
         // Register cells
         for option in OWCommentThreadCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
