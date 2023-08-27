@@ -29,7 +29,8 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let userAvatarBottomPadding: CGFloat = 12
         static let userAvatarSize: CGFloat = 40
         static let textViewHorizontalPadding: CGFloat = 10
-        static let textViewVerticalPadding: CGFloat = 12
+        static let textViewTopPadding: CGFloat = 11
+        static let textViewBottomPadding: CGFloat = 12
         static let ctaButtonHorizontalPadding: CGFloat = 5
         static let closeCrossIcon = "closeCrossIcon"
         static let editImageIcon = "commentCreationEditIcon"
@@ -291,7 +292,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         textViewObject.OWSnp.makeConstraints { make in
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.top.bottom.equalToSuperview().inset(Metrics.textViewVerticalPadding)
+            make.top.equalToSuperview().inset(Metrics.textViewTopPadding)
+            make.bottom.equalToSuperview().inset(Metrics.textViewBottomPadding)
         }
 
         if let toolbar = toolbar {
@@ -485,7 +487,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 self.viewModel.outputs.textViewVM.inputs.textExternalChange.onNext("")
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
-                    self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1,
+                    self.textViewObject.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2,
                                                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
                     self.ctaButton.alpha(0)
                     self.ctaButton.OWSnp.updateConstraints { make in
