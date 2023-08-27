@@ -29,6 +29,13 @@ public protocol OWUIViews {
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
 
+    func commentThread(postId: OWPostId,
+                       article: OWArticleProtocol,
+                       commentId: OWCommentId,
+                       additionalSettings: OWAdditionalSettingsProtocol,
+                       callbacks: OWViewActionsCallbacks?,
+                       completion: @escaping OWViewCompletion)
+
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
                       parentId: OWCommentId,
@@ -63,6 +70,13 @@ protocol OWUIViews {
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
+
+    func commentThread(postId: OWPostId,
+                       article: OWArticleProtocol,
+                       commentId: OWCommentId,
+                       additionalSettings: OWAdditionalSettingsProtocol,
+                       callbacks: OWViewActionsCallbacks?,
+                       completion: @escaping OWViewCompletion)
 
     func reportReason(postId: OWPostId,
                       commentId: OWCommentId,
