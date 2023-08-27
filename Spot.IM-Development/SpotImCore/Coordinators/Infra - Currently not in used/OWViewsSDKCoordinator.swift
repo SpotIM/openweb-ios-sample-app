@@ -29,6 +29,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                self.generateNewPageViewId()
+            })
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWPreConversationCoordinatorResult>.self)
             })
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
@@ -45,6 +49,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                           callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.generateNewPageViewId()
+            })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWConversationCoordinatorResult>.self)
@@ -159,5 +167,10 @@ fileprivate extension OWViewsSDKCoordinator {
             }
 
             return base
+    }
+
+    func generateNewPageViewId() {
+        let pageViewIdHolder = servicesProvider.pageViewIdHolder()
+        pageViewIdHolder.generateNewPageViewId()
     }
 }
