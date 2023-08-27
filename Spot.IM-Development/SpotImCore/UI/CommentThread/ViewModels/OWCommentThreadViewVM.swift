@@ -279,42 +279,18 @@ fileprivate extension OWCommentThreadViewViewModel {
         return cellOptions
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
-        guard let responseComments = response.conversation?.comments else { return [] }
-
-        let comments: [OWComment] = Array(responseComments)
-
+    func getCommentsPresentationData(of comments: [OWComment]) -> [OWCommentPresentationData] {
         var commentsPresentationData = [OWCommentPresentationData]()
-        var repliesPresentationData = [OWCommentPresentationData]()
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
-
-            if let replies = comment.replies {
-
-                repliesPresentationData = []
-
-                for reply in replies {
-                    guard let replyId = reply.id else { continue }
-
-                    let replyPresentationData = OWCommentPresentationData(
-                        id: replyId,
-                        repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
-                        totalRepliesCount: reply.repliesCount ?? 0,
-                        repliesOffset: reply.offset ?? 0,
-                        repliesPresentation: []
-                    )
-
-                    repliesPresentationData.append(replyPresentationData)
-                }
-            }
 
             let commentPresentationData = OWCommentPresentationData(
                 id: commentId,
                 repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
-                repliesPresentation: repliesPresentationData
+                repliesPresentation: getCommentsPresentationData(of: comment.replies ?? [])
             )
 
             commentsPresentationData.append(commentPresentationData)
@@ -448,10 +424,12 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 self.cacheConversationRead(response: response)
 
-                let commentsPresentationData = self.getCommentsPresentationData(from: response)
+                if let responseComments = response.conversation?.comments {
+                    let commentsPresentationData = self.getCommentsPresentationData(of: responseComments)
 
-                self._commentsPresentationData.removeAll()
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                    self._commentsPresentationData.removeAll()
+                    self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -520,7 +498,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 if let response = response {
                     self.cacheConversationRead(response: response)
 
-                    presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                    if let responseComments = response.conversation?.comments {
+                        presentationDataFromResponse = self.getCommentsPresentationData(of: responseComments)
+                    }
 
                     // filter existing comments
                     presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }

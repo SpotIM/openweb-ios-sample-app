@@ -67,7 +67,13 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func commentThreadCommentId() -> String {
-        return self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
+        let commentId = self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
+        if (commentId.isEmpty) {
+            // If value is empty on user defaults, we want to use the default comment ID
+            return OWCommentThreadSettings.defaultCommentId
+        } else {
+            return commentId
+        }
     }
 
     func mockArticle() -> OWArticleProtocol {
