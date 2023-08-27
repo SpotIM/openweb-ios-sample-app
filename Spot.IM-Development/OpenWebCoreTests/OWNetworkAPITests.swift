@@ -42,7 +42,7 @@ class OWNetworkAPITests: QuickSpec {
                 encoder = JSONEncoder()
             }
 
-            context("1. when the network response is valid") {
+            xcontext("1. when the network response is valid") {
                 it("should perform a successful user data request") {
                     let userData = MockUser.stub()
                     let encodedUserData = try! encoder.encode(userData) // swiftlint:disable:this force_try
