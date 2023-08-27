@@ -68,7 +68,7 @@ class OWTextView: UIView {
     fileprivate lazy var textViewPlaceholder: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
                 .enforceSemanticAttribute()
     }()
@@ -211,7 +211,7 @@ fileprivate extension OWTextView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
-                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor5, themeStyle: currentStyle)
+                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
