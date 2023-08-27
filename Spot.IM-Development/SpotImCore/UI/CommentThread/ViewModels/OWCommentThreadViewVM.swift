@@ -46,7 +46,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let numberOfSkeletonComments: Int = 10
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
-        static let delayForPerformHighlightAnimation: Int = 1 // second
+        static let delayForPerformHighlightAnimation: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
     }
@@ -793,7 +793,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return commentIndex
             }
             .unwrap()
-            .delay(.seconds(Metrics.delayForPerformHighlightAnimation), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .take(1)
             .subscribe(onNext: { [weak self] index in
                 self?._performHighlightAnimationCellIndex.onNext(index)
