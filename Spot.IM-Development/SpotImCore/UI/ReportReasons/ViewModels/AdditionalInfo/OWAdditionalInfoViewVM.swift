@@ -134,11 +134,12 @@ class OWAdditionalInfoViewViewModel: OWAdditionalInfoViewViewModelingInputs, OWA
          submitInProgress: Observable<Bool>,
          submitText: Observable<String>) {
         self.viewableMode = viewableMode
-        self.textViewVM = OWTextViewViewModel(textViewMaxCharecters: textViewMaxCharecters,
-                                              placeholderText: placeholderText,
-                                              textViewText: textViewText,
-                                                       charectersLimitEnabled: charectersLimitEnabled,
-                                              isEditable: true)
+        let textViewData = OWTextViewData(textViewMaxCharecters: textViewMaxCharecters,
+                                          placeholderText: placeholderText,
+                                          textViewText: textViewText,
+                                          charectersLimitEnabled: charectersLimitEnabled,
+                                          isEditable: true)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers(isTextRequired: isTextRequired, submitInProgress: submitInProgress, submitText: submitText)
     }
 }

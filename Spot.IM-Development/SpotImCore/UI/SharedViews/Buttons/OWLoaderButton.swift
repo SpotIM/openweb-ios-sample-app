@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 
 class OWLoaderButton: UIButton {
+    fileprivate let disposeBag = DisposeBag()
     fileprivate var spinner = UIActivityIndicatorView()
-
     fileprivate var isLoading = false {
         didSet {
             updateView()
@@ -22,35 +22,53 @@ class OWLoaderButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        setupObservers()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
+        setupObservers()
     }
 
     fileprivate func setupView() {
         spinner.hidesWhenStopped = true
-        spinner.color = .white
+        spinner.color = OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         addSubview(spinner)
         spinner.OWSnp.makeConstraints { make in
             make.center.equalToSuperview()
         }
     }
 
+    fileprivate var image: UIImage?
     fileprivate func updateView() {
         if isLoading {
             spinner.startAnimating()
-            titleLabel?.alpha = 0
-            imageView?.alpha = 0
+            image = image(for: .normal)
+            setImage(nil, for: .normal)
+            titleLabel?.isHidden = true
             // Prevent multiple clicks while in process
             isEnabled = false
         } else {
             spinner.stopAnimating()
-            titleLabel?.alpha = 1
-            imageView?.alpha = 0
+            if let image = image {
+                setImage(image, for: .normal)
+            }
+            titleLabel?.isHidden = false
             isEnabled = true
         }
+    }
+}
+
+fileprivate extension OWLoaderButton {
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.spinner.color = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
