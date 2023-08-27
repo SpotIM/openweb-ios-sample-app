@@ -65,6 +65,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
+        refresh.userInteractionEnabled(false)
         return refresh
     }()
 
