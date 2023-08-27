@@ -11,6 +11,8 @@ import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
     var commentText: BehaviorSubject<String> { get }
+    var becomeFirstResponder: PublishSubject<Void> { get }
+    var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
 }
 
@@ -19,6 +21,8 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
+    var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
 }
@@ -96,8 +100,20 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         case .replyToComment:
             return Observable.just(OWLocalizationManager.shared.localizedString(key: "Type your reply…"))
         default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
         }
+    }
+
+    var becomeFirstResponder = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponder
+            .asObservable()
+    }
+
+    var resignFirstResponder = PublishSubject<Void>()
+    var resignFirstResponderCalled: Observable<Void> {
+        return resignFirstResponder
+            .asObservable()
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,

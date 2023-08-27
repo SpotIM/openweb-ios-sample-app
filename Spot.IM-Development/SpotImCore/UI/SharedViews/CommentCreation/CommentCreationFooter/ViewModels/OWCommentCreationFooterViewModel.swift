@@ -82,11 +82,9 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             .do(onNext: { [weak self] loginToPost in
                 guard let self = self,
                       loginToPost == true else { return }
-
-                self._loginToPostClick
-                    .onNext()
+                self._loginToPostClick.onNext()
             })
-            .filter { !$0 } // Do not continue if needed to authenticate
+            .filter { !$0 } // Do not continue if authentication needed
             .map { _ -> Void in () }
     }
 
