@@ -122,6 +122,11 @@
 		16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */; };
 		16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */; };
 		16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */; };
+		16D996C52A8B709200748E46 /* OWPermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C42A8B709200748E46 /* OWPermissionsService.swift */; };
+		16D996C72A8B762800748E46 /* OWOpenSettingsAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */; };
+		16D996C92A8CCA7900748E46 /* UIImagePickerController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */; };
+		16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */; };
+		16D996CD2A8D0BA500748E46 /* OWPickImageActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996CC2A8D0BA500748E46 /* OWPickImageActionSheet.swift */; };
 		16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */; };
 		16F66EBD2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */; };
 		16F66EBF2A2CCC470089E70E /* OWRxPresenterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */; };
@@ -129,7 +134,9 @@
 		16F66EC32A2CCC900089E70E /* OWEmptyMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EC22A2CCC900089E70E /* OWEmptyMenu.swift */; };
 		16F66EC52A2CCC9D0089E70E /* OWCommentOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EC42A2CCC9D0089E70E /* OWCommentOptionsMenu.swift */; };
 		16F66EC72A2CCCA80089E70E /* OWSortMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EC62A2CCCA80089E70E /* OWSortMenu.swift */; };
-		1A03B291BFAA531F8124E188 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AE01CE07A21B31750067C3F /* Pods_Shared_DemoApps_Spot_IM_Development.framework */; };
+		16F8A7462A922C680023B96B /* OWCommentCreationImagePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */; };
+		16F8A7482A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F8A7472A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift */; };
+		16F8A74B2A93AF680023B96B /* OWCommentCreationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
 		2405BA3D2A398FD900986B52 /* OWMenuSelectionEncapsulationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2405BA3C2A398FD900986B52 /* OWMenuSelectionEncapsulationView.swift */; };
 		2409CE432A94A80C007701FA /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2409CE422A94A806007701FA /* OpenSans-SemiBold.ttf */; };
@@ -439,6 +446,8 @@
 		3D7E3D6E28884B7000DDBE0B /* OWHelpersLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6D28884B7000DDBE0B /* OWHelpersLayer.swift */; };
 		3D7E3D7028884D5B00DDBE0B /* SPAdditionalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */; };
 		3D7F28BA2998FA3B00E9E69E /* OWInitialSortStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */; };
+		3D8209C32A9276AE003FF453 /* OWRandomGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8209C22A9276AE003FF453 /* OWRandomGenerator.swift */; };
+		3D8209C52A927EE1003FF453 /* OWPageViewIdHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8209C42A927EE1003FF453 /* OWPageViewIdHolder.swift */; };
 		3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A6E286B081D001A939C /* OWRealtimeService.swift */; };
 		3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A70286B18E7001A939C /* OpenWeb.swift */; };
 		3D894A73286C5222001A939C /* OWRealtimeEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */; };
@@ -812,7 +821,7 @@
 		73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */; };
 		73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */; };
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
-		81AE39BD0C191131574B6B81 /* Pods_Shared_OpenWebCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10B723F841938E5B640293A5 /* Pods_Shared_OpenWebCoreTests.framework */; };
+		7FE56ED2E542AD13D648F20B /* Pods_Shared_OpenWebCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E649FF6AC92259999AC38A82 /* Pods_Shared_OpenWebCoreTests.framework */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
 		8D358D4729C8597800E229A3 /* OWViewableMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D358D4629C8597800E229A3 /* OWViewableMode.swift */; };
 		8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D358D4B29C8942E00E229A3 /* OWConversationSortViewModel.swift */; };
@@ -905,8 +914,8 @@
 		9E4163BF29F6C9C700819BC2 /* OWReportReasonCancelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */; };
 		9E4163C329F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C229F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift */; };
 		9E4163C529F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C429F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift */; };
-		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
@@ -966,8 +975,8 @@
 		9ED2E58D29EC01AD00B39A00 /* OWReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58C29EC01AD00B39A00 /* OWReportReasonView.swift */; };
 		9ED2E58F29EC01E900B39A00 /* OWReportReasonSubmittedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E58E29EC01E900B39A00 /* OWReportReasonSubmittedVC.swift */; };
 		9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E59029EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift */; };
-		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDED29798919000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
 		9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */; };
@@ -975,6 +984,7 @@
 		9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77C297E84F100814648 /* PickerSetting.swift */; };
 		9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77D297E84F100814648 /* TextFieldSetting.swift */; };
 		9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE780297E851400814648 /* UIColor+Extensions.swift */; };
+		A907737FE6D210B3BE03F9C3 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDC8256CAFD7422328283946 /* Pods_Shared_Spot_IM_Development.framework */; };
 		A921BFE929B318850E5667DE /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9092AFEF259BAEE0B10299 /* Pods_Shared_SpotImCore.framework */; };
 		E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */; };
 		F92DD7BB2A7E8B9E00A2BE5B /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
@@ -989,6 +999,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3D8209C62A9775E1003FF453 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D697A3A22B65106001AD556;
+			remoteInfo = "Spot-IM.Development";
+		};
 		44C8789223608BC100E0E662 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
@@ -1021,7 +1038,9 @@
 
 /* Begin PBXFileReference section */
 		032FF66BD0A4075941B89FB8 /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; sourceTree = "<group>"; };
+		0463F0B6696CBA8879362EE6 /* Pods-SharedTests-OpenWebCoreTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.public.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.public.xcconfig"; sourceTree = "<group>"; };
 		078331EBB5FC3AC73DDF8667 /* Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig"; sourceTree = "<group>"; };
+		088E826AE39D061DFEF5539E /* Pods-OpenWebCoreTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebCoreTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-OpenWebCoreTests/Pods-OpenWebCoreTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
 		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		0E1125D42304A043006B1489 /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
@@ -1031,7 +1050,6 @@
 		0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoxAuthenticationViewController.swift; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Spot-IM.Development/Resources/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
-		10B723F841938E5B640293A5 /* Pods_Shared_OpenWebCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_OpenWebCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		114ABD0938E416B05F040862 /* Pods-Shared-SpotImCore.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.internal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.internal.xcconfig"; sourceTree = "<group>"; };
 		131F8CE763187B7671AA1AAE /* Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
@@ -1127,6 +1145,11 @@
 		16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVM.swift; sourceTree = "<group>"; };
 		16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentViewModel.swift; sourceTree = "<group>"; };
 		16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentContentViewModel.swift; sourceTree = "<group>"; };
+		16D996C42A8B709200748E46 /* OWPermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPermissionsService.swift; sourceTree = "<group>"; };
+		16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenSettingsAlert.swift; sourceTree = "<group>"; };
+		16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Rx.swift"; sourceTree = "<group>"; };
+		16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImagePickerPresenterResponseType.swift; sourceTree = "<group>"; };
+		16D996CC2A8D0BA500748E46 /* OWPickImageActionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPickImageActionSheet.swift; sourceTree = "<group>"; };
 		16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadSettings.swift; sourceTree = "<group>"; };
 		16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterResponseType.swift; sourceTree = "<group>"; };
 		16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterAction.swift; sourceTree = "<group>"; };
@@ -1134,8 +1157,12 @@
 		16F66EC22A2CCC900089E70E /* OWEmptyMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWEmptyMenu.swift; sourceTree = "<group>"; };
 		16F66EC42A2CCC9D0089E70E /* OWCommentOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentOptionsMenu.swift; sourceTree = "<group>"; };
 		16F66EC62A2CCCA80089E70E /* OWSortMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortMenu.swift; sourceTree = "<group>"; };
+		16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationImagePreviewView.swift; sourceTree = "<group>"; };
+		16F8A7472A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationImagePreviewViewModel.swift; sourceTree = "<group>"; };
+		16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationContent.swift; sourceTree = "<group>"; };
 		1A22EE731738D885057978C0 /* Pods-Shared-SpotImCore.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		1CAB3CE1E5A9C6AE450C6F72 /* Pods-OpenWebCoreTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebCoreTests.internal.xcconfig"; path = "Target Support Files/Pods-OpenWebCoreTests/Pods-OpenWebCoreTests.internal.xcconfig"; sourceTree = "<group>"; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
 		2405BA3C2A398FD900986B52 /* OWMenuSelectionEncapsulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMenuSelectionEncapsulationView.swift; sourceTree = "<group>"; };
 		2409CE422A94A806007701FA /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -1250,14 +1277,17 @@
 		24F1753E2A5E8BD30078BCF6 /* OWLayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLayoutStyle.swift; sourceTree = "<group>"; };
 		24F175402A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsEventCreatorService.swift; sourceTree = "<group>"; };
 		24F4CD7F29C057D300261F80 /* OWPreConversationSummaryStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSummaryStyle.swift; sourceTree = "<group>"; };
+		26D6F901C861ED447A2EBD8B /* Pods-SharedTests-OpenWebCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		2A26548AC75009E549FCE5E2 /* Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		2A481A376BDEF7E19C92F808 /* Pods-Shared-Spot-IM.Development.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		2C9BF800CBE1B5708054E2BF /* Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; sourceTree = "<group>"; };
 		2CF163588A46D2E13878AAE2 /* Pods-Shared-OpenWebCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
 		30B6E37C443F3D1D9FABA6D3 /* Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
 		377DD973617E9820A88EE7A0 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		395BD17827841FD0BC6FFD64 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3C06960EDB6851AE576200FC /* Pods-OpenWebCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-OpenWebCoreTests/Pods-OpenWebCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
 		3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCoordinator.swift; sourceTree = "<group>"; };
 		3D08E05C287598F800E6F1AC /* OWConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationView.swift; sourceTree = "<group>"; };
 		3D08E05E2875994300E6F1AC /* OWConversationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationVC.swift; sourceTree = "<group>"; };
@@ -1455,6 +1485,8 @@
 		3D7E3D6D28884B7000DDBE0B /* OWHelpersLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWHelpersLayer.swift; sourceTree = "<group>"; };
 		3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdditionalConfiguration.swift; sourceTree = "<group>"; };
 		3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInitialSortStrategy.swift; sourceTree = "<group>"; };
+		3D8209C22A9276AE003FF453 /* OWRandomGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRandomGenerator.swift; sourceTree = "<group>"; };
+		3D8209C42A927EE1003FF453 /* OWPageViewIdHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPageViewIdHolder.swift; sourceTree = "<group>"; };
 		3D894A6E286B081D001A939C /* OWRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeService.swift; sourceTree = "<group>"; };
 		3D894A70286B18E7001A939C /* OpenWeb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeb.swift; sourceTree = "<group>"; };
 		3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeEndpoints.swift; sourceTree = "<group>"; };
@@ -1670,6 +1702,7 @@
 		3DFC32D028916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityGuidelinesViewModel.swift; sourceTree = "<group>"; };
 		3DFC32D728916EA4005F1C5A /* OWCommunityQuestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityQuestionViewModel.swift; sourceTree = "<group>"; };
 		3DFC32E528917942005F1C5A /* OWCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCellViewModel.swift; sourceTree = "<group>"; };
+		4012C637917A86B471A645A8 /* Pods-OpenWebCoreTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebCoreTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-OpenWebCoreTests/Pods-OpenWebCoreTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		413B2255206C3693B4D68FAF /* Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		4151E0212097F1EC3902A803 /* Pods-Shared-SpotImCore.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.public.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.public.xcconfig"; sourceTree = "<group>"; };
 		41A5212AF88F30BB35D6468C /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1810,6 +1843,7 @@
 		44F247A22379B0F900B36F12 /* SPBaseUIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseUIImageView.swift; sourceTree = "<group>"; };
 		44F247A42379B23100B36F12 /* SPBaseScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseScrollView.swift; sourceTree = "<group>"; };
 		4B4C380A903EF573ED1959CF /* Pods-Shared-DemoApps-DailyCaller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.debug.xcconfig"; sourceTree = "<group>"; };
+		52C05572E71557AB00890A85 /* Pods-Shared-Spot-IM.Development.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		5CBDE7E86D5FCB5B2A82C166 /* Pods-Shared-SpotImNoAds.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.debug.xcconfig"; sourceTree = "<group>"; };
 		5D00B74322E9B7A600EFC1B0 /* DemoUserAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoUserAuthentication.swift; sourceTree = "<group>"; };
 		5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -1823,8 +1857,11 @@
 		5DBD33E22397F98F003DE0BF /* SPBaseStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseStackView.swift; sourceTree = "<group>"; };
 		5DBD33E623980D6A003DE0BF /* SPBaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseTextField.swift; sourceTree = "<group>"; };
 		5F3FC4B023872DCFAC1C5071 /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; sourceTree = "<group>"; };
+		5F68DBC5E458A60A8F39D23D /* Pods-SharedTests-OpenWebCoreTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		6394E7A86C9ADEE394495AC3 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; sourceTree = "<group>"; };
 		648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Focus_de.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6498E2C13A12D4DE00897A3F /* Pods-Shared-Spot-IM.Development.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.public.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.public.xcconfig"; sourceTree = "<group>"; };
+		65EE97874F61B25085DBCDF7 /* Pods-SharedTests-OpenWebCoreTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		6AF9855F9DF110842B41692F /* Pods-Shared-SpotImCore.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewVisibilityTracker.swift; sourceTree = "<group>"; };
 		6D22A40A23AF79D800DCE08A /* SpotIm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotIm.swift; sourceTree = "<group>"; };
@@ -1852,7 +1889,9 @@
 		7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82E5D19AFE4DC00AC8DD537C /* Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig"; sourceTree = "<group>"; };
 		8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		88A8DBA5002847249A133EA5 /* Pods-OpenWebCoreTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebCoreTests.public.xcconfig"; path = "Target Support Files/Pods-OpenWebCoreTests/Pods-OpenWebCoreTests.public.xcconfig"; sourceTree = "<group>"; };
 		8AD06A753856558311FC9849 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		8AD138FCDAAA4D54C546AFFB /* Pods-Shared-Spot-IM.Development.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.internal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.internal.xcconfig"; sourceTree = "<group>"; };
 		8B68A2990C05E97CCA3BB018 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_DevelopmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D358D4629C8597800E229A3 /* OWViewableMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewableMode.swift; sourceTree = "<group>"; };
@@ -1927,10 +1966,10 @@
 		8DE52F5029EBEBAC00D3985C /* OWSpacerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpacerViewModel.swift; sourceTree = "<group>"; };
 		8DE52F5229EBEBB800D3985C /* OWSpacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpacerView.swift; sourceTree = "<group>"; };
 		908516EA439B74859BFC244A /* Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig"; sourceTree = "<group>"; };
+		94D4F5B12220CBBAEAB9679E /* Pods-SharedTests-OpenWebCoreTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.internal.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.internal.xcconfig"; sourceTree = "<group>"; };
 		96882182115150292A31277E /* Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; sourceTree = "<group>"; };
 		9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
-		9AE01CE07A21B31750067C3F /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
 		9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWLoaderButton.swift; sourceTree = "<group>"; };
@@ -2022,8 +2061,12 @@
 		ABB081CABCEFB8ACC874E710 /* Pods-Shared-OpenWebCoreTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		AD9092AFEF259BAEE0B10299 /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
+		B6CA61589E9C64AB8D19B5F0 /* Pods-OpenWebCoreTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenWebCoreTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-OpenWebCoreTests/Pods-OpenWebCoreTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
+		BB4C9CAFB21FD2F8EF70248E /* Pods-Shared-Spot-IM.Development.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		BD93F797FEABA3B540FA1DF3 /* Pods-Shared-SpotImCore.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
+		BD9B04288B9EE1A3557C1E90 /* Pods-SharedTests-OpenWebCoreTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
+		BDC8256CAFD7422328283946 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_MarketWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBFF8396B466B5E0D511CDBE /* Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		CFF8D88452FA83C53AAA1CB5 /* Pods-Shared-SpotImNoAds.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.release.xcconfig"; sourceTree = "<group>"; };
@@ -2035,6 +2078,8 @@
 		D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
 		DAF4043CAD3F71F4DBD608F1 /* Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		E3E01D2E95BE3559589E690E /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
+		E5F6A7E4F5D2AEFCCF9DC8CE /* Pods-Shared-Spot-IM.Development.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.beta.xcconfig"; sourceTree = "<group>"; };
+		E649FF6AC92259999AC38A82 /* Pods_Shared_OpenWebCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_OpenWebCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E685AC2925C97DC4008FECDB /* GoogleAdsV7Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsV7Provider.swift; sourceTree = "<group>"; };
 		E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoginPromptView.swift; sourceTree = "<group>"; };
 		EAA1F44D7038F3EE06511A47 /* Pods-Shared-OpenWebCoreTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.internal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.internal.xcconfig"; sourceTree = "<group>"; };
@@ -2070,7 +2115,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */,
-				1A03B291BFAA531F8124E188 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */,
+				A907737FE6D210B3BE03F9C3 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2079,7 +2124,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F92DD7BB2A7E8B9E00A2BE5B /* SpotImCore.framework in Frameworks */,
-				81AE39BD0C191131574B6B81 /* Pods_Shared_OpenWebCoreTests.framework in Frameworks */,
+				7FE56ED2E542AD13D648F20B /* Pods_Shared_OpenWebCoreTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2196,6 +2241,7 @@
 		161655602A531575004EBF6F /* CommentCreationContent */ = {
 			isa = PBXGroup;
 			children = (
+				16F8A7492A93AF560023B96B /* Models */,
 				161655622A53158B004EBF6F /* ViewModels */,
 				161655612A531584004EBF6F /* Views */,
 			);
@@ -2349,6 +2395,7 @@
 		163E93312A49817D0091A6C4 /* CommentCreation */ = {
 			isa = PBXGroup;
 			children = (
+				16F8A7422A922C2B0023B96B /* ImagePreview */,
 				161655712A64153E004EBF6F /* CommentCreationReplySnippet */,
 				161655602A531575004EBF6F /* CommentCreationContent */,
 				161655592A531517004EBF6F /* CommentCreationFooter */,
@@ -2624,6 +2671,8 @@
 				16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */,
 				16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */,
 				16F66EC02A2CCC810089E70E /* OWMenuTypeProtocol.swift */,
+				16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */,
+				16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */,
 			);
 			path = "Presenter+Rx";
 			sourceTree = "<group>";
@@ -2637,8 +2686,43 @@
 				16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */,
 				16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */,
 				162B83542A715729002290EE /* OWCloseEditorAlert.swift */,
+				16D996C62A8B762800748E46 /* OWOpenSettingsAlert.swift */,
+				16D996CC2A8D0BA500748E46 /* OWPickImageActionSheet.swift */,
 			);
 			path = MenuTypes;
+			sourceTree = "<group>";
+		};
+		16F8A7422A922C2B0023B96B /* ImagePreview */ = {
+			isa = PBXGroup;
+			children = (
+				16F8A7432A922C3B0023B96B /* ViewModels */,
+				16F8A7442A922C440023B96B /* Views */,
+			);
+			path = ImagePreview;
+			sourceTree = "<group>";
+		};
+		16F8A7432A922C3B0023B96B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				16F8A7472A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		16F8A7442A922C440023B96B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				16F8A7452A922C680023B96B /* OWCommentCreationImagePreviewView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		16F8A7492A93AF560023B96B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				16F8A74A2A93AF680023B96B /* OWCommentCreationContent.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		2414F82927EC67B000722D2B /* AvatarView - Old */ = {
@@ -4845,6 +4929,9 @@
 				3DDE2AD72A60333C007684C8 /* OWCommentCreationRequestsService.swift */,
 				162B835E2A7A76FC002290EE /* OWLocalCommentDataPopulator.swift */,
 				3D301BDD2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift */,
+				16D996C42A8B709200748E46 /* OWPermissionsService.swift */,
+				3D8209C22A9276AE003FF453 /* OWRandomGenerator.swift */,
+				3D8209C42A927EE1003FF453 /* OWPageViewIdHolder.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -4976,10 +5063,10 @@
 				648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */,
 				BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */,
 				7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */,
-				9AE01CE07A21B31750067C3F /* Pods_Shared_DemoApps_Spot_IM_Development.framework */,
-				10B723F841938E5B640293A5 /* Pods_Shared_OpenWebCoreTests.framework */,
 				8B68A2990C05E97CCA3BB018 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */,
 				AD9092AFEF259BAEE0B10299 /* Pods_Shared_SpotImCore.framework */,
+				BDC8256CAFD7422328283946 /* Pods_Shared_Spot_IM_Development.framework */,
+				E649FF6AC92259999AC38A82 /* Pods_Shared_OpenWebCoreTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -5924,6 +6011,24 @@
 				96882182115150292A31277E /* Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig */,
 				2A26548AC75009E549FCE5E2 /* Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig */,
 				ABB081CABCEFB8ACC874E710 /* Pods-Shared-OpenWebCoreTests.releasepublic.xcconfig */,
+				8AD138FCDAAA4D54C546AFFB /* Pods-Shared-Spot-IM.Development.internal.xcconfig */,
+				E5F6A7E4F5D2AEFCCF9DC8CE /* Pods-Shared-Spot-IM.Development.beta.xcconfig */,
+				6498E2C13A12D4DE00897A3F /* Pods-Shared-Spot-IM.Development.public.xcconfig */,
+				BB4C9CAFB21FD2F8EF70248E /* Pods-Shared-Spot-IM.Development.releaseinternal.xcconfig */,
+				52C05572E71557AB00890A85 /* Pods-Shared-Spot-IM.Development.releasebeta.xcconfig */,
+				2A481A376BDEF7E19C92F808 /* Pods-Shared-Spot-IM.Development.releasepublic.xcconfig */,
+				1CAB3CE1E5A9C6AE450C6F72 /* Pods-OpenWebCoreTests.internal.xcconfig */,
+				3C06960EDB6851AE576200FC /* Pods-OpenWebCoreTests.beta.xcconfig */,
+				88A8DBA5002847249A133EA5 /* Pods-OpenWebCoreTests.public.xcconfig */,
+				B6CA61589E9C64AB8D19B5F0 /* Pods-OpenWebCoreTests.releaseinternal.xcconfig */,
+				4012C637917A86B471A645A8 /* Pods-OpenWebCoreTests.releasebeta.xcconfig */,
+				088E826AE39D061DFEF5539E /* Pods-OpenWebCoreTests.releasepublic.xcconfig */,
+				94D4F5B12220CBBAEAB9679E /* Pods-SharedTests-OpenWebCoreTests.internal.xcconfig */,
+				26D6F901C861ED447A2EBD8B /* Pods-SharedTests-OpenWebCoreTests.beta.xcconfig */,
+				0463F0B6696CBA8879362EE6 /* Pods-SharedTests-OpenWebCoreTests.public.xcconfig */,
+				5F68DBC5E458A60A8F39D23D /* Pods-SharedTests-OpenWebCoreTests.releaseinternal.xcconfig */,
+				BD9B04288B9EE1A3557C1E90 /* Pods-SharedTests-OpenWebCoreTests.releasebeta.xcconfig */,
+				65EE97874F61B25085DBCDF7 /* Pods-SharedTests-OpenWebCoreTests.releasepublic.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -5998,7 +6103,6 @@
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
 				8D455ADB296C13CA0091A027 /* ShellScript */,
-				977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -6018,12 +6122,12 @@
 				F92DD7B32A7E8B9E00A2BE5B /* Sources */,
 				F92DD7B42A7E8B9E00A2BE5B /* Frameworks */,
 				F92DD7B52A7E8B9E00A2BE5B /* Resources */,
-				00DBB773F49D7DCABBAC26B2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				F92DD7BD2A7E8B9E00A2BE5B /* PBXTargetDependency */,
+				3D8209C72A9775E1003FF453 /* PBXTargetDependency */,
 			);
 			name = OpenWebCoreTests;
 			productName = OpenWebCoreTests;
@@ -6126,23 +6230,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00DBB773F49D7DCABBAC26B2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		060C6559D67DB478867B07E8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6200,23 +6287,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
 		};
-		977A26D75CFCBE82C5BFD3AB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6232,7 +6302,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-Spot-IM.Development-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shared-Spot-IM.Development-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -6281,6 +6351,7 @@
 				244193132A933A2C0085BB30 /* OWAnalyticEventType+BIExtensions.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
 				3DDA9A772919370200FE3B86 /* OWUIAuthenticationLayer.swift in Sources */,
+				3D8209C52A927EE1003FF453 /* OWPageViewIdHolder.swift in Sources */,
 				9E3B8B812A0272CE006BB207 /* String+OWExtensions.swift in Sources */,
 				16D8D4AA28C633F800895FCB /* OWCommentCreationVM.swift in Sources */,
 				4454180123685144001D0ED0 /* SPBaseTextView.swift in Sources */,
@@ -6322,6 +6393,7 @@
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
 				3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
+				16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */,
 				5DBD33E723980D6A003DE0BF /* SPBaseTextField.swift in Sources */,
 				9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */,
 				8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */,
@@ -6482,6 +6554,7 @@
 				8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */,
 				3D20A36727B00E7D003F8513 /* OWConstraintConstantTarget.swift in Sources */,
 				3D0AFC9C29C7398A002670D1 /* OWSSOProviderResponse.swift in Sources */,
+				3D8209C32A9276AE003FF453 /* OWRandomGenerator.swift in Sources */,
 				9E4163C329F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift in Sources */,
 				3DB3B95229F468D000C50192 /* OWTestingPlaygroundSettingsProtocol.swift in Sources */,
 				445418A923685154001D0ED0 /* UIFont+Extensions.swift in Sources */,
@@ -6645,6 +6718,7 @@
 				6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */,
 				9E8278792A4DAEC500EAA88E /* OWReportReasonCancelVM.swift in Sources */,
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
+				16F8A74B2A93AF680023B96B /* OWCommentCreationContent.swift in Sources */,
 				16BEFD452A4C3254007A51D5 /* OWCommentDeleteAlert.swift in Sources */,
 				3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */,
 				9EC88D8D29FAB82400EBD165 /* OWReportReasonSubmittedView.swift in Sources */,
@@ -6723,6 +6797,7 @@
 				3D0AFC9529C73441002670D1 /* OWSSOProviderModel.swift in Sources */,
 				3DEAA58129A240910043D73E /* OWFontGroupFamily+Extensions.swift in Sources */,
 				3D08E0672875BA5300E6F1AC /* OWManagerProtocol.swift in Sources */,
+				16D996CD2A8D0BA500748E46 /* OWPickImageActionSheet.swift in Sources */,
 				4454181E23685144001D0ED0 /* ShowMoreRepliesView.swift in Sources */,
 				24C9BD5A29DD547800D74034 /* OWCommentCreationEntryViewModel.swift in Sources */,
 				3DDA9A5128FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift in Sources */,
@@ -6830,6 +6905,7 @@
 				8D358D5129C9C08D00E229A3 /* OWConversationTitleHeaderViewModel.swift in Sources */,
 				244FD0A426661A3300BFBC8F /* SPCommunityQuestionView.swift in Sources */,
 				445417FC23685144001D0ED0 /* UIBarButton+UIImage.swift in Sources */,
+				16F8A7482A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift in Sources */,
 				3DEDF61628C9D48800F87056 /* OWNavigationController.swift in Sources */,
 				1628A74628EB08540019B5EC /* OWCommentView.swift in Sources */,
 				3D0AFC8D29C5F954002670D1 /* OWRenewSSOCallback.swift in Sources */,
@@ -6951,6 +7027,8 @@
 				1679DB1429B88DD400604A3D /* OWCommentThreadCellOption.swift in Sources */,
 				3DFA6B9F29216E8D0047E313 /* OWAuthentication.swift in Sources */,
 				3DB3B98129F7DBA800C50192 /* OWTestingRxTableViewCellOption.swift in Sources */,
+				16D996C72A8B762800748E46 /* OWOpenSettingsAlert.swift in Sources */,
+				16D996C52A8B709200748E46 /* OWPermissionsService.swift in Sources */,
 				3D31FB9429AB744B002B88E0 /* OWLanguageStrategy+Extensions.swift in Sources */,
 				4454181923685144001D0ED0 /* SPReplyCell.swift in Sources */,
 				4454180223685144001D0ED0 /* SPAvatarView.swift in Sources */,
@@ -6964,6 +7042,7 @@
 				3D08E0BA287AF3BC00E6F1AC /* OWObservableArray.swift in Sources */,
 				8D7FC66029A3AA510047DA22 /* OWConversationSummaryView.swift in Sources */,
 				3DFC32D128916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift in Sources */,
+				16D996C92A8CCA7900748E46 /* UIImagePickerController+Rx.swift in Sources */,
 				3DDA9A90291A7C7300FE3B86 /* OWCustomizationsLayer.swift in Sources */,
 				445418B423685154001D0ED0 /* IndexPath+SPExtensions.swift in Sources */,
 				44F247A52379B23100B36F12 /* SPBaseScrollView.swift in Sources */,
@@ -7010,6 +7089,7 @@
 				24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */,
 				24B7A2B22A30822C00A5D71D /* OWMenuSelectionView.swift in Sources */,
 				3D20A36B27B01153003F8513 /* OWConstraintDescription.swift in Sources */,
+				16F8A7462A922C680023B96B /* OWCommentCreationImagePreviewView.swift in Sources */,
 				3D20A36927B01078003F8513 /* OWConstraintConfig.swift in Sources */,
 				3DA264802951F7AD00688FFF /* OWNetworkExtended.swift in Sources */,
 				3DB3B95029F4634300C50192 /* OWTestingPlaygroundRequiredData.swift in Sources */,
@@ -7083,12 +7163,12 @@
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
 				3D301BEA2A8E89DC0012B526 /* UIViewController+LargeTitles.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
-				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				3D1D24912A4AF60600692E2A /* ToolbarCollectionCell.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
-				9EE2CDED29798919000C0E38 /* (null) in Sources */,
+				9EE2CDED29798919000C0E38 /* BuildFile in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
 				9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
@@ -7108,7 +7188,7 @@
 				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
-				9E53758C297841C000C85983 /* (null) in Sources */,
+				9E53758C297841C000C85983 /* BuildFile in Sources */,
 				9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */,
 				3DF9418A2A56DB6800A687BD /* AutomationVC.swift in Sources */,
 				9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */,
@@ -7196,7 +7276,7 @@
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleFlowsViewModel.swift in Sources */,
 				9E7D5B122A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift in Sources */,
-				9E53758E2978476900C85983 /* (null) in Sources */,
+				9E53758E2978476900C85983 /* BuildFile in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7222,6 +7302,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3D8209C72A9775E1003FF453 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5D697A3A22B65106001AD556 /* Spot-IM.Development */;
+			targetProxy = 3D8209C62A9775E1003FF453 /* PBXContainerItemProxy */;
+		};
 		44C8789323608BC100E0E662 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
@@ -7320,7 +7405,7 @@
 		};
 		3D09249428A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 078331EBB5FC3AC73DDF8667 /* Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig */;
+			baseConfigurationReference = 6498E2C13A12D4DE00897A3F /* Pods-Shared-Spot-IM.Development.public.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -7478,7 +7563,7 @@
 		};
 		3D611B7128BF8F42003960CE /* Beta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2C9BF800CBE1B5708054E2BF /* Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig */;
+			baseConfigurationReference = E5F6A7E4F5D2AEFCCF9DC8CE /* Pods-Shared-Spot-IM.Development.beta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -7630,7 +7715,7 @@
 		};
 		3D674E02298C54030049960D /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */;
+			baseConfigurationReference = 52C05572E71557AB00890A85 /* Pods-Shared-Spot-IM.Development.releasebeta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -7782,7 +7867,7 @@
 		};
 		3D674E07298C541A0049960D /* ReleasePublic */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 131F8CE763187B7671AA1AAE /* Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig */;
+			baseConfigurationReference = 2A481A376BDEF7E19C92F808 /* Pods-Shared-Spot-IM.Development.releasepublic.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -8089,7 +8174,7 @@
 		};
 		5D697A5922B65108001AD556 /* Internal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */;
+			baseConfigurationReference = 8AD138FCDAAA4D54C546AFFB /* Pods-Shared-Spot-IM.Development.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -8124,7 +8209,7 @@
 		};
 		5D697A5A22B65108001AD556 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DAF4043CAD3F71F4DBD608F1 /* Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig */;
+			baseConfigurationReference = BB4C9CAFB21FD2F8EF70248E /* Pods-Shared-Spot-IM.Development.releaseinternal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
