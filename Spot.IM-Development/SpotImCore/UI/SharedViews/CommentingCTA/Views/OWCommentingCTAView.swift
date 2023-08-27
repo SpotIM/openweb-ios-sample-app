@@ -10,11 +10,6 @@ import UIKit
 import RxSwift
 
 class OWCommentingCTAView: UIView {
-    fileprivate struct Metrics {
-        static let commentCreationBottomPadding: CGFloat = 16
-        static let readOnlyTopPadding: CGFloat = 40
-    }
-
     fileprivate lazy var skelatonView: OWCommentingCTASkeletonView = {
         return OWCommentingCTASkeletonView()
     }()
@@ -73,9 +68,6 @@ fileprivate extension OWCommentingCTAView {
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
-                    if style == .cta || style == .conversationEnded {
-                        make.bottom.equalToSuperview().offset(-Metrics.commentCreationBottomPadding)
-                    }
                 }
             })
             .disposed(by: disposeBag)
