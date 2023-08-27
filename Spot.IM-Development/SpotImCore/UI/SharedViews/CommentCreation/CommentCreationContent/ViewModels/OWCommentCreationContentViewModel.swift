@@ -160,6 +160,13 @@ fileprivate extension OWCommentCreationContentViewModel {
             self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
                 .unwrap()
                 .observe(on: MainScheduler.instance)
+                .do(onNext: { [weak self] _ in
+                    // Set a placeholder
+                    guard let self = self else { return }
+                    if let placeholder = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false) {
+                        self.imagePreviewVM.inputs.image.onNext(placeholder)
+                    }
+                })
                 .subscribe(onNext: { [weak self] imageUrl in
                     guard let self = self else { return }
                     UIImage.load(with: imageUrl) { image, _ in
