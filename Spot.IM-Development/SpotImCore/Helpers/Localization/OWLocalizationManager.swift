@@ -97,6 +97,18 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
 
     func localizedString(key: String) -> String {
         guard let localizationBundle = self.localizationBundle else {
+            /*
+             It seems that there is a rare bug in which sometimes the RX chain which call `configure(language:)`, the function which actually set the `localizationBundle` isn't working properly
+             In such case we will jsut configure the language for `_currentLanguageNonRx` which usually be the initial defualt english. Temp solution which is better than showing the actual keys.
+             */
+            configure(language: _currentLanguageNonRx)
+
+            // Re-trying. Can't use recursion to avoid infinity failure
+            if let localizationBundle = self.localizationBundle {
+                return localizationBundle.localizedString(forKey: key, value: "", table: nil)
+            }
+
+            // Failed to retrieve `localizationBundle` even in the second time (should never happen)
             return NSLocalizedString(key, comment: "")
         }
 
