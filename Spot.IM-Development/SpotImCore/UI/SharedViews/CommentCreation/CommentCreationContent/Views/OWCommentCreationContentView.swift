@@ -161,6 +161,19 @@ fileprivate extension OWCommentCreationContentView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.becomeFirstResponderCalled
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textInput.becomeFirstResponder()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.resignFirstResponderCalled
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textInput.resignFirstResponder()
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {

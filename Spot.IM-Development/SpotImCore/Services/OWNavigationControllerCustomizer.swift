@@ -75,6 +75,7 @@ fileprivate extension OWNavigationControllerCustomizer {
 
         let navigationBarBackgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
         navController.navigationBar.tintColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: style)
+        navController.navigationBar.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: style)
 
         // Setup Title
         let navigationTitleTextAttributes = [
@@ -104,7 +105,6 @@ fileprivate extension OWNavigationControllerCustomizer {
             navController.navigationBar.standardAppearance = appearance
             navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
         } else {
-            navController.navigationBar.backgroundColor = navigationBarBackgroundColor
             navController.navigationBar.titleTextAttributes = navigationTitleTextAttributes
         }
     }
