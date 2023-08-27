@@ -348,6 +348,9 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _usersService.cleanCache()
         _analyticsService.spotChanged(spotId: spotId)
         _reportedCommentsService.cleanCache()
+        _imageCacheService.cleanCache()
+        _commentsInMemoryCacheService.cleanCache()
+        _lastCommentTypeInMemoryCacheService.cleanCache()
     }
 }
 

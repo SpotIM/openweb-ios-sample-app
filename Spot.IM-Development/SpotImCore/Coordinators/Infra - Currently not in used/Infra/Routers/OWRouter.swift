@@ -52,7 +52,9 @@ extension OWRoutering {
 }
 
 class OWRouter: NSObject, OWRoutering {
-
+    fileprivate struct Metrics {
+        static let transitionDuration = 0.5
+    }
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
@@ -105,7 +107,7 @@ class OWRouter: NSObject, OWRoutering {
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
         case .present:
             let transition = CATransition()
-            transition.duration = 0.5
+            transition.duration = Metrics.transitionDuration
             transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             transition.type = .moveIn
             transition.subtype = .fromTop
@@ -132,7 +134,7 @@ class OWRouter: NSObject, OWRoutering {
             }
         case .dismiss:
             let transition = CATransition()
-            transition.duration = 0.5
+            transition.duration = Metrics.transitionDuration
             transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             transition.type = .reveal
             transition.subtype = .fromBottom

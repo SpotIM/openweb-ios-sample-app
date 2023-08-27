@@ -100,7 +100,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         case .replyToComment:
             return Observable.just(OWLocalizationManager.shared.localizedString(key: "Type your reply…"))
         default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
         }
     }
 

@@ -1185,8 +1185,11 @@ fileprivate extension OWConversationViewViewModel {
                     // Changing the sort in the service
                     let sortDictateService = self.servicesProvider.sortDictateService()
                     sortDictateService.update(sortOption: newSort, perPostId: self.postId)
+
                     // Remove all comments to show skeletons while loading new comments according to the new sort
                     self._commentsPresentationData.removeAll()
+
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
                 }
             })
             .disposed(by: disposeBag)
