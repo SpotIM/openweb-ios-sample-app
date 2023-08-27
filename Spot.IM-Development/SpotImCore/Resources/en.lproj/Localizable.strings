@@ -60,7 +60,7 @@
 "Be the first to comment" = "Be the first to comment";
 "Sort by" = "Sort by";
 "Share" = "Share";
-"What do you think?" = "What do you think?";
+"WhatDoYouThink" = "What do you think?";
 "Loading" = "Loading";
 "View Previous Reply" = "View Previous Reply";
 "Hide Reply" = "Hide Reply";
@@ -157,4 +157,4 @@
 "View x replies" = "View %d replies";
 "View x reply" = "View %d reply";
 "View x of x replies" = "View %d of %d replies";
-"Editing comment" = "Editing comment";
+"EditingComment" = "Editing comment";

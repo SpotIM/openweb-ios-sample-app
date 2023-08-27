@@ -71,8 +71,9 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .filter { _ in
                 if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                     return false
+                } else {
+                    return true
                 }
-                return true
             }
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
@@ -81,8 +82,9 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .filter { _ in
                 if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                     return true
+                } else {
+                    return false
                 }
-                return false
             }
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
@@ -115,7 +117,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        // TODO: Complete when we would like to support comment creation as a view
         let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
                                                                                                 viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)

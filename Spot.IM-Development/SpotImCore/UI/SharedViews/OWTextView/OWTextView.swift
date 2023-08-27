@@ -192,7 +192,7 @@ fileprivate extension OWTextView {
                 .disposed(by: disposeBag)
         }
 
-        viewModel.outputs.becomeFirstResponderCalled
+        viewModel.outputs.becomeFirstResponderCalledWithDelay
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.textView.becomeFirstResponder()

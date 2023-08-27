@@ -13,6 +13,16 @@ import RxCocoa
 class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_floating_keyboard_view_id"
+        static let mainContainerIdentifier = "comment_creation_floating_keyboard_main_container_view_id"
+        static let underFooterViewIdentifier = "comment_creation_floating_keyboard_under_footer_view_id"
+        static let headerViewIdentifier = "comment_creation_floating_keyboard_header_view_id"
+        static let headerCloseButtonIdentifier = "comment_creation_floating_keyboard_header_close_button_id"
+        static let headerTitleLabelIdentifier = "comment_creation_floating_keyboard_header_title_label_id"
+        static let headerIconViewIdentifier = "comment_creation_floating_keyboard_header_icon_view_id"
+        static let userAvatarViewIdentifier = "comment_creation_floating_keyboard_user_avatar_view_id"
+        static let closeButtonIdentifier = "comment_creation_floating_keyboard_close_button_id"
+        static let ctaButtonIdentifier = "comment_creation_floating_keyboard_cta_button_id"
+        static let toolbarIdentifier = "comment_creation_floating_keyboard_toolbar_view_id"
         static let prefixIdentifier = "comment_creation_floating_keyboard"
         static let userAvatarLeadingPadding: CGFloat = 20
         static let footerTrailingPadding: CGFloat = 12
@@ -83,7 +93,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             break
         case .edit(comment: let comment):
             headerIconView.image(UIImage(spNamed: Metrics.editImageIcon))
-            headerTitleLabel.text = OWLocalizationManager.shared.localizedString(key: "Editing comment")
+            headerTitleLabel.text = OWLocalizationManager.shared.localizedString(key: "EditingComment")
         case .replyToComment(originComment: let originComment):
             headerIconView.image(UIImage(spNamed: Metrics.replyImageIcon))
             var name = ""
@@ -179,23 +189,18 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         super.init(frame: .zero)
         self.enforceSemanticAttribute()
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
+        setupViews()
+        applyAccessibility()
+        setupObservers()
     }
 
     fileprivate var firstLayoutSubviewsDone = false
-    fileprivate var didSetupView = false
     override func layoutSubviews() {
-        if !didSetupView {
-            didSetupView = true
-            setupViews()
-            applyAccessibility()
-            setupObservers()
-        }
-
         if !firstLayoutSubviewsDone,
            let toolbar = toolbar,
            mainContainer.subviews.contains(toolbar) {
             firstLayoutSubviewsDone = true
-            viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(Metrics.delayKeyboard)
+            viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.delayKeyboard)
             updateToolbarConstraints(hidden: true)
             mainContainer.layoutIfNeeded()
             UIView.animate(withDuration: Metrics.toolbarAnimationSecondsDuration) { [weak self] in
@@ -205,7 +210,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             }
         } else if !firstLayoutSubviewsDone {
             firstLayoutSubviewsDone = true
-            self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCall.onNext(0)
+            self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(0)
         }
     }
 
@@ -216,7 +221,16 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
 
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        // TODO add all views
+        mainContainer.accessibilityIdentifier = Metrics.mainContainerIdentifier
+        underFooterView.accessibilityIdentifier = Metrics.underFooterViewIdentifier
+        headerView.accessibilityIdentifier = Metrics.headerViewIdentifier
+        headerCloseButton.accessibilityIdentifier = Metrics.headerCloseButtonIdentifier
+        headerTitleLabel.accessibilityIdentifier = Metrics.headerTitleLabelIdentifier
+        headerIconView.accessibilityIdentifier = Metrics.headerIconViewIdentifier
+        userAvatarView.accessibilityIdentifier = Metrics.userAvatarViewIdentifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        ctaButton.accessibilityIdentifier = Metrics.ctaButtonIdentifier
+        toolbar?.accessibilityIdentifier = Metrics.toolbarIdentifier
     }
 }
 

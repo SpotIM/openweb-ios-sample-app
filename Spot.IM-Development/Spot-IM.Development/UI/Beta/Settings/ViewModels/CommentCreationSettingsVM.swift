@@ -51,14 +51,7 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
             .map { commentCreationStyle in
                 switch commentCreationStyle {
                 case .floatingKeyboard(let accessoryViewStrategy):
-                    switch accessoryViewStrategy {
-                    case .none:
-                        return 0
-                    case .bottomToolbar:
-                        return 1
-                    default:
-                        return 0
-                    }
+                    return accessoryViewStrategy.index
                 default:
                     return 0
                 }
@@ -71,13 +64,13 @@ class CommentCreationSettingsVM: CommentCreationSettingsViewModeling, CommentCre
             .map { commentCreationStyle in
                 switch commentCreationStyle {
                 case .regular:
-                    return 0
+                    return OWCommentCreationStyleIndexer.regular.index
                 case .light:
-                    return 1
+                    return OWCommentCreationStyleIndexer.light.index
                 case .floatingKeyboard:
-                    return 2
+                    return OWCommentCreationStyleIndexer.floatingKeyboard.index
                 default:
-                    return 0
+                    return OWCommentCreationStyleIndexer.regular.index
                 }
             }
             .asObservable()

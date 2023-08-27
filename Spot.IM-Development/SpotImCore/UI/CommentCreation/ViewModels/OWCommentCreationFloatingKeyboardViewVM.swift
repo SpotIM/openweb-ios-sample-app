@@ -23,7 +23,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
-    var ctaIcon: UIImage? { get }
+    var ctaIcon: UIImage { get }
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
     var servicesProvider: OWSharedServicesProviding { get }
     var viewableMode: OWViewableMode { get }
@@ -48,7 +48,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
 
     fileprivate struct Metrics {
-        static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "What do you think?")
+        static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
     }
 
@@ -115,8 +115,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         return OWAvatarViewModel(imageURLProvider: imageURLProvider)
     }()
 
-    lazy var ctaIcon: UIImage? = {
-        return UIImage(spNamed: Metrics.ctaIconName)
+    lazy var ctaIcon: UIImage = {
+        return UIImage(spNamed: Metrics.ctaIconName)!
     }()
 
     let textViewVM: OWTextViewViewModeling

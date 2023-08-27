@@ -43,17 +43,9 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentCreationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-    }
-
-    var didSetupView = false
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if !didSetupView {
-            didSetupView = true
-            setupViews()
-            applyAccessibility()
-            setupObservers()
-        }
+        setupViews()
+        applyAccessibility()
+        setupObservers()
     }
 
     private func applyAccessibility() {

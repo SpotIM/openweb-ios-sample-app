@@ -166,11 +166,7 @@ fileprivate extension OWCommentCreationVC {
                 switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                 case .regular, .light:
                     let bottomPadding: CGFloat
-                    if #available(iOS 11.0, *) {
-                        bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
-                    } else {
-                        bottomPadding = 0
-                    }
+                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
                     self.commentCreationView.OWSnp.updateConstraints { make in
                         make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
                     }
