@@ -83,6 +83,35 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 self.router?.pop(popStyle: .dismissStyle, animated: false)
             })
 
+        // Coordinate to safari tab
+//        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
+//
+//        let coordinateToSafariObservable = coordinateToSafariObservables
+//            .filter { [weak self] _ in
+//                guard let self = self else { return false }
+//                return self.viewableMode == .partOfFlow
+//            }
+//            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+//                guard let self = self else { return .empty() }
+//                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+//                                                               url: url,
+//                                                               actionsCallbacks: self.actionsCallbacks)
+//                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+//            }
+//            .do(onNext: { result in
+//                switch result {
+//                case .loadedToScreen:
+//                    break
+//                    // Nothing
+//                case .popped:
+//                    break
+//                }
+//            })
+//            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+//                return Observable.never()
+//            }
+
+
         return Observable.merge(resultsWithPopAnimation, dismissObservable, loadedToScreenObservable)
     }
 
