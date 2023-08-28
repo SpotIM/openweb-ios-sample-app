@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public enum OWArticleInformationStrategy {
+public enum OWArticleInformationStrategy: Codable {
     case server
     case local(url: URL, title: String, subtitle: String?, thumbnailUrl: URL?)
 

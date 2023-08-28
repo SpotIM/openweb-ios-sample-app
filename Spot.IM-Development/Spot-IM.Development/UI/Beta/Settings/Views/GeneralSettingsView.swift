@@ -57,6 +57,15 @@ class GeneralSettingsView: UIView {
                                        items: items)
     }()
 
+    fileprivate lazy var segmentedArticleInformationStrategy: SegmentedControlSetting = {
+        let title = viewModel.outputs.articleInformationStrategyTitle
+        let items = viewModel.outputs.articleInformationStrategySettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedArticleHeaderStyleIdentifier, // TODO: !
+                                       items: items)
+    }()
+
     fileprivate lazy var segmentedElementsCustomizationStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.elementsCustomizationStyleTitle
         let items = viewModel.outputs.elementsCustomizationStyleSettings
@@ -204,6 +213,7 @@ fileprivate extension GeneralSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedArticleHeaderStyle)
+        stackView.addArrangedSubview(segmentedArticleInformationStrategy)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
@@ -224,6 +234,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.articleHeaderStyle
             .map { $0.index }
             .bind(to: segmentedArticleHeaderStyle.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.articleInformationStrategy
+            .map { $0.index }
+            .bind(to: segmentedArticleInformationStrategy.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.elementsCustomizationStyleIndex
@@ -269,6 +284,11 @@ fileprivate extension GeneralSettingsView {
         segmentedArticleHeaderStyle.rx.selectedSegmentIndex
             .map { OWArticleHeaderStyle.articleHeaderStyle(fromIndex: $0) }
             .bind(to: viewModel.inputs.articleHeaderSelectedStyle)
+            .disposed(by: disposeBag)
+
+        segmentedArticleInformationStrategy.rx.selectedSegmentIndex
+            .map { OWArticleInformationStrategy.articleInformationStrategy(fromIndex: $0) }
+            .bind(to: viewModel.inputs.articleInformationSelectedStrategy)
             .disposed(by: disposeBag)
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
