@@ -60,7 +60,7 @@
 "Be the first to comment" = "Be the first to comment";
 "Sort by" = "Sort by";
 "Share" = "Share";
-"What do you think?" = "What do you think?";
+"WhatDoYouThink" = "What do you think?";
 "Loading" = "Loading";
 "View Previous Reply" = "View Previous Reply";
 "Hide Reply" = "Hide Reply";
@@ -94,10 +94,10 @@
 "Options menu" = "Options menu";
 "Post a Comment" = "Post a Comment";
 "Show Comments" = "Show Comments";
-"Take a Photo" = "Take a Photo";
-"Choose from Gallery" = "Choose from Gallery";
-"Camera permissions are needed" = "Camera permissions are needed";
-"Open settings" = "Open settings";
+"TakeAPhoto" = "Take a Photo";
+"ChooseFromGallery" = "Choose from Gallery";
+"CameraPermissionsAreNeeded" = "Camera permissions are needed";
+"OpenSettings" = "Open settings";
 "Edit" = "Edit";
 "Edited" = " (Edited)";
 "Edit a Comment" = "Edit a Comment";
@@ -157,3 +157,4 @@
 "View x replies" = "View %d replies";
 "View x reply" = "View %d reply";
 "View x of x replies" = "View %d of %d replies";
+"EditingComment" = "Editing comment";

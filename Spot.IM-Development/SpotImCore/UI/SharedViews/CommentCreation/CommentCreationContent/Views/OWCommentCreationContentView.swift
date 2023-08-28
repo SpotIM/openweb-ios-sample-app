@@ -50,6 +50,10 @@ class OWCommentCreationContentView: UIView {
         return textView
     }()
 
+    fileprivate lazy var imagePreview: OWCommentCreationImagePreviewView = {
+        return OWCommentCreationImagePreviewView(with: viewModel.outputs.imagePreviewVM)
+    }()
+
     fileprivate lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
             .enforceSemanticAttribute()
@@ -71,13 +75,21 @@ class OWCommentCreationContentView: UIView {
         textInput.OWSnp.makeConstraints { make in
             make.leading.equalTo(avatarView.OWSnp.trailing).offset(Metrics.avatarToInputSpacing)
             make.trailing.equalTo(scroll.contentLayoutGuide).offset(-Metrics.horizontalOffset)
-            make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
         }
 
         scroll.addSubview(placeholderLabel)
         placeholderLabel.OWSnp.makeConstraints { make in
             make.top.equalTo(textInput.OWSnp.top)
             make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
+        }
+
+        scroll.addSubviews(imagePreview)
+        imagePreview.OWSnp.makeConstraints { make in
+            make.top.equalTo(textInput.OWSnp.bottom).offset(Metrics.verticalOffset)
+            make.top.greaterThanOrEqualTo(avatarView.OWSnp.bottom).offset(Metrics.verticalOffset)
+            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
         }
 
         return scroll
@@ -149,6 +161,19 @@ fileprivate extension OWCommentCreationContentView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.becomeFirstResponderCalled
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textInput.becomeFirstResponder()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.resignFirstResponderCalled
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textInput.resignFirstResponder()
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
