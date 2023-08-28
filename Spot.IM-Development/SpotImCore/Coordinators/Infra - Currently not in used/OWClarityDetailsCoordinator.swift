@@ -111,7 +111,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 //                return Observable.never()
 //            }
 
-
         return Observable.merge(resultsWithPopAnimation, dismissObservable, loadedToScreenObservable)
     }
 
