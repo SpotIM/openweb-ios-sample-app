@@ -296,7 +296,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: commentCreationData.article.url.absoluteString,
+                articleUrl: commentCreationData.article.url.absoluteString, // TODO!
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
                 component: .commentCreation)
     }

@@ -82,16 +82,24 @@ class CommonCreatorService: CommonCreatorServicing {
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
-        var url = articleStub.url
+        var url = articleStub.articleInformationStrategy.url
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL) {
             url = persistenceURL
         }
 
-        let article = OWArticle(url: url,
-                                title: articleStub.title,
-                                subtitle: articleStub.subtitle,
-                                thumbnailUrl: articleStub.thumbnailUrl,
+        // TODO: use sampleapp settings for strategy
+        let article = OWArticle(
+            articleInformationStrategy:
+                    .server,
+//                    .local(url: url,
+//                           title: articleStub.articleInformationStrategy.title,
+//                           subtitle: articleStub.articleInformationStrategy.subtitle,
+//                           thumbnailUrl: articleStub.articleInformationStrategy.thumbnailUrl),
+//            url: url,
+//                                title: articleStub.title,
+//                                subtitle: articleStub.subtitle,
+//                                thumbnailUrl: articleStub.thumbnailUrl,
                                 additionalSettings: settings)
         return article
     }
