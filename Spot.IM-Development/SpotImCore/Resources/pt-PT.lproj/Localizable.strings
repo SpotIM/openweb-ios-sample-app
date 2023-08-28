@@ -59,7 +59,7 @@
 "Be the first to comment" = "Seja a primeira pessoa a comentar";
 "Sort by" = "Ordenar por";
 "Share" = "Partilhar";
-"What do you think?" = "O que acha?";
+"WhatDoYouThink" = "O que acha?";
 "Loading" = "A Carregar";
 "View Previous Reply" = "Ver Resposta Anterior";
 "Hide Reply" = "Ocultar Resposta";
@@ -93,10 +93,10 @@
 "Options menu" = "Options menu";
 "Post a Comment" = "Poste um Comentário";
 "Show Comments" = "Mostrar comentários";
-"Take a Photo" = "Tire uma Foto";
-"Choose from Gallery" = "Escolha da Galeria";
-"Camera permissions are needed" = "Permissões de câmera são necessários";
-"Open settings" = "Ir para Ajustes";
+"TakeAPhoto" = "Tire uma Foto";
+"ChooseFromGallery" = "Escolha da Galeria";
+"CameraPermissionsAreNeeded" = "Permissões de câmera são necessários";
+"OpenSettings" = "Ir para Ajustes";
 "Edit" = "Editar";
 "Edited" = " (Editado)";
 "Edit a Comment" = "Editar um comentário";

@@ -14,6 +14,8 @@ class OWCommentingReadOnlyView: UIView {
     fileprivate struct Metrics {
         static let labelLeadingOffset: CGFloat = 4
         static let iconSize: CGFloat = 24
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
@@ -59,8 +61,8 @@ fileprivate extension OWCommentingReadOnlyView {
 
         self.addSubview(label)
         label.OWSnp.makeConstraints { make in
-            make.top.greaterThanOrEqualToSuperview()
-            make.bottom.greaterThanOrEqualToSuperview()
+            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
+            make.bottom.greaterThanOrEqualToSuperview().offset(Metrics.margins.bottom)
             make.trailing.equalToSuperview()
             make.centerY.equalTo(iconImageView)
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.labelLeadingOffset)
