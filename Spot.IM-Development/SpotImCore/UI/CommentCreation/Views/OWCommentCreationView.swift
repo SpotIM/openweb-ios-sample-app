@@ -44,8 +44,8 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
-        setupObservers()
         applyAccessibility()
+        setupObservers()
     }
 
     private func applyAccessibility() {
@@ -75,7 +75,8 @@ fileprivate extension OWCommentCreationView {
 
         self.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperviewSafeArea()
         }
     }
 
@@ -84,7 +85,15 @@ fileprivate extension OWCommentCreationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                let backgroundColor: UIColor = {
+                    switch self.viewModel.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                    case .floatingKeyboard:
+                        return .clear
+                    }
+                }()
+                self.backgroundColor = backgroundColor
             })
             .disposed(by: disposeBag)
 

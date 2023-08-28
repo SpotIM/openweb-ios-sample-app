@@ -10,5 +10,6 @@ import Foundation
 
 enum OWScreenPushStyle {
     case regular
-    case presentStyle
+    case present
+    case presentOverFullScreen
 }
