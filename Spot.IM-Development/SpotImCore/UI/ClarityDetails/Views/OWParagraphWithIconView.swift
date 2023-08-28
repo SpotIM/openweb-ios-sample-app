@@ -55,7 +55,7 @@ fileprivate extension OWParagraphWithIconView {
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.iconSize)
-            make.leading.centerY.equalToSuperview()
+            make.leading.top.equalToSuperview()
         }
 
         self.addSubview(textLabel)

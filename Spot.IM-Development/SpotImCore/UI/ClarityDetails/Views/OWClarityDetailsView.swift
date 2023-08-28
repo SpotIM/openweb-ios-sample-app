@@ -61,9 +61,6 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var topParagraphLabel: UILabel = {
         return UILabel()
-//            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-//            .font(OWFontBook.shared.font(typography: .bodyText))
-//            .attributedText(viewModel.outputs.topParagraphAttributedString)
             .numberOfLines(0)
     }()
 
@@ -84,6 +81,14 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             stackView.addArrangedSubview(paragraphView)
         }
         return stackView
+    }()
+
+    fileprivate lazy var bottomParagraphLabel: UILabel = {
+        return UILabel()
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
+            .text(viewModel.outputs.bottomParagraphText)
+            .numberOfLines(0)
     }()
 
     fileprivate lazy var gotItButton: UIButton = {
@@ -140,6 +145,12 @@ fileprivate extension OWClarityDetailsView {
             make.top.equalTo(detailsTitleLabel.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
         }
 
+        self.addSubview(bottomParagraphLabel)
+        bottomParagraphLabel.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
+            make.top.equalTo(paragraphsStackView.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
+        }
+
         self.addSubview(gotItButton)
         gotItButton.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
@@ -160,14 +171,26 @@ fileprivate extension OWClarityDetailsView {
             .bind(to: topParagraphLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.topParagraphAttributedStringObservable
+            .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self else { return }
+                self.topParagraphLabel
+                    .attributedText(attributedText)
+                    .addRangeGesture(targetRange: self.viewModel.outputs.communityGuidelinesClickablePlaceholder) { [weak self] in
+                        guard let self = self else { return }
+                        self.viewModel.inputs.communityGuidelinesClick.onNext()
+                    }
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
-                self.topParagraphLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.detailsTitleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.bottomParagraphLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -176,9 +199,9 @@ fileprivate extension OWClarityDetailsView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyContext)
-                self.topParagraphLabel.font = OWFontBook.shared.font(typography: .bodyText)
                 self.detailsTitleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
                 self.gotItButton.titleLabel?.font = OWFontBook.shared.font(typography: .bodyInteraction)
+                self.bottomParagraphLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
     }

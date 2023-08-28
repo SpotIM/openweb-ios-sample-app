@@ -13,15 +13,17 @@ import UIKit
 protocol OWClarityDetailsViewViewModelingInputs {
     var closeClick: PublishSubject<Void> { get }
     var gotItClick: PublishSubject<Void> { get }
+    var communityGuidelinesClick: PublishSubject<Void> { get }
 }
 
 protocol OWClarityDetailsViewViewModelingOutputs {
     var navigationTitle: String { get }
-    var topParagraphAttributedString: NSAttributedString { get }
     var detailsTitleText: String { get }
+    var bottomParagraphText: String { get }
     var paragraphItems: [OWClarityParagraphItem] { get }
     var dismissView: Observable<Void> { get }
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
+    var communityGuidelinesClickablePlaceholder: String { get }
 }
 
 protocol OWClarityDetailsViewViewModeling {
@@ -45,30 +47,22 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         setupObservers()
     }
 
+    var communityGuidelinesClick = PublishSubject<Void>()
+    var communityGuidelinesClickObservable: Observable<Void> { // TODO: add url here?
+        return communityGuidelinesClick
+            .debug("NOGAH")
+            .asObservable()
+    }
+
+    // TODO
+    var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "community guidelines").lowercased()
+
     lazy var navigationTitle: String = {
         switch type {
         case .rejected:
             return "Comment rejected"
         case .pending:
             return "Awaiting review"
-        }
-    }()
-
-    // TODO: translations!
-    lazy var topParagraphAttributedString: NSAttributedString = {
-        switch type {
-        case .rejected:
-            let string = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
-            let attributedString = NSMutableAttributedString(string: string)
-            if let range = string.range(of: "community guidelines") {
-                let nsRange = NSRange(range, in: string)
-                attributedString.addAttribute(.underlineStyle, value: 1, range: nsRange)
-                attributedString.addAttribute(.foregroundColor, value: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light), range: nsRange)
-            }
-            return attributedString
-        case .pending:
-            return OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle")
-                .attributedString
         }
     }()
 
@@ -88,7 +82,17 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         }
     }()
 
+    lazy var bottomParagraphText: String = {
+        switch type {
+        case .rejected:
+            return ""
+        case .pending:
+            return "We let registered users know as soon as their comment has been reviewed."
+        }
+    }()
+
     // TODO: translations!
+    // TODO: attributed string for guidelines
     lazy var paragraphItems: [OWClarityParagraphItem] = {
         switch type {
         case .rejected:
@@ -104,7 +108,17 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
                     text: "We do not censor. Our mission is to help build thriving communities and encourage open and civil conversations.")
             ]
         case .pending:
-            return []
+            return [
+                OWClarityParagraphItem(
+                    icon: UIImage(spNamed: "v-icon"),
+                    text: "All comments on the site require manual approval (so nothing personal)"),
+                OWClarityParagraphItem(
+                    icon: UIImage(spNamed: "eye-icon"),
+                    text: "Certain comments are sent to an internal product performance review (it’s not you, it’s us)"),
+                OWClarityParagraphItem(
+                    icon: UIImage(spNamed: "flag-icon"),
+                    text: "Your comment has been automatically flagged as it may not align with our community guidelines (You can revise your comment at any time)")
+            ]
         }
     }()
 
@@ -131,29 +145,43 @@ fileprivate extension OWClarityDetailsViewVM {
         ) { style, _ in
             return style
         }
-        .subscribe(onNext: { [weak self] _ in
+        .subscribe(onNext: { [weak self] style in
             guard let self = self else { return }
-            let attString = self.getTopParagraphAttributedString(clarityType: self.type)
+            let attString = self.getTopParagraphAttributedString(clarityType: self.type, style: style)
             self._topParagraphAttributedString.onNext(attString)
         })
         .disposed(by: disposeBag)
+
+        communityGuidelinesClickObservable
+            .subscribe(onNext: {
+
+            })
+            .disposed(by: disposeBag)
     }
 
-    func getTopParagraphAttributedString(clarityType: OWClarityDetailsType) -> NSAttributedString {
-        // TODO: add fonts, colors etc
+    // TODO: translations!
+    func getTopParagraphAttributedString(clarityType: OWClarityDetailsType, style: OWThemeStyle) -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
+            .font: OWFontBook.shared.font(typography: .bodyText)
+        ]
+
         switch clarityType {
         case .rejected:
             let string = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
-            let attributedString = NSMutableAttributedString(string: string)
-            if let range = string.range(of: "community guidelines") {
+            let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
+            if let range = string.range(of: communityGuidelinesClickablePlaceholder) {
                 let nsRange = NSRange(range, in: string)
                 attributedString.addAttribute(.underlineStyle, value: 1, range: nsRange)
-                attributedString.addAttribute(.foregroundColor, value: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light), range: nsRange)
+                attributedString.addAttribute(.foregroundColor, value: OWColorPalette.shared.color(type: .brandColor, themeStyle: style), range: nsRange)
+                attributedString.addAttribute(.font, value: OWFontBook.shared.font(typography: .bodyInteraction), range: nsRange)
             }
             return attributedString
         case .pending:
-            return OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle")
-                .attributedString
+            return NSAttributedString(
+                string: OWLocalizationManager.shared.localizedString(key: "ClarityPendingReasonsTitle"),
+                attributes: attributes
+            )
         }
     }
 }
