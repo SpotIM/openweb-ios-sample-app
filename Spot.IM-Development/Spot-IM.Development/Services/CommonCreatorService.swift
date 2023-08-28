@@ -78,11 +78,14 @@ class CommonCreatorService: CommonCreatorServicing {
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 
+        let persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
+                                                                          defaultValue: OWArticleInformationStrategy.default)
+
         let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
-        var url = articleStub.articleInformationStrategy.url
+        var url = persistenceArticleInformationStrategy.url
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL) {
             url = persistenceURL
@@ -90,17 +93,8 @@ class CommonCreatorService: CommonCreatorServicing {
 
         // TODO: use sampleapp settings for strategy
         let article = OWArticle(
-            articleInformationStrategy:
-                    .server,
-//                    .local(url: url,
-//                           title: articleStub.articleInformationStrategy.title,
-//                           subtitle: articleStub.articleInformationStrategy.subtitle,
-//                           thumbnailUrl: articleStub.articleInformationStrategy.thumbnailUrl),
-//            url: url,
-//                                title: articleStub.title,
-//                                subtitle: articleStub.subtitle,
-//                                thumbnailUrl: articleStub.thumbnailUrl,
-                                additionalSettings: settings)
+            articleInformationStrategy: persistenceArticleInformationStrategy,
+            additionalSettings: settings)
         return article
     }
 
