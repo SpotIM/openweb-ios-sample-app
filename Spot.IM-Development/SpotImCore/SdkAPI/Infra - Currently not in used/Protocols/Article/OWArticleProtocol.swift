@@ -14,6 +14,7 @@ public protocol OWArticleProtocol {
     var title: String { get }
     var subtitle: String? { get }
     var thumbnailUrl: URL? { get }
+    var articleInformationStrategy: OWArticleInformationStrategy { get }
     var additionalSettings: OWArticleSettingsProtocol { get }
 }
 #else
@@ -22,7 +23,7 @@ protocol OWArticleProtocol {
     var title: String { get }
     var subtitle: String? { get }
     var thumbnailUrl: URL? { get }
+    var articleInformationStrategy: OWArticleInformationStrategy { get }
     var additionalSettings: OWArticleSettingsProtocol { get }
 }
 #endif
-

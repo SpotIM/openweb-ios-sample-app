@@ -583,6 +583,13 @@ fileprivate extension OWConversationViewViewModel {
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+
+                    // TODO: where should this be? we want this befor any analytics!
+                    if let article = self.conversationData.article as? OWArticle {
+                        article.onConversationRead(extractData: conversationRead.extractData)
+                        self.articleDescriptionViewModel.inputs.newArticle.onNext(article)
+                    }
+
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
@@ -1523,7 +1530,7 @@ fileprivate extension OWConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: conversationData.article.url.absoluteString,
+                articleUrl: conversationData.article.url.absoluteString, // TODO:
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
     }
