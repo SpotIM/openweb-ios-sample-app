@@ -14,6 +14,7 @@ import SpotImCore
 
 protocol GeneralSettingsViewModelingInputs {
     var articleHeaderSelectedStyle: BehaviorSubject<OWArticleHeaderStyle> { get }
+    var articleInformationSelectedStrategy: BehaviorSubject<OWArticleInformationStrategy> { get }
     var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
@@ -76,6 +77,10 @@ protocol GeneralSettingsViewModelingOutputs {
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> { get }
     var articleHeaderStyleTitle: String { get }
     var articleHeaderStyleSettings: [String] { get }
+
+    var articleInformationStrategy: Observable<OWArticleInformationStrategy> { get }
+    var articleInformationStrategyTitle: String { get }
+    var articleInformationStrategySettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -88,6 +93,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var outputs: GeneralSettingsViewModelingOutputs { return self }
 
     var articleHeaderSelectedStyle = BehaviorSubject<OWArticleHeaderStyle>(value: OWArticleHeaderStyle.default)
+    var articleInformationSelectedStrategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
     var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
@@ -133,6 +139,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> {
         return userDefaultsProvider.values(key: .articleHeaderStyle, defaultValue: OWArticleHeaderStyle.default)
+    }
+
+    var articleInformationStrategy: Observable<OWArticleInformationStrategy> {
+        return userDefaultsProvider.values(key: .articleInformationStrategy, defaultValue: .server)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -265,6 +275,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("ArticleHeaderStyle", comment: "")
     }()
 
+    lazy var articleInformationStrategyTitle: String = {
+        return NSLocalizedString("ArticleInformationStrategy", comment: "")
+    }()
+
     lazy var elementsCustomizationStyleTitle: String = {
         return NSLocalizedString("ElementsCustomizationStyle", comment: "")
     }()
@@ -302,6 +316,13 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _regular = NSLocalizedString("Regular", comment: "")
 
         return [_none, _regular]
+    }()
+
+    lazy var articleInformationStrategySettings: [String] = {
+        let _server = NSLocalizedString("Server", comment: "")
+        let _custom = NSLocalizedString("Custom", comment: "")
+
+        return [_server, _custom]
     }()
 
     lazy var elementsCustomizationStyleSettings: [String] = {
@@ -422,6 +443,12 @@ fileprivate extension GeneralSettingsVM {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle))
+            .disposed(by: disposeBag)
+
+        articleInformationSelectedStrategy
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy))
             .disposed(by: disposeBag)
 
         elementsCustomizationStyleSelectedIndex

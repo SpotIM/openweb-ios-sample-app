@@ -90,6 +90,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
         case articleHeaderStyle = "articleHeaderStyle"
+        case articleInformationStrategy = "articleInformationStrategy"
         case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
@@ -143,6 +144,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current spot id to be tested"
         case .articleHeaderStyle:
             return "Key which stores article header style"
+        case .articleInformationStrategy:
+            return "Key which stores article information strategy (server, custom)"
         case .readOnlyModeIndex:
             return "Key which stores read only mode (default, enabled, disabled)"
         case .themeModeIndex:
