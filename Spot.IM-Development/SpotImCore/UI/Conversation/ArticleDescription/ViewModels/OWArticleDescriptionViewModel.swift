@@ -14,6 +14,7 @@ protocol OWArticleDescriptionViewModelingInputs {
     var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeAuthorLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeImageViewUI: PublishSubject<UIImageView> { get }
+    var newArticle: PublishSubject<OWArticleProtocol> { get }
 }
 
 protocol OWArticleDescriptionViewModelingOutputs {
@@ -65,6 +66,7 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
             .asObservable()
     }
 
+    let newArticle = PublishSubject<OWArticleProtocol>()
     fileprivate let _article = BehaviorSubject<OWArticleProtocol?>(value: nil)
     fileprivate lazy var article: Observable<OWArticleProtocol> = {
         self._article
@@ -117,6 +119,10 @@ fileprivate extension OWArticleDescriptionViewModel {
 
         triggerCustomizeImageViewUI
             .bind(to: _triggerCustomizeImageViewUI)
+            .disposed(by: disposeBag)
+
+        newArticle
+            .bind(to: _article)
             .disposed(by: disposeBag)
     }
 }
