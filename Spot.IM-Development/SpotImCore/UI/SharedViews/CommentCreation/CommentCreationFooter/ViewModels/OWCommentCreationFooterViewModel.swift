@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWCommentCreationFooterViewModelingInputs {
     var tapCta: PublishSubject<Void> { get }
-    var tapAction: PublishSubject<Void> { get }
+    var tapAddImage: PublishSubject<Void> { get }
     var ctaEnabled: BehaviorSubject<Bool> { get }
 }
 
@@ -20,6 +20,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaButtonEnabled: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
+    var addImageTapped: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
 }
 
@@ -36,10 +37,16 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var outputs: OWCommentCreationFooterViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let commentCreationType: OWCommentCreationTypeInternal
 
     var tapCta = PublishSubject<Void>()
-    var tapAction = PublishSubject<Void>()
+    var tapAddImage = PublishSubject<Void>()
+
+    var addImageTapped: Observable<Void> {
+        tapAddImage
+            .asObservable()
+    }
 
     fileprivate lazy var _shouldSignUpToPostComment: Observable<Bool> = {
         return Observable.combineLatest(
@@ -75,11 +82,9 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             .do(onNext: { [weak self] loginToPost in
                 guard let self = self,
                       loginToPost == true else { return }
-
-                self._loginToPostClick
-                    .onNext()
+                self._loginToPostClick.onNext()
             })
-            .filter { !$0 } // Do not continue if needed to authenticate
+            .filter { !$0 } // Do not continue if authentication needed
             .map { _ -> Void in () }
     }
 
@@ -106,8 +111,13 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     }
 
     var showAddImageButton: Observable<Bool> {
-        // TODO - Support adding an image
-        return Observable.just(false)
+        guard self.servicesProvider.permissionsService().hasInfoPlistContainRequiredDescription(for: .camera) else {
+            return Observable.just(false)
+        }
+        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+            .map {
+                $0.conversation?.disableImageUploadButton != true
+            }
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,
@@ -121,6 +131,5 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
 fileprivate extension OWCommentCreationFooterViewModel {
     func setupObservers() {
-
     }
 }

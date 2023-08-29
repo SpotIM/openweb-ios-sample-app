@@ -22,16 +22,24 @@ class OWTextView: UIView {
         static let textViewBottomPadding: CGFloat = 16
         static let charectersTrailingPadding: CGFloat = 12
         static let charectersBottomPadding: CGFloat = 8
-        static let textViewLeadingTrailingPadding: CGFloat = 5
+        static let textViewLeadingTrailingPadding: CGFloat = 10
         static let placeholderLeadingTrailingPadding: CGFloat = textViewLeadingTrailingPadding + 5
         static let textViewTopBottomPadding: CGFloat = 10
+        static let textViewFontSize: CGFloat = 15
+        static let charectersFontSize: CGFloat = 13
+        static let baseTextViewHeight: CGFloat = 30
+        static let maxNumberOfLines = 5
+        static let expandAnimationDuration: CGFloat = 0.1
+        static let heightConstraintPriority: CGFloat = 500
         static let didBeginEditDelay = 1
+        static let delayTextViewTextChange = 5
     }
 
     let viewModel: OWTextViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var textView: UITextView = {
+        let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
         return UITextView()
                 .font(OWFontBook.shared.font(typography: .bodyText))
                 .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
@@ -44,6 +52,9 @@ class OWTextView: UIView {
                         right: Metrics.textViewLeadingTrailingPadding
                     )
                 )
+                .enforceSemanticAttribute()
+                .spellCheckingType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
+                .autocorrectionType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
     }()
 
     fileprivate lazy var charectersCountLabel: UILabel = {
@@ -51,18 +62,21 @@ class OWTextView: UIView {
                 .font(OWFontBook.shared.font(typography: .footnoteText))
                 .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .text("0/" + "\(self.viewModel.outputs.textViewMaxCharecters)")
+                .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var textViewPlaceholder: UILabel = {
         return UILabel()
                 .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .numberOfLines(0)
+                .enforceSemanticAttribute()
     }()
 
     init(viewModel: OWTextViewViewModeling, prefixIdentifier: String) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        self.enforceSemanticAttribute()
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: prefixIdentifier)
@@ -90,7 +104,6 @@ fileprivate extension OWTextView {
             self.addSubviews(charectersCountLabel)
             charectersCountLabel.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
-                make.leading.greaterThanOrEqualToSuperview()
                 make.bottom.equalToSuperview().inset(Metrics.charectersBottomPadding)
             }
         }
@@ -103,28 +116,40 @@ fileprivate extension OWTextView {
             } else {
                 make.edges.equalToSuperview()
             }
+            if viewModel.outputs.isAutoExpandable {
+                make.height.equalTo(textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                       maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+            }
         }
 
         self.addSubviews(textViewPlaceholder)
         textViewPlaceholder.OWSnp.makeConstraints { make in
-            make.leading.equalTo(textView.OWSnp.leading).inset(Metrics.placeholderLeadingTrailingPadding)
-            make.trailing.equalTo(textView.OWSnp.trailing).inset(Metrics.placeholderLeadingTrailingPadding)
+            make.leading.trailing.equalToSuperview().inset(Metrics.placeholderLeadingTrailingPadding)
             make.top.equalTo(textView.OWSnp.top).inset(Metrics.textViewTopBottomPadding)
         }
     }
 
     func setupObservers() {
+        textView.rx.didChangeSelection
+            .map { [weak self] _ -> Range<String.Index>? in
+                guard let self = self else { return nil }
+                return self.textView.text.range(from: self.textView.selectedRange)
+            }
+            .unwrap()
+            .bind(to: viewModel.inputs.cursorRangeChange)
+            .disposed(by: disposeBag)
+
         textView.rx.text
-            .skip(1)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                if self.viewModel.outputs.charectersLimitEnabled {
-                    self.textView.text = String(self.textView.text.prefix(self.viewModel.outputs.textViewMaxCharecters))
-                }
-                self.viewModel.inputs.textViewCharectersCount.onNext(self.textView.text.count)
-                self.charectersCountLabel.text = "\(self.textView.text.count)/" + "\(self.viewModel.outputs.textViewMaxCharecters)"
-                self.viewModel.inputs.textViewTextChange.onNext(self.textView.text ?? "")
-            })
+            .unwrap()
+            .bind(to: viewModel.inputs.textInternalChange)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.textViewText
+            .bind(to: textView.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.textViewTextCount
+            .bind(to: charectersCountLabel.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.placeholderText
@@ -138,7 +163,22 @@ fileprivate extension OWTextView {
             .bind(to: textViewPlaceholder.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if !viewModel.outputs.isEditable {
+        if viewModel.outputs.isEditable {
+            if viewModel.outputs.isAutoExpandable {
+                textView.rx.text
+                    .subscribe(onNext: { [weak self] _ in
+                        guard let self = self else { return }
+                        UIView.animate(withDuration: Metrics.expandAnimationDuration) {
+                            self.textView.OWSnp.updateConstraints { make in
+                                make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                                            maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                            }
+                            self.layoutIfNeeded()
+                        }
+                    })
+                    .disposed(by: disposeBag)
+            }
+        } else {
             textView.rx.didBeginEditing
                 .bind(to: viewModel.inputs.textViewTap)
                 .disposed(by: disposeBag)
@@ -152,14 +192,17 @@ fileprivate extension OWTextView {
                 .disposed(by: disposeBag)
         }
 
-        viewModel.outputs.textViewText
-            .bind(to: textView.rx.text)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.becomeFirstResponderCalled
+        viewModel.outputs.becomeFirstResponderCalledWithDelay
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.textView.becomeFirstResponder()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.resignFirstResponderCalled
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.textView.resignFirstResponder()
             })
             .disposed(by: disposeBag)
 
@@ -168,7 +211,7 @@ fileprivate extension OWTextView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
-                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
+                self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
@@ -182,5 +225,28 @@ fileprivate extension OWTextView {
                 self.textViewPlaceholder.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+fileprivate extension UITextView {
+    func newHeight(withBaseHeight baseHeight: CGFloat, maxLines: Int) -> CGFloat {
+        // Calculate the required size of the textview
+        let fixedWidth = frame.size.width
+        let newSize = sizeThatFits(CGSize(width: fixedWidth, height: .greatestFiniteMagnitude))
+        var newFrame = frame
+
+        // Height is always >= the base height, so calculate the possible new height
+        let height: CGFloat = newSize.height > baseHeight ? newSize.height : baseHeight
+        newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: height)
+
+        let intNewHeight = Int(newFrame.height)
+        return min(maxHeight(for: maxLines), CGFloat(intNewHeight))
+    }
+
+    func maxHeight(for lines: Int) -> CGFloat {
+        if let font = self.font {
+            return font.lineHeight * CGFloat(lines)
+        }
+        return 0
     }
 }

@@ -32,11 +32,20 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate struct Metrics {
+        static let allowedMediaTypes: [String] = ["public.image"]
+    }
+
     fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
     fileprivate let viewableMode: OWViewableMode
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    // This is the original commentCreationData since
+    // the commentCreationData Can be chaged by sub VMs
+    fileprivate var originCommentCreationData: OWCommentCreationRequiredData
+
+    fileprivate var commentCreationData: OWCommentCreationRequiredData
 
     fileprivate lazy var postId = OWManager.manager.postId
 
@@ -50,14 +59,25 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
-            commentTextAfterTapObservable = Observable.never()
+            return commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
+                .do(onNext: { [weak self] commentText in
+                    guard let self = self else { return }
+                    let hasText = !commentText.isEmpty
+                    if hasText {
+                        self.cacheComment(text: commentText)
+                    } else {
+                        self.clearCachedCommentIfNeeded()
+                    }
+                })
+                .voidify()
+                // floatingKeyboard style does not need a close confirmation mesage, therfore we return the observable of 'commentCreationFloatingKeyboardViewVm' as written above
         }
         return commentTextAfterTapObservable
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
             .flatMap { [weak self] commentText -> Observable<Void> in
-                guard let self = self else { return .empty() }
+                guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 guard hasText else {
                     self.clearCachedCommentIfNeeded()
@@ -68,9 +88,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
-                    // TODO - Localization
                     .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: self.viewableMode)
-                    .flatMap { result -> Observable<Void> in
+                    .flatMap { [weak self] result -> Observable<Void> in
+                        guard let self = self else { return .empty() }
                         switch result {
                         case .completion:
                             return Observable.empty()
@@ -81,6 +101,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                                 self.sendEvent(for: .commentCreationLeavePage)
                                 return Observable.just(())
                             default:
+                                self.commentCreationRegularViewVm.inputs.becomeFirstResponder.onNext()
+                                self.commentCreationLightViewVm.inputs.becomeFirstResponder.onNext()
                                 self.sendEvent(for: .commentCreationContinueWriting)
                                 return Observable.empty()
                             }
@@ -98,7 +120,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     lazy var commentCreationFloatingKeyboardViewVm: OWCommentCreationFloatingKeyboardViewViewModeling = {
-        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: self.commentCreationData)
+        return OWCommentCreationFloatingKeyboardViewViewModel(commentCreationData: &self.commentCreationData, viewableMode: viewableMode)
     }()
 
     lazy var commentType: OWCommentCreationTypeInternal = {
@@ -109,20 +131,22 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         return self.commentCreationData.settings.commentCreationSettings.style
     }()
 
-    init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol = OWCommentCreatorNetworkHelper(),
-          viewableMode: OWViewableMode) {
-        self.servicesProvider = servicesProvider
+    init(commentCreationData: OWCommentCreationRequiredData,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol = OWCommentCreatorNetworkHelper(),
+         viewableMode: OWViewableMode) {
+        self.originCommentCreationData = commentCreationData
         self.commentCreatorNetworkHelper = commentCreatorNetworkHelper
         self.commentCreationData = commentCreationData
+        self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
         setupObservers()
     }
 
     lazy var commentCreationSubmitted: Observable<OWComment> = {
-        // TODO - add floating view cta hadling
-        let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta, commentCreationLightViewVm.outputs.performCta)
+        let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta,
+                                                                commentCreationLightViewVm.outputs.performCta,
+                                                                commentCreationFloatingKeyboardViewVm.outputs.performCta)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 switch self.commentCreationData.commentCreationType {
@@ -195,7 +219,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     guard let originCommentId = originComment.id else { return }
                     commentCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
                 case .edit:
-                    break
+                    commentCacheService.remove(forKey: .edit(postId: postId))
                 }
             })
             .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
@@ -245,20 +269,134 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         .update(updateType, postId: postId)
                 }
             })
+            .flatMap({ [weak self] comment -> Observable<OWComment> in
+                guard let self = self,
+                      case .floatingKeyboard = self.commentCreationData.settings.commentCreationSettings.style
+                else { return Observable.just(comment) }
+                self.commentCreationFloatingKeyboardViewVm.inputs.closeWithDelay.onNext()
+                return self.commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
+                    .map { _ -> OWComment in
+                        return comment
+                    }
+            })
             .share()
     }()
 }
 
 fileprivate extension OWCommentCreationViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        if case .floatingKeyboard = commentCreationData.settings.commentCreationSettings.style {
+            commentCreationFloatingKeyboardViewVm.outputs.resetTypeToNewCommentChanged
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.commentCreationData.commentCreationType = .comment
+                })
+                .disposed(by: disposeBag)
+        }
+
         Observable.merge(
             commentCreationRegularViewVm.outputs.footerViewModel.outputs.loginToPostClick,
-            commentCreationLightViewVm.outputs.footerViewModel.outputs.loginToPostClick
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.loginToPostClick,
+            commentCreationFloatingKeyboardViewVm.outputs.loginToPostClick
         )
         .subscribe(onNext: { [weak self] in
             self?.sendEvent(for: .signUpToPostClicked)
         })
         .disposed(by: disposeBag)
+
+        let selectMediaOptionsObservable = Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.addImageTapped,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.addImageTapped
+        )
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.sendEvent(for: .cameraIconClickedOpen)
+            })
+            .flatMap { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return Observable.just(false) }
+                return self.servicesProvider
+                    .permissionsService()
+                    .requestPermission(for: .camera, viewableMode: self.viewableMode)
+            }
+            .filter { $0 == true }
+            .voidify()
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                guard let self = self else { return .empty() }
+
+                let actions = [
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "TakeAPhoto"), type: OWPickImageActionSheet.takePhoto),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "ChooseFromGallery"), type: OWPickImageActionSheet.chooseFromGallery),
+                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Cancel"), type: OWPickImageActionSheet.cancel, style: .cancel)
+                ]
+                return self.servicesProvider
+                    .presenterService()
+                    .showAlert(
+                        title: nil,
+                        message: nil,
+                        actions: actions,
+                        preferredStyle: .actionSheet,
+                        viewableMode: self.viewableMode
+                    )
+            }
+
+        let userSelectedMediaObservable = selectMediaOptionsObservable
+            .map { [weak self] response -> UIImagePickerController.SourceType? in
+                guard let self = self else { return nil }
+                switch response {
+                case .completion:
+                    return nil
+                case .selected(let action):
+                    switch action.type {
+                    case OWPickImageActionSheet.takePhoto:
+                        self.sendEvent(for: .cameraIconClickedTakePhoto)
+                        return .camera
+                    case OWPickImageActionSheet.chooseFromGallery:
+                        self.sendEvent(for: .cameraIconClickedChooseFromGallery)
+                        return .photoLibrary
+                    case OWPickImageActionSheet.cancel:
+                        self.sendEvent(for: .cameraIconClickedClose)
+                        return nil
+                    default:
+                        return nil
+                    }
+                }
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] sourceType -> Observable<OWImagePickerPresenterResponseType> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                    .presenterService()
+                    .showImagePicker(mediaTypes: Metrics.allowedMediaTypes, sourceType: sourceType, viewableMode: self.viewableMode)
+            }
+            .map { response -> UIImage? in
+                switch response {
+                case .cancled:
+                    return nil
+                case .mediaInfo(let dictionary):
+                    guard let image = dictionary[.originalImage] as? UIImage else {
+                        return nil
+                    }
+                    return image
+                }
+            }
+            .unwrap()
+
+        userSelectedMediaObservable
+            .subscribe(onNext: { [weak self] image in
+                guard let self = self else { return }
+                switch self.commentCreationData.settings.commentCreationSettings.style {
+                case .regular:
+                    self.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.imagePicked.onNext(image)
+                case .light:
+                    self.commentCreationLightViewVm.outputs.commentCreationContentVM.inputs.imagePicked.onNext(image)
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     func cacheComment(text commentText: String) {
@@ -268,12 +406,12 @@ fileprivate extension OWCommentCreationViewViewModel {
         switch commentCreationData.commentCreationType {
         case .comment:
             commentsCacheService[.comment(postId: postId)] = commentText
+            commentsCacheService.remove(forKey: .edit(postId: postId))
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
             commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
         case .edit:
-            // We are not caching edit comment text
-            break
+            commentsCacheService[.edit(postId: postId)] = commentText
         }
     }
 

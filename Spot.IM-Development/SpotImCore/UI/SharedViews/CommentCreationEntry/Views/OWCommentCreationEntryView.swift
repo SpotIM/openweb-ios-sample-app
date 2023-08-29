@@ -15,10 +15,10 @@ class OWCommentCreationEntryView: UIView {
     fileprivate struct Metrics {
         static let userAvatarSize: CGFloat = 40
         static let containerLeadingOffset: CGFloat = 10
-        static let labelInsetVertical: CGFloat = 12
+        static let labelInsetVertical: CGFloat = 10
         static let labelInsetHorizontal: CGFloat = 15
 
-        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 14, right: 0)
 
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
@@ -44,7 +44,7 @@ class OWCommentCreationEntryView: UIView {
     fileprivate lazy var label: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
-            .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            .text(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .enforceSemanticAttribute()
     }()
