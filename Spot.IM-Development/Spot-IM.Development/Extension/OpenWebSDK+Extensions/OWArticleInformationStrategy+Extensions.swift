@@ -15,8 +15,10 @@ extension OWArticleInformationStrategy {
     static func articleInformationStrategy(fromIndex index: Int) -> OWArticleInformationStrategy {
         let article = OWArticle.stub()
         switch index {
-        case OWArticleInformationStrategy.server.index: return .server
-        case 1: return .local(url: article.url, title: article.title, subtitle: article.subtitle, thumbnailUrl: article.thumbnailUrl) // TODO: 
+        case OWArticleInformationStrategy.server.index:
+            return .server
+        case OWArticleInformationStrategy.local(data: OWArticleExtraData()).index:
+            return article.articleInformationStrategy
         default:
             return `default`
         }

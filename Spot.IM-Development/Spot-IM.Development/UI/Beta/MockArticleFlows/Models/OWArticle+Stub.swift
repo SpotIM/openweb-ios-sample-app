@@ -19,13 +19,16 @@ extension OWArticle {
         let section = "stock"
         let settings = OWArticleSettings(section: section)
 
-        // TODO: use sampleapp settings for strategy
-        return OWArticle(articleInformationStrategy: .local(url: URL(string: url)!, title: title, subtitle: subtitle, thumbnailUrl: URL(string: imageUrl)!),
-//                         url: URL(string: url)!,
-//                         title: title,
-//                         subtitle: subtitle,
-//                         thumbnailUrl: URL(string: imageUrl)!,
-                         additionalSettings: settings)
+        return OWArticle(
+            articleInformationStrategy:
+                    .local(data:
+                            OWArticleExtraData(
+                                url: URL(string: url)!,
+                                title: title,
+                                subtitle: subtitle,
+                                thumbnailUrl: URL(string: imageUrl)!)
+                          ),
+            additionalSettings: settings)
     }
 }
 #endif

@@ -84,17 +84,18 @@ class CommonCreatorService: CommonCreatorServicing {
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 
-        let persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
+        var persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
                                                                           defaultValue: OWArticleInformationStrategy.default)
 
         let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
-        var url = persistenceArticleInformationStrategy.url
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
-           let persistenceURL = URL(string: strURL) {
-            url = persistenceURL
+           let persistenceURL = URL(string: strURL),
+           case .local(let data) = persistenceArticleInformationStrategy {
+            let extraData = OWArticleExtraData(url: persistenceURL, title: data.title, subtitle: data.subtitle, thumbnailUrl: data.thumbnailUrl)
+            persistenceArticleInformationStrategy = .local(data: extraData)
         }
 
         // TODO: use sampleapp settings for strategy

@@ -49,7 +49,8 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactR
 
 // UIFlows
 extension OWUILayer {
-    func preConversation(postId: OWPostId, article: OWArticleProtocol,
+    func preConversation(postId: OWPostId,
+                         article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -65,6 +66,7 @@ extension OWUILayer {
                 break
             }
         }
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
 
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings,
@@ -88,12 +90,14 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func conversation(postId: OWPostId, article: OWArticleProtocol,
+    func conversation(postId: OWPostId,
+                      article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
 
         setPostId(postId: postId) { result in
             switch result {
@@ -132,12 +136,14 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
 
         setPostId(postId: postId) { result in
             switch result {
@@ -189,6 +195,7 @@ extension OWUILayer {
                        callbacks: OWViewActionsCallbacks? = nil,
                        completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
 
         setPostId(postId: postId) { result in
             switch result {
@@ -283,6 +290,7 @@ extension OWUILayer {
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
 
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -320,6 +328,7 @@ extension OWUILayer {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
 
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -357,6 +366,8 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
+
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -411,6 +422,8 @@ extension OWUILayer {
                        additionalSettings: OWAdditionalSettingsProtocol,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWViewCompletion) {
+
+        servicesProvider.activeArticleService().updateStrategy(article.articleInformationStrategy)
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
