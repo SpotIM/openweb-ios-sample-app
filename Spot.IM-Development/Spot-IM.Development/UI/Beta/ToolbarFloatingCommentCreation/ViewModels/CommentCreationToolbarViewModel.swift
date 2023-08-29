@@ -66,7 +66,7 @@ fileprivate extension CommentCreationToolbarViewModel {
                     case (.success(let manipulateTextModel), .append(let textToAppend)):
                         let userTextInput = manipulateTextModel.text
                         let range = manipulateTextModel.cursorRange
-                        let newText = userTextInput.replacingCharacters(in: range, with: " \(textToAppend)")
+                        let newText = userTextInput.replacingCharacters(in: range, with: "\(textToAppend)")
                         return newText
                     case (.success(_), .removeAll):
                         return ""

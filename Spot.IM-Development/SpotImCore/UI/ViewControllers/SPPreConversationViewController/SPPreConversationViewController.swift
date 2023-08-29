@@ -414,7 +414,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.stateActionView = nil
 
         footerView.showShowMoreCommentsButton()
-        let callToAction = SPLocalizationManager.localizedString(key: "What do you think?")
+        let callToAction = SPLocalizationManager.localizedString(key: "WhatDoYouThink")
         model.preConvCommetEntryVM.inputs.configure(ctaText: callToAction)
     }
 

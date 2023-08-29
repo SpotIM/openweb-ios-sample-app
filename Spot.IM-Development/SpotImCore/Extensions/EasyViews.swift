@@ -241,6 +241,11 @@ extension UIButton {
 
         return self
     }
+
+    @discardableResult func setAlpha(_ alpha: CGFloat) -> Self {
+        self.alpha = alpha
+        return self
+    }
 }
 
 extension UIImageView {
@@ -249,7 +254,7 @@ extension UIImageView {
         return self
     }
 
-    @discardableResult func image(_ image: UIImage) -> Self {
+    @discardableResult func image(_ image: UIImage?) -> Self {
         self.image = image
         return self
     }
@@ -356,8 +361,23 @@ extension UITextView {
         return self
     }
 
+    @discardableResult func maxNumberOfLines(_ maxNumberOfLines: Int) -> Self {
+        self.textContainer.maximumNumberOfLines = maxNumberOfLines
+        return self
+    }
+
     @discardableResult func textAlignment(_ textAlignment: NSTextAlignment) -> Self {
         self.textAlignment = textAlignment
+        return self
+    }
+
+    @discardableResult func autocorrectionType(_ autocorrectionType: UITextAutocorrectionType) -> Self {
+        self.autocorrectionType = autocorrectionType
+        return self
+    }
+
+    @discardableResult func spellCheckingType(_ spellCheckingType: UITextSpellCheckingType) -> Self {
+        self.spellCheckingType = spellCheckingType
         return self
     }
 }
