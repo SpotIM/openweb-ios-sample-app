@@ -600,7 +600,7 @@ fileprivate extension OWConversationViewViewModel {
         // First conversation load
         conversationFetchedObservable
             .take(1)
-            .subscribe(onNext: { [weak self] conversation in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 // Send analytic event
                 self.sendEvent(for: .fullConversationLoaded)
