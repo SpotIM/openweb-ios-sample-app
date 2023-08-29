@@ -44,8 +44,6 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
     override func loadView() {
         super.loadView()
-        setupUI()
-        setupObservers()
     }
 
     override func viewDidLoad() {
