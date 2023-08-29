@@ -17,7 +17,7 @@ protocol OWActiveArticleServicing {
 class OWActiveArticleService: OWActiveArticleServicing {
 
     fileprivate let _strategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
-    fileprivate let _newServerArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData(url: URL(string: "www.google.com")!, title: "", subtitle: nil, thumbnailUrl: nil))
+    fileprivate let _newServerArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData())
 
     var newArticle: Observable<OWArticleExtraData> {
         return Observable.combineLatest(_newServerArticle, _strategy) { serverArticle, strategy in

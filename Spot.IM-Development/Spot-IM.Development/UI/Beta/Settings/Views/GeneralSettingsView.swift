@@ -18,6 +18,7 @@ class GeneralSettingsView: UIView {
         static let identifier = "general_settings_view_id"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
         static let segmentedArticleHeaderStyleIdentifier = "article_header_style"
+        static let segmentedArticleInformationStrategiIdentifier = "article_information_strategy"
         static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedStatusBarStyleIdentifier = "status_bar_style"
@@ -62,7 +63,7 @@ class GeneralSettingsView: UIView {
         let items = viewModel.outputs.articleInformationStrategySettings
 
         return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedArticleHeaderStyleIdentifier, // TODO: !
+                                       accessibilityPrefixId: Metrics.segmentedArticleInformationStrategiIdentifier,
                                        items: items)
     }()
 

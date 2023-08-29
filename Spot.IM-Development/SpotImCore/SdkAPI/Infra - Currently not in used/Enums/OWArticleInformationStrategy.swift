@@ -14,7 +14,7 @@ public enum OWArticleInformationStrategy: Codable {
     case local(data: OWArticleExtraData)
 }
 #else
-enum OWArticleInformationStrategy {
+enum OWArticleInformationStrategy: Codable {
     case server
     case local(data: OWArticleExtraData)
 }
