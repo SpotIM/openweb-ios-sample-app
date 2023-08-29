@@ -14,7 +14,6 @@ protocol OWArticleDescriptionViewModelingInputs {
     var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeAuthorLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeImageViewUI: PublishSubject<UIImageView> { get }
-    var newArticle: PublishSubject<OWArticleProtocol> { get }
 }
 
 protocol OWArticleDescriptionViewModelingOutputs {
@@ -66,9 +65,8 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
             .asObservable()
     }
 
-    let newArticle = PublishSubject<OWArticleProtocol>()
-    fileprivate let _article = BehaviorSubject<OWArticleProtocol?>(value: nil)
-    fileprivate lazy var article: Observable<OWArticleProtocol> = {
+    fileprivate let _article = BehaviorSubject<OWArticleExtraData?>(value: nil)
+    fileprivate lazy var article: Observable<OWArticleExtraData> = {
         self._article
             .unwrap()
     }()
@@ -100,9 +98,10 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
     }
 
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init(article: OWArticleProtocol) {
-        _article.onNext(article)
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
         setupObservers()
     }
 }
@@ -121,7 +120,9 @@ fileprivate extension OWArticleDescriptionViewModel {
             .bind(to: _triggerCustomizeImageViewUI)
             .disposed(by: disposeBag)
 
-        newArticle
+        servicesProvider
+            .activeArticleService()
+            .newArticle
             .bind(to: _article)
             .disposed(by: disposeBag)
     }

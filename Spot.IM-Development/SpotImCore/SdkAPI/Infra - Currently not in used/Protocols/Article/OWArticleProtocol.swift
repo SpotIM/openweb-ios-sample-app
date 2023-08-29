@@ -10,19 +10,11 @@ import Foundation
 
 #if NEW_API
 public protocol OWArticleProtocol {
-    var url: URL { get }
-    var title: String { get }
-    var subtitle: String? { get }
-    var thumbnailUrl: URL? { get }
     var articleInformationStrategy: OWArticleInformationStrategy { get }
     var additionalSettings: OWArticleSettingsProtocol { get }
 }
 #else
 protocol OWArticleProtocol {
-    var url: URL { get }
-    var title: String { get }
-    var subtitle: String? { get }
-    var thumbnailUrl: URL? { get }
     var articleInformationStrategy: OWArticleInformationStrategy { get }
     var additionalSettings: OWArticleSettingsProtocol { get }
 }

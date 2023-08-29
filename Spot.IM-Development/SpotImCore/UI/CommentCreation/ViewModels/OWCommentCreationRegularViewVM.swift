@@ -54,7 +54,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: commentCreationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling = {
