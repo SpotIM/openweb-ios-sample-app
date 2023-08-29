@@ -76,8 +76,8 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         let stackView = UIStackView()
             .spacing(Metrics.spaceBetweenParagraphs)
             .axis(.vertical)
-        viewModel.outputs.paragraphItems.forEach { paragraph in
-            let paragraphView = OWParagraphWithIconView(text: paragraph.text, icon: paragraph.icon ?? UIImage())
+        viewModel.outputs.paragraphViewModels.forEach { vm in
+            let paragraphView = OWParagraphWithIconView(viewModel: vm)
             stackView.addArrangedSubview(paragraphView)
         }
         return stackView

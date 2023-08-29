@@ -20,7 +20,7 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var navigationTitle: String { get }
     var detailsTitleText: String { get }
     var bottomParagraphText: String { get }
-    var paragraphItems: [OWClarityParagraphItem] { get }
+    var paragraphViewModels: [OWParagraphWithIconViewModeling] { get }
     var dismissView: Observable<Void> { get }
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
@@ -97,31 +97,32 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
 
     // TODO: translations!
     // TODO: attributed string for guidelines
-    lazy var paragraphItems: [OWClarityParagraphItem] = {
+    lazy var paragraphViewModels: [OWParagraphWithIconViewModeling] = {
         switch type {
         case .rejected:
             return [
-                OWClarityParagraphItem(
+                OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "heart-icon"),
                     text: "All of our decisions are designed to ensure civil, open and inclusive discourse within the community."),
-                OWClarityParagraphItem(
+                OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "info-icon"),
                     text: "We use advanced machine learning technology combined with unbiased human moderation to review all questionable content."),
-                OWClarityParagraphItem(
+                OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "megaphone-icon"),
                     text: "We do not censor. Our mission is to help build thriving communities and encourage open and civil conversations.")
             ]
         case .pending:
             return [
-                OWClarityParagraphItem(
+                OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "v-icon"),
                     text: "All comments on the site require manual approval (so nothing personal)"),
-                OWClarityParagraphItem(
+                OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "eye-icon"),
                     text: "Certain comments are sent to an internal product performance review (it’s not you, it’s us)"),
-                OWClarityParagraphItem(
+                OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "flag-icon"),
-                    text: "Your comment has been automatically flagged as it may not align with our community guidelines (You can revise your comment at any time)")
+                    text: "Your comment has been automatically flagged as it may not align with our community guidelines (You can revise your comment at any time)",
+                    communityGuidelinesClickable: true)
             ]
         }
     }()
@@ -201,10 +202,4 @@ fileprivate extension OWClarityDetailsViewVM {
             )
         }
     }
-}
-
-// TODO: new file
-struct OWClarityParagraphItem {
-    let icon: UIImage?
-    let text: String // attributes?
 }
