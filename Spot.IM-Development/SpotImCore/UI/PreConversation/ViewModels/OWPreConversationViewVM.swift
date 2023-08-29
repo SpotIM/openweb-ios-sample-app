@@ -475,7 +475,7 @@ fileprivate extension OWPreConversationViewViewModel {
         // First conversation load
         conversationFetchedObservable
             .take(1)
-            .subscribe(onNext: { [weak self] conversation in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 // Send analytics event
                 self.sendEvent(for: .preConversationLoaded)
