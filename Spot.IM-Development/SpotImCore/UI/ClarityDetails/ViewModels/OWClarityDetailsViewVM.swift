@@ -24,6 +24,7 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var dismissView: Observable<Void> { get }
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
+    var communityGuidelinesClickObservable: Observable<URL> { get }
 }
 
 protocol OWClarityDetailsViewViewModeling {
@@ -48,9 +49,12 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }
 
     var communityGuidelinesClick = PublishSubject<Void>()
-    var communityGuidelinesClickObservable: Observable<Void> { // TODO: add url here?
+    var communityGuidelinesClickObservable: Observable<URL> {
         return communityGuidelinesClick
-            .debug("NOGAH")
+            .withLatestFrom(communityGuidelinesUrl) { _, url in
+                return url
+            }
+            .unwrap()
             .asObservable()
     }
 
@@ -135,6 +139,25 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             .map { true }
             .startWith(false)
     }()
+
+    fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
+        let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> String? in
+                guard let self = self else { return nil }
+                guard let conversationConfig = config.conversation,
+                          conversationConfig.communityGuidelinesEnabled == true else {
+                        return nil
+                }
+                return config.conversation?.communityGuidelinesTitle?.value
+            }
+            .unwrap()
+            .map { communityGuidelines in
+                return communityGuidelines.locateURLInText
+            }
+            .asObservable()
+    }()
 }
 
 fileprivate extension OWClarityDetailsViewVM {
@@ -151,12 +174,6 @@ fileprivate extension OWClarityDetailsViewVM {
             self._topParagraphAttributedString.onNext(attString)
         })
         .disposed(by: disposeBag)
-
-        communityGuidelinesClickObservable
-            .subscribe(onNext: {
-
-            })
-            .disposed(by: disposeBag)
     }
 
     // TODO: translations!
