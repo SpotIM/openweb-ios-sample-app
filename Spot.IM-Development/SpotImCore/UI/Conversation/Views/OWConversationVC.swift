@@ -38,6 +38,8 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     init(viewModel: OWConversationViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        setupUI()
+        setupObservers()
     }
 
     override func loadView() {

@@ -104,6 +104,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var paginationOffset = 0
 
+    fileprivate var articleUrl: String = ""
+
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -159,7 +161,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: conversationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -583,13 +585,6 @@ fileprivate extension OWConversationViewViewModel {
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
-
-                    // TODO: where should this be? we want this befor any analytics!
-                    if let article = self.conversationData.article as? OWArticle {
-                        article.onConversationRead(extractData: conversationRead.extractData)
-                        self.articleDescriptionViewModel.inputs.newArticle.onNext(article)
-                    }
-
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
@@ -602,11 +597,26 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
             .share()
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
-            .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .fullConversationLoaded)
+            .subscribe(onNext: { [weak self] conversation in
+                guard let self = self else { return }
+                // Send analytic event
+                self.sendEvent(for: .fullConversationLoaded)
+
+                // Update current article from server
+                guard let extractData = conversation.extractData,
+                      let url = extractData.url,
+                      let title = extractData.title
+                else { return }
+                self.servicesProvider.activeArticleService().triggerNewServerArticle(
+                    OWArticleExtraData(
+                        url: url,
+                        title: title,
+                        subtitle: extractData.description,
+                        thumbnailUrl: extractData.thumbnailUrl)
+                )
             })
             .disposed(by: disposeBag)
 
@@ -1532,6 +1542,14 @@ fileprivate extension OWConversationViewViewModel {
                     self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
                 })
                 .disposed(by: disposeBag)
+
+            servicesProvider
+                .activeArticleService()
+                .newArticle
+                .subscribe(onNext: { [weak self] article in
+                    self?.articleUrl = article.url.absoluteString
+                })
+                .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
@@ -1539,7 +1557,7 @@ fileprivate extension OWConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: conversationData.article.url.absoluteString, // TODO:
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
     }

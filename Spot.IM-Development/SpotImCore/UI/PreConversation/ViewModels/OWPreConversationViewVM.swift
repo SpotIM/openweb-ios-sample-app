@@ -73,6 +73,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
+    fileprivate var articleUrl: String = ""
+
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
         return _cellsViewModels
@@ -410,16 +412,10 @@ fileprivate extension OWPreConversationViewViewModel {
                 return conversationReadObservable
                     .take(1)
             }
-            .map { [weak self] event -> OWConversationReadRM? in
+            .map { event -> OWConversationReadRM? in
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
-
-                    // TODO: where should this be? we want this befor any analytics!
-                    if let article = self?.preConversationData.article as? OWArticle {
-                        article.onConversationRead(extractData: conversationRead.extractData)
-                    }
-
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
@@ -476,11 +472,26 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
-            .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .preConversationLoaded)
+            .subscribe(onNext: { [weak self] conversation in
+                guard let self = self else { return }
+                // Send analytics event
+                self.sendEvent(for: .preConversationLoaded)
+
+                // Update current article from server
+                guard let extractData = conversation.extractData,
+                      let url = extractData.url,
+                      let title = extractData.title
+                else { return }
+                self.servicesProvider.activeArticleService().triggerNewServerArticle(
+                    OWArticleExtraData(
+                        url: url,
+                        title: title,
+                        subtitle: extractData.description,
+                        thumbnailUrl: extractData.thumbnailUrl)
+                )
             })
             .disposed(by: disposeBag)
 
@@ -1039,6 +1050,14 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.sendEvent(for: .showMoreComments)
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .newArticle
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
@@ -1056,7 +1075,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: preConversationData.article.url.absoluteString, // TODO:
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
                 component: .preConversation)
     }

@@ -47,6 +47,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate var commentCreationData: OWCommentCreationRequiredData
 
+    fileprivate var articleUrl: String = ""
+
     fileprivate lazy var postId = OWManager.manager.postId
 
     lazy var closeButtonTapped: Observable<Void> = {
@@ -397,6 +399,14 @@ fileprivate extension OWCommentCreationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .newArticle
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
 
     func cacheComment(text commentText: String) {
@@ -434,7 +444,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: commentCreationData.article.url.absoluteString, // TODO!
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
                 component: .commentCreation)
     }
