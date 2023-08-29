@@ -10,17 +10,28 @@ import RxSwift
 
 protocol OWActiveArticleServicing {
     var newArticle: Observable<OWArticleExtraData> { get }
-    func triggerNewServerArticle(_ article: OWArticleExtraData)
     func updateStrategy(_ strategy: OWArticleInformationStrategy)
+    var newPost: PublishSubject<OWSpotId> { get }
 }
 
 class OWActiveArticleService: OWActiveArticleServicing {
 
     fileprivate let _strategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
-    fileprivate let _newServerArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData())
+    fileprivate let _serverArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData())
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate var disposeBag: DisposeBag
+
+    init(servicesProvider: OWSharedServicesProviding) {
+        self.servicesProvider = servicesProvider
+        disposeBag = DisposeBag()
+        setupObservers()
+    }
+
+    var newPost = PublishSubject<OWSpotId>()
 
     var newArticle: Observable<OWArticleExtraData> {
-        return Observable.combineLatest(_newServerArticle, _strategy) { serverArticle, strategy in
+        return Observable.combineLatest(_serverArticle, _strategy) { serverArticle, strategy in
             switch strategy {
             case .server:
                 return serverArticle
@@ -32,11 +43,42 @@ class OWActiveArticleService: OWActiveArticleServicing {
         .share(replay: 1)
     }
 
-    func triggerNewServerArticle(_ article: OWArticleExtraData) {
-        _newServerArticle.onNext(article)
-    }
-
     func updateStrategy(_ strategy: OWArticleInformationStrategy) {
         _strategy.onNext(strategy)
+    }
+}
+
+fileprivate extension OWActiveArticleService {
+    func setupObservers() {
+        newPost
+            .flatMap { [weak self] _ -> Observable<Event<OWConversationReadRM>> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .conversationRead(mode: .default, page: .first)
+                    .response
+                    .materialize()
+            }
+            .map { event -> OWConversationReadRM? in
+                switch event {
+                case .next(let conversation):
+                    return conversation
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] conversation in
+                guard let self = self,
+                      let extractData = conversation.extractData,
+                      let url = extractData.url,
+                      let title = extractData.title
+                else { return }
+
+                let articleExtraData = OWArticleExtraData(url: url, title: title, subtitle: extractData.description, thumbnailUrl: extractData.thumbnailUrl)
+                self._serverArticle.onNext(articleExtraData)
+            })
+            .disposed(by: disposeBag)
     }
 }

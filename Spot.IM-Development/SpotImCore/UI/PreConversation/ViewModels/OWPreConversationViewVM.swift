@@ -479,19 +479,6 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 // Send analytics event
                 self.sendEvent(for: .preConversationLoaded)
-
-                // Update current article from server
-                guard let extractData = conversation.extractData,
-                      let url = extractData.url,
-                      let title = extractData.title
-                else { return }
-                self.servicesProvider.activeArticleService().triggerNewServerArticle(
-                    OWArticleExtraData(
-                        url: url,
-                        title: title,
-                        subtitle: extractData.description,
-                        thumbnailUrl: extractData.thumbnailUrl)
-                )
             })
             .disposed(by: disposeBag)
 

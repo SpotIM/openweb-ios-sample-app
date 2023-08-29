@@ -174,7 +174,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _activeArticleService: OWActiveArticleServicing = {
-        return OWActiveArticleService()
+        return OWActiveArticleService(servicesProvider: self)
     }()
 
     fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
