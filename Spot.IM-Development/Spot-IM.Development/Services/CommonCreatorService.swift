@@ -98,7 +98,6 @@ class CommonCreatorService: CommonCreatorServicing {
             persistenceArticleInformationStrategy = .local(data: extraData)
         }
 
-        // TODO: use sampleapp settings for strategy
         let article = OWArticle(
             articleInformationStrategy: persistenceArticleInformationStrategy,
             additionalSettings: settings)
