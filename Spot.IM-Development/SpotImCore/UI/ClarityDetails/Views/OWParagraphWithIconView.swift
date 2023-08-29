@@ -17,13 +17,11 @@ class OWParagraphWithIconView: UIView {
         static let textLeadingPadding: CGFloat = 10
     }
 
-    fileprivate let text: String
-    fileprivate let icon: UIImage
     fileprivate let disposeBag: DisposeBag
+    fileprivate let viewModel: OWParagraphWithIconViewModeling
 
-    init(text: String, icon: UIImage) {
-        self.text = text
-        self.icon = icon
+    init(viewModel: OWParagraphWithIconViewModeling) {
+        self.viewModel = viewModel
         self.disposeBag = DisposeBag()
         super.init(frame: .zero)
 
@@ -36,16 +34,13 @@ class OWParagraphWithIconView: UIView {
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
-        return UIImageView(image: self.icon)
+        return UIImageView(image: self.viewModel.outputs.icon)
             .tintAdjustmentMode(.normal)
             .tintColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
     }()
 
     fileprivate lazy var textLabel: UILabel = {
         return UILabel()
-            .text(self.text)
-            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(typography: .bodyText))
             .numberOfLines(0)
     }()
 }
@@ -66,20 +61,15 @@ fileprivate extension OWParagraphWithIconView {
     }
 
     func setupObservers() {
+        viewModel.outputs.attributedString
+            .bind(to: textLabel.rx.attributedText)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.textLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
-            })
-            .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.appLifeCycle()
-            .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.textLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
     }
