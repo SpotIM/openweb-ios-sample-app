@@ -81,6 +81,10 @@ class OWCacheService<Key: Hashable, Value: Any> {
     func remove(forKey key: Key) {
         cache.removeObject(forKey: OWWrappedKey(key))
     }
+
+    func cleanCache() {
+        cache.removeAllObjects()
+    }
 }
 
 // Subscript for easy access

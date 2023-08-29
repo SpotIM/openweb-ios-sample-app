@@ -22,6 +22,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
+    func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
@@ -46,6 +47,8 @@ protocol OWSharedServicesProviding: AnyObject {
     func commentUpdaterService() -> OWCommentUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
+    func permissionsService() -> OWPermissionsServicing
+    func pageViewIdHolder() -> OWPageViewIdHolderProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -71,6 +74,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, String> = {
         return OWCacheService<OWCachedCommentKey, String>()
+    }()
+
+    fileprivate lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
+        return OWCacheService<OWPostId, OWCachedLastCommentType>()
     }()
 
     fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
@@ -177,6 +184,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWNavigationControllerCustomizer(servicesProvider: self)
     }()
 
+    fileprivate lazy var _permissionsService: OWPermissionsServicing = {
+        return OWPermissionsService(servicesProvider: self)
+    }()
+
+    fileprivate lazy var _pageViewIdHolder: OWPageViewIdHolderProtocol = {
+        return OWPageViewIdHolder()
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -191,6 +206,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String> {
         return _commentsInMemoryCacheService
+    }
+
+    func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType> {
+        return _lastCommentTypeInMemoryCacheService
     }
 
     func netwokAPI() -> OWNetworkAPIProtocol {
@@ -288,6 +307,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing {
         return _navigationControllerCustomizer
     }
+
+    func permissionsService() -> OWPermissionsServicing {
+        return _permissionsService
+    }
+
+    func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
+        return _pageViewIdHolder
+    }
 }
 
 // Configure
@@ -321,6 +348,9 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _usersService.cleanCache()
         _analyticsService.spotChanged(spotId: spotId)
         _reportedCommentsService.cleanCache()
+        _imageCacheService.cleanCache()
+        _commentsInMemoryCacheService.cleanCache()
+        _lastCommentTypeInMemoryCacheService.cleanCache()
     }
 }
 

@@ -130,7 +130,7 @@ fileprivate extension OWCommentCreationFooterView {
             .disposed(by: disposeBag)
 
         addImageButton.rx.tap
-            .bind(to: viewModel.inputs.tapAction)
+            .bind(to: viewModel.inputs.tapAddImage)
             .disposed(by: disposeBag)
 
         viewModel.outputs.showAddImageButton

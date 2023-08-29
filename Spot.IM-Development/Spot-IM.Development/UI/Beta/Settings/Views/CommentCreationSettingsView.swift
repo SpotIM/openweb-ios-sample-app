@@ -16,9 +16,17 @@ class CommentCreationSettingsView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_settings_view_id"
         static let segmentedStyleModeIdentifier = "custom_style_mode"
+        static let switchAccessoryViewIdentifier = "accessory_view"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
+
+    fileprivate lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = Metrics.verticalOffset
+        return stackView
+    }()
 
     fileprivate lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
@@ -33,6 +41,15 @@ class CommentCreationSettingsView: UIView {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedStyleModeIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedAccessoryView: SegmentedControlSetting = {
+        let title = viewModel.outputs.accessoryViewTitle
+        let items = viewModel.outputs.accessoryViewSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.switchAccessoryViewIdentifier,
                                        items: items)
     }()
 
@@ -60,18 +77,17 @@ fileprivate extension CommentCreationSettingsView {
     func setupViews() {
         self.backgroundColor = ColorPalette.shared.color(type: .background)
 
-        self.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
+        // Add a StackView so that hidden controlls constraints will be removed
+        self.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
-            make.top.equalTo(self.snp.top)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
 
-        self.addSubview(segmentedStyleMode)
-        segmentedStyleMode.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(self).inset(Metrics.horizontalOffset)
-            make.top.equalTo(titleLabel.snp.bottom).offset(Metrics.verticalOffset)
-            make.bottom.equalTo(self.snp.bottom)
-        }
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(segmentedStyleMode)
+        stackView.addArrangedSubview(segmentedAccessoryView)
     }
 
     func setupObservers() {
@@ -81,6 +97,18 @@ fileprivate extension CommentCreationSettingsView {
 
         segmentedStyleMode.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.customStyleModeSelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.accessoryViewIndex
+            .bind(to: segmentedAccessoryView.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        segmentedAccessoryView.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.accessoryViewSelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideAccessoryViewOptions
+            .bind(to: segmentedAccessoryView.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

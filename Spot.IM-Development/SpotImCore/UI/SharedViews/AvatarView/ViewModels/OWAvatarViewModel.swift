@@ -173,7 +173,7 @@ fileprivate extension OWAvatarViewModel {
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
             }
-            .filter { !$0 } // Do not continue if needed to authenticate
+            .filter { !$0 } // Do not continue if authentication needed
             .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()

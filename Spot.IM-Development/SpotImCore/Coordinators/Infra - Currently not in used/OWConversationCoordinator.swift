@@ -30,7 +30,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     fileprivate let router: OWRoutering!
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
-    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .conversation)
@@ -42,11 +42,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
-         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.router = router
         self.conversationData = conversationData
         self.actionsCallbacks = actionsCallbacks
-        self.authenticationManager = authenticationManager
+        self.servicesProvider = servicesProvider
     }
 
     // swiftlint:disable function_body_length
@@ -71,7 +71,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         if let deepLink = deepLinkOptions {
             switch deepLink {
             case .commentCreation(let commentCreationData):
-                animated = false
+                switch commentCreationData.settings.commentCreationSettings.style {
+                case .regular, .light:
+                    animated = false
+                case .floatingKeyboard:
+                    animated = true
+                }
                 deepLinkToCommentCreation.onNext(commentCreationData)
             case .commentThread(let commentThreadData):
                 animated = false
@@ -134,7 +139,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .do(onNext: { result in
                 switch result {
                 case .commentCreated:
-                    // Nothing - already taken care in report VM in which we update the comment updater service
+                    // Nothing - already taken care in comment creation VM in which we update the comment updater service
                     break
                 case .loadedToScreen:
                     break
@@ -298,6 +303,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let conversationPoppedObservable = Observable.merge(conversationPopped,
                                                             indipendentConversationClosedObservable,
                                                             partOfFlowPresentedConversationClosedObservable)
+            .do(onNext: { [weak self] in
+                guard let self = self,
+                      let postId = OWManager.manager.postId
+                else { return }
+                self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: postId)
+            })
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
 
