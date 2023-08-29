@@ -604,19 +604,6 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 // Send analytic event
                 self.sendEvent(for: .fullConversationLoaded)
-
-                // Update current article from server
-                guard let extractData = conversation.extractData,
-                      let url = extractData.url,
-                      let title = extractData.title
-                else { return }
-                self.servicesProvider.activeArticleService().triggerNewServerArticle(
-                    OWArticleExtraData(
-                        url: url,
-                        title: title,
-                        subtitle: extractData.description,
-                        thumbnailUrl: extractData.thumbnailUrl)
-                )
             })
             .disposed(by: disposeBag)
 
