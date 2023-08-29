@@ -60,7 +60,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             router.setRoot(clarityDetailsVC, animated: false, dismissCompletion: ClarityDetailsPopped)
         } else {
             router.push(clarityDetailsVC,
-                        pushStyle: .presentStyle,
+                        pushStyle: .present,
                         animated: true,
                         popCompletion: ClarityDetailsPopped)
         }
@@ -80,38 +80,44 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.router?.pop(popStyle: .dismissStyle, animated: false)
+                self.router?.pop(popStyle: .dismiss, animated: false)
             })
 
         // Coordinate to safari tab
-//        let coordinateToSafariObservables = Observable.merge(communityGuidelinesURLTapped)
-//
-//        let coordinateToSafariObservable = coordinateToSafariObservables
-//            .filter { [weak self] _ in
-//                guard let self = self else { return false }
-//                return self.viewableMode == .partOfFlow
-//            }
-//            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
-//                guard let self = self else { return .empty() }
-//                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-//                                                               url: url,
-//                                                               actionsCallbacks: self.actionsCallbacks)
-//                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
-//            }
-//            .do(onNext: { result in
-//                switch result {
-//                case .loadedToScreen:
-//                    break
-//                    // Nothing
-//                case .popped:
-//                    break
-//                }
-//            })
-//            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
-//                return Observable.never()
-//            }
+        let communityGuidelinesURLTapped = clarityDetailsVM
+                .outputs
+                .clarityDetailsViewViewModel
+                .outputs
+                .communityGuidelinesClickObservable
 
-        return Observable.merge(resultsWithPopAnimation, dismissObservable, loadedToScreenObservable)
+        let coordinateToSafariObservables = Observable.merge(
+            communityGuidelinesURLTapped
+        )
+
+        let coordinateToSafariObservable = coordinateToSafariObservables
+            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self,
+                      let router = self.router
+                else { return .empty() }
+                let safariCoordinator = OWSafariTabCoordinator(router: router,
+                                                               url: url,
+                                                               actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWClarityDetailsCoordinatorResult> in
+                return Observable.never()
+            }
+
+        return Observable.merge(resultsWithPopAnimation, dismissObservable, loadedToScreenObservable, coordinateToSafariObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
