@@ -89,8 +89,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 let learnMoreAttributedString = self.learnMoreClickableString
                     .attributedString
                     .underline(1)
-                    .font(OWFontBook.shared.font(typography: .footnoteText))
-                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+                    .font(OWFontBook.shared.font(typography: .footnoteLink))
+                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
 
                 messageAttributedString.append(learnMoreAttributedString)
 
