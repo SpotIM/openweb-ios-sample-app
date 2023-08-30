@@ -69,10 +69,31 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     // TODO: real logic
-    fileprivate let _shouldShowCommentStatus = BehaviorSubject<Bool>(value: true)
+    fileprivate var currentUser: Observable<SPUser> {
+        sharedServiceProvider
+            .authenticationManager()
+            .activeUserAvailability
+            .map { availability in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .unwrap()
+    }
+    fileprivate let _commentStatus = BehaviorSubject<OWCommentStatus>(value: .none)
     var shouldShowCommentStatus: Observable<Bool> {
-        _shouldShowCommentStatus
-            .asObservable()
+        Observable.combineLatest(_commentStatus, currentUser) { [weak self] status, user in
+            guard let self = self,
+                  let currentUserId = user.userId,
+                  let commentUserId = self.comment.userId,
+                  currentUserId == commentUserId
+            else { return false }
+
+            return status != .none
+        }
     }
 
     func reportCommentLocally() {
@@ -99,7 +120,9 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        commentStatusVM = OWCommentStatusViewModel(status: .rejected) // TODO: use data from init
+        let status = OWCommentStatus.commentStatus(from: data.comment.status)
+        commentStatusVM = OWCommentStatusViewModel(status: status)
+        _commentStatus.onNext(status)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
@@ -110,12 +133,12 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        commentStatusVM = OWCommentStatusViewModel(status: .none)
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
         comment = OWComment()
+        commentStatusVM = OWCommentStatusViewModel(status: .none)
     }
 }
 

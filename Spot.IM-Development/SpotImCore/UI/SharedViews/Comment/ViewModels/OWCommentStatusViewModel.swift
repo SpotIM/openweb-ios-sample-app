@@ -124,4 +124,16 @@ enum OWCommentStatus {
     case rejected
     case pending
     case none
+
+    static func commentStatus(from status: OWComment.CommentStatus?) -> OWCommentStatus {
+        guard let status = status else { return .none }
+        switch status {
+        case .block, .reject:
+            return .rejected
+        case .pending, .requireApproval:
+            return .pending
+        case .publishAndModerate, .unknown:
+            return .none
+        }
+    }
 }
