@@ -370,9 +370,7 @@
 		3D26B5B428CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */; };
 		3D26B5B628CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B528CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift */; };
 		3D26B5B828CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B728CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift */; };
-		3D26B5BB28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BA28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift */; };
 		3D26B5BE28CE492A00A1DAD2 /* OWModalPresentationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */; };
-		3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */; };
 		3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */; };
 		3D301BDA2A823D530012B526 /* OWThemeStyleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */; };
 		3D301BDC2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */; };
@@ -577,7 +575,6 @@
 		3DD72C7D280F053A00117946 /* OWSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7C280F053A00117946 /* OWSession.swift */; };
 		3DD72C7F28159B2E00117946 /* OWAnalyticsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7E28159B2E00117946 /* OWAnalyticsEndpoints.swift */; };
 		3DD72C812818297500117946 /* OWLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C802818297500117946 /* OWLogger.swift */; };
-		3DDA9A2E28E49E3900FE3B86 /* OWScreenPushStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */; };
 		3DDA9A3428F5897C00FE3B86 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A2F28F5897C00FE3B86 /* OpenSans-Light.ttf */; };
 		3DDA9A3528F5897C00FE3B86 /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3028F5897C00FE3B86 /* OpenSans-Italic.ttf */; };
 		3DDA9A3628F5897C00FE3B86 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3128F5897C00FE3B86 /* OpenSans-Bold.ttf */; };
@@ -639,7 +636,6 @@
 		3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57929A23D310043D73E /* OWFontBook.swift */; };
 		3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57E29A240670043D73E /* OWFontStyle.swift */; };
 		3DEAA58129A240910043D73E /* OWFontGroupFamily+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA58029A240910043D73E /* OWFontGroupFamily+Extensions.swift */; };
-		3DEDF61628C9D48800F87056 /* OWNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEDF61528C9D48800F87056 /* OWNavigationController.swift */; };
 		3DF116412921801B0064BD41 /* OWManager+Layers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF116402921801B0064BD41 /* OWManager+Layers.swift */; };
 		3DF68720285B387C00A67230 /* UIAlertController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF6871F285B387B00A67230 /* UIAlertController+Rx.swift */; };
 		3DF74FBF29EEFA2300A8265A /* OWCustomizationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF74FBE29EEFA2300A8265A /* OWCustomizationsService.swift */; };
@@ -913,6 +909,15 @@
 		8DE52F4C29EAB5F400D3985C /* OWSpacerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F4B29EAB5F400D3985C /* OWSpacerStyle.swift */; };
 		8DE52F5129EBEBAC00D3985C /* OWSpacerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F5029EBEBAC00D3985C /* OWSpacerViewModel.swift */; };
 		8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F5229EBEBB800D3985C /* OWSpacerView.swift */; };
+		9E0C60502A780246001B8D5D /* OWScreenPopStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604A2A780245001B8D5D /* OWScreenPopStyle.swift */; };
+		9E0C60512A780246001B8D5D /* OWNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604B2A780245001B8D5D /* OWNavigationController.swift */; };
+		9E0C60522A780246001B8D5D /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604C2A780245001B8D5D /* OWModalPresentationStyle+Extensions.swift */; };
+		9E0C60532A780246001B8D5D /* OWPresentationalModeExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604D2A780246001B8D5D /* OWPresentationalModeExtended.swift */; };
+		9E0C60542A780246001B8D5D /* OWScreenPresentStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604E2A780246001B8D5D /* OWScreenPresentStyle.swift */; };
+		9E0C60552A780246001B8D5D /* OWScreenPushStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604F2A780246001B8D5D /* OWScreenPushStyle.swift */; };
+		9E0C60582A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */; };
+		9E0C605C2A823042001B8D5D /* OWTextViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C605B2A823042001B8D5D /* OWTextViewData.swift */; };
+		9E0C605E2A839863001B8D5D /* OWCachedLastCommentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C605D2A839863001B8D5D /* OWCachedLastCommentType.swift */; };
 		9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */; };
 		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
 		9E2857B22A14DBBD0066D726 /* OWLoaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */; };
@@ -958,7 +963,6 @@
 		9E8278792A4DAEC500EAA88E /* OWReportReasonCancelVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8278782A4DAEC500EAA88E /* OWReportReasonCancelVM.swift */; };
 		9E82787D2A4DC24E00EAA88E /* OWTitleViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */; };
 		9E8278802A516CC800EAA88E /* OWTitleSubtitleIconVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */; };
-		9E8B92A42A1B91F3004480F5 /* OWScreenPopStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */; };
 		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
 		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
 		9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */; };
@@ -970,6 +974,7 @@
 		9EA0F84129ACBC2D008FD7A6 /* PreConversationSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0F84029ACBC2C008FD7A6 /* PreConversationSettingsVM.swift */; };
 		9EA0F84329AD11C4008FD7A6 /* ConversationSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0F84229AD11C3008FD7A6 /* ConversationSettingsVM.swift */; };
 		9EA0F84529AD12E2008FD7A6 /* ConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0F84429AD12E2008FD7A6 /* ConversationSettingsView.swift */; };
+		9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */; };
 		9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */; };
 		9EBE5C2429AE0304001150DA /* CommentCreationSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2329AE0304001150DA /* CommentCreationSettingsVM.swift */; };
 		9EBE5C2629AE080B001150DA /* IAUSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2529AE080B001150DA /* IAUSettingsVM.swift */; };
@@ -1428,9 +1433,7 @@
 		3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationRequiredData.swift; sourceTree = "<group>"; };
 		3D26B5B528CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSettingsBuilder.swift; sourceTree = "<group>"; };
 		3D26B5B728CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCoordinatorResultProtocol.swift; sourceTree = "<group>"; };
-		3D26B5BA28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPresentationalModeExtended.swift; sourceTree = "<group>"; };
 		3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWModalPresentationStyle.swift; sourceTree = "<group>"; };
-		3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentSSOAuthentication.swift; sourceTree = "<group>"; };
 		3D301BD92A823D530012B526 /* OWThemeStyleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleServiceTests.swift; sourceTree = "<group>"; };
 		3D301BDB2A824CCF0012B526 /* OWRxAppLifeCycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycleTests.swift; sourceTree = "<group>"; };
@@ -1636,7 +1639,6 @@
 		3DD72C7C280F053A00117946 /* OWSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSession.swift; sourceTree = "<group>"; };
 		3DD72C7E28159B2E00117946 /* OWAnalyticsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsEndpoints.swift; sourceTree = "<group>"; };
 		3DD72C802818297500117946 /* OWLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLogger.swift; sourceTree = "<group>"; };
-		3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWScreenPushStyle.swift; sourceTree = "<group>"; };
 		3DDA9A2F28F5897C00FE3B86 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		3DDA9A3028F5897C00FE3B86 /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Italic.ttf"; sourceTree = "<group>"; };
 		3DDA9A3128F5897C00FE3B86 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -1698,7 +1700,6 @@
 		3DEAA57929A23D310043D73E /* OWFontBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontBook.swift; sourceTree = "<group>"; };
 		3DEAA57E29A240670043D73E /* OWFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontStyle.swift; sourceTree = "<group>"; };
 		3DEAA58029A240910043D73E /* OWFontGroupFamily+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWFontGroupFamily+Extensions.swift"; sourceTree = "<group>"; };
-		3DEDF61528C9D48800F87056 /* OWNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationController.swift; sourceTree = "<group>"; };
 		3DF116402921801B0064BD41 /* OWManager+Layers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWManager+Layers.swift"; sourceTree = "<group>"; };
 		3DF6871F285B387B00A67230 /* UIAlertController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Rx.swift"; sourceTree = "<group>"; };
 		3DF74FBE29EEFA2300A8265A /* OWCustomizationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizationsService.swift; sourceTree = "<group>"; };
@@ -2010,6 +2011,15 @@
 		96882182115150292A31277E /* Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; sourceTree = "<group>"; };
 		9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
+		9E0C604A2A780245001B8D5D /* OWScreenPopStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPopStyle.swift; sourceTree = "<group>"; };
+		9E0C604B2A780245001B8D5D /* OWNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWNavigationController.swift; sourceTree = "<group>"; };
+		9E0C604C2A780245001B8D5D /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
+		9E0C604D2A780246001B8D5D /* OWPresentationalModeExtended.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPresentationalModeExtended.swift; sourceTree = "<group>"; };
+		9E0C604E2A780246001B8D5D /* OWScreenPresentStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPresentStyle.swift; sourceTree = "<group>"; };
+		9E0C604F2A780246001B8D5D /* OWScreenPushStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPushStyle.swift; sourceTree = "<group>"; };
+		9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPushOverFullScreenAnimationTransitioning.swift; sourceTree = "<group>"; };
+		9E0C605B2A823042001B8D5D /* OWTextViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextViewData.swift; sourceTree = "<group>"; };
+		9E0C605D2A839863001B8D5D /* OWCachedLastCommentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCachedLastCommentType.swift; sourceTree = "<group>"; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
 		9E2857B12A14DBBD0066D726 /* OWLoaderButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWLoaderButton.swift; sourceTree = "<group>"; };
@@ -2053,7 +2063,6 @@
 		9E8278782A4DAEC500EAA88E /* OWReportReasonCancelVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelVM.swift; sourceTree = "<group>"; };
 		9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTitleViewVM.swift; sourceTree = "<group>"; };
 		9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWTitleSubtitleIconVM.swift; sourceTree = "<group>"; };
-		9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPopStyle.swift; sourceTree = "<group>"; };
 		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWThemeStyleEnforcement+Extensions.swift"; sourceTree = "<group>"; };
@@ -2065,6 +2074,7 @@
 		9EA0F84029ACBC2C008FD7A6 /* PreConversationSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreConversationSettingsVM.swift; sourceTree = "<group>"; };
 		9EA0F84229AD11C3008FD7A6 /* ConversationSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsVM.swift; sourceTree = "<group>"; };
 		9EA0F84429AD12E2008FD7A6 /* ConversationSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationSettingsView.swift; sourceTree = "<group>"; };
+		9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAccessoryViewStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCreationSettingsView.swift; sourceTree = "<group>"; };
 		9EBE5C2329AE0304001150DA /* CommentCreationSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCreationSettingsVM.swift; sourceTree = "<group>"; };
 		9EBE5C2529AE080B001150DA /* IAUSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAUSettingsVM.swift; sourceTree = "<group>"; };
@@ -2428,6 +2438,7 @@
 			isa = PBXGroup;
 			children = (
 				162B83582A766582002290EE /* OWCachedCommentKey.swift */,
+				9E0C605D2A839863001B8D5D /* OWCachedLastCommentType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2473,18 +2484,10 @@
 		1640F2C128AD053600FB863B /* CommentCreationEntry - Old */ = {
 			isa = PBXGroup;
 			children = (
-				1640F2C228AD055000FB863B /* Models */,
 				1640F2C328AD055700FB863B /* ViewModels */,
 				1640F2C428AD056000FB863B /* Views */,
 			);
 			path = "CommentCreationEntry - Old";
-			sourceTree = "<group>";
-		};
-		1640F2C228AD055000FB863B /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		1640F2C328AD055700FB863B /* ViewModels */ = {
@@ -2644,7 +2647,6 @@
 		16D8D49F28C632F200895FCB /* CommentCreation */ = {
 			isa = PBXGroup;
 			children = (
-				3D26B5B228CA391700A1DAD2 /* Models */,
 				16D8D4A128C6332A00895FCB /* ViewModels */,
 				1628A75A28EB0E770019B5EC /* Views */,
 			);
@@ -3061,6 +3063,7 @@
 		3D08E0562874951D00E6F1AC /* Infra */ = {
 			isa = PBXGroup;
 			children = (
+				9E0C60562A7A9AFC001B8D5D /* TransitionAnimations */,
 				3DCAE3EE29D2FA7F005B9189 /* Routers */,
 				3DF95BD227CE546A0008A380 /* OWPresentable.swift */,
 				3DE0FE4427D75A9E0097B17B /* OWShowable.swift */,
@@ -3431,14 +3434,6 @@
 				3DDE2AD52A6032FF007684C8 /* OWCommentCreationSettingsProtocol+Extensions.swift */,
 			);
 			path = CommentCreation;
-			sourceTree = "<group>";
-		};
-		3D26B5B228CA391700A1DAD2 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3D29A2DA283BA421002BE318 /* Services */ = {
@@ -4280,11 +4275,12 @@
 		3DEDF61428C9D45F00F87056 /* NavigationController */ = {
 			isa = PBXGroup;
 			children = (
-				3DEDF61528C9D48800F87056 /* OWNavigationController.swift */,
-				3D26B5BA28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift */,
-				3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */,
-				3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */,
-				9E8B92A32A1B91F3004480F5 /* OWScreenPopStyle.swift */,
+				9E0C604C2A780245001B8D5D /* OWModalPresentationStyle+Extensions.swift */,
+				9E0C604B2A780245001B8D5D /* OWNavigationController.swift */,
+				9E0C604D2A780246001B8D5D /* OWPresentationalModeExtended.swift */,
+				9E0C604A2A780245001B8D5D /* OWScreenPopStyle.swift */,
+				9E0C604E2A780246001B8D5D /* OWScreenPresentStyle.swift */,
+				9E0C604F2A780246001B8D5D /* OWScreenPushStyle.swift */,
 			);
 			path = NavigationController;
 			sourceTree = "<group>";
@@ -5072,6 +5068,7 @@
 				5D697A3C22B65106001AD556 /* Products */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
+				9E0C60622A89410F001B8D5D /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -5776,6 +5773,22 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		9E0C60562A7A9AFC001B8D5D /* TransitionAnimations */ = {
+			isa = PBXGroup;
+			children = (
+				9E0C60572A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift */,
+			);
+			path = TransitionAnimations;
+			sourceTree = "<group>";
+		};
+		9E0C60622A89410F001B8D5D /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		9E2857B02A14DBA90066D726 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -5905,6 +5918,7 @@
 			children = (
 				9EC88D8E29FE633F00EBD165 /* OWTextView.swift */,
 				9EC88D9029FE638A00EBD165 /* OWTextViewVM.swift */,
+				9E0C605B2A823042001B8D5D /* OWTextViewData.swift */,
 			);
 			path = OWTextView;
 			sourceTree = "<group>";
@@ -6059,6 +6073,7 @@
 				8DBC16792A406C290010759E /* OWArticleHeaderStyle+Extensions.swift */,
 				3DB1D5A22A785C880012388E /* OWStatusBarEnforcement+Extensions.swift */,
 				3D301BE32A8799D60012B526 /* OWNavigationBarEnforcement+Extensions.swift */,
+				9EB427412A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift */,
 			);
 			path = "OpenWebSDK+Extensions";
 			sourceTree = "<group>";
@@ -6538,7 +6553,6 @@
 				161270D629ACCB38001F9715 /* OWCommentThreadCoordinator.swift in Sources */,
 				4454181323685144001D0ED0 /* SPEmptyConversationActionView.swift in Sources */,
 				3DCAE3F029D2FAA7005B9189 /* OWCompactRouteringCompatible.swift in Sources */,
-				3DDA9A2E28E49E3900FE3B86 /* OWScreenPushStyle.swift in Sources */,
 				9E3B8B6B29FFB95B006BB207 /* OWAdditionalInfoVC.swift in Sources */,
 				445418AD23685154001D0ED0 /* UIImage+SPExtensions.swift in Sources */,
 				8D99C6962A1E4CFD00DAB542 /* OWSummaryHeaderCustomizableElement.swift in Sources */,
@@ -6559,7 +6573,6 @@
 				24C314792A80DBC500F22B8C /* SPRankChange+Analytics.swift in Sources */,
 				9E4163C529F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift in Sources */,
 				16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */,
-				3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				3D31FB9229AB743A002B88E0 /* OWLocaleStrategy+Extensions.swift in Sources */,
 				8D99C6982A1E533D00DAB542 /* OWEmptyStateCustomizableElement.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
@@ -6575,6 +6588,7 @@
 				24E66A292A6563C200D5F4E9 /* OWAnalyticEventGroup.swift in Sources */,
 				4454189523685154001D0ED0 /* SPConfigurationSDKStatus.swift in Sources */,
 				161470D228609C9900CFBC9D /* SPCommentUserViewModel.swift in Sources */,
+				9E0C60532A780246001B8D5D /* OWPresentationalModeExtended.swift in Sources */,
 				3DA2646A2951E3B200688FFF /* StringEncoding+Network.swift in Sources */,
 				4454189023685154001D0ED0 /* SPNetworkError.swift in Sources */,
 				3DFBF0CF27676D860049CF1C /* SPOnlineViewingUsersCounterView.swift in Sources */,
@@ -6591,6 +6605,7 @@
 				166CCCAE2A30CDCB00C7143F /* OWCommentCreationLightViewVM.swift in Sources */,
 				3DDA9A712919169400FE3B86 /* OWGoogleAdsProvider.swift in Sources */,
 				4454180F23685144001D0ED0 /* SPBaseConversationViewController.swift in Sources */,
+				9E0C60522A780246001B8D5D /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				4454188C23685154001D0ED0 /* SPConfigRequests.swift in Sources */,
 				249DF2A3296D95C500F5D69A /* OWImageProvider.swift in Sources */,
 				24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */,
@@ -6679,7 +6694,6 @@
 				2473A2712A42CE660086B339 /* OWShadowable.swift in Sources */,
 				3DB3B97529F7DAEE00C50192 /* OWTestingGreenCellViewModel.swift in Sources */,
 				3D33C0EA29460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift in Sources */,
-				3D26B5BB28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift in Sources */,
 				4454189823685154001D0ED0 /* SPSpotConfiguration.swift in Sources */,
 				161270DB29ACD9EF001F9715 /* OWCommentThreadSettingsProtocol.swift in Sources */,
 				3DDA9A6C2919160900FE3B86 /* OWMonetization.swift in Sources */,
@@ -6701,6 +6715,7 @@
 				16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */,
 				3DB3B96529F7DA1200C50192 /* OWTestingBlueCell.swift in Sources */,
 				3D263CFD29C340F90013C532 /* OWNetworkSessionCredentials.swift in Sources */,
+				9E0C60502A780246001B8D5D /* OWScreenPopStyle.swift in Sources */,
 				24F4CD8029C057D300261F80 /* OWPreConversationSummaryStyle.swift in Sources */,
 				166CCCA42A2E362F00C7143F /* UIActivityViewController+Rx.swift in Sources */,
 				8D358D7529D5853B00E229A3 /* OWArticleDescriptionView.swift in Sources */,
@@ -6749,7 +6764,6 @@
 				3DB3B97B29F7DB1D00C50192 /* OWTestingBlueFirstLevelViewModel.swift in Sources */,
 				3D91578C29E4962D00215A48 /* OWViewActionsService.swift in Sources */,
 				3DA264752951E3B200688FFF /* OWNetworkRequestInterceptor.swift in Sources */,
-				9E8B92A42A1B91F3004480F5 /* OWScreenPopStyle.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
 				8D7662CE2A7A58CA008152BE /* OWRealtimeIndicationViewModel.swift in Sources */,
@@ -6786,6 +6800,7 @@
 				168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */,
 				3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */,
 				241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */,
+				9E0C60512A780246001B8D5D /* OWNavigationController.swift in Sources */,
 				3D08E0B6287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift in Sources */,
 				16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */,
 				1616555F2A531518004EBF6F /* OWCommentCreationFooterView.swift in Sources */,
@@ -6851,11 +6866,13 @@
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
 				8D0DB71D2A937AC60014AD1B /* OWRealtimeNewCommentsView.swift in Sources */,
 				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
+				9E0C605E2A839863001B8D5D /* OWCachedLastCommentType.swift in Sources */,
 				8D99C6892A13516400DAB542 /* OWConversationContentType.swift in Sources */,
 				8DE52F4A29E430F000D3985C /* OWPresentationalModeCompact.swift in Sources */,
 				24E66A252A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift in Sources */,
 				8D99C6822A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift in Sources */,
 				3D3150502A4D929E00EF6575 /* OWAccessoryViewStrategy.swift in Sources */,
+				9E0C60552A780246001B8D5D /* OWScreenPushStyle.swift in Sources */,
 				3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */,
 				3DD72C76280EF95200117946 /* OWRequestLogger.swift in Sources */,
 				445418A623685154001D0ED0 /* OWShareLink.swift in Sources */,
@@ -6876,6 +6893,7 @@
 				16D5A20529D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift in Sources */,
 				16D5A1E529C9A73800914AD7 /* OWCommentPresentationData.swift in Sources */,
 				24BB7C1A290FD50900F49BAA /* OWPreConversationSummaryViewModel.swift in Sources */,
+				9E0C605C2A823042001B8D5D /* OWTextViewData.swift in Sources */,
 				3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */,
 				3DB3B95429F4695F00C50192 /* OWTestingPlaygroundSettings.swift in Sources */,
 				3DD72C70280EF84F00117946 /* OWHTTPHeaderRequestMiddleware.swift in Sources */,
@@ -7033,6 +7051,7 @@
 				3DDA9A7F291A55BA00FE3B86 /* OWCustomizations.swift in Sources */,
 				3DA264692951E3B200688FFF /* OWNetworkResponseSerialization.swift in Sources */,
 				44F247A32379B0F900B36F12 /* SPBaseUIImageView.swift in Sources */,
+				9E0C60542A780246001B8D5D /* OWScreenPresentStyle.swift in Sources */,
 				163E02C22A85330D00DDB73C /* OWCommentUpdateType.swift in Sources */,
 				24A24A10291B9D7000D72755 /* OWSafariTabCoordinator.swift in Sources */,
 				8DE52F4C29EAB5F400D3985C /* OWSpacerStyle.swift in Sources */,
@@ -7092,7 +7111,6 @@
 				244FD0A426661A3300BFBC8F /* SPCommunityQuestionView.swift in Sources */,
 				445417FC23685144001D0ED0 /* UIBarButton+UIImage.swift in Sources */,
 				16F8A7482A922C720023B96B /* OWCommentCreationImagePreviewViewModel.swift in Sources */,
-				3DEDF61628C9D48800F87056 /* OWNavigationController.swift in Sources */,
 				1628A74628EB08540019B5EC /* OWCommentView.swift in Sources */,
 				3D0AFC8D29C5F954002670D1 /* OWRenewSSOCallback.swift in Sources */,
 				3DB1D5A82A7914DC0012388E /* UIStatusBarStyle+Extensions.swift in Sources */,
@@ -7237,6 +7255,7 @@
 				44F247A52379B23100B36F12 /* SPBaseScrollView.swift in Sources */,
 				3D20A39127B0219A003F8513 /* OWConstraintRelatableTarget.swift in Sources */,
 				3DB3D17A281FC60C008654CF /* SPLogLevel.swift in Sources */,
+				9E0C60582A7A9B5C001B8D5D /* OWPushOverFullScreenAnimationTransitioning.swift in Sources */,
 				3DA264762951E3B200688FFF /* OWNetworkEventMonitor.swift in Sources */,
 				2473A2752A49B7530086B339 /* OWVersion.swift in Sources */,
 				8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */,
@@ -7392,6 +7411,7 @@
 				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,
 				9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
+				9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */,
 				8DBC167A2A406C290010759E /* OWArticleHeaderStyle+Extensions.swift in Sources */,
 				3DA8DBF629F151D900783BA5 /* TestingPlaygroundViewModel.swift in Sources */,
 				3D611B8828C4D94F003960CE /* SDKUIFlowActionType.swift in Sources */,
