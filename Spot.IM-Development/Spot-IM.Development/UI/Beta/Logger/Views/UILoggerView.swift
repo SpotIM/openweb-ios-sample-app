@@ -36,6 +36,7 @@ class UILoggerView: UIView {
             .backgroundColor(.clear)
             .font(FontBook.helperLight)
             .textColor(.black)
+            .indicatorStyle(.black)
         return textView
     }()
 
@@ -85,7 +86,7 @@ fileprivate extension UILoggerView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.loggerText
-            .delay(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
+            .throttle(.milliseconds(Metrics.delayScrollToBottom), scheduler: MainScheduler.asyncInstance)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
