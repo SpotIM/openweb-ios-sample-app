@@ -77,7 +77,7 @@ final class SPCommentTextInputView: SPBaseView, SPTextInputView {
     func configureCommentType(_ type: CommentType, avatar: URL? = nil, showAvatar: Bool = false) {
         switch type {
         case .comment:
-            textInputView.placeholder = SPLocalizationManager.localizedString(key: "What do you think?")
+            textInputView.placeholder = SPLocalizationManager.localizedString(key: "WhatDoYouThink")
 
         case .reply:
             textInputView.placeholder = SPLocalizationManager.localizedString(key: "Type your reply…")

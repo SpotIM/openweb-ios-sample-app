@@ -22,6 +22,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
+    func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
@@ -74,6 +75,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, String> = {
         return OWCacheService<OWCachedCommentKey, String>()
+    }()
+
+    fileprivate lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
+        return OWCacheService<OWPostId, OWCachedLastCommentType>()
     }()
 
     fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
@@ -206,6 +211,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String> {
         return _commentsInMemoryCacheService
+    }
+
+    func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType> {
+        return _lastCommentTypeInMemoryCacheService
     }
 
     func netwokAPI() -> OWNetworkAPIProtocol {
@@ -348,6 +357,9 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _usersService.cleanCache()
         _analyticsService.spotChanged(spotId: spotId)
         _reportedCommentsService.cleanCache()
+        _imageCacheService.cleanCache()
+        _commentsInMemoryCacheService.cleanCache()
+        _lastCommentTypeInMemoryCacheService.cleanCache()
     }
 }
 
