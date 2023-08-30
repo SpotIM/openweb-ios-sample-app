@@ -11,12 +11,14 @@ import RxSwift
 import UIKit
 
 protocol OWParagraphWithIconViewModelingInputs {
+    var communityGuidelinesClick: PublishSubject<Void> { get }
 }
 
 protocol OWParagraphWithIconViewModelingOutputs {
     var icon: UIImage? { get }
     var attributedString: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
+    var communityGuidelinesClickObservable: Observable<Void> { get }
 }
 
 protocol OWParagraphWithIconViewModeling {
@@ -42,6 +44,12 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
             .asObservable()
     }()
     var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "community guidelines").lowercased()
+
+    var communityGuidelinesClick = PublishSubject<Void>()
+    var communityGuidelinesClickObservable: Observable<Void> {
+        return communityGuidelinesClick
+            .asObservable()
+    }
 
     fileprivate lazy var accessibilityChange: Observable<Bool> = {
         OWSharedServicesProvider.shared.appLifeCycle()

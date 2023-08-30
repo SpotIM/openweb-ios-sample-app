@@ -49,8 +49,15 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }
 
     var communityGuidelinesClick = PublishSubject<Void>()
+    fileprivate lazy var paragraphsCommunityGuidelinesClick: Observable<Void> = {
+        let clickObservers = self.paragraphViewModels
+            .map { viewModel in
+                viewModel.outputs.communityGuidelinesClickObservable
+            }
+        return Observable.merge(clickObservers)
+    }()
     var communityGuidelinesClickObservable: Observable<URL> {
-        return communityGuidelinesClick
+        return Observable.merge(communityGuidelinesClick, paragraphsCommunityGuidelinesClick)
             .withLatestFrom(communityGuidelinesUrl) { _, url in
                 return url
             }

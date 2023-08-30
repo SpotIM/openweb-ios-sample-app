@@ -65,6 +65,18 @@ fileprivate extension OWParagraphWithIconView {
             .bind(to: textLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.attributedString
+            .subscribe(onNext: { [weak self] attributedString in
+                guard let self = self else { return }
+                self.textLabel
+                    .attributedText(attributedString)
+                    .addRangeGesture(targetRange: self.viewModel.outputs.communityGuidelinesClickablePlaceholder) { [weak self] in
+                        guard let self = self else { return }
+                        self.viewModel.inputs.communityGuidelinesClick.onNext()
+                    }
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
