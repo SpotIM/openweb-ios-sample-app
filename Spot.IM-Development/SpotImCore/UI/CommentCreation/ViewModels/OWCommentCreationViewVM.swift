@@ -204,6 +204,23 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 }
             }
             .unwrap()
+            .flatMap { [weak self] (arg0) -> Observable<(OWCommentCreationCtaData, OWComment)?> in
+                var (commentCreationData, comment) = arg0
+                guard let self = self,
+                      let commentId = comment.id
+                else { return .empty() }
+
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .commentStatus(commentId: commentId)
+                    .response
+                    .map { response in
+                        comment.rawStatus = response["status"]
+                        return (commentCreationData, comment)
+                    }
+            }
+            .unwrap()
 
         let prepareLocalCommentObservable = commentCreationNetworkObservable
             .do(onNext: { [weak self] _ in
