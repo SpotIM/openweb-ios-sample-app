@@ -15,7 +15,6 @@ struct OWArrayChangeEvent {
     let updatedIndices: [Int]
 
     fileprivate init(inserted: [Int] = [], deleted: [Int] = [], updated: [Int] = []) {
-        assert(inserted.count + deleted.count + updated.count > 0)
         insertedIndices = inserted
         deletedIndices = deleted
         updatedIndices = updated

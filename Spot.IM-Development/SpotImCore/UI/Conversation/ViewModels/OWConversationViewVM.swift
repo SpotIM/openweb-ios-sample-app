@@ -627,8 +627,7 @@ fileprivate extension OWConversationViewViewModel {
 
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                self._commentsPresentationData.removeAll()
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
@@ -1221,8 +1220,11 @@ fileprivate extension OWConversationViewViewModel {
                     // Changing the sort in the service
                     let sortDictateService = self.servicesProvider.sortDictateService()
                     sortDictateService.update(sortOption: newSort, perPostId: self.postId)
+
                     // Remove all comments to show skeletons while loading new comments according to the new sort
                     self._commentsPresentationData.removeAll()
+
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
                 }
             })
             .disposed(by: disposeBag)
@@ -1552,6 +1554,13 @@ fileprivate extension OWConversationViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+
+            pullToRefresh
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                })
+                .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {

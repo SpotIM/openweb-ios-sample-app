@@ -11,6 +11,8 @@ import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
     var commentText: BehaviorSubject<String> { get }
+    var becomeFirstResponder: PublishSubject<Void> { get }
+    var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
 }
 
@@ -19,6 +21,8 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
+    var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
 }
@@ -96,8 +100,20 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         case .replyToComment:
             return Observable.just(OWLocalizationManager.shared.localizedString(key: "Type your reply…"))
         default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
         }
+    }
+
+    var becomeFirstResponder = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponder
+            .asObservable()
+    }
+
+    var resignFirstResponder = PublishSubject<Void>()
+    var resignFirstResponderCalled: Observable<Void> {
+        return resignFirstResponder
+            .asObservable()
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,
@@ -144,6 +160,13 @@ fileprivate extension OWCommentCreationContentViewModel {
             self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
                 .unwrap()
                 .observe(on: MainScheduler.instance)
+                .do(onNext: { [weak self] _ in
+                    // Set a placeholder
+                    guard let self = self else { return }
+                    if let placeholder = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false) {
+                        self.imagePreviewVM.inputs.image.onNext(placeholder)
+                    }
+                })
                 .subscribe(onNext: { [weak self] imageUrl in
                     guard let self = self else { return }
                     UIImage.load(with: imageUrl) { image, _ in
