@@ -157,9 +157,7 @@ fileprivate extension OWCommentCreationContentViewModel {
     func setupInitialImageIfNeeded() {
         if case let .edit(comment) = commentCreationType,
            let imageContent = comment.image {
-            self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
-                .unwrap()
-                .observe(on: MainScheduler.instance)
+            Observable.just(())
                 .do(onNext: { [weak self] _ in
                     // Set a placeholder
                     guard let self = self else { return }
@@ -167,6 +165,12 @@ fileprivate extension OWCommentCreationContentViewModel {
                         self.imagePreviewVM.inputs.image.onNext(placeholder)
                     }
                 })
+                .flatMap { [weak self] _ -> Observable<URL?> in
+                    guard let self = self else { return .empty() }
+                    return self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
+                }
+                .unwrap()
+                .observe(on: MainScheduler.instance)
                 .flatMap { imageUrl -> Observable<UIImage> in
                     return UIImage.load(with: imageUrl)
                 }
