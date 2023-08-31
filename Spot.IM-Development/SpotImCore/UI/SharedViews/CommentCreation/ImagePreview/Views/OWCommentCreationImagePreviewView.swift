@@ -58,8 +58,12 @@ class OWCommentCreationImagePreviewView: UIView {
         super.init(frame: .zero)
 
         setupUI()
-        setupObservers()
         applyAccessibility()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupObservers()
     }
 
     required init?(coder: NSCoder) {
@@ -101,6 +105,7 @@ fileprivate extension OWCommentCreationImagePreviewView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowView
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowView in
                 guard let self = self else { return }
                 self.isHidden = !shouldShowView
@@ -117,6 +122,7 @@ fileprivate extension OWCommentCreationImagePreviewView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.imageOutput
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] image in
                 guard let self = self else { return }
                 let ratio = image.size.width / image.size.height
