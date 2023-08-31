@@ -159,9 +159,7 @@ fileprivate extension OWCommentCreationContentViewModel {
     func setupInitialImageIfNeeded() {
         if case let .edit(comment) = commentCreationType,
            let imageContent = comment.image {
-            self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
-                .unwrap()
-                .observe(on: MainScheduler.instance)
+            Observable.just(())
                 .do(onNext: { [weak self] _ in
                     // Set a placeholder
                     guard let self = self else { return }
@@ -169,13 +167,21 @@ fileprivate extension OWCommentCreationContentViewModel {
                         self.imagePreviewVM.inputs.image.onNext(placeholder)
                     }
                 })
-                .subscribe(onNext: { [weak self] imageUrl in
+                .flatMap { [weak self] _ -> Observable<URL?> in
+                    guard let self = self else { return .empty() }
+                    return self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
+                }
+                .unwrap()
+                .observe(on: MainScheduler.instance)
+                .flatMap { imageUrl -> Observable<UIImage> in
+                    return UIImage.load(with: imageUrl)
+                }
+                // we added delay to fix a case we showed empty image
+                .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+                .subscribe(onNext: { [weak self] image in
                     guard let self = self else { return }
-                    UIImage.load(with: imageUrl) { image, _ in
-                        guard let image = image else { return }
-                        self.imagePreviewVM.inputs.image.onNext(image)
-                        self._imageContent.onNext(imageContent)
-                    }
+                    self.imagePreviewVM.inputs.image.onNext(image)
+                    self._imageContent.onNext(imageContent)
                 })
                 .disposed(by: disposeBag)
         }
