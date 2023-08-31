@@ -218,7 +218,8 @@ fileprivate extension BetaNewAPIViewModel {
             })
             .disposed(by: disposeBag)
 
-        Observable.merge(uiFlowsTapped.voidify(),
+        Observable.merge(settingsTapped.voidify(),
+                         uiFlowsTapped.voidify(),
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),
                          testingPlaygroundTapped.voidify())
