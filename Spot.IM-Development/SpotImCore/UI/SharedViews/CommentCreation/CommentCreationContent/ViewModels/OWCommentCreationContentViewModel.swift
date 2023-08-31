@@ -167,13 +167,13 @@ fileprivate extension OWCommentCreationContentViewModel {
                         self.imagePreviewVM.inputs.image.onNext(placeholder)
                     }
                 })
-                .subscribe(onNext: { [weak self] imageUrl in
+                .flatMap { imageUrl -> Observable<UIImage> in
+                    return UIImage.load(with: imageUrl)
+                }
+                .subscribe(onNext: { [weak self] image in
                     guard let self = self else { return }
-                    UIImage.load(with: imageUrl) { image, _ in
-                        guard let image = image else { return }
-                        self.imagePreviewVM.inputs.image.onNext(image)
-                        self._imageContent.onNext(imageContent)
-                    }
+                    self.imagePreviewVM.inputs.image.onNext(image)
+                    self._imageContent.onNext(imageContent)
                 })
                 .disposed(by: disposeBag)
         }
