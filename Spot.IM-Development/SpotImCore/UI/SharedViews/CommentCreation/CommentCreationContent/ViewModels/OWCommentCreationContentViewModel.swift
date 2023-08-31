@@ -79,13 +79,15 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         commentText
             .asObservable()
             .withLatestFrom(_commentTextCharactersLimit) { ($0, $1) }
-            .scan(("", nil)) { previous, newTuple -> (String, Int?) in
+            .scan(("", nil)) { [weak self] previous, newTuple -> (String, Int?) in
                 // Handle characters limit for comment text
+                guard let self = self else { return previous }
                 guard let limiter = newTuple.1 else { return newTuple }
                 let previousText = previous.0
                 let newText = newTuple.0
 
-                return newText.count <= limiter ? (newText, limiter) : (previousText, limiter)
+                let adjustedText = self.textValidatorTransformer(previousText: previousText, newText: newText, charactersLimiter: limiter)
+                return (adjustedText, limiter)
             }
             .map { $0.0 }
     }
@@ -176,6 +178,18 @@ fileprivate extension OWCommentCreationContentViewModel {
                     }
                 })
                 .disposed(by: disposeBag)
+        }
+    }
+
+    func textValidatorTransformer(previousText: String, newText: String, charactersLimiter: Int) -> String {
+        // Handle a state in which a user is trying to edit a text which is longer than the limiter
+        if previousText.isEmpty && newText.count > charactersLimiter {
+            return String(newText.prefix(charactersLimiter))
+        } else if newText.count > charactersLimiter {
+            // Intentionally block copy paste of longer than limiter or further characters the user is trying to add
+            return previousText
+        } else { // All good and valid, return new text
+            return newText
         }
     }
 
