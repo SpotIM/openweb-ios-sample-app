@@ -98,18 +98,12 @@ fileprivate extension OWCommentCreationImagePreviewView {
     }
 
     func setupObservers() {
-
-        viewModel.outputs.shouldShowView
-            .map { !$0 }
-            .bind(to: self.rx.isHidden)
-            .disposed(by: disposeBag)
-
         viewModel.outputs.shouldShowView
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowView in
                 guard let self = self else { return }
                 self.isHidden = !shouldShowView
-                if (!shouldShowView) {
+                if (self.isHidden) {
                     self.OWSnp.updateConstraints { make in
                         make.height.equalTo(0)
                     }
