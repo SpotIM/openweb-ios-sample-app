@@ -174,6 +174,8 @@ fileprivate extension OWCommentCreationContentViewModel {
                 .flatMap { imageUrl -> Observable<UIImage> in
                     return UIImage.load(with: imageUrl)
                 }
+                // we added delay to fix a case we showed empty image
+                .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
                 .subscribe(onNext: { [weak self] image in
                     guard let self = self else { return }
                     self.imagePreviewVM.inputs.image.onNext(image)
