@@ -20,10 +20,9 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
     fileprivate let cacheConfigService = OWCacheService<OWSpotId, SPSpotConfiguration>(expirationStrategy: .time(lifetime: 30 * 60))
     fileprivate var disposeBag: DisposeBag? = DisposeBag()
     fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
-    fileprivate let _configWhichJustFetched = BehaviorSubject<SPSpotConfiguration?>(value: nil)
-    fileprivate var configWhichJustFetched: Observable<SPSpotConfiguration> {
+    fileprivate let _configWhichJustFetched = BehaviorSubject<(SPSpotConfiguration?, Error?)>(value: (nil, nil))
+    fileprivate var configWhichJustFetched: Observable<(SPSpotConfiguration?, Error?)> {
         return _configWhichJustFetched
-            .unwrap()
             .share(replay: 0) // New subscribers will get only elements which emits after their subscription
     }
 
@@ -46,6 +45,19 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
 
                     // This way if other calls to this functions are being done before the network request finish, we won't send new requests
                     return self.configWhichJustFetched
+                        .flatMap { tuple -> Observable<SPSpotConfiguration?> in
+                            if let error = tuple.1 {
+                                // Throw error
+                                return Observable.error(error)
+                            } else if let config = tuple.0 {
+                                // Return config
+                                return Observable.just(config)
+                            } else {
+                                // Return nil observable to keep waiting
+                                return Observable.just(nil)
+                            }
+                        }
+                        .unwrap()
                         .take(1)
                 }
         }
@@ -72,6 +84,7 @@ fileprivate extension OWSpotConfigurationService {
         Observable.just(())
             .do(onNext: { [weak self] _ in
                 self?.isCurrentlyFetching.onNext(true)
+                self?._configWhichJustFetched.onNext((nil, nil))
             })
             .flatMap {
                 return api.fetchConfig(spotId: spotId)
@@ -80,13 +93,13 @@ fileprivate extension OWSpotConfigurationService {
                     .do(onNext: { [weak self] config in
                         guard let self = self else { return  }
                         self.isCurrentlyFetching.onNext(false)
-                        self._configWhichJustFetched.onNext(config)
+                        self._configWhichJustFetched.onNext((config, nil))
                         self.cacheConfigService[spotId] = config
                         self.setAdditionalStuff(forConfig: config)
                     }, onError: {[weak self] error in
                         guard let self = self else { return }
                         self.isCurrentlyFetching.onNext(false)
-                        self._configWhichJustFetched.onError(error)
+                        self._configWhichJustFetched.onNext((nil, error))
                     })
             }
             .subscribe()
