@@ -58,12 +58,8 @@ class OWCommentCreationImagePreviewView: UIView {
         super.init(frame: .zero)
 
         setupUI()
-        applyAccessibility()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -98,31 +94,24 @@ fileprivate extension OWCommentCreationImagePreviewView {
     }
 
     func setupObservers() {
-        viewModel.outputs.shouldShowView
+        viewModel.outputs.imageOutput
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shouldShowView in
+            .subscribe(onNext: { [weak self] imageType in
                 guard let self = self else { return }
-                self.isHidden = !shouldShowView
-                if (self.isHidden) {
+                switch imageType {
+                case .image(let image):
+                    self.isHidden = false
+                    let ratio = image.size.width / image.size.height
+                    let newHeight = self.imageView.frame.width / ratio
+                    self.OWSnp.updateConstraints { make in
+                        make.height.equalTo(newHeight)
+                    }
+                    self.imageView.image = image
+                case .noImage:
+                    self.isHidden = true
                     self.OWSnp.updateConstraints { make in
                         make.height.equalTo(0)
                     }
-                }
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.imageOutput
-            .bind(to: imageView.rx.image)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.imageOutput
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] image in
-                guard let self = self else { return }
-                let ratio = image.size.width / image.size.height
-                let newHeight = self.imageView.frame.width / ratio
-                self.OWSnp.updateConstraints { make in
-                    make.height.equalTo(newHeight)
                 }
             })
             .disposed(by: disposeBag)
