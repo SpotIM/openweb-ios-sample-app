@@ -103,7 +103,7 @@ fileprivate extension OWReportReasonVC {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: currentStyle == .dark), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
 
