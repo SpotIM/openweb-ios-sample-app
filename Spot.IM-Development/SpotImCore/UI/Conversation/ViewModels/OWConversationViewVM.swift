@@ -574,6 +574,8 @@ fileprivate extension OWConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
+        let _isConversationFetched = BehaviorSubject<Bool>(value: false)
+
         let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
@@ -582,6 +584,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let conversationRead):
+                    _isConversationFetched.onNext(true)
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return conversationRead
                 case .error(_):
@@ -1238,16 +1241,22 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        self.servicesProvider.commentUpdaterService()
+        let updatedCommentsObservable = self.servicesProvider.commentUpdaterService()
             .getUpdatedComments(for: postId)
             .flatMap { updateType -> Observable<OWCommentUpdateType> in
                 // Making sure comment cells are visible
-                return commentCellsVmsObservable
-                    .filter { !$0.isEmpty }
+                return _isConversationFetched
+                    .filter { $0 }
                     .take(1)
                     .map { _ in updateType }
             }
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+
+        updatedCommentsObservable
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._isEmpty.onNext(false)
+            })
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
@@ -1520,6 +1529,11 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
             pullToRefresh
+                .observe(on: MainScheduler.instance)
+                .do(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self._isEmpty.onNext(false)
+                })
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
                     self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
