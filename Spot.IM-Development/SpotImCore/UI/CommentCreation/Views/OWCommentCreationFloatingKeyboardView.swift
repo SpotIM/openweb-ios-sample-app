@@ -404,10 +404,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.inputs.ctaTap)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.textViewVM.outputs.textViewText
-            .map { text -> Bool in
-                return !text.isEmpty
-            }
+        viewModel.outputs.ctaEnabled
             .bind(to: ctaButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
