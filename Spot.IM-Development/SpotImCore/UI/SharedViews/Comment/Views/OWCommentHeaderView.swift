@@ -41,10 +41,17 @@ class OWCommentHeaderView: UIView {
     }()
 
     fileprivate lazy var userNameLabel: UILabel = {
-        return UILabel()
-            .userInteractionEnabled(false)
+        let userNameLabel = UILabel()
+            .userInteractionEnabled(true)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteContext))
+            .clipsToBounds(true)
+        userNameLabel.addGestureRecognizer(userNameTapGesture)
+        return userNameLabel
+    }()
+
+    fileprivate lazy var userNameTapGesture: UITapGestureRecognizer = {
+        return UITapGestureRecognizer()
     }()
 
     fileprivate lazy var badgeTagContainer: UIView = {
@@ -209,6 +216,11 @@ fileprivate extension OWCommentHeaderView {
     }
 
     func setupObservers() {
+        userNameTapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.tapUserName)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
             .disposed(by: disposeBag)
