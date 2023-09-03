@@ -150,6 +150,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var ctaEnabled: Observable<Bool> {
         textViewVM.outputs.textViewText
             .map { text -> Bool in
+                if case .edit(comment: let comment) = self.commentType,
+                   let commentText = comment.text?.text,
+                   commentText == text {
+                    return false
+                }
+
                 let adjustedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
                 return !adjustedText.isEmpty
             }
