@@ -274,5 +274,9 @@ fileprivate extension OWCommentHeaderViewModel {
         shouldShowHiddenCommentMessage
             .bind(to: avatarVM.inputs.shouldBlockAvatar)
             .disposed(by: disposedBag)
+
+        userNameTapped
+            .bind(to: avatarVM.inputs.tapAvatar)
+            .disposed(by: disposedBag)
     }
 }
