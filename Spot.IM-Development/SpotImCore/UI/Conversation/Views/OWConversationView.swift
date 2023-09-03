@@ -247,9 +247,10 @@ fileprivate extension OWConversationView {
 
         viewModel.outputs.conversationDataJustReceived
             .observe(on: MainScheduler.instance)
+            .throttle(.milliseconds(200), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.tableView.setContentOffset(.zero, animated: false)
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
             })
             .disposed(by: disposeBag)
 
