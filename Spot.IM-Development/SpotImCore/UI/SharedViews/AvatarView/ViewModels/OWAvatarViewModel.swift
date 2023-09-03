@@ -11,6 +11,7 @@ import RxCocoa
 import UIKit
 
 protocol OWAvatarViewModelingInputs {
+    var tappedUsername: PublishSubject<Void> { get }
     var tapAvatar: PublishSubject<Void> { get }
     var userInput: BehaviorSubject<SPUser?> { get }
     var shouldBlockAvatar: BehaviorSubject<Bool> { get } // showing default avatar image and disable tap
@@ -39,9 +40,12 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     var shouldBlockAvatar = BehaviorSubject<Bool>(value: false)
 
+    var tappedUsername = PublishSubject<Void>()
+
     var tapAvatar = PublishSubject<Void>()
     var avatarTapped: Observable<Void> {
-        Observable.combineLatest(tapAvatar, shouldBlockAvatar)
+        let tapped = Observable.merge(tappedUsername, tapAvatar)
+        return Observable.combineLatest(tapped, shouldBlockAvatar)
             .filter { !$1 }
             .voidify()
     }

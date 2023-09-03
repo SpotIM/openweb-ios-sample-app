@@ -276,7 +276,7 @@ fileprivate extension OWCommentHeaderViewModel {
             .disposed(by: disposedBag)
 
         userNameTapped
-            .bind(to: avatarVM.inputs.tapAvatar)
+            .bind(to: avatarVM.inputs.tappedUsername)
             .disposed(by: disposedBag)
     }
 }
