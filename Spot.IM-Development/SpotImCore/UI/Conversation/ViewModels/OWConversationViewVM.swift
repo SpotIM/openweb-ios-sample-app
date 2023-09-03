@@ -1244,7 +1244,6 @@ fileprivate extension OWConversationViewViewModel {
         let updatedCommentsObservable = self.servicesProvider.commentUpdaterService()
             .getUpdatedComments(for: postId)
             .flatMap { updateType -> Observable<OWCommentUpdateType> in
-                // Making sure comment cells are visible
                 return _isConversationFetched
                     .filter { $0 }
                     .take(1)
