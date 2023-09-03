@@ -23,6 +23,7 @@ class OWCommentHeaderView: UIView {
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
+        static let userNameButtonIdentifier = "comment_header_user_name_button_id"
         static let userNameSubtitleLabelIdentifier = "comment_header_user_name_subtitle_label_id"
         static let badgeTagContainerIdentifier = "comment_header_user_badge_tag_container_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
@@ -42,9 +43,15 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var userNameLabel: UILabel = {
         return UILabel()
-            .userInteractionEnabled(false)
+            .userInteractionEnabled(true)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteContext))
+            .clipsToBounds(true)
+    }()
+
+    fileprivate lazy var userNameButton: UIButton = {
+        return UIButton()
+            .backgroundColor(.clear, state: .normal)
     }()
 
     fileprivate lazy var badgeTagContainer: UIView = {
@@ -159,6 +166,16 @@ fileprivate extension OWCommentHeaderView {
             make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
         }
 
+        userNameLabel.addSubview(userNameButton)
+        userNameButton.OWSnp.makeConstraints { make in
+            // This is done on purpose since using trailing equal to userNameLabel will make the label width 0
+            // Because the userNameLabel is using setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            // See a few lines before
+            make.trailing.equalTo(self)
+            make.top.leading.equalToSuperview()
+            make.height.equalToSuperview()
+        }
+
         addSubview(optionButton)
         optionButton.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.optionButtonSize)
@@ -209,6 +226,10 @@ fileprivate extension OWCommentHeaderView {
     }
 
     func setupObservers() {
+        userNameButton.rx.tap
+            .bind(to: viewModel.inputs.tapUserName)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
             .disposed(by: disposeBag)
@@ -325,6 +346,7 @@ fileprivate extension OWCommentHeaderView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
+        userNameButton.accessibilityIdentifier = Metrics.userNameButtonIdentifier
         badgeTagContainer.accessibilityIdentifier = Metrics.badgeTagContainerIdentifier
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
