@@ -25,6 +25,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
+    var isValidatedContent: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -116,6 +117,26 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var resignFirstResponderCalled: Observable<Void> {
         return resignFirstResponder
             .asObservable()
+    }
+
+    var isValidatedContent: Observable<Bool> {
+        return Observable.combineLatest(
+            commentContent,
+            imagePreviewVM.outputs.isUploadingImageObservable
+        )
+        .map { [weak self] commentContent, isUploadingImage -> Bool in
+            guard let self = self else { return false }
+
+            // Invalidate in case original text in edit mode
+            if case .edit(comment: let comment) = self.commentCreationType,
+               let commentText = comment.text?.text,
+               commentText == commentContent.text {
+                return false
+            }
+
+            // Validate / invalidate according to content and uploading image state
+            return commentContent.hasContent() && !isUploadingImage
+        }
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,
