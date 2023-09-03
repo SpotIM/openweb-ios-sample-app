@@ -16,6 +16,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
+        static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -247,7 +248,7 @@ fileprivate extension OWConversationView {
 
         viewModel.outputs.conversationDataJustReceived
             .observe(on: MainScheduler.instance)
-            .throttle(.milliseconds(200), scheduler: MainScheduler.instance)
+            .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
