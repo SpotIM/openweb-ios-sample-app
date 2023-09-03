@@ -195,6 +195,11 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.shouldShowConversationEmptyState
+            .map { !$0 }
+            .bind(to: conversationEmptyStateView.rx.isHidden)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
