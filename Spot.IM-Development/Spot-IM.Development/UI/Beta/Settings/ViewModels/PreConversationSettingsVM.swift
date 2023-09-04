@@ -207,8 +207,8 @@ class PreConversationSettingsVM: PreConversationSettingsViewModeling,
 fileprivate extension PreConversationSettingsVM {
     func setupObservers() {
         customStyleModeObservable
-            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
             .skip(1)
+            .throttle(.milliseconds(Metrics.delayInsertDataToPersistense), scheduler: MainScheduler.instance)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<OWPreConversationStyle>.preConversationStyle))
             .disposed(by: disposeBag)
