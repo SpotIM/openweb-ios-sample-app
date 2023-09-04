@@ -55,6 +55,7 @@
 		1628A75928EB0E220019B5EC /* OWCommentContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75828EB0E220019B5EC /* OWCommentContentView.swift */; };
 		1628A75D28EB0E770019B5EC /* OWCommentCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75B28EB0E770019B5EC /* OWCommentCreationView.swift */; };
 		1628A75E28EB0E770019B5EC /* OWCommentCreationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1628A75C28EB0E770019B5EC /* OWCommentCreationVC.swift */; };
+		162A67A22AA0D0F2008BD16B /* OWImageOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162A67A12AA0D0F2008BD16B /* OWImageOption.swift */; };
 		162B83532A688BDC002290EE /* OWCommentCreationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B83522A688BDC002290EE /* OWCommentCreationType.swift */; };
 		162B83552A715729002290EE /* OWCloseEditorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B83542A715729002290EE /* OWCloseEditorAlert.swift */; };
 		162B83592A766582002290EE /* OWCachedCommentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162B83582A766582002290EE /* OWCachedCommentKey.swift */; };
@@ -1093,6 +1094,7 @@
 		1628A75828EB0E220019B5EC /* OWCommentContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentContentView.swift; sourceTree = "<group>"; };
 		1628A75B28EB0E770019B5EC /* OWCommentCreationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentCreationView.swift; sourceTree = "<group>"; };
 		1628A75C28EB0E770019B5EC /* OWCommentCreationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVC.swift; sourceTree = "<group>"; };
+		162A67A12AA0D0F2008BD16B /* OWImageOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImageOption.swift; sourceTree = "<group>"; };
 		162B83522A688BDC002290EE /* OWCommentCreationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationType.swift; sourceTree = "<group>"; };
 		162B83542A715729002290EE /* OWCloseEditorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCloseEditorAlert.swift; sourceTree = "<group>"; };
 		162B83582A766582002290EE /* OWCachedCommentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCachedCommentKey.swift; sourceTree = "<group>"; };
@@ -4849,6 +4851,7 @@
 				733170EF2742530000728324 /* SPCommentCreationDTO.swift */,
 				73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */,
 				247C01802805A4D3006A3962 /* OWImageType.swift */,
+				162A67A12AA0D0F2008BD16B /* OWImageOption.swift */,
 				164047A329E41272001DD35B /* OWComment.swift */,
 				8DE52F4929E430F000D3985C /* OWPresentationalModeCompact.swift */,
 				2473A2742A49B7520086B339 /* OWVersion.swift */,
@@ -7201,6 +7204,7 @@
 				445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */,
 				3D08E0A528771B0900E6F1AC /* OWRxTableViewSectionedAnimatedDataSource.swift in Sources */,
 				9E3B8B6929FFB944006BB207 /* OWAdditionalInfoView.swift in Sources */,
+				162A67A22AA0D0F2008BD16B /* OWImageOption.swift in Sources */,
 				24D74AE62A77FA1A00F454D5 /* OWDecoder.swift in Sources */,
 				160E42E42988103D00EDC5A1 /* OWCommentThreadVC.swift in Sources */,
 				24C314822A8A6D9300F22B8C /* OWBIAnalyticAdditionalInfoProtocol.swift in Sources */,

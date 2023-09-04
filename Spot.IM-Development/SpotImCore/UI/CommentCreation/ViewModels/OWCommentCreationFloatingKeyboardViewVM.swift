@@ -24,6 +24,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var avatarViewVM: OWAvatarViewModeling { get }
     var textViewVM: OWTextViewViewModeling { get }
     var ctaIcon: UIImage { get }
+    var ctaEnabled: Observable<Bool> { get }
     var accessoryViewStrategy: OWAccessoryViewStrategy { get }
     var servicesProvider: OWSharedServicesProviding { get }
     var viewableMode: OWViewableMode { get }
@@ -143,6 +144,20 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .map { text -> OWCommentCreationCtaData in ()
                 let commentContent = OWCommentCreationContent(text: text)
                 return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
+            }
+    }
+
+    var ctaEnabled: Observable<Bool> {
+        textViewVM.outputs.textViewText
+            .map { text -> Bool in
+                if case .edit(comment: let comment) = self.commentType,
+                   let commentText = comment.text?.text,
+                   commentText == text {
+                    return false
+                }
+
+                let adjustedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                return !adjustedText.isEmpty
             }
     }
 
