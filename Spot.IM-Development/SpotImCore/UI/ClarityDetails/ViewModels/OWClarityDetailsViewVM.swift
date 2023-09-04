@@ -74,7 +74,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         case .rejected:
             return "Comment rejected"
         case .pending:
-            return "Awaiting review"
+            return OWLocalizationManager.shared.localizedString(key: "Awaiting review")
         }
     }()
 
