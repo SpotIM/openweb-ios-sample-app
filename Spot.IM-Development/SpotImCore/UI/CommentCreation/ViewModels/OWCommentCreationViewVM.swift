@@ -217,6 +217,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     .response
                     .map { response in
                         comment.rawStatus = response["status"]
+                        // TODO: if status is "processing" we should retry according to config
                         return (commentCreationData, comment)
                     }
             }

@@ -133,7 +133,7 @@ enum OWCommentStatus {
             return .rejected
         case .pending, .requireApproval:
             return .pending
-        case .publishAndModerate, .unknown:
+        case .publishAndModerate, .unknown, .approve, .approveAll, .forceApproveAll:
             return .none
         }
     }
