@@ -379,7 +379,7 @@ fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
-        
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
