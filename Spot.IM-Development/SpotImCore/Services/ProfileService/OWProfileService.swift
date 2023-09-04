@@ -37,12 +37,6 @@ class OWProfileService: OWProfileServicing {
         _openProfile
             .asObservable()
     }
-
-    fileprivate var _openPublisherProfile = PublishSubject<String>()
-    var openPublisherProfile: Observable<String> {
-        _openPublisherProfile
-            .asObservable()
-    }
 }
 
 fileprivate extension OWProfileService {
@@ -136,24 +130,6 @@ fileprivate extension OWProfileService {
                 self._openProfile.onNext(OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId))
             })
             .disposed(by: disposeBag)
-
-        // Open publisher profile if needed
-        openProfileTapped
-            .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> String? in
-                switch (profileOptionToUse) {
-                case .publisherProfile(let ssoPublisherId):
-                    return ssoPublisherId
-                default:
-                    return nil
-                }
-            }
-            .unwrap()
-            .subscribe(onNext: { [weak self] ssoPublisherId in
-                guard let self = self else { return }
-                self._openPublisherProfile.onNext(ssoPublisherId)
-            })
-            .disposed(by: disposeBag)
-
     }
 
     func profileUrl(singleUseTicket: String?, userId: String?) -> URL? {
