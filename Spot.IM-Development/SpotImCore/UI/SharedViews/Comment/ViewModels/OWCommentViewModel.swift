@@ -29,6 +29,7 @@ protocol OWCommentViewModelingOutputs {
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
     var shouldHideCommentContent: Observable<Bool> { get }
     var shouldShowCommentStatus: Observable<Bool> { get }
+    var showDisableLayoutView: Observable<Bool> { get }
 
     var comment: OWComment { get }
 }
@@ -94,6 +95,9 @@ class OWCommentViewModel: OWCommentViewModeling,
 
             return status != .none
         }
+    }
+    var showDisableLayoutView: Observable<Bool> {
+        Observable.merge(shouldShowCommentStatus)
     }
 
     func reportCommentLocally() {
