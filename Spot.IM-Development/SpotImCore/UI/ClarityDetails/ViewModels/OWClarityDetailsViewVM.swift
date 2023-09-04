@@ -40,9 +40,11 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
 
     fileprivate let type: OWClarityDetailsType
     fileprivate var disposeBag: DisposeBag
+    fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init(type: OWClarityDetailsType) {
+    init(type: OWClarityDetailsType, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.type = type
+        self.servicesProvider = servicesProvider
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -65,7 +67,6 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             .asObservable()
     }
 
-    // TODO
     var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "community guidelines").lowercased()
 
     lazy var navigationTitle: String = {
@@ -77,7 +78,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         }
     }()
 
-    var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil) // TODO
+    var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
     lazy var topParagraphAttributedStringObservable: Observable<NSAttributedString> = {
         return _topParagraphAttributedString
             .unwrap()
@@ -103,7 +104,6 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }()
 
     // TODO: translations!
-    // TODO: attributed string for guidelines
     lazy var paragraphViewModels: [OWParagraphWithIconViewModeling] = {
         switch type {
         case .rejected:
@@ -142,14 +142,14 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }()
 
     lazy private var accessibilityChange: Observable<Bool> = {
-        OWSharedServicesProvider.shared.appLifeCycle()
+        servicesProvider.appLifeCycle()
             .didChangeContentSizeCategory
             .map { true }
             .startWith(false)
     }()
 
     fileprivate lazy var communityGuidelinesUrl: Observable<URL?> = {
-        let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
+        let configurationService = servicesProvider.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
             .map { [weak self] config -> String? in
@@ -171,7 +171,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
 fileprivate extension OWClarityDetailsViewVM {
     func setupObservers() {
         Observable.combineLatest(
-            OWSharedServicesProvider.shared.themeStyleService().style, // TODO: inject sharedServicesProvider
+            servicesProvider.themeStyleService().style,
             accessibilityChange
         ) { style, _ in
             return style

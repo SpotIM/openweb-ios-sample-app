@@ -69,7 +69,6 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
-    // TODO: real logic
     fileprivate var currentUser: Observable<SPUser> {
         sharedServiceProvider
             .authenticationManager()

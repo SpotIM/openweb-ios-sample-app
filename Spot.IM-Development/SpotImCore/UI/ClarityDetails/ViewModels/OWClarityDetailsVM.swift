@@ -38,11 +38,10 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
 
     fileprivate let type: OWClarityDetailsType
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
-        return OWClarityDetailsViewVM(type: type) // TODO: pass type
+        return OWClarityDetailsViewVM(type: type)
     }()
 
     init(type: OWClarityDetailsType, viewableMode: OWViewableMode) {
-        // TODO: viewable mode for navigation title
         self.type = type
     }
 }
