@@ -32,9 +32,15 @@ class OWLocalCommentDataPopulator: OWLocalCommentDataPopulating {
             updatedComment.parentId = originComment.id
             updatedComment.rootComment = originComment.rootComment
             updatedComment.depth = (originComment.depth ?? 0) + 1
-        case .edit:
+        case .edit(let originComment):
+            updatedComment.parentId = originComment.parentId
+            updatedComment.rootComment = originComment.rootComment
+            updatedComment.depth = originComment.depth
+            updatedComment.repliesCount = originComment.repliesCount
+            updatedComment.totalRepliesCount = originComment.totalRepliesCount
+            updatedComment.offset = originComment.offset
             updatedComment.setIsEdited(true)
-        default:
+        case .comment:
             updatedComment.rootComment = updatedComment.id
             updatedComment.depth = 0
         }
