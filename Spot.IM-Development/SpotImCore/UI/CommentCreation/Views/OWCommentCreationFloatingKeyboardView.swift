@@ -29,8 +29,6 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let userAvatarBottomPadding: CGFloat = 12
         static let userAvatarSize: CGFloat = 40
         static let textViewHorizontalPadding: CGFloat = 10
-        static let textViewTopPadding: CGFloat = 11
-        static let textViewBottomPadding: CGFloat = 12
         static let ctaButtonHorizontalPadding: CGFloat = 5
         static let closeCrossIcon = "closeCrossIcon"
         static let editImageIcon = "commentCreationEditIcon"
@@ -49,6 +47,10 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
+
+        // Warning, make sure that these parameters are identical in OWCommentCreationEntryView
+        static let textViewTopPadding: CGFloat = 11
+        static let textViewBottomPadding: CGFloat = 12
     }
 
     fileprivate var keyboardWasHidden = true
