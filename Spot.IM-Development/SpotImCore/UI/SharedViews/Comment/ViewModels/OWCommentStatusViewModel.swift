@@ -15,7 +15,7 @@ protocol OWCommentStatusViewModelingInputs {
 }
 
 protocol OWCommentStatusViewModelingOutputs {
-    var iconImage: Observable<UIImage?> { get } // TODO: not null?
+    var iconImage: Observable<UIImage> { get }
     var messageAttributedText: Observable<NSAttributedString> { get }
     var learnMoreClickableString: String { get }
     var learnMoreClicked: Observable<OWClarityDetailsType> { get }
@@ -47,7 +47,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             .asObservable()
     }()
 
-    lazy var iconImage: Observable<UIImage?> = {
+    lazy var iconImage: Observable<UIImage> = {
         Observable.combineLatest(
             status,
             sharedServicesProvider.themeStyleService().style) { [weak self] status, _ in
@@ -57,6 +57,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
                 }
             }
+            .unwrap()
     }()
 
     let learnMoreClickableString = OWLocalizationManager.shared.localizedString(key: "Learn more")
