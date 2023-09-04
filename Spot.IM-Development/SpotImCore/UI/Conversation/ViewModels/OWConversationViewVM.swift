@@ -1043,13 +1043,13 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
@@ -1145,6 +1145,7 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] _, currentSort in
                 self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
 
