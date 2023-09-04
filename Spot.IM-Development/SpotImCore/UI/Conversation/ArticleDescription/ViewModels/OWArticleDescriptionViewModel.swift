@@ -65,14 +65,14 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
             .asObservable()
     }
 
-    fileprivate let _article = BehaviorSubject<OWArticleExtraData?>(value: nil)
-    fileprivate lazy var article: Observable<OWArticleExtraData> = {
-        self._article
+    fileprivate let _articleExtraData = BehaviorSubject<OWArticleExtraData?>(value: nil)
+    fileprivate lazy var articleExtraData: Observable<OWArticleExtraData> = {
+        self._articleExtraData
             .unwrap()
     }()
 
     var conversationImageType: Observable<OWImageType> {
-        self.article
+        self.articleExtraData
             .map {
                 if let url = $0.thumbnailUrl {
                     return .custom(url: url)
@@ -82,12 +82,12 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
     }
 
     var conversationTitle: Observable<String> {
-        self.article
+        self.articleExtraData
             .map { $0.title }
     }
 
     var conversationAuthor: Observable<String> {
-        self.article
+        self.articleExtraData
             .map { $0.subtitle }
             .unwrap()
             .map { $0.uppercased() }
@@ -122,8 +122,8 @@ fileprivate extension OWArticleDescriptionViewModel {
 
         servicesProvider
             .activeArticleService()
-            .newArticle
-            .bind(to: _article)
+            .articleExtraData
+            .bind(to: _articleExtraData)
             .disposed(by: disposeBag)
     }
 }

@@ -157,8 +157,7 @@ fileprivate extension OWManager {
             .subscribe(onNext: { [weak self] postId in
                 self?.servicesProvider
                     .activeArticleService()
-                    .newPost
-                    .onNext(postId)
+                    .updatePost(postId)
             })
             .disposed(by: disposeBag)
     }

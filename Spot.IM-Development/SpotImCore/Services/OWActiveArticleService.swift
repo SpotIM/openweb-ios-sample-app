@@ -9,9 +9,9 @@
 import RxSwift
 
 protocol OWActiveArticleServicing {
-    var newArticle: Observable<OWArticleExtraData> { get }
+    var articleExtraData: Observable<OWArticleExtraData> { get }
     func updateStrategy(_ strategy: OWArticleInformationStrategy)
-    var newPost: PublishSubject<OWSpotId> { get }
+    func updatePost(_ post: OWPostId)
 }
 
 class OWActiveArticleService: OWActiveArticleServicing {
@@ -19,7 +19,7 @@ class OWActiveArticleService: OWActiveArticleServicing {
     fileprivate let _strategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
     fileprivate let _serverArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData())
 
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate var disposeBag: DisposeBag
 
     init(servicesProvider: OWSharedServicesProviding) {
@@ -28,9 +28,9 @@ class OWActiveArticleService: OWActiveArticleServicing {
         setupObservers()
     }
 
-    var newPost = PublishSubject<OWSpotId>()
+    fileprivate var newPost = PublishSubject<OWPostId>()
 
-    var newArticle: Observable<OWArticleExtraData> {
+    var articleExtraData: Observable<OWArticleExtraData> {
         return Observable.combineLatest(_serverArticle, _strategy) { serverArticle, strategy in
             switch strategy {
             case .server:
@@ -45,6 +45,10 @@ class OWActiveArticleService: OWActiveArticleServicing {
 
     func updateStrategy(_ strategy: OWArticleInformationStrategy) {
         _strategy.onNext(strategy)
+    }
+
+    func updatePost(_ post: OWPostId) {
+        newPost.onNext(post)
     }
 }
 

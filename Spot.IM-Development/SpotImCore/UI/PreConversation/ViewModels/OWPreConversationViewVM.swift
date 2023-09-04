@@ -378,6 +378,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
+        
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -1040,7 +1042,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         servicesProvider
             .activeArticleService()
-            .newArticle
+            .articleExtraData
             .subscribe(onNext: { [weak self] article in
                 self?.articleUrl = article.url.absoluteString
             })

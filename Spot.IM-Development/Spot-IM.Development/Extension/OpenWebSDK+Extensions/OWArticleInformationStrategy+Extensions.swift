@@ -13,11 +13,11 @@ import SpotImCore
 
 extension OWArticleInformationStrategy {
     static func articleInformationStrategy(fromIndex index: Int) -> OWArticleInformationStrategy {
-        let article = OWArticle.stub()
         switch index {
         case OWArticleInformationStrategy.server.index:
             return .server
         case OWArticleInformationStrategy.local(data: OWArticleExtraData()).index:
+            let article = OWArticle.stub()
             return article.articleInformationStrategy
         default:
             return `default`
