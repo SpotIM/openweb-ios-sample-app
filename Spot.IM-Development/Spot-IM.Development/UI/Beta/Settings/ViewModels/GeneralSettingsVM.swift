@@ -320,9 +320,9 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var articleInformationStrategySettings: [String] = {
         let _server = NSLocalizedString("Server", comment: "")
-        let _custom = NSLocalizedString("Custom", comment: "")
+        let _local = NSLocalizedString("Local", comment: "")
 
-        return [_server, _custom]
+        return [_server, _local]
     }()
 
     lazy var elementsCustomizationStyleSettings: [String] = {

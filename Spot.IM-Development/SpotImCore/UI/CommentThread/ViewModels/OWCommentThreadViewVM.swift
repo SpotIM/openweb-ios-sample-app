@@ -356,6 +356,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
+
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
@@ -1106,7 +1108,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         servicesProvider
             .activeArticleService()
-            .newArticle
+            .articleExtraData
             .subscribe(onNext: { [weak self] article in
                 self?.articleUrl = article.url.absoluteString
             })

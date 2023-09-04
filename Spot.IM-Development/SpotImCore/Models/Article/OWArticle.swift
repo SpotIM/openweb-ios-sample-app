@@ -24,8 +24,8 @@ struct OWArticle: OWArticleProtocol {
     let articleInformationStrategy: OWArticleInformationStrategy
     let additionalSettings: OWArticleSettingsProtocol
 
-    public init(articleInformationStrategy: OWArticleInformationStrategy,
-                additionalSettings: OWArticleSettingsProtocol) {
+    init(articleInformationStrategy: OWArticleInformationStrategy,
+         additionalSettings: OWArticleSettingsProtocol) {
         self.articleInformationStrategy = articleInformationStrategy
         self.additionalSettings = additionalSettings
     }
