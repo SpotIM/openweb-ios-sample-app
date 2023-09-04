@@ -18,11 +18,12 @@ class OWCommentCreationEntryView: UIView {
         static let labelInsetTop: CGFloat = 11
         static let labelInsetBottom: CGFloat = 10
         static let labelInsetHorizontal: CGFloat = 15
-
-        static let margins: UIEdgeInsets = UIEdgeInsets(top: 11, left: 0, bottom: 12, right: 0)
-
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
+
+        // Warning, make sure that these parameters are identical in OWCommentCreationFloatingKeyboardView
+        static let textViewTopPadding: CGFloat = 11
+        static let textViewBottomPadding: CGFloat = 12
     }
 
     fileprivate lazy var userAvatarView: OWAvatarView = {
@@ -96,8 +97,8 @@ fileprivate extension OWCommentCreationEntryView {
         }
 
         labelContainer.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().inset(Metrics.margins.top)
-            make.bottom.equalToSuperview().inset(Metrics.margins.bottom)
+            make.top.equalToSuperview().inset(Metrics.textViewTopPadding)
+            make.bottom.equalToSuperview().inset(Metrics.textViewBottomPadding)
             make.trailing.equalToSuperview()
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
