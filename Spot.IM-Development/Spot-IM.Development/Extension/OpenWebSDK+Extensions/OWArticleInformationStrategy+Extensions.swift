@@ -16,7 +16,7 @@ extension OWArticleInformationStrategy {
         switch index {
         case OWArticleInformationStrategy.server.index:
             return .server
-        case OWArticleInformationStrategy.local(data: OWArticleExtraData()).index:
+        case OWArticleInformationStrategy.local(data: OWArticleExtraData.empty).index:
             let article = OWArticle.stub()
             return article.articleInformationStrategy
         default:

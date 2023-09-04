@@ -17,7 +17,7 @@ protocol OWActiveArticleServicing {
 class OWActiveArticleService: OWActiveArticleServicing {
 
     fileprivate let _strategy = BehaviorSubject<OWArticleInformationStrategy>(value: .server)
-    fileprivate let _serverArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData())
+    fileprivate let _serverArticle = BehaviorSubject<OWArticleExtraData>(value: OWArticleExtraData.empty)
 
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate var disposeBag: DisposeBag

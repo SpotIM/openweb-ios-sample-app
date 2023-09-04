@@ -61,6 +61,7 @@
 "FullScreen" = "Full Screen";
 "PageSheet" = "Page Sheet";
 "Server" = "Server";
+"Local" = "Local";
 "Best" = "Best";
 "Newest" = "Newest";
 "Oldest" = "Oldest";

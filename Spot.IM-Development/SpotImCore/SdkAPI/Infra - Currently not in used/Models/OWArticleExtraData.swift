@@ -21,13 +21,6 @@ public struct OWArticleExtraData: Codable {
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
     }
-
-    public init() {
-        self.url = URL(fileURLWithPath: "")
-        self.title = ""
-        self.subtitle = nil
-        self.thumbnailUrl = nil
-    }
 }
 
 #else
@@ -42,13 +35,6 @@ struct OWArticleExtraData: Codable {
         self.title = title
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
-    }
-
-    init() {
-        self.url = URL(fileURLWithPath: "")
-        self.title = ""
-        self.subtitle = nil
-        self.thumbnailUrl = nil
     }
 }
 #endif
