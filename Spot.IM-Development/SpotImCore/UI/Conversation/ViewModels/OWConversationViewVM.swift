@@ -49,7 +49,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openProfile: Observable<URL> { get }
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
-    var openClarityDetails: Observable<OWClarityDetailsType> { get } // TODO: type
+    var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var conversationDataJustReceived: Observable<Void> { get }

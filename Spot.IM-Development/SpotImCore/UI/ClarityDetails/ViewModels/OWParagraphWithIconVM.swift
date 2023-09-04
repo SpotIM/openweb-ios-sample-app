@@ -52,14 +52,22 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
     }
 
     fileprivate lazy var accessibilityChange: Observable<Bool> = {
-        OWSharedServicesProvider.shared.appLifeCycle()
+        servicesProvider.appLifeCycle()
             .didChangeContentSizeCategory
             .map { true }
             .startWith(false)
     }()
 
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var disposeBag: DisposeBag
-    init(icon: UIImage?, text: String, communityGuidelinesClickable: Bool = false) {
+
+    init(
+        icon: UIImage?,
+        text: String,
+        communityGuidelinesClickable: Bool = false,
+        servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
+    ) {
+        self.servicesProvider = servicesProvider
         self.icon = icon
         self.text = text
         self.communityGuidelinesClickable = communityGuidelinesClickable
@@ -72,7 +80,7 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
 fileprivate extension OWParagraphWithIconVM {
     func setupObservers() {
         Observable.combineLatest(
-            OWSharedServicesProvider.shared.themeStyleService().style, // TODO: inject sharedServicesProvider
+            servicesProvider.themeStyleService().style,
             accessibilityChange
         ) { style, _ in
             return style

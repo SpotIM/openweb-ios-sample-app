@@ -37,7 +37,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     }()
     fileprivate let ClarityDetailsPopped = PublishSubject<Void>()
     let presentationalMode: OWPresentationalModeCompact
-//    var clarityDetailsView: UIView?
 
     init(type: OWClarityDetailsType,
          router: OWRoutering? = nil,
@@ -52,7 +51,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
         guard let router = router else { return .empty() }
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(type: type, viewableMode: .partOfFlow)
-//        , presentMode: self.presentationalMode TODO: is it needed?
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
         if router.isEmpty() {
@@ -125,7 +123,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         setupViewActionsCallbacks(forViewModel: clarityDetailsViewVM)
 
         let clarityDetailsView = OWClarityDetailsView(viewModel: clarityDetailsViewVM)
-//        self.clarityDetailsView = clarityDetailsView
         return .just(clarityDetailsView)
     }
 }
@@ -133,7 +130,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 fileprivate extension OWClarityDetailsCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWClarityDetailsViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
-        // TODO: cancel, exit, communityGuidelines
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let dismissView = viewModel.outputs.dismissView
@@ -144,6 +140,5 @@ fileprivate extension OWClarityDetailsCoordinator {
                 self?.viewActionsService.append(viewAction: viewActionType)
             })
             .disposed(by: disposeBag)
-
     }
 }
