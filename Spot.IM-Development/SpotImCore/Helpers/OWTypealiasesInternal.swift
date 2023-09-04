@@ -11,5 +11,5 @@ import UIKit
 
 typealias OWUISource = UIView
 typealias OWConversationCountersResponse = [String: [String: SPConversationCounters]]
-typealias OWCommentStatusResponse = [String: String]
+typealias OWCommentStatusResponse = [String: String] // TODO: propper response
 typealias OWSingleUseTokenResponse = [String: String]
