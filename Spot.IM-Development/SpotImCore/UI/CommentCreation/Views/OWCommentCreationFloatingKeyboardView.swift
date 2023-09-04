@@ -47,10 +47,6 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
-
-        // Warning, make sure that these parameters are identical in OWCommentCreationEntryView
-        static let textViewTopPadding: CGFloat = 11
-        static let textViewBottomPadding: CGFloat = 12
     }
 
     fileprivate var keyboardWasHidden = true
@@ -293,8 +289,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         textViewObject.OWSnp.makeConstraints { make in
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.top.equalToSuperview().inset(Metrics.textViewTopPadding)
-            make.bottom.equalToSuperview().inset(Metrics.textViewBottomPadding)
+            make.top.equalToSuperview().inset(OWCommentCreationEntryView.TextViewMetrics.textViewTopPadding)
+            make.bottom.equalToSuperview().inset(OWCommentCreationEntryView.TextViewMetrics.textViewBottomPadding)
         }
 
         if let toolbar = toolbar {
