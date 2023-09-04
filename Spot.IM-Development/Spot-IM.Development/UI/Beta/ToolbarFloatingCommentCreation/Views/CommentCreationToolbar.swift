@@ -29,7 +29,7 @@ class CommentCreationToolbar: UIView {
 
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.showsHorizontalScrollIndicator = false
-
+        collection.backgroundColor = .clear
         collection.register(cellClass: ToolbarCollectionCell.self)
         return collection
     }()
