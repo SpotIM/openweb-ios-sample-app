@@ -22,7 +22,6 @@ protocol OWCommentingCTAViewModelingOutputs {
     var shouldShowCommentingReadOnly: Observable<Bool> { get }
     var openProfile: Observable<URL> { get }
     var commentCreationTapped: Observable<Void> { get }
-    var openPublisherProfile: Observable<String> { get }
     var shouldShowView: Observable<Bool> { get }
 }
 
@@ -101,12 +100,6 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
             .asObserver()
     }
 
-    fileprivate let _openPublisherProfile = PublishSubject<String>()
-    var openPublisherProfile: Observable<String> {
-        _openPublisherProfile
-            .asObserver()
-    }
-
     fileprivate let _commentCreationTap = PublishSubject<Void>()
     var commentCreationTapped: Observable<Void> {
         _commentCreationTap
@@ -114,10 +107,13 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
     }
 
     fileprivate let imageProvider: OWImageProviding
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageProvider = imageProvider
+        self.servicesProvider = servicesProvider
         setupObservers()
     }
 }
@@ -143,26 +139,11 @@ fileprivate extension OWCommentingCTAViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment creation entry avatar click
-        commentCreationEntryViewModel
-            .outputs
-            .avatarViewVM
-            .outputs
+        servicesProvider.profileService()
             .openProfile
-            .subscribe(onNext: { [weak self] url, _ in
+            .subscribe(onNext: { [weak self] openProfileData in
                 guard let self = self else { return }
-                self._openProfile.onNext(url)
-            })
-            .disposed(by: disposeBag)
-
-        // Responding to open publisher profile
-        commentCreationEntryViewModel
-            .outputs
-            .avatarViewVM
-            .outputs
-            .openPublisherProfile
-            .subscribe(onNext: { [weak self] id in
-                guard let self = self else { return }
-                self._openPublisherProfile.onNext(id)
+                self._openProfile.onNext(openProfileData.url)
             })
             .disposed(by: disposeBag)
     }

@@ -29,7 +29,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
-    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
     }()
@@ -40,12 +40,12 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     init(router: OWRoutering! = nil,
          preConversationData: OWPreConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
-         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager(),
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          viewableMode: OWViewableMode) {
         self.router = router
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
-        self.authenticationManager = authenticationManager
+        self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
     }
 
@@ -164,8 +164,11 @@ fileprivate extension OWPreConversationCoordinator {
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }
 
-        let openPublisherProfile = viewModel.outputs.openPublisherProfile
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+        let openPublisherProfile = servicesProvider.profileService().openProfile
+            .map { openProfileData in
+                OWViewActionCallbackType.openPublisherProfile(userId: openProfileData.userId)
+            }
+            .asObservable()
 
         let openReportReason = viewModel.outputs.openReportReason
             .map { commentVM -> OWViewActionCallbackType in

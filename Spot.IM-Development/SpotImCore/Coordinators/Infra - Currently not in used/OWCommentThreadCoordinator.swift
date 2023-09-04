@@ -31,6 +31,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
+    fileprivate var servicesProvider: OWSharedServicesProviding
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
     }()
@@ -38,7 +39,11 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         return OWCustomizationsService(viewSourceType: .commentThread)
     }()
 
-    init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil,
+         commentThreadData: OWCommentThreadRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
         self.router = router
         self.commentThreadData = commentThreadData
         self.actionsCallbacks = actionsCallbacks
@@ -187,10 +192,13 @@ fileprivate extension OWCommentThreadCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let openPublisherProfile = viewModel.outputs.openPublisherProfile
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+        let openPublisherProfile = servicesProvider.profileService().openProfile
+            .map { openProfileData in
+                OWViewActionCallbackType.openPublisherProfile(userId: openProfileData.userId)
+            }
+            .asObservable()
 
-        Observable.merge(openPublisherProfile)
+        openPublisherProfile
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
