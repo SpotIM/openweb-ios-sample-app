@@ -327,11 +327,11 @@ fileprivate extension OWConversationCoordinator {
             .outputs.closeConversation
             .map { OWViewActionCallbackType.closeConversationPressed }
 
-        let openPublisherProfile = Observable.merge(
-            viewModel.outputs.openPublisherProfile,
-            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
-        )
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+        let openPublisherProfile = servicesProvider.profileService().openProfile
+            .map { openProfileData in
+                OWViewActionCallbackType.openPublisherProfile(userId: openProfileData.userId)
+            }
+            .asObservable()
 
         let openReportReason = viewModel.outputs.openReportReason
             .map { commentVM -> OWViewActionCallbackType in
@@ -340,7 +340,9 @@ fileprivate extension OWConversationCoordinator {
                 return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
-        Observable.merge(closeConversationPressed, openPublisherProfile, openReportReason)
+        Observable.merge(closeConversationPressed,
+                         openPublisherProfile,
+                         openReportReason)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
