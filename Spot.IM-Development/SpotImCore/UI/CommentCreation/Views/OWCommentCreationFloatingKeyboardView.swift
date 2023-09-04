@@ -38,7 +38,6 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let ctaButtonSize: CGFloat = 35
         static let ctaButtonImageSize: CGFloat = 24
         static let closeHeaderDuration = 0.2 // seconds
-        static let delayCloseDuration = 400 // miliseconds
         static let toolbarAnimationMilisecondsDuration = 400 // miliseconds
         static let toolbarAnimationSecondsDuration = CGFloat(toolbarAnimationMilisecondsDuration) / 1000 // seconds
         static let delayKeyboard = 0 // No delay
@@ -385,7 +384,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .observe(on: MainScheduler.instance)
-            .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
+            .delay(.milliseconds((toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
@@ -396,7 +395,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
         viewModel.outputs.closedWithDelay
             .observe(on: MainScheduler.instance)
-            .delay(.milliseconds(Metrics.delayCloseDuration + (toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
+            .delay(.milliseconds((toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration)), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
