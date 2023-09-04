@@ -25,6 +25,11 @@ class OWCommentView: UIView {
     fileprivate lazy var commentStatusView: OWCommentStatusView = {
         return OWCommentStatusView()
     }()
+    fileprivate lazy var disableLayoutView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
+            .alpha(0.5)
+    }()
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
@@ -81,6 +86,12 @@ fileprivate extension OWCommentView {
             commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.addSubview(disableLayoutView)
+        disableLayoutView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(commentStatusView.OWSnp.bottom)
+        }
+
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -110,6 +121,7 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
+        self.bringSubviewToFront(disableLayoutView)
     }
 
     func setupObservers() {
@@ -139,6 +151,20 @@ fileprivate extension OWCommentView {
                 }
                 self.commentStatusView.isHidden = !shouldShow
                 self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
+            })
+            .disposed(by: disposedBag)
+
+        viewModel.outputs.showDisableLayoutView
+            .map { !$0 }
+            .bind(to: disableLayoutView.rx.isHidden)
+            .disposed(by: disposedBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+
+                self.disableLayoutView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposedBag)
     }
