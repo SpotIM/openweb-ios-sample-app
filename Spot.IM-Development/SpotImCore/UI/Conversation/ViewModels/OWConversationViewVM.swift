@@ -546,6 +546,8 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -1532,7 +1534,7 @@ fileprivate extension OWConversationViewViewModel {
 
             servicesProvider
                 .activeArticleService()
-                .newArticle
+                .articleExtraData
                 .subscribe(onNext: { [weak self] article in
                     self?.articleUrl = article.url.absoluteString
                 })

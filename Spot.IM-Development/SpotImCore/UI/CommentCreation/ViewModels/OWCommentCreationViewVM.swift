@@ -288,6 +288,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
+
         if case .floatingKeyboard = commentCreationData.settings.commentCreationSettings.style {
             commentCreationFloatingKeyboardViewVm.outputs.resetTypeToNewCommentChanged
                 .subscribe(onNext: { [weak self] _ in
@@ -402,7 +404,7 @@ fileprivate extension OWCommentCreationViewViewModel {
 
         servicesProvider
             .activeArticleService()
-            .newArticle
+            .articleExtraData
             .subscribe(onNext: { [weak self] article in
                 self?.articleUrl = article.url.absoluteString
             })
