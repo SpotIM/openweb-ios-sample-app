@@ -12,6 +12,7 @@ import UIKit
 
 protocol OWCommentStatusViewModelingInputs {
     var learnMoreTap: PublishSubject<Void> { get }
+    func updateStatus(for: OWComment)
 }
 
 protocol OWCommentStatusViewModelingOutputs {
@@ -19,6 +20,7 @@ protocol OWCommentStatusViewModelingOutputs {
     var messageAttributedText: Observable<NSAttributedString> { get }
     var learnMoreClickableString: String { get }
     var learnMoreClicked: Observable<OWClarityDetailsType> { get }
+    var status: Observable<OWCommentStatus> { get }
 }
 
 protocol OWCommentStatusViewModeling {
@@ -42,7 +44,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
         _status.onNext(status)
     }
 
-    fileprivate lazy var status: Observable<OWCommentStatus> = {
+    lazy var status: Observable<OWCommentStatus> = {
         self._status
             .asObservable()
     }()
@@ -118,6 +120,11 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             }
             .unwrap()
             .asObservable()
+    }
+
+    func updateStatus(for comment: OWComment) {
+        let newStatus = OWCommentStatus.commentStatus(from: comment.status)
+        self._status.onNext(newStatus)
     }
 }
 

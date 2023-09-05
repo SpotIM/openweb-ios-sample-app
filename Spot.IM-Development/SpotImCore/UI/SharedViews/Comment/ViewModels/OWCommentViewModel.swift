@@ -83,9 +83,9 @@ class OWCommentViewModel: OWCommentViewModeling,
             }
             .unwrap()
     }
-    fileprivate let _commentStatus = BehaviorSubject<OWCommentStatus>(value: .none)
+
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(_commentStatus, currentUser) { [weak self] status, user in
+        Observable.combineLatest(commentStatusVM.outputs.status, currentUser) { [weak self] status, user in
             guard let self = self,
                   let currentUserId = user.userId,
                   let commentUserId = self.comment.userId,
@@ -118,6 +118,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     func updateEditedCommentLocally(updatedComment: OWComment) {
         self.comment = updatedComment
         self.contentVM.inputs.updateEditedCommentLocally(updatedComment)
+        self.commentStatusVM.inputs.updateStatus(for: updatedComment)
         self.commentLabelsContainerVM.inputs.updateEditedCommentLocally(updatedComment)
     }
 
@@ -125,7 +126,6 @@ class OWCommentViewModel: OWCommentViewModeling,
         self.sharedServiceProvider = sharedServiceProvider
         let status = OWCommentStatus.commentStatus(from: data.comment.status)
         commentStatusVM = OWCommentStatusViewModel(status: status)
-        _commentStatus.onNext(status)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
