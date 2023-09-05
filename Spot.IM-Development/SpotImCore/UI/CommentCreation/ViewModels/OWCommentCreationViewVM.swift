@@ -204,12 +204,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 }
             }
             .unwrap()
-            .do(onNext: { [weak self] arg0 in
-                var (_, comment) = arg0
-                self?.servicesProvider
-                    .commentStatusUpdaterService()
-                    .fetchStatusFor(comment: comment)
-            })
 
         let prepareLocalCommentObservable = commentCreationNetworkObservable
             .do(onNext: { [weak self] _ in
@@ -284,6 +278,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     .map { _ -> OWComment in
                         return comment
                     }
+            })
+            .do(onNext: { [weak self] comment in
+                self?.servicesProvider
+                    .commentStatusUpdaterService()
+                    .fetchStatusFor(comment: comment)
             })
             .share()
     }()
