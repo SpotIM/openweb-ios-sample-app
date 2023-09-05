@@ -14,7 +14,7 @@ import UIKit
 typealias OWRangeURLsMapper = [NSRange: URL]
 
 protocol OWCommentTextViewModelingInputs {
-    func updateEditedCommentLocally(_ comment: OWComment)
+    func update(comment: OWComment)
     var width: BehaviorSubject<CGFloat> { get }
     var labelClickIndex: PublishSubject<Int> { get }
     func shouldTapBeHandeled(at index: Int) -> Bool
@@ -60,7 +60,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         setupObservers()
     }
 
-    func updateEditedCommentLocally(_ comment: OWComment) {
+    func update(comment: OWComment) {
         _comment.onNext(comment)
     }
 
