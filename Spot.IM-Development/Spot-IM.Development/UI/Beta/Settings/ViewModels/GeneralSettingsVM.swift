@@ -25,6 +25,7 @@ protocol GeneralSettingsViewModelingInputs {
     var fontGroupTypeSelectedIndex: BehaviorSubject<Int> { get }
     var customFontGroupSelectedName: BehaviorSubject<String> { get }
     var articleAssociatedSelectedURL: PublishSubject<String> { get }
+    var articleSelectedSection: PublishSubject<String> { get }
     var languageStrategySelectedIndex: BehaviorSubject<Int> { get }
     var languageSelectedName: BehaviorSubject<String> { get }
     var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
@@ -33,6 +34,7 @@ protocol GeneralSettingsViewModelingInputs {
 protocol GeneralSettingsViewModelingOutputs {
     var title: String { get }
     var articleURLTitle: String { get }
+    var articleSectionTitle: String { get }
     var readOnlyTitle: String { get }
     var readOnlySettings: [String] { get }
     var themeModeTitle: String { get }
@@ -59,6 +61,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var customFontGroupTypeName: Observable<String> { get }
     var showCustomFontName: Observable<Bool> { get }
     var articleAssociatedURL: Observable<String> { get }
+    var articleSection: Observable<String> { get }
     var shouldShowArticleURL: Observable<Bool> { get }
     var shouldShowSetLanguage: Observable<Bool> { get }
     var supportedLanguageItems: [String] { get }
@@ -105,6 +108,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: 0)
     var customFontGroupSelectedName = BehaviorSubject<String>(value: "")
     var articleAssociatedSelectedURL = PublishSubject<String>()
+    var articleSelectedSection = PublishSubject<String>()
     var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
     var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
@@ -200,6 +204,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var articleAssociatedURL: Observable<String> {
         return userDefaultsProvider.values(key: .articleAssociatedURL)
+    }
+
+    var articleSection: Observable<String> {
+        return userDefaultsProvider.values(key: .articleSection)
     }
 
     var showCustomFontName: Observable<Bool> {
@@ -301,6 +309,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var articleURLTitle: String = {
         return NSLocalizedString("ArticleAssociatedURL", comment: "")
+    }()
+
+    lazy var articleSectionTitle: String = {
+        return NSLocalizedString("ArticleSection", comment: "")
     }()
 
     lazy var readOnlySettings: [String] = {
@@ -515,6 +527,12 @@ fileprivate extension GeneralSettingsVM {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String?>.articleAssociatedURL))
+            .disposed(by: disposeBag)
+
+        articleSelectedSection
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<String?>.articleSection))
             .disposed(by: disposeBag)
 
         themeModeSelectedIndex // 0. default 1. light 2. dark
