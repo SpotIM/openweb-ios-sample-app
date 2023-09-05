@@ -67,6 +67,7 @@
 "Oldest" = "Oldest";
 "InitialSortMode" = "Initial sort mode";
 "ArticleAssociatedURL" = "Article associated URL";
+"ArticleSection" = "Article section";
 "Light" = "Light";
 "Dark" = "Dark";
 "GeneralSettings" = "General:";

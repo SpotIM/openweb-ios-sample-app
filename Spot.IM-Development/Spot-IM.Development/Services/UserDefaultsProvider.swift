@@ -100,6 +100,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case initialSortIndex = "initialSortIndex"
         case fontGroupType = "fontGroupType"
         case articleAssociatedURL = "articleAssociatedURL"
+        case articleSection = "articleSection"
         case preConversationStyle = "preConversationCustomStyle"
         case conversationStyle = "conversationCustomStyleModeSelected"
         case commentCreationStyle = "commentCreationCustomStyleModeSelected"
@@ -159,6 +160,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores initial sort (server, best, newest, oldest)"
         case .articleAssociatedURL:
             return "Key which stores injected article url for easy testing"
+        case .articleSection:
+            return "Key which stores article section for easy testing"
         case .preConversationStyle:
             return "Key which stores pre conversation's style"
         case .conversationStyle:
