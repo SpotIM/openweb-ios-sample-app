@@ -62,6 +62,7 @@ fileprivate extension OWActiveArticleService {
                     .conversation
                     .conversationRead(mode: .default, page: .first)
                     .response
+                    .exponentialRetry(maxAttempts: 3, millisecondsDelay: 1000)
                     .materialize()
             }
             .map { event -> OWConversationReadRM? in
