@@ -55,6 +55,16 @@ class OWActiveArticleService: OWActiveArticleServicing {
 fileprivate extension OWActiveArticleService {
     func setupObservers() {
         newPost
+            .withLatestFrom(_strategy) { _, strategy in
+                return strategy
+            }
+            .filter {
+                if case .server = $0 {
+                    return true
+                } else {
+                    return false
+                }
+            }
             .flatMap { [weak self] _ -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
