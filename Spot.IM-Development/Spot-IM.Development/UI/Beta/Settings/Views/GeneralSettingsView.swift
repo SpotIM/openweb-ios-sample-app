@@ -215,6 +215,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedArticleHeaderStyle)
         stackView.addArrangedSubview(segmentedArticleInformationStrategy)
+        stackView.addArrangedSubview(textFieldArticleURL)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
@@ -227,7 +228,6 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedLanguageStrategy)
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
-        stackView.addArrangedSubview(textFieldArticleURL)
     }
 
     // swiftlint:disable function_body_length
@@ -378,6 +378,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.shouldShowSetLanguage
             .map { !$0 }
             .bind(to: pickerLanguageCode.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowArticleURL
+            .map { !$0 }
+            .bind(to: textFieldArticleURL.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }
