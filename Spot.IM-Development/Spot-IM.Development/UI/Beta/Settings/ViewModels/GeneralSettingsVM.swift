@@ -59,6 +59,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var customFontGroupTypeName: Observable<String> { get }
     var showCustomFontName: Observable<Bool> { get }
     var articleAssociatedURL: Observable<String> { get }
+    var shouldShowArticleURL: Observable<Bool> { get }
     var shouldShowSetLanguage: Observable<Bool> { get }
     var supportedLanguageItems: [String] { get }
     var supportedLanguageTitle: String { get }
@@ -262,6 +263,17 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var shouldShowSetLanguage: Observable<Bool> {
         return languageStrategyIndex
             .map { $0 == 2 }// Set language
+            .asObservable()
+    }
+
+    var shouldShowArticleURL: Observable<Bool> {
+        return articleInformationStrategy
+            .map {
+                switch $0 {
+                case .server: return false
+                case .local(_): return true
+                }
+            }
             .asObservable()
     }
 
