@@ -12,6 +12,7 @@ import UIKit
 
 protocol OWCommentLabelsContainerViewModelingInputs {
     func updateEditedCommentLocally(_ comment: OWComment)
+    func update(comment: OWComment)
 }
 
 protocol OWCommentLabelsContainerViewModelingOutputs {
@@ -55,6 +56,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             _comment.onNext(comment)
         }
         self.setupObservers()
+    }
+
+    func update(comment: OWComment) {
+        _comment.onNext(comment)
     }
 
     func updateEditedCommentLocally(_ comment: OWComment) {
