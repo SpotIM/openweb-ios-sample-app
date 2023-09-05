@@ -352,6 +352,11 @@ fileprivate extension GeneralSettingsView {
             .bind(to: viewModel.inputs.articleAssociatedSelectedURL)
             .disposed(by: disposeBag)
 
+        textFieldArticleSection.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.articleSelectedSection)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.languageStrategyIndex
             .bind(to: segmentedLanguageStrategy.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)

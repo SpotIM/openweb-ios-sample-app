@@ -77,8 +77,6 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func mockArticle() -> OWArticleProtocol {
-        let articleStub = OWArticle.stub()
-
         let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
                                                                                                            defaultValue: OWReadOnlyMode.default.index))
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
@@ -87,7 +85,10 @@ class CommonCreatorService: CommonCreatorServicing {
         var persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
                                                                           defaultValue: OWArticleInformationStrategy.default)
 
-        let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
+        let persistenceArticleSection = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
+                                                                          defaultValue: nil)
+
+        let settings = OWArticleSettings(section: persistenceArticleSection ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
