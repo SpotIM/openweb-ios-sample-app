@@ -22,10 +22,10 @@ struct OWDesignColors {
     static let L4: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.30)
     static let L5: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.65)
     static let L6: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 1)
-    static let L9: UIColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1) // Used only in pre conversation compact style
+    static let L1ALT: UIColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1) // Used only in pre conversation compact style
     static let D1: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.20)
     static let D2: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.30)
     static let D3: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.65)
     static let D4: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
-    static let D9: UIColor = UIColor(red: 54/255, green: 54/255, blue: 54/255, alpha: 1) // Used only in pre conversation compact style
+    static let D1ALT: UIColor = UIColor(red: 54/255, green: 54/255, blue: 54/255, alpha: 1) // Used only in pre conversation compact style
 }
