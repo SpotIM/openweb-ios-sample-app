@@ -14,7 +14,7 @@ protocol OWCommentStatusUpdaterServicing {
     func stopUpdating()
 }
 
-class OWCommentStatusUpdaterService {
+class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let scheduler: SchedulerType
     fileprivate var disposeBag: DisposeBag
@@ -26,23 +26,17 @@ class OWCommentStatusUpdaterService {
         self.servicesProvider = servicesProvider
         self.scheduler = scheduler
         self.disposeBag = DisposeBag()
+        self.setupObservers()
     }
 
-    // (retries, interval, timeout)
-    fileprivate var fetchParams: Observable<(Int, Int, Int)> {
-        servicesProvider.spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId)
-            .map { config in
-                guard let conversationConfig = config.conversation else { return }
-                let retries = conversationConfig.statusFetchRetryCount
-                let timeout = conversationConfig.statusFetchTimeoutInMs
-                let interval = conversationConfig.statusFetchIntervalInMs
-            }
-    }
+    // TODO: default values
+    fileprivate var retries: Int = 0
+    fileprivate var timeout: Int = 0
+    fileprivate var interval: Int = 0
 
+    fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
-        // Use OWCommentUpdaterService to update
-
+        _fetchStatusFor.onNext(comment)
     }
 
     func stopUpdating() {
@@ -61,9 +55,43 @@ fileprivate extension OWCommentStatusUpdaterService {
             .response
             .map { response in
                 guard let status = response["status"],
-                      status != "processing" else { return nil }
+                      status != "processing" else {
+                    throw OWError.userStatus // TODO
+                }
                 return status
             }
+            .retry(maxAttempts: retries, millisecondsDelay: interval)
             .unwrap()
+    }
+
+    func setupObservers() {
+        servicesProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .subscribe(onNext: { [weak self] config in
+                guard let self = self,
+                      let convConfig = config.conversation else { return }
+                self.retries = convConfig.statusFetchRetryCount
+                self.interval = convConfig.statusFetchIntervalInMs
+                self.timeout = convConfig.statusFetchTimeoutInMs
+            })
+            .disposed(by: disposeBag)
+
+        _fetchStatusFor
+            .flatMapLatest { [weak self] comment -> Observable<(String, OWComment)> in
+                guard let self = self else { return .empty() }
+                return self.getRawStatus(for: comment)
+                    .map { ($0, comment) }
+            }
+            .subscribe(onNext: { [weak self] (status, comment) in
+                guard let self = self,
+                      let commentId = comment.id,
+                      let postId = OWManager.manager.postId
+                else { return }
+                var newComment = comment
+                newComment.rawStatus = status
+                self.servicesProvider.commentUpdaterService()
+                    .update(.update(commentId: commentId, withComment: newComment), postId: postId)
+            })
+            .disposed(by: disposeBag)
     }
 }
