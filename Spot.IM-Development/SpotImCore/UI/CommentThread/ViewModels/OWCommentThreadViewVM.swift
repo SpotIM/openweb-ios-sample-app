@@ -6,6 +6,8 @@
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import RxSwift
 
