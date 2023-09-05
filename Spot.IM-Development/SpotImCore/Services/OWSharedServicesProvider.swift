@@ -49,6 +49,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
+    func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -192,6 +193,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWPageViewIdHolder()
     }()
 
+    fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
+        return OWCommentStatusUpdaterService(servicesProvider: self)
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -310,6 +315,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func permissionsService() -> OWPermissionsServicing {
         return _permissionsService
+    }
+
+    func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing {
+        return _commentStatusUpdaterService
     }
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
