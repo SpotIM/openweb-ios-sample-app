@@ -28,6 +28,7 @@ class GeneralSettingsView: UIView {
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
         static let textFieldArticleURLIdentifier = "article_url"
+        static let textFieldArticleSectionIdentifier = "article_section"
         static let segmentedLanguageStrategyIdentifier = "language_strategy"
         static let segmentedLocaleStrategyIdentifier = "locale_strategy"
         static let pickerLanguageCodeIdentifier = "language_code"
@@ -153,6 +154,13 @@ class GeneralSettingsView: UIView {
         return txtField
     }()
 
+    fileprivate lazy var textFieldArticleSection: TextFieldSetting = {
+        let txtField = TextFieldSetting(title: viewModel.outputs.articleSectionTitle,
+                                        accessibilityPrefixId: Metrics.textFieldArticleSectionIdentifier,
+                                        font: FontBook.paragraph)
+        return txtField
+    }()
+
     fileprivate lazy var segmentedLanguageStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.languageStrategyTitle
         let items = viewModel.outputs.languageStrategySettings
@@ -216,6 +224,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedArticleHeaderStyle)
         stackView.addArrangedSubview(segmentedArticleInformationStrategy)
         stackView.addArrangedSubview(textFieldArticleURL)
+        stackView.addArrangedSubview(textFieldArticleSection)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
@@ -280,6 +289,10 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.articleAssociatedURL
             .bind(to: textFieldArticleURL.rx.textFieldText)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.articleSection
+            .bind(to: textFieldArticleSection.rx.textFieldText)
             .disposed(by: disposeBag)
 
         segmentedArticleHeaderStyle.rx.selectedSegmentIndex
