@@ -63,7 +63,6 @@ struct SPConfigurationConversation: Decodable {
         disableVoteUp = try? container.decode(Bool.self, forKey: .disableVoteUp)
         disableShareComment = try? container.decode(Bool.self, forKey: .disableShareComment)
         showCommentEditOption = try? container.decode(Bool.self, forKey: .showCommentEditOption)
-        // TODO: check default values?
         statusFetchIntervalInMs = (try? container.decode(Int.self, forKey: .statusFetchIntervalInMs)) ?? 300
         statusFetchTimeoutInMs = (try? container.decode(Int.self, forKey: .statusFetchTimeoutInMs)) ?? 3000
         statusFetchRetryCount = (try? container.decode(Int.self, forKey: .statusFetchRetryCount)) ?? 12
