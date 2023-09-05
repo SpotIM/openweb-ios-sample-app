@@ -29,10 +29,9 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
         self.setupObservers()
     }
 
-    // TODO: default values
-    fileprivate var retries: Int = 0
-    fileprivate var timeout: Int = 0
-    fileprivate var interval: Int = 0
+    fileprivate var retries: Int = 12
+    fileprivate var timeout: Int = 3000
+    fileprivate var interval: Int = 300
 
     fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
@@ -54,9 +53,9 @@ fileprivate extension OWCommentStatusUpdaterService {
             .commentStatus(commentId: commentId)
             .response
             .map { response in
-                guard let status = response["status"],
-                      status != "processing" else {
-                    throw OWError.userStatus // TODO
+                let status = response.status
+                guard status != "processing" else {
+                    throw OWCommentStatusError.processingStatus
                 }
                 return status
             }
@@ -94,4 +93,8 @@ fileprivate extension OWCommentStatusUpdaterService {
             })
             .disposed(by: disposeBag)
     }
+}
+
+enum OWCommentStatusError: Error {
+    case processingStatus
 }
