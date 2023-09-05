@@ -28,8 +28,21 @@ class OWCommentStatusUpdaterService {
         self.disposeBag = DisposeBag()
     }
 
+    // (retries, interval, timeout)
+    fileprivate var fetchParams: Observable<(Int, Int, Int)> {
+        servicesProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config in
+                guard let conversationConfig = config.conversation else { return }
+                let retries = conversationConfig.statusFetchRetryCount
+                let timeout = conversationConfig.statusFetchTimeoutInMs
+                let interval = conversationConfig.statusFetchIntervalInMs
+            }
+    }
+
     func fetchStatusFor(comment: OWComment) {
         // Use OWCommentUpdaterService to update
+
     }
 
     func stopUpdating() {
