@@ -24,7 +24,7 @@ class OWUsersService: OWUsersServicing {
 
     fileprivate var _users = OWUsersMapper()
     fileprivate var disposeBag = DisposeBag()
-    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
