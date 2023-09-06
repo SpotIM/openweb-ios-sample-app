@@ -161,7 +161,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _usersService: OWUsersServicing = {
-        return OWUsersService()
+        return OWUsersService(servicesProvider: self)
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
