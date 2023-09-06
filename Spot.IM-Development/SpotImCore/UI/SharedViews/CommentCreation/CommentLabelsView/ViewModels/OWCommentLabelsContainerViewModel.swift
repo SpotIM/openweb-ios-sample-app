@@ -79,7 +79,12 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             .unwrap()
             .map { [weak self] commentLabelsSectionsConfig in
                 guard let self = self else { return nil }
-                return commentLabelsSectionsConfig[self.section]
+                if let sectionConfig = commentLabelsSectionsConfig[self.section] {
+                    return sectionConfig
+                } else if let defaultSection = commentLabelsSectionsConfig["default"] {
+                    return defaultSection
+                }
+                return nil
             }
             .unwrap()
     }()

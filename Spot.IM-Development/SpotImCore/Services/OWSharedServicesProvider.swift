@@ -44,6 +44,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
+    func activeArticleService() -> OWActiveArticleServicing
     func commentUpdaterService() -> OWCommentUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
@@ -162,7 +163,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _usersService: OWUsersServicing = {
-        return OWUsersService()
+        return OWUsersService(servicesProvider: self)
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
@@ -171,6 +172,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
         return OWCommentCreationRequestsService()
+    }()
+
+    fileprivate lazy var _activeArticleService: OWActiveArticleServicing = {
+        return OWActiveArticleService(servicesProvider: self)
     }()
 
     fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
@@ -299,6 +304,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing {
         return _commentCreationRequestsService
+    }
+
+    func activeArticleService() -> OWActiveArticleServicing {
+        return _activeArticleService
     }
 
     func commentUpdaterService() -> OWCommentUpdaterServicing {
