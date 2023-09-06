@@ -388,15 +388,15 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload // Block animations in the table view
             })
-                .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
-                    guard let self = self else { return .empty() }
-                    return self.servicesProvider
-                        .netwokAPI()
-                        .conversation
-                        .conversationRead(mode: sortOption, page: OWPaginationPage.first)
-                        .response
-                        .materialize() // Required to keep the final subscriber even if errors arrived from the network
-                }
+            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .conversationRead(mode: sortOption, page: OWPaginationPage.first)
+                    .response
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
+            }
 
         let conversationFetchedObservable = viewInitialized
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
@@ -528,27 +528,27 @@ fileprivate extension OWPreConversationViewViewModel {
             .do(onNext: { [weak self] in
                 self?.sendEvent(for: .createCommentCTAClicked)
             })
-                .subscribe(onNext: { [weak self] in
-                    guard let self = self else { return }
-                    self.commentCreationTap.onNext(.comment)
-                })
-                .disposed(by: disposeBag)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.commentCreationTap.onNext(.comment)
+            })
+            .disposed(by: disposeBag)
 
-                // Observable of the comment cell VMs
-                let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
-                .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
-                    let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
-                        if case.comment(let commentCellViewModel) = vm {
-                            return commentCellViewModel
-                        } else {
-                            return nil
+        // Observable of the comment cell VMs
+        let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
+                    .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
+                        let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                            if case.comment(let commentCellViewModel) = vm {
+                                return commentCellViewModel
+                            } else {
+                                return nil
+                            }
                         }
-                    }
                         .unwrap()
 
-                    return Observable.just(commentCellsVms)
-                }
-                .share()
+                         return Observable.just(commentCellsVms)
+                    }
+                    .share()
 
         // Responding to comments which are just reported
         let reportService = servicesProvider.reportedCommentsService()
