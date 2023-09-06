@@ -23,6 +23,11 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         static let buttonRadius: CGFloat = 6
         static let buttomBottomPadding: CGFloat = 36
         static let buttonTextPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+
+        static let identifier = "clarity_details_view_id"
+        static let titleLabelIdentifier = "clarity_details_title_id"
+        static let closeButtonIdentifier = "clarity_details_close_button_id"
+        static let gotItButtonIdentifier = "clarity_details_got_it_button_id"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -111,6 +116,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
 
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -204,5 +210,12 @@ fileprivate extension OWClarityDetailsView {
                 self.bottomParagraphLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        gotItButton.accessibilityIdentifier = Metrics.gotItButtonIdentifier
     }
 }

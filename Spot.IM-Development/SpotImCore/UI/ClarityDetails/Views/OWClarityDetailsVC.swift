@@ -11,11 +11,6 @@ import RxSwift
 import RxCocoa
 
 class OWClarityDetailsVC: UIViewController {
-    fileprivate struct Metrics {
-        static let closeButtonSize: CGFloat = 40
-        static let closeButtonIdentidier = "clarity_details_close_button_id"
-    }
-
     fileprivate lazy var clarityDetailsView: OWClarityDetailsView = {
         return OWClarityDetailsView(viewModel: viewModel.outputs.clarityDetailsViewViewModel)
     }()
