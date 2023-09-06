@@ -107,13 +107,10 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
     }
 
     fileprivate let imageProvider: OWImageProviding
-    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageProvider = imageProvider
-        self.servicesProvider = servicesProvider
         setupObservers()
     }
 }
