@@ -124,7 +124,7 @@ class CommonCreatorService: CommonCreatorServicing {
 
     func getSectionFromPreset(for spotId: String) -> String? {
         let presets = ConversationPreset.createMockModels()
-        let presetForSpot = presets.first(where: { $0.conversationDataModel.spotId == spotId } )
+        let presetForSpot = presets.first(where: { $0.conversationDataModel.spotId == spotId })
         return presetForSpot?.section
     }
 }
