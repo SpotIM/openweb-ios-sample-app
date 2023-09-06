@@ -115,7 +115,7 @@ fileprivate extension OWCommentThreadActionsView {
         self.actionView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.bottom.equalToSuperview()
-            //make.height.equalTo(Metrics.cellHeight)
+            // make.height.equalTo(Metrics.cellHeight)
         }
     }
 
