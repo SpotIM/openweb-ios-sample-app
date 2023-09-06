@@ -227,12 +227,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             communityGuidelinesURLTapped,
-            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile,
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map { $0.url },
             conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput,
-            conversationVM.outputs.conversationViewVM.outputs.openProfile
+            conversationVM.outputs.conversationViewVM.outputs.openProfile.map { $0.url }
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
+            .debug("*** openPublisherProfile conversation")
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
@@ -327,11 +328,10 @@ fileprivate extension OWConversationCoordinator {
             .outputs.closeConversation
             .map { OWViewActionCallbackType.closeConversationPressed }
 
-        let openPublisherProfile = servicesProvider.profileService().openProfile
-            .map { openProfileData in
-                OWViewActionCallbackType.openPublisherProfile(userId: openProfileData.userId)
-            }
-            .asObservable()
+        let openPublisherProfile = Observable.merge(
+                    viewModel.outputs.openProfile,
+                    viewModel.outputs.commentingCTAViewModel.outputs.openProfile)
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
 
         let openReportReason = viewModel.outputs.openReportReason
             .map { commentVM -> OWViewActionCallbackType in
