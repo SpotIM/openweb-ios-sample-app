@@ -167,7 +167,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling = {
-        return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle)
+        return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle,
+                                                spacing: conversationStyle.spacing)
     }()
 
     lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
@@ -175,7 +176,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling = {
-        return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
+        return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle,
+                                                  spacing: conversationStyle.spacing)
     }()
 
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
@@ -313,6 +315,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return self.conversationData.settings.fullConversationSettings.style
     }()
 
+    fileprivate lazy var spacingBetweenComments: CGFloat = {
+        return self.conversationStyle.spacing.betweenComments / 2
+    }()
+
     var viewInitialized = PublishSubject<Void>()
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
     var pullToRefresh = PublishSubject<Void>()
@@ -389,14 +395,16 @@ fileprivate extension OWConversationViewViewModel {
                     id: "\(commentPresentationData.id)_expand_only",
                     data: commentPresentationData,
                     mode: .expand,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
             default:
                 cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -406,7 +414,8 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             }
@@ -528,7 +537,7 @@ fileprivate extension OWConversationViewViewModel {
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
             section: self.conversationData.article.additionalSettings.section
-        ))
+        ), spacing: spacingBetweenComments)
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {

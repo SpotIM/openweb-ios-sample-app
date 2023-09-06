@@ -126,13 +126,13 @@ fileprivate extension OWConversationSummaryView {
                 make.trailing.equalToSuperview().offset(-Metrics.trailingOffset)
             }
             make.top.equalToSuperview().offset(Metrics.margins.top)
-            make.bottom.equalToSuperview().offset(-Metrics.margins.bottom)
         }
 
         // Setup bottom horizontal separator
         self.addSubview(bottomHorizontalSeparator)
         bottomHorizontalSeparator.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(summaryView.OWSnp.bottom).offset(Metrics.margins.bottom)
+            make.bottom.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
     }

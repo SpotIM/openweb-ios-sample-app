@@ -38,7 +38,8 @@ class OWCommunityGuidelinesCell: UITableViewCell {
         self.viewModel = vm
         disposeBag = DisposeBag()
 
-        communityGuidelinesView.configure(with: self.viewModel.outputs.communityGuidelinesViewModel)
+        communityGuidelinesView.configure(with: self.viewModel.outputs.communityGuidelinesViewModel,
+                                          spacing: self.viewModel.outputs.communityGuidelinesSpacing)
         self.setupObservers()
     }
 }
@@ -50,13 +51,8 @@ fileprivate extension OWCommunityGuidelinesCell {
 
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(Metrics.edgesPadding)
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.edgesPadding)
-            } else {
-                make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
-            }
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
         }
     }
 

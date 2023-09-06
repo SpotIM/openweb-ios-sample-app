@@ -15,6 +15,7 @@ protocol OWCommentCellViewModelingInputs {
 
 protocol OWCommentCellViewModelingOutputs {
     var commentVM: OWCommentViewModeling { get }
+    var spacingBetweenComments: CGFloat { get }
     var id: String { get }
     var viewAccessibilityIdentifier: String { get }
 }
@@ -36,18 +37,22 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
         return Metrics.viewAccessibilityIdentifier + id
     }()
 
+    let spacingBetweenComments: CGFloat
     let commentVM: OWCommentViewModeling
 
     var id: String = ""
 
-    init(data: OWCommentRequiredData) {
+    init(data: OWCommentRequiredData,
+         spacing: CGFloat = OWConversationSpacing.regular.betweenComments / 2) {
         self.id = data.comment.id ?? ""
 
         self.commentVM = OWCommentViewModel(data: data)
+        self.spacingBetweenComments = spacing
     }
 
     init() {
         self.commentVM = OWCommentViewModel()
+        self.spacingBetweenComments = OWConversationSpacing.regular.betweenComments / 2
     }
 }
 
