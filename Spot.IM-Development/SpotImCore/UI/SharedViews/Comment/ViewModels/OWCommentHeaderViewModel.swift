@@ -294,9 +294,7 @@ fileprivate extension OWCommentHeaderViewModel {
                 return servicesProvider.profileService().openProfileTapped(user: user)
             })
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] profileData in
-                self?._openProfile.onNext(profileData)
-            })
+            .bind(to: _openProfile)
             .disposed(by: disposedBag)
     }
 }
