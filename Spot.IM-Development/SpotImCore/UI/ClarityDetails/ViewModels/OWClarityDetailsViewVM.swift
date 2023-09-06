@@ -78,7 +78,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         }
     }()
 
-    var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
+    fileprivate var _topParagraphAttributedString: BehaviorSubject<NSAttributedString?> = BehaviorSubject(value: nil)
     lazy var topParagraphAttributedStringObservable: Observable<NSAttributedString> = {
         return _topParagraphAttributedString
             .unwrap()

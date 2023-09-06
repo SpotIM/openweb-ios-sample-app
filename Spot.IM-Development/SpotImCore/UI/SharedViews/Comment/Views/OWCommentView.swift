@@ -25,7 +25,7 @@ class OWCommentView: UIView {
     fileprivate lazy var commentStatusView: OWCommentStatusView = {
         return OWCommentStatusView()
     }()
-    fileprivate lazy var disableLayoutView: UIView = {
+    fileprivate lazy var blockingOpacityView: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light))
             .alpha(0.5)
@@ -86,8 +86,8 @@ fileprivate extension OWCommentView {
             commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
-        self.addSubview(disableLayoutView)
-        disableLayoutView.OWSnp.makeConstraints { make in
+        self.addSubview(blockingOpacityView)
+        blockingOpacityView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(commentStatusView.OWSnp.bottom)
         }
@@ -121,7 +121,7 @@ fileprivate extension OWCommentView {
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
-        self.bringSubviewToFront(disableLayoutView)
+        self.bringSubviewToFront(blockingOpacityView)
     }
 
     func setupObservers() {
@@ -155,9 +155,9 @@ fileprivate extension OWCommentView {
             })
             .disposed(by: disposedBag)
 
-        viewModel.outputs.showDisableLayoutView
+        viewModel.outputs.showBlockingLayoutView
             .map { !$0 }
-            .bind(to: disableLayoutView.rx.isHidden)
+            .bind(to: blockingOpacityView.rx.isHidden)
             .disposed(by: disposedBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
@@ -165,7 +165,7 @@ fileprivate extension OWCommentView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.disableLayoutView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.blockingOpacityView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposedBag)
     }
