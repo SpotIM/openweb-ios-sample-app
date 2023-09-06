@@ -110,25 +110,25 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             return [
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "heart-icon"),
-                    text: "All of our decisions are designed to ensure civil, open and inclusive discourse within the community."),
+                    text: OWLocalizationManager.shared.localizedString(key: "rejectReasonEnsureCivil")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "info-icon"),
-                    text: "We use advanced machine learning technology combined with unbiased human moderation to review all questionable content."),
+                    text: OWLocalizationManager.shared.localizedString(key: "rejectReasonMachineLearning")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "megaphone-icon"),
-                    text: "We do not censor. Our mission is to help build thriving communities and encourage open and civil conversations.")
+                    text: OWLocalizationManager.shared.localizedString(key: "rejectReasonWeDoNotCensor"))
             ]
         case .pending:
             return [
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "v-icon"),
-                    text: "All comments on the site require manual approval (so nothing personal)"),
+                    text: OWLocalizationManager.shared.localizedString(key: "pendingResonManualApproval")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "eye-icon"),
-                    text: "Certain comments are sent to an internal product performance review (it’s not you, it’s us)"),
+                    text: OWLocalizationManager.shared.localizedString(key: "pendingReasonPerformanceReview")),
                 OWParagraphWithIconVM(
                     icon: UIImage(spNamed: "flag-icon"),
-                    text: "Your comment has been automatically flagged as it may not align with our community guidelines (You can revise your comment at any time)",
+                    text: OWLocalizationManager.shared.localizedString(key: "pendingResonCommunityGuidelines"),
                     communityGuidelinesClickable: true)
             ]
         }
