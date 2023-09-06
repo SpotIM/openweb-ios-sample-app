@@ -18,7 +18,10 @@ class OWCommentStatusView: UIView {
         static let verticalPadding: CGFloat = 8
         static let iconTrailingPadding: CGFloat = 2
         static let iconSize: CGFloat = 20
+
         static let identifier = "comment_status_view_id"
+        static let iconIdentifier = "comment_status_icon_id"
+        static let labelIdentifier = "comment_status_label_id"
     }
 
     fileprivate var viewModel: OWCommentStatusViewModeling!
@@ -54,6 +57,8 @@ class OWCommentStatusView: UIView {
 fileprivate extension OWCommentStatusView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        iconImageView.accessibilityIdentifier = Metrics.iconIdentifier
+        messageLabel.accessibilityIdentifier = Metrics.labelIdentifier
     }
 
     func setupViews() {
