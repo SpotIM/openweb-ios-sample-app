@@ -38,7 +38,7 @@ class OWCommentCell: UITableViewCell {
 
         self.disposeBag = DisposeBag()
         self.viewModel = vm
-        self.commentView.configure(with: self.viewModel.outputs.commentVM)
+        self.commentView.configure(with: self.viewModel.outputs.commentVM, spacing: self.viewModel.outputs.spacingBetweenComments)
 
         let depth = min(self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0, Metrics.maxDepth)
         commentView.OWSnp.updateConstraints { make in

@@ -42,7 +42,8 @@ class OWCommunityQuestionCell: UITableViewCell {
         self.viewModel = vm
         disposeBag = DisposeBag()
 
-        communityQuestionView.configure(with: self.viewModel.outputs.communityQuestionViewModel)
+        communityQuestionView.configure(with: self.viewModel.outputs.communityQuestionViewModel,
+                                        spacing: self.viewModel.outputs.communityQuestionSpacing)
         self.setupObservers()
     }
 }
@@ -53,7 +54,8 @@ fileprivate extension OWCommunityQuestionCell {
 
         self.addSubviews(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.edgesPadding)
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
         }
     }
 

@@ -91,9 +91,8 @@
 "QuestionsStyleModeTitle" = "Questions Style";
 "ConversationSpacingModeTitle" = "Conversation Spacing";
 "BetweenCommentsSpacingTitle" = "Between comments spacing";
-"BelowHeaderSpacingTitle" = "Below header spacing";
-"BelowCommunityGuidelinesSpacingTitle" = "Below guidelines spacing";
-"BelowCommunityQuestionsGuidelinesSpacingTitle" = "Below questions spacing";
+"CommunityGuidelinesSpacingTitle" = "Guidelines spacing";
+"CommunityQuestionsGuidelinesSpacingTitle" = "Questions spacing";
 "None" = "None";
 "LoggerView" = "Logger View";
 "LocaleStrategy" = "Locale strategy";

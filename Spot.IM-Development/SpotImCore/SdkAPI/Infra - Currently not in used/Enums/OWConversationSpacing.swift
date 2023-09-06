@@ -11,32 +11,30 @@ import UIKit
 #if NEW_API
 public enum OWConversationSpacing: Codable {
     public struct Metrics {
-        public static let defaultSpaceBetweenComments: CGFloat = 6.0 // Will be set later by designer
-        public static let defaultSpaceBelowHeader: CGFloat = 8.0 // Will be set later by designer
-        public static let defaultSpaceBelowCommunityGuidelines: CGFloat = 8.0 // Will be set later by designer
-        public static let defaultSpaceBelowCommunityQuestions: CGFloat = 8.0 // Will be set later by designer
+        public static let defaultSpaceBetweenComments: CGFloat = 24.0 // Will be set later by designer
+        public static let defaultSpaceCommunityGuidelines: CGFloat = 12.0 // Will be set later by designer
+        public static let defaultSpaceCommunityQuestions: CGFloat = 12.0 // Will be set later by designer
         public static let maxSpace: CGFloat = 20.0
-        public static let minSpace: CGFloat = 0.0
+        public static let minSpace: CGFloat = 5.0
     }
 
     case regular
     case compact
-    case custom(betweenComments: CGFloat, belowHeader: CGFloat, belowCommunityGuidelines: CGFloat, belowCommunityQuestions: CGFloat)
+    case custom(betweenComments: CGFloat, communityGuidelines: CGFloat, communityQuestions: CGFloat)
 }
 #else
 enum OWConversationSpacing: Codable {
     struct Metrics {
         static let defaultSpaceBetweenComments: CGFloat = 6.0 // Will be set later by designer
-        static let defaultSpaceBelowHeader: CGFloat = 8.0 // Will be set later by designer
-        static let defaultSpaceBelowCommunityGuidelines: CGFloat = 8.0 // Will be set later by designer
-        static let defaultSpaceBelowCommunityQuestions: CGFloat = 8.0 // Will be set later by designer
+        static let defaultSpaceCommunityGuidelines: CGFloat = 12.0 // Will be set later by designer
+        static let defaultSpaceCommunityQuestions: CGFloat = 12.0 // Will be set later by designer
         static let maxSpace: CGFloat = 20.0
-        static let minSpace: CGFloat = 0.0
+        static let minSpace: CGFloat = 5.0
     }
 
     case regular
     case compact
-    case custom(betweenComments: CGFloat, belowHeader: CGFloat, belowCommunityGuidelines: CGFloat, belowCommunityQuestions: CGFloat)
+    case custom(betweenComments: CGFloat, communityGuidelines: CGFloat, communityQuestions: CGFloat)
 }
 #endif
 

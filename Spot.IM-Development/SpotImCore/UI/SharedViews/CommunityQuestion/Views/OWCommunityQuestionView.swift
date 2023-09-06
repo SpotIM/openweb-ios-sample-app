@@ -20,26 +20,6 @@ class OWCommunityQuestionView: UIView {
         static let identifier = "community_question_id"
     }
 
-    fileprivate lazy var titleTextView: UITextView = {
-        let textView = UITextView()
-            .backgroundColor(.clear)
-            .isEditable(false)
-            .isSelectable(false)
-            .userInteractionEnabled(true)
-            .isScrollEnabled(false)
-            .wrapContent(axis: .vertical)
-            .hugContent(axis: .vertical)
-            .dataDetectorTypes([.link])
-            .font(OWFontBook.shared.font(typography: .bodySpecial))
-            .textContainerInset(.zero)
-
-        textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                                       NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
-        textView.textContainer.lineFragmentPadding = 0
-        textView.sizeToFit()
-        return textView
-    }()
-
     fileprivate lazy var questionLabel: UILabel = {
         return UILabel()
             .wrapContent()
@@ -57,12 +37,15 @@ class OWCommunityQuestionView: UIView {
     }()
 
     fileprivate var heightConstraint: OWConstraint? = nil
+    fileprivate var spacing: CGFloat!
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
     // For init when using in Views and not in cells
-    init(with viewModel: OWCommunityQuestionViewModeling) {
+    init(with viewModel: OWCommunityQuestionViewModeling,
+         spacing: CGFloat) {
         self.viewModel = viewModel
+        self.spacing = spacing
         super.init(frame: .zero)
         updateUI()
         setupObservers()
@@ -76,8 +59,10 @@ class OWCommunityQuestionView: UIView {
     }
 
     // Only when using community question as a cell
-    func configure(with viewModel: OWCommunityQuestionViewModeling) {
+    func configure(with viewModel: OWCommunityQuestionViewModeling,
+                   spacing: CGFloat) {
         self.viewModel = viewModel
+        self.spacing = spacing
         self.disposeBag = DisposeBag()
         self.updateUI()
         self.setupObservers()
@@ -96,7 +81,7 @@ fileprivate extension OWCommunityQuestionView {
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeQuestionContainerViewUI.onNext(questionContainer)
         viewModel.inputs.triggerCustomizeQuestionTitleLabelUI.onNext(questionLabel)
-        viewModel.inputs.triggerCustomizeQuestionTitleTextViewUI.onNext(titleTextView)
+//        viewModel.inputs.triggerCustomizeQuestionTitleTextViewUI.onNext(titleTextView)
     }
 
     // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
@@ -107,12 +92,13 @@ fileprivate extension OWCommunityQuestionView {
 
         questionContainer.removeFromSuperview()
         questionLabel.removeFromSuperview()
-        titleTextView.removeFromSuperview()
 
         if viewModel.outputs.showContainer {
             self.addSubview(questionContainer)
             questionContainer.OWSnp.makeConstraints { make in
-                make.edges.equalToSuperview()
+                make.top.bottom.equalToSuperview().inset(spacing)
+                make.leading.trailing.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
             }
 
             questionContainer.addSubview(questionLabel)
@@ -123,9 +109,10 @@ fileprivate extension OWCommunityQuestionView {
                 make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
             }
         } else {
-            self.addSubview(titleTextView)
-            titleTextView.OWSnp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            self.addSubview(questionLabel)
+            questionLabel.OWSnp.makeConstraints { make in
+                make.top.bottom.equalToSuperview().inset(spacing)
+                make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
         }
@@ -137,7 +124,7 @@ fileprivate extension OWCommunityQuestionView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.attributedCommunityQuestion
-            .bind(to: titleTextView.rx.attributedText)
+            .bind(to: questionLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowView
@@ -159,7 +146,6 @@ fileprivate extension OWCommunityQuestionView {
                 self.questionLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.questionContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
                 self.questionContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: currentStyle).cgColor
-                self.titleTextView.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
@@ -168,7 +154,6 @@ fileprivate extension OWCommunityQuestionView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.titleTextView.font = OWFontBook.shared.font(typography: .bodySpecial)
                 self.questionLabel.font = OWFontBook.shared.font(typography: .bodySpecial)
             })
             .disposed(by: disposeBag)

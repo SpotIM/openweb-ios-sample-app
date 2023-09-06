@@ -36,8 +36,10 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     fileprivate let viewableMode: OWViewableMode
 
     lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
-        return OWCommentThreadViewViewModel(commentThreadData: commentThreadData, servicesProvider: self.servicesProvider,
-                                            viewableMode: self.viewableMode)
+        return OWCommentThreadViewViewModel(commentThreadData: commentThreadData,
+                                            servicesProvider: self.servicesProvider,
+                                            viewableMode: self.viewableMode,
+                                            spacing: OWConversationSpacing.regular.betweenComments / 2)
     }()
 
     lazy var title: String = {

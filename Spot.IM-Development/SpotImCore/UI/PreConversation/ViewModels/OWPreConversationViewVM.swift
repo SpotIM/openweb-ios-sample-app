@@ -23,7 +23,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
+    var communityGuidelinesSpacing: CGFloat { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
+    var communityQuestionSpacing: CGFloat { get }
     var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
@@ -106,6 +108,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
+    }()
+
+    lazy var communityGuidelinesSpacing: CGFloat = {
+        return OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines
+    }()
+
+    lazy var communityQuestionSpacing: CGFloat = {
+        return OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions
     }()
 
     lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {

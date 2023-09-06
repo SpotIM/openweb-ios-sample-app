@@ -22,6 +22,7 @@ class OWCommentThreadActionsView: UIView {
         static let textToImageSpacing: CGFloat = 6.5
     }
 
+    fileprivate var spacing: CGFloat!
     fileprivate var viewModel: OWCommentThreadActionsViewModeling!
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
@@ -34,8 +35,10 @@ class OWCommentThreadActionsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with viewModel: OWCommentThreadActionsViewModeling) {
+    func configure(with viewModel: OWCommentThreadActionsViewModeling,
+                   spacing: CGFloat) {
         self.viewModel = viewModel
+        self.spacing = spacing
         self.disposeBag = DisposeBag()
         self.setupObservers()
         self.applyAccessibility()
@@ -60,6 +63,7 @@ class OWCommentThreadActionsView: UIView {
         actionLabel.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview().offset(Metrics.topOffset)
+            make.bottom.equalToSuperview().offset(spacing)
         }
 
         view.addSubview(disclosureImageView)
@@ -111,7 +115,7 @@ fileprivate extension OWCommentThreadActionsView {
         self.actionView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.bottom.equalToSuperview()
-            make.height.equalTo(Metrics.cellHeight)
+            //make.height.equalTo(Metrics.cellHeight)
         }
     }
 
