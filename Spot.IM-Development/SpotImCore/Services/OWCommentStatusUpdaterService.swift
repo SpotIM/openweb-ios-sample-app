@@ -23,7 +23,6 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
         static let intervalDefault: Int = 300
     }
 
-
     init (
         servicesProvider: OWSharedServicesProviding
     ) {
