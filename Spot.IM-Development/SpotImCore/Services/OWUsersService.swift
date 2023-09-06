@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 typealias OWUsersMapper = [String: SPUser]
 
@@ -22,6 +23,13 @@ protocol OWUsersServicing {
 class OWUsersService: OWUsersServicing {
 
     fileprivate var _users = OWUsersMapper()
+    fileprivate var disposeBag = DisposeBag()
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+        setupObservers()
+    }
 
     func get(userId id: String) -> SPUser? {
         guard let user = _users[id] else { return nil }
@@ -56,5 +64,26 @@ class OWUsersService: OWUsersServicing {
 
     func cleanCache() {
         _users.removeAll()
+    }
+}
+
+fileprivate extension OWUsersService {
+    func setupObservers() {
+        self.servicesProvider.authenticationManager()
+            .activeUserAvailability
+            .map { availability -> SPUser? in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .unwrap()
+            .subscribe(onNext: { [weak self] user in
+                guard let self = self else { return }
+                self.set(users: [user])
+            })
+            .disposed(by: disposeBag)
     }
 }
