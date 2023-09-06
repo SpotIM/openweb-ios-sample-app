@@ -15,19 +15,25 @@ protocol OWCommentStatusUpdaterServicing {
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var disposeBag: DisposeBag
+    fileprivate let disposeBag: DisposeBag = DisposeBag()
+
+    fileprivate struct Metrics {
+        static let retriesDefault: Int = 12
+        static let timeoutDefault: Int = 3000
+        static let intervalDefault: Int = 300
+    }
+
 
     init (
         servicesProvider: OWSharedServicesProviding
     ) {
         self.servicesProvider = servicesProvider
-        self.disposeBag = DisposeBag()
         self.setupObservers()
     }
 
-    fileprivate var retries: Int = 12
-    fileprivate var timeout: Int = 3000
-    fileprivate var interval: Int = 300
+    fileprivate var retries: Int = Metrics.retriesDefault
+    fileprivate var timeout: Int = Metrics.timeoutDefault
+    fileprivate var interval: Int = Metrics.intervalDefault
 
     fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
@@ -52,6 +58,18 @@ fileprivate extension OWCommentStatusUpdaterService {
                 return status
             }
             .retry(maxAttempts: retries, millisecondsDelay: interval)
+            .materialize()
+            .map { event -> String? in
+                switch event {
+                case .next(let status):
+                    return status
+                case .error(_):
+                    return nil
+                default:
+                    return nil
+                }
+
+            }
             .unwrap()
     }
 
@@ -68,7 +86,7 @@ fileprivate extension OWCommentStatusUpdaterService {
             .disposed(by: disposeBag)
 
         _fetchStatusFor
-            .flatMapLatest { [weak self] comment -> Observable<(String, OWComment)> in
+            .flatMap { [weak self] comment -> Observable<(String, OWComment)> in
                 guard let self = self else { return .empty() }
                 return self.getRawStatus(for: comment)
                     .map { ($0, comment) }

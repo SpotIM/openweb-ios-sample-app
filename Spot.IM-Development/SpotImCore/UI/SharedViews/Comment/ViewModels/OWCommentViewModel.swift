@@ -28,7 +28,7 @@ protocol OWCommentViewModelingOutputs {
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
     var shouldHideCommentContent: Observable<Bool> { get }
     var shouldShowCommentStatus: Observable<Bool> { get }
-    var showDisableLayoutView: Observable<Bool> { get }
+    var showBlockingLayoutView: Observable<Bool> { get }
 
     var comment: OWComment { get }
 }
@@ -90,7 +90,8 @@ class OWCommentViewModel: OWCommentViewModeling,
             return status != .none
         }
     }
-    var showDisableLayoutView: Observable<Bool> {
+    var showBlockingLayoutView: Observable<Bool> {
+        // Using Observable.merge because in the future we might have more cases where we show disable layout
         Observable.merge(shouldShowCommentStatus)
     }
 

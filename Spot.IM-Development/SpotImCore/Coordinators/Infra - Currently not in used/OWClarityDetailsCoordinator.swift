@@ -33,9 +33,9 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .reportReason)
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .clarityDetails)
     }()
-    fileprivate let ClarityDetailsPopped = PublishSubject<Void>()
+    fileprivate let clarityDetailsPopped = PublishSubject<Void>()
     let presentationalMode: OWPresentationalModeCompact
 
     init(type: OWClarityDetailsType,
@@ -53,15 +53,10 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(type: type, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
-        if router.isEmpty() {
-            router.start()
-            router.setRoot(clarityDetailsVC, animated: false, dismissCompletion: ClarityDetailsPopped)
-        } else {
-            router.push(clarityDetailsVC,
-                        pushStyle: .present,
-                        animated: true,
-                        popCompletion: ClarityDetailsPopped)
-        }
+        router.push(clarityDetailsVC,
+                    pushStyle: .present,
+                    animated: true,
+                    popCompletion: clarityDetailsPopped)
 
         setupViewActionsCallbacks(forViewModel: clarityDetailsVM.outputs.clarityDetailsViewViewModel)
 
