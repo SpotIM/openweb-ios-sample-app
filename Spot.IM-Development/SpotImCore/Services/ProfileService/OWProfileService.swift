@@ -16,9 +16,9 @@ protocol OWProfileServicing {
 
 class OWProfileService: OWProfileServicing {
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
 
-    init(sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
         setupObservers()
     }

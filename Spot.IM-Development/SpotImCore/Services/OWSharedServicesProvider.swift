@@ -62,7 +62,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     var configure: OWSharedServicesProviderConfigure { return self }
 
     fileprivate lazy var _profileService: OWProfileServicing = {
-        return OWProfileService()
+        return OWProfileService(sharedServicesProvider: self)
     }()
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
