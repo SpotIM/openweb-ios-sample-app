@@ -38,9 +38,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         return OWCustomizationsService(viewSourceType: .commentThread)
     }()
 
-    init(router: OWRoutering! = nil,
-         commentThreadData: OWCommentThreadRequiredData,
-         actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.commentThreadData = commentThreadData
         self.actionsCallbacks = actionsCallbacks
