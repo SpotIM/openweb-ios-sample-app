@@ -41,7 +41,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
-        return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
+        return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel,
+                                         spacing: self.viewModel.outputs.communityGuidelinesSpacing)
     }()
 
     fileprivate lazy var communityQuestionBottomDevider: UIView = {
@@ -50,7 +51,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
-        return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
+        return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel,
+                                       spacing: self.viewModel.outputs.communityQuestionSpacing)
     }()
 
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {

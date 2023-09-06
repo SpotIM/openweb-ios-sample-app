@@ -37,7 +37,8 @@ class OWCommentThreadActionCell: UITableViewCell {
         self.disposeBag = DisposeBag()
         self.viewModel = vm
 
-        commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM)
+        commentThreadActionsView.configure(with: self.viewModel.outputs.commentActionsVM,
+                                           spacing: self.viewModel.outputs.spaceBetweenComments)
 
         let depth = min(self.viewModel.outputs.depth, Metrics.maxDepth)
         commentThreadActionsView.OWSnp.updateConstraints { make in

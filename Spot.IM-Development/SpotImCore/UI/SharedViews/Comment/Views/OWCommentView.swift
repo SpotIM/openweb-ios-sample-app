@@ -13,7 +13,7 @@ import RxCocoa
 class OWCommentView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16.0
-        static let bottomOffset: CGFloat = 16.0
+//        static let bottomOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let horizontalOffset: CGFloat = 16.0
@@ -34,6 +34,7 @@ class OWCommentView: UIView {
         return OWCommentEngagementView()
     }()
 
+    fileprivate var spacing: CGFloat!
     fileprivate var viewModel: OWCommentViewModeling!
     fileprivate var disposedBag = DisposeBag()
 
@@ -47,9 +48,11 @@ class OWCommentView: UIView {
         setupUI()
     }
 
-    func configure(with viewModel: OWCommentViewModeling) {
+    func configure(with viewModel: OWCommentViewModeling,
+                   spacing: CGFloat) {
         self.disposedBag = DisposeBag()
         self.viewModel = viewModel
+        self.spacing = spacing
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
         self.commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
@@ -71,7 +74,7 @@ fileprivate extension OWCommentView {
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+            make.top.equalToSuperview().offset(spacing)
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
         }
     }
@@ -95,7 +98,7 @@ fileprivate extension OWCommentView {
         commentEngagementView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
-            make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
+            make.bottom.equalToSuperview().offset(spacing)
         }
     }
 

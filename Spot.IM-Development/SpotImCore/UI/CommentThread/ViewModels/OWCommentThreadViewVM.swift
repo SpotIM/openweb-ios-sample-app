@@ -60,6 +60,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
+    fileprivate let spacingBetweenComments: CGFloat
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
 
@@ -203,11 +204,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
-          viewableMode: OWViewableMode = .independent
+          viewableMode: OWViewableMode = .independent,
+          spacing: CGFloat
     ) {
         self.servicesProvider = servicesProvider
         self.commentPresentationDataHelper = commentPresentationDataHelper
         self.viewableMode = viewableMode
+        self.spacingBetweenComments = spacing
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
         self.setupObservers()
@@ -242,14 +245,16 @@ fileprivate extension OWCommentThreadViewViewModel {
                     id: "\(commentPresentationData.id)_expand_only",
                     data: commentPresentationData,
                     mode: .expand,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
             default:
                 cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
@@ -259,7 +264,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             }
@@ -339,7 +345,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
             section: self.commentThreadData.article.additionalSettings.section
-        ))
+        ), spacing: spacingBetweenComments)
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
