@@ -104,6 +104,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var paginationOffset = 0
 
+    fileprivate var articleUrl: String = ""
+
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -159,7 +161,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: conversationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -544,6 +546,8 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -595,11 +599,13 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
             .share()
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .fullConversationLoaded)
+                guard let self = self else { return }
+                // Send analytic event
+                self.sendEvent(for: .fullConversationLoaded)
             })
             .disposed(by: disposeBag)
 
@@ -1526,6 +1532,14 @@ fileprivate extension OWConversationViewViewModel {
                     self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
                 })
                 .disposed(by: disposeBag)
+
+            servicesProvider
+                .activeArticleService()
+                .articleExtraData
+                .subscribe(onNext: { [weak self] article in
+                    self?.articleUrl = article.url.absoluteString
+                })
+                .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
@@ -1533,7 +1547,7 @@ fileprivate extension OWConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: conversationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
     }
