@@ -97,7 +97,7 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
     fileprivate let _openProfile = PublishSubject<OWOpenProfileData>()
     var openProfile: Observable<OWOpenProfileData> {
         _openProfile
-            .asObserver()
+            .asObservable()
     }
 
     fileprivate let _commentCreationTap = PublishSubject<Void>()
