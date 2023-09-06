@@ -11,20 +11,16 @@ import RxSwift
 
 protocol OWCommentStatusUpdaterServicing {
     func fetchStatusFor(comment: OWComment)
-    func stopUpdating()
 }
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let scheduler: SchedulerType
     fileprivate var disposeBag: DisposeBag
 
     init (
-        servicesProvider: OWSharedServicesProviding,
-        scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .utility, internalSerialQueueName: "OpenWebSDKStatusUpdaterServiceQueue")
+        servicesProvider: OWSharedServicesProviding
     ) {
         self.servicesProvider = servicesProvider
-        self.scheduler = scheduler
         self.disposeBag = DisposeBag()
         self.setupObservers()
     }
@@ -36,10 +32,6 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
         _fetchStatusFor.onNext(comment)
-    }
-
-    func stopUpdating() {
-        self.disposeBag = DisposeBag()
     }
 }
 
