@@ -147,18 +147,18 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
-            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile
+            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map { $0.url }
         )
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
-                guard let self = self else { return .empty() }
-                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-                                                                   url: url,
-                                                                   actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
-            }
-            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
-                return Observable.never()
-            }
+        .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            guard let self = self else { return .empty() }
+                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                               url: url,
+                                                               actionsCallbacks: self.actionsCallbacks)
+            return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+        }
+        .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+            return Observable.never()
+        }
 
         return Observable.merge(commentThreadPoppedObservable,
                                 commentThreadLoadedToScreenObservable,
@@ -192,10 +192,8 @@ fileprivate extension OWCommentThreadCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let openPublisherProfile = servicesProvider.profileService().openProfile
-            .map { openProfileData in
-                OWViewActionCallbackType.openPublisherProfile(userId: openProfileData.userId)
-            }
+        let openPublisherProfile = viewModel.outputs.openProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
             .asObservable()
 
         openPublisherProfile

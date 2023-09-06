@@ -41,7 +41,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldAddContentTapRecognizer: Bool { get }
     var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
-    var openProfile: Observable<URL> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
@@ -193,8 +193,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         return _openProfile
             .asObservable()
     }
@@ -630,26 +630,33 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .disposed(by: disposeBag)
 
+        let commentAvatarClickObservable: Observable<OWOpenProfileData> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWOpenProfileData> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
+                    return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+
         // Responding to comment avatar click
-        self.servicesProvider.profileService().openProfile
-            .subscribe(onNext: { [weak self] openProfileData in
+        commentAvatarClickObservable
+            .do(onNext: { [weak self] openProfileData in
                 guard let self = self  else { return }
-                self._openProfile.onNext(openProfileData.url)
                 switch openProfileData.userProfileType {
                 case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
                 case .otherUser: self.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
                 }
             })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         commentingCTAViewModel.outputs.openProfile
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .myProfileClicked(source: .commentCTA))
             })
-            .subscribe(onNext: { [weak self] url in
-                guard let self = self  else { return }
-                self._openProfile.onNext(url)
-            })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         // Update comments cells on ReadOnly mode

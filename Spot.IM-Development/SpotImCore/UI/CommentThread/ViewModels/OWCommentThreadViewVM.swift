@@ -23,7 +23,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var openProfile: Observable<URL> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var scrollToCellIndex: Observable<Int> { get }
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
@@ -154,8 +154,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObserver()
     }
 
-    fileprivate var _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         return _openProfile
             .asObservable()
     }
@@ -689,14 +689,22 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
-        self.servicesProvider.profileService().openProfile
-            .subscribe(onNext: { [weak self] openProfileData in
-                self?._openProfile.onNext(openProfileData.url)
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileData> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
+                    return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+            .do(onNext: { [weak self] openProfileData in
                 switch openProfileData.userProfileType {
                 case .currentUser: self?.sendEvent(for: .myProfileClicked(source: .comment))
                 case .otherUser: self?.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
                 }
             })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         // Subscribe to URL click in comment text
