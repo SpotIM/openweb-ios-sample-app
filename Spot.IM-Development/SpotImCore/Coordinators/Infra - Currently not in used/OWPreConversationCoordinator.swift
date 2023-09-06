@@ -29,7 +29,6 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
-    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .preConversation)
     }()
@@ -40,12 +39,10 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     init(router: OWRoutering! = nil,
          preConversationData: OWPreConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          viewableMode: OWViewableMode) {
         self.router = router
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
-        self.servicesProvider = servicesProvider
         self.viewableMode = viewableMode
     }
 
