@@ -13,9 +13,9 @@ internal final class SPNameInputView: SPBaseView, SPTextInputView {
         static let identifier = "name_input_view_id"
         static let usernameIdentifier = "name_input_view_username_id"
     }
-    private lazy var avatarUserView: SPAvatarView = .init()
-    private lazy var usernameTextView: SPInputTextView = .init()
-    private lazy var separatorView: UIView = .init()
+    private lazy var avatarUserView = SPAvatarView()
+    private lazy var usernameTextView = SPInputTextView()
+    private lazy var separatorView = UIView()
 
     internal weak var delegate: SPTextInputViewDelegate?
 

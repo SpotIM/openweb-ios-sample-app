@@ -1134,7 +1134,7 @@ extension OWNetworkDataStreamRequest {
         let parser = { [unowned self] (data: Data) in
             queue.async {
                 self.capturingError {
-                    try stream(.init(event: .stream(.success(data)), token: .init(self)))
+                    try stream(Stream(event: .stream(.success(data)), token: CancellationToken(self)))
                 }
 
                 self.updateAndCompleteIfPossible()
@@ -1174,7 +1174,7 @@ extension OWNetworkDataStreamRequest {
 
                     queue.async {
                         self.capturingError {
-                            try stream(.init(event: .stream(result), token: .init(self)))
+                            try stream(Stream(event: .stream(result), token: CancellationToken(self)))
                         }
 
                         self.updateAndCompleteIfPossible()
@@ -1209,7 +1209,7 @@ extension OWNetworkDataStreamRequest {
 
                     queue.async {
                         self.capturingError {
-                            try stream(.init(event: .stream(.success(string)), token: .init(self)))
+                            try stream(Stream(event: .stream(.success(string)), token: CancellationToken(self)))
                         }
 
                         self.updateAndCompleteIfPossible()

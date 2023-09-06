@@ -29,6 +29,8 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
     var threadOffset: Observable<CGPoint> { get }
+    var dataSourceTransition: OWViewTransition { get }
+    var openReportReason: Observable<OWCommentViewModeling> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -44,8 +46,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let numberOfSkeletonComments: Int = 10
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
-        static let delayForPerformHighlightAnimation: Int = 1 // second
+        static let delayForPerformHighlightAnimation: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -58,6 +61,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
+    fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
@@ -189,6 +193,14 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
+    fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
+    var openReportReason: Observable<OWCommentViewModeling> {
+        return openReportReasonChange
+            .asObservable()
+    }
+
+    var dataSourceTransition: OWViewTransition = .reload
+
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
@@ -268,42 +280,18 @@ fileprivate extension OWCommentThreadViewViewModel {
         return cellOptions
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
-        guard let responseComments = response.conversation?.comments else { return [] }
-
-        let comments: [OWComment] = Array(responseComments)
-
+    func getCommentsPresentationData(of comments: [OWComment]) -> [OWCommentPresentationData] {
         var commentsPresentationData = [OWCommentPresentationData]()
-        var repliesPresentationData = [OWCommentPresentationData]()
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
-
-            if let replies = comment.replies {
-
-                repliesPresentationData = []
-
-                for reply in replies {
-                    guard let replyId = reply.id else { continue }
-
-                    let replyPresentationData = OWCommentPresentationData(
-                        id: replyId,
-                        repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
-                        totalRepliesCount: reply.repliesCount ?? 0,
-                        repliesOffset: reply.offset ?? 0,
-                        repliesPresentation: []
-                    )
-
-                    repliesPresentationData.append(replyPresentationData)
-                }
-            }
 
             let commentPresentationData = OWCommentPresentationData(
                 id: commentId,
                 repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
-                repliesPresentation: repliesPresentationData
+                repliesPresentation: getCommentsPresentationData(of: comment.replies ?? [])
             )
 
             commentsPresentationData.append(commentPresentationData)
@@ -368,9 +356,15 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
+
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -433,10 +427,20 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 self.cacheConversationRead(response: response)
 
-                let commentsPresentationData = self.getCommentsPresentationData(from: response)
+                if let responseComments = response.conversation?.comments {
+                    let commentsPresentationData = self.getCommentsPresentationData(of: responseComments)
 
-                self._commentsPresentationData.removeAll()
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                    self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // Re-enabling animations in the pre conversation table view
+        commentThreadFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
@@ -496,7 +500,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                 if let response = response {
                     self.cacheConversationRead(response: response)
 
-                    presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                    if let responseComments = response.conversation?.comments {
+                        presentationDataFromResponse = self.getCommentsPresentationData(of: responseComments)
+                    }
 
                     // filter existing comments
                     presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
@@ -790,7 +796,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return commentIndex
             }
             .unwrap()
-            .delay(.seconds(Metrics.delayForPerformHighlightAnimation), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .take(1)
             .subscribe(onNext: { [weak self] index in
                 self?._performHighlightAnimationCellIndex.onNext(index)
@@ -815,7 +821,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         case .completion:
                             // Do nothing
                             break
-                        case .selected(let action):
+                        case .selected:
                             // TODO: handle selection
                             break
                         }
@@ -839,13 +845,13 @@ fileprivate extension OWCommentThreadViewViewModel {
             .do(onNext: { [weak self] (_, _, commentVm) in
                 self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
@@ -855,6 +861,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     switch (action.type) {
                     case OWCommentOptionsMenu.reportComment:
                         self.sendEvent(for: .commentMenuReportClicked(commentId: commentVm.outputs.comment.id ?? ""))
+                        self.openReportReasonChange.onNext(commentVm)
                     case OWCommentOptionsMenu.deleteComment:
                         self.sendEvent(for: .commentMenuDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         self.deleteComment.onNext(commentVm)
@@ -1098,6 +1105,14 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
@@ -1105,7 +1120,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: commentThreadData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
                 component: .commentCreation)
     }

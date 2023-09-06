@@ -15,6 +15,8 @@ class OWCommentingCTASkeletonView: OWSkeletonShimmeringView {
         static let commentEntrySkeletonHeight: CGFloat = 40
         static let commentEntrySkeletonCornerRadius: CGFloat = 6
         static let commentEntrySkeletonLeadingOffset: CGFloat = 10
+
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
 
     fileprivate lazy var avatarSkeleton: UIView = {
@@ -43,8 +45,8 @@ class OWCommentingCTASkeletonView: OWSkeletonShimmeringView {
 
         view.addSubview(commentEntrySkeleton)
         commentEntrySkeleton.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
             make.height.equalTo(Metrics.commentEntrySkeletonHeight)
-            make.centerY.equalToSuperview()
             make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(Metrics.commentEntrySkeletonLeadingOffset)
             make.trailing.equalToSuperview()
         }
@@ -68,7 +70,9 @@ extension OWCommentingCTASkeletonView {
 
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.margins.top)
+            make.bottom.equalToSuperview().offset(-Metrics.margins.bottom)
+            make.leading.trailing.equalToSuperview()
         }
         skelatonView.addSkeletonShimmering()
     }

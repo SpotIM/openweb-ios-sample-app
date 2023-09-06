@@ -49,7 +49,8 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactR
 
 // UIFlows
 extension OWUILayer {
-    func preConversation(postId: OWPostId, article: OWArticleProtocol,
+    func preConversation(postId: OWPostId,
+                         article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -88,7 +89,8 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func conversation(postId: OWPostId, article: OWArticleProtocol,
+    func conversation(postId: OWPostId,
+                      article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks? = nil,
@@ -132,7 +134,8 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -357,6 +360,7 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
+
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -403,6 +407,46 @@ extension OWUILayer {
             let error: OWError = err as? OWError ?? OWError.commentCreationView
             completion(.failure(error))
         })
+    }
+
+    func commentThread(postId: OWPostId,
+                       article: OWArticleProtocol,
+                       commentId: OWCommentId,
+                       additionalSettings: OWAdditionalSettingsProtocol,
+                       callbacks: OWViewActionsCallbacks?,
+                       completion: @escaping OWViewCompletion) {
+
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let commentThreadData = OWCommentThreadRequiredData(
+            article: article,
+            settings: additionalSettings,
+            commentId: commentId,
+            presentationalStyle: .none
+        )
+
+        _ = viewsSdkCoordinator.commentThreadView(commentThreadData: commentThreadData, callbacks: callbacks)
+            .observe(on: MainScheduler.asyncInstance)
+            .take(1)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.setActiveRouter(for: .independent)
+                self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+            })
+            .subscribe(onNext: { result in
+                completion(.success(result.toShowable()))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.commentThreadView
+                completion(.failure(error))
+            })
     }
 
     func reportReason(postId: OWPostId,

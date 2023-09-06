@@ -59,7 +59,7 @@
 "Be the first to comment" = "كن أول من يعلق...";
 "Sort by" = "الترتيب حسب";
 "Share" = "مشاركة";
-"What do you think?" = "بم تفكر؟";
+"WhatDoYouThink" = "بم تفكر؟";
 "Loading" = "جار التحميل...";
 "View Previous Reply" = "عرض التعليق السابق";
 "Hide Reply" = "اخفاء التعليق";
@@ -93,10 +93,10 @@
 "Options menu" = "Options menu";
 "Post a Comment" = "انشر تعليق";
 "Show Comments" = "إظهار التعليقات";
-"Take a Photo" = "التقاط صورة";
-"Choose from Gallery" = "اختر من المعرض";
-"Camera permissions are needed" = "هناك حاجة إلى أذونات الكاميرا";
-"Open settings" = "أفتح الإعدادات";
+"TakeAPhoto" = "التقاط صورة";
+"ChooseFromGallery" = "اختر من المعرض";
+"CameraPermissionsAreNeeded" = "هناك حاجة إلى أذونات الكاميرا";
+"OpenSettings" = "أفتح الإعدادات";
 "Edit" = "يحرر";
 "Edited" = " (تم تحريره)";
 "Edit a Comment" = "تحرير تعليق";

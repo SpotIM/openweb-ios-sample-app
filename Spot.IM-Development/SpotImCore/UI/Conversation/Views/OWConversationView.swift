@@ -16,6 +16,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
+        static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -76,7 +77,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
-        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            guard let self = self else { return .reload }
+            return self.viewModel.outputs.dataSourceTransition
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
@@ -87,6 +91,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
         let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
         dataSource.animationConfiguration = animationConfiguration
+
         return dataSource
     }()
 
@@ -152,19 +157,19 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
-        self.addSubview(self.conversationEmptyStateView)
-        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(self.tableView.OWSnp.top)
-            make.bottom.equalTo(self.tableView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
-        }
-
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
             make.top.equalTo(tableView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
+        }
+
+        self.addSubview(self.conversationEmptyStateView)
+        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
+            make.top.equalTo(self.tableView.OWSnp.top)
+            make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
+            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
         }
 
         self.addSubview(commentingCTAView)
@@ -176,21 +181,6 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
-        Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
-                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
-            .filter { $0.0 }
-            .map { $0.1 }
-            .unwrap()
-            .map { $0.height }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
-                }
-            })
-            .disposed(by: disposeBag)
-
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -211,15 +201,15 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.performTableViewAnimation
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
-                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
-                        self.tableView.beginUpdates()
-                        self.tableView.endUpdates()
-                    }
-                })
-                .disposed(by: disposeBag)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                    self.tableView.beginUpdates()
+                    self.tableView.endUpdates()
+                }
+            })
+            .disposed(by: disposeBag)
 
         tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
@@ -238,6 +228,15 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
                 self.viewModel.inputs.pullToRefresh.onNext()
                 self.tableView.setContentOffset(.zero, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationDataJustReceived
+            .observe(on: MainScheduler.instance)
+            .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
             })
             .disposed(by: disposeBag)
 

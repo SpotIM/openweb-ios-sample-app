@@ -162,7 +162,12 @@ class OWNetworkRevocationTrustEvaluator: OWNetworkServerTrustEvaluating {
             try trust.owNetwork.evaluate(afterApplying: SecPolicy.owNetwork.revocation(options: options))
         } else {
             try trust.owNetwork.validate(policy: SecPolicy.owNetwork.revocation(options: options)) { status, result in
-                OWNetworkError.serverTrustEvaluationFailed(reason: .revocationCheckFailed(output: .init(host, trust, status, result), options: options))
+                OWNetworkError.serverTrustEvaluationFailed(
+                    reason: .revocationCheckFailed(
+                        output: OWNetworkError.ServerTrustFailureReason.Output(host, trust, status, result),
+                        options: options
+                    )
+                )
             }
         }
     }
@@ -597,7 +602,11 @@ extension OWNetworkExtension where ExtendedType == SecTrust {
             try evaluate(afterApplying: SecPolicy.owNetwork.default)
         } else {
             try validate(policy: SecPolicy.owNetwork.default) { status, result in
-                OWNetworkError.serverTrustEvaluationFailed(reason: .defaultEvaluationFailed(output: .init(host, type, status, result)))
+                OWNetworkError.serverTrustEvaluationFailed(
+                    reason: .defaultEvaluationFailed(
+                        output: OWNetworkError.ServerTrustFailureReason.Output(host, type, status, result)
+                    )
+                )
             }
         }
     }
@@ -612,7 +621,11 @@ extension OWNetworkExtension where ExtendedType == SecTrust {
             try evaluate(afterApplying: SecPolicy.owNetwork.hostname(host))
         } else {
             try validate(policy: SecPolicy.owNetwork.hostname(host)) { status, result in
-                OWNetworkError.serverTrustEvaluationFailed(reason: .hostValidationFailed(output: .init(host, type, status, result)))
+                OWNetworkError.serverTrustEvaluationFailed(
+                    reason: .hostValidationFailed(
+                        output: OWNetworkError.ServerTrustFailureReason.Output(host, type, status, result)
+                    )
+                )
             }
         }
     }
