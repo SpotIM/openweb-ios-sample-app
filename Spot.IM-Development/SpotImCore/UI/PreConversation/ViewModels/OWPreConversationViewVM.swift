@@ -391,11 +391,11 @@ fileprivate extension OWPreConversationViewViewModel {
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
-                    .conversation
-                    .conversationRead(mode: sortOption, page: OWPaginationPage.first)
-                    .response
-                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
+                .netwokAPI()
+                .conversation
+                .conversationRead(mode: sortOption, page: OWPaginationPage.first)
+                .response
+                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = viewInitialized
@@ -569,66 +569,66 @@ fileprivate extension OWPreConversationViewViewModel {
                 // 2. Update report locally
                 commentVM.inputs.reportCommentLocally()
             })
-                .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // 3. Update table view
+                self._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
+
+            // Responding to reply click from comment cells VMs
+            commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWComment> in
+                let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.replyClickedOutput
+                        .map { commentVM.outputs.comment }
+                }
+                return Observable.merge(replyClickOutputObservable)
+            }
+            .do(onNext: { [weak self] comment in
+                guard let self = self else { return }
+                self.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
+            })
+                .subscribe(onNext: { [weak self] comment in
                     guard let self = self else { return }
-                    // 3. Update table view
-                    self._performTableViewAnimation.onNext()
+                    self.commentCreationTap.onNext(.replyToComment(originComment: comment))
                 })
                 .disposed(by: disposeBag)
 
-                // Responding to reply click from comment cells VMs
-                commentCellsVmsObservable
-                .flatMap { commentCellsVms -> Observable<OWComment> in
-                    let replyClickOutputObservable: [Observable<OWComment>] = commentCellsVms.map { commentCellVm in
-                        let commentVM = commentCellVm.outputs.commentVM
-                        return commentVM.outputs.commentEngagementVM
-                            .outputs.replyClickedOutput
-                            .map { commentVM.outputs.comment }
-                    }
-                    return Observable.merge(replyClickOutputObservable)
+            // Responding to share url from comment cells VMs
+            commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<(URL, OWCommentViewModeling)> in
+                let shareClickOutputObservable: [Observable<(URL, OWCommentViewModeling)>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.shareCommentUrl
+                        .map { ($0, commentVM) }
                 }
-                .do(onNext: { [weak self] comment in
-                    guard let self = self else { return }
-                    self.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
-                })
-                    .subscribe(onNext: { [weak self] comment in
-                        guard let self = self else { return }
-                        self.commentCreationTap.onNext(.replyToComment(originComment: comment))
-                    })
-                    .disposed(by: disposeBag)
-
-                    // Responding to share url from comment cells VMs
-                    commentCellsVmsObservable
-                    .flatMapLatest { commentCellsVms -> Observable<(URL, OWCommentViewModeling)> in
-                        let shareClickOutputObservable: [Observable<(URL, OWCommentViewModeling)>] = commentCellsVms.map { commentCellVm in
-                            let commentVM = commentCellVm.outputs.commentVM
-                            return commentVM.outputs.commentEngagementVM
-                                .outputs.shareCommentUrl
-                                .map { ($0, commentVM) }
-                        }
-                        return Observable.merge(shareClickOutputObservable)
+                return Observable.merge(shareClickOutputObservable)
+            }
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _, commentVm in
+                guard let self = self else { return }
+                self.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
+            })
+                .flatMap { [weak self] shareUrl, _ -> Observable<OWRxPresenterResponseType> in
+                    guard let self = self else { return .empty() }
+                    return self.servicesProvider.presenterService()
+                        .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
+                }
+                .subscribe { result in
+                    switch result {
+                    case .completion:
+                        // Do nothing
+                        break
+                    case .selected:
+                        // Do nothing
+                        break
                     }
-                    .observe(on: MainScheduler.instance)
-                    .do(onNext: { [weak self] _, commentVm in
-                        guard let self = self else { return }
-                        self.sendEvent(for: .commentShareClicked(commentId: commentVm.outputs.comment.id ?? ""))
-                    })
-                        .flatMap { [weak self] shareUrl, _ -> Observable<OWRxPresenterResponseType> in
-                            guard let self = self else { return .empty() }
-                            return self.servicesProvider.presenterService()
-                                .showActivity(activityItems: [shareUrl], applicationActivities: nil, viewableMode: self.viewableMode)
-                        }
-                        .subscribe { result in
-                            switch result {
-                            case .completion:
-                                // Do nothing
-                                break
-                            case .selected:
-                                // Do nothing
-                                break
-                            }
-                        }
-                        .disposed(by: disposeBag)
+                }
+                .disposed(by: disposeBag)
 
         // Responding to comment avatar click
         self.servicesProvider.profileService().openProfile
