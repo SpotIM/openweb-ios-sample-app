@@ -265,7 +265,6 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowHiddenCommentMessage
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isHiddenMessage in
                 guard let self = self,
                       isHiddenMessage
@@ -284,7 +283,6 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.subscriberBadgeVM
             .outputs.isSubscriber
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.subscriberBadgeView.OWSnp.updateConstraints { make in
