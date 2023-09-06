@@ -50,6 +50,8 @@ protocol OWConversationViewViewModelingOutputs {
     var openPublisherProfile: Observable<String> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var conversationOffset: Observable<CGPoint> { get }
+    var dataSourceTransition: OWViewTransition { get }
+    var conversationDataJustReceived: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -64,11 +66,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
-        static let numberOfSkeletonComments: Int = 4
+        static let numberOfSkeletonComments: Int = 5
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -100,6 +103,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     fileprivate var paginationOffset = 0
+
+    fileprivate var articleUrl: String = ""
 
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
@@ -136,6 +141,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var _conversationDataJustReceived = PublishSubject<Void>()
+    var conversationDataJustReceived: Observable<Void> {
+        return _conversationDataJustReceived
+            .asObservable()
+    }
+
     fileprivate var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
@@ -150,7 +161,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: conversationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -326,6 +337,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return changeConversationOffset
             .asObservable()
     }
+
+    var dataSourceTransition: OWViewTransition = .reload
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
@@ -533,6 +546,8 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -558,6 +573,10 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -589,16 +608,27 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
             .share()
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .fullConversationLoaded)
+                guard let self = self else { return }
+                // Send analytic event
+                self.sendEvent(for: .fullConversationLoaded)
             })
             .disposed(by: disposeBag)
 
-        // first load comments or refresh comments
+        // Each time the whole conversation loaded with new data except the first time
         conversationFetchedObservable
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?._conversationDataJustReceived.onNext(())
+            })
+            .disposed(by: disposeBag)
+
+        // first load comments / refresh comments / sorted changed
+        conversationFetchedObservable
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
@@ -606,8 +636,7 @@ fileprivate extension OWConversationViewViewModel {
 
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
 
-                self._commentsPresentationData.removeAll()
-                self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+                self._commentsPresentationData.replaceAll(with: commentsPresentationData)
             })
             .disposed(by: disposeBag)
 
@@ -637,6 +666,16 @@ fileprivate extension OWConversationViewViewModel {
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
+
+        // After conversation fetched - i.e By the user changing sort option / pull to refresh / or initial load
+        // Re-enabling animations in the conversation table view
+        conversationFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
@@ -790,6 +829,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // append new comments on load more
         loadMoreCommentsReadFetched
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
@@ -1018,13 +1058,13 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
@@ -1120,6 +1160,7 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] _, currentSort in
                 self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
 
@@ -1142,17 +1183,28 @@ fileprivate extension OWConversationViewViewModel {
                     self.sendEvent(for: .sortByClosed(currentSort: currentSort))
                     return
                 case .selected(action: let action):
-                    let sortDictateService = self.servicesProvider.sortDictateService()
-                    var newSort: OWSortOption = .best
+                    let newSort: OWSortOption
                     switch (action.type) {
                     case OWSortMenu.sortBest: newSort = .best
                     case OWSortMenu.sortNewest: newSort = .newest
                     case OWSortMenu.sortOldest: newSort = .oldest
                     default:
-                        break
+                        newSort = .best
                     }
+
+                    // Make sure the sort acutually changed
+                    guard currentSort != newSort else { return }
+
+                    // Event
                     self.sendEvent(for: .sortByChanged(previousSort: currentSort, selectedSort: newSort))
+                    // Changing the sort in the service
+                    let sortDictateService = self.servicesProvider.sortDictateService()
                     sortDictateService.update(sortOption: newSort, perPostId: self.postId)
+
+                    // Remove all comments to show skeletons while loading new comments according to the new sort
+                    self._commentsPresentationData.removeAll()
+
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
                 }
             })
             .disposed(by: disposeBag)
@@ -1482,6 +1534,21 @@ fileprivate extension OWConversationViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+
+            pullToRefresh
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                })
+                .disposed(by: disposeBag)
+
+            servicesProvider
+                .activeArticleService()
+                .articleExtraData
+                .subscribe(onNext: { [weak self] article in
+                    self?.articleUrl = article.url.absoluteString
+                })
+                .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
@@ -1489,7 +1556,7 @@ fileprivate extension OWConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: conversationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
     }

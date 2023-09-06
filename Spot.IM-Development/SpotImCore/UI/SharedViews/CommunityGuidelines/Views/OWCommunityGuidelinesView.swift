@@ -110,6 +110,7 @@ fileprivate extension OWCommunityGuidelinesView {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { make in
                 make.edges.equalToSuperview()
+                heightConstraint = make.height.equalTo(0).constraint
             }
 
             guidelinesContainer.addSubview(guidelinesIcon)

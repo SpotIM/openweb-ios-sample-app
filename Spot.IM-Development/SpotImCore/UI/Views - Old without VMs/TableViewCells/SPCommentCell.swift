@@ -38,17 +38,17 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
 
-    let messageView: MessageContainerView = .init()
+    let messageView = MessageContainerView()
 
-    private let userView: OWCommentUserView = .init()
+    private let userView = OWCommentUserView()
     private let statusIndicationView = OWCommentStatusIndicationView()
-    private let commentLabelView: CommentLabelView = .init()
-    private let replyActionsView: OWCommentActionsView = .init()
-    private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let headerView: SPBaseView = .init()
-    private let separatorView: SPBaseView = .init()
-    private let commentMediaView: CommentMediaView = .init()
-    private let opacityView: SPBaseView = .init()
+    private let commentLabelView = CommentLabelView()
+    private let replyActionsView = OWCommentActionsView()
+    private let moreRepliesView = ShowMoreRepliesView()
+    private let headerView = SPBaseView()
+    private let separatorView = SPBaseView()
+    private let commentMediaView = CommentMediaView()
+    private let opacityView = CommentMediaView()
 
     private var commentId: String?
     private var replyingToId: String?

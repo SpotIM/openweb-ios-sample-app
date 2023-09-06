@@ -31,6 +31,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let readOnlyTopPadding: CGFloat = 40
         static let tableViewAnimationDuration: Double = 0.25
         static let compactContentTopPedding: CGFloat = 8
+        static let tableViewTopPedding: CGFloat = 16
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
@@ -100,7 +101,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
-        let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            guard let self = self else { return .reload }
+            return self.viewModel.outputs.dataSourceTransition
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
@@ -209,7 +213,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTAView.OWSnp.bottom)
+            make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(0)
         }
@@ -254,7 +258,7 @@ fileprivate extension OWPreConversationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
+                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor5 : .backgroundColor2, themeStyle: currentStyle)
                 self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)

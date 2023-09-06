@@ -12,14 +12,17 @@ import RxCocoa
 import UIKit
 
 class OWCommentCreationEntryView: UIView {
+    struct TextViewMetrics {
+        static let textViewTopPadding: CGFloat = 11
+        static let textViewBottomPadding: CGFloat = 12
+    }
+
     fileprivate struct Metrics {
         static let userAvatarSize: CGFloat = 40
         static let containerLeadingOffset: CGFloat = 10
-        static let labelInsetVertical: CGFloat = 12
+        static let labelInsetTop: CGFloat = 11
+        static let labelInsetBottom: CGFloat = 10
         static let labelInsetHorizontal: CGFloat = 15
-
-        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
@@ -44,7 +47,7 @@ class OWCommentCreationEntryView: UIView {
     fileprivate lazy var label: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
-            .text(OWLocalizationManager.shared.localizedString(key: "What do you think?"))
+            .text(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .enforceSemanticAttribute()
     }()
@@ -85,25 +88,26 @@ fileprivate extension OWCommentCreationEntryView {
 
     func setupUI() {
         applyAccessibility()
+
         addSubview(userAvatarView)
+        addSubview(labelContainer)
         userAvatarView.OWSnp.makeConstraints { make in
-            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
-            make.bottom.greaterThanOrEqualToSuperview().offset(Metrics.margins.bottom)
-            make.centerY.leading.equalToSuperview()
+            make.bottom.equalTo(labelContainer.OWSnp.bottom)
+            make.leading.equalToSuperview()
             make.size.equalTo(Metrics.userAvatarSize)
         }
 
-        addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
-            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
-            make.bottom.greaterThanOrEqualToSuperview().offset(-Metrics.margins.bottom)
+            make.top.equalToSuperview().inset(TextViewMetrics.textViewTopPadding)
+            make.bottom.equalToSuperview().inset(TextViewMetrics.textViewBottomPadding)
             make.trailing.equalToSuperview()
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(Metrics.containerLeadingOffset)
         }
 
         labelContainer.addSubview(label)
         label.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(Metrics.labelInsetVertical)
+            make.top.equalToSuperview().inset(Metrics.labelInsetTop)
+            make.bottom.equalToSuperview().inset(Metrics.labelInsetBottom)
             make.leading.trailing.equalToSuperview().inset(Metrics.labelInsetHorizontal)
         }
     }

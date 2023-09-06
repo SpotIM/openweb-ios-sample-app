@@ -36,19 +36,19 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var authHandler: OWAuthenticationHandler?
     private var model: SPCommentCreationModel
 
-    let topContainerView: SPBaseView = .init()
-    let topContainerStack: SPBaseStackView = .init()
-    let commentContentScrollView: SPBaseScrollView = .init()
-    var textInputViewContainer: SPCommentTextInputView = .init()
-    private let imagePreviewView: OWCommentImagePreview = .init()
+    let topContainerView = SPBaseView()
+    let topContainerStack = SPBaseStackView()
+    let commentContentScrollView = SPBaseScrollView()
+    var textInputViewContainer = SPCommentTextInputView()
+    private let imagePreviewView = OWCommentImagePreview()
     lazy var usernameView: SPNameInputView = SPNameInputView()
 
     let activityIndicator: SPLoaderView = SPLoaderView()
     var showsUserAvatarInTextInput: Bool { !showsUsernameInput }
 
-    private let mainContainerView: SPBaseView = .init()
+    private let mainContainerView = SPBaseView()
 
-    private let footerView: SPCommentFooterView = .init()
+    private let footerView = SPCommentFooterView()
 
     private lazy var commentReplyCounterLabel: UILabel = {
         let txt = "0/\(model.commentCounter)"
@@ -59,8 +59,8 @@ class SPCommentCreationViewController: SPBaseViewController,
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
 
-    private let scrollView: SPBaseScrollView = .init()
-    private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
+    private let scrollView = SPBaseScrollView()
+    private var commentLabelsContainer = SPCommentLabelsContainerView()
     private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
 
@@ -69,12 +69,12 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var commentContentScrollViewBottomConstraint: OWConstraint?
     private var mainContainerBottomConstraint: OWConstraint?
 
-    private let closeButton: SPBaseButton = .init()
+    private let closeButton = SPBaseButton()
 
     private lazy var commentHeaderView = SPCommentReplyHeaderView()
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
-    private let commentingContainer: UIView = .init()
-    private let commentingOnLabel: SPBaseLabel = .init()
+    private let commentingContainer = UIView()
+    private let commentingOnLabel = SPBaseLabel()
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
 
     private var imagePicker: OWImagePicker?

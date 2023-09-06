@@ -57,7 +57,7 @@ final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProv
     private func realTimeParameters(conversationId: String, date: Date) -> [String: Any] {
         let timestamp: Int = Int(date.timeIntervalSince1970)
         let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: conversationId]
-        let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: []]) { first, _ in first }
+        let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: [Any]()]) { first, _ in first }
 
         return [
             RealtimeAPIKeys.timestamp: timestamp,

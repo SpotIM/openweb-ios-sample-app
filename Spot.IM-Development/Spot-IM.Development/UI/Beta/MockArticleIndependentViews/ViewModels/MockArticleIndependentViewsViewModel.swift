@@ -74,6 +74,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         }
 
         setupCustomizationsCallaback()
+        setupBICallaback()
         setupObservers()
     }
 
@@ -153,7 +154,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     fileprivate lazy var commentCreationStyleChanged: Observable<Void> = {
-        return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        return self.userDefaultsProvider.values(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
             .asObservable()
             .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
                 guard let self = self else { return .empty() }
@@ -170,9 +171,18 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
 
     // All the stuff which should trigger new comment thread component
     fileprivate lazy var commentThreadStyleChanged: Observable<Void> = {
-        // TODO: Complete once developed
-        return Observable.never()
+        return self.userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
+            .asObservable()
+            .flatMap { [weak self] _ -> Observable<SDKUIIndependentViewType> in
+                guard let self = self else { return .empty() }
+                return self.actionSettings
+                    .take(1)
+                    .map { $0.viewType }
+            }
+            .filter { $0 == .commentThread }
+            .voidify()
     }()
+
     fileprivate lazy var commentThreadUpdater: Observable<Void> = {
         return Observable.merge(self.commentThreadStyleChanged)
     }()
@@ -226,6 +236,17 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         customizations.addElementCallback(customizableClosure)
     }
 
+    func setupBICallaback() {
+        let analytics: OWAnalytics = OpenWeb.manager.analytics
+
+        let BIClosure: OWBIAnalyticEventCallback = { [weak self] event, additionalInfo, postId in
+            let log = "Received BI Event: \(event), additional info: \(additionalInfo), postId: \(postId)"
+            self?.loggerViewModel.inputs.log(text: log)
+        }
+
+        analytics.addBICallback(BIClosure)
+    }
+
     func retrieveComponent(for settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
         switch settings.viewType {
         case .preConversation:
@@ -234,6 +255,8 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             return self.retrieveConversation(settings: settings)
         case .commentCreation:
             return self.retrieveCommentCreation(settings: settings)
+        case .commentThread:
+            return self.retrieveCommentThread(settings: settings)
         default:
             return Observable.error(GeneralErrors.missingImplementation)
         }
@@ -244,7 +267,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -280,7 +303,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -316,7 +339,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -340,6 +363,43 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 case .failure(let error):
                     let message = error.description
                     DLog("Calling retrieveCommentCreation error: \(message)")
+                    observer.onError(error)
+                }
+            })
+
+            return Disposables.create()
+        }
+    }
+
+    func retrieveCommentThread(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else { return Disposables.create() }
+
+            let additionalSettings = self.commonCreatorService.additionalSettings()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
+            uiViews.commentThread(postId: settings.postId,
+                                  article: article,
+                                  commentId: self.commonCreatorService.commentThreadCommentId(),
+                                  additionalSettings: additionalSettings,
+                                  callbacks: actionsCallbacks,
+                                  completion: { result in
+                switch result {
+                case .success(let commentThreadView):
+                    observer.onNext(commentThreadView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveCommentThread error: \(message)")
                     observer.onError(error)
                 }
             })

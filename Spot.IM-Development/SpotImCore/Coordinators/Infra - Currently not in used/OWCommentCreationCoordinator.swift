@@ -50,8 +50,17 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
         let commentCreationPopped = PublishSubject<Void>()
 
+        let pushStyle: OWScreenPushStyle = {
+            switch commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+            case .regular, .light:
+                return .present
+            case .floatingKeyboard:
+                return .presentOverFullScreen
+            }
+        }()
+
         router.push(commentCreationVC,
-                    pushStyle: .presentStyle,
+                    pushStyle: pushStyle,
                     animated: true,
                     popCompletion: commentCreationPopped)
 
@@ -59,6 +68,24 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         setupViewActionsCallbacks(forViewModel: commentCreationVM)
 
         let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
+            .filter { _ in
+                if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    return false
+                } else {
+                    return true
+                }
+            }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
+            .asObservable()
+
+        let commentCreatedByFloatingKeyboardStyleObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
+            .filter { _ in
+                if case .floatingKeyboard = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    return true
+                } else {
+                    return false
+                }
+            }
             .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
 
@@ -80,16 +107,18 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable)
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                self?.router.pop(popStyle: .dismissStyle, animated: false)
+                self?.router.pop(popStyle: .dismiss, animated: false)
             })
 
-        return Observable.merge(resultsWithPopAnimation, commentCreationLoadedToScreenObservable, poppedFromBackButtonObservable)
+                return Observable.merge(resultsWithPopAnimation.take(1),
+                                        commentCreationLoadedToScreenObservable.take(1),
+                                        poppedFromBackButtonObservable.take(1),
+                                        commentCreatedByFloatingKeyboardStyleObservable.take(1))
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        // TODO: Complete when we would like to support comment creation as a view
         let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel(commentCreationData: commentCreationData,
-                                                                                                      viewableMode: .independent)
+                                                                                                viewableMode: .independent)
         let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
         setupObservers(forViewModel: commentCreationViewVM)
         setupViewActionsCallbacks(forViewModel: commentCreationViewVM)
@@ -99,6 +128,20 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
+        viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
+            .subscribe { [weak self] _ in
+                guard let self = self else { return }
+                let popStyle: OWScreenPopStyle = {
+                    switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        return .dismiss
+                    case .floatingKeyboard:
+                        return .dismissOverFullScreen
+                    }
+                }()
+                self.router.pop(popStyle: popStyle, animated: true)
+            }
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewModeling) {

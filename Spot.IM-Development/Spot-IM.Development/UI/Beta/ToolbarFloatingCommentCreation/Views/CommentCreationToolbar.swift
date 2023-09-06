@@ -15,7 +15,7 @@ import SnapKit
 class CommentCreationToolbar: UIView {
 
     struct ToolbarMetrics {
-        static let height: CGFloat = 80
+        static let height: CGFloat = 50
     }
 
     fileprivate struct Metrics {
@@ -29,7 +29,7 @@ class CommentCreationToolbar: UIView {
 
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.showsHorizontalScrollIndicator = false
-
+        collection.backgroundColor = .clear
         collection.register(cellClass: ToolbarCollectionCell.self)
         return collection
     }()
@@ -77,5 +77,4 @@ fileprivate extension CommentCreationToolbar {
             .disposed(by: disposeBag)
     }
 }
-
 #endif
