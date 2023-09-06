@@ -163,3 +163,9 @@
 "ClarityPendingReasonsTitle" = "Your comment may have been sent for review for one of the following reasons:";
 "EditingComment" = "Editing comment";
 "Awaiting review" = "Awaiting review";
+"rejectReasonEnsureCivil" = "All of our decisions are designed to ensure civil, open and inclusive discourse within the community.";
+"rejectReasonMachineLearning" = "We use advanced machine learning technology combined with unbiased human moderation to review all questionable content.";
+"rejectReasonWeDoNotCensor" = "We do not censor. Our mission is to help build thriving communities and encourage open and civil conversations.";
+"pendingResonManualApproval" = "All comments on the site require manual approval (so nothing personal)";
+"pendingReasonPerformanceReview" = "Certain comments are sent to an internal product performance review (it’s not you, it’s us)";
+"pendingResonCommunityGuidelines" = "Your comment has been automatically flagged as it may not align with our community guidelines (You can revise your comment at any time)";
