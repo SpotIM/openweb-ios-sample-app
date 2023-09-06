@@ -73,6 +73,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
+    fileprivate var articleUrl: String = ""
+
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
         return _cellsViewModels
@@ -376,6 +378,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -470,11 +474,13 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .preConversationLoaded)
+                guard let self = self else { return }
+                // Send analytics event
+                self.sendEvent(for: .preConversationLoaded)
             })
             .disposed(by: disposeBag)
 
@@ -1033,6 +1039,14 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.sendEvent(for: .showMoreComments)
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
@@ -1050,7 +1064,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: preConversationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
                 component: .preConversation)
     }
