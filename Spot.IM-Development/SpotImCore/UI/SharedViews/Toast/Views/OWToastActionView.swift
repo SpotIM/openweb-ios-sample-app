@@ -24,11 +24,11 @@ class OWToastActionView: UIView {
             string: viewModel.outputs.title,
             attributes: [
                 NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
-                NSAttributedString.Key.font: OWFontBook.shared.font(style: .medium, size: Metrics.textSize)
+                NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyInteraction)
                         ]
         )
         var label = UILabel()
-            .textColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
         label.attributedText = attributedString
         return label
     }()
@@ -37,7 +37,7 @@ class OWToastActionView: UIView {
         return UIImageView()
             .image(viewModel.outputs.icon?.withRenderingMode(.alwaysTemplate))
             .tintAdjustmentMode(.normal)
-            .tintColor(OWColorPalette.shared.color(type: .textColor6, themeStyle: .light))
+            .tintColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
     }()
 
     fileprivate var viewModel: OWToastActionViewModeling
@@ -75,8 +75,8 @@ fileprivate extension OWToastActionView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
-                self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor6, themeStyle: currentStyle)
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
+                self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
     }

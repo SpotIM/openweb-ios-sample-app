@@ -43,6 +43,8 @@ fileprivate extension OWToastActionViewModel {
             return OWLocalizationManager.shared.localizedString(key: "Try Again")
         case .undo:
             return OWLocalizationManager.shared.localizedString(key: "Undo") // TODO: missing translations
+        case .close:
+            return ""
         case .none:
             return ""
         }
@@ -55,6 +57,8 @@ fileprivate extension OWToastActionViewModel {
         case .tryAgain:
             return UIImage(spNamed: "tryAgain")
         case .undo:
+            return UIImage(spNamed: "undo")
+        case .close:
             return UIImage(spNamed: "undo")
         case .none:
             return nil
