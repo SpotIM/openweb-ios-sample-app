@@ -48,7 +48,6 @@ fileprivate extension OWCommentTextLabel {
 
     func setupObservers() {
         viewModel.outputs.attributedString
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] attString in
                 guard let self = self else { return }
                 self.attributedText = attString
