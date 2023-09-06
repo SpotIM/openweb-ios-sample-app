@@ -57,7 +57,7 @@ fileprivate extension OWCommentStatusView {
     }
 
     func setupViews() {
-        self.addCornerRadius(4)
+        self.addCornerRadius(Metrics.cornerRadius)
         self.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light)
 
         self.addSubview(iconImageView)
@@ -78,10 +78,6 @@ fileprivate extension OWCommentStatusView {
     func setupObservers() {
         viewModel.outputs.iconImage
             .bind(to: iconImageView.rx.image)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.messageAttributedText
-            .bind(to: messageLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
         viewModel.outputs.messageAttributedText

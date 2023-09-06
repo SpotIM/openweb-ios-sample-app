@@ -72,7 +72,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var navigationTitle: String = {
         switch type {
         case .rejected:
-            return "Comment rejected"
+            return "Comment rejected" // TODO: translations
         case .pending:
             return OWLocalizationManager.shared.localizedString(key: "Awaiting review")
         }
@@ -88,7 +88,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var detailsTitleText: String = {
         switch type {
         case .rejected:
-            return "How do we reach our decisions?"
+            return "How do we reach our decisions?" // TODO: translations
         case .pending:
             return ""
         }
@@ -99,11 +99,11 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         case .rejected:
             return ""
         case .pending:
-            return "We let registered users know as soon as their comment has been reviewed."
+            return "We let registered users know as soon as their comment has been reviewed." // TODO: translations
         }
     }()
 
-    // TODO: translations!
+    // TODO: translations
     lazy var paragraphViewModels: [OWParagraphWithIconViewModeling] = {
         switch type {
         case .rejected:
@@ -184,7 +184,7 @@ fileprivate extension OWClarityDetailsViewVM {
         .disposed(by: disposeBag)
     }
 
-    // TODO: translations!
+    // TODO: translations
     func getTopParagraphAttributedString(clarityType: OWClarityDetailsType, style: OWThemeStyle) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),

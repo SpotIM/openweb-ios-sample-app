@@ -20,7 +20,7 @@ protocol OWCommentStatusViewModelingOutputs {
     var messageAttributedText: Observable<NSAttributedString> { get }
     var learnMoreClickableString: String { get }
     var learnMoreClicked: Observable<OWClarityDetailsType> { get }
-    var status: Observable<OWCommentStatus> { get }
+    var status: Observable<OWCommentStatusType> { get }
 }
 
 protocol OWCommentStatusViewModeling {
@@ -35,16 +35,16 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     var inputs: OWCommentStatusViewModelingInputs { return self }
     var outputs: OWCommentStatusViewModelingOutputs { return self }
 
-    fileprivate let _status = BehaviorSubject<OWCommentStatus>(value: .none)
+    fileprivate let _status = BehaviorSubject<OWCommentStatusType>(value: .none)
 
     fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
-    init (status: OWCommentStatus, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (status: OWCommentStatusType, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServicesProvider = sharedServicesProvider
         _status.onNext(status)
     }
 
-    lazy var status: Observable<OWCommentStatus> = {
+    lazy var status: Observable<OWCommentStatusType> = {
         self._status
             .asObservable()
     }()
@@ -123,17 +123,17 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }
 
     func updateStatus(for comment: OWComment) {
-        let newStatus = OWCommentStatus.commentStatus(from: comment.status)
+        let newStatus = OWCommentStatusType.commentStatus(from: comment.status)
         self._status.onNext(newStatus)
     }
 }
 
-enum OWCommentStatus {
+enum OWCommentStatusType {
     case rejected
     case pending
     case none
 
-    static func commentStatus(from status: OWComment.CommentStatus?) -> OWCommentStatus {
+    static func commentStatus(from status: OWComment.CommentStatus?) -> OWCommentStatusType {
         guard let status = status else { return .none }
         switch status {
         case .block, .reject:
