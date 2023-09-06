@@ -92,8 +92,8 @@ struct OWColor {
                 return OWColor(lightThemeColor: OWDesignColors.G1,
                                darkThemeColor: OWDesignColors.G2)
             case .backgroundColor5:
-                return OWColor(lightThemeColor: OWDesignColors.L9,
-                               darkThemeColor: OWDesignColors.D9)
+                return OWColor(lightThemeColor: OWDesignColors.L1ALT,
+                               darkThemeColor: OWDesignColors.D1ALT)
             case .borderColor1:
                 return OWColor(lightThemeColor: OWDesignColors.L1,
                                darkThemeColor: OWDesignColors.D1)

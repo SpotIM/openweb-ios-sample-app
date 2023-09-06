@@ -793,13 +793,13 @@ fileprivate extension OWPreConversationViewViewModel {
             .do(onNext: { [weak self] (_, _, commentVm) in
                 self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
