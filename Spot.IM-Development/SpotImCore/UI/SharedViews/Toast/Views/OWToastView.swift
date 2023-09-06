@@ -33,7 +33,7 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
         return UILabel()
             .text(viewModel.outputs.title)
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.textSize))
+            .font(OWFontBook.shared.font(typography: .bodyText))
     }()
 
     fileprivate lazy var actionView: OWToastActionView = {

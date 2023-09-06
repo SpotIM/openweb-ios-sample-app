@@ -26,5 +26,6 @@ enum OWToastAction: String, OWMenuTypeProtocol {
     case undo
     case tryAgain
     case learnMore
+    case close
     case none
 }
