@@ -49,7 +49,8 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringModeProtocol, OWCompactR
 
 // UIFlows
 extension OWUILayer {
-    func preConversation(postId: OWPostId, article: OWArticleProtocol,
+    func preConversation(postId: OWPostId,
+                         article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -88,7 +89,8 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func conversation(postId: OWPostId, article: OWArticleProtocol,
+    func conversation(postId: OWPostId,
+                      article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks? = nil,
@@ -132,7 +134,8 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 
-    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
+    func commentCreation(postId: OWPostId,
+                         article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -357,6 +360,7 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
+
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -411,6 +415,7 @@ extension OWUILayer {
                        additionalSettings: OWAdditionalSettingsProtocol,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWViewCompletion) {
+
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
