@@ -16,7 +16,7 @@ protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
-    func mockArticle() -> OWArticleProtocol
+    func mockArticle(for postId: String) -> OWArticleProtocol
     func commentCreationFloatingBottomToolbar() -> (CommentCreationToolbarViewModeling, CommentCreationToolbar)
 }
 
@@ -76,7 +76,7 @@ class CommonCreatorService: CommonCreatorServicing {
         }
     }
 
-    func mockArticle() -> OWArticleProtocol {
+    func mockArticle(for postId: String) -> OWArticleProtocol {
         let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
                                                                                                            defaultValue: OWReadOnlyMode.default.index))
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
@@ -87,8 +87,9 @@ class CommonCreatorService: CommonCreatorServicing {
 
         let persistenceArticleSection = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
                                                                           defaultValue: nil)
+        let presetSection = self.getSectionFromPreset(for: postId)
 
-        let settings = OWArticleSettings(section: persistenceArticleSection ?? "",
+        let settings = OWArticleSettings(section: persistenceArticleSection ?? presetSection ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
@@ -117,6 +118,12 @@ class CommonCreatorService: CommonCreatorServicing {
         let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel(toolbarElments: toolbarElements)
         let toolbar = CommentCreationToolbar(viewModel: viewModel)
         return (viewModel, toolbar)
+    }
+
+    func getSectionFromPreset(for spotId: String) -> String? {
+        let presets = ConversationPreset.createMockModels()
+        let presetForSpot = presets.first(where: { $0.conversationDataModel.spotId == spotId } )
+        return presetForSpot?.section
     }
 }
 
