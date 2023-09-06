@@ -1186,7 +1186,7 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to comment avatar click
+        // Responding to comment avatar and user name tapped
         commentCellsVmsObservable
             .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileData> in
                 let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in

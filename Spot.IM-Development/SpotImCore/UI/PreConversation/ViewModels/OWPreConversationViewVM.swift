@@ -630,7 +630,7 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .disposed(by: disposeBag)
 
-        let commentAvatarClickObservable: Observable<OWOpenProfileData> = commentCellsVmsObservable
+        let commentOpenProfileObservable: Observable<OWOpenProfileData> = commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<OWOpenProfileData> in
                 let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
@@ -640,8 +640,8 @@ fileprivate extension OWPreConversationViewViewModel {
                 return Observable.merge(avatarClickOutputObservable)
             }
 
-        // Responding to comment avatar click
-        commentAvatarClickObservable
+        // Responding to comment avatar and user name tapped
+        commentOpenProfileObservable
             .do(onNext: { [weak self] openProfileData in
                 guard let self = self  else { return }
                 switch openProfileData.userProfileType {

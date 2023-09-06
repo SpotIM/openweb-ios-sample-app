@@ -233,7 +233,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
-            .debug("*** openPublisherProfile conversation")
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow

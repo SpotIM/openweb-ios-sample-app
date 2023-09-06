@@ -141,7 +141,6 @@ fileprivate extension OWPreConversationCoordinator {
         )
 
         coordinateToSafariObservables
-            .debug("*** openPublisherProfile pre")
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
