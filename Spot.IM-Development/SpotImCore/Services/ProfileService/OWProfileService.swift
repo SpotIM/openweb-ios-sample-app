@@ -21,8 +21,6 @@ class OWProfileService: OWProfileServicing {
         self.sharedServicesProvider = sharedServicesProvider
     }
 
-    var shouldBlockOpenProfile = BehaviorSubject<Bool>(value: false)
-
     func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileData> {
         let profileOptionToUse = profileOptionToUse(user: user)
 
