@@ -161,3 +161,9 @@
 "Hold on, your comment is waiting for approval." = "Merci de patienter, votre commentaire est en attente d'approbation.";
 "ClarityPendingReasonsTitle" = "L'examen de votre commentaire a pu être demandé pour l'une des raisons suivantes :";
 "Awaiting review" = "En attente d'évaluation";
+"rejectReasonEnsureCivil" = "Toutes nos décisions sont motivées par le souci de garantir un échange civil, ouvert et inclusif au sein de la communauté.";
+"rejectReasonMachineLearning" = "Nous utilisons une technologie avancée d'apprentissage automatique combinée à une modération humaine impartiale pour examiner tous les contenus controversés.";
+"rejectReasonWeDoNotCensor" = "Nous ne censurons pas. Notre mission est d'aider à construire des communautés dynamiques et d'encourager des conversations ouvertes et civiles.";
+"pendingResonManualApproval" = "Tous les commentaires sur le site sont soumis à une approbation manuelle (donc rien de personnel).";
+"pendingReasonPerformanceReview" = "Certains commentaires sont envoyés à un service interne d'évaluation des performances des produits (rien à voir avec vous, c'est notre affaire).";
+"pendingResonCommunityGuidelines" = "Votre commentaire a été automatiquement signalé comme n'étant pas conforme à nos directives communautaires (vous pouvez réviser votre commentaire à tout moment).";
