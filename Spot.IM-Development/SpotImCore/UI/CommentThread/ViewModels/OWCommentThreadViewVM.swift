@@ -61,6 +61,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
+    fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
@@ -355,6 +356,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
+
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
@@ -1102,6 +1105,14 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
@@ -1109,7 +1120,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: commentThreadData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
                 component: .commentCreation)
     }
