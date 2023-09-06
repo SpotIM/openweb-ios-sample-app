@@ -31,7 +31,6 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
-    fileprivate var servicesProvider: OWSharedServicesProviding
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
     }()
@@ -41,9 +40,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
     init(router: OWRoutering! = nil,
          commentThreadData: OWCommentThreadRequiredData,
-         actionsCallbacks: OWViewActionsCallbacks?,
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.servicesProvider = servicesProvider
+         actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.commentThreadData = commentThreadData
         self.actionsCallbacks = actionsCallbacks
