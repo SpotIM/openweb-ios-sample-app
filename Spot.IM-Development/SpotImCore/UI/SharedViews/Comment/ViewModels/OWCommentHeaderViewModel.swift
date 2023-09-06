@@ -291,7 +291,7 @@ fileprivate extension OWCommentHeaderViewModel {
             .unwrap()
             .flatMap({ [weak self] user -> Observable<OWOpenProfileData> in
                 guard let self = self else { return .empty() }
-                return servicesProvider.profileService().openProfileTapped(user: user)
+                return self.servicesProvider.profileService().openProfileTapped(user: user)
             })
             .observe(on: MainScheduler.instance)
             .bind(to: _openProfile)
