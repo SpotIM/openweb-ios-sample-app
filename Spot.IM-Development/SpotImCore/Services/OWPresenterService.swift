@@ -153,7 +153,7 @@ class OWPresenterService: OWPresenterServicing {
             return Disposables.create()
         }
     }
-    
+
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
         return UIImagePickerController.rx.show(
