@@ -85,11 +85,13 @@ class CommonCreatorService: CommonCreatorServicing {
         var persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
                                                                           defaultValue: OWArticleInformationStrategy.default)
 
-        let persistenceArticleSection = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
+        var section = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
                                                                           defaultValue: nil)
-        let presetSection = self.getSectionFromPreset(for: postId)
+        if (section == nil || section?.isEmpty == true) {
+            section = self.getSectionFromPreset(for: postId)
+        }
 
-        let settings = OWArticleSettings(section: persistenceArticleSection ?? presetSection ?? "",
+        let settings = OWArticleSettings(section: section ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
