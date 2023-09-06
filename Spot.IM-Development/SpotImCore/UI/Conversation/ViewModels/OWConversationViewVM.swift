@@ -229,6 +229,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 }
                 return Observable.just(communityCellsOptions + commentCellsOptions)
             })
+            .observe(on: MainScheduler.instance)
             .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
                 guard let self = self else { return [] }
 
@@ -251,8 +252,15 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             return conversationCellOptions
                         }
                         if let commentCellVm = commentsVmsMapper[commentId] {
-                            commentCellVm.outputs.commentVM.inputs.update(user: viewModel.outputs.commentVM.outputs.user)
-                            commentCellVm.outputs.commentVM.inputs.update(comment: viewModel.outputs.commentVM.outputs.comment)
+                            let commentVm = commentCellVm.outputs.commentVM
+                            let updatedCommentVm = viewModel.outputs.commentVM
+
+                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment
+                                || updatedCommentVm.outputs.user != commentVm.outputs.user) {
+
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                            }
                             return OWConversationCellOption.comment(viewModel: commentCellVm)
                         } else {
                             return conversationCellOptions

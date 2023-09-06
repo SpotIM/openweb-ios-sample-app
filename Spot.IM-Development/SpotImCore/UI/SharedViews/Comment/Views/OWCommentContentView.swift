@@ -91,7 +91,6 @@ fileprivate extension OWCommentContentView {
 
     func setupObservers() {
         viewModel.outputs.image
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
                 guard let self = self,
                       case .custom(let url) = imageType else { return }
@@ -101,7 +100,6 @@ fileprivate extension OWCommentContentView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.gifUrl
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
@@ -109,7 +107,6 @@ fileprivate extension OWCommentContentView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.mediaSize
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
@@ -128,7 +125,6 @@ fileprivate extension OWCommentContentView {
 
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] newHeight in
                 guard let self = self else { return }
                 self.textHeightConstraint?.update(offset: newHeight)
@@ -148,7 +144,6 @@ fileprivate extension OWCommentContentView {
         }
 
         viewModel.outputs.isEdited
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isEdited in
                 guard let self = self else { return }
                 self.editedLabel.OWSnp.updateConstraints { make in
