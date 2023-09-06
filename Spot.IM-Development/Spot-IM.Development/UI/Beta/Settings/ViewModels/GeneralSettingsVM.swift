@@ -14,6 +14,7 @@ import SpotImCore
 
 protocol GeneralSettingsViewModelingInputs {
     var articleHeaderSelectedStyle: BehaviorSubject<OWArticleHeaderStyle> { get }
+    var articleInformationSelectedStrategy: BehaviorSubject<OWArticleInformationStrategy> { get }
     var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
@@ -24,6 +25,7 @@ protocol GeneralSettingsViewModelingInputs {
     var fontGroupTypeSelectedIndex: BehaviorSubject<Int> { get }
     var customFontGroupSelectedName: BehaviorSubject<String> { get }
     var articleAssociatedSelectedURL: PublishSubject<String> { get }
+    var articleSelectedSection: PublishSubject<String> { get }
     var languageStrategySelectedIndex: BehaviorSubject<Int> { get }
     var languageSelectedName: BehaviorSubject<String> { get }
     var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
@@ -32,6 +34,7 @@ protocol GeneralSettingsViewModelingInputs {
 protocol GeneralSettingsViewModelingOutputs {
     var title: String { get }
     var articleURLTitle: String { get }
+    var articleSectionTitle: String { get }
     var readOnlyTitle: String { get }
     var readOnlySettings: [String] { get }
     var themeModeTitle: String { get }
@@ -58,6 +61,8 @@ protocol GeneralSettingsViewModelingOutputs {
     var customFontGroupTypeName: Observable<String> { get }
     var showCustomFontName: Observable<Bool> { get }
     var articleAssociatedURL: Observable<String> { get }
+    var articleSection: Observable<String> { get }
+    var shouldShowArticleURL: Observable<Bool> { get }
     var shouldShowSetLanguage: Observable<Bool> { get }
     var supportedLanguageItems: [String] { get }
     var supportedLanguageTitle: String { get }
@@ -76,6 +81,10 @@ protocol GeneralSettingsViewModelingOutputs {
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> { get }
     var articleHeaderStyleTitle: String { get }
     var articleHeaderStyleSettings: [String] { get }
+
+    var articleInformationStrategy: Observable<OWArticleInformationStrategy> { get }
+    var articleInformationStrategyTitle: String { get }
+    var articleInformationStrategySettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -88,6 +97,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var outputs: GeneralSettingsViewModelingOutputs { return self }
 
     var articleHeaderSelectedStyle = BehaviorSubject<OWArticleHeaderStyle>(value: OWArticleHeaderStyle.default)
+    var articleInformationSelectedStrategy = BehaviorSubject<OWArticleInformationStrategy>(value: .default)
     var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
@@ -98,6 +108,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: 0)
     var customFontGroupSelectedName = BehaviorSubject<String>(value: "")
     var articleAssociatedSelectedURL = PublishSubject<String>()
+    var articleSelectedSection = PublishSubject<String>()
     var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
     var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
@@ -133,6 +144,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> {
         return userDefaultsProvider.values(key: .articleHeaderStyle, defaultValue: OWArticleHeaderStyle.default)
+    }
+
+    var articleInformationStrategy: Observable<OWArticleInformationStrategy> {
+        return userDefaultsProvider.values(key: .articleInformationStrategy, defaultValue: .server)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -189,6 +204,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var articleAssociatedURL: Observable<String> {
         return userDefaultsProvider.values(key: .articleAssociatedURL)
+    }
+
+    var articleSection: Observable<String> {
+        return userDefaultsProvider.values(key: .articleSection)
     }
 
     var showCustomFontName: Observable<Bool> {
@@ -255,6 +274,17 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .asObservable()
     }
 
+    var shouldShowArticleURL: Observable<Bool> {
+        return articleInformationStrategy
+            .map {
+                switch $0 {
+                case .server: return false
+                case .local(_): return true
+                }
+            }
+            .asObservable()
+    }
+
     fileprivate let disposeBag = DisposeBag()
 
     lazy var title: String = {
@@ -263,6 +293,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var articleHeaderStyleTitle: String = {
         return NSLocalizedString("ArticleHeaderStyle", comment: "")
+    }()
+
+    lazy var articleInformationStrategyTitle: String = {
+        return NSLocalizedString("ArticleInformationStrategy", comment: "")
     }()
 
     lazy var elementsCustomizationStyleTitle: String = {
@@ -275,6 +309,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var articleURLTitle: String = {
         return NSLocalizedString("ArticleAssociatedURL", comment: "")
+    }()
+
+    lazy var articleSectionTitle: String = {
+        return NSLocalizedString("ArticleSection", comment: "")
     }()
 
     lazy var readOnlySettings: [String] = {
@@ -302,6 +340,13 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _regular = NSLocalizedString("Regular", comment: "")
 
         return [_none, _regular]
+    }()
+
+    lazy var articleInformationStrategySettings: [String] = {
+        let _server = NSLocalizedString("Server", comment: "")
+        let _local = NSLocalizedString("Local", comment: "")
+
+        return [_server, _local]
     }()
 
     lazy var elementsCustomizationStyleSettings: [String] = {
@@ -424,6 +469,12 @@ fileprivate extension GeneralSettingsVM {
             .setValues(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle))
             .disposed(by: disposeBag)
 
+        articleInformationSelectedStrategy
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy))
+            .disposed(by: disposeBag)
+
         elementsCustomizationStyleSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
@@ -476,6 +527,12 @@ fileprivate extension GeneralSettingsVM {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String?>.articleAssociatedURL))
+            .disposed(by: disposeBag)
+
+        articleSelectedSection
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<String?>.articleSection))
             .disposed(by: disposeBag)
 
         themeModeSelectedIndex // 0. default 1. light 2. dark

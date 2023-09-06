@@ -61,6 +61,7 @@ fileprivate extension SettingsVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
+        applyLargeTitlesIfNeeded()
 
         title = viewModel.outputs.title
 

@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWCommentCreationRegularViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
+    var becomeFirstResponder: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
@@ -24,6 +25,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
+    var becomeFirstResponderCalled: Observable<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -45,8 +47,14 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     var closeButtonTap = PublishSubject<Void>()
 
+    var becomeFirstResponder = PublishSubject<Void>()
+    var becomeFirstResponderCalled: Observable<Void> {
+        return becomeFirstResponder
+            .asObservable()
+    }
+
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: commentCreationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling = {
@@ -121,15 +129,14 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
     var performCta: Observable<OWCommentCreationCtaData> {
         footerViewModel.outputs.performCtaAction
-            .withLatestFrom(commentCreationContentVM.outputs.commentTextOutput)
+            .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
-            .map { OWCommentCreationCtaData(text: $0, commentLabelIds: $1) }
+            .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1) }
             .asObservable()
     }
 
     init (commentCreationData: OWCommentCreationRequiredData,
-          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          viewableMode: OWViewableMode = .independent) {
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentCreationData = commentCreationData
         commentType = commentCreationData.commentCreationType
@@ -139,15 +146,22 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
 
 fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
-        commentCreationContentVM.outputs.commentTextOutput
-            .map { $0.count }
+        commentCreationContentVM.outputs.commentContent
+            .map { $0.text.count }
             .unwrap()
             .bind(to: commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
 
-        commentCreationContentVM.outputs.commentTextOutput
-            .map { !$0.isEmpty }
+        commentCreationContentVM.outputs.isValidatedContent
             .bind(to: footerViewModel.inputs.ctaEnabled)
+            .disposed(by: disposeBag)
+
+        becomeFirstResponderCalled
+            .bind(to: commentCreationContentVM.inputs.becomeFirstResponder)
+            .disposed(by: disposeBag)
+
+        closeButtonTap
+            .bind(to: commentCreationContentVM.inputs.resignFirstResponder)
             .disposed(by: disposeBag)
     }
 }

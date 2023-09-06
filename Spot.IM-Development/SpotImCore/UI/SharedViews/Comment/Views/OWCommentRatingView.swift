@@ -164,6 +164,7 @@ fileprivate extension OWCommentRatingView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.voteTypes
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] voteTypes in
                 guard let self = self else { return }
                 if (voteTypes.contains(.voteUp)) {

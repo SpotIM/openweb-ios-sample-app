@@ -21,15 +21,12 @@ protocol OWRxAppLifeCycleProtocol {
 class OWRxAppLifeCycle: OWRxAppLifeCycleProtocol {
 
     fileprivate let notificationCenter: NotificationCenter
-    fileprivate let app: UIApplication
     fileprivate let queueScheduler: SerialDispatchQueueScheduler
     fileprivate let disposeBag = DisposeBag()
 
     init(notificationCenter: NotificationCenter = NotificationCenter.default,
-         app: UIApplication = UIApplication.shared,
          queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKAppLifeCycleQueue")) {
         self.notificationCenter = notificationCenter
-        self.app = app
         self.queueScheduler = queueScheduler
 
         setupObservers()

@@ -44,7 +44,7 @@ extension OWAccessoryViewStrategy: Codable {
         switch self {
         case .none:
             try container.encode(OWAccessoryViewStrategyType.none, forKey: .type)
-        case .bottomToolbar(_):
+        case .bottomToolbar:
             try container.encode(OWAccessoryViewStrategyType.bottomToolbar, forKey: .type)
         }
     }

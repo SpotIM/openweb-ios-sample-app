@@ -16,7 +16,7 @@ protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
-    func mockArticle() -> OWArticleProtocol
+    func mockArticle(for postId: String) -> OWArticleProtocol
     func commentCreationFloatingBottomToolbar() -> (CommentCreationToolbarViewModeling, CommentCreationToolbar)
 }
 
@@ -37,11 +37,11 @@ class CommonCreatorService: CommonCreatorServicing {
         let conversationSettings = OWConversationSettingsBuilder(style: conversationStyle).build()
 
         // 3. Comment creation related
-        var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.regular)
+        var commentCreationStyle = self.userDefaultsProvider.get(key: .commentCreationStyle, defaultValue: OWCommentCreationStyle.default)
         // Inject toolbar if needed
         var newToolbarVM: CommentCreationToolbarViewModeling? = nil
-        if case let OWCommentCreationStyle.floatingKeyboard(accessoryViewStrategy) = commentCreationStyle,
-           case OWAccessoryViewStrategy.bottomToolbar(_) = accessoryViewStrategy {
+        if case OWCommentCreationStyle.floatingKeyboard(let accessoryViewStrategy) = commentCreationStyle,
+           case OWAccessoryViewStrategy.bottomToolbar = accessoryViewStrategy {
             // Since we can't actually save the toolbar UIView in the memory, we will re-create it
             let floatingBottomToolbarTuple = self.commentCreationFloatingBottomToolbar()
             let newToolbar = floatingBottomToolbarTuple.1
@@ -67,32 +67,44 @@ class CommonCreatorService: CommonCreatorServicing {
     }
 
     func commentThreadCommentId() -> String {
-        return self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
+        let commentId = self.userDefaultsProvider.get(key: .openCommentId, defaultValue: OWCommentThreadSettings.defaultCommentId)
+        if (commentId.isEmpty) {
+            // If value is empty on user defaults, we want to use the default comment ID
+            return OWCommentThreadSettings.defaultCommentId
+        } else {
+            return commentId
+        }
     }
 
-    func mockArticle() -> OWArticleProtocol {
-        let articleStub = OWArticle.stub()
-
+    func mockArticle(for postId: String) -> OWArticleProtocol {
         let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
                                                                                                            defaultValue: OWReadOnlyMode.default.index))
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 
-        let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
+        var persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
+                                                                          defaultValue: OWArticleInformationStrategy.default)
+
+        var section = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
+                                                                          defaultValue: nil)
+        if (section == nil || section?.isEmpty == true) {
+            section = self.getSectionFromPreset(for: postId)
+        }
+
+        let settings = OWArticleSettings(section: section ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
-        var url = articleStub.url
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
-           let persistenceURL = URL(string: strURL) {
-            url = persistenceURL
+           let persistenceURL = URL(string: strURL),
+           case .local(let data) = persistenceArticleInformationStrategy {
+            let extraData = OWArticleExtraData(url: persistenceURL, title: data.title, subtitle: data.subtitle, thumbnailUrl: data.thumbnailUrl)
+            persistenceArticleInformationStrategy = .local(data: extraData)
         }
 
-        let article = OWArticle(url: url,
-                                title: articleStub.title,
-                                subtitle: articleStub.subtitle,
-                                thumbnailUrl: articleStub.thumbnailUrl,
-                                additionalSettings: settings)
+        let article = OWArticle(
+            articleInformationStrategy: persistenceArticleInformationStrategy,
+            additionalSettings: settings)
         return article
     }
 
@@ -108,6 +120,12 @@ class CommonCreatorService: CommonCreatorServicing {
         let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel(toolbarElments: toolbarElements)
         let toolbar = CommentCreationToolbar(viewModel: viewModel)
         return (viewModel, toolbar)
+    }
+
+    func getSectionFromPreset(for spotId: String) -> String? {
+        let presets = ConversationPreset.createMockModels()
+        let presetForSpot = presets.first(where: { $0.conversationDataModel.spotId == spotId })
+        return presetForSpot?.section
     }
 }
 

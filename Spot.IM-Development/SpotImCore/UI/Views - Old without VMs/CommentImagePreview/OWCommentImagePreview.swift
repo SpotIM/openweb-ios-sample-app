@@ -19,10 +19,10 @@ final class OWCommentImagePreview: SPBaseView {
         static let loaderViewIdentifier = "comment_image_preview_loader_view_id"
         static let removeButtonIdentifier = "comment_image_preview_remove_button_id"
     }
-    private let imageView: SPBaseUIImageView = .init()
-    private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
+    private let imageView = SPBaseUIImageView()
+    private let loaderView = SPLoaderView(backgroundOpacity: 0.4)
 
-    private lazy var removeButton: SPBaseButton = .init(type: .custom)
+    private lazy var removeButton = SPBaseButton(type: .custom)
 
     weak var delegate: OWCommentImagePreviewDelegate?
 

@@ -33,10 +33,11 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentThreadData: OWCommentThreadRequiredData
+    fileprivate let viewableMode: OWViewableMode
 
     lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
         return OWCommentThreadViewViewModel(commentThreadData: commentThreadData, servicesProvider: self.servicesProvider,
-                                            viewableMode: .partOfFlow)
+                                            viewableMode: self.viewableMode)
     }()
 
     lazy var title: String = {
@@ -57,9 +58,12 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
         return _isLargeTitleDisplay
     }
 
-    init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (commentThreadData: OWCommentThreadRequiredData,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+          viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.commentThreadData = commentThreadData
+        self.viewableMode = viewableMode
         setupObservers()
     }
 }

@@ -31,6 +31,7 @@ struct OWColor {
         case backgroundColor2
         case backgroundColor3
         case backgroundColor4
+        case backgroundColor5 // Used only in pre conversation compact style
         case borderColor1
         case borderColor2
         case borderColor3
@@ -90,10 +91,13 @@ struct OWColor {
                                darkThemeColor: OWDesignColors.L6)
             case .backgroundColor3:
                 return OWColor(lightThemeColor: OWDesignColors.L1,
-                               darkThemeColor: UIColor(red: 31.0/255.0, green: 31.0/255.0, blue: 31.0/255.0, alpha: 1.0))
+                               darkThemeColor: OWDesignColors.D1)
             case .backgroundColor4:
                 return OWColor(lightThemeColor: OWDesignColors.G1,
                                darkThemeColor: OWDesignColors.G2)
+            case .backgroundColor5:
+                return OWColor(lightThemeColor: OWDesignColors.L1ALT,
+                               darkThemeColor: OWDesignColors.D1ALT)
             case .borderColor1:
                 return OWColor(lightThemeColor: OWDesignColors.L1,
                                darkThemeColor: OWDesignColors.D1)

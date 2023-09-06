@@ -46,6 +46,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
+    var dataSourceTransition: OWViewTransition { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -60,6 +61,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -70,6 +72,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
+
+    fileprivate var articleUrl: String = ""
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
@@ -328,6 +332,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWManager.manager.postId ?? ""
     }
 
+    var dataSourceTransition: OWViewTransition = .reload
+
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
@@ -372,6 +378,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -387,6 +395,10 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+            })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -462,11 +474,13 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .preConversationLoaded)
+                guard let self = self else { return }
+                // Send analytics event
+                self.sendEvent(for: .preConversationLoaded)
             })
             .disposed(by: disposeBag)
 
@@ -501,6 +515,15 @@ fileprivate extension OWPreConversationViewViewModel {
                     break
                 }
                 self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
+
+        // Re-enabling animations in the pre conversation table view
+        conversationFetchedObservable
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
@@ -776,13 +799,13 @@ fileprivate extension OWPreConversationViewViewModel {
             .do(onNext: { [weak self] (_, _, commentVm) in
                 self?.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
@@ -1016,6 +1039,14 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.sendEvent(for: .showMoreComments)
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
@@ -1033,7 +1064,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: preConversationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
                 component: .preConversation)
     }

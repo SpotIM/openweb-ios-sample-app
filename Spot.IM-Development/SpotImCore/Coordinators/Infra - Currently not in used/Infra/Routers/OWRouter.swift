@@ -28,15 +28,39 @@ extension OWRoutering {
     func pop(popStyle: OWScreenPopStyle = .regular, animated: Bool) {
         pop(popStyle: popStyle, animated: animated)
     }
+
+    func present(_ module: OWPresentable, presentStyle: OWScreenPresentStyle = .regular, animated: Bool = false, dismissCompletion: PublishSubject<Void>?) {
+        switch presentStyle {
+        case .regular:
+            present(module, animated: animated, dismissCompletion: dismissCompletion)
+        case .fade:
+            let viewController = module.toPresentable()
+            viewController.modalTransitionStyle = .crossDissolve
+            viewController.modalPresentationStyle = .overFullScreen
+            present(module, animated: true, dismissCompletion: dismissCompletion)
+        }
+    }
+
+    func dismiss(animated: Bool = false, dismissStyle: OWScreenPresentStyle = .regular, completion: PublishSubject<Void>?) {
+        switch dismissStyle {
+        case .regular:
+            dismiss(animated: animated, completion: completion)
+        case .fade:
+            dismiss(animated: true, completion: completion)
+        }
+    }
 }
 
 class OWRouter: NSObject, OWRoutering {
-
+    fileprivate struct Metrics {
+        static let transitionDuration = 0.5
+    }
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
+    fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
     fileprivate let presentationalMode: OWPresentationalModeExtended
     fileprivate var navDisposedBag: DisposeBag!
-
+    fileprivate lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
     var rootViewController: UIViewController? {
         return navigationController?.viewControllers.first
     }
@@ -44,6 +68,7 @@ class OWRouter: NSObject, OWRoutering {
     init(navigationController: UINavigationController, presentationalMode: OWPresentationalModeExtended) {
         self.navigationController = navigationController
         self.completions = [:]
+        self.pushedVCStyles = [:]
         self.presentationalMode = presentationalMode
         super.init()
         self.navigationController?.delegate = self
@@ -80,14 +105,17 @@ class OWRouter: NSObject, OWRoutering {
         switch pushStyle {
         case .regular:
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
-        case .presentStyle:
+        case .present:
             let transition = CATransition()
-            transition.duration = 0.5
+            transition.duration = Metrics.transitionDuration
             transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             transition.type = .moveIn
             transition.subtype = .fromTop
             navigationController?.view.layer.add(transition, forKey: kCATransition)
             navigationController?.pushViewController(module.toPresentable(), animated: false)
+        case .presentOverFullScreen:
+            pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
+            navigationController?.pushViewController(module.toPresentable(), animated: animated)
         }
     }
 
@@ -100,13 +128,13 @@ class OWRouter: NSObject, OWRoutering {
 
     func pop(popStyle: OWScreenPopStyle, animated: Bool) {
         switch popStyle {
-        case .regular:
+        case .regular, .dismissOverFullScreen:
             if let controller = navigationController?.popViewController(animated: animated) {
                 runCompletion(for: controller)
             }
-        case .dismissStyle:
+        case .dismiss:
             let transition = CATransition()
-            transition.duration = 0.5
+            transition.duration = Metrics.transitionDuration
             transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             transition.type = .reveal
             transition.subtype = .fromBottom
@@ -157,6 +185,26 @@ extension OWRouter: UINavigationControllerDelegate {
             return
         }
         runCompletion(for: poppedViewController)
+    }
+
+    func navigationController(_ navigationController: UINavigationController,
+                              animationControllerFor operation: UINavigationController.Operation,
+                              from fromVC: UIViewController,
+                              to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        if operation == .push {
+            if let style = pushedVCStyles[toVC],
+               style == .presentOverFullScreen {
+                toVC.title = fromVC.title
+                return pushOverFullScreenAnimationTransitioning.presenting(true)
+            }
+        } else {
+            if let style = pushedVCStyles[fromVC],
+               style == .presentOverFullScreen {
+                pushedVCStyles.removeValue(forKey: fromVC)
+                return pushOverFullScreenAnimationTransitioning.presenting(false)
+            }
+        }
+        return nil
     }
 }
 

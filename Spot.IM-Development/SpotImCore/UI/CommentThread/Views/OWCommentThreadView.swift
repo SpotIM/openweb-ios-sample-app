@@ -25,7 +25,10 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     }
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
-        let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
+            guard let self = self else { return .reload }
+            return self.viewModel.outputs.dataSourceTransition
+        }, configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
@@ -49,9 +52,6 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
         tableView.allowsSelection = false
 
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
-
         // Register cells
         for option in OWCommentThreadCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -62,6 +62,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
+        refresh.userInteractionEnabled(false)
         return refresh
     }()
 
@@ -144,11 +145,21 @@ fileprivate extension OWCommentThreadView {
             .subscribe(onNext: { [weak self] index in
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 guard let self = self else { return }
-                UIView.animate(withDuration: Metrics.highlightScrollAnimationDuration, animations: {
-                    self.tableView.scrollToRow(at: cellIndexPath, at: .middle, animated: false)
-                }) { _ in
+
+                CATransaction.begin()
+                self.tableView.beginUpdates()
+                CATransaction.setCompletionBlock {
+                    // Code to be executed upon completion
                     self.viewModel.inputs.scrolledToCellIndex.onNext(index)
                 }
+                if (index > 0) {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                } else {
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
+                self.tableView.endUpdates()
+                CATransaction.commit()
             })
             .disposed(by: disposeBag)
 
