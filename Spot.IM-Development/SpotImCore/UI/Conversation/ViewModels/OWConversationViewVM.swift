@@ -1362,7 +1362,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return nil }
                 if let updatedComment = self.servicesProvider
                     .commentsService()
-                    .get(commentId: commentId, postId: postId) {
+                    .get(commentId: commentId, postId: self.postId) {
                     return (updatedComment, commentVm)
                 } else {
                     return nil
