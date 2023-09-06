@@ -137,10 +137,11 @@ fileprivate extension OWPreConversationCoordinator {
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
             viewModel.outputs.urlClickedOutput,
             viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput,
-            viewModel.outputs.openProfile
+            viewModel.outputs.openProfile.map { $0.url }
         )
 
         coordinateToSafariObservables
+            .debug("*** openPublisherProfile pre")
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
@@ -164,10 +165,8 @@ fileprivate extension OWPreConversationCoordinator {
         let contentPressed = viewModel.outputs.openFullConversation
             .map { OWViewActionCallbackType.contentPressed }
 
-        let openPublisherProfile = servicesProvider.profileService().openProfile
-            .map { openProfileData in
-                OWViewActionCallbackType.openPublisherProfile(userId: openProfileData.userId)
-            }
+        let openPublisherProfile = viewModel.outputs.openProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
             .asObservable()
 
         let openReportReason = viewModel.outputs.openReportReason

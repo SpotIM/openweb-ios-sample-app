@@ -10,8 +10,7 @@ import RxSwift
 import Foundation
 
 protocol OWProfileServicing {
-    var openProfileTapped: PublishSubject<SPUser> { get }
-    var openProfile: Observable<OWOpenProfileData> { get }
+    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileData>
 }
 
 class OWProfileService: OWProfileServicing {
@@ -20,32 +19,16 @@ class OWProfileService: OWProfileServicing {
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
-        setupObservers()
     }
 
     var shouldBlockOpenProfile = BehaviorSubject<Bool>(value: false)
-    lazy var openProfileTapped = PublishSubject<SPUser>()
 
-    fileprivate lazy var user: Observable<SPUser> = {
-        return self.openProfileTapped
-            .asObservable()
-            .share()
-    }()
-
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
-    var openProfile: Observable<OWOpenProfileData> {
-        _openProfile
-            .asObservable()
-    }
-}
-
-fileprivate extension OWProfileService {
-    func setupObservers() {
-        let profileOptionToUse = profileOptionToUse()
+    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileData> {
+        let profileOptionToUse = profileOptionToUse(user: user)
 
         // Check if sdk profile should be opened
-        let shouldOpenSDKProfile: Observable<Void> = openProfileTapped
-            .withLatestFrom(profileOptionToUse) { _, profileOptionToUse -> Bool in
+        let shouldOpenSDKProfile: Observable<Void> = profileOptionToUse
+            .map { profileOptionToUse -> Bool in
                 if case .SDKProfile = profileOptionToUse {
                     return true
                 } else {
@@ -57,23 +40,16 @@ fileprivate extension OWProfileService {
 
         // Check if this is current user and token is needed
         let shouldOpenUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
-            .withLatestFrom(
-                sharedServicesProvider.authenticationManager()
-                    .activeUserAvailability
-            ) { _, availability -> SPUser? in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
+            .withLatestFrom(self.sharedServicesProvider.authenticationManager()
+                .activeUserAvailability) { _, availability -> Bool in
+                    switch availability {
+                    case .notAvailable:
+                        return false
+                    case .user(let sessionUser):
+                        guard sessionUser.id == user.id else { return false }
+                        return true
+                    }
                 }
-            }
-            .withLatestFrom(user) { sessionUser, user in
-                guard let sessionUser = sessionUser,
-                      sessionUser.id == user.id
-                else { return false }
-                return true
-            }
 
         // Create URL for user profie with token
         let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
@@ -84,26 +60,25 @@ fileprivate extension OWProfileService {
                 return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
             }
             .filter { !$0 } // Do not continue if authentication needed
-            .flatMap { [weak self] _ -> Observable<OWSingleUseTokenResponse> in
+            .flatMap { [weak self] _ -> Observable<URL?> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()
                     .profile
                     .createSingleUseToken()
                     .response
-            }
-            .withLatestFrom(user) { [weak self] response, user -> URL? in
-                guard let self = self,
-                      let token = response["single_use_token"],
-                      let url = self.profileUrl(singleUseTicket: token, userId: user.id)
-                else { return nil }
-                return url
+                    .map { response -> URL? in
+                        guard let token = response["single_use_token"],
+                              let url = self.profileUrl(singleUseTicket: token, userId: user.id)
+                        else { return nil }
+                        return url
+                    }
             }
             .unwrap()
 
         // Create URL for user profile without token
         let userProfileWithoutToken: Observable<URL> = shouldOpenUserProfileWithToken
             .filter { !$0 }
-            .withLatestFrom(user) { [weak self] _, user -> URL? in
+            .map { [weak self] _ -> URL? in
                 guard let self = self,
                       let url = self.profileUrl(singleUseTicket: nil, userId: user.id)
                 else { return nil }
@@ -111,27 +86,25 @@ fileprivate extension OWProfileService {
             }
             .unwrap()
 
-        userProfileWithToken
-            .withLatestFrom(openProfileTapped) { ($0, $1) }
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] (url, user) in
-                guard let self = self,
-                      let userId = user.id else { return }
-                self._openProfile.onNext(OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId))
-            })
-            .disposed(by: disposeBag)
+        let userProfileWithTokenObservable = userProfileWithToken
+            .map { url -> OWOpenProfileData? in
+                guard let userId = user.id else { return nil }
+                return OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId)
+            }
+            .unwrap()
 
-        userProfileWithoutToken
-            .withLatestFrom(openProfileTapped) { ($0, $1) }
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] (url, user) in
-                guard let self = self,
-                      let userId = user.id else { return }
-                self._openProfile.onNext(OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId))
-            })
-            .disposed(by: disposeBag)
+        let userProfileWithoutTokenObservable = userProfileWithoutToken
+            .map { url -> OWOpenProfileData? in
+                guard let userId = user.id else { return nil }
+                return OWOpenProfileData(url: url, userProfileType: .otherUser, userId: userId)
+            }
+            .unwrap()
+
+        return Observable.merge(userProfileWithTokenObservable, userProfileWithoutTokenObservable)
     }
+}
 
+fileprivate extension OWProfileService {
     func profileUrl(singleUseTicket: String?, userId: String?) -> URL? {
         let baseUrl = URL(string: "https://sdk.openweb.com/index.html")
         guard var url = baseUrl,
@@ -150,10 +123,11 @@ fileprivate extension OWProfileService {
         return url
     }
 
-    func profileOptionToUse() -> Observable<OWProfileOption> {
-        return Observable.combineLatest(sharedServicesProvider
+    func profileOptionToUse(user: SPUser) -> Observable<OWProfileOption> {
+        return sharedServicesProvider
             .spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId), user) { config, user -> OWProfileOption in
+            .config(spotId: OWManager.manager.spotId)
+            .map { config -> OWProfileOption in
                 guard config.mobileSdk.profileEnabled == true else { return .none }
                 if config.shared?.usePublisherUserProfile == true,
                    let ssoPublisherId = user.ssoPublisherId,

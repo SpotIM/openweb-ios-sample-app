@@ -46,7 +46,7 @@ protocol OWConversationViewViewModelingOutputs {
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
-    var openProfile: Observable<URL> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
@@ -126,8 +126,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         return _openProfile
             .asObservable()
     }
@@ -1187,15 +1187,23 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment avatar click
-        servicesProvider.profileService().openProfile
-            .subscribe(onNext: { [weak self] openProfileData in
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileData> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
+                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
+                    let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
+                    return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
+                }
+                return Observable.merge(avatarClickOutputObservable)
+            }
+            .do(onNext: { [weak self] openProfileData in
                 guard let self = self else { return }
-                self._openProfile.onNext(openProfileData.url)
                 switch openProfileData.userProfileType {
                 case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
                 case .otherUser: self.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
                 }
             })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         commentingCTAViewModel

@@ -20,7 +20,7 @@ protocol OWCommentingCTAViewModelingOutputs {
     var style: Observable<OWCommentingCTAStyle> { get }
     var shouldShowCommentCreationEntry: Observable<Bool> { get }
     var shouldShowCommentingReadOnly: Observable<Bool> { get }
-    var openProfile: Observable<URL> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var commentCreationTapped: Observable<Void> { get }
     var shouldShowView: Observable<Bool> { get }
 }
@@ -94,8 +94,8 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
             .share(replay: 0)
     }
 
-    fileprivate let _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate let _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         _openProfile
             .asObserver()
     }
@@ -139,12 +139,12 @@ fileprivate extension OWCommentingCTAViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment creation entry avatar click
-        servicesProvider.profileService()
+        commentCreationEntryViewModel
+            .outputs
+            .avatarViewVM
+            .outputs
             .openProfile
-            .subscribe(onNext: { [weak self] openProfileData in
-                guard let self = self else { return }
-                self._openProfile.onNext(openProfileData.url)
-            })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
     }
 }
