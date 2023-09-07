@@ -129,7 +129,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 fileprivate extension OWAvatarViewModel {
     func setupObservers() {
         avatarTapped
-            .flatMap { [weak self] user -> Observable<OWOpenProfileData> in
+            .flatMapLatest { [weak self] user -> Observable<OWOpenProfileData> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.profileService().openProfileTapped(user: user)
             }

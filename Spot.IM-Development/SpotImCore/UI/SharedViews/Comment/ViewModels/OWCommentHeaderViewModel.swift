@@ -289,10 +289,10 @@ fileprivate extension OWCommentHeaderViewModel {
                 return self.user
             }
             .unwrap()
-            .flatMap({ [weak self] user -> Observable<OWOpenProfileData> in
+            .flatMapLatest { [weak self] user -> Observable<OWOpenProfileData> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.profileService().openProfileTapped(user: user)
-            })
+            }
             .observe(on: MainScheduler.instance)
             .bind(to: _openProfile)
             .disposed(by: disposedBag)
