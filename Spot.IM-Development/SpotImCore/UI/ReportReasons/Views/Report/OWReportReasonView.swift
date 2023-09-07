@@ -219,7 +219,8 @@ fileprivate extension OWReportReasonView {
         // Views Binding
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] currentStyle in
+            .withLatestFrom(viewModel.outputs.tableViewHeaderAttributedText) { ($0, $1) }
+            .subscribe(onNext: { [weak self] (currentStyle, tableViewHeaderAttributedText) in
                 guard let self = self else { return }
                 self.titleView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
@@ -237,14 +238,10 @@ fileprivate extension OWReportReasonView {
                 self.tableHeaderView
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
-            })
-            .disposed(by: disposeBag)
 
-        viewModel.outputs.tableViewHeaderAttributedText
-            .subscribe(onNext: { [weak self] attributedText in
-                guard let self = self else { return }
+                self.tableHeaderLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.tableHeaderLabel
-                    .attributedText(attributedText)
+                    .attributedText(tableViewHeaderAttributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.tableViewHeaderTapText) { [weak self] in
                         guard let self = self else { return }
                         self.viewModel.inputs.learnMoreTap.onNext()
