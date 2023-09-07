@@ -183,7 +183,6 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         viewModel.outputs.shouldShowConversationEmptyState
             .map { !$0 }
-            .debug("RIVI shouldShowConversationEmptyState")
             .bind(to: conversationEmptyStateView.rx.isHidden)
             .disposed(by: disposeBag)
 
