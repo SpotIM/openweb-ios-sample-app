@@ -86,7 +86,7 @@ fileprivate extension OWConversationVC {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: currentStyle == .dark), state: .normal)
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)

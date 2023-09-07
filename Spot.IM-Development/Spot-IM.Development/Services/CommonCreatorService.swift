@@ -16,7 +16,7 @@ protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func additionalSettings() -> OWAdditionalSettingsProtocol
     func commentThreadCommentId() -> String
-    func mockArticle() -> OWArticleProtocol
+    func mockArticle(for postId: String) -> OWArticleProtocol
     func commentCreationFloatingBottomToolbar() -> (CommentCreationToolbarViewModeling, CommentCreationToolbar)
 }
 
@@ -76,29 +76,35 @@ class CommonCreatorService: CommonCreatorServicing {
         }
     }
 
-    func mockArticle() -> OWArticleProtocol {
-        let articleStub = OWArticle.stub()
-
+    func mockArticle(for postId: String) -> OWArticleProtocol {
         let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: self.userDefaultsProvider.get(key: .readOnlyModeIndex,
                                                                                                            defaultValue: OWReadOnlyMode.default.index))
         let persistenceArticleHeaderStyle = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleHeaderStyle>.articleHeaderStyle,
                                                                           defaultValue: OWArticleHeaderStyle.default)
 
-        let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
+        var persistenceArticleInformationStrategy = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy,
+                                                                          defaultValue: OWArticleInformationStrategy.default)
+
+        var section = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String?>.articleSection,
+                                                                          defaultValue: nil)
+        if (section == nil || section?.isEmpty == true) {
+            section = self.getSectionFromPreset(for: postId)
+        }
+
+        let settings = OWArticleSettings(section: section ?? "",
                                          headerStyle: persistenceArticleHeaderStyle,
                                          readOnlyMode: persistenceReadOnlyMode)
 
-        var url = articleStub.url
         if let strURL = self.userDefaultsProvider.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
-           let persistenceURL = URL(string: strURL) {
-            url = persistenceURL
+           let persistenceURL = URL(string: strURL),
+           case .local(let data) = persistenceArticleInformationStrategy {
+            let extraData = OWArticleExtraData(url: persistenceURL, title: data.title, subtitle: data.subtitle, thumbnailUrl: data.thumbnailUrl)
+            persistenceArticleInformationStrategy = .local(data: extraData)
         }
 
-        let article = OWArticle(url: url,
-                                title: articleStub.title,
-                                subtitle: articleStub.subtitle,
-                                thumbnailUrl: articleStub.thumbnailUrl,
-                                additionalSettings: settings)
+        let article = OWArticle(
+            articleInformationStrategy: persistenceArticleInformationStrategy,
+            additionalSettings: settings)
         return article
     }
 
@@ -114,6 +120,12 @@ class CommonCreatorService: CommonCreatorServicing {
         let viewModel: CommentCreationToolbarViewModeling = CommentCreationToolbarViewModel(toolbarElments: toolbarElements)
         let toolbar = CommentCreationToolbar(viewModel: viewModel)
         return (viewModel, toolbar)
+    }
+
+    func getSectionFromPreset(for spotId: String) -> String? {
+        let presets = ConversationPreset.createMockModels()
+        let presetForSpot = presets.first(where: { $0.conversationDataModel.spotId == spotId })
+        return presetForSpot?.section
     }
 }
 
