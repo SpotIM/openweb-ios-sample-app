@@ -77,6 +77,10 @@ public enum SPUserInterfaceStyle: Int {
     }
 
     static var isDarkMode: Bool {
-        return SPUserInterfaceStyle.current == .dark
+        #if NEW_API
+            return OWSharedServicesProvider.shared.themeStyleService().currentStyle == .dark
+        #else
+            return SPUserInterfaceStyle.current == .dark
+        #endif
     }
 }

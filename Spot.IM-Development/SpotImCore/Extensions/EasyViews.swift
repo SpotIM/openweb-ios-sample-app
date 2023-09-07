@@ -241,6 +241,11 @@ extension UIButton {
         self.alpha = alpha
         return self
     }
+
+    @discardableResult func backgroundColor(_ color: UIColor, state: UIControl.State) -> Self {
+        self.setBackgroundColor(color: color, forState: state)
+        return self
+    }
 }
 
 extension UIImageView {

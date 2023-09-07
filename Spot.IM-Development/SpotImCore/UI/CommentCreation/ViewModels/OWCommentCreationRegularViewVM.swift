@@ -54,7 +54,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: commentCreationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling = {
@@ -152,15 +152,9 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
             .bind(to: commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(
-            commentCreationContentVM.outputs.commentContent,
-            commentCreationContentVM.outputs.imagePreviewVM.outputs.isUploadingImageObservable
-        )
-        .map { commentContent, isUploadingImage -> Bool in
-            return commentContent.hasContent() && !isUploadingImage
-        }
-        .bind(to: footerViewModel.inputs.ctaEnabled)
-        .disposed(by: disposeBag)
+        commentCreationContentVM.outputs.isValidatedContent
+            .bind(to: footerViewModel.inputs.ctaEnabled)
+            .disposed(by: disposeBag)
 
         becomeFirstResponderCalled
             .bind(to: commentCreationContentVM.inputs.becomeFirstResponder)
