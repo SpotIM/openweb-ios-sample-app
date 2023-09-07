@@ -169,7 +169,7 @@ fileprivate extension OWConversationView {
         self.conversationEmptyStateView.OWSnp.makeConstraints { make in
             make.top.equalTo(self.tableView.OWSnp.top)
             make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
-            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
+            make.leading.trailing.equalToSuperview()
         }
 
         self.addSubview(commentingCTAView)
@@ -181,6 +181,12 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
+        viewModel.outputs.shouldShowConversationEmptyState
+            .map { !$0 }
+            .debug("RIVI shouldShowConversationEmptyState")
+            .bind(to: conversationEmptyStateView.rx.isHidden)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
