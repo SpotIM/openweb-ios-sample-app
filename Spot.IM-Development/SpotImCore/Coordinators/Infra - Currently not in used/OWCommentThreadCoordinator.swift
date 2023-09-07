@@ -191,7 +191,7 @@ fileprivate extension OWCommentThreadCoordinator {
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
             .asObservable()
 
-        openPublisherProfile
+        Observable.merge(openPublisherProfile)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
