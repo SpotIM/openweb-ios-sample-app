@@ -96,7 +96,7 @@ extension OWManager {
 fileprivate extension OWManager {
     func setupObservers() {
         currentPostId
-            .distinctUntilChanged()
+            .skip(1)
             .subscribe(onNext: { [weak self] _ in
                 // PostId was re-set to another postId
                 guard let self = self else { return }

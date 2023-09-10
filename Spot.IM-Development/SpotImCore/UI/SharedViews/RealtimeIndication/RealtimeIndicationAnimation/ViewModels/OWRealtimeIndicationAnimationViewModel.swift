@@ -15,7 +15,7 @@ protocol OWRealtimeIndicationAnimationViewModelingInputs {
 
 protocol OWRealtimeIndicationAnimationViewModelingOutputs {
     var realtimeIndicationViewModel: OWRealtimeIndicationViewModeling { get }
-    var isShown: Observable<Bool> { get }
+    var shouldShow: Observable<Bool> { get }
 }
 
 protocol OWRealtimeIndicationAnimationViewModeling {
@@ -36,7 +36,7 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
 
     fileprivate let _shouldShow = BehaviorSubject<Bool>(value: false)
     fileprivate let _isShown = BehaviorSubject<Bool>(value: false)
-    lazy var isShown: Observable<Bool> = {
+    lazy var shouldShow: Observable<Bool> = {
         return Observable.combineLatest(_isShown,
                                         _shouldShow) { isShown, shouldShow -> Bool in
             guard shouldShow else { return false }
@@ -51,18 +51,18 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
         _isShown.onNext(false)
     }
 
-    fileprivate var realtimeUpdateService: OWRealtimeUpdateServicing
+    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
     fileprivate let disposeBag = DisposeBag()
 
-    init(realtimeUpdateService: OWRealtimeUpdateServicing = OWSharedServicesProvider.shared.realtimeUpdateService()) {
-        self.realtimeUpdateService = realtimeUpdateService
+    init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
+        self.realtimeIndicatorService = realtimeIndicatorService
         self.setupObservers()
     }
 }
 
 extension OWRealtimeIndicationAnimationViewModel {
     func setupObservers() {
-        realtimeUpdateService.realtimeUpdateType
+        realtimeIndicatorService.realtimeIndicatorType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
@@ -71,12 +71,12 @@ extension OWRealtimeIndicationAnimationViewModel {
             })
             .disposed(by: disposeBag)
 
-        realtimeUpdateService.state
+        realtimeIndicatorService.state
             .subscribe(onNext: { [weak self] state in
                 guard let self = self else { return }
                 self._shouldShow.onNext(state == .enable)
                 if state == .disable {
-                    self.realtimeUpdateService.cleanCache()
+                    self.realtimeIndicatorService.cleanCache()
                 }
             })
             .disposed(by: disposeBag)

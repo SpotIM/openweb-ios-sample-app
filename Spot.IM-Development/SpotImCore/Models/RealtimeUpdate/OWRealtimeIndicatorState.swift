@@ -1,5 +1,5 @@
 //
-//  OWRealtimeUpdateState.swift
+//  OWRealtimeIndicatorState.swift
 //  SpotImCore
 //
 //  Created by Revital Pisman on 02/08/2023.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWRealtimeUpdateState {
+enum OWRealtimeIndicatorState {
     case disable
     case enable
 }

@@ -207,17 +207,6 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-//        viewModel.outputs.shouldShowConversationEmptyState
-//            .filter { !$0 }
-//            .observe(on: MainScheduler.instance)
-//            .subscribe(onNext: { [weak self] _ in
-//                guard let self = self else { return }
-//                self.viewModel.outputs
-//                    .realtimeIndicationAnimationViewModel.inputs
-//                    .update(shouldShow: true)
-//            })
-//            .disposed(by: disposeBag)
-
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in

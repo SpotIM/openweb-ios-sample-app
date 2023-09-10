@@ -494,8 +494,8 @@ fileprivate extension BetaNewAPIVC {
 
 fileprivate extension BetaNewAPIVC {
 
-    func showPresetPicker(_ isShown: Bool) {
-        if isShown {
+    func showPresetPicker(_ shouldShow: Bool) {
+        if shouldShow {
             // Dismiss keyboard
             self.view.endEditing(true)
         }
@@ -504,7 +504,7 @@ fileprivate extension BetaNewAPIVC {
                        usingSpringWithDamping: Metrics.animatePickerDamping,
                        initialSpringVelocity: Metrics.animatePickerVelocity) {
             self.conversationPresetSelectionView.snp.updateConstraints { update in
-                update.bottom.equalToSuperview().inset(isShown ? 0 : -Metrics.pickerHeight)
+                update.bottom.equalToSuperview().inset(shouldShow ? 0 : -Metrics.pickerHeight)
             }
             self.view.layoutIfNeeded()
         }
