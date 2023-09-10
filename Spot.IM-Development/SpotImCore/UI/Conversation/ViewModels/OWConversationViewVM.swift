@@ -1277,6 +1277,8 @@ fileprivate extension OWConversationViewViewModel {
             .getUpdatedComments(for: postId)
             .flatMap { [weak self] updateType -> Observable<OWCommentUpdateType> in
                 guard let self = self else { return .empty() }
+
+                // Waiting for a state in which we are not loading or showing error before updating/adding comments or replies from a local service
                 return Observable.combineLatest(self._isLoadingServerComments,
                                                 self._shouldShowErrorLoadingComments) { isLoading, shouldShowError in
                     return (!isLoading && !shouldShowError)
