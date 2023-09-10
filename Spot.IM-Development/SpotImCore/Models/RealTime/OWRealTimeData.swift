@@ -55,7 +55,7 @@ extension OWRealTimeData {
     func totalCommentsCount(forPostId postId: OWPostId) -> Int {
         let commentsCounter = commentsCount(forPostId: postId)
         let repliesCounter = repliesCount(forPostId: postId)
-        
+
         return commentsCounter + repliesCounter
     }
 
