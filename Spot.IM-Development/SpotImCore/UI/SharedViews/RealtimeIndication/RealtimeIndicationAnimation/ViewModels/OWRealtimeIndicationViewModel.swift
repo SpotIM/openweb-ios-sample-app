@@ -77,18 +77,18 @@ class OWRealtimeIndicationViewModel: OWRealtimeIndicationViewModeling,
         return OWRealtimeNewCommentsViewModel()
     }()
 
-    fileprivate var realtimeUpdateService: OWRealtimeUpdateServicing
+    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
     fileprivate let disposeBag = DisposeBag()
 
-    init(realtimeUpdateService: OWRealtimeUpdateServicing = OWSharedServicesProvider.shared.realtimeUpdateService()) {
-        self.realtimeUpdateService = realtimeUpdateService
+    init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
+        self.realtimeIndicatorService = realtimeIndicatorService
         self.setupObservers()
     }
 }
 
 extension OWRealtimeIndicationViewModel {
     func setupObservers() {
-        realtimeUpdateService.realtimeUpdateType
+        realtimeIndicatorService.realtimeIndicatorType
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
@@ -100,8 +100,8 @@ extension OWRealtimeIndicationViewModel {
             .disposed(by: disposeBag)
 
         tap
-            .withLatestFrom(realtimeUpdateService.newCommentsCount) { _, newCommentsCount in
-                return newCommentsCount
+            .withLatestFrom(realtimeIndicatorService.newComments) { _, newComments in
+                return newComments.count
             }
             .subscribe(onNext: { [weak self] newCommentsCount in
                 guard newCommentsCount > 0,

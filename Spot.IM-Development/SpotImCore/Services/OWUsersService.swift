@@ -46,7 +46,7 @@ class OWUsersService: OWUsersServicing {
 
     func isUserOnline(_ userId: String, perPostId postId: OWPostId, realtimeData: OWRealTimeData) -> Bool {
         let conversationId = "\(OWManager.manager.spotId)_\(postId)"
-        guard let onlineUsersArray = realtimeData.onlineUsers?[conversationId],
+        guard let onlineUsersArray = realtimeData.onlineUsers[conversationId],
               let _ = onlineUsersArray.firstIndex(where: { $0.userId == userId}) else {
             return false
         }

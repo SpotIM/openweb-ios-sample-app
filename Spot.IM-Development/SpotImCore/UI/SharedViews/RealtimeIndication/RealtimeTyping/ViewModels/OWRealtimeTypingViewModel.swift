@@ -27,10 +27,10 @@ class OWRealtimeTypingViewModel: OWRealtimeTypingViewModeling,
     var outputs: OWRealtimeTypingViewModelingOutputs { return self }
 
     lazy var typingCount: Observable<String> = {
-        let realtimeUpdateService = OWSharedServicesProvider.shared.realtimeUpdateService()
-        return realtimeUpdateService.realtimeUpdateType
-            .map { realtimeUpdateType -> String? in
-                switch realtimeUpdateType {
+        let realtimeIndicatorService = OWSharedServicesProvider.shared.realtimeIndicatorService()
+        return realtimeIndicatorService.realtimeIndicatorType
+            .map { indicatorType -> String? in
+                switch indicatorType {
                 case .all(let typingCount, _):
                     return String(typingCount)
 

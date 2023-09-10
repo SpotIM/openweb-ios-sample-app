@@ -10,11 +10,15 @@ import RxSwift
 import RxCocoa
 
 struct OWRealTimeData: Decodable {
-    private let conversationCountMessages: [String: [OWRealTimeMessagesCount]]?
-    private let conversationTypingV2Count: [String: [[String: Int]]]?
-    private let conversationTypingV2Users: [String: [OWRealTimeTypingUsers]]?
-    private let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]?
-    private let conversationNewMessages: [String: [OWComment]]?
+    fileprivate let conversationCountMessages: [String: [OWRealTimeMessagesCount]]
+    fileprivate let conversationTypingV2Count: [String: [[String: Int]]]
+    fileprivate let conversationTypingV2Users: [String: [OWRealTimeTypingUsers]]
+    fileprivate let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]
+    fileprivate let conversationNewMessages: [String: [OWComment]]
+
+    let onlineUsers: [String: [OWRealTimeOnlineUser]]
+
+    fileprivate let defaultRealTimeOnlineViewingUsers = OWRealTimeOnlineViewingUsers(count: 0)
 
     enum CodingKeys: String, CodingKey {
         case conversationCountMessages = "conversation/count-messages"
@@ -29,56 +33,60 @@ struct OWRealTimeData: Decodable {
         static let typingCountKey = "Overall"
     }
 
-    let onlineUsers: [String: [OWRealTimeOnlineUser]]?
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
 
-    func totalCommentsCount(forConversation id: String) throws -> Int {
-        let commentsCounter = try commentsCount(forConversation: id)
-        let repliesCounter = try repliesCount(forConversation: id)
+        // If data is missing or invalid, provided default values [:]
+        self.conversationCountMessages = try container.decodeIfPresent([String: [OWRealTimeMessagesCount]].self, forKey: .conversationCountMessages) ?? [:]
+        self.conversationTypingV2Count = try container.decodeIfPresent([String: [[String: Int]]].self, forKey: .conversationTypingV2Count) ?? [:]
+        self.conversationTypingV2Users = try container.decodeIfPresent([String: [OWRealTimeTypingUsers]].self, forKey: .conversationTypingV2Users) ?? [:]
+        self.onlineViewingUsers = try container.decodeIfPresent([String: [OWRealTimeOnlineViewingUsers]].self, forKey: .onlineViewingUsers) ?? [:]
+        self.conversationNewMessages = try container.decodeIfPresent([String: [OWComment]].self, forKey: .conversationNewMessages) ?? [:]
+        self.onlineUsers = try container.decodeIfPresent([String: [OWRealTimeOnlineUser]].self, forKey: .onlineUsers) ?? [:]
+    }
+}
+
+extension OWRealTimeData {
+
+    fileprivate func getConversationId(forPostId postId: OWPostId) -> String {
+        return "\(OWManager.manager.spotId)_\(postId)"
+    }
+
+    func totalCommentsCount(forPostId postId: OWPostId) -> Int {
+        let commentsCounter = commentsCount(forPostId: postId)
+        let repliesCounter = repliesCount(forPostId: postId)
+        
         return commentsCounter + repliesCounter
     }
 
-    func repliesCount(forConversation id: String) throws -> Int {
-        let conversationCounterData = try getMessagesCountModel(forConversation: id)
-        return conversationCounterData.replies
+    func repliesCount(forPostId postId: OWPostId) -> Int {
+        let conversationId = self.getConversationId(forPostId: postId)
+
+        return conversationCountMessages[conversationId]?.first?.replies ?? 0
     }
 
-    func commentsCount(forConversation id: String) throws -> Int {
-        let conversationCounterData = try getMessagesCountModel(forConversation: id)
-        return conversationCounterData.comments
+    func commentsCount(forPostId postId: OWPostId) -> Int {
+        let conversationId = self.getConversationId(forPostId: postId)
+
+        return conversationCountMessages[conversationId]?.first?.comments ?? 0
     }
 
-    // Typing count method
-    func totalTypingCount(forConversation id: String) throws -> Int {
-        guard let typingCountDataArray = conversationTypingV2Users?[id],
-              let count = typingCountDataArray.first(where: { $0.key == Metrics.typingCountKey })?.count else {
-            throw RealTimeError.conversationNotFound
-        }
-        return count
+    func totalTypingCount(forPostId postId: OWPostId) -> Int {
+        let conversationId = self.getConversationId(forPostId: postId)
+        guard let typingCountDataArray = conversationTypingV2Users[conversationId] else { return 0 }
+
+        return typingCountDataArray.first(where: { $0.key == Metrics.typingCountKey })?.count ?? 0
     }
 
-    // New comments method
-    func newComments(forConversation id: String) throws -> [OWComment] {
-        guard let newComments = conversationNewMessages?[id] else {
-            throw RealTimeError.conversationNotFound
-        }
-        return newComments
+    func newComments(forPostId postId: OWPostId) -> [OWComment] {
+        let conversationId = self.getConversationId(forPostId: postId)
+
+        return conversationNewMessages[conversationId] ?? []
     }
 
-    // Online viewing users method
-    func onlineViewingUsersCount(_ id: String) throws -> OWRealTimeOnlineViewingUsers {
-        guard let onlineUsersViewingArray = onlineViewingUsers?[id],
-              let onlineUsersViewing = onlineUsersViewingArray.first else {
-            throw RealTimeError.onlineViewingUsersNotFound
-        }
-        return onlineUsersViewing
-    }
+    func onlineViewingUsersCount(forPostId postId: OWPostId) -> OWRealTimeOnlineViewingUsers {
+        let conversationId = self.getConversationId(forPostId: postId)
 
-    // Private method to fetch messages count model
-    private func getMessagesCountModel(forConversation id: String) throws -> OWRealTimeMessagesCount {
-        guard let conversationDataArray = conversationCountMessages?[id],
-              let conversationCounterData = conversationDataArray.first else {
-            throw RealTimeError.conversationNotFound
-        }
-        return conversationCounterData
+        return onlineViewingUsers[conversationId]?.first ?? defaultRealTimeOnlineViewingUsers
     }
 }
