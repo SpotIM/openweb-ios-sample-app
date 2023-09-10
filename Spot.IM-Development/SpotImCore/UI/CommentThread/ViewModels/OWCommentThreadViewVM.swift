@@ -966,6 +966,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         self.servicesProvider.commentUpdaterService()
             .getUpdatedComments(for: postId)
             .flatMap { updateType -> Observable<OWCommentUpdateType> in
+                // Making sure comment cells are visible
                 return commentCellsVmsObservable
                     .filter { !$0.isEmpty }
                     .take(1)
