@@ -368,8 +368,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .materialize()
         }
 
-        let _isCommentThreadFetched = BehaviorSubject<Bool>(value: false)
-
         let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
             .flatMap { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
@@ -378,7 +376,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let conversationRead):
-                    _isCommentThreadFetched.onNext(true)
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return conversationRead
                 case .error(_):
@@ -966,17 +963,15 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
             .share()
 
-        let updatedCommentsObservable = self.servicesProvider.commentUpdaterService()
+        self.servicesProvider.commentUpdaterService()
             .getUpdatedComments(for: postId)
             .flatMap { updateType -> Observable<OWCommentUpdateType> in
-                return _isCommentThreadFetched
-                    .filter { $0 }
+                return commentCellsVmsObservable
+                    .filter { !$0.isEmpty }
                     .take(1)
                     .map { _ in updateType }
             }
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
-
-        updatedCommentsObservable
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
