@@ -33,6 +33,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let compactContentTopPedding: CGFloat = 8
         static let tableViewTopPedding: CGFloat = 16
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
+        static let tableViewHeightAnimationDuration: CGFloat = 0.2
 
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
@@ -431,7 +432,7 @@ fileprivate extension OWPreConversationView {
             .unwrap()
 
         let isRealtimeIndicationShownObservable = viewModel.outputs.realtimeIndicationAnimationViewModel
-            .outputs.isShown
+            .outputs.shouldShow
 
         let tableViewHeightChangeObservable = Observable.combineLatest(tableViewContentSizeObservable,
                                                                  isRealtimeIndicationShownObservable) { size, isShown in
@@ -457,7 +458,7 @@ fileprivate extension OWPreConversationView {
                 if realtimeIsShown {
                     // Only when we shown the realtime indicator we should animate the table view height change
                     self.tableViewHeightConstraint?.update(offset: height)
-                    UIView.animate(withDuration: 0.2) {
+                    UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) {
                         self.layoutIfNeeded()
                     }
                 } else {

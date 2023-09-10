@@ -85,7 +85,6 @@ class OWRealtimeIndicationView: UIView {
     init(viewModel: OWRealtimeIndicationViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
         setupObservers()
         applyAccessibility()

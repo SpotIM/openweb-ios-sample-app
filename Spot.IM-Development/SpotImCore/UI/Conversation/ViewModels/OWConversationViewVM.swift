@@ -636,28 +636,28 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.servicesProvider.realtimeUpdateService().update(state: .enable)
+                self.servicesProvider.realtimeIndicatorService().update(state: .enable)
             })
             .disposed(by: disposeBag)
 
         realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
             .tapped
-            .withLatestFrom(self.servicesProvider.realtimeUpdateService().newComments)
+            .withLatestFrom(self.servicesProvider.realtimeIndicatorService().newComments)
             .subscribe(onNext: { [weak self] newComments in
                 guard let self = self else { return }
                 self.servicesProvider
                     .commentUpdaterService()
                     .update(.insert(comments: newComments), postId: self.postId)
 
-                self.servicesProvider.realtimeUpdateService().cleanCache()
+                self.servicesProvider.realtimeIndicatorService().cleanCache()
             })
             .disposed(by: disposeBag)
 
         pullToRefresh
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.servicesProvider.realtimeUpdateService().update(state: .disable)
+                self.servicesProvider.realtimeIndicatorService().update(state: .disable)
             })
             .disposed(by: disposeBag)
 

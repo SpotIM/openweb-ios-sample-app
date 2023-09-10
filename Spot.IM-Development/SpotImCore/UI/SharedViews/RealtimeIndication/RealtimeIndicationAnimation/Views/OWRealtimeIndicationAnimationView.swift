@@ -13,14 +13,14 @@ class OWRealtimeIndicationAnimationView: UIView {
     struct Metrics {
         static let swipeThresholdToDismiss: CGFloat = 5
         static let swipeMagnetAnimationDuration: CGFloat = 0.3
-        static let bottomOffsentStartPointDivisor: CGFloat = 2
+        static let bottomOffsetStartPointDivisor: CGFloat = 2
         static let showAndDismissAnimationDuration: CGFloat = 0.7
         static let showAndDismissAnimationSpringWithDamping: CGFloat = 0.5
         static let showAndDismissAnimationSpringVelocity: CGFloat = 0.5
     }
 
-    private var indicationViewBottomConstraint: OWConstraint?
-    private var indicationViewCenterConstraint: OWConstraint?
+    fileprivate var indicationViewBottomConstraint: OWConstraint?
+    fileprivate var indicationViewCenterConstraint: OWConstraint?
     fileprivate var indicationViewCurrentCenterOffset: CGFloat?
     fileprivate var indicationViewCurrentBottomOffset: CGFloat?
 
@@ -45,7 +45,7 @@ class OWRealtimeIndicationAnimationView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.indicationViewCurrentBottomOffset = self.bounds.height / Metrics.bottomOffsentStartPointDivisor
+        self.indicationViewCurrentBottomOffset = self.bounds.height / Metrics.bottomOffsetStartPointDivisor
 
         if indicationViewBottomConstraint == nil,
             let indicationViewCurrentBottomOffset = self.indicationViewCurrentBottomOffset {
@@ -77,7 +77,7 @@ fileprivate extension OWRealtimeIndicationAnimationView {
 
     func setupObservers() {
         viewModel.outputs
-            .isShown
+            .shouldShow
             .subscribe(onNext: { [weak self] iShown in
                 guard let self = self else { return }
                 self.animate(iShown)

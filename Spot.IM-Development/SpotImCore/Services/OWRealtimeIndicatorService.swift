@@ -1,5 +1,5 @@
 //
-//  OWRealtimeUpdateService.swift
+//  OWRealtimeIndicatorService.swift
 //  SpotImCore
 //
 //  Created by Revital Pisman on 02/08/2023.
@@ -8,18 +8,17 @@
 
 import RxSwift
 
-protocol OWRealtimeUpdateServicing {
-    var state: Observable<OWRealtimeUpdateState> { get }
-    var realtimeUpdateType: Observable<OWRealtimeIndicatorType> { get }
+protocol OWRealtimeIndicatorServicing {
+    var state: Observable<OWRealtimeIndicatorState> { get }
+    var realtimeIndicatorType: Observable<OWRealtimeIndicatorType> { get }
     var newComments: Observable<[OWComment]> { get }
-    var newCommentsCount: Observable<Int> { get }
-    func update(state: OWRealtimeUpdateState)
+    func update(state: OWRealtimeIndicatorState)
     func cleanCache()
 }
 
-class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
+class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
 
-    fileprivate var _shouldRealtimeUpdate = BehaviorSubject<OWRealtimeUpdateState>(value: .disable)
+    fileprivate var _shouldRealtimeIndicatorUpdate = BehaviorSubject<OWRealtimeIndicatorState>(value: .disable)
     fileprivate var _newCommentsCache = BehaviorSubject<[String: OWComment]>(value: [:])
 
     fileprivate var postId: OWPostId {
@@ -30,7 +29,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
         return OWManager.manager.spotId
     }
 
-    fileprivate lazy var isblitzEnabled: Observable<Bool> = {
+    fileprivate lazy var isBlitzEnabled: Observable<Bool> = {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: self.spotId)
             .map { [weak self] config -> Bool? in
@@ -42,8 +41,8 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
     }()
 
     fileprivate lazy var isRealtimeIndicatorEnabled: Observable<Bool> = {
-        return _shouldRealtimeUpdate
-            .withLatestFrom(isblitzEnabled) { shouldUpdate, isblitzEnabled in
+        return _shouldRealtimeIndicatorUpdate
+            .withLatestFrom(isBlitzEnabled) { shouldUpdate, isblitzEnabled in
                 return isblitzEnabled && shouldUpdate == .enable
             }
             .distinctUntilChanged()
@@ -55,7 +54,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> Int? in
                 guard let self = self else { return nil }
-                return try? realtimeData.data?.totalTypingCount(forConversation: "\(self.spotId)_\(self.postId)")
+                return realtimeData.data?.totalTypingCount(forPostId: self.postId)
             }
             .unwrap()
             .distinctUntilChanged()
@@ -67,28 +66,28 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> [OWComment]? in
                 guard let self = self else { return nil }
-                return try? realtimeData.data?.newComments(forConversation: ("\(self.spotId)_\(self.postId)"))
+                return realtimeData.data?.newComments(forPostId: self.postId)
             }
             .unwrap()
             .asObservable()
-    }
-
-    var newCommentsCount: Observable<Int> {
-        return _newCommentsCache.map { $0.keys.count }
     }
 
     var newComments: Observable<[OWComment]> {
         return _newCommentsCache.map { $0.values.map { $0 } }
     }
 
-    lazy var state: Observable<OWRealtimeUpdateState> = {
-        return _shouldRealtimeUpdate
+    lazy var state: Observable<OWRealtimeIndicatorState> = {
+        return _shouldRealtimeIndicatorUpdate
             .distinctUntilChanged()
             .asObservable()
             .share()
     }()
 
-    lazy var realtimeUpdateType: Observable<OWRealtimeIndicatorType> = {
+    fileprivate lazy var newCommentsCount: Observable<Int> = {
+        return newComments.map { $0.count }
+    }()
+
+    lazy var realtimeIndicatorType: Observable<OWRealtimeIndicatorType> = {
         return Observable.combineLatest(isRealtimeIndicatorEnabled,
                                         typingCount,
                                         newCommentsCount)
@@ -125,8 +124,8 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
         self.setupObservers()
     }
 
-    func update(state: OWRealtimeUpdateState) {
-        _shouldRealtimeUpdate.onNext(state)
+    func update(state: OWRealtimeIndicatorState) {
+        _shouldRealtimeIndicatorUpdate.onNext(state)
         if state == .disable {
             cleanCache()
         }
@@ -137,7 +136,7 @@ class OWRealtimeUpdateService: OWRealtimeUpdateServicing {
     }
 }
 
-extension OWRealtimeUpdateService {
+extension OWRealtimeIndicatorService {
     func setupObservers() {
         newCommentsObservable
             .subscribe(onNext: { [weak self] newComments in
@@ -145,10 +144,10 @@ extension OWRealtimeUpdateService {
 
                 newComments.forEach { comment in
                     // make sure comment is not reply and not already in conversation
-                    guard (comment.parentId == nil || comment.parentId == ""),
+                    guard (comment.parentId == nil || (comment.parentId?.isEmpty) != nil),
                           let commentId = comment.id,
                             (self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId) == nil) else { return }
-                    self.addComment(key: comment.id ?? "", comment: comment)
+                    self.addComment(key: commentId, comment: comment)
                 }
             })
             .disposed(by: disposeBag)

@@ -27,12 +27,12 @@ class OWRealtimeNewCommentsViewModel: OWRealtimeNewCommentsViewModeling,
     var outputs: OWRealtimeNewCommentsViewModelingOutputs { return self }
 
     lazy var newCommentsText: Observable<String> = {
-        let realtimeUpdateService = OWSharedServicesProvider.shared.realtimeUpdateService()
-        return realtimeUpdateService.realtimeUpdateType
-            .map { realtimeUpdateType -> String? in
+        let realtimeIndicatorService = OWSharedServicesProvider.shared.realtimeIndicatorService()
+        return realtimeIndicatorService.realtimeIndicatorType
+            .map { indicatorType -> String? in
                 let newCommentsString = OWLocalizationManager.shared.localizedString(key: "ViewNewComments")
 
-                switch realtimeUpdateType {
+                switch indicatorType {
                 case .all(_, let newCommentsCount):
                     return String(format: newCommentsString, newCommentsCount)
 
