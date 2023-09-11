@@ -42,11 +42,14 @@ class OWParagraphWithIconView: UIView {
     fileprivate lazy var textLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 }
 
 fileprivate extension OWParagraphWithIconView {
     func setupViews() {
+        self.enforceSemanticAttribute()
+
         self.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.iconSize)
