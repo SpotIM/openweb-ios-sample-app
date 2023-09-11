@@ -937,6 +937,8 @@
 		9E4163BF29F6C9C700819BC2 /* OWReportReasonCancelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */; };
 		9E4163C329F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C229F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift */; };
 		9E4163C529F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163C429F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift */; };
+		9E4B4E602AA604D100F4425F /* OWProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E5F2AA604D100F4425F /* OWProfileService.swift */; };
+		9E4B4E622AA61DEF00F4425F /* OWOpenProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B4E612AA61DEF00F4425F /* OWOpenProfileData.swift */; };
 		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
@@ -2037,6 +2039,8 @@
 		9E4163BE29F6C9C700819BC2 /* OWReportReasonCancelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelView.swift; sourceTree = "<group>"; };
 		9E4163C229F6CA0900819BC2 /* OWReportReasonCancelViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelViewVM.swift; sourceTree = "<group>"; };
 		9E4163C429F6CEC700819BC2 /* OWReportReasonSubmittedViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonSubmittedViewVM.swift; sourceTree = "<group>"; };
+		9E4B4E5F2AA604D100F4425F /* OWProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWProfileService.swift; sourceTree = "<group>"; };
+		9E4B4E612AA61DEF00F4425F /* OWOpenProfileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenProfileData.swift; sourceTree = "<group>"; };
 		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
@@ -4957,6 +4961,7 @@
 			isa = PBXGroup;
 			children = (
 				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
+				9E4B4E5E2AA604A500F4425F /* ProfileService */,
 				162B83562A766525002290EE /* CommentsCacheService */,
 				3D263CF029C0FD200013C532 /* BlockerService */,
 				3D263CE229BDE31A0013C532 /* AuthenticationManager */,
@@ -5791,6 +5796,15 @@
 			path = Miscellaneous;
 			sourceTree = "<group>";
 		};
+		9E4B4E5E2AA604A500F4425F /* ProfileService */ = {
+			isa = PBXGroup;
+			children = (
+				9E4B4E5F2AA604D100F4425F /* OWProfileService.swift */,
+				9E4B4E612AA61DEF00F4425F /* OWOpenProfileData.swift */,
+			);
+			path = ProfileService;
+			sourceTree = "<group>";
+		};
 		9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */ = {
 			isa = PBXGroup;
 			children = (
@@ -6524,6 +6538,7 @@
 				3DDA9A7B29196CC200FE3B86 /* OWAuthenticationFlowCallback.swift in Sources */,
 				8D99C6842A0B68FF00DAB542 /* OWConversationEmptyStateView.swift in Sources */,
 				166CCCA62A30CD5000C7143F /* OWCommentCreationRegularView.swift in Sources */,
+				9E4B4E622AA61DEF00F4425F /* OWOpenProfileData.swift in Sources */,
 				3DA57BA92989358E0016BF2A /* OWConversationStyle.swift in Sources */,
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				4454188423685154001D0ED0 /* SPDefaultDecoder.swift in Sources */,
@@ -6563,6 +6578,7 @@
 				4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */,
 				3DA9A42A284398150033BB8C /* OWNetworkInterceptor.swift in Sources */,
 				44F2479F2379AD0100B36F12 /* SPBaseLabel.swift in Sources */,
+				9E4B4E602AA604D100F4425F /* OWProfileService.swift in Sources */,
 				3DB3B94D29F462A000C50192 /* OWTestingPlaygroundCoordinator.swift in Sources */,
 				4454180823685144001D0ED0 /* OWKeyboardHandable.swift in Sources */,
 				8DD33B1D2A24C203001E0A2E /* OWEmptyStateCommentingEndedCustomizableElement.swift in Sources */,
