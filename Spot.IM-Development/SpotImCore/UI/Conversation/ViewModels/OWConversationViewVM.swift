@@ -133,7 +133,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var articleUrl: String = ""
 
-    fileprivate let _isLoadingServerComments = BehaviorSubject<Bool>(value: false)
+    fileprivate let _isLoadingServerComments = BehaviorSubject<Bool>(value: true)
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
