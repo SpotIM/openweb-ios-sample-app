@@ -49,10 +49,14 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var title: String = {
         let key = {
             switch errorStateType {
-                case .loadConversationReplies:
-                    return "ErrorStateLoadConversationReplies"
-                }
-            }()
+            case .loadConversationComments:
+                return "ErrorStateLoadConversationComments"
+            case .loadConversationReplies:
+                return "ErrorStateLoadConversationReplies"
+            case .none:
+                return ""
+            }
+        }()
         return OWLocalizationManager.shared.localizedString(key: key)
     }()
 

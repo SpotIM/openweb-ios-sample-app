@@ -106,7 +106,7 @@ fileprivate extension OWErrorStateView {
         addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(headerIcon).inset(Metrics.linesPadding)
+            make.top.equalTo(headerIcon).offset(Metrics.linesPadding)
         }
 
         ctaView.addSubviews(ctaLabel, retryIcon)
@@ -124,8 +124,8 @@ fileprivate extension OWErrorStateView {
         addSubview(ctaView)
         ctaView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(titleLabel).inset(Metrics.linesPadding)
-            make.bottom.equalToSuperview().inset(Metrics.verticalMainPadding)
+            make.top.equalTo(titleLabel).offset(Metrics.linesPadding)
+            make.bottom.equalToSuperview().offset(Metrics.verticalMainPadding)
         }
     }
 
