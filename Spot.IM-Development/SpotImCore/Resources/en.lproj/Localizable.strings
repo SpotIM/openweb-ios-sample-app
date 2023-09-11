@@ -158,3 +158,4 @@
 "View x reply" = "View %d reply";
 "View x of x replies" = "View %d of %d replies";
 "EditingComment" = "Editing comment";
+"ErrorStateLoadConversationReplies" = "We are unable to load replies right now";
