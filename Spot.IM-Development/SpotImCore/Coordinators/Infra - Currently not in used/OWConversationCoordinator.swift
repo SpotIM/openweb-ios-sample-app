@@ -227,9 +227,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             communityGuidelinesURLTapped,
-            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile,
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map { $0.url },
             conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput,
-            conversationVM.outputs.conversationViewVM.outputs.openProfile
+            conversationVM.outputs.conversationViewVM.outputs.openProfile.map { $0.url }
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
@@ -328,10 +328,10 @@ fileprivate extension OWConversationCoordinator {
             .map { OWViewActionCallbackType.closeConversationPressed }
 
         let openPublisherProfile = Observable.merge(
-            viewModel.outputs.openPublisherProfile,
-            viewModel.outputs.commentingCTAViewModel.outputs.openPublisherProfile
+            viewModel.outputs.openProfile,
+            viewModel.outputs.commentingCTAViewModel.outputs.openProfile
         )
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
 
         let openReportReason = viewModel.outputs.openReportReason
             .map { commentVM -> OWViewActionCallbackType in
