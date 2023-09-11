@@ -90,6 +90,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
         case articleHeaderStyle = "articleHeaderStyle"
+        case articleInformationStrategy = "articleInformationStrategy"
         case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
@@ -99,6 +100,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case initialSortIndex = "initialSortIndex"
         case fontGroupType = "fontGroupType"
         case articleAssociatedURL = "articleAssociatedURL"
+        case articleSection = "articleSection"
         case preConversationStyle = "preConversationCustomStyle"
         case conversationStyle = "conversationCustomStyleModeSelected"
         case commentCreationStyle = "commentCreationCustomStyleModeSelected"
@@ -142,6 +144,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current spot id to be tested"
         case .articleHeaderStyle:
             return "Key which stores article header style"
+        case .articleInformationStrategy:
+            return "Key which stores article information strategy (server, custom)"
         case .readOnlyModeIndex:
             return "Key which stores read only mode (default, enabled, disabled)"
         case .themeModeIndex:
@@ -156,6 +160,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores initial sort (server, best, newest, oldest)"
         case .articleAssociatedURL:
             return "Key which stores injected article url for easy testing"
+        case .articleSection:
+            return "Key which stores article section for easy testing"
         case .preConversationStyle:
             return "Key which stores pre conversation's style"
         case .conversationStyle:
