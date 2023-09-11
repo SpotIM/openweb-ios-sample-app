@@ -37,7 +37,7 @@ class OWRealtimeService: OWRealtimeServicing {
         return Observable.combineLatest(realtimeData,
                                         currentPostId.unwrap())
         .map { realtimeData, postId -> OWRealTimeOnlineViewingUsers? in
-            try? realtimeData.data?.onlineViewingUsersCount(forPostId: postId)
+            realtimeData.data?.onlineViewingUsersCount(forPostId: postId)
         }
         .unwrap()
         .map { $0.count }
