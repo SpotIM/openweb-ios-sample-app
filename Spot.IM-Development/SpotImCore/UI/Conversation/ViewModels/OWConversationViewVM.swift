@@ -74,7 +74,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
