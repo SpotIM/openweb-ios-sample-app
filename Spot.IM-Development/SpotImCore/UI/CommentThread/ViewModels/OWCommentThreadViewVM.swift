@@ -47,7 +47,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
     }
 
     fileprivate var postId: OWPostId {
