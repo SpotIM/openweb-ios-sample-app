@@ -249,7 +249,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                                         _isLoadingServerComments,
                                         _shouldShowErrorLoadingComments,
                                         shouldShowConversationEmptyState)
-            .startWith(([], [], false, false, false))
+            .startWith(([], [], true, false, false))
             .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isLoading, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
 
@@ -314,11 +314,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var shouldShowConversationEmptyState: Observable<Bool> {
         return Observable.combineLatest(_isLoadingServerComments.distinctUntilChanged(),
                                         _shouldShowErrorLoadingComments.distinctUntilChanged(),
-                                        commentCellsOptions) { isLoading, shouldShowError, comments in
-            guard !isLoading, !shouldShowError else { return false }
-            return comments.isEmpty
+                                        commentCellsOptions)
+        .startWith( (true, false, []) )
+        .flatMapLatest { isLoading, shouldShowError, comments -> Observable<Bool> in
+            guard !isLoading, !shouldShowError else { return .just(false) }
+            return .just(comments.isEmpty)
         }
-            .asObservable()
+        .distinctUntilChanged()
+        .asObservable()
     }
 
     lazy var commentingCTAViewModel: OWCommentingCTAViewModel = {
@@ -615,8 +618,6 @@ fileprivate extension OWConversationViewViewModel {
             }
             .map { [weak self] event -> OWConversationReadRM? in
                 guard let self = self else { return nil }
-                self._isLoadingServerComments.onNext(false)
-
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -657,10 +658,11 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
 
                 self.cacheConversationRead(response: response)
-
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
-
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+
+                // Update loading state only after the presented comments are updated
+                self._isLoadingServerComments.onNext(false)
             })
             .disposed(by: disposeBag)
 
