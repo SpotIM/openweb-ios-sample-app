@@ -11,11 +11,12 @@ import RxSwift
 
 protocol OWCommentStatusUpdaterServicing {
     func fetchStatusFor(comment: OWComment)
+    func spotChanged(newSpotId: OWSpotId)
 }
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate let disposeBag: DisposeBag = DisposeBag()
+    fileprivate var disposeBag: DisposeBag = DisposeBag()
 
     fileprivate struct Metrics {
         static let retriesDefault: Int = 12
@@ -37,6 +38,11 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
         _fetchStatusFor.onNext(comment)
+    }
+
+    func spotChanged(newSpotId: OWSpotId) {
+        disposeBag = DisposeBag()
+        setupObservers()
     }
 }
 

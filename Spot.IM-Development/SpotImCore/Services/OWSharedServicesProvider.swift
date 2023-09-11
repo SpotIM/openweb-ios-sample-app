@@ -378,6 +378,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _imageCacheService.cleanCache()
         _commentsInMemoryCacheService.cleanCache()
         _lastCommentTypeInMemoryCacheService.cleanCache()
+        _commentStatusUpdaterService.spotChanged(newSpotId: spotId)
     }
 }
 
