@@ -65,6 +65,11 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .map { OWClarityDetailsCoordinatorResult.popped }
             .asObservable()
 
+        let poppedFromCloseButtonObservable = clarityDetailsVM.outputs.clarityDetailsViewViewModel
+            .outputs.closeButtonPopped
+            .map { OWCommentCreationCoordinatorResult.popped }
+            .asObservable()
+
         let loadedToScreenObservable = clarityDetailsVM.outputs.loadedToScreen
             .map { OWClarityDetailsCoordinatorResult.loadedToScreen }
             .asObservable()
@@ -128,7 +133,7 @@ fileprivate extension OWClarityDetailsCoordinator {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let dismissView = viewModel.outputs.dismissView
-            .map { OWViewActionCallbackType.closeReportReason }
+            .map { OWViewActionCallbackType.closeClarityDetails }
 
         Observable.merge(dismissView)
             .subscribe(onNext: { [weak self] viewActionType in
