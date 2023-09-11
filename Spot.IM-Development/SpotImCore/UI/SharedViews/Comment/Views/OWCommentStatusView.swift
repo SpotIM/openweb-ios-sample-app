@@ -35,6 +35,7 @@ class OWCommentStatusView: UIView {
     fileprivate lazy var messageLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 
     init() {
@@ -62,6 +63,7 @@ fileprivate extension OWCommentStatusView {
     }
 
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.addCornerRadius(Metrics.cornerRadius)
         self.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light)
 

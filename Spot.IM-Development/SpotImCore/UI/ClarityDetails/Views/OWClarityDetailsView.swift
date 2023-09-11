@@ -67,6 +67,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var topParagraphLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var detailsTitleLabel: UILabel = {
@@ -75,6 +76,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .text(viewModel.outputs.detailsTitleText)
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var paragraphsStackView: UIStackView = {
@@ -94,6 +96,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .text(viewModel.outputs.bottomParagraphText)
             .numberOfLines(0)
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var gotItButton: UIButton = {
@@ -126,6 +129,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWClarityDetailsView {
     func setupViews() {
+        self.enforceSemanticAttribute()
         self.useAsThemeStyleInjector()
 
         self.addSubview(topContainerView)
