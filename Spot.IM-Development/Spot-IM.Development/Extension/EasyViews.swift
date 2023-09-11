@@ -285,4 +285,9 @@ extension UITextView {
         self.textColor = textColor
         return self
     }
+
+    @discardableResult func indicatorStyle(_ indicatorStyle: UIScrollView.IndicatorStyle) -> Self {
+        self.indicatorStyle = indicatorStyle
+        return self
+    }
 }

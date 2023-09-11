@@ -16,6 +16,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
+        static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
@@ -161,13 +162,6 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
-        self.addSubview(self.conversationEmptyStateView)
-        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(self.tableView.OWSnp.top)
-            make.bottom.equalTo(self.tableView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
-        }
-
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
@@ -176,12 +170,19 @@ fileprivate extension OWConversationView {
             make.height.equalTo(Metrics.separatorHeight)
         }
 
-        self.addSubview(self.realtimeIndicationAnimationView)
-        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
-            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+        self.addSubview(self.conversationEmptyStateView)
+        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
+            make.top.equalTo(self.tableView.OWSnp.top)
+            make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
         }
+
+    self.addSubview(self.realtimeIndicationAnimationView)
+    realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+        make.bottom.equalTo(self.tableView.OWSnp.bottom)
+        make.leading.trailing.equalToSuperview()
+        make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
+    }
 
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
@@ -192,19 +193,9 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
-        Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
-                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
-            .filter { $0.0 }
-            .map { $0.1 }
-            .unwrap()
-            .map { $0.height }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
-                }
-            })
+        viewModel.outputs.shouldShowConversationEmptyState
+            .map { !$0 }
+            .bind(to: conversationEmptyStateView.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
@@ -259,9 +250,10 @@ fileprivate extension OWConversationView {
 
         viewModel.outputs.conversationDataJustReceived
             .observe(on: MainScheduler.instance)
+            .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.tableView.setContentOffset(.zero, animated: false)
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
             })
             .disposed(by: disposeBag)
 

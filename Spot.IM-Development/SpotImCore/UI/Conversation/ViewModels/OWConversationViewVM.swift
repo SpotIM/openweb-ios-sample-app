@@ -27,7 +27,11 @@ protocol OWConversationViewViewModelingInputs {
 protocol OWConversationViewViewModelingOutputs {
     var shouldShowTiTleHeader: Bool { get }
     var shouldShowArticleDescription: Bool { get }
-    var shouldShowError: Observable<Void> { get }
+    var shouldShowErrorLoadingComments: Observable<Bool> { get }
+    var shouldShowErrorLoadingReplies: Observable<Bool> { get }
+    var shouldShowErrorLoadingMoreComments: Observable<Bool> { get }
+    var shouldShowErrorCommentDelete: Observable<Bool> { get }
+    var shouldShowErrorMuteUser: Observable<Bool> { get }
     var shouldShowConversationEmptyState: Observable<Bool> { get }
 
     var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
@@ -47,8 +51,7 @@ protocol OWConversationViewViewModelingOutputs {
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
-    var openProfile: Observable<URL> { get }
-    var openPublisherProfile: Observable<String> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
@@ -70,7 +73,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 5
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
-        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
@@ -87,9 +90,33 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return conversationData.article.additionalSettings.headerStyle != .none
     }()
 
-    var _shouldShowError = PublishSubject<Void>()
-    var shouldShowError: Observable<Void> {
-        return _shouldShowError
+    fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorLoadingComments: Observable<Bool> {
+        return _shouldShowErrorLoadingComments
+            .asObservable()
+    }
+
+    fileprivate var _shouldShowErrorLoadingReplies = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorLoadingReplies: Observable<Bool> {
+        return _shouldShowErrorLoadingReplies
+            .asObservable()
+    }
+
+    fileprivate var _shouldShowErrorLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorLoadingMoreComments: Observable<Bool> {
+        return _shouldShowErrorLoadingMoreComments
+            .asObservable()
+    }
+
+    fileprivate var _shouldShowErrorCommentDelete = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorCommentDelete: Observable<Bool> {
+        return _shouldShowErrorCommentDelete
+            .asObservable()
+    }
+
+    fileprivate var _shouldShowErrorMuteUser = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorMuteUser: Observable<Bool> {
+        return _shouldShowErrorMuteUser
             .asObservable()
     }
 
@@ -105,6 +132,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var paginationOffset = 0
 
+    fileprivate var articleUrl: String = ""
+
+    fileprivate let _isLoadingServerComments = BehaviorSubject<Bool>(value: true)
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -128,15 +158,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         return _openProfile
-            .asObservable()
-    }
-
-    fileprivate var _openPublisherProfile = PublishSubject<String>()
-    var openPublisherProfile: Observable<String> {
-        return _openPublisherProfile
             .asObservable()
     }
 
@@ -160,7 +184,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
-        return OWArticleDescriptionViewModel(article: conversationData.article)
+        return OWArticleDescriptionViewModel()
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -221,14 +245,22 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(communityCellsOptions, commentCellsOptions, isEmptyObservable)
-            .startWith(([], [], false))
-            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isEmptyConversation -> Observable<[OWConversationCellOption]> in
+        return Observable.combineLatest(communityCellsOptions,
+                                        commentCellsOptions,
+                                        _isLoadingServerComments,
+                                        _shouldShowErrorLoadingComments,
+                                        shouldShowConversationEmptyState)
+            .startWith(([], [], true, false, false))
+            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isLoading, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-                if commentCellsOptions.isEmpty && !isEmptyConversation {
+
+                if isLoading {
                     return Observable.just(self.getSkeletonCells())
+                } else if shouldShowError || isEmptyState {
+                    return Observable.just([])
+                } else {
+                    return Observable.just(communityCellsOptions + commentCellsOptions)
                 }
-                return Observable.just(communityCellsOptions + commentCellsOptions)
             })
             .scan([], accumulator: { previousConversationCellsOptions, newConversationCellsOptions in
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
@@ -281,8 +313,16 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var shouldShowConversationEmptyState: Observable<Bool> {
-        return isEmptyObservable
-            .asObservable()
+        return Observable.combineLatest(_isLoadingServerComments.distinctUntilChanged(),
+                                        _shouldShowErrorLoadingComments.distinctUntilChanged(),
+                                        commentCellsOptions)
+        .startWith( (true, false, []) )
+        .flatMapLatest { isLoading, shouldShowError, comments -> Observable<Bool> in
+            guard !isLoading, !shouldShowError else { return .just(false) }
+            return .just(comments.isEmpty)
+        }
+        .distinctUntilChanged()
+        .asObservable()
     }
 
     lazy var commentingCTAViewModel: OWCommentingCTAViewModel = {
@@ -321,14 +361,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var viewInitialized = PublishSubject<Void>()
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
     var pullToRefresh = PublishSubject<Void>()
-
-    fileprivate var _isEmpty = BehaviorSubject<Bool?>(value: nil)
-    fileprivate lazy var isEmptyObservable: Observable<Bool> = {
-        return _isEmpty
-            .unwrap()
-            .share(replay: 1)
-            .asObservable()
-    }()
 
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
@@ -550,6 +582,8 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -569,6 +603,9 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload // Block animations in the table view
+
+                self._isLoadingServerComments.onNext(true)
+                self._shouldShowErrorLoadingComments.onNext(false)
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
@@ -592,7 +629,7 @@ fileprivate extension OWConversationViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._shouldShowError.onNext()
+                    self._shouldShowErrorLoadingComments.onNext(true)
                     return nil
                 default:
                     return nil
@@ -601,11 +638,13 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
             .share()
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .fullConversationLoaded)
+                guard let self = self else { return }
+                // Send analytic event
+                self.sendEvent(for: .fullConversationLoaded)
             })
             .disposed(by: disposeBag)
 
@@ -624,10 +663,10 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
 
                 self.cacheConversationRead(response: response)
-
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
-
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+
+                self._isLoadingServerComments.onNext(false)
             })
             .disposed(by: disposeBag)
 
@@ -658,18 +697,6 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.servicesProvider.realtimeIndicatorService().update(state: .disable)
-            })
-            .disposed(by: disposeBag)
-
-        // Set isEmpty
-        conversationFetchedObservable
-            .subscribe(onNext: { [weak self] conversation in
-                guard let self = self else { return }
-                if let messageCount = conversation.conversation?.messagesCount, messageCount > 0 {
-                    self._isEmpty.onNext(false)
-                } else {
-                    self._isEmpty.onNext(true)
-                }
             })
             .disposed(by: disposeBag)
 
@@ -708,7 +735,7 @@ fileprivate extension OWConversationViewViewModel {
             .bind(to: conversationEmptyStateViewModel.inputs.isReadOnly)
             .disposed(by: disposeBag)
 
-        isEmptyObservable
+        shouldShowConversationEmptyState
             .bind(to: conversationEmptyStateViewModel.inputs.isEmpty)
             .disposed(by: disposeBag)
 
@@ -731,6 +758,10 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         let loadMoreRepliesReadObservable = _loadMoreReplies
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._shouldShowErrorLoadingReplies.onNext(false)
+            })
             .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
@@ -770,7 +801,7 @@ fileprivate extension OWConversationViewViewModel {
                     return (commentPresentationData, conversationRead)
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._shouldShowError.onNext()
+                    self._shouldShowErrorLoadingReplies.onNext(true)
                     return nil
                 default:
                     return nil
@@ -817,6 +848,10 @@ fileprivate extension OWConversationViewViewModel {
         // fetch more comments
         let loadMoreCommentsReadObservable = _loadMoreComments
             .observe(on: loadMoreCommentsScheduler)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._shouldShowErrorLoadingMoreComments.onNext(false)
+            })
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
@@ -840,7 +875,7 @@ fileprivate extension OWConversationViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._shouldShowError.onNext()
+                    self._shouldShowErrorLoadingMoreComments.onNext(true)
                     return nil
                 default:
                     return nil
@@ -1079,13 +1114,13 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self.sendEvent(for: .commentMenuClicked(commentId: commentVm.outputs.comment.id ?? ""))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] (actions, sender, commentVm) -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.presenterService()
                     .showMenu(actions: actions, sender: sender, viewableMode: self.viewableMode)
                     .map { ($0, commentVm) }
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] result, commentVm in
                 guard let self = self else { return }
                 switch result {
@@ -1148,7 +1183,8 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // error alert
-        shouldShowError
+        shouldShowErrorLoadingComments
+            .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -1181,6 +1217,7 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] _, currentSort in
                 self?.sendEvent(for: .sortByClicked(currentSort: currentSort))
             })
+            .observe(on: MainScheduler.instance)
             .flatMapLatest { [weak self] sender, currentSort -> Observable<(OWRxPresenterResponseType, OWSortOption)> in
                 guard let self = self else { return .empty() }
 
@@ -1229,26 +1266,24 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to comment avatar click
+        // Responding to comment avatar and user name tapped
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
-                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileData> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
-                    return avatarVM.outputs.openProfile
-                        .map { url, type in
-                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
-                        }
+                    let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
+                    return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] url, type, userId in
+            .do(onNext: { [weak self] openProfileData in
                 guard let self = self else { return }
-                self._openProfile.onNext(url)
-                switch type {
+                switch openProfileData.userProfileType {
                 case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
-                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: userId))
+                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
                 }
             })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         commentingCTAViewModel
@@ -1274,15 +1309,22 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        self.servicesProvider.commentUpdaterService()
+        let updatedCommentsObservable = self.servicesProvider.commentUpdaterService()
             .getUpdatedComments(for: postId)
-            .flatMap { updateType -> Observable<OWCommentUpdateType> in
-                // Making sure comment cells are visible
-                return commentCellsVmsObservable
-                    .filter { !$0.isEmpty }
-                    .take(1)
-                    .map { _ in updateType }
+            .flatMap { [weak self] updateType -> Observable<OWCommentUpdateType> in
+                guard let self = self else { return .empty() }
+
+                // Waiting for a state in which we are not loading or showing error before updating/adding comments or replies from a local service
+                return Observable.combineLatest(self._isLoadingServerComments,
+                                                self._shouldShowErrorLoadingComments) { isLoading, shouldShowError in
+                    return (!isLoading && !shouldShowError)
+                }
+                .filter { $0 }
+                .take(1)
+                .map { _ in updateType }
             }
+
+        updatedCommentsObservable
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
@@ -1432,6 +1474,10 @@ fileprivate extension OWConversationViewViewModel {
         // Deleting comment from network
         commentDeletedLocallyObservable
             .observe(on: MainScheduler.asyncInstance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._shouldShowErrorCommentDelete.onNext(false)
+            })
             .flatMap { [weak self] commentVm -> Observable<Event<OWCommentDelete>> in
                 let comment = commentVm.outputs.comment
                 guard let self = self,
@@ -1451,6 +1497,7 @@ fileprivate extension OWConversationViewViewModel {
                     return commentDelete
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    self._shouldShowErrorCommentDelete.onNext(true)
                     return nil
                 default:
                     return nil
@@ -1499,6 +1546,10 @@ fileprivate extension OWConversationViewViewModel {
 
         // Handling mute user from network
         muteUserObservable
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._shouldShowErrorMuteUser.onNext(false)
+            })
             .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -1515,6 +1566,7 @@ fileprivate extension OWConversationViewViewModel {
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    self._shouldShowErrorMuteUser.onNext(true)
                     return false
                 default:
                     return false
@@ -1556,9 +1608,18 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
             pullToRefresh
+                .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
                     self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                })
+                .disposed(by: disposeBag)
+
+            servicesProvider
+                .activeArticleService()
+                .articleExtraData
+                .subscribe(onNext: { [weak self] article in
+                    self?.articleUrl = article.url.absoluteString
                 })
                 .disposed(by: disposeBag)
     }
@@ -1568,7 +1629,7 @@ fileprivate extension OWConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: conversationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: conversationData.presentationalStyle),
                 component: .conversation)
     }

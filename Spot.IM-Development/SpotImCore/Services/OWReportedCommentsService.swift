@@ -21,8 +21,13 @@ protocol OWReportedCommentsServicing {
 
 class OWReportedCommentsService: OWReportedCommentsServicing {
 
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
     fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
+
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
 
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment {
         guard let commentId = originalComment.id else { return originalComment }
@@ -55,6 +60,17 @@ fileprivate extension OWReportedCommentsService {
             _mapPostIdToReportedCommentIds[postId] = existingCommentIdsForPostId.union(ids)
         } else {
             _mapPostIdToReportedCommentIds[postId] = Set(ids)
+        }
+        updateCommentsService(with: ids, postId: postId)
+    }
+
+    func updateCommentsService(with reportedCommentIds: [OWCommentId], postId: OWPostId) {
+        reportedCommentIds.forEach { commentId in
+            let commentsService = self.servicesProvider.commentsService()
+            if var existingComment = commentsService.get(commentId: commentId, postId: postId) {
+                existingComment.setIsReported(true)
+                commentsService.set(comments: [existingComment], postId: postId)
+            }
         }
     }
 

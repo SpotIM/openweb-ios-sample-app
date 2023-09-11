@@ -25,6 +25,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
+    var isValidatedContent: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -79,13 +80,15 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         commentText
             .asObservable()
             .withLatestFrom(_commentTextCharactersLimit) { ($0, $1) }
-            .scan(("", nil)) { previous, newTuple -> (String, Int?) in
+            .scan(("", nil)) { [weak self] previous, newTuple -> (String, Int?) in
                 // Handle characters limit for comment text
+                guard let self = self else { return previous }
                 guard let limiter = newTuple.1 else { return newTuple }
                 let previousText = previous.0
                 let newText = newTuple.0
 
-                return newText.count <= limiter ? (newText, limiter) : (previousText, limiter)
+                let adjustedText = self.textValidatorTransformer(previousText: previousText, newText: newText, charactersLimiter: limiter)
+                return (adjustedText, limiter)
             }
             .map { $0.0 }
     }
@@ -114,6 +117,26 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var resignFirstResponderCalled: Observable<Void> {
         return resignFirstResponder
             .asObservable()
+    }
+
+    var isValidatedContent: Observable<Bool> {
+        return Observable.combineLatest(
+            commentContent,
+            imagePreviewVM.outputs.isUploadingImageObservable
+        )
+        .map { [weak self] commentContent, isUploadingImage -> Bool in
+            guard let self = self else { return false }
+
+            // Invalidate in case original text in edit mode
+            if case .edit(comment: let comment) = self.commentCreationType,
+               let commentText = comment.text?.text,
+               commentText == commentContent.text {
+                return false
+            }
+
+            // Validate / invalidate according to content and uploading image state
+            return commentContent.hasContent() && !isUploadingImage
+        }
     }
 
     init(commentCreationType: OWCommentCreationTypeInternal,
@@ -157,9 +180,7 @@ fileprivate extension OWCommentCreationContentViewModel {
     func setupInitialImageIfNeeded() {
         if case let .edit(comment) = commentCreationType,
            let imageContent = comment.image {
-            self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
-                .unwrap()
-                .observe(on: MainScheduler.instance)
+            Observable.just(())
                 .do(onNext: { [weak self] _ in
                     // Set a placeholder
                     guard let self = self else { return }
@@ -167,15 +188,35 @@ fileprivate extension OWCommentCreationContentViewModel {
                         self.imagePreviewVM.inputs.image.onNext(placeholder)
                     }
                 })
-                .subscribe(onNext: { [weak self] imageUrl in
+                .flatMap { [weak self] _ -> Observable<URL?> in
+                    guard let self = self else { return .empty() }
+                    return self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
+                }
+                .unwrap()
+                .observe(on: MainScheduler.instance)
+                .flatMap { imageUrl -> Observable<UIImage> in
+                    return UIImage.load(with: imageUrl)
+                }
+                // we added delay to fix a case we showed empty image
+                .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+                .subscribe(onNext: { [weak self] image in
                     guard let self = self else { return }
-                    UIImage.load(with: imageUrl) { image, _ in
-                        guard let image = image else { return }
-                        self.imagePreviewVM.inputs.image.onNext(image)
-                        self._imageContent.onNext(imageContent)
-                    }
+                    self.imagePreviewVM.inputs.image.onNext(image)
+                    self._imageContent.onNext(imageContent)
                 })
                 .disposed(by: disposeBag)
+        }
+    }
+
+    func textValidatorTransformer(previousText: String, newText: String, charactersLimiter: Int) -> String {
+        // Handle a state in which a user is trying to edit a text which is longer than the limiter
+        if previousText.isEmpty && newText.count > charactersLimiter {
+            return String(newText.prefix(charactersLimiter))
+        } else if newText.count > charactersLimiter {
+            // Intentionally block copy paste of longer than limiter or further characters the user is trying to add
+            return previousText
+        } else { // All good and valid, return new text
+            return newText
         }
     }
 
