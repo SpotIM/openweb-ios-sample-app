@@ -166,3 +166,7 @@
 "pendingResonManualApproval" = "Todos os comentários no site requerem aprovação manual (por isso, nada de pessoal)";
 "pendingReasonPerformanceReview" = "Alguns comentários são enviados para uma análise interna do desempenho do produto (não é você, somos nós)";
 "pendingResonCommunityGuidelines" = "O seu comentário foi automaticamente assinalado por poder não estar de acordo com as nossas diretrizes da comunidade (pode analisar o seu comentário em qualquer altura)";
+"commentRejected" = "Comentário recusado";
+"rejectReasonsTitle" = "Como é que tomamos as nossas decisões?";
+"clarityDetailsPendingSummary" = "Informamos os utilizadores registados assim que o seu comentário for analisado.";
+"clarityDetailsRejectedTopParagraph" = "O seu comentário parece violar as diretrizes da nossa comunidade, pelo que foi rejeitado. Apenas será visível para si.";

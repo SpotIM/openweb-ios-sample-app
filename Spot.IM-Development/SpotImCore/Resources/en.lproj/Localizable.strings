@@ -169,3 +169,7 @@
 "pendingResonManualApproval" = "All comments on the site require manual approval (so nothing personal)";
 "pendingReasonPerformanceReview" = "Certain comments are sent to an internal product performance review (it’s not you, it’s us)";
 "pendingResonCommunityGuidelines" = "Your comment has been automatically flagged as it may not align with our community guidelines (You can revise your comment at any time)";
+"commentRejected" = "Comment rejected";
+"rejectReasonsTitle" = "How do we reach our decisions?";
+"clarityDetailsPendingSummary" = "We let registered users know as soon as their comment has been reviewed.";
+"clarityDetailsRejectedTopParagraph" = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you.";
