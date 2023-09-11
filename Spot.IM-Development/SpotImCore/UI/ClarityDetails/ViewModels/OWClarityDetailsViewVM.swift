@@ -22,6 +22,7 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var bottomParagraphText: String { get }
     var paragraphViewModels: [OWParagraphWithIconViewModeling] { get }
     var dismissView: Observable<Void> { get }
+    var closeButtonPopped: Observable<Void> { get }
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
     var communityGuidelinesClickObservable: Observable<URL> { get }
@@ -138,8 +139,14 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     var gotItClick = PublishSubject<Void>()
 
     lazy var dismissView: Observable<Void> = {
-        return Observable.merge(closeClick, gotItClick)
+        return gotItClick
+            .asObservable()
     }()
+
+    lazy var closeButtonPopped: Observable<Void> = {
+        return closeClick
+            .asObservable()
+    }
 
     lazy private var accessibilityChange: Observable<Bool> = {
         servicesProvider.appLifeCycle()
