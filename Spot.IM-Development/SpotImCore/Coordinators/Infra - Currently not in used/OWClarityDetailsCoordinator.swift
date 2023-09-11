@@ -62,19 +62,21 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
         let dismissObservable = clarityDetailsVM.outputs.clarityDetailsViewViewModel
             .outputs.dismissView
-            .map { OWClarityDetailsCoordinatorResult.popped }
             .asObservable()
 
         let poppedFromCloseButtonObservable = clarityDetailsVM.outputs.clarityDetailsViewViewModel
             .outputs.closeButtonPopped
-            .map { OWCommentCreationCoordinatorResult.popped }
+            .asObservable()
+
+        let poppedFromBackButtonObservable = clarityDetailsPopped
             .asObservable()
 
         let loadedToScreenObservable = clarityDetailsVM.outputs.loadedToScreen
             .map { OWClarityDetailsCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        let resultsWithPopAnimation = dismissObservable
+        let resultsWithPopAnimation = Observable.merge(dismissObservable, poppedFromCloseButtonObservable, poppedFromBackButtonObservable)
+            .map { OWClarityDetailsCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -115,7 +117,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 return Observable.never()
             }
 
-        return Observable.merge(resultsWithPopAnimation, dismissObservable, loadedToScreenObservable, coordinateToSafariObservable)
+        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
