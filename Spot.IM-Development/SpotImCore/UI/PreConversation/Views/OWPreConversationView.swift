@@ -273,7 +273,7 @@ fileprivate extension OWPreConversationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
+                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor5 : .backgroundColor2, themeStyle: currentStyle)
                 self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)

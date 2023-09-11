@@ -267,7 +267,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -303,7 +303,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -339,7 +339,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
@@ -376,7 +376,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             guard let self = self else { return Disposables.create() }
 
             let additionalSettings = self.commonCreatorService.additionalSettings()
-            let article = self.commonCreatorService.mockArticle()
+            let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views

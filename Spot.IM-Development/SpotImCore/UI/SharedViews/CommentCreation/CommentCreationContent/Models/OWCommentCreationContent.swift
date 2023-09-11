@@ -13,6 +13,7 @@ struct OWCommentCreationContent {
     var image: OWCommentImage?
 
     func hasContent() -> Bool {
-        return !text.isEmpty || image != nil
+        let adjustedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !adjustedText.isEmpty || image != nil
     }
 }

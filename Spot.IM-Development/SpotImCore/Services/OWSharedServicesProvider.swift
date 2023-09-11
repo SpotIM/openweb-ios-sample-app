@@ -18,6 +18,7 @@ protocol OWSharedServicesProviderConfigure {
 
 protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
+    func profileService() -> OWProfileServicing
     func themeStyleService() -> OWThemeStyleServicing
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
@@ -44,6 +45,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func usersService() -> OWUsersServicing
     func presenterService() -> OWPresenterServicing
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
+    func activeArticleService() -> OWActiveArticleServicing
     func commentUpdaterService() -> OWCommentUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
@@ -60,6 +62,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     private init() {}
 
     var configure: OWSharedServicesProviderConfigure { return self }
+
+    fileprivate lazy var _profileService: OWProfileServicing = {
+        return OWProfileService(sharedServicesProvider: self)
+    }()
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
@@ -162,7 +168,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _usersService: OWUsersServicing = {
-        return OWUsersService()
+        return OWUsersService(servicesProvider: self)
     }()
 
     fileprivate lazy var _presenterService: OWPresenterServicing = {
@@ -171,6 +177,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _commentCreationRequestsService: OWCommentCreationRequestsServicing = {
         return OWCommentCreationRequestsService()
+    }()
+
+    fileprivate lazy var _activeArticleService: OWActiveArticleServicing = {
+        return OWActiveArticleService(servicesProvider: self)
     }()
 
     fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
@@ -196,6 +206,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     fileprivate lazy var _pageViewIdHolder: OWPageViewIdHolderProtocol = {
         return OWPageViewIdHolder()
     }()
+
+    func profileService() -> OWProfileServicing {
+        return _profileService
+    }
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
@@ -299,6 +313,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing {
         return _commentCreationRequestsService
+    }
+
+    func activeArticleService() -> OWActiveArticleServicing {
+        return _activeArticleService
     }
 
     func commentUpdaterService() -> OWCommentUpdaterServicing {
