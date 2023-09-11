@@ -67,7 +67,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
             .asObservable()
     }
 
-    var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "community guidelines").lowercased()
+    var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "Community Guidelines").lowercased()
 
     lazy var navigationTitle: String = {
         switch type {
