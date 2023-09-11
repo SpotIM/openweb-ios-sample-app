@@ -60,7 +60,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
