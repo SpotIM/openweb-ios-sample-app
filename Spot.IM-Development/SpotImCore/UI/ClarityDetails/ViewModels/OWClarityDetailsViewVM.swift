@@ -72,7 +72,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var navigationTitle: String = {
         switch type {
         case .rejected:
-            return "Comment rejected" // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "commentRejected")
         case .pending:
             return OWLocalizationManager.shared.localizedString(key: "Awaiting review")
         }
@@ -88,7 +88,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var detailsTitleText: String = {
         switch type {
         case .rejected:
-            return "How do we reach our decisions?" // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "rejectReasonsTitle")
         case .pending:
             return ""
         }
@@ -99,7 +99,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         case .rejected:
             return ""
         case .pending:
-            return "We let registered users know as soon as their comment has been reviewed." // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "clarityDetailsPendingSummary")
         }
     }()
 
@@ -193,7 +193,7 @@ fileprivate extension OWClarityDetailsViewVM {
 
         switch clarityType {
         case .rejected:
-            let string = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you."
+            let string = OWLocalizationManager.shared.localizedString(key: "clarityDetailsRejectedTopParagraph")
             let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
             if let range = string.range(of: communityGuidelinesClickablePlaceholder) {
                 let nsRange = NSRange(range, in: string)

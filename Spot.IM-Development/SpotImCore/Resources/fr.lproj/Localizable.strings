@@ -167,3 +167,7 @@
 "pendingResonManualApproval" = "Tous les commentaires sur le site sont soumis à une approbation manuelle (donc rien de personnel).";
 "pendingReasonPerformanceReview" = "Certains commentaires sont envoyés à un service interne d'évaluation des performances des produits (rien à voir avec vous, c'est notre affaire).";
 "pendingResonCommunityGuidelines" = "Votre commentaire a été automatiquement signalé comme n'étant pas conforme à nos directives communautaires (vous pouvez réviser votre commentaire à tout moment).";
+"commentRejected" = "Commentaire rejeté";
+"rejectReasonsTitle" = "Comment prenons-nous nos décisions?";
+"clarityDetailsPendingSummary" = "Nous informons les utilisateurs enregistrés dès que leur commentaire a été examiné.";
+"clarityDetailsRejectedTopParagraph" = "Votre commentaire semble violer les lignes directrices de notre communauté et a donc été rejeté. Il ne sera visible que par vous.";
