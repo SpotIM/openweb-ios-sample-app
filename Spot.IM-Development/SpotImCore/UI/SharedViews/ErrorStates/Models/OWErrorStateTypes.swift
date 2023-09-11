@@ -9,5 +9,7 @@
 import Foundation
 
 enum OWErrorStateTypes {
+    case none
+    case loadConversationComments
     case loadConversationReplies
 }
