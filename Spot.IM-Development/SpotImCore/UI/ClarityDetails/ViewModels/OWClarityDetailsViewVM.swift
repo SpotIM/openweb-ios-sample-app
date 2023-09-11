@@ -146,7 +146,7 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     lazy var closeButtonPopped: Observable<Void> = {
         return closeClick
             .asObservable()
-    }
+    }()
 
     lazy private var accessibilityChange: Observable<Bool> = {
         servicesProvider.appLifeCycle()
