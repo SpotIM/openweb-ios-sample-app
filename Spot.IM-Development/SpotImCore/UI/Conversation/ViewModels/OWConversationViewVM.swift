@@ -64,7 +64,7 @@ protocol OWConversationViewViewModeling {
 
 class OWConversationViewViewModel: OWConversationViewViewModeling,
                                     OWConversationViewViewModelingInputs,
-                                    OWConversationViewViewModelingOutputs {
+                                   OWConversationViewViewModelingOutputs {
     var inputs: OWConversationViewViewModelingInputs { return self }
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
@@ -203,9 +203,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
-//    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
-//        return OWConversationEmptyStateCellViewModel()
-//    }()
+    //    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
+    //        return OWConversationEmptyStateCellViewModel()
+    //    }()
 
     lazy var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling = {
         return OWConversationEmptyStateViewModel()
@@ -243,19 +243,32 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }()
 
-    fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
+    fileprivate lazy var cellsViewModels = Observable.merge(errorCellViewModels, mainCellsViewModels)
+        .share(replay: 1)
+        .asObservable()
+
+    fileprivate lazy var errorCellViewModels: Observable<[OWConversationCellOption]> = shouldShowErrorLoadingComments
+        .filter { $0 }
+        .flatMap { [weak self] _ -> Observable<[OWConversationCellOption]> in
+            guard let self = self else { return .empty() }
+            return Observable.just(self.getErrorStateCell())
+        }
+
+    fileprivate lazy var mainCellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(communityCellsOptions,
                                         commentCellsOptions,
                                         _isLoadingServerComments,
                                         _shouldShowErrorLoadingComments,
                                         shouldShowConversationEmptyState)
-            .startWith(([], [], false, false, false))
+            .startWith(([], [], true, false, false))
             .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isLoading, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
 
                 if isLoading {
                     return Observable.just(self.getSkeletonCells())
-                } else if shouldShowError || isEmptyState {
+                } else if shouldShowError {
+                    return Observable.just(self.getErrorStateCell())
+                } else if isEmptyState {
                     return Observable.just([])
                 } else {
                     return Observable.just(communityCellsOptions + commentCellsOptions)
@@ -348,6 +361,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate lazy var conversationStyle: OWConversationStyle = {
         return self.conversationData.settings.fullConversationSettings.style
+    }()
+
+    fileprivate lazy var errorStateCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.conversationErrorState(viewModel: OWErrorStateCellViewModel(errorStateType: .loadConversationComments))
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -470,6 +487,11 @@ fileprivate extension OWConversationViewViewModel {
         let skeletonCells = skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
 
         return skeletonCells
+    }
+
+    func getErrorStateCell() -> [OWConversationCellOption] {
+        let errorStateCellOption = errorStateCellOption
+        return [errorStateCellOption]
     }
 
     func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {

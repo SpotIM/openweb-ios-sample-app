@@ -46,7 +46,7 @@ class OWErrorStateCellViewModel: OWErrorStateCellViewModeling,
 }
 
 extension OWErrorStateCellViewModel {
-    static func stub(errorStateType: OWErrorStateTypes) -> OWErrorStateCellViewModeling {
-        return OWErrorStateCellViewModel(errorStateType: errorStateType)
+    static func stub() -> OWErrorStateCellViewModeling {
+        return OWErrorStateCellViewModel(errorStateType: .none)
     }
 }
