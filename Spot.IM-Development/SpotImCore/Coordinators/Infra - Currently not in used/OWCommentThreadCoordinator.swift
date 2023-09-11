@@ -142,7 +142,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
-            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile
+            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map { $0.url }
         )
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
@@ -187,8 +187,9 @@ fileprivate extension OWCommentThreadCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let openPublisherProfile = viewModel.outputs.openPublisherProfile
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0) }
+        let openPublisherProfile = viewModel.outputs.openProfile
+            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
+            .asObservable()
 
         Observable.merge(openPublisherProfile)
             .subscribe { [weak self] viewActionType in
