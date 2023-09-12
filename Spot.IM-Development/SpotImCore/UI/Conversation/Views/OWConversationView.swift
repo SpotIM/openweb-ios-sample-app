@@ -51,8 +51,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var tableView: UITableView = {
-        let tableView = UITableView()
+    fileprivate lazy var tableView: OWTableView = {
+        let tableView = OWTableView()
             .enforceSemanticAttribute()
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
@@ -181,6 +181,10 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
+        tableView.rx.height
+            .bind(to: viewModel.inputs.tableViewHeight)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowConversationEmptyState
             .map { !$0 }
             .bind(to: conversationEmptyStateView.rx.isHidden)

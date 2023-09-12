@@ -11,5 +11,6 @@ import Foundation
 enum OWErrorStateTypes {
     case none
     case loadConversationComments
+    case loadMoreConversationComments
     case loadConversationReplies
 }
