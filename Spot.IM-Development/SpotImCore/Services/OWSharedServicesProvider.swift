@@ -51,6 +51,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
+    func toastNotificationService() -> OWToastNotificationServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -202,6 +203,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWPageViewIdHolder()
     }()
 
+    fileprivate lazy var _toastNotificationService: OWToastNotificationServicing = {
+        return OWToastNotificationService()
+    }()
+
     func profileService() -> OWProfileServicing {
         return _profileService
     }
@@ -332,6 +337,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
         return _pageViewIdHolder
+    }
+
+    func toastNotificationService() -> OWToastNotificationServicing {
+        return _toastNotificationService
     }
 }
 
