@@ -328,7 +328,15 @@ extension String {
         ]
 
         guard let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) else { return nil }
-        return attributedString.string
+
+        var resultString = attributedString.string
+
+        // Remove newline character at the end if it exists, sometimes when converting string to attributed string it adds a newline at the end
+        if resultString.hasSuffix("\n") {
+            resultString = String(resultString.dropLast())
+        }
+
+        return resultString
     }
 
     var linkedText: String? {
