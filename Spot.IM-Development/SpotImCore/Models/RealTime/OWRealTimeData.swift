@@ -17,8 +17,6 @@ struct OWRealTimeData: Decodable {
     fileprivate let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]
     fileprivate let onlineUsers: [String: [OWRealTimeOnlineUser]]
 
-    fileprivate let defaultRealTimeOnlineViewingUsers = OWRealTimeOnlineViewingUsers(count: 0)
-
     enum CodingKeys: String, CodingKey {
         case conversationCountMessages = "conversation/count-messages"
         case conversationTypingV2Count = "conversation/typing-v2-count"
@@ -30,6 +28,7 @@ struct OWRealTimeData: Decodable {
 
     struct Metrics {
         static let typingCountKey = "Overall"
+        static let defaultRealTimeOnlineViewingUsers = OWRealTimeOnlineViewingUsers(count: 1)
     }
 
     init(from decoder: Decoder) throws {
@@ -86,7 +85,7 @@ extension OWRealTimeData {
     func onlineViewingUsersCount(forPostId postId: OWPostId) -> OWRealTimeOnlineViewingUsers {
         let conversationId = self.getConversationId(forPostId: postId)
 
-        return onlineViewingUsers[conversationId]?.first ?? defaultRealTimeOnlineViewingUsers
+        return onlineViewingUsers[conversationId]?.first ?? Metrics.defaultRealTimeOnlineViewingUsers
     }
 
     func onlineUsers(forPostId postId: OWPostId) -> [OWRealTimeOnlineUser] {
