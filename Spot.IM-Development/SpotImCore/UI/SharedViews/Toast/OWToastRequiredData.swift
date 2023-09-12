@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct OWToastRequiredData {
+struct OWToastRequiredData: Codable, Equatable {
     var type: OWToastType
     var action: OWToastAction
     var title: String
 }
 
-enum OWToastType {
+enum OWToastType: Codable {
     case information
     case success
     case error
@@ -22,7 +22,7 @@ enum OWToastType {
 }
 
 // TODO: should have some onClick function (except none)
-enum OWToastAction: String, OWMenuTypeProtocol {
+enum OWToastAction: String, OWMenuTypeProtocol, Codable {
     case undo
     case tryAgain
     case learnMore
