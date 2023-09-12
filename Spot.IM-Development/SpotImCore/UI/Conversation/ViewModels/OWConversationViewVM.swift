@@ -75,7 +75,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -666,6 +666,7 @@ fileprivate extension OWConversationViewViewModel {
                 let commentsPresentationData = self.getCommentsPresentationData(from: response)
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
 
+                // Update loading state only after the presented comments are updated
                 self._isLoadingServerComments.onNext(false)
             })
             .disposed(by: disposeBag)
