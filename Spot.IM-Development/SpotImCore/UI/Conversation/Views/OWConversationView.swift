@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
+class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let separatorHeight: CGFloat = 1
@@ -181,6 +181,12 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
+        viewModel.outputs.displayToast
+            .subscribe(onNext: { [weak self] data in
+                self?.displayToast(requiredData: data)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowConversationEmptyState
             .map { !$0 }
             .bind(to: conversationEmptyStateView.rx.isHidden)
