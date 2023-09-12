@@ -318,6 +318,38 @@ extension String {
     var url: URL? {
         return URL(string: self)
     }
+
+    var stringWithoutURL: String? {
+        guard let data = self.data(using: .utf8) else { return nil }
+
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.html,
+            .characterEncoding: String.Encoding.utf8.rawValue
+        ]
+
+        guard let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) else { return nil }
+        return attributedString.string
+    }
+
+    var linkedText: String? {
+        guard let data = self.data(using: .utf8) else { return nil }
+
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            .documentType: NSAttributedString.DocumentType.html,
+            .characterEncoding: String.Encoding.utf8.rawValue
+        ]
+
+        guard let attributedString = try? NSMutableAttributedString(data: data, options: options, documentAttributes: nil) else { return nil }
+
+        var linkedString: String? = nil
+        attributedString.enumerateAttribute(.link, in: NSRange(location: 0, length: attributedString.length), options: []) { (value, range, stop) in
+            if let _ = value as? URL {
+                linkedString = attributedString.attributedSubstring(from: range).string
+            }
+        }
+
+        return linkedString
+    }
 }
 
 extension UITextView {

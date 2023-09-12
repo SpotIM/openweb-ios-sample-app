@@ -26,8 +26,8 @@ class OWCommunityGuidelinesView: UIView {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .wrapContent(axis: .vertical)
-            .hugContent(axis: .vertical)
+            .wrapContent()
+            .numberOfLines(0)
             .font(OWFontBook.shared.font(typography: .bodySpecial))
             .enforceSemanticAttribute()
     }()
@@ -95,7 +95,7 @@ fileprivate extension OWCommunityGuidelinesView {
         guidelinesIcon.removeFromSuperview()
         titleLabel.removeFromSuperview()
 
-        if viewModel.outputs.showContainer {
+        if viewModel.outputs.shouldShowContainer {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { make in
                 make.top.bottom.equalToSuperview().inset(spacing)
@@ -139,8 +139,23 @@ fileprivate extension OWCommunityGuidelinesView {
                 .disposed(by: disposeBag)
         }
 
-        viewModel.outputs.communityGuidelinesHtmlAttributedString
-            .bind(to: titleLabel.rx.attributedText)
+        let communityGuidelinesClickableStringObservable = viewModel.outputs
+            .communityGuidelinesClickableString
+
+        let communityGuidelinesAttributedStringObservable = viewModel.outputs
+            .communityGuidelinesAttributedString
+
+        Observable.combineLatest(communityGuidelinesAttributedStringObservable,
+                                 communityGuidelinesClickableStringObservable)
+            .subscribe(onNext: { [weak self] attributedText, clickableString in
+                guard let self = self else { return }
+                self.titleLabel
+                    .attributedText(attributedText)
+                    .addRangeGesture(targetRange: clickableString) { [weak self] in
+                        guard let self = self else { return }
+                        self.viewModel.inputs.urlClicked.onNext(())
+                    }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
@@ -148,23 +163,14 @@ fileprivate extension OWCommunityGuidelinesView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.guidelinesContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.updateCustomUI()
-            })
-            .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.appLifeCycle()
-            .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.titleLabel.font = OWFontBook.shared.font(typography: .bodySpecial)
             })
             .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeContainerViewUI.onNext(guidelinesContainer)
-//        viewModel.inputs.triggerCustomizeTitleTextViewUI.onNext(titleTextView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
         viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(guidelinesIcon)
     }
 
