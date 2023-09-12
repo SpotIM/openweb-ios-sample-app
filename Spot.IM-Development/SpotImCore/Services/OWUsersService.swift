@@ -53,12 +53,7 @@ class OWUsersService: OWUsersServicing {
     }
 
     func isUserOnline(_ userId: String, perPostId postId: OWPostId, realtimeData: OWRealTimeData) -> Bool {
-        let onlineUsersArray = realtimeData.onlineUsers(forPostId: postId)
-        guard let _ = onlineUsersArray.firstIndex(where: { $0.userId == userId}) else {
-            return false
-        }
-
-        return true
+        return realtimeData.onlineUsers(forPostId: postId).contains { $0.userId == userId }
     }
 
     func cleanCache() {

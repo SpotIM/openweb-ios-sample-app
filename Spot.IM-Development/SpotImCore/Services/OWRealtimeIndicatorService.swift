@@ -83,14 +83,12 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
             .share()
     }()
 
-    fileprivate lazy var newCommentsCount: Observable<Int> = {
-        return newComments.map { $0.count }
-    }()
-
     lazy var realtimeIndicatorType: Observable<OWRealtimeIndicatorType> = {
         return Observable.combineLatest(isRealtimeIndicatorEnabled,
                                         typingCount,
-                                        newCommentsCount)
+                                        newComments) { isEnabled, typingCount, newComments -> (Bool, Int, Int) in
+            return (isEnabled, typingCount, newComments.count)
+        }
         .map { isEnabled, typingCount, newCommentsCount -> OWRealtimeIndicatorType in
             guard isEnabled else { return .none }
 

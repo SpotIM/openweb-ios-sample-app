@@ -78,9 +78,9 @@ fileprivate extension OWRealtimeIndicationAnimationView {
     func setupObservers() {
         viewModel.outputs
             .shouldShow
-            .subscribe(onNext: { [weak self] iShown in
+            .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
-                self.animate(iShown)
+                self.animate(shouldShow)
             })
             .disposed(by: disposeBag)
 

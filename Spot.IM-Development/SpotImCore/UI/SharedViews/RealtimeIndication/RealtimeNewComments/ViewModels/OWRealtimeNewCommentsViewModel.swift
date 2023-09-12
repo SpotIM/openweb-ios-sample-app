@@ -27,7 +27,6 @@ class OWRealtimeNewCommentsViewModel: OWRealtimeNewCommentsViewModeling,
     var outputs: OWRealtimeNewCommentsViewModelingOutputs { return self }
 
     lazy var newCommentsText: Observable<String> = {
-        let realtimeIndicatorService = OWSharedServicesProvider.shared.realtimeIndicatorService()
         return realtimeIndicatorService.realtimeIndicatorType
             .map { indicatorType -> String? in
                 let newCommentsString = OWLocalizationManager.shared.localizedString(key: "ViewNewComments")
@@ -46,4 +45,10 @@ class OWRealtimeNewCommentsViewModel: OWRealtimeNewCommentsViewModeling,
             .unwrap()
             .asObservable()
     }()
+
+    fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing
+
+    init(realtimeIndicatorService: OWRealtimeIndicatorServicing = OWSharedServicesProvider.shared.realtimeIndicatorService()) {
+        self.realtimeIndicatorService = realtimeIndicatorService
+    }
 }
