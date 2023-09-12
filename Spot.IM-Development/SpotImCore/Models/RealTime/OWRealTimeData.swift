@@ -13,8 +13,8 @@ struct OWRealTimeData: Decodable {
     fileprivate let conversationCountMessages: [String: [OWRealTimeMessagesCount]]
     fileprivate let conversationTypingV2Count: [String: [[String: Int]]]
     fileprivate let conversationTypingV2Users: [String: [OWRealTimeTypingUsers]]
-    fileprivate let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]
     fileprivate let conversationNewMessages: [String: [OWComment]]
+    fileprivate let onlineViewingUsers: [String: [OWRealTimeOnlineViewingUsers]]
     fileprivate let onlineUsers: [String: [OWRealTimeOnlineUser]]
 
     fileprivate let defaultRealTimeOnlineViewingUsers = OWRealTimeOnlineViewingUsers(count: 0)
@@ -23,9 +23,9 @@ struct OWRealTimeData: Decodable {
         case conversationCountMessages = "conversation/count-messages"
         case conversationTypingV2Count = "conversation/typing-v2-count"
         case conversationTypingV2Users = "conversation/typing-v2-users"
-        case onlineUsers = "online/users"
-        case onlineViewingUsers = "online/users-count"
         case conversationNewMessages = "conversation/new-messages"
+        case onlineViewingUsers = "online/users-count"
+        case onlineUsers = "online/users"
     }
 
     struct Metrics {
