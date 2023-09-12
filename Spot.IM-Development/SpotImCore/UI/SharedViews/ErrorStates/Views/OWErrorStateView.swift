@@ -14,9 +14,14 @@ class OWErrorStateView: UIView {
         static let borderWidth: CGFloat = 1
         static let borderRadius: CGFloat = 12
         static let verticalMainPadding: CGFloat = 18
+        static let ctaHorizontalPadding: CGFloat = 4
+        static let ctaVerticalPadding: CGFloat = 5
         static let linesPadding: CGFloat = 10
+        static let headerIconSize: CGFloat = 27
+        static let retryIconSize: CGFloat = 14
 
         static let identifier = "error_state_view_id"
+        static let containerViewIdentifier = "error_state_container_view_id"
         static let headerIconIdentifier = "error_state_header_image_view_id"
         static let retryIconIdentifier = "error_state_retry_image_view_id"
         static let titleLabelIdentifier = "error_state_title_label_id"
@@ -27,17 +32,20 @@ class OWErrorStateView: UIView {
     fileprivate var disposeBag = DisposeBag()
     fileprivate var viewModel: OWErrorStateViewViewModeling!
 
+    fileprivate lazy var containerView: UIView = {
+       return UIView()
+            .backgroundColor(.clear)
+    }()
+
     fileprivate lazy var headerIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
-            .wrapContent()
             .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: true)!)
     }()
 
     fileprivate lazy var retryIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
-            .wrapContent()
             .image(UIImage(spNamed: "errorStateRetryIcon", supportDarkMode: true)!)
     }()
 
@@ -97,35 +105,49 @@ fileprivate extension OWErrorStateView {
     func setupViews() {
         self.corner(radius: Metrics.borderRadius)
 
-        addSubview(headerIcon)
+        addSubview(containerView)
+        containerView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+
+        containerView.addSubview(headerIcon)
         headerIcon.OWSnp.makeConstraints { make in
+            make.size.equalTo(Metrics.headerIconSize)
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(Metrics.verticalMainPadding)
         }
 
-        addSubview(titleLabel)
+        containerView.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(headerIcon).offset(Metrics.linesPadding)
+            make.top.equalTo(headerIcon.OWSnp.bottom).offset(Metrics.linesPadding)
         }
 
         ctaView.addSubviews(ctaLabel, retryIcon)
 
         ctaLabel.OWSnp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview()
-            make.trailing.equalTo(retryIcon)
+            make.leading.equalToSuperview()
+            make.bottom.top.equalToSuperview().inset(Metrics.ctaVerticalPadding)
         }
 
         retryIcon.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(ctaLabel.OWSnp.trailing).offset(Metrics.ctaHorizontalPadding)
+            make.size.equalTo(Metrics.retryIconSize)
+            make.centerY.equalToSuperview()
             make.trailing.equalToSuperview()
         }
 
-        addSubview(ctaView)
+        containerView.addSubview(ctaView)
         ctaView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(titleLabel).offset(Metrics.linesPadding)
-            make.bottom.equalToSuperview().offset(Metrics.verticalMainPadding)
+            make.top.equalTo(titleLabel.OWSnp.bottom).offset(Metrics.linesPadding)
+            make.bottom.equalToSuperview().inset(Metrics.verticalMainPadding)
+        }
+
+        self.OWSnp.makeConstraints { make in
+            make.height.greaterThanOrEqualTo(containerView.OWSnp.height)
+            make.height.greaterThanOrEqualTo(0)
         }
     }
 
@@ -134,7 +156,10 @@ fileprivate extension OWErrorStateView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.border(width: Metrics.borderWidth, color: OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle))
+                let borderColor: UIColor = self.viewModel.outputs.shouldHaveBorder ? OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle) : .clear
+                self.border(width: Metrics.borderWidth, color: borderColor)
+                self.ctaLabel.attributedText = self.viewModel.outputs.tryAgainText
+                self.ctaLabel.textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle))
                 self.titleLabel.textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
@@ -143,10 +168,22 @@ fileprivate extension OWErrorStateView {
             .voidify()
             .bind(to: viewModel.inputs.tryAgainTapped)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.height
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] newHeight in
+                guard let self = self else { return }
+                self.OWSnp.updateConstraints { make in
+                    make.height.greaterThanOrEqualTo(newHeight)
+                }
+                self.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+        containerView.accessibilityIdentifier = Metrics.containerViewIdentifier
         headerIcon.accessibilityIdentifier = Metrics.headerIconIdentifier
         retryIcon.accessibilityIdentifier = Metrics.retryIconIdentifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
