@@ -18,7 +18,6 @@ class OWCommentThreadActionsView: UIView {
         static let topOffset: CGFloat = 4.0
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
-        static let cellHeight: CGFloat = 40.0
         static let textToImageSpacing: CGFloat = 6.5
     }
 
@@ -114,8 +113,8 @@ fileprivate extension OWCommentThreadActionsView {
         self.addSubview(actionView)
         self.actionView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-            make.top.bottom.equalToSuperview()
-            make.height.equalTo(Metrics.cellHeight)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview() //HERE
         }
     }
 
