@@ -33,6 +33,7 @@ protocol OWCommentHeaderViewModelingOutputs {
 
     var userNameTapped: Observable<Void> { get }
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
 }
 
 protocol OWCommentHeaderViewModeling {
@@ -60,6 +61,12 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()
+    }
+
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
+        _openProfile
+            .asObservable()
     }
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
@@ -275,8 +282,19 @@ fileprivate extension OWCommentHeaderViewModel {
             .bind(to: avatarVM.inputs.shouldBlockAvatar)
             .disposed(by: disposedBag)
 
-        userNameTapped
-            .bind(to: avatarVM.inputs.tappedUsername)
+        Observable.combineLatest(userNameTapped, shouldShowHiddenCommentMessage)
+            .filter { !$1 }
+            .map { [weak self] _ -> SPUser? in
+                guard let self = self else { return nil }
+                return self.user
+            }
+            .unwrap()
+            .flatMapLatest { [weak self] user -> Observable<OWOpenProfileData> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.profileService().openProfileTapped(user: user)
+            }
+            .observe(on: MainScheduler.instance)
+            .bind(to: _openProfile)
             .disposed(by: disposedBag)
     }
 }

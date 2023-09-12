@@ -185,7 +185,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let flows = manager.ui.flows
 
                 let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle()
+                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
@@ -226,7 +226,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let flows = manager.ui.flows
 
                 let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle()
+                let article = self.commonCreatorService.mockArticle(for: manager.spotId)
 
                 flows.conversation(postId: postId,
                                    article: article,
@@ -266,7 +266,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let flows = manager.ui.flows
 
                 let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle()
+                let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
                 flows.commentCreation(postId: postId,
                                       article: article,
@@ -306,7 +306,7 @@ fileprivate extension MockArticleFlowsViewModel {
                 let flows = manager.ui.flows
 
                 let additionalSettings = self.commonCreatorService.additionalSettings()
-                let article = self.commonCreatorService.mockArticle()
+                let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
 
                 flows.commentThread(postId: postId,
                                     article: article,
