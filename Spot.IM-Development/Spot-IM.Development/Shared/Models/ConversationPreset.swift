@@ -11,6 +11,7 @@ import Foundation
 struct ConversationPreset {
     let displayName: String
     let conversationDataModel: SDKConversationDataModel
+    var section: String? = nil
 }
 
 // swiftlint:disable line_length
@@ -36,7 +37,8 @@ extension ConversationPreset {
                                                                                                             postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
                                          ConversationPreset(displayName: "Yahoo",
                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_Rba9aFpG",
-                                                                                                            postId: "finmb$24937")),
+                                                                                                            postId: "finmb$24937"),
+                                                            section: "stock"),
                                          ConversationPreset(displayName: "Ynet",
                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_AJXaDckj",
                                                                                                             postId: "S19Z20aTU")),
@@ -54,7 +56,8 @@ extension ConversationPreset {
                                                                                                             postId: "sdk1")),
                                          ConversationPreset(displayName: "mobile Guest",
                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileGuest",
-                                                                                                            postId: "sdk1")),
+                                                                                                            postId: "sdk1"),
+                                                            section: "other_section"),
                                          ConversationPreset(displayName: "mobile Social",
                                                             conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocial",
                                                                                                             postId: "sdk1")),
