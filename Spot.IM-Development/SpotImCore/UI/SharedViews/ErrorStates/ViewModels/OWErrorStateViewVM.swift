@@ -11,12 +11,17 @@ import Foundation
 
 protocol OWErrorStateViewViewModelingInputs {
     var tryAgainTapped: PublishSubject<Void> { get }
+    var errorStateType: OWErrorStateTypes { get set }
+    var heightChange: BehaviorSubject<CGFloat> { get }
 }
 
 protocol OWErrorStateViewViewModelingOutputs {
     var title: String { get }
     var tryAgainText: NSAttributedString { get }
     var tryAgainTap: Observable<OWErrorStateTypes> { get }
+    var shouldHaveBorder: Bool { get }
+    var height: Observable<CGFloat> { get }
+    var errorStateType: OWErrorStateTypes { get }
 }
 
 protocol OWErrorStateViewViewModeling {
@@ -29,7 +34,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     var outputs: OWErrorStateViewViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let errorStateType: OWErrorStateTypes
+    var errorStateType: OWErrorStateTypes
 
     init(errorStateType: OWErrorStateTypes) {
         self.errorStateType = errorStateType
@@ -49,7 +54,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var title: String = {
         let key = {
             switch errorStateType {
-            case .loadConversationComments:
+            case .loadConversationComments, .loadMoreConversationComments:
                 return "ErrorStateLoadConversationComments"
             case .loadConversationReplies:
                 return "ErrorStateLoadConversationReplies"
@@ -69,6 +74,26 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         attributedString.addAttribute(.font,
                                       value: OWFontBook.shared.font(typography: .bodyInteraction, forceOpenWebFont: false),
                                          range: NSRange(location: 0, length: attributedString.length))
+        attributedString.addAttribute(.underlineStyle,
+                                      value: NSUnderlineStyle.single.rawValue,
+                                      range: NSRange(location: 0, length: attributedString.length))
         return attributedString
     }()
+
+    lazy var shouldHaveBorder: Bool = {
+        switch errorStateType {
+
+        case .none, .loadConversationComments:
+            return false
+        case .loadMoreConversationComments, .loadConversationReplies:
+            return true
+        }
+    }()
+
+    var heightChange = BehaviorSubject<CGFloat>(value: 0)
+    var height: Observable<CGFloat> {
+        return heightChange
+            .distinctUntilChanged()
+            .asObservable()
+    }
 }

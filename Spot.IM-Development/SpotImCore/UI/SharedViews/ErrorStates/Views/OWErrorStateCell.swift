@@ -10,6 +10,9 @@ import Foundation
 import RxSwift
 
 class OWErrorStateCell: UITableViewCell {
+    fileprivate struct Metrics {
+        static let padding: CGFloat = 16
+    }
 
     fileprivate lazy var errorStateView: OWErrorStateView = {
         return OWErrorStateView()
@@ -40,9 +43,9 @@ fileprivate extension OWErrorStateCell {
         self.backgroundColor = .clear
         self.selectionStyle = .none
 
-        self.addSubview(errorStateView)
+        contentView.addSubview(errorStateView)
         errorStateView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalToSuperview().inset(Metrics.padding)
         }
     }
 }
