@@ -20,7 +20,6 @@ protocol OWPresenterServicing {
     ) -> Observable<OWRxPresenterResponseType>
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
-    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
 }
 
@@ -107,51 +106,6 @@ class OWPresenterService: OWPresenterServicing {
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
         guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
         return UIActivityViewController.rx.show(onViewController: presenterVC, activityItems: activityItems, applicationActivities: applicationActivities)
-    }
-
-    func showToast(requiredData: OWToastRequiredData, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType> {
-        guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
-
-        return Observable.create { observer in
-            let rxAction = OWRxPresenterAction(title: "", type: requiredData.action)
-            let toastVM = OWToastViewModel(requiredData: requiredData) {
-                observer.onNext(.selected(action: rxAction))
-                observer.onCompleted()
-            }
-            let toastView = OWToastView(viewModel: toastVM)
-
-            presenterVC.view.addSubview(toastView)
-            toastView.OWSnp.makeConstraints { make in
-                make.centerX.equalToSuperview()
-                make.bottom.equalToSuperview().offset(50) // TODO: what insets?
-            }
-            presenterVC.view.setNeedsLayout()
-            presenterVC.view.layoutIfNeeded()
-
-            UIView.animate(withDuration: 0.5, animations: {
-                toastView.OWSnp.updateConstraints { make in
-                    make.bottom.equalToSuperview().inset(30)
-                }
-                presenterVC.view.setNeedsLayout()
-                presenterVC.view.layoutIfNeeded()
-            }, completion: { _ in
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                    UIView.animate(withDuration: 0.5, animations: {
-                        toastView.OWSnp.updateConstraints { make in
-                            make.bottom.equalToSuperview().offset(50)
-                        }
-                        presenterVC.view.setNeedsLayout()
-                        presenterVC.view.layoutIfNeeded()
-                    }, completion: { _ in
-                        toastView.removeFromSuperview()
-                        observer.onNext(.completion)
-                    })
-                }
-
-            })
-
-            return Disposables.create()
-        }
     }
 
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType> {

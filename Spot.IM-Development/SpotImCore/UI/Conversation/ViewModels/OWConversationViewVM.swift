@@ -55,6 +55,8 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var conversationDataJustReceived: Observable<Void> { get }
+
+    var displayToast: Observable<OWToastRequiredData> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -369,6 +371,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var _displayToast = PublishSubject<OWToastRequiredData>()
+    var displayToast: Observable<OWToastRequiredData> {
+        return _displayToast
+            .asObservable()
+    }
+
     var dataSourceTransition: OWViewTransition = .reload
 
     fileprivate let servicesProvider: OWSharedServicesProviding
@@ -583,16 +591,16 @@ fileprivate extension OWConversationViewViewModel {
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.servicesProvider.presenterService()
-                    .showToast(requiredData: OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast...."), viewableMode: self.viewableMode).subscribe(onNext: { result in
-                        switch(result) {
-                        case .selected(let action):
-                            print(action)
-                        case .completion:
-                            print("completion")
-                        }
-
-                    }).disposed(by: self.disposeBag)
+//                self.servicesProvider.presenterService()
+//                    .showToast(requiredData: OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast...."), viewableMode: self.viewableMode).subscribe(onNext: { result in
+//                        switch(result) {
+//                        case .selected(let action):
+//                            print(action)
+//                        case .completion:
+//                            print("completion")
+//                        }
+//
+//                    }).disposed(by: self.disposeBag)
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
@@ -610,6 +618,8 @@ fileprivate extension OWConversationViewViewModel {
 
                 self._isLoadingServerComments.onNext(true)
                 self._shouldShowErrorLoadingComments.onNext(false)
+
+                self._displayToast.onNext(OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast...."))
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
