@@ -342,7 +342,7 @@ extension String {
         guard let attributedString = try? NSMutableAttributedString(data: data, options: options, documentAttributes: nil) else { return nil }
 
         var linkedString: String? = nil
-        attributedString.enumerateAttribute(.link, in: NSRange(location: 0, length: attributedString.length), options: []) { (value, range, stop) in
+        attributedString.enumerateAttribute(.link, in: NSRange(location: 0, length: attributedString.length), options: []) { (value, range, _) in
             if let _ = value as? URL {
                 linkedString = attributedString.attributedSubstring(from: range).string
             }
