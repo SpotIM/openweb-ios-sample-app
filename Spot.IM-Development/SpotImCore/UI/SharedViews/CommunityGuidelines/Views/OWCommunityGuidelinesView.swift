@@ -112,7 +112,7 @@ fileprivate extension OWCommunityGuidelinesView {
 
             guidelinesContainer.addSubview(titleLabel)
             titleLabel.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
+                make.top.bottom.equalToSuperview().inset(Metrics.horizontalPadding)
                 make.leading.equalTo(guidelinesIcon.OWSnp.trailing).offset(Metrics.horizontalPadding)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             }
