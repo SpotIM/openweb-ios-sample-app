@@ -694,11 +694,12 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        pullToRefresh
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.servicesProvider.realtimeIndicatorService().update(state: .disable)
-            })
+        Observable.merge(sortOptionObservable.voidify(),
+                         pullToRefresh)
+        .subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.servicesProvider.realtimeIndicatorService().update(state: .disable)
+        })
             .disposed(by: disposeBag)
 
         // Set read only mode
