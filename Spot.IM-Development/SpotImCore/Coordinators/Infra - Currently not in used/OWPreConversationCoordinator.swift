@@ -212,24 +212,20 @@ fileprivate extension OWPreConversationCoordinator {
         let communityQuestionCustomizeContainer = viewModel.outputs.communityQuestionViewModel
             .outputs.customizeQuestionContainerViewUI
 
-        let communityQuestionCustomizeTitleLabel = viewModel.outputs.communityQuestionViewModel
+        let communityQuestionCustomizeTitle = viewModel.outputs.communityQuestionViewModel
             .outputs.customizeQuestionTitleLabelUI
-
-        let communityQuestionCustomizeTitleTextView = viewModel.outputs.communityQuestionViewModel
-            .outputs.customizeQuestionTitleTextViewUI
 
         let communityQuestionStyle = viewModel.outputs.communityQuestionViewModel
             .outputs.style
 
         let communityQuestionCustomizationElementObservable = Observable.combineLatest(communityQuestionCustomizeContainer,
-                                                                                    communityQuestionCustomizeTitleLabel,
-                                                                                    communityQuestionCustomizeTitleTextView)
-            .flatMap { container, titleLabel, titleTextView in
+                                                                                    communityQuestionCustomizeTitle)
+            .flatMap { container, title in
                 switch communityQuestionStyle {
                 case .regular:
-                    return Observable.just(OWCustomizableElement.communityQuestion(element: .regular(textView: titleTextView)))
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .regular(label: title)))
                 case .compact:
-                    return Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: titleLabel)))
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: title)))
                 case .none:
                     return .empty()
                 }
@@ -240,7 +236,7 @@ fileprivate extension OWPreConversationCoordinator {
             .outputs.customizeContainerViewUI
 
         let communityGuidelinesCustomizeTitle = viewModel.outputs.communityGuidelinesViewModel
-            .outputs.customizeTitleTextViewUI
+            .outputs.customizeTitleLabelUI
 
         let communityGuidelinesCustomizeIcon = viewModel.outputs.communityGuidelinesViewModel
             .outputs.customizeIconImageViewUI
@@ -254,9 +250,9 @@ fileprivate extension OWPreConversationCoordinator {
             .flatMap { container, icon, title in
                 switch communityGuidelinesStyle {
                 case .regular:
-                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .regular(textView: title)))
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .regular(label: title)))
                 case .compact:
-                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, label: title)))
                 case .none:
                     return .empty()
                 }

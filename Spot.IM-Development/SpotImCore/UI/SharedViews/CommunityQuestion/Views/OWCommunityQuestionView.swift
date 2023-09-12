@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 
-// TODO: complete
 class OWCommunityQuestionView: UIView {
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 15.0
@@ -24,7 +23,7 @@ class OWCommunityQuestionView: UIView {
         return UILabel()
             .wrapContent()
             .numberOfLines(0)
-            .font(OWFontBook.shared.font(typography: .bodySpecial))
+            .font(viewModel.outputs.titleFont)
             .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
@@ -81,7 +80,6 @@ fileprivate extension OWCommunityQuestionView {
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeQuestionContainerViewUI.onNext(questionContainer)
         viewModel.inputs.triggerCustomizeQuestionTitleLabelUI.onNext(questionLabel)
-//        viewModel.inputs.triggerCustomizeQuestionTitleTextViewUI.onNext(titleTextView)
     }
 
     // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
@@ -93,7 +91,7 @@ fileprivate extension OWCommunityQuestionView {
         questionContainer.removeFromSuperview()
         questionLabel.removeFromSuperview()
 
-        if viewModel.outputs.showContainer {
+        if viewModel.outputs.shouldShowContainer {
             self.addSubview(questionContainer)
             questionContainer.OWSnp.makeConstraints { make in
                 make.top.bottom.equalToSuperview().inset(spacing)
@@ -123,10 +121,6 @@ fileprivate extension OWCommunityQuestionView {
             .bind(to: questionLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.attributedCommunityQuestion
-            .bind(to: questionLabel.rx.attributedText)
-            .disposed(by: disposeBag)
-
         viewModel.outputs.shouldShowView
             .map { !$0 }
             .bind(to: self.rx.isHidden)
@@ -154,7 +148,7 @@ fileprivate extension OWCommunityQuestionView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.questionLabel.font = OWFontBook.shared.font(typography: .bodySpecial)
+                self.questionLabel.font = self.viewModel.outputs.titleFont
             })
             .disposed(by: disposeBag)
     }
