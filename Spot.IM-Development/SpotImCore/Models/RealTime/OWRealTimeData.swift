@@ -32,15 +32,15 @@ struct OWRealTimeData: Decodable {
     }
 
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let container = try? decoder.container(keyedBy: CodingKeys.self)
 
         // If data is missing or invalid, provided default values [:]
-        self.conversationCountMessages = (try? container.decodeIfPresent([String: [OWRealTimeMessagesCount]].self, forKey: .conversationCountMessages)) ?? [:]
-        self.conversationTypingV2Count = (try? container.decodeIfPresent([String: [[String: Int]]].self, forKey: .conversationTypingV2Count)) ?? [:]
-        self.conversationTypingV2Users = (try? container.decodeIfPresent([String: [OWRealTimeTypingUsers]].self, forKey: .conversationTypingV2Users)) ?? [:]
-        self.onlineViewingUsers = (try? container.decodeIfPresent([String: [OWRealTimeOnlineViewingUsers]].self, forKey: .onlineViewingUsers)) ?? [:]
-        self.conversationNewMessages = (try? container.decodeIfPresent([String: [OWComment]].self, forKey: .conversationNewMessages)) ?? [:]
-        self.onlineUsers = (try? container.decodeIfPresent([String: [OWRealTimeOnlineUser]].self, forKey: .onlineUsers)) ?? [:]
+        self.conversationCountMessages = (try? container?.decodeIfPresent([String: [OWRealTimeMessagesCount]].self, forKey: .conversationCountMessages)) ?? [:]
+        self.conversationTypingV2Count = (try? container?.decodeIfPresent([String: [[String: Int]]].self, forKey: .conversationTypingV2Count)) ?? [:]
+        self.conversationTypingV2Users = (try? container?.decodeIfPresent([String: [OWRealTimeTypingUsers]].self, forKey: .conversationTypingV2Users)) ?? [:]
+        self.onlineViewingUsers = (try? container?.decodeIfPresent([String: [OWRealTimeOnlineViewingUsers]].self, forKey: .onlineViewingUsers)) ?? [:]
+        self.conversationNewMessages = (try? container?.decodeIfPresent([String: [OWComment]].self, forKey: .conversationNewMessages)) ?? [:]
+        self.onlineUsers = (try? container?.decodeIfPresent([String: [OWRealTimeOnlineUser]].self, forKey: .onlineUsers)) ?? [:]
     }
 }
 
