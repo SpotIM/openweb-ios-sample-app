@@ -47,6 +47,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate var commentCreationData: OWCommentCreationRequiredData
 
+    fileprivate var articleUrl: String = ""
+
     fileprivate lazy var postId = OWManager.manager.postId
 
     lazy var closeButtonTapped: Observable<Void> = {
@@ -286,6 +288,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
+
         if case .floatingKeyboard = commentCreationData.settings.commentCreationSettings.style {
             commentCreationFloatingKeyboardViewVm.outputs.resetTypeToNewCommentChanged
                 .subscribe(onNext: { [weak self] _ in
@@ -397,6 +401,14 @@ fileprivate extension OWCommentCreationViewViewModel {
                 }
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
 
     func cacheComment(text commentText: String) {
@@ -434,7 +446,7 @@ fileprivate extension OWCommentCreationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: commentCreationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentCreationData.presentationalStyle),
                 component: .commentCreation)
     }

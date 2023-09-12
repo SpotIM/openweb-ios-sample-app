@@ -157,19 +157,19 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
-        self.addSubview(self.conversationEmptyStateView)
-        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(self.tableView.OWSnp.top)
-            make.bottom.equalTo(self.tableView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(Metrics.conversationEmptyStateHorizontalPadding)
-        }
-
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
             make.top.equalTo(tableView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
+        }
+
+        self.addSubview(self.conversationEmptyStateView)
+        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
+            make.top.equalTo(self.tableView.OWSnp.top)
+            make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
+            make.leading.trailing.equalToSuperview()
         }
 
         self.addSubview(commentingCTAView)
@@ -181,19 +181,9 @@ fileprivate extension OWConversationView {
     }
 
     func setupObservers() {
-        Observable.combineLatest(viewModel.outputs.shouldShowConversationEmptyState,
-                                 tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize)))
-            .filter { $0.0 }
-            .map { $0.1 }
-            .unwrap()
-            .map { $0.height }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                self.conversationEmptyStateView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableView.OWSnp.top).offset(height)
-                }
-            })
+        viewModel.outputs.shouldShowConversationEmptyState
+            .map { !$0 }
+            .bind(to: conversationEmptyStateView.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
