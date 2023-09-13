@@ -55,7 +55,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var conversationDataJustReceived: Observable<Void> { get }
+    var scrollToTop: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -73,9 +73,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let numberOfSkeletonComments: Int = 5
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
-        static let delayAfterRecievingUpdatedComments: Int = 500 // ms
+        static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -134,7 +134,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var articleUrl: String = ""
 
-    fileprivate let _isLoadingServerComments = BehaviorSubject<Bool>(value: true)
+    fileprivate let _serverCommentsLoadingState = BehaviorSubject<OWLoadingState>(value: .loading(triggredBy: .initialLoading))
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -164,9 +164,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _conversationDataJustReceived = PublishSubject<Void>()
-    var conversationDataJustReceived: Observable<Void> {
-        return _conversationDataJustReceived
+    fileprivate var _scrollToTop = PublishSubject<Void>()
+    var scrollToTop: Observable<Void> {
+        return _scrollToTop
             .asObservable()
     }
 
@@ -247,14 +247,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(communityCellsOptions,
                                         commentCellsOptions,
-                                        _isLoadingServerComments,
+                                        _serverCommentsLoadingState,
                                         _shouldShowErrorLoadingComments,
                                         shouldShowConversationEmptyState)
-            .startWith(([], [], true, false, false))
-            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isLoading, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
+            .startWith(([], [], .loading(triggredBy: .initialLoading), false, false))
+            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
 
-                if isLoading {
+                if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
                 } else if shouldShowError || isEmptyState {
                     return Observable.just([])
@@ -313,12 +313,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var shouldShowConversationEmptyState: Observable<Bool> {
-        return Observable.combineLatest(_isLoadingServerComments.distinctUntilChanged(),
+        return Observable.combineLatest(_serverCommentsLoadingState.distinctUntilChanged(),
                                         _shouldShowErrorLoadingComments.distinctUntilChanged(),
                                         commentCellsOptions)
-        .startWith( (true, false, []) )
-        .flatMapLatest { isLoading, shouldShowError, comments -> Observable<Bool> in
-            guard !isLoading, !shouldShowError else { return .just(false) }
+        .startWith( (.loading(triggredBy: .initialLoading), false, []) )
+        .flatMapLatest { loadingState, shouldShowError, comments -> Observable<Bool> in
+            guard loadingState == .notLoading, !shouldShowError else { return .just(false) }
             return .just(comments.isEmpty)
         }
         .distinctUntilChanged()
@@ -602,13 +602,6 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
-            .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.dataSourceTransition = .reload // Block animations in the table view
-
-                self._isLoadingServerComments.onNext(true)
-                self._shouldShowErrorLoadingComments.onNext(false)
-            })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
@@ -619,16 +612,26 @@ fileprivate extension OWConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
-        let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
-            .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
+        let conversationFetchedObservable = Observable.merge(viewInitialized.map { OWLoadingTriggeredReason.initialLoading },
+                                                             pullToRefresh.map { OWLoadingTriggeredReason.pullToRefresh })
+            .do(onNext: { [weak self] loadingTriggeredReason in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload // Block animations in the table view
+
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+                self._shouldShowErrorLoadingComments.onNext(false)
+            })
+            .flatMapLatest { loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 return conversationReadObservable
+                    .map { ($0, loadingTriggeredReason) }
             }
-            .map { [weak self] event -> OWConversationReadRM? in
+            .map { [weak self] result -> (OWConversationReadRM, OWLoadingTriggeredReason)? in
+                let event = result.0
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
-                    return conversationRead
+                    return (conversationRead, result.1)
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
                     self._shouldShowErrorLoadingComments.onNext(true)
@@ -653,13 +656,18 @@ fileprivate extension OWConversationViewViewModel {
         // Each time the whole conversation loaded with new data except the first time
         conversationFetchedObservable
             .skip(1)
-            .subscribe(onNext: { [weak self] _ in
-                self?._conversationDataJustReceived.onNext(())
+            .map { $0.1 }
+            .subscribe(onNext: { [weak self] originalLoadingTriggeredReason in
+                guard let self = self else { return }
+                if originalLoadingTriggeredReason != .pullToRefresh {
+                    self._scrollToTop.onNext(())
+                }
             })
             .disposed(by: disposeBag)
 
         // first load comments / refresh comments / sorted changed
         conversationFetchedObservable
+            .map { $0.0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
@@ -669,12 +677,13 @@ fileprivate extension OWConversationViewViewModel {
                 self._commentsPresentationData.replaceAll(with: commentsPresentationData)
 
                 // Update loading state only after the presented comments are updated
-                self._isLoadingServerComments.onNext(false)
+                self._serverCommentsLoadingState.onNext(.notLoading)
             })
             .disposed(by: disposeBag)
 
         // Set read only mode
         conversationFetchedObservable
+            .map { $0.0 }
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
                 var isReadOnly: Bool = response.conversation?.readOnly ?? false
@@ -727,6 +736,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Binding to community question component
         conversationFetchedObservable
+            .map { $0.0 }
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
@@ -1242,6 +1252,7 @@ fileprivate extension OWConversationViewViewModel {
                     // Event
                     self.sendEvent(for: .sortByChanged(previousSort: currentSort, selectedSort: newSort))
                     // Changing the sort in the service
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .sortingChanged))
                     let sortDictateService = self.servicesProvider.sortDictateService()
                     sortDictateService.update(sortOption: newSort, perPostId: self.postId)
 
@@ -1302,9 +1313,9 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return .empty() }
 
                 // Waiting for a state in which we are not loading or showing error before updating/adding comments or replies from a local service
-                return Observable.combineLatest(self._isLoadingServerComments,
-                                                self._shouldShowErrorLoadingComments) { isLoading, shouldShowError in
-                    return (!isLoading && !shouldShowError)
+                return Observable.combineLatest(self._serverCommentsLoadingState,
+                                                self._shouldShowErrorLoadingComments) { loadingState, shouldShowError in
+                    return (loadingState == .notLoading && !shouldShowError)
                 }
                 .filter { $0 }
                 .take(1)
