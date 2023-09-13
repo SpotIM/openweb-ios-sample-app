@@ -123,7 +123,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                                               communityGuidelinesText: communityGuidelinesTitle)
             }
             .unwrap()
-            .asObservable()
     }
 
     fileprivate var _communityGuidelinesClickableString = PublishSubject<String>()

@@ -15,7 +15,6 @@ protocol OWCommentCellViewModelingInputs {
 
 protocol OWCommentCellViewModelingOutputs {
     var commentVM: OWCommentViewModeling { get }
-    var spacingBetweenComments: CGFloat { get }
     var id: String { get }
     var viewAccessibilityIdentifier: String { get }
 }
@@ -25,7 +24,9 @@ protocol OWCommentCellViewModeling: OWCellViewModel {
     var outputs: OWCommentCellViewModelingOutputs { get }
 }
 
-class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModelingInputs, OWCommentCellViewModelingOutputs {
+class OWCommentCellViewModel: OWCommentCellViewModeling,
+                              OWCommentCellViewModelingInputs,
+                              OWCommentCellViewModelingOutputs {
     fileprivate struct Metrics {
         static let viewAccessibilityIdentifier = "comment_cell_id_"
     }
@@ -37,22 +38,19 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
         return Metrics.viewAccessibilityIdentifier + id
     }()
 
-    let spacingBetweenComments: CGFloat
     let commentVM: OWCommentViewModeling
 
     var id: String = ""
 
     init(data: OWCommentRequiredData,
-         spacing: CGFloat = OWConversationSpacing.regular.betweenComments / 2) {
+         spacing: CGFloat) {
         self.id = data.comment.id ?? ""
 
-        self.commentVM = OWCommentViewModel(data: data)
-        self.spacingBetweenComments = spacing
+        self.commentVM = OWCommentViewModel(data: data, spacing: spacing)
     }
 
     init() {
-        self.commentVM = OWCommentViewModel()
-        self.spacingBetweenComments = OWConversationSpacing.regular.betweenComments / 2
+        self.commentVM = OWCommentViewModel(spacing: OWConversationSpacing.regular.betweenComments)
     }
 }
 

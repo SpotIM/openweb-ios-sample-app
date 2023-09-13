@@ -26,9 +26,7 @@ class OWCommunityGuidelinesView: UIView {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .wrapContent()
             .numberOfLines(0)
-            .font(OWFontBook.shared.font(typography: .bodySpecial))
             .enforceSemanticAttribute()
     }()
 
@@ -81,6 +79,7 @@ class OWCommunityGuidelinesView: UIView {
         self.disposeBag = DisposeBag()
         updateUI()
         setupObservers()
+        self.layoutIfNeeded()
     }
 }
 
