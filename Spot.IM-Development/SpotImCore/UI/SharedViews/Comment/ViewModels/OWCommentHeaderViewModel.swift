@@ -299,8 +299,13 @@ fileprivate extension OWCommentHeaderViewModel {
             .bind(to: avatarVM.inputs.shouldBlockAvatar)
             .disposed(by: disposedBag)
 
-        Observable.combineLatest(userNameTapped, shouldShowHiddenCommentMessage)
-            .filter { !$1 }
+        userNameTapped
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.shouldShowHiddenCommentMessage
+                    .take(1)
+            }
+            .filter { !$0 }
             .map { [weak self] _ -> SPUser? in
                 guard let self = self else { return nil }
                 return self.user
