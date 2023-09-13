@@ -46,7 +46,7 @@ class OWCommentCell: UITableViewCell {
         }
 
         commentView.OWSnp.updateConstraints { make in
-            make.top.bottom.equalToSuperview()//.inset(self.viewModel.outputs.spacingBetweenComments)
+            make.top.bottom.equalToSuperview()
         }
 
         self.setupObservers()
