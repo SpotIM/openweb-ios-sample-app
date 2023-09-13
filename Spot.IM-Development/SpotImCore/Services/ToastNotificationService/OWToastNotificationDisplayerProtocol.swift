@@ -11,14 +11,16 @@ import UIKit
 import RxSwift
 
 protocol OWToastNotificationDisplayerProtocol {
-    func displayToast(requiredData: OWToastRequiredData)
-    func removeToast(toastView: OWToastView)
+    mutating func displayToast(requiredData: OWToastRequiredData)
+    func removeToast()
+    var toastView: OWToastView? { get set }
 }
 
 extension OWToastNotificationDisplayerProtocol where Self: UIView {
-    func displayToast(requiredData: OWToastRequiredData) {
+    mutating func displayToast(requiredData: OWToastRequiredData) {
         let toastVM = OWToastViewModel(requiredData: requiredData) { }
-        let toastView = OWToastView(viewModel: toastVM)
+        self.toastView = OWToastView(viewModel: toastVM)
+        guard let toastView = toastView else { return }
 
         self.addSubview(toastView)
         toastView.OWSnp.makeConstraints { make in
@@ -29,12 +31,13 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
         self.layoutIfNeeded()
 //        self.bringSubviewToFront(toastView)
 
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+            guard let toastView = self?.toastView else { return }
             toastView.OWSnp.updateConstraints { make in
                 make.bottom.equalToSuperview().inset(30) // TODO: insets
             }
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
+            self?.setNeedsLayout()
+            self?.layoutIfNeeded()
         }, completion: { _ in
 //            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
 //                UIView.animate(withDuration: 0.5, animations: {
@@ -53,15 +56,18 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
     }
 
     // The implementing view should hold the toast view!
-    func removeToast(toastView: OWToastView) {
-        UIView.animate(withDuration: 0.5, animations: {
+    func removeToast() {
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+            guard let toastView = self?.toastView else { return }
             toastView.OWSnp.updateConstraints { make in
                 make.bottom.equalToSuperview().offset(50)
             }
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }, completion: { _ in
+            self?.setNeedsLayout()
+            self?.layoutIfNeeded()
+        }, completion: { [weak self] _ in
+            guard let toastView = self?.toastView else { return }
             toastView.removeFromSuperview()
+            self?.toastView = nil
         })
     }
 }

@@ -11,4 +11,5 @@ import Foundation
 enum OWBlockerActionType: CaseIterable {
     case authentication
     case renewAuthentication
+    case toastNotification
 }
