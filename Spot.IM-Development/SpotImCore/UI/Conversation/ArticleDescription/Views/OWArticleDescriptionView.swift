@@ -142,13 +142,15 @@ fileprivate extension OWArticleDescriptionView {
 
     func setupObservers() {
         viewModel.outputs.conversationImageType
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
+                guard let self = self else { return }
                 switch imageType {
                 case .custom(let url):
-                    guard let self = self else { return }
                     self.setImage(with: url)
+                    self.setImageConstraints(isVisible: true)
                 case .defaultImage:
-                    self?.setNoImageConstraints()
+                    self.setImageConstraints(isVisible: false)
                 }
             })
             .disposed(by: disposeBag)
@@ -210,19 +212,19 @@ fileprivate extension OWArticleDescriptionView {
             guard let self = self else { return }
 
             if error != nil {
-                self.setNoImageConstraints()
+                self.setImageConstraints(isVisible: false)
             } else if let image = image {
                 self.conversationImageView.image = image
-
+                self.setImageConstraints(isVisible: true)
                 // Only when we have an imgae from article url, we can replace it with customize element
                 self.viewModel.inputs.triggerCustomizeImageViewUI.onNext(self.conversationImageView)
             }
         }
     }
 
-    func setNoImageConstraints() {
+    func setImageConstraints(isVisible: Bool) {
        self.conversationImageView.OWSnp.updateConstraints { make in
-           make.width.equalTo(0)
+           make.size.equalTo(isVisible ? Metrics.imageSize : 0)
        }
    }
 }

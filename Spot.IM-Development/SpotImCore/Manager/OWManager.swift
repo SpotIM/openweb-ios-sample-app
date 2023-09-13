@@ -152,6 +152,14 @@ fileprivate extension OWManager {
                 self.reset()
             })
             .disposed(by: disposeBag)
+
+        currentPostId
+            .subscribe(onNext: { [weak self] postId in
+                self?.servicesProvider
+                    .activeArticleService()
+                    .updatePost(postId)
+            })
+            .disposed(by: disposeBag)
     }
 
     // Things to clear / reset each time the spotId reset (even if the same spotId set again - usually the use case will be from our Sample App).
