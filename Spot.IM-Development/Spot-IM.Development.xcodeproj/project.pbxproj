@@ -414,6 +414,8 @@
 		3D451B7B29C799AA00CB3BE6 /* OWAuthenticationLevelAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */; };
 		3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */; };
 		3D4A949F29C74C050087D143 /* OWAuthenticationRecoveryResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4A949E29C74C050087D143 /* OWAuthenticationRecoveryResult.swift */; };
+		3D5058B02AB1D5A7006CECFA /* OWLoadingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5058AF2AB1D5A7006CECFA /* OWLoadingState.swift */; };
+		3D5058B22AB1D5DC006CECFA /* OWLoadingTriggeredReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5058B12AB1D5DC006CECFA /* OWLoadingTriggeredReason.swift */; };
 		3D5561A9295313FC0097A6D1 /* OWNetworkStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5561A8295313FC0097A6D1 /* OWNetworkStatusCode.swift */; };
 		3D5561AB29532F220097A6D1 /* OWAuthorizationRecoveryServiceOldAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5561AA29532F220097A6D1 /* OWAuthorizationRecoveryServiceOldAPI.swift */; };
 		3D611B7928BFA906003960CE /* BetaNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B7828BFA906003960CE /* BetaNewAPIVC.swift */; };
@@ -1465,6 +1467,8 @@
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRenewerService.swift; sourceTree = "<group>"; };
 		3D4A949E29C74C050087D143 /* OWAuthenticationRecoveryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRecoveryResult.swift; sourceTree = "<group>"; };
+		3D5058AF2AB1D5A7006CECFA /* OWLoadingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingState.swift; sourceTree = "<group>"; };
+		3D5058B12AB1D5DC006CECFA /* OWLoadingTriggeredReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingTriggeredReason.swift; sourceTree = "<group>"; };
 		3D5561A8295313FC0097A6D1 /* OWNetworkStatusCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkStatusCode.swift; sourceTree = "<group>"; };
 		3D5561AA29532F220097A6D1 /* OWAuthorizationRecoveryServiceOldAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthorizationRecoveryServiceOldAPI.swift; sourceTree = "<group>"; };
 		3D611B7828BFA906003960CE /* BetaNewAPIVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaNewAPIVC.swift; sourceTree = "<group>"; };
@@ -3507,6 +3511,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		3D5058AE2AB1D595006CECFA /* SharedModels */ = {
+			isa = PBXGroup;
+			children = (
+				3D5058AF2AB1D5A7006CECFA /* OWLoadingState.swift */,
+				3D5058B12AB1D5DC006CECFA /* OWLoadingTriggeredReason.swift */,
+			);
+			path = SharedModels;
+			sourceTree = "<group>";
+		};
 		3D611B7528BFA8B1003960CE /* BetaNewAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -4784,6 +4797,7 @@
 		4454185423685154001D0ED0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D5058AE2AB1D595006CECFA /* SharedModels */,
 				24E66A212A6555CD00D5F4E9 /* Analytics */,
 				3D3150512A4D995500EF6575 /* AccessoryViewStrategy */,
 				166CCCB52A3A125D00C7143F /* AdditionalSettings */,
@@ -7003,6 +7017,7 @@
 				445417FF23685144001D0ED0 /* Int+Formatting.swift in Sources */,
 				3D08E0722875C42F00E6F1AC /* OWFlowsSDKCoordinator.swift in Sources */,
 				3D263CF329C0FD7C0013C532 /* OWBlockerActionType.swift in Sources */,
+				3D5058B02AB1D5A7006CECFA /* OWLoadingState.swift in Sources */,
 				3D08E0912877095C00E6F1AC /* OWAnimatableSectionModel.swift in Sources */,
 				16D5A20C29D457CC00914AD7 /* OWCommentThreadActionsCellViewModel.swift in Sources */,
 				3D20A37127B015D4003F8513 /* OWConstraintInsetTarget.swift in Sources */,
@@ -7149,6 +7164,7 @@
 				16F8A7462A922C680023B96B /* OWCommentCreationImagePreviewView.swift in Sources */,
 				3D20A36927B01078003F8513 /* OWConstraintConfig.swift in Sources */,
 				3DA264802951F7AD00688FFF /* OWNetworkExtended.swift in Sources */,
+				3D5058B22AB1D5DC006CECFA /* OWLoadingTriggeredReason.swift in Sources */,
 				3DB3B95029F4634300C50192 /* OWTestingPlaygroundRequiredData.swift in Sources */,
 				3DDA9A4828F852A300FE3B86 /* OWShimmeringDirection.swift in Sources */,
 				24F1753F2A5E8BD30078BCF6 /* OWLayoutStyle.swift in Sources */,
