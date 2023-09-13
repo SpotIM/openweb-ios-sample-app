@@ -95,5 +95,6 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         return heightChange
             .distinctUntilChanged()
             .asObservable()
+            .share(replay: 1)
     }
 }
