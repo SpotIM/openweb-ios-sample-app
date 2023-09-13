@@ -28,7 +28,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let readOnlyTopPadding: CGFloat = 40
         static let tableViewAnimationDuration: Double = 0.25
         static let compactContentTopPedding: CGFloat = 8
-        static let tableViewTopPedding: CGFloat = 16
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
@@ -212,7 +211,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
+            make.top.equalTo(commentingCTAView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(0)
         }
