@@ -395,7 +395,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
-        setupObservers()
+        self.setupObservers()
 
         sendEvent(for: .fullConversationViewed)
     }
@@ -1332,7 +1332,8 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self._scrollToCellIndex.onNext(0)
             })
-            .flatMapLatest { comments -> Observable<[OWComment]> in
+            .flatMapLatest { [weak self] comments -> Observable<[OWComment]> in
+                guard let self = self else { return .empty() }
                 // waiting for scroll to top
                 return self.scrolledToCellIndex
                     .filter { $0 == 0 }
@@ -1357,7 +1358,8 @@ fileprivate extension OWConversationViewViewModel {
         _updateLocalComment
             .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { comment, commentId, commentCellsVms in
+            .subscribe(onNext: { [weak self] comment, commentId, commentCellsVms in
+                guard let self = self else { return }
                 if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
                     commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: comment)
                     self._performTableViewAnimation.onNext()
@@ -1435,7 +1437,8 @@ fileprivate extension OWConversationViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { result, commentVm -> Bool in
+            .map { [weak self] result, commentVm -> Bool in
+                guard let self = self else { return false }
                 switch result {
                 case .completion:
                     return false
@@ -1477,7 +1480,8 @@ fileprivate extension OWConversationViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> OWCommentDelete? in
+            .map { [weak self] event -> OWCommentDelete? in
+                guard let self = self else { return nil }
                 switch event {
                 case .next(let commentDelete):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -1546,7 +1550,8 @@ fileprivate extension OWConversationViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> Bool in
+            .map { [weak self] event -> Bool in
+                guard let self = self else { return false }
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
