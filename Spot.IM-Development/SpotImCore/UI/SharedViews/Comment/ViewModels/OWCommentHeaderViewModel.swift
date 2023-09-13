@@ -172,18 +172,35 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
+    fileprivate var currentUser: Observable<SPUser> {
+        servicesProvider
+            .authenticationManager()
+            .activeUserAvailability
+            .map { availability in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .unwrap()
+    }
+
     var hiddenCommentReasonText: Observable<String> {
         Observable.combineLatest(_unwrappedModel,
                                  _unwrappedUser,
+                                 currentUser,
                                  shouldDeleteCommentLocally,
                                  shouldMuteCommentLocally,
-                                 shouldReportCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
+                                 shouldReportCommentLocally) { model, user, currentUser, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
             let localizationKey: String
+            let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
             if user.isMuted || shouldMuteCommentLocally {
                 localizationKey = "This user is muted."
-            } else if model.reported || shouldReportCommentLocally {
+            } else if (model.reported || shouldReportCommentLocally) && (!isCurrentUserComment) {
                 localizationKey = "This message was reported."
-            } else if (model.status == .block || model.status == .reject) {
+            } else if (model.status == .block || model.status == .reject) && (!isCurrentUserComment) {
                 localizationKey = "This comment violated our policy."
             } else if model.deleted || shouldDeleteCommentLocally {
                 localizationKey = "This message was deleted."

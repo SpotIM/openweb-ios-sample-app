@@ -281,6 +281,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         return comment
                     }
             })
+            .do(onNext: { [weak self] comment in
+                self?.servicesProvider
+                    .commentStatusUpdaterService()
+                    .fetchStatusFor(comment: comment)
+            })
             .share()
     }()
 }

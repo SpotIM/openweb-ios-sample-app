@@ -19,14 +19,16 @@ protocol OWCommentViewModelingInputs {
 }
 
 protocol OWCommentViewModelingOutputs {
-    var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
 
+    var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
     var shouldHideCommentContent: Observable<Bool> { get }
+    var shouldShowCommentStatus: Observable<Bool> { get }
+    var showBlockingLayoutView: Observable<Bool> { get }
 
     var comment: OWComment { get }
 }
@@ -45,14 +47,11 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     fileprivate let sharedServiceProvider: OWSharedServicesProviding
 
-    lazy var statusIndicationVM: OWCommentStatusIndicationViewModeling = {
-        return OWCommentStatusIndicationViewModel()
-    }()
-
     lazy var commentActionsVM: OWCommentActionsViewModeling = {
         return OWCommentActionsViewModel()
     }()
 
+    var commentStatusVM: OWCommentStatusViewModeling
     var commentHeaderVM: OWCommentHeaderViewModeling
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
@@ -63,6 +62,37 @@ class OWCommentViewModel: OWCommentViewModeling,
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
             .asObservable()
+    }
+
+    fileprivate var currentUser: Observable<SPUser> {
+        sharedServiceProvider
+            .authenticationManager()
+            .activeUserAvailability
+            .map { availability in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .unwrap()
+    }
+
+    var shouldShowCommentStatus: Observable<Bool> {
+        Observable.combineLatest(commentStatusVM.outputs.status, currentUser) { [weak self] status, user in
+            guard let self = self,
+                  let currentUserId = user.userId,
+                  let commentUserId = self.comment.userId,
+                  currentUserId == commentUserId
+            else { return false }
+
+            return status != .none
+        }
+    }
+    var showBlockingLayoutView: Observable<Bool> {
+        // Using Observable.merge because in the future we might have more cases where we show disable layout
+        Observable.merge(shouldShowCommentStatus)
     }
 
     func reportCommentLocally() {
@@ -84,11 +114,14 @@ class OWCommentViewModel: OWCommentViewModeling,
     func updateEditedCommentLocally(updatedComment: OWComment) {
         self.comment = updatedComment
         self.contentVM.inputs.updateEditedCommentLocally(updatedComment)
+        self.commentStatusVM.inputs.updateStatus(for: updatedComment)
         self.commentLabelsContainerVM.inputs.updateEditedCommentLocally(updatedComment)
     }
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
+        let status = OWCommentStatusType.commentStatus(from: data.comment.status)
+        commentStatusVM = OWCommentStatusViewModel(status: status)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
@@ -104,6 +137,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
         comment = OWComment()
+        commentStatusVM = OWCommentStatusViewModel(status: .none)
     }
 }
 
