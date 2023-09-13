@@ -22,14 +22,12 @@ class OWToastActionView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
         let attributedString = NSAttributedString(
             string: viewModel.outputs.title,
-            attributes: [
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
-                NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyInteraction)
-                        ]
+            attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
         )
         var label = UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
-        label.attributedText = attributedString
+            .font(OWFontBook.shared.font(typography: .bodyInteraction))
+            .attributedText(attributedString)
         return label
     }()
 
@@ -77,6 +75,14 @@ fileprivate extension OWToastActionView {
                 guard let self = self else { return }
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
                 self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
     }
