@@ -35,7 +35,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .clarityDetails)
     }()
-    fileprivate let clarityDetailsPopped = PublishSubject<Void>()
+
     let presentationalMode: OWPresentationalModeCompact
 
     init(type: OWClarityDetailsType,
@@ -53,6 +53,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(type: type, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
+        let clarityDetailsPopped = PublishSubject<Void>()
         router.push(clarityDetailsVC,
                     pushStyle: .present,
                     animated: true,
@@ -75,13 +76,17 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .map { OWClarityDetailsCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        let resultsWithPopAnimation = Observable.merge(dismissObservable, poppedFromCloseButtonObservable, poppedFromBackButtonObservable)
+        let resultsWithPopAnimation = Observable.merge(dismissObservable, poppedFromCloseButtonObservable)
             .map { OWClarityDetailsCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.router?.pop(popStyle: .dismiss, animated: false)
             })
+
+        let resultWithoutPopAnimation = clarityDetailsPopped
+                .asObservable()
+                .map { OWClarityDetailsCoordinatorResult.popped }
 
         // Coordinate to safari tab
         let communityGuidelinesURLTapped = clarityDetailsVM
@@ -117,7 +122,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 return Observable.never()
             }
 
-        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable)
+        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
