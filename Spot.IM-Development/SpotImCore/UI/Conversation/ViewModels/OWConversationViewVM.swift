@@ -83,6 +83,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let loadMoreCommentsScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "loadMoreCommentsQueue")
 
     var tableViewHeight = BehaviorSubject<CGFloat>(value: 0)
+    fileprivate lazy var tableViewHeightChanged: Observable<CGFloat> = {
+        tableViewHeight
+            .distinctUntilChanged()
+            .asObservable()
+            .share(replay: 1)
+    }()
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
@@ -226,7 +232,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .shouldShowView
     }()
 
-    fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
+    fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = Observable.merge(mainCommentCellsOptions, loadMoreErrorStateCellsOptions)
+
+    fileprivate lazy var loadMoreErrorStateCellsOptions: Observable<[OWConversationCellOption]> = shouldShowErrorLoadingMoreComments
+        .filter { $0 }
+        .withLatestFrom(mainCommentCellsOptions)
+        .map { [weak self] currentComments -> [OWConversationCellOption]? in
+            guard let self = self else { return nil }
+            return currentComments + self.getErrorStateCell(errorStateType: .loadMoreConversationComments)
+        }
+        .unwrap()
+        .asObservable()
+
+    fileprivate lazy var mainCommentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
@@ -911,7 +929,7 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell)
-        Observable.combineLatest(cellsViewModels, tableViewHeight)
+        Observable.combineLatest(cellsViewModels, tableViewHeightChanged)
             .flatMapLatest { (cellsVms, tableViewHeight) -> Observable<Void> in
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                         if case.conversationErrorState(let errorStateCellViewModeling) = vm {
