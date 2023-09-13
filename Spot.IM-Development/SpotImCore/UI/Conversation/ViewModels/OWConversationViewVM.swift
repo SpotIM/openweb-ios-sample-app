@@ -75,6 +75,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
     }
@@ -1181,6 +1182,25 @@ fileprivate extension OWConversationViewViewModel {
                         }
                     })
                     .disposed(by: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        // Dynamic should update tableView cells
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .flatMapLatest {
+                return OWSharedServicesProvider.shared.appLifeCycle()
+                    .isActive
+                    .filter { $0 }
+                    .take(1)
+            }
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationAfterContentSizeChanged),
+                   scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 

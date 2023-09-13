@@ -27,6 +27,7 @@ protocol OWCommentViewModelingOutputs {
     var contentVM: OWCommentContentViewModeling { get }
     var commentEngagementVM: OWCommentEngagementViewModeling { get }
     var shouldHideCommentContent: Observable<Bool> { get }
+    var updateSpacing: Observable<CGFloat> { get }
 
     var comment: OWComment { get }
 }
@@ -65,6 +66,14 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
+    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
+    var updateSpacing: Observable<CGFloat> {
+        _updateSpacing
+            .unwrap()
+            .take(1)
+            .asObservable()
+    }
+
     func reportCommentLocally() {
         self.commentHeaderVM.inputs.shouldReportCommentLocally.onNext(true)
         self._shouldHideCommentContent.onNext(true)
@@ -87,17 +96,21 @@ class OWCommentViewModel: OWCommentViewModeling,
         self.commentLabelsContainerVM.inputs.updateEditedCommentLocally(updatedComment)
     }
 
-    init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         spacing: CGFloat) {
         self.sharedServiceProvider = sharedServiceProvider
-        commentHeaderVM = OWCommentHeaderViewModel(data: data)
+        commentHeaderVM = OWCommentHeaderViewModel(data: data, spacing: spacing)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
+
+        _updateSpacing.onNext(spacing)
         dictateCommentContentVisibility(data: data)
     }
 
-    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         spacing: CGFloat) {
         self.sharedServiceProvider = sharedServiceProvider
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()

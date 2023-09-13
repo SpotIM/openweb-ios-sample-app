@@ -30,6 +30,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
     var hiddenCommentReasonText: Observable<String> { get }
+    var updateSpacing: Observable<CGFloat> { get }
 
     var userNameTapped: Observable<Void> { get }
     var openMenu: Observable<([OWRxPresenterAction], OWUISource)> { get }
@@ -69,6 +70,15 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
 
+    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
+    var updateSpacing: Observable<CGFloat> {
+        _updateSpacing
+            .unwrap()
+            .take(1)
+            .asObservable()
+            .share(replay: 1)
+    }
+
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
     var shouldReportCommentLocally = BehaviorSubject<Bool>(value: false)
@@ -78,11 +88,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
+         userBadgeService: OWUserBadgeServicing = OWUserBadgeService(),
+         spacing: CGFloat
     ) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
         self.user = data.user
+
+        _updateSpacing.onNext(spacing)
         avatarVM = OWAvatarViewModel(user: data.user, imageURLProvider: imageProvider)
         _model.onNext(data.comment)
         _user.onNext(data.user)
