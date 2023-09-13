@@ -51,6 +51,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
+    func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -202,6 +203,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWPageViewIdHolder()
     }()
 
+    fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
+        return OWCommentStatusUpdaterService(servicesProvider: self)
+    }()
+
     func profileService() -> OWProfileServicing {
         return _profileService
     }
@@ -330,6 +335,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _permissionsService
     }
 
+    func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing {
+        return _commentStatusUpdaterService
+    }
+
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
         return _pageViewIdHolder
     }
@@ -369,6 +378,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _imageCacheService.cleanCache()
         _commentsInMemoryCacheService.cleanCache()
         _lastCommentTypeInMemoryCacheService.cleanCache()
+        _commentStatusUpdaterService.spotChanged(newSpotId: spotId)
     }
 }
 
