@@ -12,6 +12,7 @@ struct OWToastRequiredData: Codable, Equatable {
     var type: OWToastType
     var action: OWToastAction
     var title: String
+    var bottomPadding: CGFloat = 114
 }
 
 enum OWToastType: Codable {

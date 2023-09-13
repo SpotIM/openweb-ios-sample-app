@@ -50,32 +50,28 @@ class OWToastNotificationService: OWToastNotificationServicing {
 }
 
 fileprivate extension OWToastNotificationService {
-    func sendToastToShow() { // TODO: rename
-        guard !queue.isEmpty() else { return }
-        print("NOGAH: sendToastToShow")
-        let action = OWDefaultBlockerAction(blockerType: .toastNotification)
-        blockerService.add(blocker: action)
-        let toast = queue.popFirst()
-        _toastToShow.onNext(toast)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) { [weak self] in // TODO: handle properly
-            self?._toastToShow.onNext(nil)
-            print("NOGAH: toast finish")
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) { [weak self] in // TODO: handle properly
-                action.finish()
-                print("NOGAH: action.finish()")
-            }
-        }
-    }
-
     func setupObservers() {
         newToastObservable
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 return self.blockerService.waitForNonBlocker(for: [.toastNotification])
             }
-            .debug("NOGAH: newToastObservable")
             .subscribe(onNext: { [weak self] in
-                self?.sendToastToShow()
+                guard let self = self,
+                      !self.queue.isEmpty() else { return }
+                // Block before showing toast to prevent more toasts from showing
+                let action = OWDefaultBlockerAction(blockerType: .toastNotification)
+                self.blockerService.add(blocker: action)
+                // Show toast
+                let toast = self.queue.popFirst()
+                self._toastToShow.onNext(toast)
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) { [weak self] in // TODO: handle properly
+                    self?._toastToShow.onNext(nil)
+                    // Wait for the exiting animation to complete before unblocking next toast
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.6) { // TODO: handle properly
+                        action.finish()
+                    }
+                }
             })
             .disposed(by: disposeBag)
     }
