@@ -69,9 +69,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
             .outputs.closeButtonPopped
             .asObservable()
 
-        let poppedFromBackButtonObservable = clarityDetailsPopped
-            .asObservable()
-
         let loadedToScreenObservable = clarityDetailsVM.outputs.loadedToScreen
             .map { OWClarityDetailsCoordinatorResult.loadedToScreen }
             .asObservable()
