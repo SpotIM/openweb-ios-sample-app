@@ -57,6 +57,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationDataJustReceived: Observable<Void> { get }
 
     var displayToast: Observable<OWToastRequiredData> { get }
+    var hideToast: Observable<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -371,9 +372,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _displayToast = PublishSubject<OWToastRequiredData>()
+    fileprivate var _displayToast = PublishSubject<OWToastRequiredData?>()
     var displayToast: Observable<OWToastRequiredData> {
         return _displayToast
+            .unwrap()
+            .asObservable()
+    }
+    var hideToast: Observable<Void> {
+        return _displayToast
+            .map { data -> Bool? in
+                return data == nil ? true : nil
+            }
+            .unwrap()
+            .voidify()
             .asObservable()
     }
 
@@ -587,6 +598,15 @@ fileprivate extension OWConversationViewViewModel {
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
 
+        servicesProvider.toastNotificationService()
+            .toastToShow
+//            .debug("NOGAH: VM servicesProvider.toastNotificationService().toastToShow")
+            .subscribe(onNext: { [weak self] data in
+                let data = data?.data
+                self?._displayToast.onNext(data)
+            })
+            .disposed(by: disposeBag)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -619,7 +639,13 @@ fileprivate extension OWConversationViewViewModel {
                 self._isLoadingServerComments.onNext(true)
                 self._shouldShowErrorLoadingComments.onNext(false)
 
-                self._displayToast.onNext(OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast...."))
+//                print("NOGAH: send toasts")
+                let data = OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast....")
+                let data2 = OWToastRequiredData(type: .error, action: .close, title: "Error toast....")
+                self.servicesProvider.toastNotificationService()
+                    .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data))
+                self.servicesProvider.toastNotificationService()
+                    .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data2))
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
