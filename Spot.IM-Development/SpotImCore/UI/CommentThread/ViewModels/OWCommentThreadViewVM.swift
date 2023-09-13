@@ -84,7 +84,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
-            .scan([], accumulator: { previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
+            .observe(on: MainScheduler.instance)
+            .scan([], accumulator: { [weak self] previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
+                guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
 
                 previousCommentThreadCellsOptions.forEach { commentThreadCellOption in
@@ -103,8 +105,17 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                         guard let commentId = viewModel.outputs.commentVM.outputs.comment.id else {
                             return commentThreadCellOptions
                         }
-                        if let commentVm = commentsVmsMapper[commentId] {
-                            return OWCommentThreadCellOption.comment(viewModel: commentVm)
+                        if let commentCellVm = commentsVmsMapper[commentId] {
+                            let commentVm = commentCellVm.outputs.commentVM
+                            let updatedCommentVm = viewModel.outputs.commentVM
+
+                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment
+                                || updatedCommentVm.outputs.user != commentVm.outputs.user) {
+
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                            }
+                            return OWCommentThreadCellOption.comment(viewModel: commentCellVm)
                         } else {
                             return commentThreadCellOptions
                         }
