@@ -25,8 +25,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var openProfile: Observable<URL> { get }
-    var openPublisherProfile: Observable<String> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var scrollToCellIndex: Observable<Int> { get }
     var highlightCellIndex: Observable<Int> { get }
     var shouldShowError: Observable<Void> { get }
@@ -50,7 +49,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -63,6 +62,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
+    fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
@@ -157,15 +157,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObserver()
     }
 
-    fileprivate var _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         return _openProfile
-            .asObservable()
-    }
-
-    fileprivate var _openPublisherProfile = PublishSubject<String>()
-    var openPublisherProfile: Observable<String> {
-        return _openPublisherProfile
             .asObservable()
     }
 
@@ -357,6 +351,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
+
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
@@ -708,38 +704,23 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to comment avatar click
+        // Responding to comment avatar and user name tapped
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
-                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileData> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
-                    return avatarVM.outputs.openProfile
-                        .map { url, type in
-                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
-                        }
+                    let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
+                    return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] url, type, userId in
-                self?._openProfile.onNext(url)
-                switch type {
+            .do(onNext: { [weak self] openProfileData in
+                switch openProfileData.userProfileType {
                 case .currentUser: self?.sendEvent(for: .myProfileClicked(source: .comment))
-                case .otherUser: self?.sendEvent(for: .userProfileClicked(userId: userId))
+                case .otherUser: self?.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
                 }
             })
-            .disposed(by: disposeBag)
-
-        commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<String> in
-                let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
-                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
-                    return avatarVM.outputs.openPublisherProfile
-                }
-                return Observable.merge(commentOpenPublisherProfileOutput)
-            }
-            .subscribe(onNext: { [weak self] id in
-                self?._openPublisherProfile.onNext(id)
-            })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         // Subscribe to URL click in comment text
@@ -1146,6 +1127,14 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
@@ -1153,7 +1142,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: commentThreadData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: commentThreadData.presentationalStyle),
                 component: .commentCreation)
     }

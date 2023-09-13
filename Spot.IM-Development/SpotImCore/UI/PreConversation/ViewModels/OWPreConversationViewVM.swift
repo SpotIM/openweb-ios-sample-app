@@ -41,8 +41,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldAddContentTapRecognizer: Bool { get }
     var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
-    var openProfile: Observable<URL> { get }
-    var openPublisherProfile: Observable<String> { get }
+    var openProfile: Observable<OWOpenProfileData> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
@@ -61,7 +60,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -74,6 +73,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+
+    fileprivate var articleUrl: String = ""
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
@@ -196,15 +197,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _openProfile = PublishSubject<URL>()
-    var openProfile: Observable<URL> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
+    var openProfile: Observable<OWOpenProfileData> {
         return _openProfile
-            .asObservable()
-    }
-
-    fileprivate var _openPublisherProfile = PublishSubject<String>()
-    var openPublisherProfile: Observable<String> {
-        return _openPublisherProfile
             .asObservable()
     }
 
@@ -378,6 +373,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
+
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
@@ -472,11 +469,13 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
-        // First conversation load - send event
+        // First conversation load
         conversationFetchedObservable
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.sendEvent(for: .preConversationLoaded)
+                guard let self = self else { return }
+                // Send analytics event
+                self.sendEvent(for: .preConversationLoaded)
             })
             .disposed(by: disposeBag)
 
@@ -650,54 +649,33 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .disposed(by: disposeBag)
 
-        // Responding to comment avatar click
-        let commentAvatarClickObservable: Observable<(URL, OWUserProfileType, String)> = commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(URL, OWUserProfileType, String)> in
-                let avatarClickOutputObservable: [Observable<(URL, OWUserProfileType, String)>] = commentCellsVms.map { commentCellVm in
+        let commentOpenProfileObservable: Observable<OWOpenProfileData> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWOpenProfileData> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
-                    return avatarVM.outputs.openProfile
-                        .map { url, type in
-                            return (url, type, commentCellVm.outputs.commentVM.outputs.comment.userId ?? "")
-                        }
+                    let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
+                    return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
 
-        commentAvatarClickObservable
-            .subscribe(onNext: { [weak self] url, type, userId in
+        // Responding to comment avatar and user name tapped
+        commentOpenProfileObservable
+            .do(onNext: { [weak self] openProfileData in
                 guard let self = self  else { return }
-                self._openProfile.onNext(url)
-                switch type {
+                switch openProfileData.userProfileType {
                 case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
-                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: userId))
+                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
                 }
             })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         commentingCTAViewModel.outputs.openProfile
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .myProfileClicked(source: .commentCTA))
             })
-            .subscribe(onNext: { [weak self] url in
-                guard let self = self  else { return }
-                self._openProfile.onNext(url)
-            })
-            .disposed(by: disposeBag)
-
-        let commentOpenPublisherProfileObservable: Observable<String> = commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<String> in
-                let commentOpenPublisherProfileOutput: [Observable<String>] = commentCellsVms.map { commentCellVm in
-                    let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
-                    return avatarVM.outputs.openPublisherProfile
-                }
-                return Observable.merge(commentOpenPublisherProfileOutput)
-            }
-
-        Observable.merge(commentOpenPublisherProfileObservable,
-                         commentingCTAViewModel.outputs.openPublisherProfile)
-            .subscribe(onNext: { [weak self] id in
-                self?._openPublisherProfile.onNext(id)
-            })
+            .bind(to: _openProfile)
             .disposed(by: disposeBag)
 
         // Update comments cells on ReadOnly mode
@@ -1085,6 +1063,14 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.sendEvent(for: .showMoreComments)
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
@@ -1102,7 +1088,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .analyticsEventCreatorService()
             .analyticsEvent(
                 for: eventType,
-                articleUrl: preConversationData.article.url.absoluteString,
+                articleUrl: articleUrl,
                 layoutStyle: OWLayoutStyle(from: preConversationData.presentationalStyle),
                 component: .preConversation)
     }
