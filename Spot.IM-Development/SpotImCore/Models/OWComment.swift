@@ -140,9 +140,12 @@ internal struct OWComment: Decodable, Equatable {
         case unknown
         case block
         case reject
+        case approve
         case pending
+        case approveAll
         case publishAndModerate
         case requireApproval
+        case forceApproveAll
 
         init?(rawValue: String) {
             if rawValue.contains("block") {
@@ -150,14 +153,20 @@ internal struct OWComment: Decodable, Equatable {
                 return
             }
             switch rawValue {
+            case "approve_all":
+                self = .approveAll
             case "publish_and_moderate":
                 self = .publishAndModerate
             case "require_approval":
                 self = .requireApproval
             case "reject":
                 self = .reject
+            case "approve":
+                self = .approve
             case "pending":
                 self = .pending
+            case "force_approve_all":
+                self = .forceApproveAll
             default:
                 self = .unknown
             }

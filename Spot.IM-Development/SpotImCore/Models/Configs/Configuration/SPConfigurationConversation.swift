@@ -24,6 +24,9 @@ struct SPConfigurationConversation: Decodable {
     let disableVoteUp: Bool?
     let disableShareComment: Bool?
     let showCommentEditOption: Bool?
+    let statusFetchIntervalInMs: Int
+    let statusFetchTimeoutInMs: Int
+    let statusFetchRetryCount: Int
 
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadge"
@@ -38,7 +41,10 @@ struct SPConfigurationConversation: Decodable {
              translationTextOverrides,
              disableOnlineDotIndicator,
              disableVoteDown,
-             disableVoteUp
+             disableVoteUp,
+             statusFetchIntervalInMs,
+             statusFetchTimeoutInMs,
+             statusFetchRetryCount
     }
 
     init(from decoder: Decoder) throws {
@@ -57,5 +63,8 @@ struct SPConfigurationConversation: Decodable {
         disableVoteUp = try? container.decode(Bool.self, forKey: .disableVoteUp)
         disableShareComment = try? container.decode(Bool.self, forKey: .disableShareComment)
         showCommentEditOption = try? container.decode(Bool.self, forKey: .showCommentEditOption)
+        statusFetchIntervalInMs = (try? container.decode(Int.self, forKey: .statusFetchIntervalInMs)) ?? 300
+        statusFetchTimeoutInMs = (try? container.decode(Int.self, forKey: .statusFetchTimeoutInMs)) ?? 3000
+        statusFetchRetryCount = (try? container.decode(Int.self, forKey: .statusFetchRetryCount)) ?? 12
     }
 }

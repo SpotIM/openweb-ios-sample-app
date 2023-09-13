@@ -52,6 +52,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<OWOpenProfileData> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var conversationDataJustReceived: Observable<Void> { get }
@@ -360,6 +361,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
+    var openClarityDetails: Observable<OWClarityDetailsType> {
+        return openClarityDetailsChange
             .asObservable()
     }
 
@@ -1110,6 +1117,20 @@ fileprivate extension OWConversationViewViewModel {
                         return
                     }
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // Observe open clarity details
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    return commentStatusVm.outputs.learnMoreClicked
+                }
+                return Observable.merge(learnMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] clarityDetailsType in
+                self?.openClarityDetailsChange.onNext(clarityDetailsType)
             })
             .disposed(by: disposeBag)
 
