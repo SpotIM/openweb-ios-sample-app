@@ -18,6 +18,7 @@ class GeneralSettingsView: UIView {
         static let identifier = "general_settings_view_id"
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
         static let segmentedArticleHeaderStyleIdentifier = "article_header_style"
+        static let segmentedArticleInformationStrategiIdentifier = "article_information_strategy"
         static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedStatusBarStyleIdentifier = "status_bar_style"
@@ -27,6 +28,7 @@ class GeneralSettingsView: UIView {
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
         static let textFieldArticleURLIdentifier = "article_url"
+        static let textFieldArticleSectionIdentifier = "article_section"
         static let segmentedLanguageStrategyIdentifier = "language_strategy"
         static let segmentedLocaleStrategyIdentifier = "locale_strategy"
         static let pickerLanguageCodeIdentifier = "language_code"
@@ -54,6 +56,15 @@ class GeneralSettingsView: UIView {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedArticleHeaderStyleIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedArticleInformationStrategy: SegmentedControlSetting = {
+        let title = viewModel.outputs.articleInformationStrategyTitle
+        let items = viewModel.outputs.articleInformationStrategySettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedArticleInformationStrategiIdentifier,
                                        items: items)
     }()
 
@@ -143,6 +154,13 @@ class GeneralSettingsView: UIView {
         return txtField
     }()
 
+    fileprivate lazy var textFieldArticleSection: TextFieldSetting = {
+        let txtField = TextFieldSetting(title: viewModel.outputs.articleSectionTitle,
+                                        accessibilityPrefixId: Metrics.textFieldArticleSectionIdentifier,
+                                        font: FontBook.paragraph)
+        return txtField
+    }()
+
     fileprivate lazy var segmentedLanguageStrategy: SegmentedControlSetting = {
         let title = viewModel.outputs.languageStrategyTitle
         let items = viewModel.outputs.languageStrategySettings
@@ -204,6 +222,9 @@ fileprivate extension GeneralSettingsView {
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(segmentedArticleHeaderStyle)
+        stackView.addArrangedSubview(segmentedArticleInformationStrategy)
+        stackView.addArrangedSubview(textFieldArticleURL)
+        stackView.addArrangedSubview(textFieldArticleSection)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
@@ -216,7 +237,6 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedLanguageStrategy)
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
-        stackView.addArrangedSubview(textFieldArticleURL)
     }
 
     // swiftlint:disable function_body_length
@@ -224,6 +244,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.articleHeaderStyle
             .map { $0.index }
             .bind(to: segmentedArticleHeaderStyle.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.articleInformationStrategy
+            .map { $0.index }
+            .bind(to: segmentedArticleInformationStrategy.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.elementsCustomizationStyleIndex
@@ -266,9 +291,18 @@ fileprivate extension GeneralSettingsView {
             .bind(to: textFieldArticleURL.rx.textFieldText)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.articleSection
+            .bind(to: textFieldArticleSection.rx.textFieldText)
+            .disposed(by: disposeBag)
+
         segmentedArticleHeaderStyle.rx.selectedSegmentIndex
             .map { OWArticleHeaderStyle.articleHeaderStyle(fromIndex: $0) }
             .bind(to: viewModel.inputs.articleHeaderSelectedStyle)
+            .disposed(by: disposeBag)
+
+        segmentedArticleInformationStrategy.rx.selectedSegmentIndex
+            .map { OWArticleInformationStrategy.articleInformationStrategy(fromIndex: $0) }
+            .bind(to: viewModel.inputs.articleInformationSelectedStrategy)
             .disposed(by: disposeBag)
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
@@ -318,6 +352,11 @@ fileprivate extension GeneralSettingsView {
             .bind(to: viewModel.inputs.articleAssociatedSelectedURL)
             .disposed(by: disposeBag)
 
+        textFieldArticleSection.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.articleSelectedSection)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.languageStrategyIndex
             .bind(to: segmentedLanguageStrategy.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
@@ -357,6 +396,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.shouldShowSetLanguage
             .map { !$0 }
             .bind(to: pickerLanguageCode.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowArticleURL
+            .map { !$0 }
+            .bind(to: textFieldArticleURL.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

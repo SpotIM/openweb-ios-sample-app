@@ -61,11 +61,13 @@
 "FullScreen" = "Full Screen";
 "PageSheet" = "Page Sheet";
 "Server" = "Server";
+"Local" = "Local";
 "Best" = "Best";
 "Newest" = "Newest";
 "Oldest" = "Oldest";
 "InitialSortMode" = "Initial sort mode";
 "ArticleAssociatedURL" = "Article associated URL";
+"ArticleSection" = "Article section";
 "Light" = "Light";
 "Dark" = "Dark";
 "GeneralSettings" = "General:";
@@ -108,6 +110,7 @@
 "Style1" = "Style 1";
 "Style2" = "Style 2";
 "ArticleHeaderStyle" = "Article header style";
+"ArticleInformationStrategy" = "Article information strategy";
 "Automation" = "Automation";
 "Fonts" = "Fonts";
 "UserInformation" = "User information";

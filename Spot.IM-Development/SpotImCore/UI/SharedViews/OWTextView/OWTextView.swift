@@ -239,9 +239,7 @@ fileprivate extension UITextView {
         // Height is always >= the base height, so calculate the possible new height
         let height: CGFloat = newSize.height > baseHeight ? newSize.height : baseHeight
         newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: height)
-
-        let intNewHeight = Int(newFrame.height)
-        return min(maxHeight(for: maxLines), CGFloat(intNewHeight))
+        return min(maxHeight(for: maxLines), newFrame.height)
     }
 
     func maxHeight(for lines: Int) -> CGFloat {
