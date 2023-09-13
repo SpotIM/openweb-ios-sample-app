@@ -175,14 +175,30 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
+    fileprivate var currentUser: Observable<SPUser> {
+        servicesProvider
+            .authenticationManager()
+            .activeUserAvailability
+            .map { availability in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .unwrap()
+    }
+
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser) { model, user in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, currentUser) { model, user, currentUser in
             let localizationKey: String
+            let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
             if user.isMuted {
                 localizationKey = "This user is muted."
-            } else if model.reported {
+            } else if (model.reported && !isCurrentUserComment) {
                 localizationKey = "This message was reported."
-            } else if (model.status == .block || model.status == .reject) {
+            } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
                 localizationKey = "This comment violated our policy."
             } else if model.deleted {
                 localizationKey = "This message was deleted."

@@ -15,6 +15,7 @@ public enum OWViewSourceType {
     case commentCreation
     case commentThread
     case reportReason
+    case clarityDetails
 }
 #else
 enum OWViewSourceType {
@@ -23,5 +24,6 @@ enum OWViewSourceType {
     case commentCreation
     case commentThread
     case reportReason
+    case clarityDetails
 }
 #endif

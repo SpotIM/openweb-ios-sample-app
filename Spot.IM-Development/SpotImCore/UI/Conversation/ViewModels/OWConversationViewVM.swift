@@ -52,6 +52,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<OWOpenProfileData> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var conversationDataJustReceived: Observable<Void> { get }
@@ -375,6 +376,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
+    var openClarityDetails: Observable<OWClarityDetailsType> {
+        return openClarityDetailsChange
+            .asObservable()
+    }
+
     var changeConversationOffset = PublishSubject<CGPoint>()
     var conversationOffset: Observable<CGPoint> {
         return changeConversationOffset
@@ -400,7 +407,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         self.imageProvider = imageProvider
         self.conversationData = conversationData
         self.viewableMode = viewableMode
-        setupObservers()
+        self.setupObservers()
 
         sendEvent(for: .fullConversationViewed)
     }
@@ -1125,6 +1132,20 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe open clarity details
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    return commentStatusVm.outputs.learnMoreClicked
+                }
+                return Observable.merge(learnMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] clarityDetailsType in
+                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            })
+            .disposed(by: disposeBag)
+
         // Observe on read more click
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<OWCommentId> in
@@ -1323,7 +1344,8 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self._scrollToCellIndex.onNext(0)
             })
-            .flatMapLatest { comments -> Observable<[OWComment]> in
+            .flatMapLatest { [weak self] comments -> Observable<[OWComment]> in
+                guard let self = self else { return .empty() }
                 // waiting for scroll to top
                 return self.scrolledToCellIndex
                     .filter { $0 == 0 }
@@ -1359,7 +1381,8 @@ fileprivate extension OWConversationViewViewModel {
                     .set(comments: [comment], postId: self.postId)
             })
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { comment, commentId, commentCellsVms in
+            .subscribe(onNext: { [weak self] comment, commentId, commentCellsVms in
+                guard let self = self else { return }
                 if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
                     commentCellVm.outputs.commentVM.inputs.update(comment: comment)
                     self._performTableViewAnimation.onNext()
@@ -1448,7 +1471,8 @@ fileprivate extension OWConversationViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { result, commentVm -> Bool in
+            .map { [weak self] result, commentVm -> Bool in
+                guard let self = self else { return false }
                 switch result {
                 case .completion:
                     return false
@@ -1502,7 +1526,8 @@ fileprivate extension OWConversationViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> OWCommentDelete? in
+            .map { [weak self] event -> OWCommentDelete? in
+                guard let self = self else { return nil }
                 switch event {
                 case .next(let commentDelete):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -1571,7 +1596,8 @@ fileprivate extension OWConversationViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> Bool in
+            .map { [weak self] event -> Bool in
+                guard let self = self else { return false }
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
