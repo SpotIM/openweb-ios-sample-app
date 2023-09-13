@@ -885,7 +885,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { result, commentVm -> Bool in
+            .map { [weak self] result, commentVm -> Bool in
+                guard let self = self else { return false }
                 switch result {
                 case .completion:
                     return false
@@ -1026,7 +1027,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .set(comments: [comment], postId: self.postId)
             })
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { comment, commentId, commentCellsVms in
+            .subscribe(onNext: { [weak self] comment, commentId, commentCellsVms in
+                guard let self = self else { return }
                 if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
                     commentCellVm.outputs.commentVM.inputs.update(comment: comment)
                     self._performTableViewAnimation.onNext()
