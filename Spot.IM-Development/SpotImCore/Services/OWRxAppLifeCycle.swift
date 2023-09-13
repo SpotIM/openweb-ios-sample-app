@@ -15,6 +15,7 @@ protocol OWRxAppLifeCycleProtocol {
     var didEnterBackground: Observable<Void> { get }
     var willEnterForeground: Observable<Void> { get }
     var willResignActive: Observable<Void> { get }
+    var isActive: Observable<Bool> { get }
     var didChangeContentSizeCategory: Observable<Void> { get }
 }
 
@@ -73,6 +74,13 @@ class OWRxAppLifeCycle: OWRxAppLifeCycleProtocol {
             .asObservable()
             .share(replay: 0) // Zero to emitt new subscriber only new events
     }
+
+    fileprivate let _isActive = BehaviorSubject<Bool>(value: true)
+    var isActive: Observable<Bool> {
+        return _isActive
+            .asObservable()
+            .share(replay: 0) // Zero to emitt new subscriber only new events
+    }
 }
 
 fileprivate extension OWRxAppLifeCycle {
@@ -105,6 +113,17 @@ fileprivate extension OWRxAppLifeCycle {
             .observe(on: queueScheduler)
             .voidify()
             .bind(to: _willResignActive)
+            .disposed(by: disposeBag)
+
+        let didBecomeActive = notificationCenter.rx.notification(UIApplication.didBecomeActiveNotification)
+            .map { _ in true }
+
+        let willResignActive = notificationCenter.rx.notification(UIApplication.didEnterBackgroundNotification)
+            .map { _ in false }
+
+        Observable.merge(didBecomeActive, willResignActive)
+            .observe(on: queueScheduler)
+            .bind(to: _isActive)
             .disposed(by: disposeBag)
 
         notificationCenter.rx.notification(UIContentSizeCategory.didChangeNotification)

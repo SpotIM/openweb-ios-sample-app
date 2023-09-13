@@ -11,10 +11,10 @@ import UIKit
 #if NEW_API
 public enum OWConversationSpacing: Codable {
     public struct Metrics {
-        public static let defaultSpaceBetweenComments: CGFloat = 24.0 // Will be set later by designer
+        public static let defaultSpaceBetweenComments: CGFloat = 56.0 // Will be set later by designer
         public static let defaultSpaceCommunityGuidelines: CGFloat = 12.0 // Will be set later by designer
         public static let defaultSpaceCommunityQuestions: CGFloat = 12.0 // Will be set later by designer
-        public static let maxSpace: CGFloat = 20.0
+        public static let maxSpace: CGFloat = 60.0
         public static let minSpace: CGFloat = 5.0
     }
 
