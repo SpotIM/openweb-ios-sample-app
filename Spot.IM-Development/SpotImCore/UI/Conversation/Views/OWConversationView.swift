@@ -19,6 +19,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
     }
 
+    var toastView: OWToastView? = nil
+
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
             .enforceSemanticAttribute()
@@ -182,8 +184,15 @@ fileprivate extension OWConversationView {
 
     func setupObservers() {
         viewModel.outputs.displayToast
+//            .debug("NOGAH: View display toast")
             .subscribe(onNext: { [weak self] data in
                 self?.displayToast(requiredData: data)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
             })
             .disposed(by: disposeBag)
 
