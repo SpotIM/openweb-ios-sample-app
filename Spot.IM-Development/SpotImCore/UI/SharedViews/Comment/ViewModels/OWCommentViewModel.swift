@@ -89,6 +89,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
             return status != .none
         }
+        .startWith(false)
     }
     var showBlockingLayoutView: Observable<Bool> {
         // Using Observable.merge because in the future we might have more cases where we show disable layout
