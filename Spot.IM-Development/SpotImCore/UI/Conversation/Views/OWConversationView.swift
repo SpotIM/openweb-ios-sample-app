@@ -17,6 +17,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
+        static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -49,6 +50,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+        return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
     fileprivate lazy var tableView: UITableView = {
@@ -171,6 +176,13 @@ fileprivate extension OWConversationView {
             make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
             make.leading.trailing.equalToSuperview()
         }
+
+    self.addSubview(self.realtimeIndicationAnimationView)
+    realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+        make.bottom.equalTo(self.tableView.OWSnp.bottom)
+        make.leading.trailing.equalToSuperview()
+        make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
+    }
 
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in

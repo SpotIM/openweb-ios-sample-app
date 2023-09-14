@@ -39,6 +39,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModel { get }
+    var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
 
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
@@ -339,6 +340,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     lazy var commentingCTAViewModel: OWCommentingCTAViewModel = {
         return OWCommentingCTAViewModel(imageProvider: imageProvider)
+    }()
+
+    lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
+        return OWRealtimeIndicationAnimationViewModel()
     }()
 
     fileprivate lazy var spacerCellViewModel: OWSpacerCellViewModeling = {
@@ -691,6 +696,37 @@ fileprivate extension OWConversationViewViewModel {
                 // Update loading state only after the presented comments are updated
                 self._serverCommentsLoadingState.onNext(.notLoading)
             })
+            .disposed(by: disposeBag)
+
+        // Realtime Indicator
+        conversationFetchedObservable
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeIndicatorService().update(state: .enable)
+            })
+            .disposed(by: disposeBag)
+
+        realtimeIndicationAnimationViewModel.outputs
+            .realtimeIndicationViewModel.outputs
+            .tapped
+            .withLatestFrom(self.servicesProvider.realtimeIndicatorService().newComments)
+            .subscribe(onNext: { [weak self] newComments in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .commentUpdaterService()
+                    .update(.insert(comments: newComments), postId: self.postId)
+
+                self.servicesProvider.realtimeIndicatorService().cleanCache()
+            })
+            .disposed(by: disposeBag)
+
+        Observable.merge(sortOptionObservable.voidify(),
+                         pullToRefresh)
+        .subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.servicesProvider.realtimeIndicatorService().update(state: .disable)
+        })
             .disposed(by: disposeBag)
 
         // Set read only mode

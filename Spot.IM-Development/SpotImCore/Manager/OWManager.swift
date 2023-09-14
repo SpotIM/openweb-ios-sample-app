@@ -95,6 +95,15 @@ extension OWManager {
 // Extension with access only inside this file and for the OWManager class
 fileprivate extension OWManager {
     func setupObservers() {
+        currentPostId
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                // PostId was re-set to another postId
+                guard let self = self else { return }
+                self.resetPostId()
+            })
+            .disposed(by: disposeBag)
+
         currentSpotId
             .take(1)
             .subscribe(onNext: { [weak self] spotId in
@@ -124,7 +133,7 @@ fileprivate extension OWManager {
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to another spotId
                 guard let self = self else { return }
-                self.reset()
+                self.resetSpotId()
                 self.servicesProvider.configure.change(spotId: spotId)
             })
             .disposed(by: disposeBag)
@@ -149,7 +158,7 @@ fileprivate extension OWManager {
             .subscribe(onNext: { [weak self] _ in
                 // SpotId was re-set to the same spotId
                 guard let self = self else { return }
-                self.reset()
+                self.resetSpotId()
             })
             .disposed(by: disposeBag)
 
@@ -163,7 +172,7 @@ fileprivate extension OWManager {
     }
 
     // Things to clear / reset each time the spotId reset (even if the same spotId set again - usually the use case will be from our Sample App).
-    func reset() {
+    func resetSpotId() {
         if let customizations = self.uiLayer.customizations as? OWCustomizationsInternalProtocol {
             customizations.clearCallbacks()
         }
@@ -171,5 +180,11 @@ fileprivate extension OWManager {
         if let analytics = self.analyticsLayer as? OWAnalyticsInternalProtocol {
             analytics.clearCallbacks()
         }
+    }
+
+    // Things to clear / reset each time the postId changed
+    func resetPostId() {
+        self.servicesProvider.realtimeService()
+            .reset()
     }
 }

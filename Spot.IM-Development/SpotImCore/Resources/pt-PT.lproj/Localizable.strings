@@ -170,3 +170,5 @@
 "rejectReasonsTitle" = "Como é que tomamos as nossas decisões?";
 "clarityDetailsPendingSummary" = "Informamos os utilizadores registados assim que o seu comentário for analisado.";
 "clarityDetailsRejectedTopParagraph" = "O seu comentário parece violar as diretrizes da nossa comunidade, pelo que foi rejeitado. Apenas será visível para si.";
+"ViewNewComments" = "Ver %d Novos Comentários";
+"TypingNow" = "%d A escrever agora";
