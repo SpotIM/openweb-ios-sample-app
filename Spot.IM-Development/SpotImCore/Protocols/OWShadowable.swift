@@ -13,7 +13,7 @@ enum OWShadowType: Equatable {
 }
 
 enum OWShadowDirection {
-    case down, up
+    case down, up, all
 }
 
 protocol OWShadowable {
@@ -62,9 +62,15 @@ extension UIView: OWShadowable {
 
     func apply(shadow type: OWShadowType, direction: OWShadowDirection) {
         var offset = type.offset
-        if direction == .up {
+        switch direction {
+        case .up:
             offset.height *= -1
+        case .all:
+            offset = .zero
+        case .down:
+            break
         }
+
         layer.shadowColor = type.color.cgColor
         layer.shadowRadius = type.radius
         layer.shadowOffset = offset
