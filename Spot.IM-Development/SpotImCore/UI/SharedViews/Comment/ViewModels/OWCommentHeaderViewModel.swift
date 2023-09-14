@@ -11,12 +11,10 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentHeaderViewModelingInputs {
-    func updateEditedCommentLocally(_ comment: OWComment)
+    func update(comment: OWComment)
+    func update(user: SPUser)
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
-    var shouldReportCommentLocally: BehaviorSubject<Bool> { get }
-    var shouldDeleteCommentLocally: BehaviorSubject<Bool> { get }
-    var shouldMuteCommentLocally: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
@@ -71,10 +69,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
-    var shouldReportCommentLocally = BehaviorSubject<Bool>(value: false)
-    var shouldDeleteCommentLocally = BehaviorSubject<Bool>(value: false)
-    var shouldMuteCommentLocally = BehaviorSubject<Bool>(value: false)
-
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -94,6 +88,15 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         servicesProvider = OWSharedServicesProvider.shared
         userBadgeService = OWUserBadgeService()
         setupObservers()
+    }
+
+    func update(comment: OWComment) {
+        _model.onNext(comment)
+    }
+
+    func update(user: SPUser) {
+        self.user = user
+        _user.onNext(user)
     }
 
     func updateEditedCommentLocally(_ comment: OWComment) {
@@ -188,21 +191,16 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel,
-                                 _unwrappedUser,
-                                 currentUser,
-                                 shouldDeleteCommentLocally,
-                                 shouldMuteCommentLocally,
-                                 shouldReportCommentLocally) { model, user, currentUser, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, currentUser) { model, user, currentUser in
             let localizationKey: String
             let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
-            if user.isMuted || shouldMuteCommentLocally {
+            if user.isMuted {
                 localizationKey = "This user is muted."
-            } else if (model.reported || shouldReportCommentLocally) && (!isCurrentUserComment) {
+            } else if (model.reported && !isCurrentUserComment) {
                 localizationKey = "This message was reported."
-            } else if (model.status == .block || model.status == .reject) && (!isCurrentUserComment) {
+            } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
                 localizationKey = "This comment violated our policy."
-            } else if model.deleted || shouldDeleteCommentLocally {
+            } else if model.deleted {
                 localizationKey = "This message was deleted."
             } else {
                 return ""

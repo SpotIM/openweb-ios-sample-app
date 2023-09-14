@@ -12,10 +12,8 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentViewModelingInputs {
-    func updateEditedCommentLocally(updatedComment: OWComment)
-    func reportCommentLocally()
-    func deleteCommentLocally()
-    func muteCommentLocally()
+    func update(comment: OWComment)
+    func update(user: SPUser)
 }
 
 protocol OWCommentViewModelingOutputs {
@@ -31,6 +29,7 @@ protocol OWCommentViewModelingOutputs {
     var showBlockingLayoutView: Observable<Bool> { get }
 
     var comment: OWComment { get }
+    var user: SPUser { get }
 }
 
 protocol OWCommentViewModeling {
@@ -57,6 +56,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var contentVM: OWCommentContentViewModeling
     var commentEngagementVM: OWCommentEngagementViewModeling
     var comment: OWComment
+    var user: SPUser
 
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
@@ -96,27 +96,23 @@ class OWCommentViewModel: OWCommentViewModeling,
         Observable.merge(shouldShowCommentStatus)
     }
 
-    func reportCommentLocally() {
-        self.commentHeaderVM.inputs.shouldReportCommentLocally.onNext(true)
-        self._shouldHideCommentContent.onNext(true)
+    func update(comment: OWComment) {
+        self.comment = comment
+
+        dictateCommentContentVisibility()
+
+        commentHeaderVM.inputs.update(comment: comment)
+        commentLabelsContainerVM.inputs.update(comment: comment)
+        contentVM.inputs.update(comment: comment)
+        commentStatusVM.inputs.updateStatus(for: comment)
     }
 
-    func deleteCommentLocally() {
-        self._shouldHideCommentContent.onNext(true)
-        self.commentHeaderVM.inputs.shouldDeleteCommentLocally.onNext(true)
-        self.updateDeletedCommentInCommentsService()
-    }
+    func update(user: SPUser) {
+        self.user = user
 
-    func muteCommentLocally() {
-        self._shouldHideCommentContent.onNext(true)
-        self.commentHeaderVM.inputs.shouldMuteCommentLocally.onNext(true)
-    }
+        dictateCommentContentVisibility()
 
-    func updateEditedCommentLocally(updatedComment: OWComment) {
-        self.comment = updatedComment
-        self.contentVM.inputs.updateEditedCommentLocally(updatedComment)
-        self.commentStatusVM.inputs.updateStatus(for: updatedComment)
-        self.commentLabelsContainerVM.inputs.updateEditedCommentLocally(updatedComment)
+        commentHeaderVM.inputs.update(user: user)
     }
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -128,7 +124,8 @@ class OWCommentViewModel: OWCommentViewModeling,
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
-        dictateCommentContentVisibility(data: data)
+        user = data.user
+        dictateCommentContentVisibility()
     }
 
     init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -137,29 +134,18 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
-        comment = OWComment()
         commentStatusVM = OWCommentStatusViewModel(status: .none)
+        comment = OWComment()
+        user = SPUser()
     }
 }
 
 fileprivate extension OWCommentViewModel {
-    func dictateCommentContentVisibility(data: OWCommentRequiredData) {
-        let shouldHide = data.user.isMuted || // muted
-            data.comment.deleted || // deleted
-            data.comment.reported // reported
+    func dictateCommentContentVisibility() {
+        let shouldHide = self.user.isMuted || // muted
+            self.comment.deleted || // deleted
+            self.comment.reported // reported
 
         self._shouldHideCommentContent.onNext(shouldHide)
-    }
-
-    func updateDeletedCommentInCommentsService() {
-        guard let postId = OWManager.manager.postId,
-              let commentId = comment.id,
-              var comment = self.sharedServiceProvider.commentsService().get(commentId: commentId, postId: postId)
-        else { return }
-
-        comment.setIsDeleted(true)
-        self.sharedServiceProvider
-            .commentsService()
-            .set(comments: [comment], postId: postId)
     }
 }
