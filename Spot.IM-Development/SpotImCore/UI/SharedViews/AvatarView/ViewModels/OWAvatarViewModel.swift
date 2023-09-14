@@ -40,12 +40,17 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 
     var tapAvatar = PublishSubject<Void>()
     var avatarTapped: Observable<SPUser> {
-        return Observable.combineLatest(tapAvatar, shouldBlockAvatar)
-            .filter { !$1 }
+        return tapAvatar
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.shouldBlockAvatar
+            }
+            .filter { !$0 }
             .voidify()
-            .flatMap { [weak self] _ -> Observable<SPUser> in
+            .flatMapLatest { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
                 return self.user
+                    .take(1)
             }
     }
 
