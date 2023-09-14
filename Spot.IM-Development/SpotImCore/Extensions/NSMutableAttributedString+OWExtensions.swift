@@ -29,4 +29,13 @@ extension NSMutableAttributedString {
         }
         return self
     }
+
+    @discardableResult func underline(_ style: Int, forText text: String? = nil) -> NSMutableAttributedString {
+        let text = text ?? self.string
+        if let range = self.string.range(of: text) {
+            let nsRange = NSRange(range, in: self.string)
+            self.addAttribute(.underlineStyle, value: style, range: nsRange)
+        }
+        return self
+    }
 }
