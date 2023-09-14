@@ -24,6 +24,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
+    var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
@@ -111,6 +112,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
     }()
 
+    lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
+        return OWRealtimeIndicationAnimationViewModel()
+    }()
+
     lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {
         return OWCommentingCTAViewModel(imageProvider: imageProvider)
     }()
@@ -153,8 +158,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
-            .map { realtimeData in
-                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
+            .map { [weak self] realtimeData in
+                guard let self = self,
+                      let count = realtimeData.data?.totalCommentsCount(forPostId: self.postId) else {return nil}
                 return count
             }
             .unwrap()
@@ -193,7 +199,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var fullConversationCTATap = PublishSubject<Void>()
 
     var openFullConversation: Observable<Void> {
-        return Observable.merge(fullConversationTap, fullConversationCTATap)
+        let tappedObservable = realtimeIndicationAnimationViewModel.outputs
+            .realtimeIndicationViewModel.outputs
+            .tapped
+
+        return Observable.merge(fullConversationTap,
+                                fullConversationCTATap,
+                                tappedObservable)
             .asObservable()
     }
 
@@ -380,6 +392,31 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
+        // Realtime Indicator
+        openFullConversation
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeService().stopFetchingData()
+                self.servicesProvider.realtimeIndicatorService().update(state: .disable)
+
+            })
+            .disposed(by: disposeBag)
+
+        let realtimeIndicatorUpdateStateObservable = Observable.combineLatest(viewInitialized,
+                                                                              shouldShowComments) { _, shouldShowComments -> Bool in
+            return shouldShowComments
+        }
+            .map { shouldShow -> OWRealtimeIndicatorState in
+                return shouldShow ? .enable : .disable
+            }
+
+        realtimeIndicatorUpdateStateObservable
+            .subscribe(onNext: { [weak self] state in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeIndicatorService().update(state: state)
             })
             .disposed(by: disposeBag)
 
@@ -739,6 +776,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         // making sure we are not adding an existing comment
                         !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })
                     }
+                    guard !filteredCommentsVms.isEmpty else { return }
                     viewModels.insert(contentsOf: filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
                     let numOfComments = self.preConversationStyle.numberOfComments
                     self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))

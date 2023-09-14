@@ -173,3 +173,5 @@
 "rejectReasonsTitle" = "How do we reach our decisions?";
 "clarityDetailsPendingSummary" = "We let registered users know as soon as their comment has been reviewed.";
 "clarityDetailsRejectedTopParagraph" = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you.";
+"ViewNewComments" = "View %d new comments";
+"TypingNow" = "%d Typing now";

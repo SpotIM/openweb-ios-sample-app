@@ -38,14 +38,14 @@ enum OWRealtimeEndpoints: OWEndpoints {
 }
 
 protocol OWRealtimeAPI {
-    func fetchData(fullConversationId: String) -> OWNetworkResponse<RealTimeModel>
+    func fetchData(fullConversationId: String) -> OWNetworkResponse<OWRealTime>
 }
 
 extension OWNetworkAPI: OWRealtimeAPI {
     // Access by .realtime for readability
     var realtime: OWRealtimeAPI { return self }
 
-    func fetchData(fullConversationId: String) -> OWNetworkResponse<RealTimeModel> {
+    func fetchData(fullConversationId: String) -> OWNetworkResponse<OWRealTime> {
         let endpoint = OWRealtimeEndpoints.fetchData(fullConversationId: fullConversationId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

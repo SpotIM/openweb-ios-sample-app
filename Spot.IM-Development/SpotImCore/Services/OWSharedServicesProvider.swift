@@ -49,6 +49,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func commentUpdaterService() -> OWCommentUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
+    func realtimeIndicatorService() -> OWRealtimeIndicatorServicing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
@@ -195,6 +196,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWNavigationControllerCustomizer(servicesProvider: self)
     }()
 
+    fileprivate lazy var _realtimeIndicatorServicre: OWRealtimeIndicatorServicing = {
+        return OWRealtimeIndicatorService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _permissionsService: OWPermissionsServicing = {
         return OWPermissionsService(servicesProvider: self)
     }()
@@ -329,6 +334,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing {
         return _navigationControllerCustomizer
+    }
+
+    func realtimeIndicatorService() -> OWRealtimeIndicatorServicing {
+        return _realtimeIndicatorServicre
     }
 
     func permissionsService() -> OWPermissionsServicing {
