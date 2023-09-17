@@ -84,6 +84,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .asObservable()
 
         return Observable.merge(reportReasonPoppedObservable, reportReasonLoadedToScreenObservable, reportReasonSubmittedObservable)
+            .debug("Alon OWReportReasonCoordinator start")
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -408,7 +409,8 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
-            .map { reportReasonCancelViewVM -> OWReportReasonCancelView in
+            .map { [weak self] reportReasonCancelViewVM -> OWReportReasonCancelView? in
+                guard let self = self else { return nil }
                 let reportReasonCancelView = OWReportReasonCancelView(viewModel: reportReasonCancelViewVM)
                 reportReasonCancelView.alpha = 0
                 self.reportReasonView?.addSubview(reportReasonCancelView)
@@ -421,6 +423,7 @@ fileprivate extension OWReportReasonCoordinator {
 
                 return reportReasonCancelView
             }
+            .unwrap()
             .share(replay: 1)
 
         // Subscribe to above - General
