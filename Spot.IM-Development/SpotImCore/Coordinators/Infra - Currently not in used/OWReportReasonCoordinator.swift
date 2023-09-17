@@ -114,7 +114,6 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             }
 
         return Observable.merge(reportReasonPoppedObservable, reportReasonSubmittedObservable, reportReasonLoadedToScreenObservable, learnMoreObservable)
-            .debug("Alon OWReportReasonCoordinator start")
     }
 
     override func showableComponent() -> Observable<OWShowable> {
