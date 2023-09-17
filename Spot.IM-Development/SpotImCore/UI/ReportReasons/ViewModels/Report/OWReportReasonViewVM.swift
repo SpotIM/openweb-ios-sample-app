@@ -47,7 +47,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var reportOffset: Observable<CGPoint> { get }
 }
 
-protocol OWReportReasonViewViewModeling {
+protocol OWReportReasonViewViewModeling: AnyObject {
     var inputs: OWReportReasonViewViewModelingInputs { get }
     var outputs: OWReportReasonViewViewModelingOutputs { get }
 }
@@ -115,9 +115,11 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .unwrap()
     }
 
-    fileprivate let _reportReasonSubmittedSuccessfully = PublishSubject<OWCommentId>()
+    fileprivate let _reportReasonSubmittedSuccessfully = BehaviorSubject<OWCommentId?>(value: nil)
     var reportReasonSubmittedSuccessfully: Observable<OWCommentId> {
         return _reportReasonSubmittedSuccessfully
+            .unwrap()
+            .asObservable()
     }
 
     var inputs: OWReportReasonViewViewModelingInputs { return self }
