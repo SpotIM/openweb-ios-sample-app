@@ -146,9 +146,8 @@ fileprivate extension OWCommentView {
                 return (shouldShow, spacing)
             }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shouldShow, spacing in
+            .subscribe(onNext: { [weak self] shouldShow, spacingBetweenComments in
                 guard let self = self else { return }
-                let spacingBetweenComments = spacing / 2
 
                 self.commentHeaderView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : spacingBetweenComments)
@@ -178,12 +177,11 @@ fileprivate extension OWCommentView {
             .disposed(by: disposedBag)
 
         // Update bottom spacing
-        Observable.combineLatest(viewModel.outputs.shouldHideCommentContent.debug("RIVI shouldHideCommentContent"),
-                                 viewModel.outputs.updateSpacing.debug("RIVI updateSpacing"))
+        Observable.combineLatest(viewModel.outputs.shouldHideCommentContent,
+                                 viewModel.outputs.updateSpacing)
         .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { [weak self] shouldBlockComment, spacing in
+        .subscribe(onNext: { [weak self] shouldBlockComment, spacingBetweenComments in
             guard let self = self else { return }
-            let spacingBetweenComments = spacing / 2
 
             if shouldBlockComment {
                 self.commentHeaderView.OWSnp.updateConstraints { make in

@@ -141,9 +141,8 @@ fileprivate extension OWCommentThreadActionsView {
 
         // Update bottom spacing
         viewModel.outputs.updateSpacing
-            .subscribe(onNext: { [weak self] spacing in
+            .subscribe(onNext: { [weak self] spacingBetweenComments in
                 guard let self = self else { return }
-                let spacingBetweenComments = spacing / 2
 
                 self.actionView.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperview().offset(-spacingBetweenComments)
