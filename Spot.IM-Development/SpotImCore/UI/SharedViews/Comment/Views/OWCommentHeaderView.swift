@@ -283,7 +283,6 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.subscriberBadgeVM
             .outputs.isSubscriber
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.subscriberBadgeView.OWSnp.updateConstraints { make in

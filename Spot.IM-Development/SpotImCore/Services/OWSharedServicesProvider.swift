@@ -49,9 +49,11 @@ protocol OWSharedServicesProviding: AnyObject {
     func commentUpdaterService() -> OWCommentUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
+    func realtimeIndicatorService() -> OWRealtimeIndicatorServicing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
     func toastNotificationService() -> OWToastNotificationServicing
+    func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -195,6 +197,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWNavigationControllerCustomizer(servicesProvider: self)
     }()
 
+    fileprivate lazy var _realtimeIndicatorServicre: OWRealtimeIndicatorServicing = {
+        return OWRealtimeIndicatorService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _permissionsService: OWPermissionsServicing = {
         return OWPermissionsService(servicesProvider: self)
     }()
@@ -205,6 +211,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _toastNotificationService: OWToastNotificationServicing = {
         return OWToastNotificationService()
+    }()
+
+    fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
+        return OWCommentStatusUpdaterService(servicesProvider: self)
     }()
 
     func profileService() -> OWProfileServicing {
@@ -331,8 +341,16 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _navigationControllerCustomizer
     }
 
+    func realtimeIndicatorService() -> OWRealtimeIndicatorServicing {
+        return _realtimeIndicatorServicre
+    }
+
     func permissionsService() -> OWPermissionsServicing {
         return _permissionsService
+    }
+
+    func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing {
+        return _commentStatusUpdaterService
     }
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
@@ -378,6 +396,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _imageCacheService.cleanCache()
         _commentsInMemoryCacheService.cleanCache()
         _lastCommentTypeInMemoryCacheService.cleanCache()
+        _commentStatusUpdaterService.spotChanged(newSpotId: spotId)
     }
 }
 
