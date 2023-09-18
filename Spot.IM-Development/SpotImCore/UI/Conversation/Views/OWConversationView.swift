@@ -186,7 +186,8 @@ fileprivate extension OWConversationView {
         viewModel.outputs.displayToast
 //            .debug("NOGAH: View display toast")
             .subscribe(onNext: { [weak self] data in
-                self?.displayToast(requiredData: data)
+                guard let weakself = self else { return }
+                self?.displayToast(requiredData: data, actionCompletion: weakself.viewModel.outputs.toastActionCompletion)
             })
             .disposed(by: disposeBag)
 

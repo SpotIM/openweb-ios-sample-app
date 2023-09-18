@@ -58,6 +58,7 @@ protocol OWConversationViewViewModelingOutputs {
 
     var displayToast: Observable<OWToastRequiredData> { get }
     var hideToast: Observable<Void> { get }
+    var toastActionCompletion: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -387,6 +388,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .voidify()
             .asObservable()
     }
+    var toastActionCompletion = PublishSubject<Void>()
 
     var dataSourceTransition: OWViewTransition = .reload
 
@@ -596,6 +598,13 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        toastActionCompletion
+            .asObservable()
+            .subscribe(onNext: {
+                print("NOGAH: toast action")
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
 
         servicesProvider.toastNotificationService()
@@ -641,11 +650,11 @@ fileprivate extension OWConversationViewViewModel {
 
 //                print("NOGAH: send toasts")
                 let data = OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast....")
-                let data2 = OWToastRequiredData(type: .error, action: .close, title: "Error toast....")
-                self.servicesProvider.toastNotificationService()
-                    .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data))
+                let data2 = OWToastRequiredData(type: .error, action: .undo, title: "Error toast....")
                 self.servicesProvider.toastNotificationService()
                     .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data2))
+                self.servicesProvider.toastNotificationService()
+                    .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data))
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
