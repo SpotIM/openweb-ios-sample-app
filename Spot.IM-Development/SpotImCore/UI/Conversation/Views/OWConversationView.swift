@@ -17,6 +17,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
+        static let commentingCTAViewLeadingTrailingPadding: CGFloat = 20
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -175,7 +176,7 @@ fileprivate extension OWConversationView {
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(20)
+            make.leading.trailing.equalToSuperview().inset(Metrics.commentingCTAViewLeadingTrailingPadding)
             make.bottom.equalTo(self.safeAreaLayoutGuide)
         }
     }
