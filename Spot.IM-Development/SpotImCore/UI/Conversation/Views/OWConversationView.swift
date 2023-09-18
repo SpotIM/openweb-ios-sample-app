@@ -17,6 +17,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
+        static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
     var toastView: OWToastView? = nil
@@ -51,6 +52,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
         return OWCommentingCTAView(with: self.viewModel.outputs.commentingCTAViewModel)
             .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+        return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
     fileprivate lazy var tableView: UITableView = {
@@ -174,6 +179,13 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
+    self.addSubview(self.realtimeIndicationAnimationView)
+    realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+        make.bottom.equalTo(self.tableView.OWSnp.bottom)
+        make.leading.trailing.equalToSuperview()
+        make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
+    }
+
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
@@ -252,7 +264,7 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.conversationDataJustReceived
+        viewModel.outputs.scrollToTop
             .observe(on: MainScheduler.instance)
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
