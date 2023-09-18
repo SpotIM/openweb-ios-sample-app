@@ -36,25 +36,27 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     var borderColor: UIColor = .clear
 
     var actionClick = PublishSubject<Void>()
+    let actionCompletion: PublishSubject<Void>
     var disposeBag = DisposeBag()
 
-    init(requiredData: OWToastRequiredData, handler: @escaping (() -> Void)) {
+    init(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>) { //  } handler: @escaping (() -> Void)) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
+        self.actionCompletion = actionCompletion
         iconImage = self.iconForType(type: requiredData.type)
         borderColor = self.borderColorForType(type: requiredData.type)
 
-        setupObservers(onClickHandler: handler)
+        setupObservers()
     }
 }
 
 fileprivate extension OWToastViewModel {
-    func setupObservers(onClickHandler: @escaping (() -> Void)) {
+    func setupObservers() {
         actionClick
             .asObservable()
-            .subscribe(onNext: {
-                onClickHandler()
+            .subscribe(onNext: { [weak self] in
+                self?.actionCompletion.onNext()
             })
             .disposed(by: disposeBag)
     }
