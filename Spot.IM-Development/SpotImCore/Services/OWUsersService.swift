@@ -15,7 +15,7 @@ protocol OWUsersServicing {
     func get(userId id: String) -> SPUser?
     func set(users: OWUsersMapper)
     func set(users: [SPUser])
-    func isUserOnline(_ userId: String, perPostId postId: OWPostId, realtimeData: RealTimeDataModel) -> Bool
+    func isUserOnline(_ userId: String, perPostId postId: OWPostId, realtimeData: OWRealTimeData) -> Bool
 
     func cleanCache()
 }
@@ -52,14 +52,8 @@ class OWUsersService: OWUsersServicing {
         _users.merge(users, uniquingKeysWith: {(_, new) in new })
     }
 
-    func isUserOnline(_ userId: String, perPostId postId: OWPostId, realtimeData: RealTimeDataModel) -> Bool {
-        let conversationId = "\(OWManager.manager.spotId)_\(postId)"
-        guard let onlineUsersArray = realtimeData.onlineUsers?[conversationId],
-              let _ = onlineUsersArray.firstIndex(where: { $0.userId == userId}) else {
-            return false
-        }
-
-        return true
+    func isUserOnline(_ userId: String, perPostId postId: OWPostId, realtimeData: OWRealTimeData) -> Bool {
+        return realtimeData.onlineUsers(forPostId: postId).contains { $0.userId == userId }
     }
 
     func cleanCache() {
