@@ -15,7 +15,6 @@ class OWCommentView: UIView {
         static let leadingOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentStatusBottomPadding: CGFloat = 12.0
-        static let commentLabelTopPadding: CGFloat = 10.0
         static let horizontalOffset: CGFloat = 16.0
         static let messageContainerTopOffset: CGFloat = 4.0
         static let commentActionsTopPadding: CGFloat = 15.0
@@ -81,7 +80,7 @@ fileprivate extension OWCommentView {
         self.addSubviews(commentStatusView)
         commentStatusView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+            make.top.equalToSuperview()
             commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
@@ -103,7 +102,7 @@ fileprivate extension OWCommentView {
     func setupCommentContentUI() {
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
+            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
             make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
         }
@@ -143,12 +142,22 @@ fileprivate extension OWCommentView {
         }
 
         viewModel.outputs.shouldShowCommentStatus
+            .withLatestFrom(viewModel.outputs.updateSpacing) { shouldShow, spacing in
+                return (shouldShow, spacing)
+            }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shouldShow in
+            .subscribe(onNext: { [weak self] shouldShow, spacing in
                 guard let self = self else { return }
+                let spacingBetweenComments = spacing / 2
+
                 self.commentHeaderView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
+                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : spacingBetweenComments)
                 }
+
+                self.commentStatusView.OWSnp.updateConstraints { make in
+                    make.top.equalToSuperview().offset(shouldShow ? spacingBetweenComments : 0)
+                }
+
                 self.commentStatusView.isHidden = !shouldShow
                 self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
             })
@@ -168,22 +177,9 @@ fileprivate extension OWCommentView {
             })
             .disposed(by: disposedBag)
 
-        // Update top spacing
-        viewModel.outputs.updateSpacing
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] spacing in
-                guard let self = self else { return }
-                let spacingBetweenComments = spacing / 2
-
-                self.commentHeaderView.OWSnp.updateConstraints { make in
-                    make.top.equalToSuperview().offset(spacingBetweenComments)
-                }
-            })
-            .disposed(by: disposedBag)
-
         // Update bottom spacing
-        Observable.combineLatest(viewModel.outputs.shouldHideCommentContent,
-                                 viewModel.outputs.updateSpacing)
+        Observable.combineLatest(viewModel.outputs.shouldHideCommentContent.debug("RIVI shouldHideCommentContent"),
+                                 viewModel.outputs.updateSpacing.debug("RIVI updateSpacing"))
         .observe(on: MainScheduler.instance)
         .subscribe(onNext: { [weak self] shouldBlockComment, spacing in
             guard let self = self else { return }
