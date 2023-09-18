@@ -71,7 +71,7 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling,
 
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
+                guard let count = realtimeData.data?.totalCommentsCount(forPostId: postId) else { return nil }
                 return count
             }
             .unwrap()

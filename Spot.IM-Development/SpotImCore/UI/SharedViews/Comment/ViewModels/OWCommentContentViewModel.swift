@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentContentViewModelingInputs {
-    func updateEditedCommentLocally(_ comment: OWComment)
+    func update(comment: OWComment)
 }
 
 protocol OWCommentContentViewModelingOutputs {
@@ -62,9 +62,9 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         self.imageProvider = imageProvider
     }
 
-    func updateEditedCommentLocally(_ comment: OWComment) {
+    func update(comment: OWComment) {
         _comment.onNext(comment)
-        collapsableLabelViewModel.inputs.updateEditedCommentLocally(comment)
+        collapsableLabelViewModel.inputs.update(comment: comment)
     }
 
     var gifUrl: Observable<String> {
