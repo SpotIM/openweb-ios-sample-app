@@ -38,7 +38,6 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var actionView: OWToastActionView = {
         return OWToastActionView(viewModel: viewModel.outputs.toastActionViewModel)
-            .userInteractionEnabled(true)
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
@@ -90,7 +89,7 @@ fileprivate extension OWToastView {
         self.addSubview(actionView)
         actionView.OWSnp.makeConstraints { make in
             make.leading.equalTo(messageLabel.OWSnp.trailing).offset(Metrics.actionLeadingPadding)
-            make.centerY.equalToSuperview()
+            make.top.bottom.equalToSuperview()
             make.trailing.equalToSuperview().inset(viewModel.outputs.showAction ? Metrics.horizontalPadding : 0)
             if (!viewModel.outputs.showAction) {
                 make.width.equalTo(0)

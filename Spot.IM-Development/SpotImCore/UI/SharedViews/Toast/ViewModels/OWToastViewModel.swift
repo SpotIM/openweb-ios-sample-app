@@ -39,7 +39,7 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     let actionCompletion: PublishSubject<Void>
     var disposeBag = DisposeBag()
 
-    init(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>) { //  } handler: @escaping (() -> Void)) {
+    init(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
