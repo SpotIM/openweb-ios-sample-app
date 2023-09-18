@@ -46,7 +46,9 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
     var mode: OWCommentThreadActionsCellMode = .collapse
     fileprivate var spacing: CGFloat
 
-    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread, commentId: self.commentPresentationData.id)
+    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
+                                                                                                 commentId: self.commentPresentationData.id,
+                                                                                                 spacing: spacing)
 
     lazy var spaceBetweenComments: CGFloat = {
         return self.spacing
@@ -61,7 +63,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
         let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
 
-        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id)
+        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: spacing)
     }
 
     init() {

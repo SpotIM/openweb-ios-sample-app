@@ -128,7 +128,7 @@ fileprivate extension OWCommentView {
             })
             .disposed(by: disposedBag)
 
-        // Update top bottom
+        // Update bottom spacing
         Observable.combineLatest(viewModel.outputs.shouldHideCommentContent,
                                  viewModel.outputs.updateSpacing)
             .observe(on: MainScheduler.instance)
