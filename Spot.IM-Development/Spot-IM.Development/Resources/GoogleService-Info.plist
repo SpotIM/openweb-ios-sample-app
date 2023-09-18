@@ -2,34 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>775253352388-3inmtiof4njf7bpv9sv1pa5pplqg9isr.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.775253352388-3inmtiof4njf7bpv9sv1pa5pplqg9isr</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBCTqfb8Df2LtqReCDZ-2AATi8HdsXXkRc</string>
+	<string>AIzaSyDI_a7ERmYJjlFm4g1PaESn4D61JNJBcWw</string>
 	<key>GCM_SENDER_ID</key>
-	<string>775253352388</string>
+	<string>642808895071</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>im.spot.sdk-beta</string>
+	<string>im.spot.demo</string>
 	<key>PROJECT_ID</key>
-	<string>mobile-sdk-4b18e</string>
+	<string>openweb-ios-sampleapp</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mobile-sdk-4b18e.appspot.com</string>
+	<string>openweb-ios-sampleapp.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:775253352388:ios:faf0864ce19013ba</string>
+	<string>1:642808895071:ios:e2773e084a9857c5cf6dea</string>
 	<key>DATABASE_URL</key>
 	<string>https://mobile-sdk-4b18e.firebaseio.com</string>
 </dict>
