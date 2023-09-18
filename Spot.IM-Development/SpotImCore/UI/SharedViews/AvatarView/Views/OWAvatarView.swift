@@ -133,6 +133,7 @@ fileprivate extension OWAvatarView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.onlineIndicatorView.backgroundColor = OWColorPalette.shared.color(type: .borderColor3, themeStyle: currentStyle)
+                self.avatarImageView.image = UIImage(spNamed: Metrics.defaultAvatarImageName, supportDarkMode: true)
             })
             .disposed(by: disposeBag)
     }
