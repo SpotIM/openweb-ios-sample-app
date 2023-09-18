@@ -168,37 +168,41 @@ fileprivate extension OWCommentView {
             })
             .disposed(by: disposedBag)
 
-// Update top spacing
-viewModel.outputs.updateSpacing
-.observe(on: MainScheduler.instance)
-.subscribe(onNext: { [weak self] spacing in
-guard let self = self else { return }
-let spacingBetweenComments = spacing / 2
+        // Update top spacing
+        viewModel.outputs.updateSpacing
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] spacing in
+                guard let self = self else { return }
+                let spacingBetweenComments = spacing / 2
 
-self.commentHeaderView.OWSnp.updateConstraints { make in
-make.top.equalToSuperview().offset(spacingBetweenComments)
-}
-})
-.disposed(by: disposedBag)
+                self.commentHeaderView.OWSnp.updateConstraints { make in
+                    make.top.equalToSuperview().offset(spacingBetweenComments)
+                }
+            })
+            .disposed(by: disposedBag)
 
-// Update bottom spacing
-Observable.combineLatest(viewModel.outputs.shouldHideCommentContent,
-viewModel.outputs.updateSpacing)
-.observe(on: MainScheduler.instance)
-.subscribe(onNext: { [weak self] shouldBlockComment, spacing in
-guard let self = self else { return }
-let spacingBetweenComments = spacing / 2
+        // Update bottom spacing
+        Observable.combineLatest(viewModel.outputs.shouldHideCommentContent,
+                                 viewModel.outputs.updateSpacing)
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { [weak self] shouldBlockComment, spacing in
+            guard let self = self else { return }
+            let spacingBetweenComments = spacing / 2
 
-if shouldBlockComment {
-self.commentHeaderView.OWSnp.updateConstraints { make in
-make.bottom.equalToSuperview().offset(-spacingBetweenComments)
-}
-} else {
-self.commentEngagementView.OWSnp.updateConstraints { make in
-make.bottom.equalToSuperview().offset(-spacingBetweenComments)
-}
-}
-})
-.disposed(by: disposedBag)
+            if shouldBlockComment {
+                self.commentHeaderView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                }
+            } else {
+                self.commentEngagementView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                }
+            }
+
+            self.blockingOpacityView.OWSnp.updateConstraints { make in
+                make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+            }
+        })
+        .disposed(by: disposedBag)
     }
 }
