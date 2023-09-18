@@ -50,7 +50,7 @@ class OWCommentCellViewModel: OWCommentCellViewModeling,
     }
 
     init() {
-        self.commentVM = OWCommentViewModel(spacing: OWConversationSpacing.regular.betweenComments)
+        self.commentVM = OWCommentViewModel()
     }
 }
 
