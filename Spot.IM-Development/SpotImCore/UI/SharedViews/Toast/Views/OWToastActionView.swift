@@ -25,7 +25,6 @@ class OWToastActionView: UIView {
             attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
         )
         var label = UILabel()
-            .textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .attributedText(attributedString)
         return label
@@ -35,7 +34,6 @@ class OWToastActionView: UIView {
         return UIImageView()
             .image(viewModel.outputs.icon?.withRenderingMode(.alwaysTemplate))
             .tintAdjustmentMode(.normal)
-            .tintColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
     }()
 
     fileprivate var viewModel: OWToastActionViewModeling
@@ -69,14 +67,12 @@ fileprivate extension OWToastActionView {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        viewModel.outputs.color
+            .subscribe(onNext: { [weak self] color in
                 guard let self = self else { return }
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
-                self.iconImageView.tintColor = OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle)
+                self.titleLabel.textColor = color
+                self.iconImageView.tintColor = color
             })
-            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory

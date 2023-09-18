@@ -650,7 +650,7 @@ fileprivate extension OWConversationViewViewModel {
 
 //                print("NOGAH: send toasts")
                 let data = OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast....")
-                let data2 = OWToastRequiredData(type: .error, action: .undo, title: "Error toast....")
+                let data2 = OWToastRequiredData(type: .error, action: .close, title: "Error toast....")
                 self.servicesProvider.toastNotificationService()
                     .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data2))
                 self.servicesProvider.toastNotificationService()
