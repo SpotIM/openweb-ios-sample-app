@@ -130,7 +130,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return Metrics.defaultCommunityQuestionSpacing
     }()
 
-
     lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {
         return OWCommentingCTAViewModel(imageProvider: imageProvider)
     }()
