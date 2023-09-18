@@ -23,6 +23,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var tapOutput: Observable<Void> { get }
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
+    var updateSpacing: Observable<CGFloat> { get }
     var commentId: String { get }
 }
 
@@ -40,24 +41,37 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
         tap.asObservable()
     }
 
+    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
+    var updateSpacing: Observable<CGFloat> {
+        _updateSpacing
+            .unwrap()
+            .take(1)
+            .asObservable()
+    }
+
     let commentId: String
 
-    init(with type: OWCommentThreadActionType, commentId: String) {
+    init(with type: OWCommentThreadActionType,
+         commentId: String,
+         spacing: CGFloat) {
         self.commentId = commentId
         switch type {
         case .collapseThread:
             _actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))
             _disclosureTransform.onNext(.identity)
+            _updateSpacing.onNext(0)
 
         case .viewMoreReplies(count: let count):
             let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
             _actionLabelText.onNext(String(format: repliesString, count))
             _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+            _updateSpacing.onNext(spacing)
 
         case .viewMoreRepliesRange(from: let from, to: let to):
             let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
             _actionLabelText.onNext(String(format: repliesString, from, to))
             _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+            _updateSpacing.onNext(spacing)
         }
     }
 

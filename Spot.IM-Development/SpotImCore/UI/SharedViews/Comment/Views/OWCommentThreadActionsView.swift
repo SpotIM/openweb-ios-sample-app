@@ -139,6 +139,18 @@ fileprivate extension OWCommentThreadActionsView {
             })
             .disposed(by: disposeBag)
 
+        // Update bottom spacing
+        viewModel.outputs.updateSpacing
+            .subscribe(onNext: { [weak self] spacing in
+                guard let self = self else { return }
+                let spacingBetweenComments = spacing / 2
+
+                self.actionView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.actionLabelText
             .bind(to: actionLabel.rx.text)
             .disposed(by: disposeBag)
