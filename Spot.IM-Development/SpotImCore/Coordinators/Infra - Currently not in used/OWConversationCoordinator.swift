@@ -63,6 +63,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
         let deepLinkToReportReason = BehaviorSubject<OWReportReasonsRequiredData?>(value: nil)
+        let deepLinkToClarityDetails = BehaviorSubject<OWClarityDetailsType?>(value: nil)
 
         var animated = true
 
@@ -85,6 +86,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             case .reportReason(let reportData):
                 animated = false
                 deepLinkToReportReason.onNext(reportData)
+            case .clarityDetails(let type):
+                animated = false
+                deepLinkToClarityDetails.onNext(type)
             default:
                 break
             }
@@ -191,6 +195,38 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        let clarityDetailsFromConversationObservable = conversationVM.outputs.conversationViewVM.outputs.openClarityDetails
+
+        // Coordinate to clarity details
+        let coordinateClarityDetailsObservable = Observable.merge(
+            deepLinkToClarityDetails.unwrap(),
+            clarityDetailsFromConversationObservable)
+            .asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                                                                            router: self.router,
+                                                                            actionsCallbacks: self.actionsCallbacks,
+                                                                            presentationalMode: self.conversationData.presentationalStyle)
+                return self.coordinate(to: clarityDetailsCoordinator)
+            }
+            .do(onNext: { coordinatorResult in
+                switch coordinatorResult {
+                case .popped:
+                    // Nothing
+                    break
+                default:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+                return Observable.never()
+            }
+
         // Coordinate to comment thread
         let coordinateCommentThreadObservable = deepLinkToCommentThread.unwrap().asObservable()
             .filter { [weak self] _ in
@@ -284,6 +320,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             conversationPoppedObservable,
             coordinateCommentCreationObservable,
             coordinateReportReasonObservable,
+            coordinateClarityDetailsObservable,
             coordinateCommentThreadObservable,
             conversationLoadedObservable,
             coordinateToSafariObservable

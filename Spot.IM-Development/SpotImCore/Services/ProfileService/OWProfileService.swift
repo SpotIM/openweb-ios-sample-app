@@ -58,7 +58,7 @@ class OWProfileService: OWProfileServicing {
                 return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
             }
             .filter { !$0 } // Do not continue if authentication needed
-            .flatMap { [weak self] _ -> Observable<URL?> in
+            .flatMapLatest { [weak self] _ -> Observable<URL?> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.netwokAPI()
                     .profile

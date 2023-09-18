@@ -177,6 +177,11 @@ extension UIButton {
         return self
     }
 
+    @discardableResult func withPadding(_ padding: UIEdgeInsets) -> Self {
+        self.contentEdgeInsets = padding
+        return self
+    }
+
     @discardableResult func horizontalAlignment(_ align: UIControl.ContentHorizontalAlignment) -> Self {
         self.contentHorizontalAlignment = align
         return self

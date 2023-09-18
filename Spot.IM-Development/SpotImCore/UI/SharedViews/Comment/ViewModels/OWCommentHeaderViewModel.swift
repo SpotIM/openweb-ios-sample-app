@@ -11,12 +11,10 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentHeaderViewModelingInputs {
-    func updateEditedCommentLocally(_ comment: OWComment)
+    func update(comment: OWComment)
+    func update(user: SPUser)
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
-    var shouldReportCommentLocally: BehaviorSubject<Bool> { get }
-    var shouldDeleteCommentLocally: BehaviorSubject<Bool> { get }
-    var shouldMuteCommentLocally: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
@@ -81,10 +79,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
-    var shouldReportCommentLocally = BehaviorSubject<Bool>(value: false)
-    var shouldDeleteCommentLocally = BehaviorSubject<Bool>(value: false)
-    var shouldMuteCommentLocally = BehaviorSubject<Bool>(value: false)
-
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -107,6 +101,15 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         servicesProvider = OWSharedServicesProvider.shared
         userBadgeService = OWUserBadgeService()
         setupObservers()
+    }
+
+    func update(comment: OWComment) {
+        _model.onNext(comment)
+    }
+
+    func update(user: SPUser) {
+        self.user = user
+        _user.onNext(user)
     }
 
     func updateEditedCommentLocally(_ comment: OWComment) {
@@ -185,20 +188,32 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
+    fileprivate var currentUser: Observable<SPUser> {
+        servicesProvider
+            .authenticationManager()
+            .activeUserAvailability
+            .map { availability in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+            .unwrap()
+    }
+
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel,
-                                 _unwrappedUser,
-                                 shouldDeleteCommentLocally,
-                                 shouldMuteCommentLocally,
-                                 shouldReportCommentLocally) { model, user, shouldDeleteCommentLocally, shouldMuteCommentLocally, shouldReportCommentLocally in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, currentUser) { model, user, currentUser in
             let localizationKey: String
-            if user.isMuted || shouldMuteCommentLocally {
+            let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
+            if user.isMuted {
                 localizationKey = "This user is muted."
-            } else if model.reported || shouldReportCommentLocally {
+            } else if (model.reported && !isCurrentUserComment) {
                 localizationKey = "This message was reported."
-            } else if (model.status == .block || model.status == .reject) {
+            } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
                 localizationKey = "This comment violated our policy."
-            } else if model.deleted || shouldDeleteCommentLocally {
+            } else if model.deleted {
                 localizationKey = "This message was deleted."
             } else {
                 return ""
@@ -295,8 +310,13 @@ fileprivate extension OWCommentHeaderViewModel {
             .bind(to: avatarVM.inputs.shouldBlockAvatar)
             .disposed(by: disposedBag)
 
-        Observable.combineLatest(userNameTapped, shouldShowHiddenCommentMessage)
-            .filter { !$1 }
+        userNameTapped
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.shouldShowHiddenCommentMessage
+                    .take(1)
+            }
+            .filter { !$0 }
             .map { [weak self] _ -> SPUser? in
                 guard let self = self else { return nil }
                 return self.user
