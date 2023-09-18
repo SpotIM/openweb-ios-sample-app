@@ -210,7 +210,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _toastNotificationService: OWToastNotificationServicing = {
-        return OWToastNotificationService()
+        return OWToastNotificationService(servicesProvider: self)
     }()
 
     fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {

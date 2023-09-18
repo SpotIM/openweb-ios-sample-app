@@ -31,7 +31,7 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
         self.addSubview(toastView)
         toastView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(50) // TODO: what insets?
+            make.bottom.equalToSuperview().offset(50)
         }
         self.setNeedsLayout()
         self.layoutIfNeeded()
