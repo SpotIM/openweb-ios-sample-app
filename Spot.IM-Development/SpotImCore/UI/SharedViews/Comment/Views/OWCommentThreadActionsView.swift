@@ -15,7 +15,6 @@ class OWCommentThreadActionsView: UIView {
         static let identifier = "comment_thread_actions_view_id_"
         static let actionViewIdentifier = "comment_thread_actions_view_action_view_id_"
         static let actionLabelIdentifier = "comment_thread_actions_view_action_label_id_"
-        static let topOffset: CGFloat = 4.0
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
         static let textToImageSpacing: CGFloat = 6.5
