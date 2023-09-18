@@ -11,20 +11,20 @@ import UIKit
 import RxSwift
 
 protocol OWToastNotificationDisplayerProtocol {
-    mutating func displayToast(requiredData: OWToastRequiredData)
+    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>)
     func dismissToast()
     var toastView: OWToastView? { get set }
 }
 
 extension OWToastNotificationDisplayerProtocol where Self: UIView {
-    mutating func displayToast(requiredData: OWToastRequiredData) {
+    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>) {
         // Make sure no old toast is visible
         if let oldToast = self.toastView {
             oldToast.removeFromSuperview()
             self.toastView = nil
         }
 
-        let toastVM = OWToastViewModel(requiredData: requiredData) { }
+        let toastVM = OWToastViewModel(requiredData: requiredData, actionCompletion: actionCompletion)
         self.toastView = OWToastView(viewModel: toastVM)
         guard let toastView = toastView else { return }
 

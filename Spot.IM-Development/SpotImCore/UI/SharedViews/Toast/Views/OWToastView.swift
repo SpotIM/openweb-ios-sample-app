@@ -38,6 +38,7 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var actionView: OWToastActionView = {
         return OWToastActionView(viewModel: viewModel.outputs.toastActionViewModel)
+            .userInteractionEnabled(true)
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
@@ -99,6 +100,7 @@ fileprivate extension OWToastView {
 
     func setupObservers() {
         tapGesture.rx.event.voidify()
+            .debug("NOGAH: tap")
             .bind(to: viewModel.inputs.actionClick)
             .disposed(by: disposeBag)
 
