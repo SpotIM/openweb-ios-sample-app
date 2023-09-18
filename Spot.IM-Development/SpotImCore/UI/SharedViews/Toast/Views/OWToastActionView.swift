@@ -73,6 +73,7 @@ fileprivate extension OWToastActionView {
                 self.titleLabel.textColor = color
                 self.iconImageView.tintColor = color
             })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
