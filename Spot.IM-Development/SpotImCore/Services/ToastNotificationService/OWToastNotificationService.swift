@@ -18,7 +18,8 @@ protocol OWToastNotificationServicing {
 
 class OWToastNotificationService: OWToastNotificationServicing {
     fileprivate let queue = OWQueue<OWToastNotificationPresentData>()
-    fileprivate var blockerService: OWBlockerServicing = OWSharedServicesProvider.shared.blockerServicing() // TODO: di
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
     fileprivate var _toastToShow = BehaviorSubject<OWToastNotificationPresentData?>(value: nil)
@@ -34,7 +35,8 @@ class OWToastNotificationService: OWToastNotificationServicing {
             .share()
     }
 
-    init() {
+    init(servicesProvider: OWSharedServicesProviding) {
+        self.servicesProvider = servicesProvider
         setupObservers()
     }
 
@@ -54,14 +56,14 @@ fileprivate extension OWToastNotificationService {
         newToastObservable
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                return self.blockerService.waitForNonBlocker(for: [.toastNotification])
+                return self.servicesProvider.blockerServicing().waitForNonBlocker(for: [.toastNotification])
             }
             .subscribe(onNext: { [weak self] in
                 guard let self = self,
                       !self.queue.isEmpty() else { return }
                 // Block before showing toast to prevent more toasts from showing
                 let action = OWDefaultBlockerAction(blockerType: .toastNotification)
-                self.blockerService.add(blocker: action)
+                self.servicesProvider.blockerServicing().add(blocker: action)
                 // Show toast
                 let toast = self.queue.popFirst()
                 self._toastToShow.onNext(toast)

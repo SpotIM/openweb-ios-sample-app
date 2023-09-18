@@ -56,7 +56,6 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var conversationDataJustReceived: Observable<Void> { get }
     var scrollToTop: Observable<Void> { get }
 
     var displayToast: Observable<OWToastRequiredData> { get }
@@ -71,7 +70,7 @@ protocol OWConversationViewViewModeling {
 
 class OWConversationViewViewModel: OWConversationViewViewModeling,
                                     OWConversationViewViewModelingInputs,
-                                    OWConversationViewViewModelingOutputs {
+                                   OWConversationViewViewModelingOutputs {
     var inputs: OWConversationViewViewModelingInputs { return self }
     var outputs: OWConversationViewViewModelingOutputs { return self }
 
