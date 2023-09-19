@@ -30,6 +30,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
+    var logoutAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var dismissVC: PublishSubject<Void> { get }
     var dismissed: Observable<Void> { get }
 }
@@ -116,6 +117,12 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
             .asObservable()
     }
 
+    fileprivate let _logoutAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    var logoutAuthenticationStatus: Observable<AuthenticationStatus> {
+        return _logoutAuthenticationStatus
+            .asObservable()
+    }
+
     var dismissing = PublishSubject<Void>()
     var dismissed: Observable<Void> {
         return dismissing
@@ -174,19 +181,22 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
+                self?._logoutAuthenticationStatus.onNext(.inProgress)
             })
             .subscribe(onNext: {
                 let authentication = OpenWeb.manager.authentication
                 authentication.userStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
-                    authentication.logout { result in
+                    authentication.logout { [weak self] result in
                         switch result {
                         case .success(_):
                             authentication.userStatus { loginStatus in
                                 DLog("After logout \(loginStatus))")
                             }
+                            self?._logoutAuthenticationStatus.onNext(.successful)
                         case .failure(let error):
                             DLog("Logout error: \(error)")
+                            self?._logoutAuthenticationStatus.onNext(.failed)
                         }
                     }
                 }
@@ -213,6 +223,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._logoutAuthenticationStatus.onNext(.initial)
             })
             .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
@@ -311,6 +322,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
+                self?._logoutAuthenticationStatus.onNext(.initial)
             })
             .withLatestFrom(shouldInitializeSDK) { JWTSSO, shouldInitializeSDK -> JWTSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
