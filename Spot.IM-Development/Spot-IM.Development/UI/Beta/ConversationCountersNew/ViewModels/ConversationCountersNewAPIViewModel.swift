@@ -112,7 +112,7 @@ fileprivate extension ConversationCountersNewAPIViewModel {
                         self._cellsViewModels.onNext(cellViewModels)
                     case .failure(let error):
                         DLog(error)
-                        self._showError.onNext(error.localizedDescription)
+                        self._showError.onNext(error.description)
                     }
                 }
             })
