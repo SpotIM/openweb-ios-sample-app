@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+// swiftlint:disable file_length
+
 // Our sections is just a string as we will flat all the comments, replies, ads and everything into cells
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
