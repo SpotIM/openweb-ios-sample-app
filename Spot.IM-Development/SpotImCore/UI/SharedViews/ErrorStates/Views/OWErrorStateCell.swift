@@ -23,7 +23,6 @@ class OWErrorStateCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setupViews()
     }
 
     required init?(coder: NSCoder) {
@@ -35,13 +34,16 @@ class OWErrorStateCell: UITableViewCell {
         self.disposeBag = DisposeBag()
         self.viewModel = vm
         self.errorStateView.configure(with: self.viewModel.errorStateViewModel)
+        self.updateUI()
     }
 }
 
 fileprivate extension OWErrorStateCell {
-    func setupViews() {
+    func updateUI() {
         self.backgroundColor = .clear
         self.selectionStyle = .none
+
+        errorStateView.removeFromSuperview()
 
         contentView.addSubview(errorStateView)
         errorStateView.OWSnp.makeConstraints { make in

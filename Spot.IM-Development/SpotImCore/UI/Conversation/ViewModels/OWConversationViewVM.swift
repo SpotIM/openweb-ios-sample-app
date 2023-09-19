@@ -22,7 +22,7 @@ protocol OWConversationViewViewModelingInputs {
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
-    var tableViewHeight: BehaviorSubject<CGFloat> { get }
+    var tableViewHeight: PublishSubject<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -71,8 +71,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate struct Metrics {
         static let numberOfSkeletonComments: Int = 5
+        static let delayBeforeTryAgainAfterError: Int = 2000 // ms
+        static let delayBeforeScrollingToLastCell: Int = 600 // ms
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayAfterScrolledToIndex: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
@@ -82,12 +85,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate let loadMoreCommentsScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "loadMoreCommentsQueue")
 
-    var tableViewHeight = BehaviorSubject<CGFloat>(value: 0)
+    var tableViewHeight = PublishSubject<CGFloat>()
     fileprivate lazy var tableViewHeightChanged: Observable<CGFloat> = {
         tableViewHeight
+            .filter { $0 > 0 }
             .distinctUntilChanged()
             .asObservable()
-            .share(replay: 1)
     }()
 
     fileprivate var postId: OWPostId {
@@ -101,6 +104,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorLoadingComments: Observable<Bool> {
         return _shouldShowErrorLoadingComments
+            .observe(on: MainScheduler.instance)
             .asObservable()
     }
 
@@ -143,18 +147,28 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var articleUrl: String = ""
 
     fileprivate let _isLoadingServerComments = BehaviorSubject<Bool>(value: true)
+    fileprivate var isLoadingServerComments: Observable<Bool> {
+        _isLoadingServerComments
+            .observe(on: MainScheduler.instance)
+            .asObservable()
+    }
     fileprivate var _commentsPresentationData = OWObservableArray<OWCommentPresentationData>()
 
     fileprivate let _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
     fileprivate let _loadMoreComments = PublishSubject<Int>()
-    fileprivate let isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    fileprivate let _isLoadingMoreComments = BehaviorSubject<Bool>(value: false)
+    fileprivate var isLoadingMoreComments: Observable<Bool> {
+        _isLoadingMoreComments
+            .observe(on: MainScheduler.instance)
+            .asObservable()
+    }
 
     fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
     fileprivate let _scrollToCellIndex = PublishSubject<Int>()
-    var scrolledToCellIndex = PublishSubject<Int>()
 
+    var scrolledToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
             .asObservable()
@@ -232,19 +246,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .shouldShowView
     }()
 
-    fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = Observable.merge(mainCommentCellsOptions, loadMoreErrorStateCellsOptions)
-
-    fileprivate lazy var loadMoreErrorStateCellsOptions: Observable<[OWConversationCellOption]> = shouldShowErrorLoadingMoreComments
-        .filter { $0 }
-        .withLatestFrom(mainCommentCellsOptions)
-        .map { [weak self] currentComments -> [OWConversationCellOption]? in
-            guard let self = self else { return nil }
-            return currentComments + self.getErrorStateCell(errorStateType: .loadMoreConversationComments)
-        }
-        .unwrap()
-        .asObservable()
-
-    fileprivate lazy var mainCommentCellsOptions: Observable<[OWConversationCellOption]> = {
+    fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
@@ -261,6 +263,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 guard let self = self else { return Observable.never() }
                 return Observable.just(self.getCommunityCells(shouldShowCommunityQuestion: showCommunityQuestion, shouldShowCommunityGuidelines: showCommunityGuidlines))
             })
+            .startWith([])
             .asObservable()
     }()
 
@@ -278,60 +281,65 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             }
     }()
 
+    // swiftlint:disable line_length
     fileprivate lazy var mainCellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(communityCellsOptions,
                                         commentCellsOptions,
-                                        _isLoadingServerComments,
-                                        _shouldShowErrorLoadingComments,
-                                        shouldShowConversationEmptyState)
-            .startWith(([], [], true, false, false))
-            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isLoading, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
-                guard let self = self else { return Observable.never() }
+                                        isLoadingServerComments,
+                                        shouldShowErrorLoadingComments,
+                                        shouldShowConversationEmptyState,
+                                        isLoadingMoreComments,
+                                        shouldShowErrorLoadingMoreComments)
+        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, isLoading, shouldShowError, isEmptyState, isLoadingMoreComments, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
+            guard let self = self else { return Observable.never() }
 
-                if isLoading {
-                    return Observable.just(self.getSkeletonCells())
-                } else if shouldShowError {
-                    return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
-                } else if isEmptyState {
-                    return Observable.just([])
-                } else {
-                    return Observable.just(communityCellsOptions + commentCellsOptions)
+            if isLoading {
+                return Observable.just(self.getSkeletonCells())
+            } else if shouldShowError {
+                return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
+            } else if isEmptyState {
+                return Observable.just([])
+            } else {
+                let loadingCell = isLoadingMoreComments ? self.getLoadingCell() : []
+                let errorLoadingMoreCell = shouldShowErrorLoadingMoreComments ? self.getErrorStateCell(errorStateType: .loadMoreConversationComments) : []
+                return Observable.just(communityCellsOptions + commentCellsOptions + loadingCell + errorLoadingMoreCell)
+            }
+        })
+        .scan([], accumulator: { previousConversationCellsOptions, newConversationCellsOptions in
+            var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
+
+            previousConversationCellsOptions.forEach { conversationCellOption in
+                switch conversationCellOption {
+                case .comment(let commentCellViewModel):
+                    guard let commentId = commentCellViewModel.outputs.commentVM.outputs.comment.id else { return }
+                    commentsVmsMapper[commentId] = commentCellViewModel
+                default:
+                    break
                 }
-            })
-            .scan([], accumulator: { previousConversationCellsOptions, newConversationCellsOptions in
-                var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
+            }
 
-                previousConversationCellsOptions.forEach { conversationCellOption in
-                    switch conversationCellOption {
-                    case .comment(let commentCellViewModel):
-                        guard let commentId = commentCellViewModel.outputs.commentVM.outputs.comment.id else { return }
-                        commentsVmsMapper[commentId] = commentCellViewModel
-                    default:
-                        break
-                    }
-                }
-
-                let adjustedNewCommentCellOptions: [OWConversationCellOption] = newConversationCellsOptions.map { conversationCellOptions in
-                    switch conversationCellOptions {
-                    case .comment(let viewModel):
-                        guard let commentId = viewModel.outputs.commentVM.outputs.comment.id else {
-                            return conversationCellOptions
-                        }
-                        if let commentVm = commentsVmsMapper[commentId] {
-                            return OWConversationCellOption.comment(viewModel: commentVm)
-                        } else {
-                            return conversationCellOptions
-                        }
-                    default:
+            let adjustedNewCommentCellOptions: [OWConversationCellOption] = newConversationCellsOptions.map { conversationCellOptions in
+                switch conversationCellOptions {
+                case .comment(let viewModel):
+                    guard let commentId = viewModel.outputs.commentVM.outputs.comment.id else {
                         return conversationCellOptions
                     }
+                    if let commentVm = commentsVmsMapper[commentId] {
+                        return OWConversationCellOption.comment(viewModel: commentVm)
+                    } else {
+                        return conversationCellOptions
+                    }
+                default:
+                    return conversationCellOptions
                 }
+            }
 
-                return adjustedNewCommentCellOptions
-            })
-            .share(replay: 1)
-            .asObservable()
+            return adjustedNewCommentCellOptions
+        })
+        .share(replay: 1)
+        .asObservable()
     }()
+    // swiftlint:enable line_length
 
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels
@@ -393,6 +401,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var viewInitialized = PublishSubject<Void>()
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
     var pullToRefresh = PublishSubject<Void>()
+    fileprivate var tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
 
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
@@ -513,7 +522,15 @@ fileprivate extension OWConversationViewViewModel {
     }
 
     func getErrorStateCell(errorStateType: OWErrorStateTypes) -> [OWConversationCellOption] {
-        return [OWConversationCellOption.conversationErrorState(viewModel: OWErrorStateCellViewModel(errorStateType: errorStateType))]
+        let errorViewModel = OWErrorStateCellViewModel(errorStateType: errorStateType)
+        errorViewModel.outputs.errorStateViewModel.outputs.tryAgainTap
+            .bind(to: tryAgainAfterError)
+            .disposed(by: disposeBag)
+        return [OWConversationCellOption.conversationErrorState(viewModel: errorViewModel)]
+    }
+
+    func getLoadingCell() -> [OWConversationCellOption] {
+        return [OWConversationCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
     func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
@@ -629,6 +646,20 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        let tryAgainAfterInitialError = tryAgainAfterError
+            .filter { $0 == .loadConversationComments }
+            .voidify()
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                self._commentsPresentationData.removeAll()
+                self._isLoadingServerComments.onNext(false)
+                self._isLoadingServerComments.onNext(true)
+            })
+            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: MainScheduler.asyncInstance)
+            .asObservable()
+
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
             .sortDictateService()
@@ -653,10 +684,13 @@ fileprivate extension OWConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
-        let conversationFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
+        let conversationFetchedObservable = Observable.merge(viewInitialized,
+                                                             pullToRefresh,
+                                                             tryAgainAfterInitialError)
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
             }
+            .observe(on: MainScheduler.instance)
             .map { [weak self] event -> OWConversationReadRM? in
                 guard let self = self else { return nil }
                 switch event {
@@ -665,6 +699,7 @@ fileprivate extension OWConversationViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
+                    self._isLoadingServerComments.onNext(false)
                     self._shouldShowErrorLoadingComments.onNext(true)
                     return nil
                 default:
@@ -692,7 +727,7 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // first load comments / refresh comments / sorted changed
+        // first load comments / refresh comments / sorted changed / try again after error
         conversationFetchedObservable
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
@@ -852,13 +887,20 @@ fileprivate extension OWConversationViewViewModel {
         })
         .disposed(by: disposeBag)
 
-        // fetch more comments
-        let loadMoreCommentsReadObservable = _loadMoreComments
-            .observe(on: loadMoreCommentsScheduler)
+        let tryAgainAfterLoadingMoreError = tryAgainAfterError
+            .filter { $0 == .loadMoreConversationComments }
+            .withLatestFrom(_loadMoreComments)
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._shouldShowErrorLoadingMoreComments.onNext(false)
+                self._isLoadingMoreComments.onNext(true)
             })
+            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: MainScheduler.asyncInstance)
+            .asObservable()
+
+        // fetch more comments
+        let loadMoreCommentsReadObservable = Observable.merge(_loadMoreComments, tryAgainAfterLoadingMoreError)
             .withLatestFrom(sortOptionObservable) { (offset, sortOption) -> (OWSortOption, Int) in
                 return (sortOption, offset)
             }
@@ -875,13 +917,14 @@ fileprivate extension OWConversationViewViewModel {
         let loadMoreCommentsReadFetched = loadMoreCommentsReadObservable
             .map { [weak self] event -> OWConversationReadRM? in
                 guard let self = self else { return nil }
-                self.isLoadingMoreComments.onNext(false)
+                self._isLoadingMoreComments.onNext(false)
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
+                    self._isLoadingMoreComments.onNext(false)
                     self._shouldShowErrorLoadingMoreComments.onNext(true)
                     return nil
                 default:
@@ -928,17 +971,11 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to comment height change (for updating cell)
-        Observable.combineLatest(cellsViewModels, tableViewHeightChanged)
-            .flatMapLatest { (cellsVms, tableViewHeight) -> Observable<Void> in
+        // Responding to comment height change (for updating cell) and tableView height change for errorState cell
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Void> in
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                        if case.conversationErrorState(let errorStateCellViewModeling) = vm {
-                            let errorStateVM = errorStateCellViewModeling.outputs.errorStateViewModel
-                            if errorStateVM.outputs.errorStateType == .loadConversationComments {
-                                errorStateVM.inputs.heightChange.onNext(tableViewHeight)
-                                return Observable.just(())
-                            }
-                        } else if case.comment(let commentCellViewModel) = vm {
+                        if case.comment(let commentCellViewModel) = vm {
                             let commentVM = commentCellViewModel.outputs.commentVM
                             return commentVM.outputs.contentVM
                                 .outputs.collapsableLabelViewModel.outputs.height
@@ -949,7 +986,30 @@ fileprivate extension OWConversationViewViewModel {
                     .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .subscribe(onNext: { [weak self] _ in
+                self?._performTableViewAnimation.onNext()
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to errorState cell with tableViewHeight change
+        Observable.combineLatest(cellsViewModels, tableViewHeightChanged)
+            .flatMapLatest { (cellsVms, tableViewHeight) -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { cellVM in
+                    if case.conversationErrorState(let errorStateCellViewModeling) = cellVM {
+                        let errorStateVM = errorStateCellViewModeling.outputs.errorStateViewModel
+                        if errorStateVM.outputs.errorStateType == .loadConversationComments {
+                            errorStateVM.inputs.heightChange.onNext(tableViewHeight)
+                            return errorStateVM.outputs.height
+                                .voidify()
+                        }
+                    }
+                    return nil
+                }
+                .unwrap()
+                return Observable.merge(sizeChangeObservable)
+            }
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationErrorState), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
             })
@@ -1082,7 +1142,9 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
-            .map { willDisplayCellEvent -> Int in
+            .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
+            .filter { !$1 }
+            .map { (willDisplayCellEvent, _) -> Int in
                 return willDisplayCellEvent.indexPath.row
             }
             .withLatestFrom(_commentsPresentationData.rx_elements()) { rowIndex, presentationData -> Int? in
@@ -1090,7 +1152,7 @@ fileprivate extension OWConversationViewViewModel {
                 return rowIndex
             }
             .unwrap()
-            .withLatestFrom(isLoadingMoreComments) { rowIndex, isLoadingMoreComments in
+            .withLatestFrom(_isLoadingMoreComments) { rowIndex, isLoadingMoreComments in
                 return (rowIndex, isLoadingMoreComments)
             }
             .filter { !$0.1 }
@@ -1105,7 +1167,7 @@ fileprivate extension OWConversationViewViewModel {
             })
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.isLoadingMoreComments.onNext(true)
+                self._isLoadingMoreComments.onNext(true)
                 self._loadMoreComments.onNext(self.paginationOffset)
             })
             .disposed(by: disposeBag)
@@ -1612,6 +1674,28 @@ fileprivate extension OWConversationViewViewModel {
                     self?.articleUrl = article.url.absoluteString
                 })
                 .disposed(by: disposeBag)
+
+        let scrollToLastCellErrorLoadingMore = shouldShowErrorLoadingMoreComments
+            .filter { $0 }
+            .voidify()
+            .asObservable()
+
+        let scrollToLastCellTryAgainAfterErrorLoadingMore = tryAgainAfterError
+            .filter { $0 == .loadMoreConversationComments }
+            .voidify()
+            .asObservable()
+
+        let scrollToLastCellWithDelay = Observable.merge(scrollToLastCellErrorLoadingMore)
+                                            .delay(.milliseconds(Metrics.delayBeforeScrollingToLastCell), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        let scrollToLastCellWithoutDelay = Observable.merge(scrollToLastCellTryAgainAfterErrorLoadingMore)
+
+        // Scroll to last cell
+        Observable.merge(scrollToLastCellWithoutDelay, scrollToLastCellWithDelay)
+            .observe(on: MainScheduler.instance)
+            .withLatestFrom(cellsViewModels)
+            .map { $0.count - 1 }
+            .bind(to: _scrollToCellIndex)
+            .disposed(by: disposeBag)
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
