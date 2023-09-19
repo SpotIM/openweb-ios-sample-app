@@ -9,6 +9,8 @@
 import Foundation
 import SpotImCore
 
+#if NEW_API
+
 protocol ConversationCounterNewAPICellViewModelingInputs {}
 
 protocol ConversationCounterNewAPICellViewModelingOutputs {
@@ -39,3 +41,4 @@ class ConversationCounterNewAPICellViewModel: ConversationCounterNewAPICellViewM
     }
 }
 
+#endif
