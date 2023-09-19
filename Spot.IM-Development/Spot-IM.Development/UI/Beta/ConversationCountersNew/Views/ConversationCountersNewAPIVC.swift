@@ -63,6 +63,14 @@ class ConversationCountersNewAPIVC: UIViewController {
         return loader
     }()
 
+    fileprivate lazy var counterTableView: UITableView = {
+        let tblView = UITableView()
+            .separatorStyle(.none)
+
+        tblView.register(cellClass: ConversationCounterNewAPICell.self)
+        return tblView
+    }()
+
     init(viewModel: ConversationCountersNewAPIViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -113,6 +121,13 @@ fileprivate extension ConversationCountersNewAPIVC {
             make.top.equalTo(lblDescription.snp.bottom).offset(Metrics.btnTopPadding)
         }
 
+        view.addSubview(counterTableView)
+        counterTableView.snp.makeConstraints { make in
+            make.top.equalTo(btnExecute.snp.bottom).offset(Metrics.verticalMargin)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+
         self.view.addSubview(loader)
         loader.snp.makeConstraints { make in
             make.center.equalTo(view.safeAreaLayoutGuide)
@@ -158,6 +173,12 @@ fileprivate extension ConversationCountersNewAPIVC {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.cellsViewModels
+            .bind(to: counterTableView.rx.items(cellIdentifier: ConversationCounterNewAPICell.identifierName,
+                                                cellType: ConversationCounterNewAPICell.self)) { _, viewModel, cell in
+                cell.configure(with: viewModel)
+            }
+            .disposed(by: disposeBag)
     }
 
     func showError(message: String) {

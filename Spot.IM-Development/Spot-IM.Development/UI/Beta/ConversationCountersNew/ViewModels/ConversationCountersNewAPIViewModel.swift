@@ -19,6 +19,7 @@ protocol ConversationCountersNewAPIViewModelingOutputs {
     var title: String { get }
     var showLoader: Observable<Bool> { get }
     var showError: Observable<String> { get }
+    var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> { get }
 }
 
 protocol ConversationCountersNewAPIViewModeling {
@@ -56,6 +57,16 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
             .asObservable()
     }
 
+    fileprivate let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
+    var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> {
+        _cellsViewModels
+            .map { vms in
+                guard let vms = vms else { return [] }
+                return vms
+            }
+            .asObservable()
+    }
+
     fileprivate let disposeBag = DisposeBag()
 
     init() {
@@ -69,6 +80,7 @@ fileprivate extension ConversationCountersNewAPIViewModel {
             .do(onNext: { [weak self] _ in
                 self?._showLoader.onNext(true)
                 self?._showError.onNext(nil)
+                self?._cellsViewModels.onNext(nil)
             })
             .flatMapLatest { [weak self] _ -> Observable<String> in
                 guard let self = self else { return Observable.empty() }
@@ -87,20 +99,19 @@ fileprivate extension ConversationCountersNewAPIViewModel {
                     self._showLoader.onNext(false)
 
                     switch result {
-                    case .success(let commentDic):
-                        let postIdsKeys = commentDic.keys
-//                        var cellViewModels = [ConversationCounterCellViewModeling]()
-//
-//                        for id in postIdsKeys {
-//                            guard let counter = commentDic[id] else { continue }
-//                            let cellViewModel = (ConversationCounterCellViewModel(counter: counter, postId: id))
-//                            cellViewModels.append(cellViewModel)
-//                        }
+                    case .success(let commentDict):
+                        let postIdsKeys = commentDict.keys
+                        var cellViewModels = [ConversationCounterNewAPICellViewModeling]()
 
-//                        self._cellsViewModels.onNext(cellViewModels)
+                        for id in postIdsKeys {
+                            guard let counter = commentDict[id] else { continue }
+                            let cellViewModel = ConversationCounterNewAPICellViewModel(counter: counter, postId: id)
+                            cellViewModels.append(cellViewModel)
+                        }
+
+                        self._cellsViewModels.onNext(cellViewModels)
                     case .failure(let error):
                         DLog(error)
-//                        self._shouldShowError.onNext(true)
                         self._showError.onNext(error.localizedDescription)
                     }
                 }
