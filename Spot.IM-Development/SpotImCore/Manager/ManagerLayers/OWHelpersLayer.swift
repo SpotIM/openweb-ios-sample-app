@@ -43,8 +43,8 @@ extension OWHelpersLayer {
             .subscribe(onNext: { res in
                 completion(.success(res.counts))
             },
-            onError: { error in
-                completion(.failure(OWError.alreadyLoggedIn)) // TODO: real error
+            onError: { _ in
+                completion(.failure(OWError.conversationCounters))
             })
     }
 
