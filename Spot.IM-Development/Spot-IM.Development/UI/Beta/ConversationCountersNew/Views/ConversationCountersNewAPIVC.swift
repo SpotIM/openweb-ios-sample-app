@@ -51,6 +51,18 @@ class ConversationCountersNewAPIVC: UIViewController {
             .withPadding(Metrics.btnPadding)
     }()
 
+    fileprivate lazy var loader: UIActivityIndicatorView = {
+        let style: UIActivityIndicatorView.Style
+        if #available(iOS 13.0, *) {
+            style = .large
+        } else {
+            style = .whiteLarge
+        }
+        let loader = UIActivityIndicatorView(style: style)
+        loader.isHidden = true
+        return loader
+    }()
+
     init(viewModel: ConversationCountersNewAPIViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -100,6 +112,11 @@ fileprivate extension ConversationCountersNewAPIVC {
             make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(lblDescription.snp.bottom).offset(Metrics.btnTopPadding)
         }
+
+        self.view.addSubview(loader)
+        loader.snp.makeConstraints { make in
+            make.center.equalTo(view.safeAreaLayoutGuide)
+        }
     }
 
     func applyAccessibility() {
@@ -121,6 +138,32 @@ fileprivate extension ConversationCountersNewAPIVC {
             })
             .bind(to: viewModel.inputs.loadConversationCounter)
             .disposed(by: disposeBag)
+
+        let showLoaderObservable = viewModel.outputs.showLoader
+            .share(replay: 0)
+
+        showLoaderObservable
+            .map { !$0 }
+            .bind(to: loader.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        showLoaderObservable
+            .bind(to: loader.rx.isAnimating)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showError
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] message in
+                self?.showError(message: message)
+            })
+            .disposed(by: disposeBag)
+
+    }
+
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
