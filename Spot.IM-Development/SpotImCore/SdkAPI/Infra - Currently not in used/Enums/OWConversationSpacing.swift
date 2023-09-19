@@ -11,9 +11,9 @@ import UIKit
 #if NEW_API
 public enum OWConversationSpacing: Codable {
     public struct Metrics {
-        public static let defaultSpaceBetweenComments: CGFloat = 28.0 // Will be set later by designer
-        public static let defaultSpaceCommunityGuidelines: CGFloat = 12.0 // Will be set later by designer
-        public static let defaultSpaceCommunityQuestions: CGFloat = 12.0 // Will be set later by designer
+        public static let defaultSpaceBetweenComments: CGFloat = 28.0
+        public static let defaultSpaceCommunityGuidelines: CGFloat = 12.0
+        public static let defaultSpaceCommunityQuestions: CGFloat = 12.0
         public static let maxSpace: CGFloat = 40.0
         public static let minSpace: CGFloat = 5.0
     }
@@ -25,9 +25,9 @@ public enum OWConversationSpacing: Codable {
 #else
 enum OWConversationSpacing: Codable {
     struct Metrics {
-        static let defaultSpaceBetweenComments: CGFloat = 28.0 // Will be set later by designer
-        static let defaultSpaceCommunityGuidelines: CGFloat = 12.0 // Will be set later by designer
-        static let defaultSpaceCommunityQuestions: CGFloat = 12.0 // Will be set later by designer
+        static let defaultSpaceBetweenComments: CGFloat = 28.0
+        static let defaultSpaceCommunityGuidelines: CGFloat = 12.0
+        static let defaultSpaceCommunityQuestions: CGFloat = 12.0
         static let maxSpace: CGFloat = 40.0
         static let minSpace: CGFloat = 5.0
     }
