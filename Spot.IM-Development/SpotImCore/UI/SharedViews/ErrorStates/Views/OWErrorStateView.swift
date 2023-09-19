@@ -40,13 +40,13 @@ class OWErrorStateView: UIView {
     fileprivate lazy var headerIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
-            .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: true)!)
+            .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: false)!)
     }()
 
     fileprivate lazy var retryIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
-            .image(UIImage(spNamed: "errorStateRetryIcon", supportDarkMode: true)!)
+            .image(UIImage(spNamed: "errorStateRetryIcon", supportDarkMode: false)!)
     }()
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -77,8 +77,7 @@ class OWErrorStateView: UIView {
     init(with viewModel: OWErrorStateViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-
-        setupViews()
+        updateUI()
         setupObservers()
         applyAccessibility()
     }
@@ -91,9 +90,10 @@ class OWErrorStateView: UIView {
     func configure(with viewModel: OWErrorStateViewViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        self.setupViews()
+        self.updateUI()
         self.setupObservers()
         self.applyAccessibility()
+        self.viewModel.inputs.heightChange.onNext(0)
     }
 
     required init?(coder: NSCoder) {
@@ -102,8 +102,18 @@ class OWErrorStateView: UIView {
 }
 
 fileprivate extension OWErrorStateView {
-    func setupViews() {
+    // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
+    // using function configure and here it is also called in init when this class is used as a standalone uiview
+    func updateUI() {
         self.corner(radius: Metrics.borderRadius)
+
+        self.OWSnp.removeConstraints()
+        containerView.removeFromSuperview()
+        ctaView.removeFromSuperview()
+        headerIcon.removeFromSuperview()
+        ctaView.removeFromSuperview()
+        ctaLabel.removeFromSuperview()
+        retryIcon.removeFromSuperview()
 
         addSubview(containerView)
         containerView.OWSnp.makeConstraints { make in
@@ -176,7 +186,6 @@ fileprivate extension OWErrorStateView {
                 self.OWSnp.updateConstraints { make in
                     make.height.greaterThanOrEqualTo(newHeight)
                 }
-                self.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
     }

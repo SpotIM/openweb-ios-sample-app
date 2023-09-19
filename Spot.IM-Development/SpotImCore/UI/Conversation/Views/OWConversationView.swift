@@ -13,6 +13,8 @@ import RxCocoa
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
+        static let ctaViewSlideAnimationDelay = 10
+        static let ctaViewSlideAnimationDuration: Double = 0.25
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
@@ -109,11 +111,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         setupUI()
         setupObservers()
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        viewModel.inputs.tableViewHeight.onNext(tableView.frame.height)
-    }
 }
 
 fileprivate extension OWConversationView {
@@ -162,10 +159,17 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
+        self.addSubview(commentingCTAView)
+        commentingCTAView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
+        }
+
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
             make.top.equalTo(tableView.OWSnp.bottom)
+            make.bottom.equalTo(commentingCTAView.OWSnp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
@@ -176,16 +180,34 @@ fileprivate extension OWConversationView {
             make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
             make.leading.trailing.equalToSuperview()
         }
-
-        self.addSubview(commentingCTAView)
-        commentingCTAView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(20)
-            make.bottom.equalTo(self.safeAreaLayoutGuide)
-        }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.shouldShowErrorLoadingComments
+            .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
+                guard let self = self else { return }
+                self.commentingCTAView.OWSnp.updateConstraints { make in
+                    if shouldShowErrorLoadingComments {
+                        let bottomPadding: CGFloat = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                        make.bottom.equalTo(self.safeAreaLayoutGuide).offset(self.commentingCTAView.frame.size.height + bottomPadding)
+                    } else {
+                        make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
+                    }
+                }
+                UIView.animate(withDuration: Metrics.ctaViewSlideAnimationDuration) {
+                    self.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+            .unwrap()
+            .map { $0.size.height }
+            .bind(to: viewModel.inputs.tableViewHeight)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowConversationEmptyState
             .map { !$0 }
             .bind(to: conversationEmptyStateView.rx.isHidden)
@@ -210,7 +232,11 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.performTableViewAnimation
+        let showErrorLoadingFirstTimeObserver = viewModel.outputs.shouldShowErrorLoadingComments
+                .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
+                .voidify()
+
+        Observable.merge(viewModel.outputs.performTableViewAnimation, showErrorLoadingFirstTimeObserver)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -278,4 +304,5 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }

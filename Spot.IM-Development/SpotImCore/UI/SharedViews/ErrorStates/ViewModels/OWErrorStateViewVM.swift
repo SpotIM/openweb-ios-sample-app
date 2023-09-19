@@ -34,7 +34,11 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     var outputs: OWErrorStateViewViewModelingOutputs { return self }
 
     fileprivate let disposeBag = DisposeBag()
-    var errorStateType: OWErrorStateTypes
+    var errorStateType: OWErrorStateTypes {
+        didSet {
+            heightChange.onNext(0)
+        }
+    }
 
     init(errorStateType: OWErrorStateTypes) {
         self.errorStateType = errorStateType
@@ -93,8 +97,6 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     var heightChange = BehaviorSubject<CGFloat>(value: 0)
     var height: Observable<CGFloat> {
         return heightChange
-            .distinctUntilChanged()
             .asObservable()
-            .share(replay: 1)
     }
 }
