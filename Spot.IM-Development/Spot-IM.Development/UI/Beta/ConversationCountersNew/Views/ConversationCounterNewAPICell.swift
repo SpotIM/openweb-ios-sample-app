@@ -8,6 +8,8 @@
 
 import UIKit
 
+#if NEW_API
+
 class ConversationCounterNewAPICell: UITableViewCell {
     fileprivate struct Metrics {
         static let horizontalMargin: CGFloat = 20
@@ -102,3 +104,5 @@ fileprivate extension ConversationCounterNewAPICell {
         lblReplies.text = "\(NSLocalizedString("Replies", comment: "")): \(viewModel.outputs.replies)"
     }
 }
+
+#endif
