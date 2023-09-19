@@ -285,8 +285,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return isCompactMode
     }
 
+    fileprivate var _shouldShowCTAButton = BehaviorSubject<Bool>(value: true)
     var shouldShowCTAButton: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
+        Observable.combineLatest(_shouldShowCTAButton,
+                                 preConversationStyleObservable,
+                                 isReadOnlyObservable,
+                                 isEmpty) { shouldShow, style, isReadOnly, isEmpty in
+            guard shouldShow else { return false }
             var isVisible = true
             switch (style) {
             case .regular, .custom:
@@ -473,6 +478,9 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 let numOfComments = self.preConversationStyle.numberOfComments
                 let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
+
+                // Hide the "Show More Comments" button, if there are fewer comments than num of comments in  PreConversation style
+                self._shouldShowCTAButton.onNext(numOfComments < responseComments.count)
 
                 // cache comments in comment service
                 self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
