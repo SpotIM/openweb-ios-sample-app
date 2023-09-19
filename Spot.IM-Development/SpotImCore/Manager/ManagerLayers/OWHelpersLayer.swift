@@ -35,7 +35,7 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 // Will be public extension
 extension OWHelpersLayer {
     func conversationCounters(forPostIds postIds: [OWPostId],
-                              completion: OWConversationCountersCompletion) {
+                              completion: @escaping OWConversationCountersCompletion) {
         _ = sharedServicesProvider.netwokAPI()
             .conversation
             .commentsCounters(conversationIds: postIds)

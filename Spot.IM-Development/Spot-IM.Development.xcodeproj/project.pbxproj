@@ -147,6 +147,8 @@
 		2409CE4B2A94FA99007701FA /* OWClarityDetailsType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2409CE4A2A94FA99007701FA /* OWClarityDetailsType.swift */; };
 		2409CE532A964887007701FA /* OWArticleInformationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2409CE522A964887007701FA /* OWArticleInformationStrategy.swift */; };
 		240D6E852AB882E400EB70FA /* OWConversationCountersResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240D6E842AB882E400EB70FA /* OWConversationCountersResponse.swift */; };
+		240D6E8A2AB96E5000EB70FA /* ConversationCountersNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240D6E892AB96E5000EB70FA /* ConversationCountersNewAPIVC.swift */; };
+		240D6E8C2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240D6E8B2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift */; };
 		240E8FAC2AA5B53400903E51 /* OWArticleExtraData+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */; };
 		240E8FAE2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */; };
 		240E8FB02AA76A3600903E51 /* OWCommentStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240E8FAF2AA76A3600903E51 /* OWCommentStatusResponse.swift */; };
@@ -1220,6 +1222,8 @@
 		2409CE4A2A94FA99007701FA /* OWClarityDetailsType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsType.swift; sourceTree = "<group>"; };
 		2409CE522A964887007701FA /* OWArticleInformationStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleInformationStrategy.swift; sourceTree = "<group>"; };
 		240D6E842AB882E400EB70FA /* OWConversationCountersResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCountersResponse.swift; sourceTree = "<group>"; };
+		240D6E892AB96E5000EB70FA /* ConversationCountersNewAPIVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCountersNewAPIVC.swift; sourceTree = "<group>"; };
+		240D6E8B2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCountersNewAPIViewModel.swift; sourceTree = "<group>"; };
 		240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWArticleExtraData+Extensions.swift"; sourceTree = "<group>"; };
 		240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentStatusUpdaterService.swift; sourceTree = "<group>"; };
 		240E8FAF2AA76A3600903E51 /* OWCommentStatusResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentStatusResponse.swift; sourceTree = "<group>"; };
@@ -2814,6 +2818,31 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		240D6E862AB96C0900EB70FA /* ConversationCountersNew */ = {
+			isa = PBXGroup;
+			children = (
+				240D6E882AB96E2A00EB70FA /* ViewModels */,
+				240D6E872AB96C2A00EB70FA /* Views */,
+			);
+			path = ConversationCountersNew;
+			sourceTree = "<group>";
+		};
+		240D6E872AB96C2A00EB70FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				240D6E892AB96E5000EB70FA /* ConversationCountersNewAPIVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		240D6E882AB96E2A00EB70FA /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				240D6E8B2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		2414F82927EC67B000722D2B /* AvatarView - Old */ = {
 			isa = PBXGroup;
 			children = (
@@ -3655,6 +3684,7 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
+				240D6E862AB96C0900EB70FA /* ConversationCountersNew */,
 				3D1D24802A4ACD7B00692E2A /* ToolbarFloatingCommentCreation */,
 				3DCAE3E929D07A58005B9189 /* Errors */,
 				9E73DACF29C85E270098EEC1 /* Logger */,
@@ -7499,6 +7529,7 @@
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
 				9EBE5C2429AE0304001150DA /* CommentCreationSettingsVM.swift in Sources */,
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
+				240D6E8C2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift in Sources */,
 				3D301BEA2A8E89DC0012B526 /* UIViewController+LargeTitles.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
 				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
@@ -7575,6 +7606,7 @@
 				8D7662BE2A6D139A008152BE /* OWConversationSpacingIndexer.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
 				8D7662C02A6D170E008152BE /* OWFontGroupFamilyIndexer.swift in Sources */,
+				240D6E8A2AB96E5000EB70FA /* ConversationCountersNewAPIVC.swift in Sources */,
 				3D1D24892A4AF22500692E2A /* CommentCreationToolbar.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
 				9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */,
