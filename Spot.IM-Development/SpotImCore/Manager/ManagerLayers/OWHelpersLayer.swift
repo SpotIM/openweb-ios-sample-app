@@ -36,7 +36,16 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 extension OWHelpersLayer {
     func conversationCounters(forPostIds postIds: [OWPostId],
                               completion: OWConversationCountersCompletion) {
-
+        _ = sharedServicesProvider.netwokAPI()
+            .conversation
+            .commentsCounters(conversationIds: postIds)
+            .response
+            .subscribe(onNext: { res in
+                completion(.success(res.counts))
+            },
+            onError: { error in
+                completion(.failure(OWError.alreadyLoggedIn)) // TODO: real error
+            })
     }
 
     var additionalConfigurations: [OWAdditionalConfiguration] {
