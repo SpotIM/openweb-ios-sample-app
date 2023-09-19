@@ -6,13 +6,17 @@
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import RxSwift
+import SpotImCore
 
 #if NEW_API
 protocol ConversationCountersNewAPIViewModelingInputs {
+    var userPostIdsInput: BehaviorSubject<String> { get }
+    var loadConversationCounter: PublishSubject<Void> { get }
 }
 
 protocol ConversationCountersNewAPIViewModelingOutputs {
+    var title: String { get }
 }
 
 protocol ConversationCountersNewAPIViewModeling {
@@ -25,7 +29,12 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
                                            ConversationCountersNewAPIViewModelingOutputs {
     var inputs: ConversationCountersNewAPIViewModelingInputs { return self }
     var outputs: ConversationCountersNewAPIViewModelingOutputs { return self }
-    
+
+    lazy var title: String = {
+        return NSLocalizedString("ConversationCounterTitle", comment: "")
+    }()
+    let userPostIdsInput = BehaviorSubject<String>(value: "")
+    let loadConversationCounter = PublishSubject<Void>()
 }
 
 #endif
