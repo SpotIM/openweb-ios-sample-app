@@ -18,7 +18,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     let messageView = MessageContainerView()
     private let userView = OWCommentUserView()
-    private let statusIndicationView = OWCommentStatusIndicationView()
+    private let statusIndicationView = SPCommentStatusIndicationView()
     private let commentLabelView = CommentLabelView()
     private let replyActionsView = OWCommentActionsView()
     private let moreRepliesView = ShowMoreRepliesView()
