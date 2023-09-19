@@ -14,15 +14,113 @@ import SnapKit
 #if NEW_API
 
 class ConversationCountersNewAPIVC: UIViewController {
+    fileprivate struct Metrics {
+        static let identifier = "conversation_counters_new_api_vc_id"
+        static let txtFieldPostIdsIdentifier = "post_ids"
+        static let btnExecuteIdentifier = "execute_btn"
+        static let textFieldHeight: CGFloat = 40
+        static let verticalMargin: CGFloat = 20
+        static let horizontalMargin: CGFloat = 20
+        static let horizontalSmallMargin: CGFloat = 10
+        static let btnPadding: CGFloat = 12
+        static let btnTopPadding: CGFloat = 40
+    }
+
     fileprivate let viewModel: ConversationCountersNewAPIViewModeling
+    fileprivate let disposeBag = DisposeBag()
+
+    fileprivate lazy var txtFieldPostIds: TextFieldSetting = {
+        let txtField = TextFieldSetting(title: NSLocalizedString("PostIdOrIds", comment: "") + ":",
+                                        accessibilityPrefixId: Metrics.txtFieldPostIdsIdentifier)
+        return txtField
+    }()
+
+    fileprivate lazy var lblDescription: UILabel = {
+        let txt = NSLocalizedString("ConversationCounterMultiplePostIdsDescription", comment: "")
+
+        return txt
+            .label
+            .font(FontBook.helper)
+            .textColor(ColorPalette.shared.color(type: .red))
+            .numberOfLines(0)
+    }()
+
+    fileprivate lazy var btnExecute: UIButton = {
+        return NSLocalizedString("Execute", comment: "")
+            .blueRoundedButton
+            .withPadding(Metrics.btnPadding)
+    }()
+
     init(viewModel: ConversationCountersNewAPIViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = .blue
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    override func loadView() {
+        super.loadView()
+        setupViews()
+        applyAccessibility()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupObservers()
+    }
+}
+
+fileprivate extension ConversationCountersNewAPIVC {
+    func setupViews() {
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        applyLargeTitlesIfNeeded()
+
+        self.view.addSubview(txtFieldPostIds)
+        txtFieldPostIds.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalSmallMargin)
+            make.height.equalTo(Metrics.textFieldHeight)
+        }
+
+        self.view.addSubview(lblDescription)
+        lblDescription.snp.makeConstraints { make in
+            make.top.equalTo(txtFieldPostIds.snp.bottom).offset(Metrics.verticalMargin/2)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalMargin)
+        }
+
+        self.view.addSubview(btnExecute)
+        btnExecute.snp.makeConstraints { make in
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(lblDescription.snp.bottom).offset(Metrics.btnTopPadding)
+        }
+    }
+
+    func applyAccessibility() {
+        self.view.accessibilityIdentifier = Metrics.identifier
+        btnExecute.accessibilityIdentifier = Metrics.btnExecuteIdentifier
+    }
+
+    func setupObservers() {
+        title = viewModel.outputs.title
+
+        txtFieldPostIds.rx.textFieldText
+            .unwrap()
+            .bind(to: viewModel.inputs.userPostIdsInput)
+            .disposed(by: disposeBag)
+
+        btnExecute.rx.tap
+            .do(onNext: { [weak self] _ in
+                self?.txtFieldPostIds.resignFirstResponder()
+            })
+            .bind(to: viewModel.inputs.loadConversationCounter)
+            .disposed(by: disposeBag)
     }
 }
 
