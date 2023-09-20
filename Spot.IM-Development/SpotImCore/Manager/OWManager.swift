@@ -186,5 +186,8 @@ fileprivate extension OWManager {
     func resetPostId() {
         self.servicesProvider.realtimeService()
             .reset()
+
+        self.servicesProvider.activeArticleService()
+            .reset()
     }
 }
