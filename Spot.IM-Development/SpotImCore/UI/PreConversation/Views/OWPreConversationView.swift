@@ -440,10 +440,10 @@ fileprivate extension OWPreConversationView {
         }
             .withLatestFrom(viewModel.outputs.shouldShowComments) { result, isCommentsVisible -> (CGFloat?, Bool) in
                 let realtimeIsShown = result.1
-                guard isCommentsVisible == true else { return (0.0, realtimeIsShown) }
+                let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
+                guard isCommentsVisible == true else { return (extraHeight, realtimeIsShown) }
 
                 let size = result.0
-                let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
                 let height = size.height + extraHeight
 
                 return (height, realtimeIsShown)
