@@ -25,7 +25,7 @@ protocol OWConversationViewViewModelingInputs {
 }
 
 protocol OWConversationViewViewModelingOutputs {
-    var shouldShowTiTleHeader: Bool { get }
+    var shouldShowTitleHeader: Bool { get }
     var shouldShowArticleDescription: Bool { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
     var shouldShowErrorLoadingReplies: Observable<Bool> { get }
@@ -127,7 +127,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    var shouldShowTiTleHeader: Bool {
+    var shouldShowTitleHeader: Bool {
         return viewableMode == .independent
     }
 
