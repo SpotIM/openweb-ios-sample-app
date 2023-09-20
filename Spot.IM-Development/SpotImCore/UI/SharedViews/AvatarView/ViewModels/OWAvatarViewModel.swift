@@ -85,7 +85,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var imageType: Observable<OWImageType> {
         Observable.combineLatest(
             self.userInput,
-            self.shouldBlockAvatar.asObserver(),
+            self.shouldBlockAvatar.asObservable(),
             sharedServicesProvider.themeStyleService().style
         )
             .flatMapLatest { [weak self] (user, shouldBlockAvatar, _) -> Observable<URL?> in
