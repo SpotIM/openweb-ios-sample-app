@@ -140,6 +140,7 @@ platform :ios do
     set_version(version:options[:version])
     build_release_ipa(app:"internal", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
   # Excpect parameter `version`
@@ -153,6 +154,7 @@ platform :ios do
     set_version(version:options[:version])
     build_release_ipa(app:"beta", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_debug_symbols_to_crashlytics(version:options[:version])
   end
 
   # Excpect parameter `version`
@@ -166,6 +168,20 @@ platform :ios do
     set_version(version:options[:version])
     build_release_ipa(app:"public", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_debug_symbols_to_crashlytics(version:options[:version])
+  end
+
+  # Excpect parameter `version`
+  desc "Upload debug symbols to Crashlytics"
+  lane :upload_debug_symbols_to_crashlytics do |options|
+    current_build_number = get_build_number()
+    version = options[:version]
+    download_dsyms(version: version, build_number: current_build_number)
+    upload_symbols_to_crashlytics(
+        gsp_path: "./Spot-IM.Development/Resources/GoogleService-Info.plist",
+        binary_path: './scripts/upload-symbols'
+    )
+    clean_build_artifacts
   end
 
   # Excpect parameter `version`
