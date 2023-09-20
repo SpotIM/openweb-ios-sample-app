@@ -12,6 +12,7 @@ protocol OWActiveArticleServicing {
     var articleExtraData: Observable<OWArticleExtraData> { get }
     func updateStrategy(_ strategy: OWArticleInformationStrategy)
     func updatePost(_ post: OWPostId)
+    func reset()
 }
 
 class OWActiveArticleService: OWActiveArticleServicing {
@@ -49,6 +50,11 @@ class OWActiveArticleService: OWActiveArticleServicing {
 
     func updatePost(_ post: OWPostId) {
         newPost.onNext(post)
+    }
+
+    func reset() {
+        _strategy.onNext(.server)
+        _serverArticle.onNext(.empty)
     }
 }
 
