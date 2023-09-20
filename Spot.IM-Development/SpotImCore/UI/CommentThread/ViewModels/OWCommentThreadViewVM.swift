@@ -1026,9 +1026,6 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         _updateLocalComment
             .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
-            .map { comment, commentId, commentCellsVms -> (OWComment, OWCommentId, [OWCommentCellViewModeling]) in
-                return (comment, commentId, commentCellsVms)
-            }
             .do(onNext: { [weak self] comment, _, _ in
                 guard let self = self else { return }
                 self.servicesProvider
