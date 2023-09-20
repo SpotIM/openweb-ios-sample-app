@@ -26,7 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack)
         UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment)
 
+        #if !(DEBUG)
         FirebaseApp.configure()
+        #endif
 
         return true
     }
