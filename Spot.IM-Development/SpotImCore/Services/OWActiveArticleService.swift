@@ -48,7 +48,6 @@ class OWActiveArticleService: OWActiveArticleServicing {
     }
 
     func updatePost(_ post: OWPostId) {
-        _strategy.onNext(.server)
         _serverArticle.onNext(.empty)
         newPost.onNext(post)
     }

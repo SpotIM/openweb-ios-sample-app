@@ -24,6 +24,7 @@ protocol OWArticleDescriptionViewModelingOutputs {
     var customizeTitleLabelUI: Observable<UILabel> { get }
     var customizeAuthorLabelUI: Observable<UILabel> { get }
     var customizeImageViewUI: Observable<UIImageView> { get }
+    var shouldShow: Observable<Bool> { get }
 }
 
 protocol OWArticleDescriptionViewModeling {
@@ -97,6 +98,12 @@ class OWArticleDescriptionViewModel: OWArticleDescriptionViewModeling,
         return tap.asObservable()
     }
 
+    fileprivate var _shouldShow = BehaviorSubject(value: false)
+    var shouldShow: Observable<Bool> {
+        _shouldShow
+            .asObservable()
+    }
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
 
@@ -124,6 +131,15 @@ fileprivate extension OWArticleDescriptionViewModel {
             .activeArticleService()
             .articleExtraData
             .bind(to: _articleExtraData)
+            .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .map { data in
+                return data != OWArticleExtraData.empty
+            }
+            .bind(to: _shouldShow)
             .disposed(by: disposeBag)
     }
 }
