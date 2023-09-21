@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import SpotImCore
 
 #if NEW_API
 
@@ -17,11 +18,13 @@ protocol UIViewsViewModelingInputs {
     var commentCreationTapped: PublishSubject<Void> { get }
     var commentThreadTapped: PublishSubject<Void> { get }
     var independentAdUnitTapped: PublishSubject<Void> { get }
+    var examplesTapped: PublishSubject<Void> { get }
 }
 
 protocol UIViewsViewModelingOutputs {
     var title: String { get }
     var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> { get }
+    var openExamplesScreen: Observable<OWPostId> { get }
 }
 
 protocol UIViewsViewModeling {
@@ -42,10 +45,18 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let commentCreationTapped = PublishSubject<Void>()
     let commentThreadTapped = PublishSubject<Void>()
     let independentAdUnitTapped = PublishSubject<Void>()
+    let examplesTapped = PublishSubject<Void>()
 
     fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
     var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> {
         return _openMockArticleScreen
+            .unwrap()
+            .asObservable()
+    }
+
+    fileprivate let _openExamplesScreen = BehaviorSubject<OWPostId?>(value: nil)
+    var openExamplesScreen: Observable<OWPostId> {
+        return _openExamplesScreen
             .unwrap()
             .asObservable()
     }
@@ -102,6 +113,12 @@ fileprivate extension UIViewsViewModel {
         Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel, independentAdUnitTappedModel)
             .map { return $0 }
             .bind(to: _openMockArticleScreen)
+            .disposed(by: disposeBag)
+
+        examplesTapped
+            .asObservable()
+            .map { postId }
+            .bind(to: _openExamplesScreen)
             .disposed(by: disposeBag)
     }
 }
