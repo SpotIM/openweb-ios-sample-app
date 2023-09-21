@@ -17,14 +17,23 @@ class ConversationBelowVideoVC: UIViewController {
 
     fileprivate struct Metrics {
         static let identifier = "uiviews_examples_vc_id"
-        static let verticalMargin: CGFloat = 20
+        static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
+        static let conversationAnimationDuration: TimeInterval = 0.3
+        static let preConversationHorizontalMargin: CGFloat = 16.0
         static let videoRatio: CGFloat = 9/16
         static let videoPlayerIdentifier = "video_player_id"
     }
 
     fileprivate let viewModel: ConversationBelowVideoViewModeling
     fileprivate let disposeBag = DisposeBag()
+
+    fileprivate var preConversation: UIView?
+    fileprivate var conversation: UIView?
+    fileprivate var commentCreation: UIView?
+    fileprivate var reportReasons: UIView?
+
+    fileprivate unowned var conversationTopConstraint: Constraint!
 
     fileprivate lazy var videoPlayer: UIView = {
         let view = UIView()
@@ -86,6 +95,117 @@ fileprivate extension ConversationBelowVideoVC {
 
     func setupObservers() {
         title = viewModel.outputs.title
+
+        // Showing error if needed
+        viewModel.outputs.componentRetrievingError
+            .subscribe(onNext: { [weak self] err in
+                self?.showError(message: err.description)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.preConversationRetrieved
+            .subscribe(onNext: { [weak self] view in
+                self?.handlePreConversationRetrieved(view: view)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationRetrieved
+            .subscribe(onNext: { [weak self] view in
+                self?.handleConversationRetrieved(view: view)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.commentCreationRetrieved
+            .subscribe(onNext: { [weak self] view in
+                self?.handleCommentCreationRetrieved(view: view)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.reportReasonsRetrieved
+            .subscribe(onNext: { [weak self] view in
+                self?.handleReportReasonsRetrieved(view: view)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.removeConversation
+            .subscribe(onNext: { [weak self] _ in
+                self?.handleRemoveConversation()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func handlePreConversationRetrieved(view: UIView) {
+        // 1. Remove pre conversation from UI hierarchy if for some reason it was already retrieved
+        if let preConversationView = preConversation {
+            preConversationView.removeFromSuperview()
+            preConversation = nil
+        }
+
+        // 2. Set pre conversation and add to the UI hierarchy
+        preConversation = view
+        containerBelowVideo.addSubview(view)
+        view.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.verticalMargin)
+            make.leading.trailing.equalToSuperview().inset(Metrics.preConversationHorizontalMargin)
+        }
+    }
+
+    func handleConversationRetrieved(view: UIView) {
+        // 1. Remove conversation from UI hierarchy
+        if let conversationView = conversation {
+            conversationView.removeFromSuperview()
+            conversation = nil
+        }
+
+        // 2. Set conversation and add to the UI hierarchy with animation from the bottom
+        // Intentionnaly adding on the main `view` and not on `containerBelowVideo`, so later on we will be able to extend on the entire screen with a pan gesture on the conversation header
+        conversation = view
+        self.view.addSubview(view)
+        view.snp.makeConstraints { make in
+            conversationTopConstraint = make.top.equalTo(self.view.snp.bottom).constraint
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(containerBelowVideo.snp.height)
+        }
+        self.view.layoutIfNeeded()
+
+        // 3. Perform animation
+        let offset = -containerBelowVideo.frame.height-self.view.safeAreaInsets.bottom
+        conversationTopConstraint.update(offset: offset)
+        UIView.animate(withDuration: Metrics.conversationAnimationDuration) { [weak self] in
+            guard let self = self else { return }
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            // Nothing here
+        }
+    }
+
+    func handleCommentCreationRetrieved(view: UIView) {
+
+    }
+
+    func handleReportReasonsRetrieved(view: UIView) {
+
+    }
+
+    func handleRemoveConversation() {
+        guard conversation != nil else { return }
+
+        // 1. Perform animation
+        conversationTopConstraint.update(offset: 0)
+        UIView.animate(withDuration: Metrics.conversationAnimationDuration) { [weak self] in
+            guard let self = self else { return }
+            self.view.layoutIfNeeded()
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
+            self.conversation?.removeFromSuperview()
+            self.conversation = nil
+        }
+    }
+
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error retrieving component", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

@@ -33,7 +33,7 @@ class UIViewsExamplesVC: UIViewController {
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
-    
+
     fileprivate lazy var btnConversationBelowVideo: UIButton = {
         return NSLocalizedString("ConversationBelowVideo", comment: "")
             .blueRoundedButton
