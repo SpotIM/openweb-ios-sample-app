@@ -55,6 +55,8 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
         prepareForNewFlow()
 
         setPostId(postId: postId) { result in
@@ -95,6 +97,8 @@ extension OWUILayer {
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
         prepareForNewFlow()
 
         setPostId(postId: postId) { result in
@@ -140,6 +144,8 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
         prepareForNewFlow()
 
         setPostId(postId: postId) { result in
@@ -191,6 +197,8 @@ extension OWUILayer {
                        additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                        callbacks: OWViewActionsCallbacks? = nil,
                        completion: @escaping OWDefaultCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
         prepareForNewFlow()
 
         setPostId(postId: postId) { result in
@@ -241,6 +249,7 @@ extension OWUILayer {
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
                            callbacks: OWViewActionsCallbacks? = nil,
                            completion: @escaping OWDefaultCompletion) {
+
         prepareForNewFlow()
 
         setPostId(postId: postId) { result in
@@ -285,6 +294,7 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
         setPostId(postId: postId) { result in
             switch result {
@@ -322,6 +332,7 @@ extension OWUILayer {
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
         setPostId(postId: postId) { result in
             switch result {
@@ -360,6 +371,7 @@ extension OWUILayer {
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
         setPostId(postId: postId) { result in
             switch result {
@@ -415,6 +427,7 @@ extension OWUILayer {
                        additionalSettings: OWAdditionalSettingsProtocol,
                        callbacks: OWViewActionsCallbacks?,
                        completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
         setPostId(postId: postId) { result in
             switch result {
@@ -455,6 +468,7 @@ extension OWUILayer {
                       additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
         checkIfPostIdExists { result in
             switch result {
@@ -521,6 +535,16 @@ extension OWUILayer {
 }
 
 fileprivate extension OWUILayer {
+    func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {
+        let spotId = OpenWeb.manager.spotId
+        guard !spotId.isEmpty else {
+            completion(.failure(.missingSpotId))
+            return false
+        }
+
+        return true
+    }
+
     func setPostId(postId: OWPostId, completion: @escaping OWDefaultCompletion) {
         guard let manager = OpenWeb.manager as? OWManagerInternalProtocol else {
             let error = OWError.castingError(description: "OpenWeb.manager casting to OWManagerInternalProtocol failed")
