@@ -22,6 +22,7 @@ class UIViewsVC: UIViewController {
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
         static let btnIndependentAdUnitIdentifier = "btn_independent_ad_unit_id"
+        static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -58,6 +59,10 @@ class UIViewsVC: UIViewController {
         return NSLocalizedString("IndependentAdUnit", comment: "").blueRoundedButton
     }()
 
+    fileprivate lazy var btnExamples: UIButton = {
+        return NSLocalizedString("Examples", comment: "").blueRoundedButton
+    }()
+
     init(viewModel: UIViewsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -87,6 +92,7 @@ fileprivate extension UIViewsVC {
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
         btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
+        btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
     func setupViews() {
@@ -144,6 +150,15 @@ fileprivate extension UIViewsVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentThread.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
+        // Adding examples button
+        scrollView.addSubview(btnExamples)
+        btnExamples.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnIndependentAdUnit.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
@@ -172,11 +187,23 @@ fileprivate extension UIViewsVC {
             .bind(to: viewModel.inputs.independentAdUnitTapped)
             .disposed(by: disposeBag)
 
+        btnExamples.rx.tap
+            .bind(to: viewModel.inputs.examplesTapped)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.openMockArticleScreen
             .subscribe(onNext: { [weak self] settings in
                 let mockArticleIndependentViewsVM = MockArticleIndependentViewsViewModel(actionSettings: settings)
                 let mockArticleIndependentViewsVC = MockArticleIndependentViewsVC(viewModel: mockArticleIndependentViewsVM)
                 self?.navigationController?.pushViewController(mockArticleIndependentViewsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openExamplesScreen
+            .subscribe(onNext: { [weak self] postId in
+                let viewsExamplesVM = UIViewsExamplesViewModel(postId: postId)
+                let viewsExamplesVC = UIViewsExamplesVC(viewModel: viewsExamplesVM)
+                self?.navigationController?.pushViewController(viewsExamplesVC, animated: true)
             })
             .disposed(by: disposeBag)
     }
