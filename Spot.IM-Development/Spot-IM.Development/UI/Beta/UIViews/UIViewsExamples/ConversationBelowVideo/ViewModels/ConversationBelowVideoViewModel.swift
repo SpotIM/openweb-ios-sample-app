@@ -21,7 +21,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var conversationRetrieved: Observable<UIView> { get }
     var commentCreationRetrieved: Observable<UIView> { get }
     var reportReasonsRetrieved: Observable<UIView> { get }
-
+    var removeConversation: Observable<Void> { get }
 }
 
 protocol ConversationBelowVideoViewModeling {
@@ -42,15 +42,17 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         return NSLocalizedString("VideoExample", comment: "")
     }()
 
-    fileprivate let _componentRetrievingError = PublishSubject<OWError>()
+    fileprivate let _componentRetrievingError = BehaviorSubject<OWError?>(value: nil)
     var componentRetrievingError: Observable<OWError> {
         return _componentRetrievingError
+            .unwrap()
             .asObservable()
     }
 
-    fileprivate let _preConversationRetrieved = PublishSubject<UIView>()
+    fileprivate let _preConversationRetrieved = BehaviorSubject<UIView?>(value: nil)
     var preConversationRetrieved: Observable<UIView> {
         return _preConversationRetrieved
+            .unwrap()
             .asObservable()
     }
 
@@ -72,8 +74,23 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
-    fileprivate let actionsCallbacks: OWViewActionsCallbacks = { callbackType, sourceType, postId in
+    fileprivate let _removeConversation = PublishSubject<Void>()
+    var removeConversation: Observable<Void> {
+        return _removeConversation
+            .asObservable()
+    }
 
+    fileprivate lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, _ in
+        guard let self = self else { return }
+
+        switch (sourceType, callbackType) {
+        case (.preConversation, .contentPressed):
+            self.retrieveConversationComponent()
+        case (.conversation, .closeConversationPressed):
+            self._removeConversation.onNext()
+        default:
+            break
+        }
     }
 
     init(postId: OWPostId,
@@ -81,10 +98,16 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         self.postId = postId
         self.commonCreatorService = commonCreatorService
         setupObservers()
+        initialSetup()
     }
 }
 
 fileprivate extension ConversationBelowVideoViewModel {
+    func initialSetup() {
+        // We are going to retrieve pre conversation component as soon as the user entered the screen.
+        // We even perform the API in the init of the VM to speed things up
+        retrievePreConversationComponent()
+    }
     func setupObservers() {}
 
     func retrievePreConversationComponent() {
