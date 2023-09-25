@@ -22,6 +22,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var commentCreationRetrieved: Observable<UIView> { get }
     var reportReasonsRetrieved: Observable<UIView> { get }
     var removeConversation: Observable<Void> { get }
+    var removeReportReasons: Observable<Void> { get }
 }
 
 protocol ConversationBelowVideoViewModeling {
@@ -80,14 +81,27 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
-    fileprivate lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, _ in
+    fileprivate let _removeReportReasons = PublishSubject<Void>()
+    var removeReportReasons: Observable<Void> {
+        return _removeReportReasons
+            .asObservable()
+    }
+
+    fileprivate lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
         guard let self = self else { return }
+
+        let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+        DLog(log)
 
         switch (sourceType, callbackType) {
         case (.preConversation, .contentPressed):
             self.retrieveConversationComponent()
         case (.conversation, .closeConversationPressed):
             self._removeConversation.onNext()
+        case (.conversation, .openReportReason(let commentId, let parentId)):
+            self.retrieveReportReasonsComponent(commentId: commentId, parentId: parentId)
+        case (.reportReason, .closeReportReason):
+            self._removeReportReasons.onNext()
         default:
             break
         }

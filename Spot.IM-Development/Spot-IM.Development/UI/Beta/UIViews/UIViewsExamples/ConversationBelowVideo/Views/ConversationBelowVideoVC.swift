@@ -19,7 +19,7 @@ class ConversationBelowVideoVC: UIViewController {
         static let identifier = "uiviews_examples_vc_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
-        static let conversationAnimationDuration: TimeInterval = 0.3
+        static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
         static let videoRatio: CGFloat = 9/16
         static let videoPlayerIdentifier = "video_player_id"
@@ -34,6 +34,7 @@ class ConversationBelowVideoVC: UIViewController {
     fileprivate var reportReasons: UIView?
 
     fileprivate unowned var conversationTopConstraint: Constraint!
+    fileprivate unowned var reportReasonsTopConstraint: Constraint!
 
     fileprivate lazy var videoPlayer: UIView = {
         let view = UIView()
@@ -132,6 +133,12 @@ fileprivate extension ConversationBelowVideoVC {
                 self?.handleRemoveConversation()
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.removeReportReasons
+            .subscribe(onNext: { [weak self] _ in
+                self?.handleRemoveReportReasons()
+            })
+            .disposed(by: disposeBag)
     }
 
     func handlePreConversationRetrieved(view: UIView) {
@@ -171,7 +178,7 @@ fileprivate extension ConversationBelowVideoVC {
         // 3. Perform animation
         let offset = -containerBelowVideo.frame.height-self.view.safeAreaInsets.bottom
         conversationTopConstraint.update(offset: offset)
-        UIView.animate(withDuration: Metrics.conversationAnimationDuration) { [weak self] in
+        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self = self else { return }
             self.view.layoutIfNeeded()
         } completion: { _ in
@@ -184,7 +191,33 @@ fileprivate extension ConversationBelowVideoVC {
     }
 
     func handleReportReasonsRetrieved(view: UIView) {
+        // 1. Remove report reasons from UI hierarchy
+        if let reportReasonsView = reportReasons {
+            reportReasonsView.removeFromSuperview()
+            reportReasons = nil
+        }
 
+        // 2. Set report reasons and add to the UI hierarchy with animation from the bottom
+        // Adding on the `conversationView`
+        guard let conversationView = conversation else { return }
+        reportReasons = view
+        conversationView.addSubview(view)
+        view.snp.makeConstraints { make in
+            reportReasonsTopConstraint = make.top.equalTo(conversationView.snp.bottom).offset(self.view.safeAreaInsets.bottom).constraint
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(conversationView.snp.height)
+        }
+        self.view.layoutIfNeeded()
+
+        // 3. Perform animation
+        let offset = -conversationView.frame.height
+        reportReasonsTopConstraint.update(offset: offset)
+        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
+            guard let self = self else { return }
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            // Nothing here
+        }
     }
 
     func handleRemoveConversation() {
@@ -192,13 +225,28 @@ fileprivate extension ConversationBelowVideoVC {
 
         // 1. Perform animation
         conversationTopConstraint.update(offset: 0)
-        UIView.animate(withDuration: Metrics.conversationAnimationDuration) { [weak self] in
+        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self = self else { return }
             self.view.layoutIfNeeded()
         } completion: { [weak self] _ in
             guard let self = self else { return }
             self.conversation?.removeFromSuperview()
             self.conversation = nil
+        }
+    }
+
+    func handleRemoveReportReasons() {
+        guard reportReasons != nil else { return }
+
+        // 1. Perform animation
+        reportReasonsTopConstraint.update(offset: 0)
+        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
+            guard let self = self else { return }
+            self.view.layoutIfNeeded()
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
+            self.reportReasons?.removeFromSuperview()
+            self.reportReasons = nil
         }
     }
 
