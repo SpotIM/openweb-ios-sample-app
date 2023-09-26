@@ -68,6 +68,10 @@ class ConversationBelowVideoVC: UIViewController {
         super.viewDidLoad()
         setupObservers()
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
 }
 
 fileprivate extension ConversationBelowVideoVC {
