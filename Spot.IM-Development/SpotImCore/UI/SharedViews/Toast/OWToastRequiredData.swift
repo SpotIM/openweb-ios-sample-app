@@ -22,8 +22,7 @@ enum OWToastType: Codable {
     case warning
 }
 
-// TODO: should have some onClick function (except none)
-enum OWToastAction: String, OWMenuTypeProtocol, Codable {
+enum OWToastAction: String, Codable {
     case undo
     case tryAgain
     case learnMore
