@@ -374,8 +374,11 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowComments
-            .map { !$0 }
+        Observable.combineLatest(viewModel.outputs.shouldShowCTAButton,
+                                 viewModel.outputs.shouldShowComments) { shouldShowCTAButton, shouldShowComments in
+            guard shouldShowCTAButton else { return true }
+            return !shouldShowComments
+        }
             .bind(to: tableBottomDivider.rx.isHidden)
             .disposed(by: disposeBag)
 
