@@ -29,6 +29,7 @@ public enum OWError: Error, Codable {
     case ssoStart
     case ssoComplete
     case alreadyLoggedIn
+    case conversationCounters
     // TODO: Will be removed once the API is no longer beta and be official
     case missingImplementation
 
@@ -72,6 +73,8 @@ public enum OWError: Error, Codable {
             return "Error - Not implemented yet."
         case .reportReasonFlow:
             return "Error - In the process of starting report reason flow"
+        case .conversationCounters:
+            return "Error - In getting conversation counters"
         }
     }
 }
@@ -97,6 +100,7 @@ enum OWError: Error, Codable {
     case ssoStart
     case ssoComplete
     case alreadyLoggedIn
+    case conversationCounters
     // TODO: Will be removed once the API is no longer beta and be official
     case missingImplementation
 
@@ -140,6 +144,8 @@ enum OWError: Error, Codable {
             return "Error - Not implemented yet."
         case .reportReasonFlow:
             return "Error - In the process of starting report reason flow"
+        case .conversationCounters:
+            return "Error - In getting conversation counters"
         }
     }
 }
