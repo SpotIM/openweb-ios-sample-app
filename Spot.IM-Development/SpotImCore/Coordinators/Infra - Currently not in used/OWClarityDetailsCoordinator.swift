@@ -139,10 +139,16 @@ fileprivate extension OWClarityDetailsCoordinator {
         let dismissView = viewModel.outputs.dismissView
             .map { OWViewActionCallbackType.closeClarityDetails }
 
-        Observable.merge(dismissView)
-            .subscribe(onNext: { [weak self] viewActionType in
-                self?.viewActionsService.append(viewAction: viewActionType)
-            })
-            .disposed(by: disposeBag)
+        let openCommunityGuidelines = viewModel.outputs.communityGuidelinesClickObservable
+            .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
+
+        Observable.merge(
+            dismissView,
+            openCommunityGuidelines
+        )
+        .subscribe(onNext: { [weak self] viewActionType in
+            self?.viewActionsService.append(viewAction: viewActionType)
+        })
+        .disposed(by: disposeBag)
     }
 }
