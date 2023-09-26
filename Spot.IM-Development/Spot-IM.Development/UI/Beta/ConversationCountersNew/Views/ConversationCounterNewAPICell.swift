@@ -12,6 +12,10 @@ import UIKit
 
 class ConversationCounterNewAPICell: UITableViewCell {
     fileprivate struct Metrics {
+        static let identifier: String = "conversation_counter_id_"
+        static let lblPostIdentifier: String = "counter_post_id_"
+        static let lblCommentsIdentifier: String = "counter_comments_id_"
+        static let lblRepliesIdentifier: String = "counter_replies_id_"
         static let horizontalMargin: CGFloat = 20
         static let verticalMargin: CGFloat = 15
         static let cornerRadius: CGFloat = 12
@@ -65,6 +69,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
     func configure(with viewModel: ConversationCounterNewAPICellViewModeling) {
         self.viewModel = viewModel
         configureViews()
+        applyAccessibility()
     }
 }
 fileprivate extension ConversationCounterNewAPICell {
@@ -96,6 +101,13 @@ fileprivate extension ConversationCounterNewAPICell {
             make.top.equalTo(lblComments.snp.bottom).offset(Metrics.verticalMargin/2)
             make.bottom.equalToSuperview().inset(Metrics.verticalMargin)
         }
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier + viewModel.outputs.postId
+        lblPostId.accessibilityIdentifier = Metrics.lblPostIdentifier + viewModel.outputs.postId
+        lblComments.accessibilityIdentifier = Metrics.lblCommentsIdentifier + viewModel.outputs.postId
+        lblReplies.accessibilityIdentifier = Metrics.lblRepliesIdentifier + viewModel.outputs.postId
     }
 
     func configureViews() {
