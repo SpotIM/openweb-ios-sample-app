@@ -917,7 +917,6 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
             .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
