@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 import SnapKit
 import SpotImCore
+import AVFoundation
+import AVKit
 
 #if NEW_API
 
@@ -24,6 +26,11 @@ class ConversationBelowVideoVC: UIViewController {
         static let preConversationHorizontalMargin: CGFloat = 16.0
         static let videoRatio: CGFloat = 9/16
         static let videoPlayerIdentifier = "video_player_id"
+        static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"
+        // For some reason those longer videos didn't worked, try to play them also locally without luck
+        // Keeping the URLs for reference
+        static let videoLink2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+        static let videoLink3 = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 
     fileprivate let viewModel: ConversationBelowVideoViewModeling
@@ -37,9 +44,46 @@ class ConversationBelowVideoVC: UIViewController {
     fileprivate unowned var conversationTopConstraint: Constraint!
     fileprivate unowned var reportReasonsTopConstraint: Constraint!
 
-    fileprivate lazy var videoPlayer: UIView = {
+    fileprivate lazy var videoPlayerItem: AVPlayerItem = {
+        let videoURL = URL(string: Metrics.videoLink)
+        let playerItem = AVPlayerItem(url: videoURL!)
+        return playerItem
+    }()
+
+    fileprivate lazy var videoQueuePlayer: AVQueuePlayer = {
+        let queuePlayer = AVQueuePlayer(playerItem: videoPlayerItem)
+        return queuePlayer
+    }()
+
+    fileprivate lazy var videoPlayerLooper: AVPlayerLooper = {
+        let playerLooper = AVPlayerLooper(player: self.videoQueuePlayer, templateItem: self.videoPlayerItem)
+        return playerLooper
+    }()
+
+    fileprivate lazy var videoPlayerLayer: AVPlayerLayer = {
+        let playerLayer = AVPlayerLayer(player: self.videoQueuePlayer)
+        playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        // Looper should be initialize at some point - the following line basically do that
+        _ = self.videoPlayerLooper
+        return playerLayer
+    }()
+
+    fileprivate lazy var imgViewPlaceholder: UIImageView = {
+        return UIImageView()
+            .image(UIImage(named: "video_placeholder")!)
+            .contentMode(.scaleAspectFill)
+    }()
+
+    fileprivate lazy var videoPlayerContainer: UIView = {
         let view = UIView()
-            .backgroundColor(.green)
+            .backgroundColor(.clear)
+
+        view.addSubview(imgViewPlaceholder)
+        imgViewPlaceholder.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        view.layer.addSublayer(videoPlayerLayer)
         return view
     }()
 
@@ -67,6 +111,7 @@ class ConversationBelowVideoVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupObservers()
+        setupVideo()
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -77,7 +122,7 @@ class ConversationBelowVideoVC: UIViewController {
 fileprivate extension ConversationBelowVideoVC {
     func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
-        videoPlayer.accessibilityIdentifier = Metrics.videoPlayerIdentifier
+        videoPlayerContainer.accessibilityIdentifier = Metrics.videoPlayerIdentifier
     }
 
     func setupViews() {
@@ -85,16 +130,16 @@ fileprivate extension ConversationBelowVideoVC {
         self.navigationItem.largeTitleDisplayMode = .never
 
         // Adding video player view
-        view.addSubview(videoPlayer)
-        videoPlayer.snp.makeConstraints { make in
+        view.addSubview(videoPlayerContainer)
+        videoPlayerContainer.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(videoPlayer.snp.width).multipliedBy(Metrics.videoRatio)
+            make.height.equalTo(videoPlayerContainer.snp.width).multipliedBy(Metrics.videoRatio)
         }
 
         // Adding container below video
         view.addSubview(containerBelowVideo)
         containerBelowVideo.snp.makeConstraints { make in
-            make.top.equalTo(videoPlayer.snp.bottom)
+            make.top.equalTo(videoPlayerContainer.snp.bottom)
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
@@ -168,6 +213,12 @@ fileprivate extension ConversationBelowVideoVC {
                 completion()
             })
             .disposed(by: disposeBag)
+    }
+
+    func setupVideo() {
+        self.view.layoutIfNeeded()
+        videoPlayerLayer.frame = videoPlayerContainer.bounds
+        videoQueuePlayer.play()
     }
 
     func handlePreConversationRetrieved(view: UIView) {
