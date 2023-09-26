@@ -22,6 +22,7 @@ public enum OWViewActionCallbackType: Codable {
     case closeConversationPressed
     case openPublisherProfile(userId: String)
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
+    case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
     case closeClarityDetails
     case error(_ error: OWError)
@@ -40,6 +41,7 @@ enum OWViewActionCallbackType: Codable {
     case closeConversationPressed
     case openPublisherProfile(userId: String)
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
+    case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
     case closeClarityDetails
     case error(_ error: OWError)
@@ -71,6 +73,12 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (let .openPublisherProfile(lhsId), let .openPublisherProfile(rhsId)):
             return lhsId == rhsId
+        case (let .openReportReason(lhsId, lhsParent), let .openReportReason(rhsId, rhsParent)):
+            return lhsId == rhsId && lhsParent == rhsParent
+        case (let .openCommentCreation(lhsId), let .openCommentCreation(rhsId)):
+            return lhsId == rhsId
+        case (.closeReportReason, .closeReportReason):
+            return true
         case (.closeClarityDetails, .closeClarityDetails):
             return true
         default:

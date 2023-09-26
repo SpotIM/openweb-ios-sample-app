@@ -224,7 +224,23 @@ fileprivate extension OWCommentThreadCoordinator {
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
             .asObservable()
 
-        Observable.merge(openPublisherProfile)
+        // Open comment creation
+        let openCommentCreation = viewModel.outputs.openCommentCreation
+            .map { internalType -> OWCommentCreationType in
+                switch internalType {
+                case .comment:
+                    return OWCommentCreationType.comment
+                case .replyToComment(let originComment):
+                    return .replyTo(commentId: originComment.id ?? "")
+                case .edit(let comment):
+                    return .edit(commentId: comment.id ?? "")
+                }
+            }
+            .map { OWViewActionCallbackType.openCommentCreation(type: $0) }
+
+
+        Observable.merge(openPublisherProfile,
+                         openCommentCreation)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
