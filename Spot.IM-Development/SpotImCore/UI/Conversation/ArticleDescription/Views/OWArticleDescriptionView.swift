@@ -75,6 +75,7 @@ class OWArticleDescriptionView: UIView {
         return UITapGestureRecognizer()
     }()
 
+    fileprivate var zeroHeightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWArticleDescriptionViewModeling!
     fileprivate let disposeBag = DisposeBag()
 
@@ -93,6 +94,11 @@ class OWArticleDescriptionView: UIView {
 
 fileprivate extension OWArticleDescriptionView {
     func setupUI() {
+        self.OWSnp.makeConstraints { make in
+            zeroHeightConstraint = make.height.equalTo(0).constraint
+            zeroHeightConstraint?.isActive = false
+        }
+
         // Setup top separator
         self.addSubview(topSeparatorView)
         topSeparatorView.OWSnp.makeConstraints { make in
@@ -167,6 +173,13 @@ fileprivate extension OWArticleDescriptionView {
             .voidify()
             .bind(to: viewModel.inputs.tap)
             .disposed(by: disposeBag)
+
+        if let zeroHeightConstraint = zeroHeightConstraint {
+            viewModel.outputs.shouldShow
+                .map { !$0 }
+                .bind(to: zeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style

@@ -120,8 +120,8 @@ fileprivate extension OWConversationView {
     func setupUI() {
         self.useAsThemeStyleInjector()
 
-        let shouldShowTiTleHeader = viewModel.outputs.shouldShowTiTleHeader
-        if shouldShowTiTleHeader {
+        let shouldShowTitleHeader = viewModel.outputs.shouldShowTitleHeader
+        if shouldShowTitleHeader {
             self.addSubview(conversationTitleHeaderView)
             conversationTitleHeaderView.OWSnp.makeConstraints { make in
                 make.top.leading.trailing.equalToSuperview()
@@ -132,7 +132,7 @@ fileprivate extension OWConversationView {
         if shouldShowArticleDescription {
             self.addSubview(articleDescriptionView)
             articleDescriptionView.OWSnp.makeConstraints { make in
-                if shouldShowTiTleHeader {
+                if shouldShowTitleHeader {
                     make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
                 } else {
                     make.top.equalToSuperview()
@@ -146,7 +146,7 @@ fileprivate extension OWConversationView {
             if shouldShowArticleDescription {
                 make.top.equalTo(articleDescriptionView.OWSnp.bottom)
             } else {
-                if shouldShowTiTleHeader {
+                if shouldShowTitleHeader {
                     make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
                 } else {
                     make.top.equalToSuperview()
