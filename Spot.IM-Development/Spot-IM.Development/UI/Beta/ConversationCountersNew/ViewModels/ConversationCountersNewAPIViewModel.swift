@@ -60,11 +60,9 @@ class ConversationCountersNewAPIViewModel: ConversationCountersNewAPIViewModelin
     fileprivate let _cellsViewModels = BehaviorSubject<[ConversationCounterNewAPICellViewModeling]?>(value: nil)
     var cellsViewModels: Observable<[ConversationCounterNewAPICellViewModeling]> {
         _cellsViewModels
-            .map { vms in
-                guard let vms = vms else { return [] }
-                return vms
-            }
+            .unwrap()
             .asObservable()
+            .startWith([])
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -80,7 +78,7 @@ fileprivate extension ConversationCountersNewAPIViewModel {
             .do(onNext: { [weak self] _ in
                 self?._showLoader.onNext(true)
                 self?._showError.onNext(nil)
-                self?._cellsViewModels.onNext(nil)
+                self?._cellsViewModels.onNext([])
             })
             .flatMapLatest { [weak self] _ -> Observable<String> in
                 guard let self = self else { return Observable.empty() }
