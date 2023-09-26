@@ -141,6 +141,12 @@ fileprivate extension ConversationBelowVideoVC {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.removeCommentCreation
+            .subscribe(onNext: { [weak self] _ in
+                self?.handleRemoveCommentCreation()
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.openAuthentication
             .flatMap { [weak self] result -> Observable<OWBasicCompletion> in
                 guard let self = self else { return Observable.empty() }
@@ -206,7 +212,19 @@ fileprivate extension ConversationBelowVideoVC {
     }
 
     func handleCommentCreationRetrieved(view: UIView) {
+        // 1. Remove comment creation from UI hierarchy
+        if let commentCreationView = commentCreation {
+            commentCreationView.removeFromSuperview()
+            commentCreation = nil
+        }
 
+        // 2. Set comment creation and add to the UI hierarchy. Animation will happen internally in the component
+        guard let conversationView = conversation else { return }
+        commentCreation = view
+        conversationView.addSubview(view)
+        view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func handleReportReasonsRetrieved(view: UIView) {
@@ -267,6 +285,13 @@ fileprivate extension ConversationBelowVideoVC {
             self.reportReasons?.removeFromSuperview()
             self.reportReasons = nil
         }
+    }
+
+    func handleRemoveCommentCreation() {
+        guard let commentCreationView = commentCreation else { return }
+
+        commentCreationView.removeFromSuperview()
+        commentCreation = nil
     }
 
     func showError(message: String) {
