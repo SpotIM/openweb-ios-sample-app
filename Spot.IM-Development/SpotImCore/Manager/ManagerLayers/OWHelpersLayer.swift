@@ -36,6 +36,8 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 extension OWHelpersLayer {
     func conversationCounters(forPostIds postIds: [OWPostId],
                               completion: @escaping OWConversationCountersCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
         _ = sharedServicesProvider.netwokAPI()
             .conversation
             .commentsCounters(conversationIds: postIds)
@@ -86,6 +88,16 @@ extension OWHelpersLayer {
 }
 
 fileprivate extension OWHelpersLayer {
+    func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {
+        let spotId = OpenWeb.manager.spotId
+        guard !spotId.isEmpty else {
+            completion(.failure(.missingSpotId))
+            return false
+        }
+
+        return true
+    }
+
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return sharedServicesProvider
             .analyticsEventCreatorService()
