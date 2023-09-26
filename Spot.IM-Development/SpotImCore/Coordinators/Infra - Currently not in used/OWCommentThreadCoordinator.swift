@@ -44,6 +44,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         self.actionsCallbacks = actionsCallbacks
     }
 
+    // swiftlint:disable function_body_length
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
         viewableMode = .partOfFlow
         let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
@@ -191,6 +192,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                                 coordinateReportReasonObservable,
                                 coordinateClarityDetailsObservable)
     }
+    // swiftlint:enable function_body_length
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
