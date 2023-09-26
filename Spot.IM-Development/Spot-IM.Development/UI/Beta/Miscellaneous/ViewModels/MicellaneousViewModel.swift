@@ -36,10 +36,9 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     let conversationCounterTapped = PublishSubject<Void>()
-
-    fileprivate let _openConversationCounters = PublishSubject<Void>()
     var openConversationCounters: Observable<Void> {
-        return _openConversationCounters.asObservable()
+        return conversationCounterTapped
+            .asObservable()
     }
 
     lazy var title: String = {
@@ -54,11 +53,7 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
 
 fileprivate extension MiscellaneousViewModel {
 
-    func setupObservers() {
-        conversationCounterTapped
-            .bind(to: _openConversationCounters)
-            .disposed(by: disposeBag)
-    }
+    func setupObservers() { }
 }
 
 #endif

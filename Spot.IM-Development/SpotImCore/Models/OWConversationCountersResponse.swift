@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct OWConversationCountersResponse: Decodable {
-    let counts: [String: OWConversationCounter]
+struct OWConversationCountersResponse: Codable {
+    let counts: [OWPostId: OWConversationCounter]
 }
