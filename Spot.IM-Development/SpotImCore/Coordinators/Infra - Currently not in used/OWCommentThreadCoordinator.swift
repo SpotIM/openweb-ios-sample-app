@@ -139,6 +139,36 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 return Observable.never()
             }
 
+        let clarityDetailsFromCommentThreadObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openClarityDetails
+
+        // Coordinate to clarity details
+        let coordinateClarityDetailsObservable = clarityDetailsFromCommentThreadObservable
+            .asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                                                                            router: self.router,
+                                                                            actionsCallbacks: self.actionsCallbacks,
+                                                                            presentationalMode: self.commentThreadData.presentationalStyle)
+                return self.coordinate(to: clarityDetailsCoordinator)
+            }
+            .do(onNext: { coordinatorResult in
+                switch coordinatorResult {
+                case .popped:
+                    // Nothing
+                    break
+                default:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
@@ -158,7 +188,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         return Observable.merge(commentThreadPoppedObservable,
                                 commentThreadLoadedToScreenObservable,
                                 coordinateCommentCreationObservable, coordinateToSafariObservables,
-                                coordinateReportReasonObservable)
+                                coordinateReportReasonObservable,
+                                coordinateClarityDetailsObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
