@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import SpotImCore
 
 #if NEW_API
 
@@ -137,6 +138,24 @@ fileprivate extension ConversationBelowVideoVC {
         viewModel.outputs.removeReportReasons
             .subscribe(onNext: { [weak self] _ in
                 self?.handleRemoveReportReasons()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openAuthentication
+            .flatMap { [weak self] result -> Observable<OWBasicCompletion> in
+                guard let self = self else { return Observable.empty() }
+                let spotId = result.0
+                let completion = result.1
+                let authenticationVM = AuthenticationPlaygroundNewAPIViewModel(filterBySpotId: spotId)
+                let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
+                self.navigationController?.present(authenticationVC, animated: true)
+
+                return authenticationVM.outputs.dismissed
+                    .take(1)
+                    .map { completion }
+            }
+            .subscribe(onNext: { completion in
+                completion()
             })
             .disposed(by: disposeBag)
     }

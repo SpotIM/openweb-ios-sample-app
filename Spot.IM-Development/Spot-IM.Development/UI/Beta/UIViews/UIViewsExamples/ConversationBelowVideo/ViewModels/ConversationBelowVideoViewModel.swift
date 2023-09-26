@@ -23,6 +23,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var reportReasonsRetrieved: Observable<UIView> { get }
     var removeConversation: Observable<Void> { get }
     var removeReportReasons: Observable<Void> { get }
+    var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> { get }
 }
 
 protocol ConversationBelowVideoViewModeling {
@@ -38,6 +39,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     fileprivate let postId: OWPostId
     fileprivate let disposeBag = DisposeBag()
     fileprivate let commonCreatorService: CommonCreatorServicing
+    fileprivate let silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol
 
     lazy var title: String = {
         return NSLocalizedString("VideoExample", comment: "")
@@ -87,6 +89,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
+    fileprivate let _openAuthentication = PublishSubject<(OWSpotId, OWBasicCompletion)>()
+    var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> {
+        return _openAuthentication
+            .asObservable()
+    }
+
     fileprivate lazy var actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
         guard let self = self else { return }
 
@@ -107,10 +115,45 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         }
     }
 
+    // Providing `displayAuthenticationFlow` callback
+    fileprivate lazy var authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
+        guard let self = self else { return }
+
+        switch routeringMode {
+        case .none:
+            self._openAuthentication.onNext((OpenWeb.manager.spotId, completion))
+        default:
+            break
+        }
+    }
+
+    // Providing `renewSSO` callback
+    fileprivate lazy var  renewSSOCallback: OWRenewSSOCallback = { [weak self] userId, completion in
+        guard let self = self else { return }
+        let demoSpotId = ConversationPreset.demoSpot().conversationDataModel.spotId
+        if OpenWeb.manager.spotId == demoSpotId,
+           let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
+            _ = self.silentSSOAuthentication.silentSSO(for: genericSSO, ignoreLoginStatus: true)
+                .take(1) // No need to disposed since we only take 1
+                .subscribe(onNext: { userId in
+                    DLog("Silent SSO completed successfully with userId: \(userId)")
+                    completion()
+                }, onError: { error in
+                    DLog("Silent SSO failed with error: \(error)")
+                    completion()
+                })
+        } else {
+            DLog("`renewSSOCallback` triggered, but this is not our demo spot: \(demoSpotId)")
+            completion()
+        }
+    }
+
     init(postId: OWPostId,
-         commonCreatorService: CommonCreatorServicing = CommonCreatorService()) {
+         commonCreatorService: CommonCreatorServicing = CommonCreatorService(),
+         silentSSOAuthentication: SilentSSOAuthenticationNewAPIProtocol = SilentSSOAuthenticationNewAPI()) {
         self.postId = postId
         self.commonCreatorService = commonCreatorService
+        self.silentSSOAuthentication = silentSSOAuthentication
         setupObservers()
         initialSetup()
     }
@@ -118,6 +161,14 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
 
 fileprivate extension ConversationBelowVideoViewModel {
     func initialSetup() {
+        // Setup authentication flow callback
+        var authenticationUI = OpenWeb.manager.ui.authenticationUI
+        authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
+
+        // Setup renew SSO callback
+        var authentication = OpenWeb.manager.authentication
+        authentication.renewSSO = renewSSOCallback
+
         // We are going to retrieve pre conversation component as soon as the user entered the screen.
         // We even perform the API in the init of the VM to speed things up
         retrievePreConversationComponent()
