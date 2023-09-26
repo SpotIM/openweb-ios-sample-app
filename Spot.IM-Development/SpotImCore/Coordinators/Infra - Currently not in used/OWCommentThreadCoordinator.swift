@@ -238,7 +238,6 @@ fileprivate extension OWCommentThreadCoordinator {
             }
             .map { OWViewActionCallbackType.openCommentCreation(type: $0) }
 
-
         Observable.merge(openPublisherProfile,
                          openCommentCreation)
             .subscribe { [weak self] viewActionType in
