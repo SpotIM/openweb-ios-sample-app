@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+// swiftlint:disable file_length
+
 // Our sections is just a string as we will flat all the comments, replies, ads and everything into cells
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
@@ -198,14 +200,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var fullConversationTap = PublishSubject<Void>()
     var fullConversationCTATap = PublishSubject<Void>()
 
-    var openFullConversation: Observable<Void> {
-        let tappedObservable = realtimeIndicationAnimationViewModel.outputs
+    fileprivate lazy var realtimeIndicationTapped: Observable<Void> = {
+        return realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
             .tapped
+            .asObservable()
+    }()
 
+    var openFullConversation: Observable<Void> {
         return Observable.merge(fullConversationTap,
                                 fullConversationCTATap,
-                                tappedObservable)
+                                realtimeIndicationTapped)
             .asObservable()
     }
 
@@ -285,8 +290,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return isCompactMode
     }
 
+    fileprivate var _shouldShowCTAButton = BehaviorSubject<Bool>(value: true)
     var shouldShowCTAButton: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
+        Observable.combineLatest(_shouldShowCTAButton,
+                                 preConversationStyleObservable,
+                                 isReadOnlyObservable,
+                                 isEmpty) { shouldShow, style, isReadOnly, isEmpty in
+            guard shouldShow else { return false }
             var isVisible = true
             switch (style) {
             case .regular, .custom:
@@ -396,18 +406,25 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Realtime Indicator
-        openFullConversation
+        realtimeIndicationTapped
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+
                 self.servicesProvider.realtimeService().stopFetchingData()
                 self.servicesProvider.realtimeIndicatorService().update(state: .disable)
-
             })
             .disposed(by: disposeBag)
 
         let realtimeIndicatorUpdateStateObservable = Observable.combineLatest(viewInitialized,
-                                                                              shouldShowComments) { _, shouldShowComments -> Bool in
-            return shouldShowComments
+                                                                              preConversationStyleObservable) { _, style -> Bool in
+            switch(style) {
+            case .regular, .custom:
+                return true
+            case .compact, .ctaButtonOnly, .ctaWithSummary:
+                return false
+            }
         }
             .map { shouldShow -> OWRealtimeIndicatorState in
                 return shouldShow ? .enable : .disable
@@ -473,6 +490,9 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 let numOfComments = self.preConversationStyle.numberOfComments
                 let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
+
+                // Hide the "Show More Comments" button, if there are fewer comments than num of comments in  PreConversation style
+                self._shouldShowCTAButton.onNext(numOfComments < responseComments.count)
 
                 // cache comments in comment service
                 self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
