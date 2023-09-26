@@ -23,6 +23,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var reportReasonsRetrieved: Observable<UIView> { get }
     var removeConversation: Observable<Void> { get }
     var removeReportReasons: Observable<Void> { get }
+    var removeCommentCreation: Observable<Void> { get }
     var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> { get }
 }
 
@@ -86,6 +87,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     fileprivate let _removeReportReasons = PublishSubject<Void>()
     var removeReportReasons: Observable<Void> {
         return _removeReportReasons
+            .asObservable()
+    }
+
+    fileprivate let _removeCommentCreation = PublishSubject<Void>()
+    var removeCommentCreation: Observable<Void> {
+        return _removeCommentCreation
             .asObservable()
     }
 
