@@ -172,9 +172,14 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
+        // Open Guidelines
+        let communityGuidelinesObservable = viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput
+            .map {  OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
+
         Observable.merge(contentPressed,
                          openPublisherProfile,
-                         openReportReason)
+                         openReportReason,
+                         communityGuidelinesObservable)
             .subscribe(onNext: { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             })
