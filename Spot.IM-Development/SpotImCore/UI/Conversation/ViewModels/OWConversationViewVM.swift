@@ -25,7 +25,7 @@ protocol OWConversationViewViewModelingInputs {
 }
 
 protocol OWConversationViewViewModelingOutputs {
-    var shouldShowTiTleHeader: Bool { get }
+    var shouldShowTitleHeader: Bool { get }
     var shouldShowArticleDescription: Bool { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
     var shouldShowErrorLoadingReplies: Observable<Bool> { get }
@@ -127,7 +127,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    var shouldShowTiTleHeader: Bool {
+    var shouldShowTitleHeader: Bool {
         return viewableMode == .independent
     }
 
@@ -1416,11 +1416,6 @@ fileprivate extension OWConversationViewViewModel {
 
         _updateLocalComment
             .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
-            .map { comment, commentId, commentCellsVms -> (OWComment, OWCommentId, [OWCommentCellViewModeling]) in
-                var updatedComment = comment
-                updatedComment.setIsEdited(true)
-                return (updatedComment, commentId, commentCellsVms)
-            }
             .do(onNext: { [weak self] comment, _, _ in
                 guard let self = self else { return }
                 self.servicesProvider

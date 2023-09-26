@@ -166,7 +166,7 @@ fileprivate extension OWRealtimeIndicationView {
             .map { shouldShowTypingLabel, shouldShowNewCommentsLabel -> Bool in
                 return !(shouldShowTypingLabel && shouldShowNewCommentsLabel)
             }
-            .bind(to: verticalSeparatorBetweenTypingAndNewComments.rx.isHiddenAnimated)
+            .bind(to: verticalSeparatorBetweenTypingAndNewComments.rx.isHidden)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
