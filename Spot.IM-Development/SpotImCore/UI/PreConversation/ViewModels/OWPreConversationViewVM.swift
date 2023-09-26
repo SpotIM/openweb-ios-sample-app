@@ -198,14 +198,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var fullConversationTap = PublishSubject<Void>()
     var fullConversationCTATap = PublishSubject<Void>()
 
-    var openFullConversation: Observable<Void> {
-        let tappedObservable = realtimeIndicationAnimationViewModel.outputs
+    fileprivate lazy var realtimeIndicationTapped: Observable<Void> = {
+        return realtimeIndicationAnimationViewModel.outputs
             .realtimeIndicationViewModel.outputs
             .tapped
+            .asObservable()
+    }()
 
+    var openFullConversation: Observable<Void> {
         return Observable.merge(fullConversationTap,
                                 fullConversationCTATap,
-                                tappedObservable)
+                                realtimeIndicationTapped)
             .asObservable()
     }
 
@@ -396,18 +399,25 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Realtime Indicator
-        openFullConversation
+        realtimeIndicationTapped
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+
                 self.servicesProvider.realtimeService().stopFetchingData()
                 self.servicesProvider.realtimeIndicatorService().update(state: .disable)
-
             })
             .disposed(by: disposeBag)
 
         let realtimeIndicatorUpdateStateObservable = Observable.combineLatest(viewInitialized,
-                                                                              shouldShowComments) { _, shouldShowComments -> Bool in
-            return shouldShowComments
+                                                                              preConversationStyleObservable) { _, style -> Bool in
+            switch(style) {
+            case .regular, .custom:
+                return true
+            case .compact, .ctaButtonOnly, .ctaWithSummary:
+                return false
+            }
         }
             .map { shouldShow -> OWRealtimeIndicatorState in
                 return shouldShow ? .enable : .disable
