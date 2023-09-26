@@ -261,7 +261,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .insert(comments: [comment])
                 case .edit:
                     guard let commentId = comment.id else { return }
-                    commentUpdateType = .update(commentId: commentId, withComment: comment)
+                    var updatedComment = comment
+                    updatedComment.setIsEdited(true)
+                    commentUpdateType = .update(commentId: commentId, withComment: updatedComment)
                 case .replyToComment(originComment: let originComment):
                     guard let commentId = originComment.id else { return }
                     commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
