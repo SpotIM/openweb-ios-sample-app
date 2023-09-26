@@ -40,6 +40,7 @@ extension OWHelpersLayer {
             .conversation
             .commentsCounters(conversationIds: postIds)
             .response
+            .take(1)
             .subscribe(onNext: { res in
                 completion(.success(res.counts))
             },

@@ -21,7 +21,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
         let view = UIView()
             .corner(radius: Metrics.cornerRadius)
             .backgroundColor(ColorPalette.shared.color(type: .background))
-            .border(width: 1, color: ColorPalette.shared.color(type: .basicGrey))
+            .border(width: 1, color: ColorPalette.shared.color(type: .darkGrey))
         view.apply(shadow: .low)
         return view
     }()
@@ -39,7 +39,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
         return txt
             .label
             .font(FontBook.paragraph)
-            .textColor(ColorPalette.shared.color(type: .basicGrey))
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
 
     fileprivate lazy var lblReplies: UILabel = {
@@ -47,7 +47,7 @@ class ConversationCounterNewAPICell: UITableViewCell {
         return txt
             .label
             .font(FontBook.paragraph)
-            .textColor(ColorPalette.shared.color(type: .basicGrey))
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
 
     fileprivate var viewModel: ConversationCounterNewAPICellViewModeling!
