@@ -32,6 +32,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var threadOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var openClarityDetails: Observable<OWClarityDetailsType> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -202,6 +203,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
+    var openClarityDetails: Observable<OWClarityDetailsType> {
+        return openClarityDetailsChange
             .asObservable()
     }
 
@@ -877,6 +884,36 @@ fileprivate extension OWCommentThreadViewViewModel {
                         return
                     }
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // Observe open clarity details
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    return commentStatusVm.outputs.learnMoreClicked
+                }
+                return Observable.merge(learnMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] clarityDetailsType in
+                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            })
+            .disposed(by: disposeBag)
+
+        // Observe on read more click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWCommentId> in
+                let readMoreClickObservable: [Observable<OWCommentId>] = commentCellsVms.map { commentCellVm -> Observable<OWCommentId> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.readMoreTap
+                        .map { commentCellVm.outputs.commentVM.outputs.comment.id ?? "" }
+                }
+                return Observable.merge(readMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId in
+                self?.sendEvent(for: .commentReadMoreClicked(commentId: commentId))
             })
             .disposed(by: disposeBag)
 
