@@ -80,7 +80,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
         return _shouldRealtimeIndicatorUpdate
             .distinctUntilChanged()
             .asObservable()
-            .share()
+            .share(replay: 1)
     }()
 
     lazy var realtimeIndicatorType: Observable<OWRealtimeIndicatorType> = {
@@ -142,7 +142,7 @@ extension OWRealtimeIndicatorService {
 
                 newComments.forEach { comment in
                     // make sure comment is not reply and not already in conversation
-                    guard (comment.parentId == nil || (comment.parentId?.isEmpty) != nil),
+                    guard (comment.parentId == nil || (comment.parentId?.isEmpty ?? false)),
                           let commentId = comment.id,
                             (self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId) == nil) else { return }
                     self.addComment(key: commentId, comment: comment)

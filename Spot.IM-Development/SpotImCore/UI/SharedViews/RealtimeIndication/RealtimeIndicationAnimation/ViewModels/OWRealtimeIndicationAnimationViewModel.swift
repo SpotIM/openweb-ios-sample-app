@@ -49,6 +49,7 @@ class OWRealtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewM
 
     func swiped() {
         _isThereAnyDataToShow.onNext(false)
+        _isRealtimeIndicatorEnabled.onNext(false)
     }
 
     fileprivate var realtimeIndicatorService: OWRealtimeIndicatorServicing

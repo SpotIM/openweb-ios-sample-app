@@ -11,7 +11,7 @@ import Foundation
 #if NEW_API
 public protocol OWHelpers {
     func conversationCounters(forPostIds postIds: [OWPostId],
-                              completion: OWConversationCountersCompletion)
+                              completion: @escaping OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
     var loggerConfiguration: OWLoggerConfiguration { get }
     var languageStrategy: OWLanguageStrategy { get set }
@@ -20,7 +20,7 @@ public protocol OWHelpers {
 #else
 protocol OWHelpers {
     func conversationCounters(forPostIds postIds: [OWPostId],
-                              completion: OWConversationCountersCompletion)
+                              completion: @escaping OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
     var loggerConfiguration: OWLoggerConfiguration { get }
     var languageStrategy: OWLanguageStrategy { get set }
