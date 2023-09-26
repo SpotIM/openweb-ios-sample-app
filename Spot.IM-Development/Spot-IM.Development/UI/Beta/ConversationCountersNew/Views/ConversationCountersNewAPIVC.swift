@@ -18,6 +18,7 @@ class ConversationCountersNewAPIVC: UIViewController {
         static let identifier = "conversation_counters_new_api_vc_id"
         static let txtFieldPostIdsIdentifier = "post_ids"
         static let btnExecuteIdentifier = "execute_btn"
+        static let countersTableIdentifier = "counters_table"
         static let textFieldHeight: CGFloat = 40
         static let verticalMargin: CGFloat = 20
         static let horizontalMargin: CGFloat = 20
@@ -137,6 +138,8 @@ fileprivate extension ConversationCountersNewAPIVC {
     func applyAccessibility() {
         self.view.accessibilityIdentifier = Metrics.identifier
         btnExecute.accessibilityIdentifier = Metrics.btnExecuteIdentifier
+        txtFieldPostIds.accessibilityIdentifier = Metrics.txtFieldPostIdsIdentifier
+        counterTableView.accessibilityIdentifier = Metrics.countersTableIdentifier
     }
 
     func setupObservers() {
