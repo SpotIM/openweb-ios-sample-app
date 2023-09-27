@@ -176,7 +176,8 @@ platform :ios do
   lane :upload_debug_symbols_to_crashlytics do |options|
     upload_symbols_to_crashlytics(
         gsp_path: "./Spot-IM.Development/Resources/GoogleService-Info.plist",
-        binary_path: './scripts/upload-symbols'
+        binary_path: './scripts/upload-symbols',
+        dsym_path: "./Spot-IM.Development.app.dSYM.zip"
     )
   end
 
