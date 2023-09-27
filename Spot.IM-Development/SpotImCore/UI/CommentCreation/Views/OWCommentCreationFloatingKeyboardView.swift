@@ -387,7 +387,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.isSendingChanged
+        viewModel.outputs.ctaButtonLoading
             .bind(to: ctaButton.rx.isLoading)
             .disposed(by: disposeBag)
 
@@ -471,7 +471,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
             .withLatestFrom(viewModel.outputs.textViewVM.outputs.textViewText) { ($0, $1) }
-            .withLatestFrom(viewModel.outputs.isSendingChanged) { ($0.0, $0.1, $1) }
+            .withLatestFrom(viewModel.outputs.ctaButtonLoading) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] (notification, textViewText, isSendingComment) in
                 guard
                     let self = self,
