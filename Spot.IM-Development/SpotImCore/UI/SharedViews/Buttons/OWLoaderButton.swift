@@ -41,12 +41,18 @@ class OWLoaderButton: UIButton {
     }
 
     fileprivate var image: UIImage?
+    fileprivate var originalTextColor: UIColor?
     fileprivate func updateView() {
         if isLoading {
             spinner.startAnimating()
+
             image = image(for: .normal)
             setImage(nil, for: .normal)
-            titleLabel?.isHidden = true
+
+            // Changing the text color to transparent to keep original button size
+            originalTextColor = titleLabel?.textColor
+            textColor(.clear)
+
             // Prevent multiple clicks while in process
             isEnabled = false
         } else {
@@ -54,7 +60,9 @@ class OWLoaderButton: UIButton {
             if let image = image {
                 setImage(image, for: .normal)
             }
-            titleLabel?.isHidden = false
+            if let originalTextColor = originalTextColor {
+                textColor(originalTextColor)
+            }
             isEnabled = true
         }
     }
