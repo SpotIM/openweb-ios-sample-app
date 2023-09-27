@@ -117,6 +117,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveReportReasonsComponent(commentId: commentId, parentId: parentId)
         case (.reportReason, .closeReportReason):
             self._removeReportReasons.onNext()
+        case (.conversation, .openCommentCreation(let commentCreationType)):
+            self.retrieveCommentCreationComponent(type: commentCreationType)
         default:
             break
         }
