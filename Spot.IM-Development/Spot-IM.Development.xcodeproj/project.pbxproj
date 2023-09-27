@@ -29,7 +29,6 @@
 		0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125E323054335006B1489 /* ArticleWebViewController.swift */; };
 		0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
-		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */; };
 		160E42E42988103D00EDC5A1 /* OWCommentThreadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E32988103D00EDC5A1 /* OWCommentThreadVC.swift */; };
 		160E42E62988105100EDC5A1 /* OWCommentThreadViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E42E52988105100EDC5A1 /* OWCommentThreadViewVM.swift */; };
@@ -128,6 +127,7 @@
 		16D996C92A8CCA7900748E46 /* UIImagePickerController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */; };
 		16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */; };
 		16D996CD2A8D0BA500748E46 /* OWPickImageActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D996CC2A8D0BA500748E46 /* OWPickImageActionSheet.swift */; };
+		16E6BA512AB8980500C60575 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 16E6BA502AB8980500C60575 /* GoogleService-Info.plist */; };
 		16F1D4292A234F9E00D22825 /* OWCommentThreadSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */; };
 		16F66EBD2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */; };
 		16F66EBF2A2CCC470089E70E /* OWRxPresenterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */; };
@@ -1099,7 +1099,6 @@
 		0E1125E323054335006B1489 /* ArticleWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleWebViewController.swift; sourceTree = "<group>"; };
 		0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoxAuthenticationViewController.swift; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
-		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Spot-IM.Development/Resources/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		114ABD0938E416B05F040862 /* Pods-Shared-SpotImCore.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.internal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.internal.xcconfig"; sourceTree = "<group>"; };
 		131F8CE763187B7671AA1AAE /* Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
@@ -1201,6 +1200,7 @@
 		16D996C82A8CCA7900748E46 /* UIImagePickerController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Rx.swift"; sourceTree = "<group>"; };
 		16D996CA2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImagePickerPresenterResponseType.swift; sourceTree = "<group>"; };
 		16D996CC2A8D0BA500748E46 /* OWPickImageActionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPickImageActionSheet.swift; sourceTree = "<group>"; };
+		16E6BA502AB8980500C60575 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadSettings.swift; sourceTree = "<group>"; };
 		16F66EBC2A2CCC2A0089E70E /* OWRxPresenterResponseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterResponseType.swift; sourceTree = "<group>"; };
 		16F66EBE2A2CCC470089E70E /* OWRxPresenterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxPresenterAction.swift; sourceTree = "<group>"; };
@@ -6240,7 +6240,7 @@
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
+				16E6BA502AB8980500C60575 /* GoogleService-Info.plist */,
 				5D697A4A22B65108001AD556 /* Info.plist */,
 				5D697A4522B65108001AD556 /* Assets.xcassets */,
 				4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */,
@@ -6530,8 +6530,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16E6BA512AB8980500C60575 /* GoogleService-Info.plist in Resources */,
 				5D697A4622B65108001AD556 /* Assets.xcassets in Resources */,
-				0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */,
 				3DDA9A4228F5919600FE3B86 /* Roboto-Bold.ttf in Resources */,
 				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
 				5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */,
