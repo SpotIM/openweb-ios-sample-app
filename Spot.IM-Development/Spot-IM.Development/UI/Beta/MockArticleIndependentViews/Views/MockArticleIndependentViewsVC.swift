@@ -148,6 +148,8 @@ fileprivate extension MockArticleIndependentViewsVC {
                     self.handleCommentCreationPresentation()
                 case .commentThread:
                     self.handleCommentThreadPresentation()
+                case .clarityDetails:
+                    self.handleClarityDetailsPresentation()
                 default:
                     // TODO: Implement for supported types
                     break
@@ -192,6 +194,16 @@ fileprivate extension MockArticleIndependentViewsVC {
 
         scrollView.addSubview(commentThread)
         commentThread.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.height.equalTo(scrollView.snp.height)
+        }
+    }
+
+    func handleClarityDetailsPresentation() {
+        guard let clarityDetails = self.independentView else { return }
+
+        scrollView.addSubview(clarityDetails)
+        clarityDetails.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)
             make.height.equalTo(scrollView.snp.height)
         }
