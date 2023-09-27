@@ -10,5 +10,4 @@ import Foundation
 import UIKit
 
 typealias OWUISource = UIView
-typealias OWConversationCountersResponse = [String: [String: SPConversationCounters]]
 typealias OWSingleUseTokenResponse = [String: String]

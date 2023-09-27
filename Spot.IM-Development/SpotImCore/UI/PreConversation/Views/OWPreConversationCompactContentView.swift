@@ -40,7 +40,7 @@ class OWPreConversationCompactContentView: UIView {
 
     fileprivate lazy var emptyConversationImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
+        imageView.image = UIImage(spNamed: "emptyConversation-icon", supportDarkMode: true)
         return imageView
     }()
 
@@ -225,7 +225,7 @@ fileprivate extension OWPreConversationCompactContentView {
                 guard let self = self else { return }
 
                 self.textLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
-                self.emptyConversationImageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
+                self.emptyConversationImageView.image = UIImage(spNamed: "emptyConversation-icon", supportDarkMode: true)
                 self.closedImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
                 self.cameraIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
             })
