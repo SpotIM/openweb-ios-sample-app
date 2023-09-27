@@ -12,10 +12,7 @@ import Foundation
 public enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
-    case articleHeaderPressed
     case communityGuidelinesPressed(url: URL)
-    case communityQuestionsPressed
-    case postCommentPressed
     case adClosed
     case adTapped
     case closeConversationPressed
@@ -31,10 +28,7 @@ public enum OWViewActionCallbackType: Codable {
 enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
-    case articleHeaderPressed
     case communityGuidelinesPressed(url: URL)
-    case communityQuestionsPressed
-    case postCommentPressed
     case adClosed
     case adTapped
     case closeConversationPressed
@@ -55,13 +49,7 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.showMoreCommentsPressed, .showMoreCommentsPressed):
             return true
-        case (.articleHeaderPressed, .articleHeaderPressed):
-            return true
         case (.communityGuidelinesPressed, .communityGuidelinesPressed):
-            return true
-        case (.communityQuestionsPressed, .communityQuestionsPressed):
-            return true
-        case (.postCommentPressed, .postCommentPressed):
             return true
         case (.adClosed, .adClosed):
             return true
