@@ -377,7 +377,38 @@ fileprivate extension OWConversationCoordinator {
                 return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
-        Observable.merge(closeConversationPressed, openPublisherProfile, openReportReason)
+        let communityGuidelinesURLTapped = viewModel.outputs
+            .communityGuidelinesCellViewModel.outputs
+            .communityGuidelinesViewModel.outputs
+            .urlClickedOutput
+        let openCommunityGuidelines = communityGuidelinesURLTapped
+            .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
+
+        // Open comment creation
+        let openCommentCreation = viewModel.outputs.openCommentCreation
+            .map { internalType -> OWCommentCreationType in
+                switch internalType {
+                case .comment:
+                    return OWCommentCreationType.comment
+                case .replyToComment(let originComment):
+                    return .replyTo(commentId: originComment.id ?? "")
+                case .edit(let comment):
+                    return .edit(commentId: comment.id ?? "")
+                }
+            }
+            .map { OWViewActionCallbackType.openCommentCreation(type: $0) }
+
+        // Open clarity details
+        let openClarityDetails = viewModel.outputs.openClarityDetails
+            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+
+        Observable.merge(
+            closeConversationPressed,
+            openPublisherProfile,
+            openReportReason,
+            openCommunityGuidelines,
+            openCommentCreation,
+            openClarityDetails)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
