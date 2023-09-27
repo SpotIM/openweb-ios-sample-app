@@ -47,6 +47,7 @@
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
 "CommentThread" = "Comment Thread";
+"ClarityDetails" = "Clarity Details";
 "IndependentAdUnit" = "IAU - Independent Ad Unit";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
@@ -105,6 +106,7 @@
 "PlaygroundIndependentMode" = "Playground - Independent Mode";
 "TestingPlaygroundLogger" = "Testing playground logger";
 "CommentThreadSettings" = "Comment Thread:";
+"ClarityDetailsSettings" = "Clarity Details:";
 "OpenCommentId" = "Open comment id";
 "ElementsCustomizationStyle" = "Elements customization style:";
 "Style1" = "Style 1";

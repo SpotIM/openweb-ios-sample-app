@@ -23,6 +23,7 @@ class ToolbarCollectionCell: UICollectionViewCell {
         let lbl = UILabel()
             .font(FontBook.mainHeadingBold)
             .textAlignment(.center)
+            .textColor(.red)
         return lbl
     }()
 

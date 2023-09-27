@@ -499,6 +499,24 @@ extension OWUILayer {
         })
     }
 
+    func clarityDetails(postId: OWPostId,
+                        commentId: OWCommentId,
+                        type: OWClarityDetailsType,
+                        additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
+                        callbacks: OWViewActionsCallbacks?,
+                        completion: @escaping OWViewCompletion) {
+
+        _ = viewsSdkCoordinator.clarityDetailsView(type: type, callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+    }
+
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol = OWTestingPlaygroundSettings(),
