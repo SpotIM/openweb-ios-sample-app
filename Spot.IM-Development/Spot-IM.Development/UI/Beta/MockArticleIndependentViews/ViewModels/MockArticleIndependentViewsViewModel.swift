@@ -71,6 +71,8 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
             loggerViewTitle = "Comment thread logger"
         case .independentAdUnit:
             loggerViewTitle = "Independed ad unit logger"
+        case .clarityDetails:
+            loggerViewTitle = "Clarity details logger"
         }
 
         setupCustomizationsCallaback()
@@ -105,7 +107,7 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     }()
 
     fileprivate lazy var viewTypeUpdaters: Observable<SDKUIIndependentViewsActionSettings> = {
-        return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater)
+        return Observable.merge(preConversationUpdater, conversationUpdater, commentCreationUpdater, commentThreadUpdater, independentAdUnitUpdater, clarityDetailsUpdater)
             .flatMapLatest { [weak self] _ -> Observable<SDKUIIndependentViewsActionSettings> in
                 guard let self = self else { return .empty() }
                 return self.actionSettings
@@ -195,6 +197,14 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
     fileprivate lazy var independentAdUnitUpdater: Observable<Void> = {
         return Observable.merge(self.independentAdUnitStyleChanged)
     }()
+
+    // All the stuff which should trigger new comment thread component
+    fileprivate lazy var clarityDetailsStyleChanged: Observable<Void> = {
+        return Observable.just(())
+    }()
+    fileprivate lazy var clarityDetailsUpdater: Observable<Void> = {
+        return Observable.merge(self.clarityDetailsStyleChanged)
+    }()
 }
 
 fileprivate extension MockArticleIndependentViewsViewModel {
@@ -257,6 +267,8 @@ fileprivate extension MockArticleIndependentViewsViewModel {
             return self.retrieveCommentCreation(settings: settings)
         case .commentThread:
             return self.retrieveCommentThread(settings: settings)
+        case .clarityDetails:
+            return self.retrieveClarityDetails(settings: settings)
         default:
             return Observable.error(GeneralErrors.missingImplementation)
         }
@@ -400,6 +412,37 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 case .failure(let error):
                     let message = error.description
                     DLog("Calling retrieveCommentThread error: \(message)")
+                    observer.onError(error)
+                }
+            })
+
+            return Disposables.create()
+        }
+    }
+
+    func retrieveClarityDetails(settings: SDKUIIndependentViewsActionSettings) -> Observable<UIView> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else { return Disposables.create() }
+
+            let manager = OpenWeb.manager
+            let uiViews = manager.ui.views
+
+            let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
+                guard let self = self else { return }
+                let log = "Received OWViewActionsCallback type: \(callbackType), from source: \(sourceType), postId: \(postId)\n"
+                self.loggerViewModel.inputs.log(text: log)
+            }
+
+            uiViews.clarityDetails(type: .rejected,
+                                   callbacks: actionsCallbacks,
+                                   completion: { result in
+                switch result {
+                case .success(let clarityDetailsView):
+                    observer.onNext(clarityDetailsView)
+                    observer.onCompleted()
+                case .failure(let error):
+                    let message = error.description
+                    DLog("Calling retrieveClarityDetails error: \(message)")
                     observer.onError(error)
                 }
             })
