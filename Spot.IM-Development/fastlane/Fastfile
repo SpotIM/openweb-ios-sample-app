@@ -174,14 +174,10 @@ platform :ios do
   # Excpect parameter `version`
   desc "Upload debug symbols to Crashlytics"
   lane :upload_debug_symbols_to_crashlytics do |options|
-    current_build_number = get_build_number()
-    version = options[:version]
-    download_dsyms(version: version, build_number: current_build_number)
     upload_symbols_to_crashlytics(
         gsp_path: "./Spot-IM.Development/Resources/GoogleService-Info.plist",
         binary_path: './scripts/upload-symbols'
     )
-    clean_build_artifacts
   end
 
   # Excpect parameter `version`
