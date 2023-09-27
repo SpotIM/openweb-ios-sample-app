@@ -55,7 +55,8 @@ class OWCommentThreadActionCell: UITableViewCell {
 
 fileprivate extension OWCommentThreadActionCell {
     func setupUI() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         self.contentView.addSubviews(commentThreadActionsView)
 
         commentThreadActionsView.OWSnp.makeConstraints { make in
