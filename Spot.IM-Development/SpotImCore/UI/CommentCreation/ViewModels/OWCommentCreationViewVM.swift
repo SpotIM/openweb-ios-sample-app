@@ -425,7 +425,6 @@ fileprivate extension OWCommentCreationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-
         self._commentCreationSubmitInProgrss
             .subscribe(onNext: { [weak self] isInProgress in
                 guard let self = self else { return }
