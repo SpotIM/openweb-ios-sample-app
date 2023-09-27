@@ -38,8 +38,8 @@ class OWCommentCreationFooterView: UIView {
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
-    fileprivate lazy var ctaButton: UIButton = {
-        let button = UIButton()
+    fileprivate lazy var ctaButton: OWLoaderButton = {
+        let button = OWLoaderButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .font(OWFontBook.shared.font(typography: .bodyText))
             .corner(radius: Metrics.ctaButtonCornerRadius)
@@ -136,6 +136,10 @@ fileprivate extension OWCommentCreationFooterView {
         viewModel.outputs.showAddImageButton
             .map { !$0 }
             .bind(to: addImageButton.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.ctaButtonLoading
+            .bind(to: ctaButton.rx.isLoading)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
