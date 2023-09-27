@@ -12,7 +12,6 @@ import Foundation
 public enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
-    case writeCommentPressed
     case articleHeaderPressed
     case communityGuidelinesPressed(url: URL)
     case communityQuestionsPressed
@@ -24,6 +23,7 @@ public enum OWViewActionCallbackType: Codable {
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
+    case openClarityDetails(type: OWClarityDetailsType)
     case closeClarityDetails
     case error(_ error: OWError)
 }
@@ -31,7 +31,6 @@ public enum OWViewActionCallbackType: Codable {
 enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
-    case writeCommentPressed
     case articleHeaderPressed
     case communityGuidelinesPressed(url: URL)
     case communityQuestionsPressed
@@ -43,6 +42,7 @@ enum OWViewActionCallbackType: Codable {
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
+    case openClarityDetails(type: OWClarityDetailsType)
     case closeClarityDetails
     case error(_ error: OWError)
 }
@@ -54,8 +54,6 @@ extension OWViewActionCallbackType: Equatable {
         case (.contentPressed, .contentPressed):
             return true
         case (.showMoreCommentsPressed, .showMoreCommentsPressed):
-            return true
-        case (.writeCommentPressed, .writeCommentPressed):
             return true
         case (.articleHeaderPressed, .articleHeaderPressed):
             return true
@@ -79,6 +77,8 @@ extension OWViewActionCallbackType: Equatable {
             return lhsId == rhsId
         case (.closeReportReason, .closeReportReason):
             return true
+        case (let .openClarityDetails(lhsType), let .openClarityDetails(rhsType)):
+            return lhsType == rhsType
         case (.closeClarityDetails, .closeClarityDetails):
             return true
         default:
