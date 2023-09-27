@@ -21,6 +21,7 @@ class UIViewsVC: UIViewController {
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
+        static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
         static let btnIndependentAdUnitIdentifier = "btn_independent_ad_unit_id"
         static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
@@ -53,6 +54,10 @@ class UIViewsVC: UIViewController {
 
     fileprivate lazy var btnCommentThread: UIButton = {
         return NSLocalizedString("CommentThread", comment: "").blueRoundedButton
+    }()
+
+    fileprivate lazy var btnClarityDetails: UIButton = {
+        return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnIndependentAdUnit: UIButton = {
@@ -91,6 +96,7 @@ fileprivate extension UIViewsVC {
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
+        btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
         btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
         btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
@@ -143,12 +149,21 @@ fileprivate extension UIViewsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
+        // Adding clarity details button
+        scrollView.addSubview(btnClarityDetails)
+        btnClarityDetails.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentThread.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
         // Adding independent ad unit button
         scrollView.addSubview(btnIndependentAdUnit)
         btnIndependentAdUnit.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentThread.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
@@ -181,6 +196,10 @@ fileprivate extension UIViewsVC {
 
         btnCommentThread.rx.tap
             .bind(to: viewModel.inputs.commentThreadTapped)
+            .disposed(by: disposeBag)
+
+        btnClarityDetails.rx.tap
+            .bind(to: viewModel.inputs.clarityDetailsTapped)
             .disposed(by: disposeBag)
 
         btnIndependentAdUnit.rx.tap

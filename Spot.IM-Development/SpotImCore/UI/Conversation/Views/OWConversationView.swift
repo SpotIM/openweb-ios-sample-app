@@ -78,6 +78,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
+        refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
+                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+
         return refresh
     }()
 
@@ -214,6 +217,7 @@ fileprivate extension OWConversationView {
 
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
+                self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
