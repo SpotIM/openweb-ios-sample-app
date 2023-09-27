@@ -8,7 +8,14 @@
 
 import Foundation
 
-enum OWClarityDetailsType {
+#if NEW_API
+public enum OWClarityDetailsType: Codable {
     case rejected
     case pending
 }
+#else
+enum OWClarityDetailsType: Codable {
+    case rejected
+    case pending
+}
+#endif

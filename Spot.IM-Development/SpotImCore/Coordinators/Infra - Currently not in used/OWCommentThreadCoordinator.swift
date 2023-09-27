@@ -238,8 +238,13 @@ fileprivate extension OWCommentThreadCoordinator {
             }
             .map { OWViewActionCallbackType.openCommentCreation(type: $0) }
 
+        // Open clarity details
+        let openClarityDetails = viewModel.outputs.openClarityDetails
+            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+
         Observable.merge(openPublisherProfile,
-                         openCommentCreation)
+                         openCommentCreation,
+                         openClarityDetails)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
