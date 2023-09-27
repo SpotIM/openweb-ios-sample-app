@@ -426,6 +426,7 @@ fileprivate extension MockArticleIndependentViewsViewModel {
 
             let manager = OpenWeb.manager
             let uiViews = manager.ui.views
+            let additionalSettings = self.commonCreatorService.additionalSettings()
 
             let actionsCallbacks: OWViewActionsCallbacks = { [weak self] callbackType, sourceType, postId in
                 guard let self = self else { return }
@@ -433,7 +434,10 @@ fileprivate extension MockArticleIndependentViewsViewModel {
                 self.loggerViewModel.inputs.log(text: log)
             }
 
-            uiViews.clarityDetails(type: .rejected,
+            uiViews.clarityDetails(postId: settings.postId,
+                                   commentId: self.commonCreatorService.commentThreadCommentId(),
+                                   type: .rejected,
+                                   additionalSettings: additionalSettings,
                                    callbacks: actionsCallbacks,
                                    completion: { result in
                 switch result {
