@@ -172,9 +172,29 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
+        // Open Guidelines
+        let communityGuidelinesObservable = viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput
+            .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
+
+        // Open comment creation
+        let commentCreationObservable = viewModel.outputs.openCommentCreation
+            .map { internalType -> OWCommentCreationType in
+                switch internalType {
+                case .comment:
+                    return OWCommentCreationType.comment
+                case .replyToComment(let originComment):
+                    return .replyTo(commentId: originComment.id ?? "")
+                case .edit(let comment):
+                    return .edit(commentId: comment.id ?? "")
+                }
+            }
+            .map { OWViewActionCallbackType.openCommentCreation(type: $0) }
+
         Observable.merge(contentPressed,
                          openPublisherProfile,
-                         openReportReason)
+                         openReportReason,
+                         communityGuidelinesObservable,
+                         commentCreationObservable)
             .subscribe(onNext: { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             })
