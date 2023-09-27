@@ -108,8 +108,9 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     }
 
     var ctaButtonEnabled: Observable<Bool> {
-        return ctaEnabled
-            .asObservable()
+        Observable.combineLatest(ctaEnabled, submitCommentInProgress) { ctaEnabled, submitCommentInProgress in
+            return ctaEnabled && !submitCommentInProgress
+        }
     }
 
     var submitCommentInProgress = BehaviorSubject<Bool>(value: false)
