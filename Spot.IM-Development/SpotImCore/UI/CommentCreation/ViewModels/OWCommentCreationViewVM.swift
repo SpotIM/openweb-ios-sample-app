@@ -206,6 +206,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     return (commentCreationData, comment)
                 case .error(_):
                     // TODO - Handle error
+                    self._commentCreationSubmitInProgrss.onNext(false)
                     return nil
                 default:
                     return nil
@@ -430,6 +431,7 @@ fileprivate extension OWCommentCreationViewViewModel {
                 guard let self = self else { return }
                 self.commentCreationRegularViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
                 self.commentCreationLightViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
+                self.commentCreationFloatingKeyboardViewVm.inputs.submitCommentInProgress.onNext(isInProgress)
             })
             .disposed(by: disposeBag)
     }
