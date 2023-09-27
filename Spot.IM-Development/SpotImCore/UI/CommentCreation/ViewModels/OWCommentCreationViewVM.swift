@@ -51,6 +51,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate lazy var postId = OWManager.manager.postId
 
+    fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
+
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
         switch commentCreationData.settings.commentCreationSettings.style {
@@ -173,6 +175,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 ))
             }
             .unwrap()
+            .do(onNext: { [weak self] _, _ in
+                guard let self = self else { return }
+                self._commentCreationSubmitInProgrss.onNext(true)
+            })
             .flatMapLatest { [weak self] commentCreationData, networkParameters -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // 2 - perform create comment request
                 guard let self = self else { return .empty() }
@@ -284,9 +290,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     }
             })
             .do(onNext: { [weak self] comment in
-                self?.servicesProvider
+                guard let self = self else { return }
+                self.servicesProvider
                     .commentStatusUpdaterService()
                     .fetchStatusFor(comment: comment)
+                self._commentCreationSubmitInProgrss.onNext(false)
             })
             .share()
     }()
@@ -414,6 +422,15 @@ fileprivate extension OWCommentCreationViewViewModel {
             .articleExtraData
             .subscribe(onNext: { [weak self] article in
                 self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+
+        self._commentCreationSubmitInProgrss
+            .subscribe(onNext: { [weak self] isInProgress in
+                guard let self = self else { return }
+                self.commentCreationRegularViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
+                self.commentCreationLightViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
             })
             .disposed(by: disposeBag)
     }
