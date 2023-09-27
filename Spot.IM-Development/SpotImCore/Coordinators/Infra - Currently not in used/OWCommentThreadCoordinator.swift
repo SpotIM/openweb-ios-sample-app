@@ -242,9 +242,18 @@ fileprivate extension OWCommentThreadCoordinator {
         let openClarityDetails = viewModel.outputs.openClarityDetails
             .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
 
+        // Open report reason
+        let openReportReason = viewModel.outputs.openReportReason
+            .map { commentVM -> OWViewActionCallbackType in
+                guard let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return .error(.reportReasonFlow) }
+                return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
+            }
+
         Observable.merge(openPublisherProfile,
                          openCommentCreation,
-                         openClarityDetails)
+                         openClarityDetails,
+                         openReportReason)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
