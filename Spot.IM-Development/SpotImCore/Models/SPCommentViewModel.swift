@@ -63,7 +63,7 @@ internal struct CommentViewModel {
 
     let commentUserVM: SPCommentUserViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
-    let statusIndicationVM: OWCommentStatusIndicationViewModeling = OWCommentStatusIndicationViewModel()
+    let statusIndicationVM: SPCommentStatusIndicationViewModeling = SPCommentStatusIndicationViewModel()
 
     init(
         with comment: SPComment,

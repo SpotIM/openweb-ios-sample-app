@@ -45,7 +45,8 @@ class OWCommunityGuidelinesCell: UITableViewCell {
 
 fileprivate extension OWCommunityGuidelinesCell {
     func setupUI() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         self.contentView.isUserInteractionEnabled = false
 
         self.addSubview(communityGuidelinesView)
