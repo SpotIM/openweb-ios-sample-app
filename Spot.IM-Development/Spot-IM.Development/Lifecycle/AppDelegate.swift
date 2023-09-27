@@ -9,6 +9,7 @@
 import UIKit
 import SpotImCore
 import GoogleMobileAds
+import FirebaseCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldShowOpenFullConversation)
         UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack)
         UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment)
+
+        #if !(DEBUG)
+        FirebaseApp.configure()
+        #endif
 
         return true
     }
