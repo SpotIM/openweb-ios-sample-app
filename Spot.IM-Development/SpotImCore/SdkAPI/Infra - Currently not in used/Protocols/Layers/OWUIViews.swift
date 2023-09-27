@@ -43,7 +43,10 @@ public protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
-    func clarityDetails(type: OWClarityDetailsType,
+    func clarityDetails(postId: OWPostId,
+                        commentId: OWCommentId,
+                        type: OWClarityDetailsType,
+                        additionalSettings: OWAdditionalSettingsProtocol,
                         callbacks: OWViewActionsCallbacks?,
                         completion: @escaping OWViewCompletion)
 
@@ -89,7 +92,10 @@ protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
-    func clarityDetails(type: OWClarityDetailsType,
+    func clarityDetails(postId: OWPostId,
+                        commentId: OWCommentId,
+                        type: OWClarityDetailsType,
+                        additionalSettings: OWAdditionalSettingsProtocol,
                         callbacks: OWViewActionsCallbacks?,
                         completion: @escaping OWViewCompletion)
 }

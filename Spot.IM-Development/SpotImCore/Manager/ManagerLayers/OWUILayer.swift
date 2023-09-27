@@ -485,9 +485,13 @@ extension OWUILayer {
         })
     }
 
-    func clarityDetails(type: OWClarityDetailsType,
+    func clarityDetails(postId: OWPostId,
+                        commentId: OWCommentId,
+                        type: OWClarityDetailsType,
+                        additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                         callbacks: OWViewActionsCallbacks?,
                         completion: @escaping OWViewCompletion) {
+
         _ = viewsSdkCoordinator.clarityDetailsView(type: type, callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
