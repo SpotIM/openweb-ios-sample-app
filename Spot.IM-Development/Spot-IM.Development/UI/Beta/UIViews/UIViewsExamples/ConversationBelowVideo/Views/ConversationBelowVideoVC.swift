@@ -40,9 +40,13 @@ class ConversationBelowVideoVC: UIViewController {
     fileprivate var conversation: UIView?
     fileprivate var commentCreation: UIView?
     fileprivate var reportReasons: UIView?
+    fileprivate var clarityDetails: UIView?
+    fileprivate var webPage: UIView?
 
     fileprivate unowned var conversationTopConstraint: Constraint!
     fileprivate unowned var reportReasonsTopConstraint: Constraint!
+    fileprivate unowned var clarityDetailsTopConstraint: Constraint!
+    fileprivate unowned var webPageTopConstraint: Constraint!
 
     fileprivate lazy var videoPlayerItem: AVPlayerItem = {
         let videoURL = URL(string: Metrics.videoLink)
@@ -174,19 +178,63 @@ fileprivate extension ConversationBelowVideoVC {
 
         viewModel.outputs.reportReasonsRetrieved
             .subscribe(onNext: { [weak self] view in
-                self?.handleReportReasonsRetrieved(view: view)
+                guard let self = self else { return }
+                self.handleRetrieved(component: view,
+                                     assignToComponent: &self.reportReasons,
+                                     topConstraint: &self.reportReasonsTopConstraint,
+                                     putWithAnimationOnComponent: self.conversation)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.clarityDetailsRetrieved
+            .subscribe(onNext: { [weak self] view in
+                guard let self = self else { return }
+                self.handleRetrieved(component: view,
+                                     assignToComponent: &self.clarityDetails,
+                                     topConstraint: &self.clarityDetailsTopConstraint,
+                                     putWithAnimationOnComponent: self.conversation)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.webPageRetrieved
+            .subscribe(onNext: { [weak self] view in
+                guard let self = self else { return }
+                self.handleRetrieved(component: view,
+                                     assignToComponent: &self.webPage,
+                                     topConstraint: &self.webPageTopConstraint,
+                                     putWithAnimationOnComponent: self.conversation)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.removeConversation
             .subscribe(onNext: { [weak self] _ in
-                self?.handleRemoveConversation()
+                guard let self = self else { return }
+                self.handleRemoveWithAnimation(component: &self.conversation,
+                                               componentTopConstraint: self.conversationTopConstraint)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.removeReportReasons
             .subscribe(onNext: { [weak self] _ in
-                self?.handleRemoveReportReasons()
+                guard let self = self else { return }
+                self.handleRemoveWithAnimation(component: &self.reportReasons,
+                                               componentTopConstraint: self.reportReasonsTopConstraint)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.removeClarityDetails
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.handleRemoveWithAnimation(component: &self.clarityDetails,
+                                               componentTopConstraint: self.clarityDetailsTopConstraint)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.removeWebPage
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.handleRemoveWithAnimation(component: &self.webPage,
+                                               componentTopConstraint: self.webPageTopConstraint)
             })
             .disposed(by: disposeBag)
 
@@ -282,28 +330,31 @@ fileprivate extension ConversationBelowVideoVC {
         }
     }
 
-    func handleReportReasonsRetrieved(view: UIView) {
+    func handleRetrieved(component: UIView,
+                         assignToComponent componentToAssignOn: inout UIView?,
+                         topConstraint: inout Constraint!,
+                         putWithAnimationOnComponent baseComponent: UIView?) {
         // 1. Remove report reasons from UI hierarchy
-        if let reportReasonsView = reportReasons {
-            reportReasonsView.removeFromSuperview()
-            reportReasons = nil
+        if let existedComponent = componentToAssignOn {
+            existedComponent.removeFromSuperview()
+            componentToAssignOn = nil
         }
 
         // 2. Set report reasons and add to the UI hierarchy with animation from the bottom
         // Adding on the `conversationView`
-        guard let conversationView = conversation else { return }
-        reportReasons = view
-        conversationView.addSubview(view)
-        view.snp.makeConstraints { make in
-            reportReasonsTopConstraint = make.top.equalTo(conversationView.snp.bottom).offset(self.view.safeAreaInsets.bottom).constraint
+        guard let baseComponentView = baseComponent else { return }
+        componentToAssignOn = component
+        baseComponentView.addSubview(component)
+        component.snp.makeConstraints { make in
+            topConstraint = make.top.equalTo(baseComponentView.snp.bottom).offset(self.view.safeAreaInsets.bottom).constraint
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(conversationView.snp.height)
+            make.height.equalTo(baseComponentView.snp.height)
         }
         self.view.layoutIfNeeded()
 
         // 3. Perform animation
-        let offset = -conversationView.frame.height
-        reportReasonsTopConstraint.update(offset: offset)
+        let offset = -baseComponentView.frame.height
+        topConstraint.update(offset: offset)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self = self else { return }
             self.view.layoutIfNeeded()
@@ -312,33 +363,17 @@ fileprivate extension ConversationBelowVideoVC {
         }
     }
 
-    func handleRemoveConversation() {
-        guard conversation != nil else { return }
+    func handleRemoveWithAnimation(component: inout UIView?, componentTopConstraint: Constraint) {
+        guard component != nil else { return }
 
         // 1. Perform animation
-        conversationTopConstraint.update(offset: 0)
+        componentTopConstraint.update(offset: 0)
         UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
             guard let self = self else { return }
             self.view.layoutIfNeeded()
-        } completion: { [weak self] _ in
-            guard let self = self else { return }
-            self.conversation?.removeFromSuperview()
-            self.conversation = nil
-        }
-    }
-
-    func handleRemoveReportReasons() {
-        guard reportReasons != nil else { return }
-
-        // 1. Perform animation
-        reportReasonsTopConstraint.update(offset: 0)
-        UIView.animate(withDuration: Metrics.presentAnimationDuration) { [weak self] in
-            guard let self = self else { return }
-            self.view.layoutIfNeeded()
-        } completion: { [weak self] _ in
-            guard let self = self else { return }
-            self.reportReasons?.removeFromSuperview()
-            self.reportReasons = nil
+        } completion: { [weak component] _ in
+            component?.removeFromSuperview()
+            component = nil
         }
     }
 
