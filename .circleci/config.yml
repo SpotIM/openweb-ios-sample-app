@@ -652,6 +652,13 @@ workflows:
                 - /^release/tag14.3.1/.*/
           xcode: "14.3.1"
 
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/tag15.0/.*/
+          xcode: "15.0"
+
       - release_sdk_job:
           filters:
             branches:
@@ -684,6 +691,13 @@ workflows:
           xcode: "14.3.1"
           buildConfig: "ReleaseBeta"
 
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag15.0/.*/
+          xcode: "15.0"
+          buildConfig: "ReleaseBeta"
 
       - release_app_job:
           context: mobile-automation
