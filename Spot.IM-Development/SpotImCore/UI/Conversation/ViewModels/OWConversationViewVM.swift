@@ -31,7 +31,6 @@ protocol OWConversationViewViewModelingOutputs {
     var shouldShowTiTleHeader: Bool { get }
     var shouldShowArticleDescription: Bool { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
-    var shouldShowErrorLoadingReplies: Observable<Bool> { get }
     var shouldShowErrorLoadingMoreComments: Observable<Bool> { get }
     var shouldShowErrorCommentDelete: Observable<Bool> { get }
     var shouldShowErrorMuteUser: Observable<Bool> { get }
@@ -125,12 +124,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var shouldShowErrorLoadingComments: Observable<Bool> {
         return _shouldShowErrorLoadingComments
             .observe(on: generalVMScheduler)
-            .asObservable()
-    }
-
-    fileprivate var _shouldShowErrorLoadingReplies = BehaviorSubject<Bool>(value: false)
-    var shouldShowErrorLoadingReplies: Observable<Bool> {
-        return _shouldShowErrorLoadingReplies
             .asObservable()
     }
 
@@ -519,22 +512,23 @@ fileprivate extension OWConversationViewViewModel {
                     depth: depth
                 )))
 
-                cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
+                if !commentPresentationData.repliesPresentation.contains(where: { $0.repliesError == true }) {
+                    cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
 
-                if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
-                    cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
-                        id: "\(commentPresentationData.id)_expand",
-                        data: commentPresentationData,
-                        mode: .expand,
-                        depth: depth
-                    )))
+                    if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
+                        cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                            id: "\(commentPresentationData.id)_expand",
+                            data: commentPresentationData,
+                            mode: .expand,
+                            depth: depth
+                        )))
+                    }
                 }
             }
 
             if commentPresentationData.repliesPresentation.contains(where: { $0.repliesError == true }) {
-                print("commentPresentationData = \(commentPresentationData.id)")
-                print("cellOptions = \(cellOptions)")
-                cellOptions.append(contentsOf: self.getErrorStateCell(errorStateType: .loadConversationReplies(commentPresentationData: commentPresentationData)))
+                cellOptions.append(contentsOf: self.getErrorStateCell(errorStateType: .loadConversationReplies(commentPresentationData: commentPresentationData),
+                                                                      depth: depth))
             }
         }
         return cellOptions
@@ -568,8 +562,8 @@ fileprivate extension OWConversationViewViewModel {
         return skeletonCells
     }
 
-    func getErrorStateCell(errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil) -> [OWConversationCellOption] {
-        let errorViewModel = OWErrorStateCellViewModel(errorStateType: errorStateType, commentPresentationData: commentPresentationData)
+    func getErrorStateCell(errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil, depth: Int = 0) -> [OWConversationCellOption] {
+        let errorViewModel = OWErrorStateCellViewModel(errorStateType: errorStateType, commentPresentationData: commentPresentationData, depth: depth)
         errorViewModel.outputs.errorStateViewModel.outputs.tryAgainTap
             .bind(to: tryAgainAfterError)
             .disposed(by: disposeBag)
@@ -869,10 +863,6 @@ fileprivate extension OWConversationViewViewModel {
             .asObservable()
 
         let loadMoreRepliesReadObservable = Observable.merge(_loadMoreReplies, tryAgainAfterLoadingMoreRepliesError)
-            .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self._shouldShowErrorLoadingReplies.onNext(false)
-            })
             .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
@@ -905,21 +895,19 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
-            .map { [weak self] (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?)? in
-                guard let self = self else { return nil }
+            .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?, Bool)? in
                 guard event != nil else {
                     // We didn't have to fetch new data - the event is nil
-                    return (commentPresentationData, nil)
+                    return (commentPresentationData, nil, false)
                 }
 
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
-                    return (commentPresentationData, conversationRead)
+                    return (commentPresentationData, conversationRead, false)
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._shouldShowErrorLoadingReplies.onNext(true)
-                    return (commentPresentationData, nil)
+                    return (commentPresentationData, nil, true)
                 default:
                     return nil
                 }
@@ -927,7 +915,6 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .withLatestFrom(shouldShowErrorLoadingReplies) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
                 if shouldShowErrorLoadingReplies {
