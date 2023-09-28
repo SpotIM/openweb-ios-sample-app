@@ -20,10 +20,14 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var preConversationRetrieved: Observable<UIView> { get }
     var conversationRetrieved: Observable<UIView> { get }
     var commentCreationRetrieved: Observable<UIView> { get }
+    var clarityDetailsRetrieved: Observable<UIView> { get }
+    var webPageRetrieved: Observable<UIView> { get }
     var reportReasonsRetrieved: Observable<UIView> { get }
     var removeConversation: Observable<Void> { get }
     var removeReportReasons: Observable<Void> { get }
     var removeCommentCreation: Observable<Void> { get }
+    var removeClarityDetails: Observable<Void> { get }
+    var removeWebPage: Observable<Void> { get }
     var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> { get }
 }
 
@@ -78,6 +82,18 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
+    fileprivate let _clarityDetailsRetrieved = PublishSubject<UIView>()
+    var clarityDetailsRetrieved: Observable<UIView> {
+        return _clarityDetailsRetrieved
+            .asObservable()
+    }
+
+    fileprivate let _webPageRetrieved = PublishSubject<UIView>()
+    var webPageRetrieved: Observable<UIView> {
+        return _webPageRetrieved
+            .asObservable()
+    }
+
     fileprivate let _removeConversation = PublishSubject<Void>()
     var removeConversation: Observable<Void> {
         return _removeConversation
@@ -93,6 +109,18 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
     fileprivate let _removeCommentCreation = PublishSubject<Void>()
     var removeCommentCreation: Observable<Void> {
         return _removeCommentCreation
+            .asObservable()
+    }
+
+    fileprivate let _removeClarityDetails = PublishSubject<Void>()
+    var removeClarityDetails: Observable<Void> {
+        return _removeClarityDetails
+            .asObservable()
+    }
+
+    fileprivate let _removeWebPage = PublishSubject<Void>()
+    var removeWebPage: Observable<Void> {
+        return _removeWebPage
             .asObservable()
     }
 
@@ -119,6 +147,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self._removeReportReasons.onNext()
         case (.conversation, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
+        case (.conversation, .openClarityDetails(let clarityDetailsType)):
+            self.retrieveClarityDetailsComponent(commentId: "", type: clarityDetailsType)
+        case (.clarityDetails, .closeClarityDetails):
+            self._removeClarityDetails.onNext()
+        case (.conversation, .communityGuidelinesPressed(let url)):
+            self.retrieveWebPageComponent(url: url)
         default:
             break
         }
@@ -281,7 +315,28 @@ fileprivate extension ConversationBelowVideoViewModel {
         })
     }
 
-    func retrieveWebPageComponent() {
+    func retrieveClarityDetailsComponent(commentId: OWCommentId, type: OWClarityDetailsType) {
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let additionalSettings = OWAdditionalSettings()
+
+        uiViewsLayer.clarityDetails(postId: self.postId,
+                                  commentId: commentId,
+                                  type: type,
+                                  additionalSettings: additionalSettings,
+                                  callbacks: self.actionsCallbacks,
+                                  completion: { [weak self] result in
+
+            guard let self = self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.onNext(err)
+            case.success(let view):
+                self._clarityDetailsRetrieved.onNext(view)
+            }
+        })
+    }
+
+    func retrieveWebPageComponent(url: URL) {
         // TODO: To be completed in the SDK side
     }
 }
