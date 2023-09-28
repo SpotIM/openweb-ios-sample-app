@@ -21,6 +21,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
     var commentCreationSubmitted: Observable<OWComment> { get }
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -38,7 +39,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewableMode: OWViewableMode
+    let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     // This is the original commentCreationData since

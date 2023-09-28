@@ -153,6 +153,10 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self._removeClarityDetails.onNext()
         case (.conversation, .communityGuidelinesPressed(let url)):
             self.retrieveWebPageComponent(url: url)
+        case (.commentCreation, .floatingCommentCreationDismissed):
+            self._removeCommentCreation.onNext()
+            // TODO: Add profile integration
+            // TODO: Add dismiss for the web view
         default:
             break
         }
