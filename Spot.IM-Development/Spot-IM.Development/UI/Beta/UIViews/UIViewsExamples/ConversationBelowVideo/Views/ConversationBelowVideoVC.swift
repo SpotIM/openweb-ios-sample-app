@@ -27,10 +27,8 @@ class ConversationBelowVideoVC: UIViewController {
         static let videoRatio: CGFloat = 9/16
         static let videoPlayerIdentifier = "video_player_id"
         static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"
-        // For some reason those longer videos didn't worked, try to play them also locally without luck
-        // Keeping the URLs for reference
-        static let videoLink2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
-        static let videoLink3 = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        // For some reason this longer video isn't working on a simulator, so we will show it only one a real device
+        static let videoLink2 = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 
     fileprivate let viewModel: ConversationBelowVideoViewModeling
@@ -49,7 +47,14 @@ class ConversationBelowVideoVC: UIViewController {
     fileprivate unowned var webPageTopConstraint: Constraint!
 
     fileprivate lazy var videoPlayerItem: AVPlayerItem = {
-        let videoURL = URL(string: Metrics.videoLink)
+        let urlString: String
+        #if targetEnvironment(simulator)
+        urlString = Metrics.videoLink
+        #else
+        urlString = Metrics.videoLink2
+        #endif
+
+        let videoURL = URL(string: urlString)
         let playerItem = AVPlayerItem(url: videoURL!)
         return playerItem
     }()
