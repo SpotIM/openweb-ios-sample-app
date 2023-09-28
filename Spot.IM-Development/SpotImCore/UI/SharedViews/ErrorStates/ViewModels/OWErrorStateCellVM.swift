@@ -17,6 +17,7 @@ protocol OWErrorStateCellViewModelingInputs {
 protocol OWErrorStateCellViewModelingOutputs {
     var id: String { get }
     var errorStateViewModel: OWErrorStateViewViewModeling { get }
+    var depth: Int { get }
 }
 
 protocol OWErrorStateCellViewModeling: OWCellViewModel {
@@ -30,6 +31,8 @@ class OWErrorStateCellViewModel: OWErrorStateCellViewModeling,
     var inputs: OWErrorStateCellViewModelingInputs { return self }
     var outputs: OWErrorStateCellViewModelingOutputs { return self }
 
+    var depth: Int = 0
+
     lazy var errorStateViewModel: OWErrorStateViewViewModeling = {
         return OWErrorStateViewViewModel(errorStateType: errorStateType)
     }()
@@ -40,10 +43,11 @@ class OWErrorStateCellViewModel: OWErrorStateCellViewModeling,
     // Unique identifier
     let id: String
 
-    init(id: String = UUID().uuidString, errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil) {
+    init(id: String = UUID().uuidString, errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil, depth: Int = 0) {
         self.id = id
         self.errorStateType = errorStateType
         self.commentPresentationData = commentPresentationData
+        self.depth = depth
     }
 }
 

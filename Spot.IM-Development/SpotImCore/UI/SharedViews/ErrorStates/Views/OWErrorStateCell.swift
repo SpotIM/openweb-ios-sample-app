@@ -11,6 +11,8 @@ import RxSwift
 
 class OWErrorStateCell: UITableViewCell {
     fileprivate struct Metrics {
+        static let maxDepth: Int = 4
+        static let depthOffset: CGFloat = 23
         static let padding: CGFloat = 16
     }
 
@@ -35,6 +37,11 @@ class OWErrorStateCell: UITableViewCell {
         self.viewModel = vm
         self.errorStateView.configure(with: self.viewModel.errorStateViewModel)
         self.updateUI()
+
+        let depth = min(self.viewModel.outputs.depth, Metrics.maxDepth)
+        errorStateView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.padding)
+        }
     }
 }
 
@@ -47,7 +54,8 @@ fileprivate extension OWErrorStateCell {
 
         contentView.addSubview(errorStateView)
         errorStateView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.padding)
+            make.trailing.top.bottom.equalToSuperview().inset(Metrics.padding)
+            make.leading.equalToSuperview().offset(Metrics.padding)
         }
     }
 }

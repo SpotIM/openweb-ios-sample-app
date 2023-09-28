@@ -13,8 +13,8 @@ import RxSwift
 class OWCommentCell: UITableViewCell {
     fileprivate struct Metrics {
         static let maxDepth: Int = 4
-        static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
+        static let horizontalOffset: CGFloat = 16
     }
 
     fileprivate lazy var commentView: OWCommentView = {
