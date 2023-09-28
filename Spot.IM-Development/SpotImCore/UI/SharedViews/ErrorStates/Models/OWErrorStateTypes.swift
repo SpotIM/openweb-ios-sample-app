@@ -12,5 +12,22 @@ enum OWErrorStateTypes {
     case none
     case loadConversationComments
     case loadMoreConversationComments
-    case loadConversationReplies
+    case loadConversationReplies(commentPresentationData: OWCommentPresentationData)
+}
+
+extension OWErrorStateTypes: Equatable {
+    static func == (lhs: OWErrorStateTypes, rhs: OWErrorStateTypes) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case (.loadConversationComments, .loadConversationComments):
+            return true
+        case (.loadMoreConversationComments, .loadMoreConversationComments):
+            return true
+        case (let .loadConversationReplies(lhsId), let .loadConversationReplies(rhsId)):
+            return lhsId == rhsId
+        default:
+            return false
+        }
+    }
 }

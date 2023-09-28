@@ -93,7 +93,6 @@ class OWErrorStateView: UIView {
         self.updateUI()
         self.setupObservers()
         self.applyAccessibility()
-        self.viewModel.inputs.heightChange.onNext(0)
     }
 
     required init?(coder: NSCoder) {
@@ -186,6 +185,7 @@ fileprivate extension OWErrorStateView {
                 self.OWSnp.updateConstraints { make in
                     make.height.greaterThanOrEqualTo(newHeight)
                 }
+                self.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
     }

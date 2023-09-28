@@ -35,13 +35,15 @@ class OWErrorStateCellViewModel: OWErrorStateCellViewModeling,
     }()
 
     fileprivate let errorStateType: OWErrorStateTypes
+    fileprivate let commentPresentationData: OWCommentPresentationData?
 
     // Unique identifier
     let id: String
 
-    init(id: String = UUID().uuidString, errorStateType: OWErrorStateTypes) {
+    init(id: String = UUID().uuidString, errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil) {
         self.id = id
         self.errorStateType = errorStateType
+        self.commentPresentationData = commentPresentationData
     }
 }
 
