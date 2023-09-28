@@ -19,6 +19,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
+        static let throttleObserveTableViewDuration = 500
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -208,6 +209,20 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.tableViewHeight)
             .disposed(by: disposeBag)
 
+        tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
+            .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
+            .unwrap()
+            .map { $0.y }
+            .bind(to: viewModel.inputs.tableViewContentOffsetY)
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
+            .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
+            .unwrap()
+            .map { $0.height }
+            .bind(to: viewModel.inputs.tableViewContentSizeHeight)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowConversationEmptyState
             .map { !$0 }
             .bind(to: conversationEmptyStateView.rx.isHidden)
@@ -232,11 +247,7 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        let showErrorLoadingFirstTimeObserver = viewModel.outputs.shouldShowErrorLoadingComments
-                .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
-                .voidify()
-
-        Observable.merge(viewModel.outputs.performTableViewAnimation, showErrorLoadingFirstTimeObserver)
+        Observable.merge(viewModel.outputs.performTableViewAnimation)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -281,26 +292,30 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.changeConversationOffset)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.scrollToCellIndex
+        viewModel.outputs.scrollToTop
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
-                let cellIndexPath = IndexPath(row: index, section: 0)
+            .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
 
                 CATransaction.begin()
                 self.tableView.beginUpdates()
                 CATransaction.setCompletionBlock {
                     // Code to be executed upon completion
-                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                    self.viewModel.inputs.scrolledToTop.onNext()
                 }
-                if (index > 0) {
-                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
-                } else {
-                    // it looks like set the content offset behave better when scroll to top
-                    self.tableView.setContentOffset(.zero, animated: true)
-                }
+                // it looks like set the content offset behave better when scroll to top
+                self.tableView.setContentOffset(.zero, animated: true)
                 self.tableView.endUpdates()
                 CATransaction.commit()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
             .disposed(by: disposeBag)
     }
