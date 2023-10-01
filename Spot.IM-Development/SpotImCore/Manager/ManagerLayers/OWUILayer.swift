@@ -387,10 +387,18 @@ extension OWUILayer {
         switch commentCreationType {
         case .comment:
             internalCommentCreationType = .comment
-        case .edit(let commentId), .replyTo(let commentId):
+        case .edit(let commentId):
             // TODO - The comment might not be found in the service, we should fetch it somehow
             if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
                 internalCommentCreationType = .edit(comment: comment)
+            } else {
+                completion(.failure(.commentCreationView))
+                return
+            }
+        case .replyTo(let commentId):
+            // TODO - The comment might not be found in the service, we should fetch it somehow
+            if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
+                internalCommentCreationType = .replyToComment(originComment: comment)
             } else {
                 completion(.failure(.commentCreationView))
                 return
