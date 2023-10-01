@@ -512,7 +512,8 @@ fileprivate extension OWConversationViewViewModel {
                     depth: depth
                 )))
 
-                if !commentPresentationData.repliesPresentation.contains(where: { $0.repliesError == true }) {
+                // Only if commentPresentationData.repliesPresentation does not contain an error or loading replies state
+                if !commentPresentationData.repliesPresentation.contains(where: { $0.repliesErrorState != .none }) {
                     cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
 
                     if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
@@ -526,9 +527,13 @@ fileprivate extension OWConversationViewViewModel {
                 }
             }
 
-            if commentPresentationData.repliesPresentation.contains(where: { $0.repliesError == true }) {
+            if commentPresentationData.repliesPresentation.contains(where: { $0.repliesErrorState == .error }) {
                 cellOptions.append(contentsOf: self.getErrorStateCell(errorStateType: .loadConversationReplies(commentPresentationData: commentPresentationData),
                                                                       depth: depth))
+            }
+
+            if commentPresentationData.repliesPresentation.contains(where: { $0.repliesErrorState == .reloading }) {
+                cellOptions.append(contentsOf: self.getLoadingCell())
             }
         }
         return cellOptions
@@ -858,32 +863,36 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
             .do(onNext: { commentPresentationData in
                 self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
+                if let commentPresentationDataError = commentPresentationData.repliesPresentation.first(where: { $0.repliesErrorState == .error }) {
+                    commentPresentationDataError.repliesErrorState = .reloading
+                    commentPresentationDataError.update.onNext()
+                }
             })
-            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: generalVMScheduler)
             .asObservable()
 
-        let loadMoreRepliesReadObservable = Observable.merge(_loadMoreReplies, tryAgainAfterLoadingMoreRepliesError)
+        let tryAgainAfterLoadingMoreRepliesErrorWithDelay = tryAgainAfterLoadingMoreRepliesError
+                .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: generalVMScheduler)
+                .asObservable()
+
+        let loadMoreRepliesReadObservable = Observable.merge(_loadMoreReplies, tryAgainAfterLoadingMoreRepliesErrorWithDelay)
             .withLatestFrom(sortOptionObservable) { (commentPresentationData, sortOption) -> (OWCommentPresentationData, OWSortOption)  in
                 return (commentPresentationData, sortOption)
             }
             .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
-                if commentPresentationData.repliesPresentation.contains(where: { $0.repliesError == true }) {
-                    let errorCommentsPresentationData = commentPresentationData.repliesPresentation.filter { $0.repliesError == true }
-                    commentPresentationData.repliesIds.removeAll(where: { errorCommentsPresentationData.map { $0.id }.contains($0) })
-                    commentPresentationData.setRepliesPresentation(commentPresentationData.repliesPresentation.filter { $0.repliesError == false })
-                }
+                let hasRepliesError = commentPresentationData.repliesPresentation
+                    .filter { $0.repliesErrorState != .none }.count > 0
+                let commentPresentationRepliesCount = hasRepliesError ? 0 : commentPresentationData.repliesPresentation.count
+                let countAfterUpdate = min(commentPresentationRepliesCount + Metrics.defaultNumberOfReplies, commentPresentationData.totalRepliesCount)
 
-                let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + Metrics.defaultNumberOfReplies, commentPresentationData.totalRepliesCount)
-
-                if countAfterUpdate <= commentPresentationData.repliesIds.count {
+                let repliesIdsCount = hasRepliesError ? 0 : commentPresentationData.repliesIds.count
+                if countAfterUpdate <= repliesIdsCount {
                     // no need to fetch more comments
                     return Observable.just((commentPresentationData, nil))
                 }
 
-                let currentRepliesCount = commentPresentationData.repliesIds.count
-                let fetchCount = countAfterUpdate - currentRepliesCount
+                let fetchCount = countAfterUpdate - repliesIdsCount
 
                 return self.servicesProvider
                     .netwokAPI()
@@ -895,6 +904,14 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
+            .do(onNext: { (commentPresentationData, _) in
+                let errorCommentsPresentationData = commentPresentationData.repliesPresentation
+                    .filter { $0.repliesErrorState == .reloading }
+                if !errorCommentsPresentationData.isEmpty {
+                    commentPresentationData.repliesIds.removeAll(where: { errorCommentsPresentationData.map { $0.id }.contains($0) })
+                        commentPresentationData.setRepliesPresentation(commentPresentationData.repliesPresentation.filter { $0.repliesErrorState == .reloading })
+                }
+            })
             .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?, Bool)? in
                 guard event != nil else {
                     // We didn't have to fetch new data - the event is nil
