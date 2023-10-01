@@ -166,14 +166,14 @@ fileprivate extension OWCommentCreationCoordinator {
             .disposed(by: disposeBag)
 
         let commentCreatedByFloatingKeyboardStyleObservable = viewModel.outputs.commentCreationSubmitted
-            .filter { _ in
+            .voidify()
+            .filter {
                 if case .floatingKeyboard = viewModel.outputs.commentCreationStyle {
-                    return true
+                    return viewModel.outputs.viewableMode == .independent
                 } else {
                     return false
                 }
             }
-            .voidify()
             .map { OWViewActionCallbackType.commentSubmitted }
             .asObservable()
 
