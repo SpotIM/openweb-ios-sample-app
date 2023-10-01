@@ -12,6 +12,7 @@ import RxSwift
 protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var closeWithDelay: PublishSubject<Void> { get }
     var closeInstantly: PublishSubject<String> { get }
+    var triggerDismiss: PublishSubject<Void> { get }
     var ctaTap: PublishSubject<Void> { get }
     var textBeforeClosedChange: BehaviorSubject<String> { get }
     var resetTypeToNewCommentChange: PublishSubject<Void> { get }
@@ -31,6 +32,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var closedWithDelay: Observable<Void> { get }
     var closedInstantly: Observable<String> { get }
+    var dismissed: Observable<Void> { get }
     var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
@@ -51,6 +53,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     fileprivate struct Metrics {
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
+        static let delayForDismiss: Int = 350 // ms
     }
 
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
@@ -85,6 +88,14 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var closeWithDelay = PublishSubject<Void>()
     var closedWithDelay: Observable<Void> {
         return closeWithDelay
+            .asObservable()
+    }
+
+    var triggerDismiss = PublishSubject<Void>()
+    var dismissed: Observable<Void> {
+        return triggerDismiss
+            .delay(.milliseconds(Metrics.delayForDismiss), scheduler: SerialDispatchQueueScheduler(qos: .userInteractive))
+            .observe(on: MainScheduler.instance)
             .asObservable()
     }
 
