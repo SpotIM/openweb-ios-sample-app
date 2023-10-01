@@ -270,7 +270,7 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        Observable.merge(viewModel.outputs.performTableViewAnimation)
+        viewModel.outputs.performTableViewAnimation
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -315,7 +315,7 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.changeConversationOffset)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.scrollToTop
+        viewModel.outputs.scrollToTopAnimated
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
