@@ -997,6 +997,7 @@
 		9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED2E59029EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */; };
 		9EE9F79B29D6DC99005FFC8A /* OWQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79929D6DC99005FFC8A /* OWQueue.swift */; };
 		9EE9F79C29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */; };
 		9EEBF66C2A431A7E00315EB0 /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */; };
@@ -2090,6 +2091,7 @@
 		9ED2E58C29EC01AD00B39A00 /* OWReportReasonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonView.swift; sourceTree = "<group>"; };
 		9ED2E58E29EC01E900B39A00 /* OWReportReasonSubmittedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReportReasonSubmittedVC.swift; sourceTree = "<group>"; };
 		9ED2E59029EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConfigurationReportReasonOptions.swift; sourceTree = "<group>"; };
+		9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRepliesErrorState.swift; sourceTree = "<group>"; };
 		9EE9F79929D6DC99005FFC8A /* OWQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueue.swift; sourceTree = "<group>"; };
 		9EE9F79A29D6DC99005FFC8A /* OWQueueDuplicationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWQueueDuplicationStrategy.swift; sourceTree = "<group>"; };
 		9EEBF66B2A431A7E00315EB0 /* Notification+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+Keyboard.swift"; sourceTree = "<group>"; };
@@ -2376,6 +2378,7 @@
 				1628A74C28EB0D8E0019B5EC /* ViewModels */,
 				249DF2962964182B00F5D69A /* OWCommentRequiredData.swift */,
 				16D5A1E429C9A73800914AD7 /* OWCommentPresentationData.swift */,
+				9EE87B452AC8EE9400F11DD2 /* OWRepliesErrorState.swift */,
 			);
 			path = Comment;
 			sourceTree = "<group>";
@@ -6679,6 +6682,7 @@
 				160E42E62988105100EDC5A1 /* OWCommentThreadViewVM.swift in Sources */,
 				16D7F55026CE996800A06693 /* SPAdBannerCell.swift in Sources */,
 				3DA2647C2951E3B200688FFF /* OWNetworkRequestTaskMap.swift in Sources */,
+				9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */,
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				8D358D4C29C8942E00E229A3 /* OWConversationSortViewModel.swift in Sources */,
 				3D20A36727B00E7D003F8513 /* OWConstraintConstantTarget.swift in Sources */,

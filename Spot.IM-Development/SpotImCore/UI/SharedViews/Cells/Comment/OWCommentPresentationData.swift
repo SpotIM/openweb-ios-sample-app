@@ -16,7 +16,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
 
     let id: OWCommentId
     var repliesIds: [OWCommentId]
-    let repliesError: Bool
+    var repliesErrorState: OWRepliesErrorState
     var totalRepliesCount: Int
     var repliesOffset: Int
     fileprivate(set) var repliesPresentation: [OWCommentPresentationData]
@@ -33,7 +33,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         self.totalRepliesCount = totalRepliesCount
         self.repliesOffset = repliesOffset
         self.repliesPresentation = repliesPresentation
-        self.repliesError = false
+        self.repliesErrorState = .none
         self.updateRepliesPresentationObservers()
     }
 
@@ -43,11 +43,11 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         self.totalRepliesCount = 0
         self.repliesOffset = 0
         self.repliesPresentation = []
-        self.repliesError = false
+        self.repliesErrorState = .none
     }
 
     init(repliesError: Bool) {
-        self.repliesError = true
+        self.repliesErrorState = .error
         self.id = UUID().uuidString
         self.repliesIds = []
         self.totalRepliesCount = 0
