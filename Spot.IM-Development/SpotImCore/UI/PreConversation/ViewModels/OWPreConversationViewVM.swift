@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+// swiftlint:disable file_length
+
 // Our sections is just a string as we will flat all the comments, replies, ads and everything into cells
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
@@ -24,6 +26,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
+    var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
@@ -72,6 +75,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
+    fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+
     fileprivate var articleUrl: String = ""
 
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
@@ -107,6 +112,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
+    }()
+
+    lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
+        return OWRealtimeIndicationAnimationViewModel()
     }()
 
     lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {
@@ -151,8 +160,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
-            .map { realtimeData in
-                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
+            .map { [weak self] realtimeData in
+                guard let self = self,
+                      let count = realtimeData.data?.totalCommentsCount(forPostId: self.postId) else {return nil}
                 return count
             }
             .unwrap()
@@ -190,8 +200,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var fullConversationTap = PublishSubject<Void>()
     var fullConversationCTATap = PublishSubject<Void>()
 
+    fileprivate lazy var realtimeIndicationTapped: Observable<Void> = {
+        return realtimeIndicationAnimationViewModel.outputs
+            .realtimeIndicationViewModel.outputs
+            .tapped
+            .asObservable()
+    }()
+
     var openFullConversation: Observable<Void> {
-        return Observable.merge(fullConversationTap, fullConversationCTATap)
+        return Observable.merge(fullConversationTap,
+                                fullConversationCTATap,
+                                realtimeIndicationTapped)
             .asObservable()
     }
 
@@ -271,8 +290,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return isCompactMode
     }
 
+    fileprivate var _shouldShowCTAButton = BehaviorSubject<Bool>(value: true)
     var shouldShowCTAButton: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
+        Observable.combineLatest(_shouldShowCTAButton,
+                                 preConversationStyleObservable,
+                                 isReadOnlyObservable,
+                                 isEmpty) { shouldShow, style, isReadOnly, isEmpty in
+            guard shouldShow else { return false }
             var isVisible = true
             switch (style) {
             case .regular, .custom:
@@ -381,6 +405,38 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Realtime Indicator
+        realtimeIndicationTapped
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let sortDictateService = self.servicesProvider.sortDictateService()
+                sortDictateService.update(sortOption: .newest, perPostId: self.postId)
+
+                self.servicesProvider.realtimeService().stopFetchingData()
+                self.servicesProvider.realtimeIndicatorService().update(state: .disable)
+            })
+            .disposed(by: disposeBag)
+
+        let realtimeIndicatorUpdateStateObservable = Observable.combineLatest(viewInitialized,
+                                                                              preConversationStyleObservable) { _, style -> Bool in
+            switch(style) {
+            case .regular, .custom:
+                return true
+            case .compact, .ctaButtonOnly, .ctaWithSummary:
+                return false
+            }
+        }
+            .map { shouldShow -> OWRealtimeIndicatorState in
+                return shouldShow ? .enable : .disable
+            }
+
+        realtimeIndicatorUpdateStateObservable
+            .subscribe(onNext: { [weak self] state in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeIndicatorService().update(state: state)
+            })
+            .disposed(by: disposeBag)
+
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
             .sortDictateService()
@@ -434,6 +490,9 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 let numOfComments = self.preConversationStyle.numberOfComments
                 let comments: [OWComment] = Array(responseComments.prefix(numOfComments))
+
+                // Hide the "Show More Comments" button, if there are fewer comments than num of comments in  PreConversation style
+                self._shouldShowCTAButton.onNext(numOfComments < responseComments.count)
 
                 // cache comments in comment service
                 self.servicesProvider.commentsService().set(comments: responseComments, postId: self.postId)
@@ -562,22 +621,33 @@ fileprivate extension OWPreConversationViewViewModel {
             .withLatestFrom(commentCellsVmsObservable) {
                 ($0, $1)
             }
-            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+            .flatMap { commentId, commentCellVMs -> Observable<(OWCommentId, OWCommentViewModeling)> in
                 // 1. Find if such comment VM exist for this comment ID
                 guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
                     return .empty()
                 }
-                return Observable.just(commentCellVM.outputs.commentVM)
+                return Observable.just((commentId, commentCellVM.outputs.commentVM))
+            }
+            .map { [weak self] commentId, commentVm -> (OWComment, OWCommentViewModeling)? in
+                // 2. Get updated comment from comments service
+                guard let self = self else { return nil }
+                if let updatedComment = self.servicesProvider
+                    .commentsService()
+                    .get(commentId: commentId, postId: self.postId) {
+                    return (updatedComment, commentVm)
+                } else {
+                    return nil
+                }
             }
             .unwrap()
             .observe(on: MainScheduler.instance)
-            .do(onNext: { commentVM in
-                // 2. Update report locally
-                commentVM.inputs.reportCommentLocally()
+            .do(onNext: { comment, commentVM in
+                // 3. Update report locally
+                commentVM.inputs.update(comment: comment)
             })
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                // 3. Update table view
+                // 4. Update table view
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
@@ -726,17 +796,32 @@ fileprivate extension OWPreConversationViewViewModel {
                         // making sure we are not adding an existing comment
                         !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })
                     }
+                    guard !filteredCommentsVms.isEmpty else { return }
                     viewModels.insert(contentsOf: filteredCommentsVms.map { OWPreConversationCellOption.comment(viewModel: $0) }, at: 0)
                     let numOfComments = self.preConversationStyle.numberOfComments
                     self._cellsViewModels.replaceAll(with: Array(viewModels.prefix(numOfComments)))
                 case let .update(commentId, withComment):
-                    if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
-                        commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: withComment)
-                        self._performTableViewAnimation.onNext()
-                    }
+                    self._updateLocalComment.onNext((withComment, commentId))
                 case .insertReply:
                     // We are not showing replies in pre conversation
                     break
+                }
+            })
+            .disposed(by: disposeBag)
+
+        _updateLocalComment
+            .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
+            .do(onNext: { [weak self] comment, _, _ in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .commentsService()
+                    .set(comments: [comment], postId: self.postId)
+            })
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { comment, commentId, commentCellsVms in
+                if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
+                    commentCellVm.outputs.commentVM.inputs.update(comment: comment)
+                    self._performTableViewAnimation.onNext()
                 }
             })
             .disposed(by: disposeBag)
@@ -871,12 +956,24 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .filter { $0 }
             .withLatestFrom(deleteComment)
-            .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] commentVm in
+            .map { commentVm -> (OWCommentViewModeling, OWComment) in
+                var updatedComment = commentVm.outputs.comment
+                updatedComment.setIsDeleted(true)
+                return (commentVm, updatedComment)
+            }
+            .do(onNext: { [weak self] _, updatedComment in
                 guard let self = self else { return }
-                commentVm.inputs.deleteCommentLocally()
+                self.servicesProvider
+                    .commentsService()
+                    .set(comments: [updatedComment], postId: self.postId)
+            })
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] commentVm, updatedComment in
+                guard let self = self else { return }
+                commentVm.inputs.update(comment: updatedComment)
                 self._performTableViewAnimation.onNext()
             })
+            .map { $0.0 }
 
         // Deleting comment from network
         commentDeletedLocallyObservable
@@ -980,22 +1077,30 @@ fileprivate extension OWPreConversationViewViewModel {
             .withLatestFrom(commentCellsVmsObservable) { userId, commentCellsVms -> (String, [OWCommentCellViewModeling]) in
                 return (userId, commentCellsVms)
             }
-            .do(onNext: { [weak self] userId, _ in
+            .map { [weak self] userId, commentCellsVms -> (SPUser, [OWCommentCellViewModeling])? in
                 guard let self = self,
                       let user = self.servicesProvider.usersService().get(userId: userId)
-                else { return }
+                else { return nil }
 
                 user.isMuted = true
+                return (user, commentCellsVms)
+
+            }
+            .unwrap()
+            .do(onNext: { [weak self] user, _ in
+                guard let self = self else { return }
                 self.servicesProvider
                     .usersService()
                     .set(users: [user])
             })
-            .map { userId, commentCellsVms -> [OWCommentViewModeling] in
-                let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == userId }
-                return userCommentCells.map { $0.outputs.commentVM }
+            .map { user, commentCellsVms -> (SPUser, [OWCommentViewModeling]) in
+                let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == user.id }
+                return (user, userCommentCells.map { $0.outputs.commentVM })
             }
-            .do(onNext: { mutedUserCommentCellsVms in
-                mutedUserCommentCellsVms.forEach { $0.inputs.muteCommentLocally() }
+            .do(onNext: { user, mutedUserCommentCellsVms in
+                mutedUserCommentCellsVms.forEach {
+                    $0.inputs.update(user: user)
+                }
             })
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in

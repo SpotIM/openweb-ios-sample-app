@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ReportReasonCancelIcon.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

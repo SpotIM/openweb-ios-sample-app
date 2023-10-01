@@ -16,6 +16,7 @@ protocol UIViewsViewModelingInputs {
     var fullConversationTapped: PublishSubject<Void> { get }
     var commentCreationTapped: PublishSubject<Void> { get }
     var commentThreadTapped: PublishSubject<Void> { get }
+    var clarityDetailsTapped: PublishSubject<Void> { get }
     var independentAdUnitTapped: PublishSubject<Void> { get }
 }
 
@@ -41,6 +42,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let fullConversationTapped = PublishSubject<Void>()
     let commentCreationTapped = PublishSubject<Void>()
     let commentThreadTapped = PublishSubject<Void>()
+    let clarityDetailsTapped = PublishSubject<Void>()
     let independentAdUnitTapped = PublishSubject<Void>()
 
     fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
@@ -85,6 +87,13 @@ fileprivate extension UIViewsViewModel {
                 return model
             }
 
+        let clarityDetailsTappedModel = clarityDetailsTapped
+            .map { _ -> SDKUIIndependentViewsActionSettings in
+                let viewType = SDKUIIndependentViewType.clarityDetails
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
+                return model
+            }
+
         let preConversationTappedModel = preConversationTapped
             .map { _ -> SDKUIIndependentViewsActionSettings in
                 let viewType = SDKUIIndependentViewType.preConversation
@@ -99,10 +108,16 @@ fileprivate extension UIViewsViewModel {
                 return model
             }
 
-        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel, independentAdUnitTappedModel)
-            .map { return $0 }
-            .bind(to: _openMockArticleScreen)
-            .disposed(by: disposeBag)
+        Observable.merge(
+            fullConversationTappedModel,
+            commentCreationTappedModel,
+            commentThreadTappedModel,
+            clarityDetailsTappedModel,
+            preConversationTappedModel,
+            independentAdUnitTappedModel)
+        .map { return $0 }
+        .bind(to: _openMockArticleScreen)
+        .disposed(by: disposeBag)
     }
 }
 

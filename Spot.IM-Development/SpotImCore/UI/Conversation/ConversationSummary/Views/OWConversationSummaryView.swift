@@ -99,7 +99,6 @@ class OWConversationSummaryView: UIView {
     init(viewModel: OWConversationSummaryViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
         setupObservers()
         applyAccessibility()
@@ -169,6 +168,7 @@ fileprivate extension OWConversationSummaryView {
     }
 
     func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
         commentsCountLabel.accessibilityIdentifier = Metrics.commentsCountLabelIdentifier
     }
 }

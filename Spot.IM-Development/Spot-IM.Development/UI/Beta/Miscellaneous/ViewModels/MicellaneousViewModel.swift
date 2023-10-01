@@ -17,6 +17,7 @@ protocol MiscellaneousViewModelingInputs {
 
 protocol MiscellaneousViewModelingOutputs {
     var title: String { get }
+    var openConversationCounters: Observable<Void> { get }
 }
 
 protocol MiscellaneousViewModeling {
@@ -35,6 +36,10 @@ class MiscellaneousViewModel: MiscellaneousViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     let conversationCounterTapped = PublishSubject<Void>()
+    var openConversationCounters: Observable<Void> {
+        return conversationCounterTapped
+            .asObservable()
+    }
 
     lazy var title: String = {
         return NSLocalizedString("Miscellaneous", comment: "")
