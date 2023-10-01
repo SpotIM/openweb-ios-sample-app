@@ -151,14 +151,33 @@ fileprivate extension OWCommentCreationCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let floatingDismissed = viewModel.outputs.commentCreationFloatingKeyboardViewVm
-            .outputs.dismissed
+        let floatingDismissed = viewModel.outputs.closeButtonTapped
+            .voidify()
             .map { OWViewActionCallbackType.floatingCommentCreationDismissed}
 
         Observable.merge(floatingDismissed)
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
+            .subscribe(onNext: { [weak self] viewAction in
+                guard let self = self else { return }
+                self.viewActionsService.append(viewAction: viewAction)
+            })
+            .disposed(by: disposeBag)
+
+        let commentCreatedByFloatingKeyboardStyleObservable = viewModel.outputs.commentCreationSubmitted
+            .filter { _ in
+                if case .floatingKeyboard = viewModel.outputs.commentCreationStyle {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            .voidify()
+            .map { OWViewActionCallbackType.commentSubmitted }
+            .asObservable()
+
+        commentCreatedByFloatingKeyboardStyleObservable
             .subscribe(onNext: { [weak self] viewAction in
                 guard let self = self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
