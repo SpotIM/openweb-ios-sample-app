@@ -383,10 +383,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.outputs.textViewVM.inputs.resignFirstResponderCall)
             .disposed(by: disposeBag)
 
-        postedOrClosedObservable
-            .bind(to: viewModel.inputs.triggerDismiss)
-            .disposed(by: disposeBag)
-
         Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .observe(on: MainScheduler.instance)
             .delay(.milliseconds(toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
@@ -399,6 +395,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.closedWithDelay
+            .debug("*** viewModel.outputs.closedWithDelay")
             .observe(on: MainScheduler.instance)
             .delay(.milliseconds(toolbar == nil ? 0 : Metrics.toolbarAnimationMilisecondsDuration), scheduler: MainScheduler.instance)
             .withLatestFrom(viewModel.outputs.textBeforeClosedChanged)
@@ -406,7 +403,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
 
         ctaButton.rx.tap
-            .bind(to: viewModel.inputs.ctaTap)
+            .subscribe(onNext: { [weak self] _ in
+                self?.viewModel.inputs.ctaTap.onNext()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.ctaEnabled

@@ -24,6 +24,7 @@ public enum OWViewActionCallbackType: Codable {
     case closeClarityDetails
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
+    case commentSubmitted
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -41,6 +42,7 @@ enum OWViewActionCallbackType: Codable {
     case closeClarityDetails
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
+    case commentSubmitted
 }
 #endif
 
