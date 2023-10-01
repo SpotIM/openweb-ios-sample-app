@@ -22,6 +22,7 @@ public enum OWViewActionCallbackType: Codable {
     case closeReportReason
     case openClarityDetails(type: OWClarityDetailsType)
     case closeClarityDetails
+    case floatingCommentCreationDismissed
     case error(_ error: OWError)
 }
 #else
@@ -38,6 +39,7 @@ enum OWViewActionCallbackType: Codable {
     case closeReportReason
     case openClarityDetails(type: OWClarityDetailsType)
     case closeClarityDetails
+    case floatingCommentCreationDismissed
     case error(_ error: OWError)
 }
 #endif
@@ -68,6 +70,8 @@ extension OWViewActionCallbackType: Equatable {
         case (let .openClarityDetails(lhsType), let .openClarityDetails(rhsType)):
             return lhsType == rhsType
         case (.closeClarityDetails, .closeClarityDetails):
+            return true
+        case (.floatingCommentCreationDismissed, .floatingCommentCreationDismissed):
             return true
         default:
             return false
