@@ -67,7 +67,7 @@ protocol OWConversationViewViewModeling {
 }
 
 class OWConversationViewViewModel: OWConversationViewViewModeling,
-                                    OWConversationViewViewModelingInputs,
+                                   OWConversationViewViewModelingInputs,
                                    OWConversationViewViewModelingOutputs {
     var inputs: OWConversationViewViewModelingInputs { return self }
     var outputs: OWConversationViewViewModelingOutputs { return self }
@@ -161,7 +161,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var articleUrl: String = ""
 
     fileprivate let _serverCommentsLoadingState = BehaviorSubject<OWLoadingState>(value: .loading(triggredBy: .initialLoading))
-    fileprivate var isLoadingServerComments: Observable<OWLoadingState> {
+    fileprivate var serverCommentsLoadingState: Observable<OWLoadingState> {
         _serverCommentsLoadingState
             .observe(on: generalVMScheduler)
             .asObservable()
@@ -182,11 +182,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
     fileprivate let _scrollToTopAnimated = PublishSubject<Bool>()
-    var scrolledToTop = PublishSubject<Void>()
     var scrollToTopAnimated: Observable<Bool> {
         _scrollToTopAnimated
             .asObservable()
     }
+    var scrolledToTop = PublishSubject<Void>()
 
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
@@ -298,7 +298,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate lazy var mainCellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(communityCellsOptions,
                                         commentCellsOptions,
-                                        isLoadingServerComments,
+                                        serverCommentsLoadingState,
                                         shouldShowErrorLoadingComments,
                                         shouldShowConversationEmptyState,
                                         isLoadingMoreComments,
@@ -395,8 +395,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var shouldShowConversationEmptyState: Observable<Bool> {
-        return Observable.combineLatest(_serverCommentsLoadingState.distinctUntilChanged(),
-                                        _shouldShowErrorLoadingComments.distinctUntilChanged(),
+        return Observable.combineLatest(serverCommentsLoadingState.distinctUntilChanged(),
+                                        shouldShowErrorLoadingComments.distinctUntilChanged(),
                                         commentCellsOptions)
         .startWith( (.loading(triggredBy: .initialLoading), false, []) )
         .flatMapLatest { loadingState, shouldShowError, comments -> Observable<Bool> in
@@ -441,8 +441,20 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     var viewInitialized = PublishSubject<Void>()
+    fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
+        return viewInitialized
+            .map { OWLoadingTriggeredReason.initialLoading }
+    }()
+
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
+
     var pullToRefresh = PublishSubject<Void>()
+    fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
+        return pullToRefresh
+            .map { OWLoadingTriggeredReason.pullToRefresh }
+            .asObservable()
+    }()
+
     fileprivate var tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
 
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
@@ -701,7 +713,6 @@ fileprivate extension OWConversationViewViewModel {
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
@@ -744,8 +755,8 @@ fileprivate extension OWConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
-        let conversationFetchedObservable = Observable.merge(viewInitialized.map { OWLoadingTriggeredReason.initialLoading },
-                                                             pullToRefresh.map { OWLoadingTriggeredReason.pullToRefresh },
+        let conversationFetchedObservable = Observable.merge(viewInitializedObservable,
+                                                             pullToRefreshObservable,
                                                              tryAgainAfterInitialError)
             .do(onNext: { [weak self] loadingTriggeredReason in
                 guard let self = self else { return }
@@ -840,7 +851,7 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         Observable.merge(sortOptionObservable.voidify(),
-                         pullToRefresh)
+                         pullToRefreshObservable.voidify())
         .subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.servicesProvider.realtimeIndicatorService().update(state: .disable)
@@ -1079,7 +1090,6 @@ fileprivate extension OWConversationViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._isLoadingMoreComments.onNext(false)
                     self._shouldShowErrorLoadingMoreComments.onNext(true)
                     return nil
                 default:
@@ -1121,30 +1131,26 @@ fileprivate extension OWConversationViewViewModel {
                 return Observable.merge(sizeChangeObservable)
             }
             .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: generalVMScheduler)
-            .subscribe(onNext: { [weak self] _ in
-                self?._performTableViewAnimation.onNext()
-            })
+            .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell) and tableView height change for errorState cell
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Void> in
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                        if case.comment(let commentCellViewModel) = vm {
-                            let commentVM = commentCellViewModel.outputs.commentVM
-                            return commentVM.outputs.contentVM
-                                .outputs.collapsableLabelViewModel.outputs.height
-                                .voidify()
-                        }
-                        return nil
+                    if case.comment(let commentCellViewModel) = vm {
+                        let commentVM = commentCellViewModel.outputs.commentVM
+                        return commentVM.outputs.contentVM
+                            .outputs.collapsableLabelViewModel.outputs.height
+                            .voidify()
                     }
-                    .unwrap()
+                    return nil
+                }
+                .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
             .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: generalVMScheduler)
-            .subscribe(onNext: { [weak self] _ in
-                self?._performTableViewAnimation.onNext()
-            })
+            .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
         // Responding to errorState cell with tableViewHeight change
@@ -1165,9 +1171,7 @@ fileprivate extension OWConversationViewViewModel {
                 return Observable.merge(sizeChangeObservable)
             }
             .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationErrorState), scheduler: generalVMScheduler)
-            .subscribe(onNext: { [weak self] _ in
-                self?._performTableViewAnimation.onNext()
-            })
+            .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
         // Observable of the comment cell VMs
@@ -1200,10 +1204,8 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] comment in
                 self?.sendEvent(for: .replyClicked(replyToCommentId: comment.id ?? ""))
             })
-            .subscribe(onNext: { [weak self] comment in
-                guard let self = self else { return }
-                self.commentCreationTap.onNext(.replyToComment(originComment: comment))
-            })
+            .map { OWCommentCreationTypeInternal.replyToComment(originComment: $0) }
+            .bind(to: commentCreationTap)
             .disposed(by: disposeBag)
 
         // Responding to share url from comment cells VMs
@@ -1310,7 +1312,7 @@ fileprivate extension OWConversationViewViewModel {
                 return rowIndex
             }
             .unwrap()
-            .withLatestFrom(_isLoadingMoreComments) { rowIndex, isLoadingMoreComments in
+            .withLatestFrom(isLoadingMoreComments) { rowIndex, isLoadingMoreComments in
                 return (rowIndex, isLoadingMoreComments)
             }
             .filter { !$0.1 }
@@ -1535,8 +1537,8 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return .empty() }
 
                 // Waiting for a state in which we are not loading or showing error before updating/adding comments or replies from a local service
-                return Observable.combineLatest(self._serverCommentsLoadingState,
-                                                self._shouldShowErrorLoadingComments) { loadingState, shouldShowError in
+                return Observable.combineLatest(self.serverCommentsLoadingState,
+                                                self.shouldShowErrorLoadingComments) { loadingState, shouldShowError in
                     return (loadingState == .notLoading && !shouldShowError)
                 }
                 .filter { $0 }

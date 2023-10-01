@@ -16,7 +16,13 @@ class OWCommentPresentationData: OWUpdaterProtocol {
 
     let id: OWCommentId
     var repliesIds: [OWCommentId]
+
+    // TODO - Consult with Alon.H if he has a better idea for this.
+    // Using OWCommentPresentationData to notify that there is an error loading comment replies
+    // And also using it to notify that we are reloading after an error loading comment replies
+    // Works perfect, just I thought maybe we can do something nicer, lets talk about this.
     var repliesErrorState: OWRepliesErrorState
+
     var totalRepliesCount: Int
     var repliesOffset: Int
     fileprivate(set) var repliesPresentation: [OWCommentPresentationData]
