@@ -16,7 +16,7 @@ references:
     macos:
       xcode: << parameters.xcode >>
     working_directory: ~/project/Spot.IM-Development
-    
+
   define_var_release_version: &define_var_release_version
     run:
       name: Export new version number to environment variable
@@ -89,7 +89,7 @@ commands:
             - "vendor/bundle"
 
       - swiftlint
-      
+
       - run:
           name: Installing Rosetta 2 if needed
           command: |
@@ -414,6 +414,11 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
+      - run:
+          name: Copy dsym zip to folder ipa-build to upload to S3
+          command: |
+            cp Spot-IM.Development.app.dSYM.zip ipa-build
+
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
@@ -436,6 +441,11 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
+      - run:
+          name: Copy dsym zip to folder ipa-build to upload to S3
+          command: |
+            cp Spot-IM.Development.app.dSYM.zip ipa-build
+
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
@@ -457,6 +467,11 @@ jobs:
           command: |
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
+
+      - run:
+          name: Copy dsym zip to folder ipa-build to upload to S3
+          command: |
+            cp Spot-IM.Development.app.dSYM.zip ipa-build
 
       - aws-s3/sync:
           from: ipa-build
@@ -497,6 +512,11 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
+      - run:
+          name: Copy dsym zip to folder ipa-build to upload to S3
+          command: |
+            cp Spot-IM.Development.app.dSYM.zip ipa-build
+
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
@@ -535,6 +555,11 @@ jobs:
           command: |
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
+
+      - run:
+          name: Copy dsym zip to folder ipa-build to upload to S3
+          command: |
+            cp Spot-IM.Development.app.dSYM.zip ipa-build
 
       - aws-s3/sync:
           from: ipa-build
@@ -575,6 +600,11 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
+      - run:
+          name: Copy dsym zip to folder ipa-build to upload to S3
+          command: |
+            cp Spot-IM.Development.app.dSYM.zip ipa-build
+
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
@@ -614,14 +644,21 @@ workflows:
               only:
                 - /^release/tag14.3/.*/
           xcode: "14.3.0"
-          
+
       - release_tag:
           filters:
             branches:
               only:
                 - /^release/tag14.3.1/.*/
           xcode: "14.3.1"
-          
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/tag15.0/.*/
+          xcode: "15.0"
+
       - release_sdk_job:
           filters:
             branches:
@@ -645,7 +682,7 @@ workflows:
                 - /^release/beta_tag14.3/.*/
           xcode: "14.3.0"
           buildConfig: "ReleaseBeta"
-          
+
       - release_tag:
           filters:
             branches:
@@ -653,7 +690,14 @@ workflows:
                 - /^release/beta_tag14.3.1/.*/
           xcode: "14.3.1"
           buildConfig: "ReleaseBeta"
-          
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag15.0/.*/
+          xcode: "15.0"
+          buildConfig: "ReleaseBeta"
 
       - release_app_job:
           context: mobile-automation
@@ -715,7 +759,7 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.3.0"
-          
+
       - release_tag:
           requires:
             - "release_sdk_job"
@@ -783,7 +827,7 @@ workflows:
               only:
                 - /^validate/cocoapods/sdk/.*/
           xcode: "14.3.1"
-      
+
       - validate_spm_job:
           filters:
             branches:

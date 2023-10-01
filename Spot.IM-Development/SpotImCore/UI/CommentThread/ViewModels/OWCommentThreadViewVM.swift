@@ -6,6 +6,8 @@
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 import RxSwift
 
@@ -30,6 +32,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var threadOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
+    var openClarityDetails: Observable<OWClarityDetailsType> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -82,7 +85,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
-            .scan([], accumulator: { previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
+            .observe(on: MainScheduler.instance)
+            .scan([], accumulator: { [weak self] previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
+                guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
 
                 previousCommentThreadCellsOptions.forEach { commentThreadCellOption in
@@ -101,8 +106,17 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                         guard let commentId = viewModel.outputs.commentVM.outputs.comment.id else {
                             return commentThreadCellOptions
                         }
-                        if let commentVm = commentsVmsMapper[commentId] {
-                            return OWCommentThreadCellOption.comment(viewModel: commentVm)
+                        if let commentCellVm = commentsVmsMapper[commentId] {
+                            let commentVm = commentCellVm.outputs.commentVM
+                            let updatedCommentVm = viewModel.outputs.commentVM
+
+                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment
+                                || updatedCommentVm.outputs.user != commentVm.outputs.user) {
+
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                            }
+                            return OWCommentThreadCellOption.comment(viewModel: commentCellVm)
                         } else {
                             return commentThreadCellOptions
                         }
@@ -189,6 +203,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
         return openReportReasonChange
+            .asObservable()
+    }
+
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
+    var openClarityDetails: Observable<OWClarityDetailsType> {
+        return openClarityDetailsChange
             .asObservable()
     }
 
@@ -563,22 +583,33 @@ fileprivate extension OWCommentThreadViewViewModel {
             .withLatestFrom(commentCellsVmsObservable) {
                 ($0, $1)
             }
-            .flatMap { commentId, commentCellVMs -> Observable<OWCommentViewModeling?> in
+            .flatMap { commentId, commentCellVMs -> Observable<(OWCommentId, OWCommentViewModeling)> in
                 // 1. Find if such comment VM exist for this comment ID
                 guard let commentCellVM = commentCellVMs.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) else {
                     return .empty()
                 }
-                return Observable.just(commentCellVM.outputs.commentVM)
+                return Observable.just((commentId, commentCellVM.outputs.commentVM))
+            }
+            .map { [weak self] commentId, commentVm -> (OWComment, OWCommentViewModeling)? in
+                // 2. Get updated comment from comments service
+                guard let self = self else { return nil }
+                if let updatedComment = self.servicesProvider
+                    .commentsService()
+                    .get(commentId: commentId, postId: self.postId) {
+                    return (updatedComment, commentVm)
+                } else {
+                    return nil
+                }
             }
             .unwrap()
             .observe(on: MainScheduler.instance)
-            .do(onNext: { commentVM in
-                // 2. Update report locally
-                commentVM.inputs.reportCommentLocally()
+            .do(onNext: { comment, commentVM in
+                // 3. Update report locally
+                commentVM.inputs.update(comment: comment)
             })
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                // 3. Update table view
+                // 4. Update table view
                 self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
@@ -856,6 +887,36 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe open clarity details
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    return commentStatusVm.outputs.learnMoreClicked
+                }
+                return Observable.merge(learnMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] clarityDetailsType in
+                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            })
+            .disposed(by: disposeBag)
+
+        // Observe on read more click
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWCommentId> in
+                let readMoreClickObservable: [Observable<OWCommentId>] = commentCellsVms.map { commentCellVm -> Observable<OWCommentId> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.readMoreTap
+                        .map { commentCellVm.outputs.commentVM.outputs.comment.id ?? "" }
+                }
+                return Observable.merge(readMoreClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentId in
+                self?.sendEvent(for: .commentReadMoreClicked(commentId: commentId))
+            })
+            .disposed(by: disposeBag)
+
         let commentDeletedLocallyObservable = deleteComment
             .asObservable()
             .flatMap { [weak self] commentVm -> Observable<(OWRxPresenterResponseType, OWCommentViewModeling)> in
@@ -889,12 +950,24 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .filter { $0 }
             .withLatestFrom(deleteComment)
-            .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] commentVm in
+            .map { commentVm -> (OWCommentViewModeling, OWComment) in
+                var updatedComment = commentVm.outputs.comment
+                updatedComment.setIsDeleted(true)
+                return (commentVm, updatedComment)
+            }
+            .do(onNext: { [weak self] _, updatedComment in
                 guard let self = self else { return }
-                commentVm.inputs.deleteCommentLocally()
+                self.servicesProvider
+                    .commentsService()
+                    .set(comments: [updatedComment], postId: self.postId)
+            })
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] commentVm, updatedComment in
+                guard let self = self else { return }
+                commentVm.inputs.update(comment: updatedComment)
                 self._performTableViewAnimation.onNext()
             })
+            .map { $0.0 }
 
         // Deleting comment from network
         commentDeletedLocallyObservable
@@ -990,11 +1063,17 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         _updateLocalComment
             .withLatestFrom(commentCellsVmsObservable) { ($0.0, $0.1, $1) }
+            .do(onNext: { [weak self] comment, _, _ in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .commentsService()
+                    .set(comments: [comment], postId: self.postId)
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] comment, commentId, commentCellsVms in
                 guard let self = self else { return }
                 if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
-                    commentCellVm.outputs.commentVM.inputs.updateEditedCommentLocally(updatedComment: comment)
+                    commentCellVm.outputs.commentVM.inputs.update(comment: comment)
                     self._performTableViewAnimation.onNext()
                 }
             })
@@ -1062,22 +1141,30 @@ fileprivate extension OWCommentThreadViewViewModel {
             .withLatestFrom(commentCellsVmsObservable) { userId, commentCellsVms -> (String, [OWCommentCellViewModeling]) in
                 return (userId, commentCellsVms)
             }
-            .do(onNext: { [weak self] userId, _ in
+            .map { [weak self] userId, commentCellsVms -> (SPUser, [OWCommentCellViewModeling])? in
                 guard let self = self,
                       let user = self.servicesProvider.usersService().get(userId: userId)
-                else { return }
+                else { return nil }
 
                 user.isMuted = true
+                return (user, commentCellsVms)
+
+            }
+            .unwrap()
+            .do(onNext: { [weak self] user, _ in
+                guard let self = self else { return }
                 self.servicesProvider
                     .usersService()
                     .set(users: [user])
             })
-            .map { userId, commentCellsVms -> [OWCommentViewModeling] in
-                let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == userId }
-                return userCommentCells.map { $0.outputs.commentVM }
+            .map { user, commentCellsVms -> (SPUser, [OWCommentViewModeling]) in
+                let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == user.id }
+                return (user, userCommentCells.map { $0.outputs.commentVM })
             }
-            .do(onNext: { mutedUserCommentCellsVms in
-                mutedUserCommentCellsVms.forEach { $0.inputs.muteCommentLocally() }
+            .do(onNext: { user, mutedUserCommentCellsVms in
+                mutedUserCommentCellsVms.forEach {
+                    $0.inputs.update(user: user)
+                }
             })
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
