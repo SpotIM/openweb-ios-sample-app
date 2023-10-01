@@ -82,11 +82,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
-        static let delayAfterScrolledToIndex: Int = 500 // ms
+        static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
-        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 400
+        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
     }
 
     fileprivate let generalVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "generalVMScheduler")
@@ -183,7 +183,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
     fileprivate let _scrollToTop = PublishSubject<Void>()
-
     var scrollToTop: Observable<Void> {
         _scrollToTop
             .asObservable()
@@ -306,22 +305,29 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate lazy var mainCellsViewModels: Observable<[OWConversationCellOption]> = {
         return Observable.combineLatest(communityCellsOptions,
                                         commentCellsOptions,
-                                        _serverCommentsLoadingState,
-                                        _shouldShowErrorLoadingComments,
-                                        shouldShowConversationEmptyState)
-            .startWith(([], [], .loading(triggredBy: .initialLoading), false, false))
-            .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, isEmptyState -> Observable<[OWConversationCellOption]> in
+                                        isLoadingServerComments,
+                                        shouldShowErrorLoadingComments,
+                                        shouldShowConversationEmptyState,
+                                        isLoadingMoreComments,
+                                        shouldShowErrorLoadingMoreComments)
+        .observe(on: generalVMScheduler)
+        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, isEmptyState, isLoadingMoreComments, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
 
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
-                } else if shouldShowError || isEmptyState {
+                } else if shouldShowError {
+                    self.dataSourceTransition = .reload
+                    return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
+                } else if isEmptyState {
                     return Observable.just([])
                 } else {
-                    return Observable.just(communityCellsOptions + commentCellsOptions)
+                    var loadingCell = isLoadingMoreComments ? self.getLoadingCell() : []
+                    let errorLoadingMoreCell = shouldShowErrorLoadingMoreComments ? self.getErrorStateCell(errorStateType: .loadMoreConversationComments) : []
+                    self.dataSourceTransition = shouldShowErrorLoadingMoreComments ? .reload : self.dataSourceTransition
+                    return Observable.just(communityCellsOptions + commentCellsOptions + loadingCell + errorLoadingMoreCell)
                 }
             })
-            .observe(on: generalVMScheduler)
             .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
                 guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
@@ -971,7 +977,7 @@ fileprivate extension OWConversationViewViewModel {
                     .filter { $0.repliesErrorState == .reloading }
                 if !errorCommentsPresentationData.isEmpty {
                     commentPresentationData.repliesIds.removeAll(where: { errorCommentsPresentationData.map { $0.id }.contains($0) })
-                        commentPresentationData.setRepliesPresentation(commentPresentationData.repliesPresentation.filter { $0.repliesErrorState == .reloading })
+                    commentPresentationData.setRepliesPresentation(commentPresentationData.repliesPresentation.filter { $0.repliesErrorState == .reloading })
                 }
             })
             .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?, Bool)? in
@@ -1286,6 +1292,9 @@ fileprivate extension OWConversationViewViewModel {
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
+                    if let errorCommentPresentationData = commentPresentationData.repliesPresentation.first(where: { $0.repliesErrorState != .none }) {
+                        commentPresentationData.repliesIds.removeAll(where: { $0 == errorCommentPresentationData.id })
+                    }
                     commentPresentationData.setRepliesPresentation([])
                     commentPresentationData.update.onNext()
                 case .expand:
@@ -1570,7 +1579,7 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
                     .map { _ in comments }
             }
-            .delay(.milliseconds(Metrics.delayAfterScrolledToIndex), scheduler: generalVMScheduler)
+            .delay(.milliseconds(Metrics.delayAfterScrolledToTopAnimated), scheduler: generalVMScheduler)
             .subscribe(onNext: { [weak self] comments in
                 guard let self = self else { return }
                 let commentsIds = comments.map { $0.id }.unwrap()
