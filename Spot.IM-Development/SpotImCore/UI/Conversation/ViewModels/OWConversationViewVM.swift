@@ -50,6 +50,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var scrollToTop: Observable<Void> { get }
+    var scrollToTopAnimated: Observable<Void> { get }
     var scrollToCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
@@ -180,11 +181,18 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
+
     fileprivate let _scrollToTop = PublishSubject<Void>()
 
-    var scrolledToTop = PublishSubject<Void>()
     var scrollToTop: Observable<Void> {
         _scrollToTop
+            .asObservable()
+    }
+
+    fileprivate let _scrollToTopAnimated = PublishSubject<Void>()
+    var scrolledToTop = PublishSubject<Void>()
+    var scrollToTopAnimated: Observable<Void> {
+        _scrollToTopAnimated
             .asObservable()
     }
 
@@ -240,9 +248,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
-    //    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
-    //        return OWConversationEmptyStateCellViewModel()
-    //    }()
+//    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
+//        return OWConversationEmptyStateCellViewModel()
+//    }()
 
     lazy var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling = {
         return OWConversationEmptyStateViewModel()
@@ -265,8 +273,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .rx_elements()
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-                let commentCells = self.getCommentCells(for: commentsPresentationData)
-                return Observable.just(commentCells)
+                return Observable.just(self.getCommentCells(for: commentsPresentationData))
             })
             .asObservable()
     }()
@@ -314,7 +321,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     return Observable.just(communityCellsOptions + commentCellsOptions)
                 }
             })
-            .observe(on: MainScheduler.instance)
+            .observe(on: generalVMScheduler)
             .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
                 guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
@@ -1554,7 +1561,7 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] _ in
                 // scroll to top
                 guard let self = self else { return }
-                self._scrollToTop.onNext()
+                self._scrollToTopAnimated.onNext()
             })
             .flatMapLatest { [weak self] comments -> Observable<[OWComment]> in
                 guard let self = self else { return .empty() }
