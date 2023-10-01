@@ -20,6 +20,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
         static let throttleObserveTableViewDuration = 500
+        static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
@@ -294,7 +295,9 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.scrollToTop
+        viewModel.outputs.scrollToTopAnimated
+        // filter only when animated = false
+            .filter { !$0 }
             .observe(on: MainScheduler.instance)
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
@@ -309,21 +312,24 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToTopAnimated
+        // filter only when animated = true
+            .filter { $0 }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-
-                CATransaction.begin()
                 self.tableView.beginUpdates()
-                CATransaction.setCompletionBlock {
-                    // Code to be executed upon completion
-                    self.viewModel.inputs.scrolledToTop.onNext()
-                }
                 // it looks like set the content offset behave better when scroll to top
                 self.tableView.setContentOffset(.zero, animated: true)
                 self.tableView.endUpdates()
-                CATransaction.commit()
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToTopAnimated
+        // filter only when animated = true
+            .filter { $0 }
+            .voidify()
+            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.inputs.scrolledToTop)
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToCellIndex

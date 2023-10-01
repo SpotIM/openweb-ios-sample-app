@@ -49,8 +49,7 @@ protocol OWConversationViewViewModelingOutputs {
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
-    var scrollToTop: Observable<Void> { get }
-    var scrollToTopAnimated: Observable<Void> { get }
+    var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
@@ -182,15 +181,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
-    fileprivate let _scrollToTop = PublishSubject<Void>()
-    var scrollToTop: Observable<Void> {
-        _scrollToTop
-            .asObservable()
-    }
-
-    fileprivate let _scrollToTopAnimated = PublishSubject<Void>()
+    fileprivate let _scrollToTopAnimated = PublishSubject<Bool>()
     var scrolledToTop = PublishSubject<Void>()
-    var scrollToTopAnimated: Observable<Void> {
+    var scrollToTopAnimated: Observable<Bool> {
         _scrollToTopAnimated
             .asObservable()
     }
@@ -802,7 +795,7 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] originalLoadingTriggeredReason in
                 guard let self = self else { return }
                 if originalLoadingTriggeredReason != .pullToRefresh {
-                    self._scrollToTop.onNext(())
+                    self._scrollToTopAnimated.onNext(false)
                 }
             })
             .disposed(by: disposeBag)
@@ -1570,7 +1563,7 @@ fileprivate extension OWConversationViewViewModel {
             .do(onNext: { [weak self] _ in
                 // scroll to top
                 guard let self = self else { return }
-                self._scrollToTopAnimated.onNext()
+                self._scrollToTopAnimated.onNext(true)
             })
             .flatMapLatest { [weak self] comments -> Observable<[OWComment]> in
                 guard let self = self else { return .empty() }
