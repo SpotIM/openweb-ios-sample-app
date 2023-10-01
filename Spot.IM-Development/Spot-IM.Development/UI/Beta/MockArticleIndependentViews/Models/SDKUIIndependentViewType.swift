@@ -14,4 +14,5 @@ enum SDKUIIndependentViewType {
     case commentCreation
     case commentThread
     case independentAdUnit
+    case clarityDetails
 }

@@ -20,6 +20,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
         static let throttleObserveTableViewDuration = 500
+        static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -54,6 +55,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
+    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+        return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
+    }()
+
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -76,6 +81,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
+        refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
+                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+
         return refresh
     }()
 
@@ -118,8 +126,8 @@ fileprivate extension OWConversationView {
     func setupUI() {
         self.useAsThemeStyleInjector()
 
-        let shouldShowTiTleHeader = viewModel.outputs.shouldShowTiTleHeader
-        if shouldShowTiTleHeader {
+        let shouldShowTitleHeader = viewModel.outputs.shouldShowTitleHeader
+        if shouldShowTitleHeader {
             self.addSubview(conversationTitleHeaderView)
             conversationTitleHeaderView.OWSnp.makeConstraints { make in
                 make.top.leading.trailing.equalToSuperview()
@@ -130,7 +138,7 @@ fileprivate extension OWConversationView {
         if shouldShowArticleDescription {
             self.addSubview(articleDescriptionView)
             articleDescriptionView.OWSnp.makeConstraints { make in
-                if shouldShowTiTleHeader {
+                if shouldShowTitleHeader {
                     make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
                 } else {
                     make.top.equalToSuperview()
@@ -144,7 +152,7 @@ fileprivate extension OWConversationView {
             if shouldShowArticleDescription {
                 make.top.equalTo(articleDescriptionView.OWSnp.bottom)
             } else {
-                if shouldShowTiTleHeader {
+                if shouldShowTitleHeader {
                     make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
                 } else {
                     make.top.equalToSuperview()
@@ -180,6 +188,20 @@ fileprivate extension OWConversationView {
             make.top.equalTo(self.tableView.OWSnp.top)
             make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
             make.leading.trailing.equalToSuperview()
+        }
+
+        self.addSubview(self.realtimeIndicationAnimationView)
+        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
+        }
+
+        self.addSubview(commentingCTAView)
+        commentingCTAView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.bottom.equalTo(self.safeAreaLayoutGuide)
         }
     }
 
@@ -244,6 +266,7 @@ fileprivate extension OWConversationView {
 
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
+                self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -278,7 +301,7 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.conversationDataJustReceived
+        viewModel.outputs.scrollToTop
             .observe(on: MainScheduler.instance)
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in

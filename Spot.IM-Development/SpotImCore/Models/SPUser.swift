@@ -11,6 +11,18 @@ import UIKit
 internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     static func == (lhs: SPUser, rhs: SPUser) -> Bool {
         return lhs.userId == rhs.userId
+        && lhs.displayName == rhs.displayName
+        && lhs.userName == rhs.userName
+        && lhs.imageId == rhs.imageId
+        && lhs.registered == rhs.registered
+        && lhs.isAdmin == rhs.isAdmin
+        && lhs.isModerator == rhs.isModerator
+        && lhs.isCommunityModerator == rhs.isCommunityModerator
+        && lhs.isSuperAdmin == rhs.isSuperAdmin
+        && lhs.isMuted == rhs.isMuted
+        && lhs.badgeType == rhs.badgeType
+        && lhs.tokenExpiration == rhs.tokenExpiration
+        && lhs.ssoPublisherId == rhs.ssoPublisherId
     }
 
     enum CodingKeys: String, CodingKey {
@@ -74,6 +86,28 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
 
         let now = Date().timeIntervalSince1970
         return tokenExpiration <= Int(now)
+    }
+
+    // empty init
+    init() {
+        id = nil
+        badgeType = ""
+        displayName = nil
+        imageId = nil
+        isAdmin = false
+        isJournalist = false
+        isModerator = false
+        isCommunityModerator = false
+        isSuperAdmin = false
+        points = nil
+        registered = false
+        userId = nil
+        userName = nil
+        tokenExpiration = nil
+        ssoData = nil
+        id = nil
+        ssoPublisherId = nil
+        isMuted = false
     }
 
     required init(from decoder: Decoder) throws {

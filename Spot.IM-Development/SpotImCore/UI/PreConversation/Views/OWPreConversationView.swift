@@ -32,6 +32,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let tableViewAnimationDuration: Double = 0.25
         static let compactContentTopPedding: CGFloat = 8
         static let tableViewTopPedding: CGFloat = 16
+        static let realtimeIndicationAnimationViewHeight: CGFloat = 150
+        static let tableViewHeightAnimationDuration: CGFloat = 0.2
+
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
@@ -51,6 +54,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
+    }()
+
+    fileprivate lazy var realtimeIndicationAnimationView: OWRealtimeIndicationAnimationView = {
+        return OWRealtimeIndicationAnimationView(viewModel: self.viewModel.outputs.realtimeIndicationAnimationViewModel)
     }()
 
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
@@ -131,6 +138,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return tap
     }()
 
+    private var tableViewHeightConstraint: OWConstraint?
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -215,14 +223,21 @@ fileprivate extension OWPreConversationView {
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(0)
+            tableViewHeightConstraint = make.height.equalTo(0).constraint
         }
 
         self.addSubview(tableBottomDivider)
         tableBottomDivider.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.separatorHeight)
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.tableDeviderTopPadding)
+            make.top.equalTo(tableView.OWSnp.bottom)
+        }
+
+        self.addSubview(self.realtimeIndicationAnimationView)
+        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
         }
 
         self.addSubview(btnCTAConversation)
@@ -359,19 +374,12 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowComments
-            .map { !$0 }
+        Observable.combineLatest(viewModel.outputs.shouldShowCTAButton,
+                                 viewModel.outputs.shouldShowComments) { shouldShowCTAButton, shouldShowComments in
+            guard shouldShowCTAButton else { return true }
+            return !shouldShowComments
+        }
             .bind(to: tableBottomDivider.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.shouldShowComments
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.tableBottomDivider.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.tableDeviderTopPadding : 0)
-                }
-            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowCTAButton
@@ -423,17 +431,43 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
+        let tableViewContentSizeObservable = tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
-            .withLatestFrom(viewModel.outputs.shouldShowComments) { size, showComments -> CGFloat? in
-                guard showComments == true else { return 0 }
-                return size.height
+
+        let isRealtimeIndicationShownObservable = viewModel.outputs.realtimeIndicationAnimationViewModel
+            .outputs.shouldShow
+
+        let tableViewHeightChangeObservable = Observable.combineLatest(tableViewContentSizeObservable,
+                                                                 isRealtimeIndicationShownObservable) { size, isShown in
+            return (size, isShown)
+        }
+            .withLatestFrom(viewModel.outputs.shouldShowComments) { result, isCommentsVisible -> (CGFloat?, Bool) in
+                let realtimeIsShown = result.1
+                let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
+                guard isCommentsVisible == true else { return (extraHeight, realtimeIsShown) }
+
+                let size = result.0
+                let height = size.height + extraHeight
+
+                return (height, realtimeIsShown)
             }
-            .unwrap()
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                self.tableView.OWSnp.updateConstraints { make in
-                    make.height.equalTo(height)
+
+        tableViewHeightChangeObservable
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self,
+                      let height = result.0 else { return }
+                let realtimeIsShown = result.1
+
+                if realtimeIsShown {
+                    // Only when we shown the realtime indicator we should animate the table view height change
+                    self.tableViewHeightConstraint?.update(offset: height)
+                    UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) {
+                        self.layoutIfNeeded()
+                    }
+                } else {
+                    self.tableView.OWSnp.updateConstraints { make in
+                        make.height.equalTo(height)
+                    }
                 }
             })
             .disposed(by: disposeBag)

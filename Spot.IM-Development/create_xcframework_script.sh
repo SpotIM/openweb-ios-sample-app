@@ -46,15 +46,15 @@ ls -l "${BUILD_DIR}/"
 # https://developer.apple.com/forums/thread/655768
 
 # First, get all the UUID filepaths for BCSymbolMaps, because these are randomly generated and need to be individually added as the `-debug-symbols` parameter. The dSYM path is always the same so that one is manually added
-echo "XCFramework: Generating IPHONE BCSymbolMap paths..."
-IPHONE_BCSYMBOLMAP_PATHS=(${BUILD_DIR}/Release-iphoneos.xcarchive/BCSymbolMaps/*)
-IPHONE_BCSYMBOLMAP_COMMANDS=""
-for path in "${IPHONE_BCSYMBOLMAP_PATHS[@]}"; do
-  IPHONE_BCSYMBOLMAP_COMMANDS="$IPHONE_BCSYMBOLMAP_COMMANDS -debug-symbols $path "
-  echo $IPHONE_BCSYMBOLMAP_COMMANDS
-done
-
-echo "XCFramework: Generating IPHONE BCSymbolMap paths... --> Done"
+#echo "XCFramework: Generating IPHONE BCSymbolMap paths..."
+#IPHONE_BCSYMBOLMAP_PATHS=(${BUILD_DIR}/Release-iphoneos.xcarchive/BCSymbolMaps/*)
+#IPHONE_BCSYMBOLMAP_COMMANDS=""
+#for path in "${IPHONE_BCSYMBOLMAP_PATHS[@]}"; do
+#  IPHONE_BCSYMBOLMAP_COMMANDS="$IPHONE_BCSYMBOLMAP_COMMANDS -debug-symbols $path "
+#  echo $IPHONE_BCSYMBOLMAP_COMMANDS
+#done
+#
+#echo "XCFramework: Generating IPHONE BCSymbolMap paths... --> Done"
 
 echo "Creating XCFramework..."
 
