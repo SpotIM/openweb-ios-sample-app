@@ -86,7 +86,6 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
 
     lazy var shouldHaveBorder: Bool = {
         switch errorStateType {
-
         case .none, .loadConversationComments:
             return false
         case .loadMoreConversationComments, .loadConversationReplies:
