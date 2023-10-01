@@ -102,7 +102,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var tableViewContentOffsetY = PublishSubject<CGFloat>()
     fileprivate lazy var tableViewContentOffsetYChanged: Observable<CGFloat> = {
         tableViewContentOffsetY
-            .distinctUntilChanged()
             .asObservable()
     }()
 
@@ -758,12 +757,6 @@ fileprivate extension OWConversationViewViewModel {
         let conversationFetchedObservable = Observable.merge(viewInitializedObservable,
                                                              pullToRefreshObservable,
                                                              tryAgainAfterInitialError)
-            .do(onNext: { [weak self] loadingTriggeredReason in
-                guard let self = self else { return }
-                self.dataSourceTransition = .reload // Block animations in the table view
-                self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
-                self._shouldShowErrorLoadingComments.onNext(false)
-            })
             .flatMapLatest { loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 return conversationReadObservable
                     .map { ($0, loadingTriggeredReason) }
@@ -771,14 +764,17 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: generalVMScheduler)
             .map { [weak self] result -> (OWConversationReadRM, OWLoadingTriggeredReason)? in
                 let event = result.0
+                let loadingTriggeredReason = result.1
                 guard let self = self else { return nil }
+                self.dataSourceTransition = .reload // Block animations in the table view
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+                    self._shouldShowErrorLoadingComments.onNext(false)
                     return (conversationRead, result.1)
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self.dataSourceTransition = .reload
                     self._serverCommentsLoadingState.onNext(.notLoading)
                     self._shouldShowErrorLoadingComments.onNext(true)
                     return nil
