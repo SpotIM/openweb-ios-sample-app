@@ -38,7 +38,8 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,
-                           prefixIdentifier: Metrics.prefixIdentifier)
+                           prefixIdentifier: Metrics.prefixIdentifier,
+                           viewModel: viewModel.outputs.titleViewVM)
     }()
 
     fileprivate lazy var textView: OWTextView = {
