@@ -28,6 +28,7 @@ class OWTitleViewViewModel: OWTitleViewViewModeling, OWTitleViewViewModelingOutp
 
     var closeTap = PublishSubject<Void>()
     var closeTapped: Observable<Void> {
-        return closeTap.asObservable()
+        return closeTap
+            .asObservable()
     }
 }

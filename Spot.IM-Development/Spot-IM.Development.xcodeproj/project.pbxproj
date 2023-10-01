@@ -658,6 +658,10 @@
 		3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */; };
 		3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4427D75A9E0097B17B /* OWShowable.swift */; };
 		3DE330992A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */; };
+		3DE476D82ABC1E5700093D09 /* UIViewsExamplesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE476D72ABC1E5700093D09 /* UIViewsExamplesVC.swift */; };
+		3DE476DA2ABC1E6800093D09 /* UIViewsExamplesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE476D92ABC1E6800093D09 /* UIViewsExamplesViewModel.swift */; };
+		3DE476DF2ABC213E00093D09 /* ConversationBelowVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE476DE2ABC213E00093D09 /* ConversationBelowVideoViewModel.swift */; };
+		3DE476E12ABC214F00093D09 /* ConversationBelowVideoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE476E02ABC214F00093D09 /* ConversationBelowVideoVC.swift */; };
 		3DEAA57829A23B5C0043D73E /* OWFontGroupFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */; };
 		3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57929A23D310043D73E /* OWFontBook.swift */; };
 		3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57E29A240670043D73E /* OWFontStyle.swift */; };
@@ -1748,6 +1752,10 @@
 		3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleService.swift; sourceTree = "<group>"; };
 		3DE0FE4427D75A9E0097B17B /* OWShowable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWShowable.swift; sourceTree = "<group>"; };
 		3DE330982A38CE2700933CD5 /* OWUserAuthenticationStatus+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWUserAuthenticationStatus+Extenstions.swift"; sourceTree = "<group>"; };
+		3DE476D72ABC1E5700093D09 /* UIViewsExamplesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsExamplesVC.swift; sourceTree = "<group>"; };
+		3DE476D92ABC1E6800093D09 /* UIViewsExamplesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsExamplesViewModel.swift; sourceTree = "<group>"; };
+		3DE476DE2ABC213E00093D09 /* ConversationBelowVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBelowVideoViewModel.swift; sourceTree = "<group>"; };
+		3DE476E02ABC214F00093D09 /* ConversationBelowVideoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBelowVideoVC.swift; sourceTree = "<group>"; };
 		3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontGroupFamily.swift; sourceTree = "<group>"; };
 		3DEAA57929A23D310043D73E /* OWFontBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontBook.swift; sourceTree = "<group>"; };
 		3DEAA57E29A240670043D73E /* OWFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontStyle.swift; sourceTree = "<group>"; };
@@ -4374,6 +4382,57 @@
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
 		};
+		3DE476D42ABC1E2A00093D09 /* UIViewsExamples */ = {
+			isa = PBXGroup;
+			children = (
+				3DE476D52ABC1E3500093D09 /* Views */,
+				3DE476D62ABC1E3C00093D09 /* ViewModels */,
+				3DE476DB2ABC20E400093D09 /* ConversationBelowVideo */,
+			);
+			path = UIViewsExamples;
+			sourceTree = "<group>";
+		};
+		3DE476D52ABC1E3500093D09 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DE476D72ABC1E5700093D09 /* UIViewsExamplesVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3DE476D62ABC1E3C00093D09 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DE476D92ABC1E6800093D09 /* UIViewsExamplesViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3DE476DB2ABC20E400093D09 /* ConversationBelowVideo */ = {
+			isa = PBXGroup;
+			children = (
+				3DE476DC2ABC210B00093D09 /* Views */,
+				3DE476DD2ABC211900093D09 /* ViewModels */,
+			);
+			path = ConversationBelowVideo;
+			sourceTree = "<group>";
+		};
+		3DE476DC2ABC210B00093D09 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DE476E02ABC214F00093D09 /* ConversationBelowVideoVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3DE476DD2ABC211900093D09 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DE476DE2ABC213E00093D09 /* ConversationBelowVideoViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		3DEAA57B29A240200043D73E /* Colors */ = {
 			isa = PBXGroup;
 			children = (
@@ -5784,6 +5843,7 @@
 			children = (
 				8DCBE86E2940D95900C8677C /* Views */,
 				8DCBE86D2940D94E00C8677C /* ViewModels */,
+				3DE476D42ABC1E2A00093D09 /* UIViewsExamples */,
 			);
 			path = UIViews;
 			sourceTree = "<group>";
@@ -7532,6 +7592,7 @@
 				9E7D5B0E2A0A777900F1707C /* CommentThreadSettingsVM.swift in Sources */,
 				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
+				3DE476DA2ABC1E6800093D09 /* UIViewsExamplesViewModel.swift in Sources */,
 				9EBE5C2429AE0304001150DA /* CommentCreationSettingsVM.swift in Sources */,
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
 				240D6E8C2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift in Sources */,
@@ -7601,6 +7662,7 @@
 				9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
 				3DA8DBF429F142E500783BA5 /* TestingPlaygroundVC.swift in Sources */,
+				3DE476D82ABC1E5700093D09 /* UIViewsExamplesVC.swift in Sources */,
 				9EA0F83F29ACBA9C008FD7A6 /* PreConversationSettingsView.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */,
@@ -7622,6 +7684,7 @@
 				9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */,
 				9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */,
 				3DB3D19F2831A5E8008654CF /* AuthenticationMetrics.swift in Sources */,
+				3DE476E12ABC214F00093D09 /* ConversationBelowVideoVC.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
 				9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */,
@@ -7631,6 +7694,7 @@
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
 				3DB3D190282A7F7C008654CF /* AuthenticationStatus.swift in Sources */,
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
+				3DE476DF2ABC213E00093D09 /* ConversationBelowVideoViewModel.swift in Sources */,
 				3D1D24932A4AF63500692E2A /* ToolbarCollectionCellViewModel.swift in Sources */,
 				240D6E8E2AB9942200EB70FA /* ConversationCounterNewAPICell.swift in Sources */,
 				9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */,
