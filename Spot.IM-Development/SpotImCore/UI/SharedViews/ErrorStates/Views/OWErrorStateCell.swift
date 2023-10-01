@@ -12,8 +12,8 @@ import RxSwift
 class OWErrorStateCell: UITableViewCell {
     fileprivate struct Metrics {
         static let maxDepth: Int = 4
-        static let depthOffset: CGFloat = 23
         static let padding: CGFloat = 16
+        static let depthOffset: CGFloat = 23
     }
 
     fileprivate lazy var errorStateView: OWErrorStateView = {
