@@ -12,4 +12,8 @@ class SampleAppNavigationController: UINavigationController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return topViewController?.preferredStatusBarStyle ?? .default
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return self.topViewController?.supportedInterfaceOrientations ?? .allButUpsideDown
+    }
 }
