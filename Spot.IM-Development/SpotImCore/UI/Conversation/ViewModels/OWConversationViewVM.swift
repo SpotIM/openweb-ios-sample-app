@@ -1004,7 +1004,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 if shouldShowErrorLoadingReplies {
                     let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
-                    let replyErrorData = [OWCommentPresentationData(repliesError: true)]
+                    let replyErrorData = [OWCommentPresentationData(repliesErrorState: .error)]
                     let repliesPresentation = existingRepliesPresentationData + replyErrorData
                     if let replyErrorId = replyErrorData.last?.id {
                         commentPresentationData.repliesIds.append(replyErrorId)

@@ -46,8 +46,8 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         self.repliesErrorState = .none
     }
 
-    init(repliesError: Bool) {
-        self.repliesErrorState = .error
+    init(repliesErrorState: OWRepliesErrorState) {
+        self.repliesErrorState = repliesErrorState
         self.id = UUID().uuidString
         self.repliesIds = []
         self.totalRepliesCount = 0
