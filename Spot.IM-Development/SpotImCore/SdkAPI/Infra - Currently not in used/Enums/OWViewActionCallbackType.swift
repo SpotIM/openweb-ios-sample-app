@@ -25,6 +25,7 @@ public enum OWViewActionCallbackType: Codable {
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
     case commentSubmitted
+    case closeWebView
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -43,6 +44,7 @@ enum OWViewActionCallbackType: Codable {
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
     case commentSubmitted
+    case closeWebView
 }
 #endif
 
@@ -74,6 +76,12 @@ extension OWViewActionCallbackType: Equatable {
         case (.closeClarityDetails, .closeClarityDetails):
             return true
         case (.floatingCommentCreationDismissed, .floatingCommentCreationDismissed):
+            return true
+        case (let .error(lhsErr), let .error(rhsErr)):
+            return lhsErr.description == rhsErr.description
+        case (.commentSubmitted, .commentSubmitted):
+            return true
+        case (.closeWebView, .closeWebView):
             return true
         default:
             return false
