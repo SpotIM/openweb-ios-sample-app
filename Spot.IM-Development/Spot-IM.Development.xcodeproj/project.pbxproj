@@ -4170,6 +4170,7 @@
 				3DB1D59B2A76522A0012388E /* OWManipulateTextModel.swift */,
 				240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */,
 				24C83DCC2A9DC08C0024080F /* OWArticleExtraData.swift */,
+				24A24A17291BAC7C00D72755 /* OWWebTabOptions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4472,7 +4473,6 @@
 		3DF41EEA2ACAD0C700887340 /* SafariTab */ = {
 			isa = PBXGroup;
 			children = (
-				3DF41EED2ACAD0E500887340 /* Models */,
 				3DF41EEC2ACAD0DF00887340 /* Views */,
 				3DF41EEB2ACAD0D300887340 /* ViewModels */,
 			);
@@ -4495,14 +4495,6 @@
 				3DF41EF02ACAD6C300887340 /* OWWebTabView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		3DF41EED2ACAD0E500887340 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				24A24A17291BAC7C00D72755 /* OWWebTabOptions.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3DF941802A559F2200A687BD /* ReportReasons */ = {
