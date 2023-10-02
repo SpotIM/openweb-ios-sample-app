@@ -152,11 +152,13 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         case (.clarityDetails, .closeClarityDetails):
             self._removeClarityDetails.onNext()
         case (.conversation, .communityGuidelinesPressed(let url)):
-            self.retrieveWebPageComponent(url: url)
+            let options = OWWebTabOptions(url: url, title: "")
+            self.retrieveWebPageComponent(options: options)
         case (.commentCreation, .floatingCommentCreationDismissed):
             self._removeCommentCreation.onNext()
+        case (.webView, .closeWebView):
+            self._removeWebPage.onNext()
             // TODO: Add profile integration
-            // TODO: Add dismiss for the web view
         default:
             break
         }
@@ -340,8 +342,24 @@ fileprivate extension ConversationBelowVideoViewModel {
         })
     }
 
-    func retrieveWebPageComponent(url: URL) {
-        // TODO: To be completed in the SDK side
+    func retrieveWebPageComponent(options: OWWebTabOptions) {
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let additionalSettings = OWAdditionalSettings()
+
+        uiViewsLayer.webTab(postId: self.postId,
+                            tabOptions: options,
+                            additionalSettings: additionalSettings,
+                            callbacks: self.actionsCallbacks,
+                            completion: { [weak self] result in
+
+            guard let self = self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.onNext(err)
+            case.success(let view):
+                self._webPageRetrieved.onNext(view)
+            }
+        })
     }
 }
 

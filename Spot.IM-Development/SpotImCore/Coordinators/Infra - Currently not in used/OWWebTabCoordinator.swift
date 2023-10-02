@@ -25,21 +25,22 @@ enum OWWebTabCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
 
-    fileprivate let router: OWRoutering
+    fileprivate let router: OWRoutering?
     fileprivate let options: OWWebTabOptions
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
-        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .webView)
     }()
 
-    init(router: OWRoutering, options: OWWebTabOptions, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering? = nil, options: OWWebTabOptions, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
         self.options = options
         self.actionsCallbacks = actionsCallbacks // TODO: handle actions callbacks?
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWWebTabCoordinatorResult> {
+        guard let router = router else { return .empty() }
         viewableMode = .partOfFlow
         let webTabVM = OWWebTabViewModel(options: options,
                                             viewableMode: .partOfFlow)
@@ -75,6 +76,18 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
 
 fileprivate extension OWWebTabCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWWebTabViewViewModeling) {
+        let closeObservable = viewModel.outputs.closeTapped
+            .voidify()
+            .map { OWViewActionCallbackType.closeWebView }
 
+        Observable.merge(closeObservable)
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .subscribe(onNext: { [weak self] viewAction in
+                guard let self = self else { return }
+                self.viewActionsService.append(viewAction: viewAction)
+            })
+            .disposed(by: disposeBag)
     }
 }
