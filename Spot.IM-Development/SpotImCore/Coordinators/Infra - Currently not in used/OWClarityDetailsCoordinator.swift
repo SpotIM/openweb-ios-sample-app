@@ -101,8 +101,12 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 guard let self = self,
                       let router = self.router
                 else { return .empty() }
+                let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
+                    .outputs.navigationTitle
+                let options = OWSafariTabOptions(url: url,
+                                                 title: title)
                 let safariCoordinator = OWSafariTabCoordinator(router: router,
-                                                               url: url,
+                                                               options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }

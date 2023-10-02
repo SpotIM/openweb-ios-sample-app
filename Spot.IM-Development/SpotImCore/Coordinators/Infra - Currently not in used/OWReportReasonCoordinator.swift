@@ -104,8 +104,10 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 guard let router = self.router else { return .empty() }
+                let options = OWSafariTabOptions(url: url,
+                                                 title: "")
                 let safariCoordinator = OWSafariTabCoordinator(router: router,
-                                                               url: url,
+                                                               options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }

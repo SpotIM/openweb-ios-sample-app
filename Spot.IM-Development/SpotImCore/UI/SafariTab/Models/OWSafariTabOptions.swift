@@ -8,6 +8,7 @@
 
 import Foundation
 
-struct OWSafariViewControllerOptions {
+struct OWSafariTabOptions {
     var url: URL
+    var title: String
 }
