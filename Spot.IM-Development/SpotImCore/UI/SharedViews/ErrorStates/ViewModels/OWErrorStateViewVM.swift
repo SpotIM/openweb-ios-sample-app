@@ -10,7 +10,7 @@ import RxSwift
 import Foundation
 
 protocol OWErrorStateViewViewModelingInputs {
-    var tryAgainTapped: PublishSubject<Void> { get }
+    var tryAgainTap: PublishSubject<Void> { get }
     var errorStateType: OWErrorStateTypes { get set }
     var heightChange: BehaviorSubject<CGFloat> { get }
 }
@@ -18,7 +18,7 @@ protocol OWErrorStateViewViewModelingInputs {
 protocol OWErrorStateViewViewModelingOutputs {
     var title: String { get }
     var tryAgainText: NSAttributedString { get }
-    var tryAgainTap: Observable<OWErrorStateTypes> { get }
+    var tryAgainTapped: Observable<OWErrorStateTypes> { get }
     var shouldHaveBorder: Bool { get }
     var height: Observable<CGFloat> { get }
     var errorStateType: OWErrorStateTypes { get }
@@ -44,9 +44,9 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         self.errorStateType = errorStateType
     }
 
-    var tryAgainTapped = PublishSubject<Void>()
-    lazy var tryAgainTap: Observable<OWErrorStateTypes> = {
-        return tryAgainTapped
+    var tryAgainTap = PublishSubject<Void>()
+    lazy var tryAgainTapped: Observable<OWErrorStateTypes> = {
+        return tryAgainTap
             .map { [weak self] _ -> OWErrorStateTypes? in
                 guard let self = self else { return nil }
                 return self.errorStateType
