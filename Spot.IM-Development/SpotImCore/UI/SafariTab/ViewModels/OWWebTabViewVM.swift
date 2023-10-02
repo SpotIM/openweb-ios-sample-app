@@ -9,14 +9,14 @@
 import Foundation
 import RxSwift
 
-protocol OWWebTabViewViewModelingInputs {
-    var closeTap: PublishSubject<Void> { get }
-}
+protocol OWWebTabViewViewModelingInputs { }
 
 protocol OWWebTabViewViewModelingOutputs {
     var closeTapped: Observable<Void> { get }
     var viewableMode: OWViewableMode { get }
     var options: OWWebTabOptions { get }
+    var titleViewVM: OWTitleViewViewModeling { get }
+    var shouldShowTitleView: Bool { get }
 }
 
 protocol OWWebTabViewViewModeling {
@@ -31,11 +31,21 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling, OWWebTabViewViewModelingI
     let options: OWWebTabOptions
     let viewableMode: OWViewableMode
 
-    var closeTap = PublishSubject<Void>()
     var closeTapped: Observable<Void> {
-        closeTap
+        titleViewVM
+            .outputs
+            .closeTapped
             .asObservable()
     }
+
+    lazy var shouldShowTitleView: Bool = {
+        return viewableMode == .independent
+    }()
+
+    lazy var titleViewVM: OWTitleViewViewModeling = {
+        return OWTitleViewViewModel()
+    }()
+
 
     init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
         self.options = options
