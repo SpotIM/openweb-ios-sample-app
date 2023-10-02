@@ -588,9 +588,6 @@ fileprivate extension OWConversationViewViewModel {
 
     func getErrorStateCell(errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil, depth: Int = 0) -> [OWConversationCellOption] {
         let errorViewModel = OWErrorStateCellViewModel(errorStateType: errorStateType, commentPresentationData: commentPresentationData, depth: depth)
-        errorViewModel.outputs.errorStateViewModel.outputs.tryAgainTapped
-            .bind(to: tryAgainAfterError)
-            .disposed(by: disposeBag)
         return [OWConversationCellOption.conversationErrorState(viewModel: errorViewModel)]
     }
 
@@ -1166,6 +1163,22 @@ fileprivate extension OWConversationViewViewModel {
             }
             .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationErrorState), scheduler: conversationViewVMScheduler)
             .bind(to: _performTableViewAnimation)
+            .disposed(by: disposeBag)
+
+        // Responding to error states try again tap
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<OWErrorStateTypes> in
+                let errorStateTryAgainTapped: [Observable<OWErrorStateTypes>] = cellsVms.map { vm in
+                    if case .conversationErrorState(let errorStateCellVM) = vm {
+                        let errorStateViewVM = errorStateCellVM.outputs.errorStateViewModel
+                        return errorStateViewVM.outputs.tryAgainTapped
+                    }
+                    return nil
+                }
+                .unwrap()
+                return Observable.merge(errorStateTryAgainTapped)
+            }
+            .bind(to: tryAgainAfterError)
             .disposed(by: disposeBag)
 
         // Observable of the comment cell VMs
