@@ -10,18 +10,18 @@ import Foundation
 import UIKit
 import SafariServices
 
-class OWSafariTabVC: UIViewController {
-    private let viewModel: OWSafariTabViewModeling
+class OWWebTabVC: UIViewController {
+    private let viewModel: OWWebTabViewModeling
 
-    fileprivate lazy var safariTabView: OWSafariTabView = {
-        return OWSafariTabView(viewModel: self.viewModel.outputs.safariTabViewVM)
+    fileprivate lazy var safariTabView: OWWebTabView = {
+        return OWWebTabView(viewModel: self.viewModel.outputs.webTabViewVM)
     }()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: OWSafariTabViewModeling) {
+    init(viewModel: OWWebTabViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -37,7 +37,7 @@ class OWSafariTabVC: UIViewController {
     }
 }
 
-fileprivate extension OWSafariTabVC {
+fileprivate extension OWWebTabVC {
     func setupUI() {
         self.title = viewModel.outputs.options.title
         self.navigationItem.largeTitleDisplayMode = .never
