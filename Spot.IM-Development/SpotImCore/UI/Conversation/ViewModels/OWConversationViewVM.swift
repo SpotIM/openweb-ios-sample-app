@@ -356,6 +356,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                         }
                     case .commentThreadActions(let viewModel):
                         if let commentThreadActionVm = commentThreadActionVmsMapper[viewModel.outputs.id] {
+                            if (ObjectIdentifier(viewModel.outputs.commentPresentationData) != ObjectIdentifier(commentThreadActionVm.outputs.commentPresentationData)) {
+                                commentThreadActionVm.inputs.update(commentPresentationData: viewModel.outputs.commentPresentationData)
+                            }
                             return OWConversationCellOption.commentThreadActions(viewModel: commentThreadActionVm)
                         } else {
                             return conversationCellOptions
