@@ -52,14 +52,12 @@ class OWErrorStateView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteText, forceOpenWebFont: false))
-            .text(viewModel.outputs.title)
             .textAlignment(.center)
             .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var ctaLabel: UILabel = {
        return UILabel()
-            .attributedText(viewModel.outputs.tryAgainText)
             .enforceSemanticAttribute()
     }()
 
@@ -77,13 +75,16 @@ class OWErrorStateView: UIView {
     init(with viewModel: OWErrorStateViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        updateUI()
-        setupObservers()
-        applyAccessibility()
+        self.setupUI()
+        self.applyAccessibility()
+        self.setupObservers()
+        self.updateUI()
     }
 
     init() {
         super.init(frame: .zero)
+        self.setupUI()
+        self.applyAccessibility()
     }
 
     // Only when using ErrorStateView as a cell
@@ -92,7 +93,6 @@ class OWErrorStateView: UIView {
         self.disposeBag = DisposeBag()
         self.updateUI()
         self.setupObservers()
-        self.applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -101,18 +101,15 @@ class OWErrorStateView: UIView {
 }
 
 fileprivate extension OWErrorStateView {
-    // This function is Called updateUI instead of setupUI since it is designed to be reused for cells -
-    // using function configure and here it is also called in init when this class is used as a standalone uiview
+    // Called only after having a view model
     func updateUI() {
-        self.corner(radius: Metrics.borderRadius)
+        self.titleLabel.text(viewModel.outputs.title)
+        self.ctaLabel.attributedText(viewModel.outputs.tryAgainText)
+        self.layoutIfNeeded()
+    }
 
-        self.OWSnp.removeConstraints()
-        containerView.removeFromSuperview()
-        ctaView.removeFromSuperview()
-        headerIcon.removeFromSuperview()
-        ctaView.removeFromSuperview()
-        ctaLabel.removeFromSuperview()
-        retryIcon.removeFromSuperview()
+    func setupUI() {
+        self.corner(radius: Metrics.borderRadius)
 
         addSubview(containerView)
         containerView.OWSnp.makeConstraints { make in
@@ -175,7 +172,7 @@ fileprivate extension OWErrorStateView {
 
         ctaTapGesture.rx.event
             .voidify()
-            .bind(to: viewModel.inputs.tryAgainTapped)
+            .bind(to: viewModel.inputs.tryAgainTap)
             .disposed(by: disposeBag)
 
         viewModel.outputs.height
@@ -183,6 +180,11 @@ fileprivate extension OWErrorStateView {
             .subscribe(onNext: { [weak self] newHeight in
                 guard let self = self else { return }
                 self.OWSnp.updateConstraints { make in
+                    // We use here greaterThen since the default newHeight is 0 in this constraint
+                    // So that it will be tied to the components constraints inside this view
+                    // When the newHeight is larger then the components constraints need
+                    // they will be centered and the view will be larger and constraint to
+                    // the size of newHeight
                     make.height.greaterThanOrEqualTo(newHeight)
                 }
                 self.layoutIfNeeded()
