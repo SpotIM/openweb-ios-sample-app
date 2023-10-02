@@ -11,7 +11,6 @@ import RxSwift
 
 class OWErrorStateCell: UITableViewCell {
     fileprivate struct Metrics {
-        static let maxDepth: Int = 4
         static let padding: CGFloat = 16
         static let depthOffset: CGFloat = 23
     }
@@ -25,6 +24,7 @@ class OWErrorStateCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.setupUI()
     }
 
     required init?(coder: NSCoder) {
@@ -37,20 +37,21 @@ class OWErrorStateCell: UITableViewCell {
         self.viewModel = vm
         self.errorStateView.configure(with: self.viewModel.errorStateViewModel)
         self.updateUI()
-
-        let depth = min(self.viewModel.outputs.depth, Metrics.maxDepth)
-        errorStateView.OWSnp.updateConstraints { make in
-            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.padding)
-        }
     }
 }
 
 fileprivate extension OWErrorStateCell {
     func updateUI() {
+        let depth = min(self.viewModel.outputs.depth, OWCommentCell.ExternalMetrics.maxDepth)
+        errorStateView.OWSnp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.padding)
+        }
+        self.layoutIfNeeded()
+    }
+
+    func setupUI() {
         self.backgroundColor = .clear
         self.selectionStyle = .none
-
-        errorStateView.removeFromSuperview()
 
         contentView.addSubview(errorStateView)
         errorStateView.OWSnp.makeConstraints { make in
