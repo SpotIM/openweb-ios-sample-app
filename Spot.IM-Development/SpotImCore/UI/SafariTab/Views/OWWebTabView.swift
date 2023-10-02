@@ -13,14 +13,21 @@ import WebKit
 class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
+        static let titleViewHeight: CGFloat = 56
         static let identifier = "web_tab_view_id"
-        static let closeButtonIdentifier = "web_tab_close_button_id"
+        static let titleHeaderIdentifier = "web_tab_title_header"
     }
 
     fileprivate lazy var webView: WKWebView = {
         let webView = WKWebView(frame: .zero,
                                 configuration: WKWebViewConfiguration())
         return webView
+    }()
+
+    fileprivate lazy var titleView: OWTitleView = {
+        let titleView = OWTitleView(title: viewModel.outputs.options.title,
+                                    prefixIdentifier: Metrics.titleHeaderIdentifier, viewModel: viewModel.outputs.titleViewVM)
+        return titleView
     }()
 
     fileprivate let viewModel: OWWebTabViewViewModeling
@@ -43,15 +50,27 @@ fileprivate extension OWWebTabView {
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-//        cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier
     }
 
     func setupViews() {
         self.useAsThemeStyleInjector()
 
+        if viewModel.outputs.shouldShowTitleView {
+            self.addSubview(titleView)
+            titleView.OWSnp.makeConstraints { make in
+                make.leading.trailing.top.equalToSuperviewSafeArea()
+                make.height.equalTo(Metrics.titleViewHeight)
+            }
+        }
+
         self.addSubview(webView)
         webView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            if viewModel.outputs.shouldShowTitleView {
+                make.top.equalTo(titleView.OWSnp.bottom)
+            } else {
+                make.top.equalToSuperview()
+            }
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 
