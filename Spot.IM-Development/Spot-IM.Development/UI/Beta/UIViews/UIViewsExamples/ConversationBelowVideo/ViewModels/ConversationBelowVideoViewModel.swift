@@ -151,7 +151,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveClarityDetailsComponent(commentId: "", type: clarityDetailsType)
         case (.clarityDetails, .closeClarityDetails):
             self._removeClarityDetails.onNext()
-        case (.conversation, .communityGuidelinesPressed(let url)):
+        case (_, .communityGuidelinesPressed(let url)):
             let title = NSLocalizedString("CommunityGuidelines", comment: "")
             let options = OWWebTabOptions(url: url, title: title)
             self.retrieveWebPageComponent(options: options)
