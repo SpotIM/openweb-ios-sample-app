@@ -27,23 +27,31 @@ enum OWSafariTabCoordinatorResult: OWCoordinatorResultProtocol {
 class OWSafariTabCoordinator: OWBaseCoordinator<OWSafariTabCoordinatorResult> {
 
     fileprivate let router: OWRoutering
-    fileprivate let url: URL
+    fileprivate let options: OWSafariTabOptions
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate var viewableMode: OWViewableMode!
+    fileprivate lazy var viewActionsService: OWViewActionsServicing = {
+        return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
+    }()
 
-    init(router: OWRoutering, url: URL, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering, options: OWSafariTabOptions, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
-        self.url = url
+        self.options = options
         self.actionsCallbacks = actionsCallbacks // TODO: handle actions callbacks?
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWSafariTabCoordinatorResult> {
-        let safariOptions = OWSafariViewControllerOptions(url: url)
-        let safariVM = OWSafariViewModel(options: safariOptions)
-        let safariVC = OWSafariViewController(viewModel: safariVM)
+        viewableMode = .partOfFlow
+        let safariVM = OWSafariTabViewModel(options: options,
+                                            viewableMode: .partOfFlow)
+        let safariVC = OWSafariTabVC(viewModel: safariVM)
 
         let safariVCPopped = PublishSubject<Void>()
 
-        router.present(safariVC, animated: true, dismissCompletion: safariVCPopped)
+        router.push(safariVC,
+                    pushStyle: .regular,
+                    animated: true,
+                    popCompletion: safariVCPopped)
 
         let safariVCPoppedObservable = safariVCPopped
             .map { OWSafariTabCoordinatorResult.popped }
@@ -54,5 +62,20 @@ class OWSafariTabCoordinator: OWBaseCoordinator<OWSafariTabCoordinatorResult> {
             .asObservable()
 
         return Observable.merge(safariVCPoppedObservable, safariVCLoadedToScreenObservable)
+    }
+
+    override func showableComponent() -> Observable<OWShowable> {
+        viewableMode = .independent
+        let safariTabViewVM: OWSafariTabViewViewModeling = OWSafariTabViewViewModel(options: options,
+                                                                                    viewableMode: viewableMode)
+        let safariTabView = OWSafariTabView(viewModel: safariTabViewVM)
+        setupViewActionsCallbacks(forViewModel: safariTabViewVM)
+        return .just(safariTabView)
+    }
+}
+
+fileprivate extension OWSafariTabCoordinator {
+    func setupViewActionsCallbacks(forViewModel viewModel: OWSafariTabViewViewModeling) {
+
     }
 }
