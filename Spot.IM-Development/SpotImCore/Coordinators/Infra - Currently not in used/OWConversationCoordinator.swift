@@ -274,13 +274,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] tuple -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let url = tuple.0
                 let title = tuple.1
-                let options = OWSafariTabOptions(url: url,
+                let options = OWWebTabOptions(url: url,
                                                  title: title)
-                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)

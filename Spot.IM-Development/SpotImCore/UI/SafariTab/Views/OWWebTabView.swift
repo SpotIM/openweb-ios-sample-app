@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import WebKit
 
-class OWSafariTabView: UIView, OWThemeStyleInjectorProtocol {
+class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
         static let identifier = "web_tab_view_id"
@@ -23,14 +23,14 @@ class OWSafariTabView: UIView, OWThemeStyleInjectorProtocol {
         return webView
     }()
 
-    fileprivate let viewModel: OWSafariTabViewViewModeling
+    fileprivate let viewModel: OWWebTabViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: OWSafariTabViewViewModeling) {
+    init(viewModel: OWWebTabViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -39,7 +39,7 @@ class OWSafariTabView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWSafariTabView {
+fileprivate extension OWWebTabView {
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
