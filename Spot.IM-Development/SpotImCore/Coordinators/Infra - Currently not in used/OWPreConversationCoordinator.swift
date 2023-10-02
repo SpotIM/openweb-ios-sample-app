@@ -131,10 +131,10 @@ fileprivate extension OWPreConversationCoordinator {
 
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
-            viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
-            viewModel.outputs.urlClickedOutput,
-            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput,
-            viewModel.outputs.openProfile.map { $0.url }
+            viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput.map { ($0, "") },
+            viewModel.outputs.urlClickedOutput.map { ($0, "") },
+            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput.map { ($0, "") },
+            viewModel.outputs.openProfile.map { ($0.url, OWLocalizationManager.shared.localizedString(key: "profile_title")) }
         )
 
         coordinateToSafariObservables
@@ -142,10 +142,14 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] tuple -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-                                                                   url: url,
+                let url = tuple.0
+                let title = tuple.1
+                let options = OWSafariTabOptions(url: url,
+                                                 title: title)
+                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   options: options,
                                                                    actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }

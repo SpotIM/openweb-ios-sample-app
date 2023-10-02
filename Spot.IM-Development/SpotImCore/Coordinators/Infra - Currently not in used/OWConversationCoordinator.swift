@@ -261,11 +261,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .urlClickedOutput
 
         // Coordinate to safari tab
+        let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "profile_title")
         let coordinateToSafariObservables = Observable.merge(
-            communityGuidelinesURLTapped,
-            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map { $0.url },
-            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput,
-            conversationVM.outputs.conversationViewVM.outputs.openProfile.map { $0.url }
+            communityGuidelinesURLTapped.map { ($0, "") },
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map { ($0.url, profilePageTitle) },
+            conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput.map { ($0, "") },
+            conversationVM.outputs.conversationViewVM.outputs.openProfile.map { ($0.url, profilePageTitle) }
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
@@ -273,10 +274,14 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] tuple -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
+                let url = tuple.0
+                let title = tuple.1
+                let options = OWSafariTabOptions(url: url,
+                                                 title: title)
                 let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-                                                               url: url,
+                                                               options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
