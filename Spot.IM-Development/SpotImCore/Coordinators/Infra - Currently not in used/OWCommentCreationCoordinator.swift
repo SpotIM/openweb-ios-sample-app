@@ -155,29 +155,14 @@ fileprivate extension OWCommentCreationCoordinator {
             .voidify()
             .map { OWViewActionCallbackType.floatingCommentCreationDismissed}
 
-        Observable.merge(floatingDismissed)
+        let commentCreatedObservable = viewModel.outputs.commentCreationSubmitted
+            .voidify()
+            .map { OWViewActionCallbackType.commentSubmitted }
+
+        Observable.merge(floatingDismissed, commentCreatedObservable)
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
-            .subscribe(onNext: { [weak self] viewAction in
-                guard let self = self else { return }
-                self.viewActionsService.append(viewAction: viewAction)
-            })
-            .disposed(by: disposeBag)
-
-        let commentCreatedByFloatingKeyboardStyleObservable = viewModel.outputs.commentCreationSubmitted
-            .voidify()
-            .filter {
-                if case .floatingKeyboard = viewModel.outputs.commentCreationStyle {
-                    return viewModel.outputs.viewableMode == .independent
-                } else {
-                    return false
-                }
-            }
-            .map { OWViewActionCallbackType.commentSubmitted }
-            .asObservable()
-
-        commentCreatedByFloatingKeyboardStyleObservable
             .subscribe(onNext: { [weak self] viewAction in
                 guard let self = self else { return }
                 self.viewActionsService.append(viewAction: viewAction)
