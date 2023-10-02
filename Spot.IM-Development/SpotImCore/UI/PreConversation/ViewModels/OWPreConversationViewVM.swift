@@ -479,7 +479,14 @@ fileprivate extension OWPreConversationViewViewModel {
             .share()
 
         // Creating the cells VMs for the pre conversation
+        // Do so only for designs which requiring a table view
         conversationFetchedObservable
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly]
+                let isNonTableViewStyle = stylesWithoutTableView.contains(self.preConversationStyle)
+                return !isNonTableViewStyle
+            }
             .subscribe(onNext: { [weak self] response in
                 guard
                     let self = self,
