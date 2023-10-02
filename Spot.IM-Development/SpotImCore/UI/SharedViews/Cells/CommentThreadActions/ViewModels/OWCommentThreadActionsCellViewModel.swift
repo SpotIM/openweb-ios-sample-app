@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentThreadActionsCellViewModelingInputs {
-
+    func update(commentPresentationData: OWCommentPresentationData)
 }
 
 protocol OWCommentThreadActionsCellViewModelingOutputs {
@@ -43,7 +43,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var depth: Int = 0
 
-    let commentPresentationData: OWCommentPresentationData
+    var commentPresentationData: OWCommentPresentationData
 
     var mode: OWCommentThreadActionsCellMode = .collapse
 
@@ -68,6 +68,10 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
             repliesOffset: 0,
             repliesPresentation: []
         )
+    }
+
+    func update(commentPresentationData: OWCommentPresentationData) {
+        self.commentPresentationData = commentPresentationData
     }
 }
 
