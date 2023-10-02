@@ -462,7 +462,7 @@ jobs:
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -496,7 +496,7 @@ jobs:
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -598,7 +598,7 @@ jobs:
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -649,7 +649,7 @@ jobs:
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
