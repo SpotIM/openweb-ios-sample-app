@@ -175,13 +175,13 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { ($0, "") },
             commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map { ($0.url, OWLocalizationManager.shared.localizedString(key: "profile_title")) }
         )
-            .flatMap { [weak self] tuple -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let url = tuple.0
                 let title = tuple.1
-                let options = OWSafariTabOptions(url: url,
+                let options = OWWebTabOptions(url: url,
                                                  title: title)
-                let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
                                                                    actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
