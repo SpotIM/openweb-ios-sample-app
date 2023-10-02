@@ -46,7 +46,6 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling, OWWebTabViewViewModelingI
         return OWTitleViewViewModel()
     }()
 
-
     init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
         self.options = options
         self.viewableMode = viewableMode
