@@ -45,15 +45,12 @@ class OWCommunityGuidelinesView: UIView {
     }()
 
     fileprivate var heightConstraint: OWConstraint? = nil
-    fileprivate var spacing: CGFloat!
     fileprivate var viewModel: OWCommunityGuidelinesViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
     // For init when using in Views and not in cells
-    init(with viewModel: OWCommunityGuidelinesViewModeling,
-         spacing: CGFloat) {
+    init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
-        self.spacing = spacing
         super.init(frame: .zero)
         self.isUserInteractionEnabled = true
         updateUI()
@@ -72,10 +69,8 @@ class OWCommunityGuidelinesView: UIView {
     }
 
     // Only when using community guidelines as a cell
-    func configure(with viewModel: OWCommunityGuidelinesViewModeling,
-                   spacing: CGFloat) {
+    func configure(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
-        self.spacing = spacing
         self.disposeBag = DisposeBag()
         updateUI()
         setupObservers()
@@ -97,7 +92,7 @@ fileprivate extension OWCommunityGuidelinesView {
         if viewModel.outputs.shouldShowContainer {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(spacing)
+                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
                 make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
@@ -118,7 +113,7 @@ fileprivate extension OWCommunityGuidelinesView {
         } else {
             self.addSubview(titleLabel)
             titleLabel.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(spacing)
+                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
                 make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }

@@ -38,8 +38,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
         self.viewModel = vm
         disposeBag = DisposeBag()
 
-        communityGuidelinesView.configure(with: self.viewModel.outputs.communityGuidelinesViewModel,
-                                          spacing: self.viewModel.outputs.communityGuidelinesSpacing)
+        communityGuidelinesView.configure(with: self.viewModel.outputs.communityGuidelinesViewModel)
         self.setupObservers()
     }
 }

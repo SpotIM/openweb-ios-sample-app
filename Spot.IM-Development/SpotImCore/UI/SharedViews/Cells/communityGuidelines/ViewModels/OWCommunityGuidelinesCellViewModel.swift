@@ -29,7 +29,7 @@ class OWCommunityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling,
     var outputs: OWCommunityGuidelinesCellViewModelingOutputs { return self }
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel(style: self.style)
+        return OWCommunityGuidelinesViewModel(style: self.style, spacing: self.spacing)
     }()
 
     lazy var communityGuidelinesSpacing: CGFloat = {

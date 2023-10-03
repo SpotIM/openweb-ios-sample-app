@@ -41,8 +41,7 @@ class OWCommunityQuestionCell: UITableViewCell {
         self.viewModel = vm
         disposeBag = DisposeBag()
 
-        communityQuestionView.configure(with: self.viewModel.outputs.communityQuestionViewModel,
-                                        spacing: self.viewModel.outputs.communityQuestionSpacing)
+        communityQuestionView.configure(with: self.viewModel.outputs.communityQuestionViewModel)
         self.setupObservers()
     }
 }

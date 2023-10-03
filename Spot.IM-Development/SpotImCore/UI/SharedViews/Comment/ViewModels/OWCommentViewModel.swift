@@ -125,14 +125,13 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     init(data: OWCommentRequiredData,
-         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         spacing: CGFloat) {
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        _updateSpacing.onNext(spacing)
+        _updateSpacing.onNext(data.spacing)
 
         let status = OWCommentStatusType.commentStatus(from: data.comment.status)
         commentStatusVM = OWCommentStatusViewModel(status: status)
-        commentHeaderVM = OWCommentHeaderViewModel(data: data, spacing: spacing)
+        commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)

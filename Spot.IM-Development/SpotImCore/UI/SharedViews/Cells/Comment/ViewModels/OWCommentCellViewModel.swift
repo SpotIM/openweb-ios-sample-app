@@ -42,11 +42,10 @@ class OWCommentCellViewModel: OWCommentCellViewModeling,
 
     var id: String = ""
 
-    init(data: OWCommentRequiredData,
-         spacing: CGFloat) {
+    init(data: OWCommentRequiredData) {
         self.id = data.comment.id ?? ""
 
-        self.commentVM = OWCommentViewModel(data: data, spacing: spacing)
+        self.commentVM = OWCommentViewModel(data: data)
     }
 
     init() {

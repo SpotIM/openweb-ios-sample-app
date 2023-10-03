@@ -41,10 +41,8 @@ class OWCommunityQuestionView: UIView {
     fileprivate var disposeBag = DisposeBag()
 
     // For init when using in Views and not in cells
-    init(with viewModel: OWCommunityQuestionViewModeling,
-         spacing: CGFloat) {
+    init(with viewModel: OWCommunityQuestionViewModeling) {
         self.viewModel = viewModel
-        self.spacing = spacing
         super.init(frame: .zero)
         updateUI()
         setupObservers()
@@ -58,10 +56,8 @@ class OWCommunityQuestionView: UIView {
     }
 
     // Only when using community question as a cell
-    func configure(with viewModel: OWCommunityQuestionViewModeling,
-                   spacing: CGFloat) {
+    func configure(with viewModel: OWCommunityQuestionViewModeling) {
         self.viewModel = viewModel
-        self.spacing = spacing
         self.disposeBag = DisposeBag()
         self.updateUI()
         self.setupObservers()
@@ -94,7 +90,7 @@ fileprivate extension OWCommunityQuestionView {
         if viewModel.outputs.shouldShowContainer {
             self.addSubview(questionContainer)
             questionContainer.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(spacing)
+                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
                 make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
@@ -109,7 +105,7 @@ fileprivate extension OWCommunityQuestionView {
         } else {
             self.addSubview(questionLabel)
             questionLabel.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(spacing)
+                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
                 make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
