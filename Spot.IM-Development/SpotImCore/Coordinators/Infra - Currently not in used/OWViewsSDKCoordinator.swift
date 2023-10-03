@@ -118,6 +118,39 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 }
     }
 
+    func clarityDetailsView(type: OWClarityDetailsType,
+                            callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWClarityDetailsCoordinatorResult>.self)
+            })
+                .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                    guard let self = self else { return .empty() }
+                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type, actionsCallbacks: callbacks)
+
+                    self.store(coordinator: clarityDetailsCoordinator)
+                    return clarityDetailsCoordinator.showableComponent()
+                }
+    }
+
+    func webTabView(tabOptions: OWWebTabOptions, callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWWebTabCoordinatorResult>.self)
+            })
+                .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                    guard let self = self else { return .empty() }
+                    let webTabCoordinator = OWWebTabCoordinator(options: tabOptions, actionsCallbacks: callbacks)
+
+                    self.store(coordinator: webTabCoordinator)
+                    return webTabCoordinator.showableComponent()
+                }
+    }
+
 #if BETA
     func testingPlaygroundView(testingPlaygroundData: OWTestingPlaygroundRequiredData,
                                callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {

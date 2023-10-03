@@ -90,6 +90,19 @@ fileprivate extension MiscellaneousVC {
 
     func setupObservers() {
         title = viewModel.outputs.title
+
+        btnConversationCounter.rx.tap
+            .bind(to: viewModel.inputs.conversationCounterTapped)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openConversationCounters
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let conversationCounterVM = ConversationCountersNewAPIViewModel()
+                let conversationCounterVC = ConversationCountersNewAPIVC(viewModel: conversationCounterVM)
+                self.navigationController?.pushViewController(conversationCounterVC, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

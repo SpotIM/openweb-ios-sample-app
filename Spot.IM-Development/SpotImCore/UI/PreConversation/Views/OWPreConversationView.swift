@@ -362,8 +362,11 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowComments
-            .map { !$0 }
+        Observable.combineLatest(viewModel.outputs.shouldShowCTAButton,
+                                 viewModel.outputs.shouldShowComments) { shouldShowCTAButton, shouldShowComments in
+            guard shouldShowCTAButton else { return true }
+            return !shouldShowComments
+        }
             .bind(to: tableBottomDivider.rx.isHidden)
             .disposed(by: disposeBag)
 
@@ -428,10 +431,10 @@ fileprivate extension OWPreConversationView {
         }
             .withLatestFrom(viewModel.outputs.shouldShowComments) { result, isCommentsVisible -> (CGFloat?, Bool) in
                 let realtimeIsShown = result.1
-                guard isCommentsVisible == true else { return (0.0, realtimeIsShown) }
+                let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
+                guard isCommentsVisible == true else { return (extraHeight, realtimeIsShown) }
 
                 let size = result.0
-                let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
                 let height = size.height + extraHeight
 
                 return (height, realtimeIsShown)

@@ -66,6 +66,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
 
     fileprivate lazy var lblGenericSSOStatus: UILabel = statusLabel
     fileprivate lazy var lblJWTSSOStatus: UILabel = statusLabel
+    fileprivate lazy var lblLogoutStatus: UILabel = statusLabel
 
     fileprivate lazy var btnGenericSSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
     fileprivate lazy var btnJWTSSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
@@ -73,6 +74,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
 
     fileprivate lazy var lblGenericSSOStatusSymbol: UILabel = statusSymbol
     fileprivate lazy var lblJWTSSOStatusSymbol: UILabel = statusSymbol
+    fileprivate lazy var lblLogoutStatusSymbol: UILabel = statusSymbol
 
     fileprivate func blueRoundedButton(key: String) -> UIButton {
         NSLocalizedString(key, comment: "")
@@ -212,10 +214,22 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
         }
 
         // Logout
+        scrollView.addSubview(lblLogoutStatus)
+        lblLogoutStatus.snp.makeConstraints { make in
+            make.top.equalTo(btnJWTSSOAuthenticate.snp.bottom).offset(Metrics.verticalBigMargin)
+            make.leading.equalTo(lblJWTSSOStatus)
+        }
+
+        scrollView.addSubview(lblLogoutStatusSymbol)
+        lblLogoutStatusSymbol.snp.makeConstraints { make in
+            make.centerY.equalTo(lblLogoutStatus)
+            make.leading.equalTo(lblLogoutStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+        }
+
         scrollView.addSubview(btnLogout)
         btnLogout.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(btnJWTSSOAuthenticate.snp.bottom).offset(Metrics.verticalBigMargin)
+            make.centerY.equalTo(lblLogoutStatusSymbol)
+            make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
@@ -253,6 +267,11 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
         viewModel.outputs.JWTSSOAuthenticationStatus
             .map { $0.symbol }
             .bind(to: lblJWTSSOStatusSymbol.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.logoutAuthenticationStatus
+            .map { $0.symbol }
+            .bind(to: lblLogoutStatusSymbol.rx.text)
             .disposed(by: disposeBag)
 
         btnGenericSSOAuthenticate.rx.tap
