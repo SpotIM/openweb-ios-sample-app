@@ -25,10 +25,8 @@ protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
-    var communityGuidelinesSpacing: CGFloat { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
-    var communityQuestionSpacing: CGFloat { get }
     var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
@@ -113,23 +111,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle)
+        return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle,
+                                              spacing: Metrics.defaultCommunityGuidelinesSpacing)
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
+        return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle,
+                                            spacing: Metrics.defaultCommunityQuestionSpacing)
     }()
 
     lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
         return OWRealtimeIndicationAnimationViewModel()
-    }()
-
-    lazy var communityGuidelinesSpacing: CGFloat = {
-        return Metrics.defaultCommunityGuidelinesSpacing
-    }()
-
-    lazy var communityQuestionSpacing: CGFloat = {
-        return Metrics.defaultCommunityQuestionSpacing
     }()
 
     lazy var commentingCTAViewModel: OWCommentingCTAViewModeling = {
@@ -400,8 +392,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
                                                                   user: user,
                                                                   replyToUser: replyToUser,
                                                                   collapsableTextLineLimit: 0,
-                                                                  section: self.preConversationData.article.additionalSettings.section),
-                                      spacing: Metrics.defaultBetweenCommentsSpacing)
+                                                                  section: self.preConversationData.article.additionalSettings.section,
+                                                                  spacing: Metrics.defaultBetweenCommentsSpacing))
     }
 }
 
@@ -531,8 +523,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                        section: self.preConversationData.article.additionalSettings.section
-                    ), spacing: Metrics.defaultBetweenCommentsSpacing)
+                        section: self.preConversationData.article.additionalSettings.section,
+                        spacing: Metrics.defaultBetweenCommentsSpacing))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
@@ -809,8 +801,8 @@ fileprivate extension OWPreConversationViewViewModel {
                             user: user,
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                            section: self.preConversationData.article.additionalSettings.section
-                        ), spacing: Metrics.defaultBetweenCommentsSpacing)
+                            section: self.preConversationData.article.additionalSettings.section,
+                            spacing: Metrics.defaultBetweenCommentsSpacing))
                     }.unwrap()
                     var viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in

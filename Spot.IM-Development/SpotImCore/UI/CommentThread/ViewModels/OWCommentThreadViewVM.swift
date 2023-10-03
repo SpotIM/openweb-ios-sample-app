@@ -46,6 +46,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate struct Metrics {
         static let numberOfSkeletonComments: Int = 10
+        static let betweenCommentsSpacingDivisor: CGFloat = 2
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 500 // ms
@@ -57,12 +58,15 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         return OWManager.manager.postId ?? ""
     }
 
+    fileprivate lazy var spacingBetweenComments: CGFloat = {
+        return self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments / Metrics.betweenCommentsSpacingDivisor
+    }()
+
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
-    fileprivate let spacingBetweenComments: CGFloat
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
@@ -218,13 +222,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
-          viewableMode: OWViewableMode = .independent,
-          spacing: CGFloat
-    ) {
+          viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
         self.commentPresentationDataHelper = commentPresentationDataHelper
         self.viewableMode = viewableMode
-        self.spacingBetweenComments = spacing
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
         self.setupObservers()
@@ -259,16 +260,14 @@ fileprivate extension OWCommentThreadViewViewModel {
                     id: "\(commentPresentationData.id)_expand_only",
                     data: commentPresentationData,
                     mode: .expand,
-                    depth: depth,
-                    spacing: spacingBetweenComments
+                    depth: depth
                 )))
             default:
                 cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth,
-                    spacing: spacingBetweenComments
+                    depth: depth
                 )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
@@ -278,8 +277,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth,
-                        spacing: spacingBetweenComments
+                        depth: depth
                     )))
                 }
             }
@@ -310,6 +308,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
+                spacing: self.spacingBetweenComments,
                 repliesPresentation: getCommentsPresentationData(of: comment.replies ?? [])
             )
 
@@ -330,6 +329,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
+                    spacing: self.spacingBetweenComments,
                     repliesPresentation: []
                 )
             )
@@ -358,8 +358,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
-            section: self.commentThreadData.article.additionalSettings.section
-        ), spacing: spacingBetweenComments)
+            section: self.commentThreadData.article.additionalSettings.section,
+            spacing: self.spacingBetweenComments))
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {

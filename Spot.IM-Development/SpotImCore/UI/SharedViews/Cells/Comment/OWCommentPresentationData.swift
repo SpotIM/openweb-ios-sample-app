@@ -18,6 +18,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
     var repliesIds: [OWCommentId]
     var totalRepliesCount: Int
     var repliesOffset: Int
+    var spacing: CGFloat
     fileprivate(set) var repliesPresentation: [OWCommentPresentationData]
 
     init(
@@ -25,12 +26,14 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         repliesIds: [OWCommentId],
         totalRepliesCount: Int,
         repliesOffset: Int,
+        spacing: CGFloat,
         repliesPresentation: [OWCommentPresentationData]) {
 
         self.id = id
         self.repliesIds = repliesIds
         self.totalRepliesCount = totalRepliesCount
         self.repliesOffset = repliesOffset
+        self.spacing = spacing
         self.repliesPresentation = repliesPresentation
         self.updateRepliesPresentationObservers()
     }
@@ -40,6 +43,7 @@ class OWCommentPresentationData: OWUpdaterProtocol {
         self.repliesIds = []
         self.totalRepliesCount = 0
         self.repliesOffset = 0
+        self.spacing = 0
         self.repliesPresentation = []
     }
 }
