@@ -15,8 +15,8 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var ctaTap: PublishSubject<Void> { get }
     var textBeforeClosedChange: BehaviorSubject<String> { get }
     var resetTypeToNewCommentChange: PublishSubject<Void> { get }
-    var isSendingChange: BehaviorSubject<Bool> { get }
     var initialTextUsed: PublishSubject<Void> { get }
+    var submitCommentInProgress: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -34,8 +34,8 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
-    var isSendingChanged: Observable<Bool> { get }
     var loginToPostClick: Observable<Void> { get }
+    var ctaButtonLoading: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -51,6 +51,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     fileprivate struct Metrics {
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
+        static let delayForDismiss: Int = 350 // ms
     }
 
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
@@ -88,11 +89,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .asObservable()
     }
 
-    var isSendingChange = BehaviorSubject<Bool>(value: false)
-    var isSendingChanged: Observable<Bool> {
-        return isSendingChange
+    var submitCommentInProgress = BehaviorSubject<Bool>(value: false)
+    var ctaButtonLoading: Observable<Bool> {
+        submitCommentInProgress
             .asObservable()
-            .share()
     }
 
     var initialTextUsed = PublishSubject<Void>()
@@ -128,11 +128,6 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .flatMap { [weak self] _ -> Observable<Bool> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
-            }
-            .map { [weak self] needsAuthentication -> Bool in
-                guard let self = self else { return needsAuthentication }
-                self.isSendingChange.onNext(!needsAuthentication)
-                return needsAuthentication
             }
             .do(onNext: { [weak self] loginToPost in
                 guard let self = self,
@@ -276,7 +271,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        closeInstantly
+        closedInstantly
             .withLatestFrom(textBeforeClosedChanged)
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }

@@ -21,6 +21,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
     var commentCreationSubmitted: Observable<OWComment> { get }
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -38,7 +39,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let viewableMode: OWViewableMode
+    let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     // This is the original commentCreationData since
@@ -51,6 +52,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate lazy var postId = OWManager.manager.postId
 
+    fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
+
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
         switch commentCreationData.settings.commentCreationSettings.style {
@@ -61,7 +64,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
-            return commentCreationFloatingKeyboardViewVm.inputs.closeInstantly
+            return commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
                 .do(onNext: { [weak self] commentText in
                     guard let self = self else { return }
                     let hasText = !commentText.isEmpty
@@ -173,6 +176,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 ))
             }
             .unwrap()
+            .do(onNext: { [weak self] _, _ in
+                guard let self = self else { return }
+                self._commentCreationSubmitInProgrss.onNext(true)
+            })
             .flatMapLatest { [weak self] commentCreationData, networkParameters -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // 2 - perform create comment request
                 guard let self = self else { return .empty() }
@@ -200,6 +207,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     return (commentCreationData, comment)
                 case .error(_):
                     // TODO - Handle error
+                    self._commentCreationSubmitInProgrss.onNext(false)
                     return nil
                 default:
                     return nil
@@ -261,7 +269,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .insert(comments: [comment])
                 case .edit:
                     guard let commentId = comment.id else { return }
-                    commentUpdateType = .update(commentId: commentId, withComment: comment)
+                    var updatedComment = comment
+                    updatedComment.setIsEdited(true)
+                    commentUpdateType = .update(commentId: commentId, withComment: updatedComment)
                 case .replyToComment(originComment: let originComment):
                     guard let commentId = originComment.id else { return }
                     commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
@@ -282,9 +292,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     }
             })
             .do(onNext: { [weak self] comment in
-                self?.servicesProvider
+                guard let self = self else { return }
+                self.servicesProvider
                     .commentStatusUpdaterService()
                     .fetchStatusFor(comment: comment)
+                self._commentCreationSubmitInProgrss.onNext(false)
             })
             .share()
     }()
@@ -412,6 +424,15 @@ fileprivate extension OWCommentCreationViewViewModel {
             .articleExtraData
             .subscribe(onNext: { [weak self] article in
                 self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+        self._commentCreationSubmitInProgrss
+            .subscribe(onNext: { [weak self] isInProgress in
+                guard let self = self else { return }
+                self.commentCreationRegularViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
+                self.commentCreationLightViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
+                self.commentCreationFloatingKeyboardViewVm.inputs.submitCommentInProgress.onNext(isInProgress)
             })
             .disposed(by: disposeBag)
     }

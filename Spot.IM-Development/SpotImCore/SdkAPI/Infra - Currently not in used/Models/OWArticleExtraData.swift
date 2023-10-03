@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public struct OWArticleExtraData: Codable {
+public struct OWArticleExtraData: Codable, Equatable {
     public let url: URL
     public let title: String
     public let subtitle: String?
@@ -24,7 +24,7 @@ public struct OWArticleExtraData: Codable {
 }
 
 #else
-struct OWArticleExtraData: Codable {
+struct OWArticleExtraData: Codable, Equatable {
     let url: URL
     let title: String
     let subtitle: String?

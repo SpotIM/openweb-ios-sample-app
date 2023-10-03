@@ -35,10 +35,12 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate var footerBottomPaddingConstraint: OWConstraint? = nil
+    fileprivate var hasLayoutSubviewsFirstTime = false
 
     fileprivate lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,
-                           prefixIdentifier: Metrics.prefixIdentifier)
+                           prefixIdentifier: Metrics.prefixIdentifier,
+                           viewModel: viewModel.outputs.titleViewVM)
     }()
 
     fileprivate lazy var textView: OWTextView = {
@@ -84,7 +86,10 @@ class OWAdditionalInfoView: UIView, OWThemeStyleInjectorProtocol {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.becomeFirstResponderDelay)
+        if viewModel.outputs.viewableMode == .partOfFlow || !hasLayoutSubviewsFirstTime {
+            self.viewModel.outputs.textViewVM.inputs.becomeFirstResponderCallWithDelay.onNext(Metrics.becomeFirstResponderDelay)
+            hasLayoutSubviewsFirstTime = true
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -164,10 +169,22 @@ fileprivate extension OWAdditionalInfoView {
             .disposed(by: disposeBag)
 
         cancelButton.rx.tap
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                if self.viewModel.outputs.viewableMode == .independent {
+                    self.viewModel.outputs.textViewVM.inputs.resignFirstResponderCall.onNext()
+                }
+            })
             .bind(to: viewModel.inputs.cancelAdditionalInfoTap)
             .disposed(by: disposeBag)
 
         submitButton.rx.tap
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                if self.viewModel.outputs.viewableMode == .independent {
+                    self.viewModel.outputs.textViewVM.inputs.resignFirstResponderCall.onNext()
+                }
+            })
             .bind(to: viewModel.inputs.submitAdditionalInfoTap)
             .disposed(by: disposeBag)
 
