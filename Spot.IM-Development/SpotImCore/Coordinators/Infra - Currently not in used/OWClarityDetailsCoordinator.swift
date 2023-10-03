@@ -97,12 +97,16 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] url -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self,
                       let router = self.router
                 else { return .empty() }
-                let safariCoordinator = OWSafariTabCoordinator(router: router,
-                                                               url: url,
+                let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
+                    .outputs.navigationTitle
+                let options = OWWebTabOptions(url: url,
+                                                 title: title)
+                let safariCoordinator = OWWebTabCoordinator(router: router,
+                                                               options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
@@ -138,11 +142,20 @@ fileprivate extension OWClarityDetailsCoordinator {
 
         let dismissView = viewModel.outputs.dismissView
             .map { OWViewActionCallbackType.closeClarityDetails }
+        let closeButtonClick = viewModel.outputs.closeButtonPopped
+            .map { OWViewActionCallbackType.closeClarityDetails }
 
-        Observable.merge(dismissView)
-            .subscribe(onNext: { [weak self] viewActionType in
-                self?.viewActionsService.append(viewAction: viewActionType)
-            })
-            .disposed(by: disposeBag)
+        let openCommunityGuidelines = viewModel.outputs.communityGuidelinesClickObservable
+            .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
+
+        Observable.merge(
+            dismissView,
+            closeButtonClick,
+            openCommunityGuidelines
+        )
+        .subscribe(onNext: { [weak self] viewActionType in
+            self?.viewActionsService.append(viewAction: viewActionType)
+        })
+        .disposed(by: disposeBag)
     }
 }

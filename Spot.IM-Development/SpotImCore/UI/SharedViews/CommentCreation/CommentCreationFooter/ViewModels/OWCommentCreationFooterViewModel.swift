@@ -13,11 +13,13 @@ protocol OWCommentCreationFooterViewModelingInputs {
     var tapCta: PublishSubject<Void> { get }
     var tapAddImage: PublishSubject<Void> { get }
     var ctaEnabled: BehaviorSubject<Bool> { get }
+    var submitCommentInProgress: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaTitleText: Observable<String> { get }
     var ctaButtonEnabled: Observable<Bool> { get }
+    var ctaButtonLoading: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
     var addImageTapped: Observable<Void> { get }
@@ -106,7 +108,14 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     }
 
     var ctaButtonEnabled: Observable<Bool> {
-        return ctaEnabled
+        Observable.combineLatest(ctaEnabled, submitCommentInProgress) { ctaEnabled, submitCommentInProgress in
+            return ctaEnabled && !submitCommentInProgress
+        }
+    }
+
+    var submitCommentInProgress = BehaviorSubject<Bool>(value: false)
+    var ctaButtonLoading: Observable<Bool> {
+        submitCommentInProgress
             .asObservable()
     }
 

@@ -65,7 +65,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     popCompletion: commentCreationPopped)
 
         setupObservers(forViewModel: commentCreationVM)
-        setupViewActionsCallbacks(forViewModel: commentCreationVM)
+        setupViewActionsCallbacks(forViewModel: commentCreationVM.outputs.commentCreationViewVM)
 
         let commentCreatedObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
             .filter { _ in
@@ -144,15 +144,29 @@ fileprivate extension OWCommentCreationCoordinator {
             .disposed(by: disposeBag)
     }
 
-    func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewModeling) {
-        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
-    }
-
     func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        let floatingDismissed = viewModel.outputs.closeButtonTapped
+            .voidify()
+            .map { OWViewActionCallbackType.floatingCommentCreationDismissed}
+
+        let commentCreatedObservable = viewModel.outputs.commentCreationSubmitted
+            .voidify()
+            .map { OWViewActionCallbackType.commentSubmitted }
+
+        Observable.merge(floatingDismissed, commentCreatedObservable)
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .subscribe(onNext: { [weak self] viewAction in
+                guard let self = self else { return }
+                self.viewActionsService.append(viewAction: viewAction)
+            })
+            .disposed(by: disposeBag)
     }
 }

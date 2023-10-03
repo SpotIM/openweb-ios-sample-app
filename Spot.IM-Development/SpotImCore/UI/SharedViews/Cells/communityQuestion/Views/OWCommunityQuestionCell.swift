@@ -18,8 +18,7 @@ class OWCommunityQuestionCell: UITableViewCell {
     }
 
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
-       let communityQuestionView = OWCommunityQuestionView()
-        return communityQuestionView
+        return OWCommunityQuestionView()
     }()
 
     fileprivate var viewModel: OWCommunityQuestionCellViewModeling!
@@ -50,7 +49,8 @@ class OWCommunityQuestionCell: UITableViewCell {
 
 fileprivate extension OWCommunityQuestionCell {
     func setupUI() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
         self.addSubviews(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in

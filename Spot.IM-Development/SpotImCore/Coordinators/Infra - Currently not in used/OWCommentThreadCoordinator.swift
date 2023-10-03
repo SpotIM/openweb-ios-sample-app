@@ -44,6 +44,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         self.actionsCallbacks = actionsCallbacks
     }
 
+    // swiftlint:disable function_body_length
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
         viewableMode = .partOfFlow
         let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
@@ -139,15 +140,49 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 return Observable.never()
             }
 
+        let clarityDetailsFromCommentThreadObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openClarityDetails
+
+        // Coordinate to clarity details
+        let coordinateClarityDetailsObservable = clarityDetailsFromCommentThreadObservable
+            .asObservable()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                                                                            router: self.router,
+                                                                            actionsCallbacks: self.actionsCallbacks,
+                                                                            presentationalMode: self.commentThreadData.presentationalStyle)
+                return self.coordinate(to: clarityDetailsCoordinator)
+            }
+            .do(onNext: { coordinatorResult in
+                switch coordinatorResult {
+                case .popped:
+                    // Nothing
+                    break
+                default:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
-            commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput,
-            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map { $0.url }
+            commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { ($0, "") },
+            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map { ($0.url, OWLocalizationManager.shared.localizedString(key: "profile_title")) }
         )
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
-                                                                   url: url,
+                let url = tuple.0
+                let title = tuple.1
+                let options = OWWebTabOptions(url: url,
+                                                 title: title)
+                let safariCoordinator = OWWebTabCoordinator(router: self.router,
+                                                                   options: options,
                                                                    actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
@@ -158,8 +193,10 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         return Observable.merge(commentThreadPoppedObservable,
                                 commentThreadLoadedToScreenObservable,
                                 coordinateCommentCreationObservable, coordinateToSafariObservables,
-                                coordinateReportReasonObservable)
+                                coordinateReportReasonObservable,
+                                coordinateClarityDetailsObservable)
     }
+    // swiftlint:enable function_body_length
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
@@ -193,7 +230,36 @@ fileprivate extension OWCommentThreadCoordinator {
             .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
             .asObservable()
 
-        Observable.merge(openPublisherProfile)
+        // Open comment creation
+        let openCommentCreation = viewModel.outputs.openCommentCreation
+            .map { internalType -> OWCommentCreationType in
+                switch internalType {
+                case .comment:
+                    return OWCommentCreationType.comment
+                case .replyToComment(let originComment):
+                    return .replyTo(commentId: originComment.id ?? "")
+                case .edit(let comment):
+                    return .edit(commentId: comment.id ?? "")
+                }
+            }
+            .map { OWViewActionCallbackType.openCommentCreation(type: $0) }
+
+        // Open clarity details
+        let openClarityDetails = viewModel.outputs.openClarityDetails
+            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+
+        // Open report reason
+        let openReportReason = viewModel.outputs.openReportReason
+            .map { commentVM -> OWViewActionCallbackType in
+                guard let commentId = commentVM.outputs.comment.id,
+                      let parentId = commentVM.outputs.comment.parentId else { return .error(.reportReasonFlow) }
+                return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
+            }
+
+        Observable.merge(openPublisherProfile,
+                         openCommentCreation,
+                         openClarityDetails,
+                         openReportReason)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
