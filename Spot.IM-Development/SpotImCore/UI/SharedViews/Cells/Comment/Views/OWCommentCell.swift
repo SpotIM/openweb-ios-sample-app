@@ -45,10 +45,6 @@ class OWCommentCell: UITableViewCell {
             make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
         }
 
-        commentView.OWSnp.updateConstraints { make in
-            make.top.bottom.equalToSuperview()
-        }
-
         self.setupObservers()
         self.applyAccessibility()
     }

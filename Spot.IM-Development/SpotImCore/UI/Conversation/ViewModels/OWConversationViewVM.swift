@@ -453,16 +453,14 @@ fileprivate extension OWConversationViewViewModel {
                     id: "\(commentPresentationData.id)_expand_only",
                     data: commentPresentationData,
                     mode: .expand,
-                    depth: depth,
-                    spacing: spacingBetweenComments
+                    depth: depth
                 )))
             default:
                 cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth,
-                    spacing: spacingBetweenComments
+                    depth: depth
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -472,8 +470,7 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth,
-                        spacing: spacingBetweenComments
+                        depth: depth
                     )))
                 }
             }
@@ -534,6 +531,7 @@ fileprivate extension OWConversationViewViewModel {
                         repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                         totalRepliesCount: reply.repliesCount ?? 0,
                         repliesOffset: reply.offset ?? 0,
+                        spacing: self.spacingBetweenComments,
                         repliesPresentation: []
                     )
 
@@ -546,6 +544,7 @@ fileprivate extension OWConversationViewViewModel {
                 repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
+                spacing: self.spacingBetweenComments,
                 repliesPresentation: repliesPresentationData
             )
 
@@ -566,6 +565,7 @@ fileprivate extension OWConversationViewViewModel {
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
+                    spacing: self.spacingBetweenComments,
                     repliesPresentation: []
                 )
             )
@@ -594,8 +594,8 @@ fileprivate extension OWConversationViewViewModel {
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
-            section: self.conversationData.article.additionalSettings.section
-        ), spacing: spacingBetweenComments)
+            section: self.conversationData.article.additionalSettings.section,
+            spacing: self.spacingBetweenComments))
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {

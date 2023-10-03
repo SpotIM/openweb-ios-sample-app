@@ -23,6 +23,7 @@ protocol OWCommunityQuestionViewModelingOutputs {
 
     var shouldShowContainer: Bool { get }
     var titleFont: UIFont { get }
+    var spacing: CGFloat { get }
     var style: OWCommunityQuestionStyle { get }
 }
 
@@ -88,15 +89,19 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
     }()
 
     let style: OWCommunityQuestionStyle
+    let spacing: CGFloat
     fileprivate let disposeBag = DisposeBag()
 
-    init(style: OWCommunityQuestionStyle) {
+    init(style: OWCommunityQuestionStyle,
+         spacing: CGFloat) {
         self.style = style
+        self.spacing = spacing
         setupObservers()
     }
 
     init() {
         style = .regular
+        spacing = OWConversationSpacing.regular.communityQuestions
     }
 }
 

@@ -19,7 +19,6 @@ protocol OWCommentThreadActionsCellViewModelingOutputs {
     var commentPresentationData: OWCommentPresentationData { get }
     var commentActionsVM: OWCommentThreadActionsViewModel { get }
     var depth: Int { get }
-    var spaceBetweenComments: CGFloat { get }
 }
 
 protocol OWCommentThreadActionsCellViewModeling: OWCellViewModel {
@@ -44,26 +43,21 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
     var depth: Int = 0
     let commentPresentationData: OWCommentPresentationData
     var mode: OWCommentThreadActionsCellMode = .collapse
-    fileprivate var spacing: CGFloat
 
-    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
-                                                                                                 commentId: self.commentPresentationData.id,
-                                                                                                 spacing: spacing)
+    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread, data: commentPresentationData)
 
-    lazy var spaceBetweenComments: CGFloat = {
-        return self.spacing
-    }()
-
-    init(id: String = UUID().uuidString, data: OWCommentPresentationData, mode: OWCommentThreadActionsCellMode = .collapse, depth: Int = 0, spacing: CGFloat) {
+    init(id: String = UUID().uuidString,
+         data: OWCommentPresentationData,
+         mode: OWCommentThreadActionsCellMode = .collapse,
+         depth: Int = 0) {
         self.id = id
         self.commentPresentationData = data
         self.depth = depth
         self.mode = mode
-        self.spacing = spacing
 
         let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
 
-        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: spacing)
+        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, data: data)
     }
 
     init() {
@@ -72,9 +66,9 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
             repliesIds: [],
             totalRepliesCount: 0,
             repliesOffset: 0,
+            spacing: 0,
             repliesPresentation: []
         )
-        self.spacing = 0
     }
 }
 

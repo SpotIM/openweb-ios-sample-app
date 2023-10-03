@@ -27,6 +27,7 @@ protocol OWCommunityGuidelinesViewModelingOutputs {
     var shouldShowView: Observable<Bool> { get }
 
     var shouldShowContainer: Bool { get }
+    var spacing: CGFloat { get }
     var style: OWCommunityGuidelinesStyle { get }
 }
 
@@ -92,7 +93,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .share(replay: 1)
     }
 
-    fileprivate lazy var accessibilityChange: Observable<Bool> = {
+    fileprivate lazy var contentSizeChanged: Observable<Bool> = {
         servicesProvider.appLifeCycle()
             .didChangeContentSizeCategory
             .map { true }
@@ -136,12 +137,15 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     }()
 
     let style: OWCommunityGuidelinesStyle
+    let spacing: CGFloat
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
     init(style: OWCommunityGuidelinesStyle,
+         spacing: CGFloat,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.style = style
+        self.spacing = spacing
         self.servicesProvider = servicesProvider
         setupObservers()
     }
@@ -176,7 +180,7 @@ fileprivate extension OWCommunityGuidelinesViewModel {
 
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,
-            accessibilityChange) { style, _ in
+            contentSizeChanged) { style, _ in
                 return style
             }
             .subscribe(onNext: { [weak self] style in

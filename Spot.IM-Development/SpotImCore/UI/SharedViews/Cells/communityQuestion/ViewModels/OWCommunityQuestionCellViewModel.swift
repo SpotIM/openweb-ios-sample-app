@@ -29,7 +29,7 @@ class OWCommunityQuestionCellViewModel: OWCommunityQuestionCellViewModeling,
     var outputs: OWCommunityQuestionCellViewModelingOutputs { return self }
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel(style: self.style)
+        return OWCommunityQuestionViewModel(style: self.style, spacing: self.spacing)
     }()
 
     lazy var communityQuestionSpacing: CGFloat = {
