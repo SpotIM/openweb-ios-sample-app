@@ -101,11 +101,13 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         let learnMoreObservable = reportReasonVM.outputs.reportReasonViewViewModel
             .outputs.learnMoreTapped
             .unwrap()
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] url -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 guard let router = self.router else { return .empty() }
-                let safariCoordinator = OWSafariTabCoordinator(router: router,
-                                                               url: url,
+                let options = OWWebTabOptions(url: url,
+                                                 title: "")
+                let safariCoordinator = OWWebTabCoordinator(router: router,
+                                                               options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }

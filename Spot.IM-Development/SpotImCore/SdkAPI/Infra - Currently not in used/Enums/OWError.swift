@@ -24,6 +24,9 @@ public enum OWError: Error, Codable {
     case conversationView
     case commentCreationView
     case commentThreadView
+    case reportReasonView
+    case clarityDetailsView
+    case webTabView
     case logout
     case userStatus
     case ssoStart
@@ -59,6 +62,12 @@ public enum OWError: Error, Codable {
             return "Error in the process of starting comment creation as a view"
         case .commentThreadView:
             return "Error in the process of starting comment thread as a view"
+        case .reportReasonView:
+            return "Error in the process of starting report reason as a view"
+        case .clarityDetailsView:
+            return "Error in the process of starting clarity details as a view"
+        case .webTabView:
+            return "Error in the process of starting web tab as a view"
         case .logout:
             return "Error in the process of logout"
         case .userStatus:
@@ -95,6 +104,9 @@ enum OWError: Error, Codable {
     case conversationView
     case commentCreationView
     case commentThreadView
+    case reportReasonView
+    case clarityDetailsView
+    case webTabView
     case logout
     case userStatus
     case ssoStart
@@ -130,6 +142,12 @@ enum OWError: Error, Codable {
             return "Error in the process of starting comment creation as a view"
         case .commentThreadView:
             return "Error in the process of starting comment thread as a view"
+        case .reportReasonView:
+            return "Error in the process of starting report reason as a view"
+        case .clarityDetailsView:
+            return "Error in the process of starting clarity details as a view"
+        case .webTabView:
+            return "Error in the process of starting web tab as a view"
         case .logout:
             return "Error in the process of logout"
         case .userStatus:

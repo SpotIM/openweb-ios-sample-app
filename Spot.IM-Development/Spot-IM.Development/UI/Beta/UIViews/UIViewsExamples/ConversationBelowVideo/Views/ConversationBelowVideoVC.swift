@@ -25,6 +25,7 @@ class ConversationBelowVideoVC: UIViewController {
         static let presentAnimationDuration: TimeInterval = 0.3
         static let preConversationHorizontalMargin: CGFloat = 16.0
         static let videoRatio: CGFloat = 9/16
+        static let keyboardAnimationDuration: CGFloat = 0.25
         static let videoPlayerIdentifier = "video_player_id"
         static let videoLink = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_30MB.mp4"
         // For some reason this longer video isn't working on a simulator, so we will show it only one a real device
@@ -45,6 +46,11 @@ class ConversationBelowVideoVC: UIViewController {
     fileprivate unowned var reportReasonsTopConstraint: Constraint!
     fileprivate unowned var clarityDetailsTopConstraint: Constraint!
     fileprivate unowned var webPageTopConstraint: Constraint!
+
+    // Designed to play with the height
+    fileprivate unowned var reportReasonsHeightConstraint: Constraint!
+    fileprivate unowned var clarityDetailsHeightConstraint: Constraint!
+    fileprivate unowned var webPageHeightConstraint: Constraint!
 
     fileprivate lazy var videoPlayerItem: AVPlayerItem = {
         let urlString: String
@@ -153,6 +159,7 @@ fileprivate extension ConversationBelowVideoVC {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
@@ -187,6 +194,7 @@ fileprivate extension ConversationBelowVideoVC {
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.reportReasons,
                                      topConstraint: &self.reportReasonsTopConstraint,
+                                     heightConstraint: &self.reportReasonsHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
             .disposed(by: disposeBag)
@@ -197,6 +205,7 @@ fileprivate extension ConversationBelowVideoVC {
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.clarityDetails,
                                      topConstraint: &self.clarityDetailsTopConstraint,
+                                     heightConstraint: &self.clarityDetailsHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
             .disposed(by: disposeBag)
@@ -207,6 +216,7 @@ fileprivate extension ConversationBelowVideoVC {
                 self.handleRetrieved(component: view,
                                      assignToComponent: &self.webPage,
                                      topConstraint: &self.webPageTopConstraint,
+                                     heightConstraint: &self.webPageHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
             .disposed(by: disposeBag)
@@ -264,6 +274,37 @@ fileprivate extension ConversationBelowVideoVC {
             }
             .subscribe(onNext: { completion in
                 completion()
+            })
+            .disposed(by: disposeBag)
+
+        let keyboardShowHeight = NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .map { notification -> CGFloat in
+                // swiftlint:disable line_length
+                let height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+                // swiftlint:enable line_length
+                return height ?? 0
+            }
+
+        let keyboardHideHeight = NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .map { _ -> CGFloat in
+                0
+            }
+
+        let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight])
+            .merge()
+
+        // Chaning report reasons height according to the keyboard
+        keyboardHeight
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self, self.reportReasons != nil,
+                let reportReasonsHeightConstraint = self.reportReasonsHeightConstraint else { return }
+                let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
+                reportReasonsHeightConstraint.update(offset: -adjustedHeight)
+                UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
+                    self.view.layoutIfNeeded()
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -338,6 +379,7 @@ fileprivate extension ConversationBelowVideoVC {
     func handleRetrieved(component: UIView,
                          assignToComponent componentToAssignOn: inout UIView?,
                          topConstraint: inout Constraint!,
+                         heightConstraint: inout Constraint!,
                          putWithAnimationOnComponent baseComponent: UIView?) {
         // 1. Remove report reasons from UI hierarchy
         if let existedComponent = componentToAssignOn {
@@ -353,7 +395,7 @@ fileprivate extension ConversationBelowVideoVC {
         component.snp.makeConstraints { make in
             topConstraint = make.top.equalTo(baseComponentView.snp.bottom).offset(self.view.safeAreaInsets.bottom).constraint
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(baseComponentView.snp.height)
+            heightConstraint = make.height.equalTo(baseComponentView.snp.height).constraint
         }
         self.view.layoutIfNeeded()
 
