@@ -10,6 +10,17 @@ import Foundation
 
 extension OWConversationSpacing {
 
+    func validate() -> OWConversationSpacing {
+        guard case let .custom(betweenCommentsSpacing, communityGuidelinesSpacing, communityQuestionsSpacing) = self else { return self }
+        let betweenComments = min(max(betweenCommentsSpacing, Metrics.minSpace), Metrics.maxSpace)
+        let communityGuidelines = min(max(communityGuidelinesSpacing, Metrics.minSpace), Metrics.maxSpace)
+        let communityQuestions = min(max(communityQuestionsSpacing, Metrics.minSpace), Metrics.maxSpace)
+
+        return .custom(betweenComments: betweenComments,
+                       communityGuidelines: communityGuidelines,
+                       communityQuestions: communityQuestions)
+    }
+
     var betweenComments: CGFloat {
         switch self {
         case .regular:
