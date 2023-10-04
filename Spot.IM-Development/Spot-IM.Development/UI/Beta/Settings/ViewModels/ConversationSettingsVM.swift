@@ -290,9 +290,9 @@ class ConversationSettingsVM: ConversationSettingsViewModeling,
                                                          communityGuidelinesStyleIndex: communityGuidelinesStyleIndex,
                                                          communityQuestionsStyleIndex: questionsStyleIndex,
                                                          spacingIndex: conversationSpacingIndex,
-                                                         betweenComments: OWConversationSpacing.convertSpacing(betweenCommentsSpace),
-                                                         belowCommunityGuidelines: OWConversationSpacing.convertSpacing(communityGuidelinesSpace),
-                                                         belowCommunityQuestions: OWConversationSpacing.convertSpacing(communityQuestionsGuidelinesSpace))
+                                                         betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
+                                                         belowCommunityGuidelines: OWConversationSpacing.validateSpacing(communityGuidelinesSpace),
+                                                         belowCommunityQuestions: OWConversationSpacing.validateSpacing(communityQuestionsGuidelinesSpace))
         }
                                         .asObservable()
     }()
