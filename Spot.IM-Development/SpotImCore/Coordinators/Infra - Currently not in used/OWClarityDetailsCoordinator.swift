@@ -97,12 +97,16 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
-            .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+            .flatMap { [weak self] url -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self,
                       let router = self.router
                 else { return .empty() }
-                let safariCoordinator = OWSafariTabCoordinator(router: router,
-                                                               url: url,
+                let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
+                    .outputs.navigationTitle
+                let options = OWWebTabOptions(url: url,
+                                                 title: title)
+                let safariCoordinator = OWWebTabCoordinator(router: router,
+                                                               options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }

@@ -69,6 +69,7 @@ fileprivate extension OWCommentReplyCounterView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.showCounter
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showCounter in
                 guard let self = self else { return }
                 if (showCounter) {
