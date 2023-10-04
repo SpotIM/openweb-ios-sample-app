@@ -25,13 +25,14 @@ extension OWConversationSpacing {
     }
 
     // Validate and correct spacing inputs from setting's text fields
-    static func convertSpacing(_ spacing: String) -> CGFloat {
+    static func validateSpacing(_ spacing: String) -> CGFloat {
         guard let spacingDouble = Double(spacing) else {
             // Return a default value or handle the error if the conversion fails
             return OWConversationSpacing.Metrics.minSpace
         }
 
-        return  CGFloat(spacingDouble)
+        let cgFloatSpacing = CGFloat(spacingDouble)
+        return min(max(cgFloatSpacing, Metrics.minSpace), Metrics.maxSpace)
     }
 
     static var defaultIndex: Int {

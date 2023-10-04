@@ -36,7 +36,6 @@ class OWCommunityQuestionView: UIView {
     }()
 
     fileprivate var heightConstraint: OWConstraint? = nil
-    fileprivate var spacing: CGFloat!
     fileprivate var viewModel: OWCommunityQuestionViewModeling!
     fileprivate var disposeBag = DisposeBag()
 
