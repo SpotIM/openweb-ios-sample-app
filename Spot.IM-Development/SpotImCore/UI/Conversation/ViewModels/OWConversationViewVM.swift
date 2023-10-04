@@ -91,6 +91,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var timeMeasureLoadInitialComments = OWTimeMeasure()
     fileprivate var timeMeasureLoadMoreComments = OWTimeMeasure()
     fileprivate var timeMeasureLoadReplies: [OWCommentId: OWTimeMeasure] = [:]
+    fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
     fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewVMScheduler")
     fileprivate let loadMoreCommentsScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "loadMoreCommentsQueue")
@@ -524,12 +525,22 @@ fileprivate extension OWConversationViewViewModel {
             case (_, 0):
                 break
             case (0, _):
-                cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
-                    id: "\(commentPresentationData.id)_expand_only",
-                    data: commentPresentationData,
-                    mode: .expand,
-                    depth: depth
-                )))
+                if self.errorsLoadingReplies[commentPresentationData.id] != nil {
+                    cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_collapse",
+                        data: commentPresentationData,
+                        mode: .collapse,
+                        depth: depth
+                    )))
+                } else {
+                    // This is expand in a reply or more in depth replies
+                    cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_expand_only",
+                        data: commentPresentationData,
+                        mode: .expand,
+                        depth: depth
+                    )))
+                }
             default:
                 cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
@@ -538,27 +549,26 @@ fileprivate extension OWConversationViewViewModel {
                     depth: depth
                 )))
 
-                // Only if commentPresentationData.repliesPresentation does not contain an error or loading replies state
-                if !commentPresentationData.repliesPresentation.contains(where: { $0.repliesErrorState != .none }) {
-                    cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
+                cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
 
-                    if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
-                        cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
-                            id: "\(commentPresentationData.id)_expand",
-                            data: commentPresentationData,
-                            mode: .expand,
-                            depth: depth
-                        )))
-                    }
+                if self.errorsLoadingReplies[commentPresentationData.id] == nil,
+                   repliesToShowCount < commentPresentationData.totalRepliesCount {
+                    // This is expand more replies in root depth
+                    cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_expand",
+                        data: commentPresentationData,
+                        mode: .expand,
+                        depth: depth
+                    )))
                 }
             }
 
-            if commentPresentationData.repliesPresentation.contains(where: { $0.repliesErrorState == .error }) {
+            if self.errorsLoadingReplies[commentPresentationData.id] == .error {
                 cellOptions.append(contentsOf: self.getErrorStateCell(errorStateType: .loadConversationReplies(commentPresentationData: commentPresentationData),
                                                                       depth: depth))
             }
 
-            if commentPresentationData.repliesPresentation.contains(where: { $0.repliesErrorState == .reloading }) {
+            if self.errorsLoadingReplies[commentPresentationData.id] == .reloading {
                 cellOptions.append(contentsOf: self.getLoadingCell())
             }
         }
@@ -934,11 +944,12 @@ fileprivate extension OWConversationViewViewModel {
                 }
             }
             .unwrap()
-            .do(onNext: { commentPresentationData in
+            .do(onNext: { [weak self] commentPresentationData in
+                guard let self = self else { return }
                 self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
-                if let commentPresentationDataError = commentPresentationData.repliesPresentation.first(where: { $0.repliesErrorState == .error }) {
-                    commentPresentationDataError.repliesErrorState = .reloading
-                    commentPresentationDataError.update.onNext()
+                if self.errorsLoadingReplies[commentPresentationData.id] == .error {
+                    self.errorsLoadingReplies[commentPresentationData.id] = .reloading
+                    commentPresentationData.update.onNext()
                 }
             })
             .asObservable()
@@ -950,11 +961,10 @@ fileprivate extension OWConversationViewViewModel {
             .flatMap { [weak self] (commentPresentationData, sortOption) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
-                let hasRepliesError = commentPresentationData.repliesPresentation
-                    .filter { $0.repliesErrorState != .none }.count > 0
+                let hasRepliesError = self.errorsLoadingReplies[commentPresentationData.id] != nil
                 let commentPresentationRepliesCount = hasRepliesError ? 0 : commentPresentationData.repliesPresentation.count
-                let countAfterUpdate = min(commentPresentationRepliesCount + Metrics.defaultNumberOfReplies, commentPresentationData.totalRepliesCount)
 
+                let countAfterUpdate = min(commentPresentationRepliesCount + Metrics.defaultNumberOfReplies, commentPresentationData.totalRepliesCount)
                 let repliesIdsCount = hasRepliesError ? 0 : commentPresentationData.repliesIds.count
                 if countAfterUpdate <= repliesIdsCount {
                     // no need to fetch more comments
@@ -978,13 +988,9 @@ fileprivate extension OWConversationViewViewModel {
             }
 
         let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
-            .do(onNext: { (commentPresentationData, _) in
-                let errorCommentsPresentationData = commentPresentationData.repliesPresentation
-                    .filter { $0.repliesErrorState == .reloading }
-                if !errorCommentsPresentationData.isEmpty {
-                    commentPresentationData.repliesIds.removeAll(where: { errorCommentsPresentationData.map { $0.id }.contains($0) })
-                    commentPresentationData.setRepliesPresentation(commentPresentationData.repliesPresentation.filter { $0.repliesErrorState == .reloading })
-                }
+            .do(onNext: { [weak self] (commentPresentationData, _) in
+                guard let self = self else { return }
+                self.errorsLoadingReplies.removeValue(forKey: commentPresentationData.id)
             })
             .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
@@ -1022,13 +1028,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self.dataSourceTransition = .animated
                 if shouldShowErrorLoadingReplies {
-                    let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
-                    let replyErrorData = [OWCommentPresentationData(repliesErrorState: .error)]
-                    let repliesPresentation = existingRepliesPresentationData + replyErrorData
-                    if let replyErrorId = replyErrorData.last?.id {
-                        commentPresentationData.repliesIds.append(replyErrorId)
-                    }
-                    commentPresentationData.setRepliesPresentation(repliesPresentation)
+                    self.errorsLoadingReplies[commentPresentationData.id] = .error
                     commentPresentationData.update.onNext()
                 } else {
                     let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
@@ -1328,9 +1328,7 @@ fileprivate extension OWConversationViewViewModel {
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
-                    if let errorCommentPresentationData = commentPresentationData.repliesPresentation.first(where: { $0.repliesErrorState != .none }) {
-                        commentPresentationData.repliesIds.removeAll(where: { $0 == errorCommentPresentationData.id })
-                    }
+                    self.errorsLoadingReplies.removeValue(forKey: commentPresentationData.id)
                     commentPresentationData.setRepliesPresentation([])
                     commentPresentationData.update.onNext()
                 case .expand:
@@ -1338,6 +1336,17 @@ fileprivate extension OWConversationViewViewModel {
                     self._loadMoreReplies.onNext(commentPresentationData)
                 }
 
+            })
+            .disposed(by: disposeBag)
+
+        // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
+        willDisplayCell
+            .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
+            .filter {  $0.0.cell.isKind(of: OWErrorStateCell.self) && $0.1 }
+            .map { $0.0 }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { willDisplayCellEvent in
+                willDisplayCellEvent.cell.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
 

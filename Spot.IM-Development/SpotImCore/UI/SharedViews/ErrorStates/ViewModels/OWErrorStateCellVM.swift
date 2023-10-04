@@ -18,6 +18,7 @@ protocol OWErrorStateCellViewModelingOutputs {
     var id: String { get }
     var errorStateViewModel: OWErrorStateViewViewModeling { get }
     var depth: Int { get }
+    var errorStateType: OWErrorStateTypes { get }
 }
 
 protocol OWErrorStateCellViewModeling: OWCellViewModel {
@@ -37,7 +38,7 @@ class OWErrorStateCellViewModel: OWErrorStateCellViewModeling,
         return OWErrorStateViewViewModel(errorStateType: errorStateType)
     }()
 
-    fileprivate let errorStateType: OWErrorStateTypes
+    let errorStateType: OWErrorStateTypes
     fileprivate let commentPresentationData: OWCommentPresentationData?
 
     // Unique identifier
