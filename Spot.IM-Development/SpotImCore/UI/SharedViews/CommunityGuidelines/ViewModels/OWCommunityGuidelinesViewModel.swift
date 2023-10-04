@@ -203,10 +203,13 @@ fileprivate extension OWCommunityGuidelinesViewModel {
               let linkedText = communityGuidelinesByStyle.linkedText else { return nil }
         _communityGuidelinesClickableString.onNext(linkedText)
 
-        return getAttributedText(text: text,
-                                 linkedText: linkedText,
-                                 linkURL: url,
-                                 themeStyle: currentThemeStyle)
+        return text.getAttributedText(textColor: OWColorPalette.shared.color(type: .textColor2, themeStyle: currentThemeStyle),
+                                      textFont: OWFontBook.shared.font(typography: .bodyText),
+                                      linkedText: linkedText,
+                                      linkURL: url,
+                                      linkColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: currentThemeStyle),
+                                      linkFont: OWFontBook.shared.font(typography: .bodyInteraction),
+                                      paragraphAlignment: OWLocalizationManager.shared.textAlignment)
     }
 
     func getTextAndLinkedText(style: OWCommunityGuidelinesStyle, themeStyle: OWThemeStyle, communityGuidelinesText text: String) -> (text: String?, linkedText: String?) {
@@ -222,35 +225,5 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         case .none:
             return (nil, nil)
         }
-    }
-
-    func getAttributedText(text: String, linkedText: String, linkURL: URL?, themeStyle: OWThemeStyle) -> NSMutableAttributedString {
-        let attributedString = NSMutableAttributedString(string: text)
-
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
-
-        // Set default attributes for the entire string
-        let defaultAttributes: [NSAttributedString.Key: Any] = [
-            .paragraphStyle: paragraphStyle,
-            .font: OWFontBook.shared.font(typography: .bodyText),
-            .foregroundColor: OWColorPalette.shared.color(type: .textColor2, themeStyle: themeStyle)
-        ]
-        attributedString.addAttributes(defaultAttributes, range: NSRange(location: 0, length: text.count))
-
-        // Search for the linkedText in the main text
-        if let _ = linkURL, let range = text.range(of: linkedText) {
-            let nsRange = NSRange(range, in: text)
-
-            // Set link attributes on the linkedText
-            let linkAttributes: [NSAttributedString.Key: Any] = [
-                .underlineStyle: 1,
-                .font: OWFontBook.shared.font(typography: .bodyInteraction),
-                .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: themeStyle)
-            ]
-            attributedString.addAttributes(linkAttributes, range: nsRange)
-        }
-
-        return attributedString
     }
 }
