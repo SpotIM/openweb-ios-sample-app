@@ -10,6 +10,14 @@ import Foundation
 
 extension OWConversationStyle {
 
+    func validate() -> OWConversationStyle {
+        guard case let .custom(communityGuidelinesStyle, communityQuestionsStyle, spacing) = self else { return self }
+        let validatedSpacing = spacing.validate()
+        return .custom(communityGuidelinesStyle: communityGuidelinesStyle,
+                       communityQuestionsStyle: communityQuestionsStyle,
+                       spacing: validatedSpacing)
+    }
+
     var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
         switch self {
         case .regular:
@@ -39,7 +47,7 @@ extension OWConversationStyle {
         case .compact:
             return .compact
         case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacing):
-            return spacing
+            return spacing.validate()
         }
     }
 }
