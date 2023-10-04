@@ -46,7 +46,6 @@ fileprivate extension OWErrorStateCell {
         errorStateView.OWSnp.updateConstraints { make in
             make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.padding)
         }
-        self.layoutIfNeeded()
     }
 
     func setupUI() {
