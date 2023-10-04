@@ -10,7 +10,7 @@ import Foundation
 
 extension OWConversationSpacing {
 
-    func validate() -> OWConversationSpacing {
+    func validate(_ spacing: CGFloat? = nil) -> OWConversationSpacing {
         guard case let .custom(betweenCommentsSpacing, communityGuidelinesSpacing, communityQuestionsSpacing) = self else { return self }
         let betweenComments = min(max(betweenCommentsSpacing, Metrics.minSpace), Metrics.maxSpace)
         let communityGuidelines = min(max(communityGuidelinesSpacing, Metrics.minSpace), Metrics.maxSpace)
@@ -28,7 +28,7 @@ extension OWConversationSpacing {
         case .compact:
             return Metrics.defaultSpaceBetweenComments
         case .custom(betweenComments: let betweenComments, communityGuidelines: _, communityQuestions: _):
-            return min(max(betweenComments, Metrics.minSpace), Metrics.maxSpace)
+            return betweenComments
         }
     }
 
@@ -39,7 +39,7 @@ extension OWConversationSpacing {
         case .compact:
             return Metrics.defaultSpaceCommunityGuidelines
         case .custom(betweenComments: _, communityGuidelines: let communityGuidelinesSpacing, communityQuestions: _):
-            return min(max(communityGuidelinesSpacing, Metrics.minSpace), Metrics.maxSpace)
+            return communityGuidelinesSpacing
         }
     }
 
@@ -50,7 +50,7 @@ extension OWConversationSpacing {
         case .compact:
             return Metrics.defaultSpaceCommunityQuestions
         case .custom(betweenComments: _, communityGuidelines: _, communityQuestions: let communityQuestionsSpacing):
-            return min(max(communityQuestionsSpacing, Metrics.minSpace), Metrics.maxSpace)
+            return communityQuestionsSpacing
         }
     }
 }
