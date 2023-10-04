@@ -151,11 +151,15 @@ fileprivate extension OWCommentCreationCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let floatingDismissed = viewModel.outputs.commentCreationFloatingKeyboardViewVm
-            .outputs.dismissed
+        let floatingDismissed = viewModel.outputs.closeButtonTapped
+            .voidify()
             .map { OWViewActionCallbackType.floatingCommentCreationDismissed}
 
-        Observable.merge(floatingDismissed)
+        let commentCreatedObservable = viewModel.outputs.commentCreationSubmitted
+            .voidify()
+            .map { OWViewActionCallbackType.commentSubmitted }
+
+        Observable.merge(floatingDismissed, commentCreatedObservable)
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }

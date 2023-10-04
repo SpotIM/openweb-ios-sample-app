@@ -387,10 +387,18 @@ extension OWUILayer {
         switch commentCreationType {
         case .comment:
             internalCommentCreationType = .comment
-        case .edit(let commentId), .replyTo(let commentId):
+        case .edit(let commentId):
             // TODO - The comment might not be found in the service, we should fetch it somehow
             if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
                 internalCommentCreationType = .edit(comment: comment)
+            } else {
+                completion(.failure(.commentCreationView))
+                return
+            }
+        case .replyTo(let commentId):
+            // TODO - The comment might not be found in the service, we should fetch it somehow
+            if let comment = servicesProvider.commentsService().get(commentId: commentId, postId: postId) {
+                internalCommentCreationType = .replyToComment(originComment: comment)
             } else {
                 completion(.failure(.commentCreationView))
                 return
@@ -494,7 +502,7 @@ extension OWUILayer {
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            let error: OWError = err as? OWError ?? OWError.reportReasonView
             completion(.failure(error))
         })
     }
@@ -505,14 +513,62 @@ extension OWUILayer {
                         additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
                         callbacks: OWViewActionsCallbacks?,
                         completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
+        checkIfPostIdExists { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
 
         _ = viewsSdkCoordinator.clarityDetailsView(type: type, callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            let error: OWError = err as? OWError ?? OWError.clarityDetailsView
+            completion(.failure(error))
+        })
+    }
+
+    func webTab(postId: OWPostId,
+                tabOptions: OWWebTabOptions,
+                additionalSettings: OWAdditionalSettingsProtocol = OWAdditionalSettings(),
+                callbacks: OWViewActionsCallbacks?,
+                completion: @escaping OWViewCompletion) {
+
+        guard validateSpotIdExist(completion: completion) else { return }
+
+        checkIfPostIdExists { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        _ = viewsSdkCoordinator.webTabView(tabOptions: tabOptions, callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.webTabView
             completion(.failure(error))
         })
     }

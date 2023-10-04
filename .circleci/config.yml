@@ -414,14 +414,21 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
-      - run:
-          name: Copy dsym zip to folder ipa-build to upload to S3
-          command: |
-            cp Spot-IM.Development.app.dSYM.zip ipa-build
-
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -441,14 +448,21 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
-      - run:
-          name: Copy dsym zip to folder ipa-build to upload to S3
-          command: |
-            cp Spot-IM.Development.app.dSYM.zip ipa-build
-
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -468,14 +482,21 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
-      - run:
-          name: Copy dsym zip to folder ipa-build to upload to S3
-          command: |
-            cp Spot-IM.Development.app.dSYM.zip ipa-build
-
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -512,14 +533,21 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
-      - run:
-          name: Copy dsym zip to folder ipa-build to upload to S3
-          command: |
-            cp Spot-IM.Development.app.dSYM.zip ipa-build
-
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -556,14 +584,21 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
-      - run:
-          name: Copy dsym zip to folder ipa-build to upload to S3
-          command: |
-            cp Spot-IM.Development.app.dSYM.zip ipa-build
-
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -600,14 +635,21 @@ jobs:
             mkdir ipa-build
             cp Spot-IM.Development.ipa ipa-build
 
-      - run:
-          name: Copy dsym zip to folder ipa-build to upload to S3
-          command: |
-            cp Spot-IM.Development.app.dSYM.zip ipa-build
-
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
