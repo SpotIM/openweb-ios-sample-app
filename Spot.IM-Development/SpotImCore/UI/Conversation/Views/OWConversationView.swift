@@ -13,10 +13,14 @@ import RxCocoa
 class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
+        static let ctaViewSlideAnimationDelay = 50
+        static let ctaViewSlideAnimationDuration: Double = 0.25
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
         static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
+        static let throttleObserveTableViewDuration = 500
+        static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
     }
 
@@ -165,10 +169,17 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
+        self.addSubview(commentingCTAView)
+        commentingCTAView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
+        }
+
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
             make.top.equalTo(tableView.OWSnp.bottom)
+            make.bottom.equalTo(commentingCTAView.OWSnp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
@@ -180,22 +191,54 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperview()
         }
 
-    self.addSubview(self.realtimeIndicationAnimationView)
-    realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
-        make.bottom.equalTo(self.tableView.OWSnp.bottom)
-        make.leading.trailing.equalToSuperview()
-        make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
-    }
-
-        self.addSubview(commentingCTAView)
-        commentingCTAView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTATopHorizontalSeparator.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(20)
-            make.bottom.equalTo(self.safeAreaLayoutGuide)
+        self.addSubview(self.realtimeIndicationAnimationView)
+        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+            make.bottom.equalTo(self.tableView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.shouldShowErrorLoadingComments
+            .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
+                guard let self = self else { return }
+                self.commentingCTAView.OWSnp.updateConstraints { make in
+                    if shouldShowErrorLoadingComments {
+                        let bottomPadding: CGFloat = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                        make.bottom.equalTo(self.safeAreaLayoutGuide).offset(self.commentingCTAView.frame.size.height + bottomPadding)
+                    } else {
+                        make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
+                    }
+                }
+                UIView.animate(withDuration: Metrics.ctaViewSlideAnimationDuration) {
+                    self.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+            .unwrap()
+            .map { $0.size.height }
+            .bind(to: viewModel.inputs.tableViewHeight)
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
+            .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
+            .unwrap()
+            .map { $0.y }
+            .bind(to: viewModel.inputs.tableViewContentOffsetY)
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
+            .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
+            .unwrap()
+            .map { $0.height }
+            .bind(to: viewModel.inputs.tableViewContentSizeHeight)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowConversationEmptyState
             .map { !$0 }
             .bind(to: conversationEmptyStateView.rx.isHidden)
@@ -252,7 +295,9 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.scrollToTop
+        viewModel.outputs.scrollToTopAnimated
+        // filter only when animated = false
+            .filter { !$0 }
             .observe(on: MainScheduler.instance)
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
@@ -266,27 +311,35 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.changeConversationOffset)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.scrollToTopAnimated
+        // filter only when animated = true
+            .filter { $0 }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.beginUpdates()
+                // it looks like set the content offset behave better when scroll to top
+                self.tableView.setContentOffset(.zero, animated: true)
+                self.tableView.endUpdates()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToTopAnimated
+        // filter only when animated = true
+            .filter { $0 }
+            .voidify()
+            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.inputs.scrolledToTop)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.scrollToCellIndex
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in
-                let cellIndexPath = IndexPath(row: index, section: 0)
                 guard let self = self else { return }
-
-                CATransaction.begin()
-                self.tableView.beginUpdates()
-                CATransaction.setCompletionBlock {
-                    // Code to be executed upon completion
-                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
-                }
-                if (index > 0) {
-                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
-                } else {
-                    // it looks like set the content offset behave better when scroll to top
-                    self.tableView.setContentOffset(.zero, animated: true)
-                }
-                self.tableView.endUpdates()
-                CATransaction.commit()
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
