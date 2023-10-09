@@ -19,7 +19,9 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
                 .communityQuestion(viewModel: OWCommunityQuestionCellViewModel.stub()),
                 .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub()),
                 // TODO: Decide if we need an OWConversationEmptyState cell/cellVM after final design in all orientations
-                .conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModel.stub())]
+                .conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModel.stub()),
+                .conversationErrorState(viewModel: OWErrorStateCellViewModel.stub()),
+                .loading(viewModel: OWLoadingCellViewModel.stub())]
     }
 
     case comment(viewModel: OWCommentCellViewModeling)
@@ -30,6 +32,8 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
     case communityQuestion(viewModel: OWCommunityQuestionCellViewModeling)
     case communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModeling)
     case conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModeling)
+    case conversationErrorState(viewModel: OWErrorStateCellViewModeling)
+    case loading(viewModel: OWLoadingCellViewModeling)
 }
 
 extension OWConversationCellOption {
@@ -50,6 +54,10 @@ extension OWConversationCellOption {
         case .communityGuidelines(let viewModel):
             return viewModel
         case .conversationEmptyState(viewModel: let viewModel):
+            return viewModel
+        case .conversationErrorState(viewModel: let viewModel):
+            return viewModel
+        case .loading(viewModel: let viewModel):
             return viewModel
         }
     }
@@ -73,6 +81,10 @@ extension OWConversationCellOption {
             return OWCommunityGuidelinesCell.self
         case .conversationEmptyState:
             return OWConversationEmptyStateCell.self
+        case .conversationErrorState:
+            return OWErrorStateCell.self
+        case .loading:
+            return OWLoadingCell.self
         }
     }
 }
@@ -99,6 +111,10 @@ extension OWConversationCellOption: Equatable {
         case .communityGuidelines(let viewModel):
             return viewModel.outputs.id
         case .conversationEmptyState(viewModel: let viewModel):
+            return viewModel.outputs.id
+        case .conversationErrorState(viewModel: let viewModel):
+            return viewModel.outputs.id
+        case .loading(viewModel: let viewModel):
             return viewModel.outputs.id
         }
     }
