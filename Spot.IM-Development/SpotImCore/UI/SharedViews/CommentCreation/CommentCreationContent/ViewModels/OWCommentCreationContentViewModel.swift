@@ -122,16 +122,18 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var isValidatedContent: Observable<Bool> {
         return Observable.combineLatest(
             commentContent,
+            _imageContent,
             imagePreviewVM.outputs.isUploadingImageObservable
         )
-        .map { [weak self] commentContent, isUploadingImage -> Bool in
+        .map { [weak self] commentContent, imageContent, isUploadingImage -> Bool in
             guard let self = self else { return false }
 
             // Invalidate in case original text in edit mode
-            if case .edit(comment: let comment) = self.commentCreationType,
-               let commentText = comment.text?.text,
-               commentText == commentContent.text {
-                return false
+            if case .edit(comment: let comment) = self.commentCreationType {
+                if comment.text?.text == commentContent.text &&
+                    comment.image?.imageId == imageContent?.imageId {
+                    return false
+                }
             }
 
             // Validate / invalidate according to content and uploading image state
