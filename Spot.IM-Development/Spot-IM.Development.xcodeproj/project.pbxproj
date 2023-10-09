@@ -1000,7 +1000,6 @@
 		9E8278792A4DAEC500EAA88E /* OWReportReasonCancelVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8278782A4DAEC500EAA88E /* OWReportReasonCancelVM.swift */; };
 		9E82787D2A4DC24E00EAA88E /* OWTitleViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */; };
 		9E8278802A516CC800EAA88E /* OWTitleSubtitleIconVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */; };
-		9E839BF32ACAF23500C561AB /* OWTimeMeasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E839BF22ACAF23500C561AB /* OWTimeMeasure.swift */; };
 		9E8FA4822AB84B36004510EA /* OWLoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8FA4812AB84B36004510EA /* OWLoadingCell.swift */; };
 		9E8FA4862AB84E11004510EA /* OWLoadingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8FA4852AB84E11004510EA /* OWLoadingCellViewModel.swift */; };
 		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
@@ -2141,7 +2140,6 @@
 		9E8278782A4DAEC500EAA88E /* OWReportReasonCancelVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWReportReasonCancelVM.swift; sourceTree = "<group>"; };
 		9E82787C2A4DC24E00EAA88E /* OWTitleViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTitleViewVM.swift; sourceTree = "<group>"; };
 		9E82787F2A516CC800EAA88E /* OWTitleSubtitleIconVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWTitleSubtitleIconVM.swift; sourceTree = "<group>"; };
-		9E839BF22ACAF23500C561AB /* OWTimeMeasure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasure.swift; sourceTree = "<group>"; };
 		9E8FA4812AB84B36004510EA /* OWLoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingCell.swift; sourceTree = "<group>"; };
 		9E8FA4852AB84E11004510EA /* OWLoadingCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoadingCellViewModel.swift; sourceTree = "<group>"; };
 		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
@@ -5111,7 +5109,6 @@
 				163E02BD2A852C4F00DDB73C /* OWCommentCreatorNetworkHelper.swift */,
 				163E02BF2A852FB300DDB73C /* OWCommentsPresentationDataHelper.swift */,
 				163E02C12A85330D00DDB73C /* OWCommentUpdateType.swift */,
-				9E839BF22ACAF23500C561AB /* OWTimeMeasure.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -7076,7 +7073,6 @@
 				3DDE2AD62A603300007684C8 /* OWCommentCreationSettingsProtocol+Extensions.swift in Sources */,
 				3DA264602951E3B200688FFF /* OWProtected.swift in Sources */,
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
-				9E839BF32ACAF23500C561AB /* OWTimeMeasure.swift in Sources */,
 				3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */,
 				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
 				249DF2972964182B00F5D69A /* OWCommentRequiredData.swift in Sources */,
