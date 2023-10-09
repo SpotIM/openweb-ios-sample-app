@@ -72,20 +72,40 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .share(replay: 1)
     }()
 
-    fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
+    fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
+    fileprivate var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
+
+    fileprivate lazy var commentCellsOptions: Observable<[OWCommentThreadCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
-            .startWith([])
             .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWCommentThreadCellOption]> in
-                guard let self = self else { return Observable.empty() }
-
-                if (commentsPresentationData.isEmpty) {
-                    return Observable.just(self.getSkeletonCells())
-                }
-
+                guard let self = self else { return Observable.never() }
                 return Observable.just(self.getCells(for: commentsPresentationData))
             })
+            .asObservable()
+    }()
+
+    fileprivate lazy var errorCellViewModels: Observable<[OWCommentThreadCellOption]> = {
+        return _shouldShowErrorLoadingComments
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<[OWCommentThreadCellOption]> in
+                guard let self = self else { return .empty() }
+                return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
+            }
+            .startWith([])
+    }()
+
+    fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
+        return Observable.combineLatest(commentCellsOptions, errorCellViewModels)
             .observe(on: MainScheduler.instance)
+            .flatMapLatest({ [weak self] commentCellsOptions, errorCellViewModels -> Observable<[OWCommentThreadCellOption]> in
+                guard let self = self else { return Observable.never() }
+                if (!errorCellViewModels.isEmpty) {
+                    return Observable.just(errorCellViewModels)
+                } else {
+                    return Observable.just(commentCellsOptions)
+                }
+            })
             .scan([], accumulator: { [weak self] previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
                 guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
@@ -281,6 +301,11 @@ fileprivate extension OWCommentThreadViewViewModel {
         return cellOptions
     }
 
+    func getErrorStateCell(errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil, depth: Int = 0) -> [OWCommentThreadCellOption] {
+        let errorViewModel = OWErrorStateCellViewModel(errorStateType: errorStateType, commentPresentationData: commentPresentationData, depth: depth)
+        return [OWCommentThreadCellOption.conversationErrorState(viewModel: errorViewModel)]
+    }
+
     func getSkeletonCells() -> [OWCommentThreadCellOption] {
         var cellOptions = [OWCommentThreadCellOption]()
         let numberOfComments = Metrics.numberOfSkeletonComments
@@ -388,7 +413,18 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .materialize()
         }
 
-        let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh)
+        // Try again after error loading initial comments
+        let tryAgainAfterInitialError = _tryAgainAfterError
+            .filter { $0 == .loadConversationComments }
+            .voidify()
+            .do(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload
+                self._shouldShowErrorLoadingComments.onNext(false)
+            })
+            .asObservable()
+
+        let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh, tryAgainAfterInitialError)
             .flatMap { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
@@ -397,10 +433,11 @@ fileprivate extension OWCommentThreadViewViewModel {
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    self._shouldShowErrorLoadingComments.onNext(false)
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._shouldShowError.onNext()
+                    self._shouldShowErrorLoadingComments.onNext(true)
                     return nil
                 default:
                     return nil
@@ -434,7 +471,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 // Should not be empty
                 guard let comments = response.conversation?.comments,
                       !comments.isEmpty else {
-                    self._shouldShowError.onNext()
+                    self._shouldShowErrorLoadingComments.onNext(true)
                     return
                 }
 
@@ -559,6 +596,22 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
             })
+            .disposed(by: disposeBag)
+
+        // Responding to error states try again tap
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<OWErrorStateTypes> in
+                let errorStateTryAgainTapped: [Observable<OWErrorStateTypes>] = cellsVms.map { vm in
+                    if case .conversationErrorState(let errorStateCellVM) = vm {
+                        let errorStateViewVM = errorStateCellVM.outputs.errorStateViewModel
+                        return errorStateViewVM.outputs.tryAgainTapped
+                    }
+                    return nil
+                }
+                .unwrap()
+                return Observable.merge(errorStateTryAgainTapped)
+            }
+            .bind(to: _tryAgainAfterError)
             .disposed(by: disposeBag)
 
         // Observable of the comment cell VMs
