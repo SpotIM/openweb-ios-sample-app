@@ -15,7 +15,8 @@ enum OWCommentThreadCellOption: CaseIterable, OWUpdaterProtocol {
             .comment(viewModel: OWCommentCellViewModel.stub()),
             .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
             .spacer(viewModel: OWSpacerCellViewModel.stub()),
-            .commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel.stub())
+            .commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel.stub()),
+            .conversationErrorState(viewModel: OWErrorStateCellViewModel.stub())
         ]
     }
 
@@ -23,6 +24,7 @@ enum OWCommentThreadCellOption: CaseIterable, OWUpdaterProtocol {
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
     case commentThreadActions(viewModel: OWCommentThreadActionsCellViewModeling)
+    case conversationErrorState(viewModel: OWErrorStateCellViewModeling)
 }
 
 extension OWCommentThreadCellOption {
@@ -35,6 +37,8 @@ extension OWCommentThreadCellOption {
         case .spacer(let viewModel):
             return viewModel
         case .commentThreadActions(let viewModel):
+            return viewModel
+        case .conversationErrorState(viewModel: let viewModel):
             return viewModel
         }
     }
@@ -49,6 +53,8 @@ extension OWCommentThreadCellOption {
             return OWSpacerCell.self
         case .commentThreadActions:
             return OWCommentThreadActionCell.self
+        case .conversationErrorState:
+            return OWErrorStateCell.self
         }
     }
 }
@@ -63,6 +69,8 @@ extension OWCommentThreadCellOption: Equatable {
         case .spacer(let viewModel):
             return viewModel.outputs.id
         case .commentThreadActions(let viewModel):
+            return viewModel.outputs.id
+        case .conversationErrorState(viewModel: let viewModel):
             return viewModel.outputs.id
         }
     }
