@@ -78,7 +78,6 @@ class OWErrorStateView: UIView {
         self.setupUI()
         self.applyAccessibility()
         self.setupObservers()
-        self.updateUI()
     }
 
     init() {
@@ -91,7 +90,6 @@ class OWErrorStateView: UIView {
     func configure(with viewModel: OWErrorStateViewViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        self.updateUI()
         self.setupObservers()
     }
 
@@ -101,13 +99,6 @@ class OWErrorStateView: UIView {
 }
 
 fileprivate extension OWErrorStateView {
-    // Called only after having a view model
-    func updateUI() {
-        self.titleLabel.text(viewModel.outputs.title)
-        self.ctaLabel.attributedText(viewModel.outputs.tryAgainText)
-        self.layoutIfNeeded()
-    }
-
     func setupUI() {
         self.corner(radius: Metrics.borderRadius)
 
@@ -158,6 +149,9 @@ fileprivate extension OWErrorStateView {
     }
 
     func setupObservers() {
+        self.titleLabel.text(viewModel.outputs.title)
+        self.ctaLabel.attributedText(viewModel.outputs.tryAgainText)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
