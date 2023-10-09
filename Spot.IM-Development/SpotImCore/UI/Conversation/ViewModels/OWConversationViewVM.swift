@@ -768,7 +768,7 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
-                let timeToLoadInitialComments = self.millisecondsForKey(.conversationLoadingInitialComments)
+                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .conversationLoadingInitialComments)
                 if case .error = event,
                    timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((event, loadingTriggeredReason))
@@ -992,7 +992,7 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentPresentationData, event)) }
-                let timeToLoadMoreReplies = self.millisecondsForKey(.conversationLoadingMoreReplies(commentId: commentPresentationData.id))
+                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id))
                 if case .error = event,
                    timeToLoadMoreReplies < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((commentPresentationData, event))
@@ -1095,7 +1095,7 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] event -> Observable<Event<OWConversationReadRM>?> in
                 // Add delay if end time for load more comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just(event) }
-                let timeToLoadMoreComments = self.millisecondsForKey(.conversationLoadingMoreComments)
+                let timeToLoadMoreComments = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreComments)
                 if case .error = event,
                    timeToLoadMoreComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just(event)
@@ -1962,7 +1962,7 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
     }
 
-    func millisecondsForKey(_ key: OWTimeMeasuringService.OWKeys) -> Int {
+    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
         switch servicesProvider.timeMeasuringService()
                 .endMeasure(forKey: key) {
         case .time(let milliseconds):
