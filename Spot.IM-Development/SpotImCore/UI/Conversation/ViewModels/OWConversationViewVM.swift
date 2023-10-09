@@ -1963,15 +1963,13 @@ fileprivate extension OWConversationViewViewModel {
     }
 
     func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
-        switch servicesProvider.timeMeasuringService()
-                .endMeasure(forKey: key) {
-        case .time(let milliseconds):
-            if milliseconds < Metrics.delayBeforeTryAgainAfterError {
-                return milliseconds
-            }
-        default:
-            return 0
+        let measureService = servicesProvider.timeMeasuringService()
+        let measureResult = measureService.endMeasure(forKey: key)
+        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
+           milliseconds < Metrics.delayBeforeTryAgainAfterError {
+            return milliseconds
         }
+        // If end was called before start for some reason, returning 0 milliseconds here
         return 0
     }
 
