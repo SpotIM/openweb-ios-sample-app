@@ -128,7 +128,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         .map { [weak self] commentContent, imageContent, isUploadingImage -> Bool in
             guard let self = self else { return false }
 
-            // Invalidate in case original text in edit mode
+            // In edit mode - invalidate in case the original text and image are used
             if case .edit(comment: let comment) = self.commentCreationType {
                 if comment.text?.text == commentContent.text &&
                     comment.image?.imageId == imageContent?.imageId {
