@@ -163,6 +163,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             let title = NSLocalizedString("ProfileTitle", comment: "")
             let options = OWWebTabOptions(url: data.url, title: title)
             self.retrieveWebPageComponent(options: options)
+        case (_, .openLinkInComment(let url)):
+            self.retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
         default:
             break
         }

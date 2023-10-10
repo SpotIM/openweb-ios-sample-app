@@ -268,10 +268,15 @@ fileprivate extension OWCommentThreadCoordinator {
                 return OWViewActionCallbackType.openReportReason(commentId: commentId, parentId: parentId)
             }
 
+        // Open URL in comment
+        let openUrlInComment = viewModel.outputs.urlClickedOutput
+            .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
+
         Observable.merge(openPublisherProfile,
                          openCommentCreation,
                          openClarityDetails,
-                         openReportReason)
+                         openReportReason,
+                         openUrlInComment)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
