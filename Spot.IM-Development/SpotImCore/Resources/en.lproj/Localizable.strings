@@ -162,6 +162,8 @@
 "Hold on, your comment is waiting for approval." = "Hold on, your comment is waiting for approval.";
 "ClarityPendingReasonsTitle" = "Your comment may have been sent for review for one of the following reasons:";
 "EditingComment" = "Editing comment";
+"ErrorStateLoadConversationReplies" = "We are unable to load replies right now";
+"ErrorStateLoadConversationComments" = "We are unable to load comments right now";
 "Awaiting review" = "Awaiting review";
 "rejectReasonEnsureCivil" = "All of our decisions are designed to ensure civil, open and inclusive discourse within the community.";
 "rejectReasonMachineLearning" = "We use advanced machine learning technology combined with unbiased human moderation to review all questionable content.";
