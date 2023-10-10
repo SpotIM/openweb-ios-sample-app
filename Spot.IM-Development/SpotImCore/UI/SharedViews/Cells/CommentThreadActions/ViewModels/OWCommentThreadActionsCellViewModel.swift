@@ -44,20 +44,26 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
     let commentPresentationData: OWCommentPresentationData
     var mode: OWCommentThreadActionsCellMode = .collapse
 
-    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread, data: commentPresentationData)
+    fileprivate var spacingBetweenComments: CGFloat = 0
+
+    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
+                                                                                                 commentId: self.commentPresentationData.id,
+                                                                                                 spacing: self.spacingBetweenComments)
 
     init(id: String = UUID().uuidString,
          data: OWCommentPresentationData,
          mode: OWCommentThreadActionsCellMode = .collapse,
-         depth: Int = 0) {
+         depth: Int = 0,
+         spacing: CGFloat) {
         self.id = id
         self.commentPresentationData = data
         self.depth = depth
+        self.spacingBetweenComments = spacing
         self.mode = mode
 
         let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
 
-        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, data: data)
+        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: self.spacingBetweenComments)
     }
 
     init() {
@@ -66,7 +72,6 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
             repliesIds: [],
             totalRepliesCount: 0,
             repliesOffset: 0,
-            spacing: 0,
             repliesPresentation: []
         )
     }

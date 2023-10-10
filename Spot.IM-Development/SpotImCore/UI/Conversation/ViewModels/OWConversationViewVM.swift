@@ -72,6 +72,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate struct Metrics {
         static let numberOfSkeletonComments: Int = 5
+        static let betweenCommentsSpacingDivisor: CGFloat = 2
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
@@ -375,7 +376,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return self.conversationStyle.spacing.betweenComments / 2
+        return self.conversationStyle.spacing.betweenComments / Metrics.betweenCommentsSpacingDivisor
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -453,14 +454,16 @@ fileprivate extension OWConversationViewViewModel {
                     id: "\(commentPresentationData.id)_expand_only",
                     data: commentPresentationData,
                     mode: .expand,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
             default:
                 cellOptions.append(OWConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -470,7 +473,8 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             }
@@ -531,7 +535,6 @@ fileprivate extension OWConversationViewViewModel {
                         repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                         totalRepliesCount: reply.repliesCount ?? 0,
                         repliesOffset: reply.offset ?? 0,
-                        spacing: self.spacingBetweenComments,
                         repliesPresentation: []
                     )
 
@@ -544,7 +547,6 @@ fileprivate extension OWConversationViewViewModel {
                 repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
-                spacing: self.spacingBetweenComments,
                 repliesPresentation: repliesPresentationData
             )
 
@@ -565,7 +567,6 @@ fileprivate extension OWConversationViewViewModel {
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
-                    spacing: self.spacingBetweenComments,
                     repliesPresentation: []
                 )
             )
