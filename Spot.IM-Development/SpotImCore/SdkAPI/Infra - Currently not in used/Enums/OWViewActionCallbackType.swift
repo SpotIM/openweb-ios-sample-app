@@ -26,6 +26,7 @@ public enum OWViewActionCallbackType: Codable {
     case error(_ error: OWError)
     case commentSubmitted
     case closeWebView
+    case openLinkInComment(url: URL)
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -45,6 +46,7 @@ enum OWViewActionCallbackType: Codable {
     case error(_ error: OWError)
     case commentSubmitted
     case closeWebView
+    case openLinkInComment(url: URL)
 }
 #endif
 
@@ -83,6 +85,8 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.closeWebView, .closeWebView):
             return true
+        case (.openLinkInComment(let lhsUrl), .openLinkInComment(let rhsUrl)):
+            return lhsUrl == rhsUrl
         default:
             return false
         }
