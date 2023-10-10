@@ -160,7 +160,7 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         case (.webView, .closeWebView):
             self._removeWebPage.onNext()
         case (_, .openOWProfile(let data)):
-            let title = NSLocalizedString("Profile", comment: "")
+            let title = NSLocalizedString("ProfileTitle", comment: "")
             let options = OWWebTabOptions(url: data.url, title: title)
             self.retrieveWebPageComponent(options: options)
         default:

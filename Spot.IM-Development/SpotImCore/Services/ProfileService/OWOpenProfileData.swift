@@ -20,6 +20,7 @@ struct OWOpenProfileData {
 }
 #endif
 
+#if NEW_API
 extension OWOpenProfileData: Equatable, Codable {
     public static func == (lhs: OWOpenProfileData, rhs: OWOpenProfileData) -> Bool {
         return rhs.url == lhs.url &&
@@ -27,3 +28,12 @@ extension OWOpenProfileData: Equatable, Codable {
                 rhs.userId == lhs.userId
     }
 }
+#else
+extension OWOpenProfileData: Equatable, Codable {
+    static func == (lhs: OWOpenProfileData, rhs: OWOpenProfileData) -> Bool {
+        return rhs.url == lhs.url &&
+                rhs.userProfileType == lhs.userProfileType &&
+                rhs.userId == lhs.userId
+    }
+}
+#endif
