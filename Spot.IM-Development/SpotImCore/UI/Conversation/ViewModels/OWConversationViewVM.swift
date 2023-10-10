@@ -534,7 +534,7 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_collapse",
                         data: commentPresentationData,
                         mode: .collapse,
-                        depth: depth, 
+                        depth: depth,
                         spacing: spacingBetweenComments
                     )))
                 } else {
