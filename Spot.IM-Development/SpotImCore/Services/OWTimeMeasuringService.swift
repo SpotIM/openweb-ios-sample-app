@@ -25,6 +25,8 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         case conversationLoadingInitialComments
         case conversationLoadingMoreComments
         case conversationLoadingMoreReplies(commentId: OWCommentId)
+
+        case commentThreadLoadingInitialComments
     }
 
     fileprivate var startTimeDictionary = [String: CFAbsoluteTime]()
@@ -58,6 +60,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return true
         case (let .conversationLoadingMoreReplies(lhsId), let .conversationLoadingMoreReplies(rhsId)):
             return lhsId == rhsId
+        case (.commentThreadLoadingInitialComments, .commentThreadLoadingInitialComments):
+            return true
         default:
             return false
         }
@@ -73,6 +77,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "conversationLoadingMoreComments"
         case .conversationLoadingMoreReplies(let commentId):
             return "conversationLoadingMoreReplies_\(commentId)"
+        case .commentThreadLoadingInitialComments:
+            return "commentThreadLoadingInitialComments"
         }
     }
 
@@ -86,6 +92,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "Time for loading more comments in conversation view"
         case .conversationLoadingMoreReplies:
             return "Time for loading more replies in conversation view"
+        case .commentThreadLoadingInitialComments:
+            return "Time for loading initial comments in comment thread view"
         }
     }
 }
