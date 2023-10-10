@@ -413,7 +413,7 @@ internal struct CommentViewModel {
 
 enum BadgesOverrideKeys: String {
     case admin = "user.badges.admin"
-    case journalist = "user.badges.jurnalist"
+    case journalist = "user.badges.journalist"
     case moderator = "user.badges.moderator"
     case communityModerator = "user.badges.community-moderator"
 }
