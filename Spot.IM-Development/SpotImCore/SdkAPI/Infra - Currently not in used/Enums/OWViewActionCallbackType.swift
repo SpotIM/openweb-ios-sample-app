@@ -16,7 +16,8 @@ public enum OWViewActionCallbackType: Codable {
     case adClosed
     case adTapped
     case closeConversationPressed
-    case openPublisherProfile(userId: String)
+    case openPublisherProfile(ssoPublisherId: String, type: OWUserProfileType)
+    case openOWProfile(data: OWOpenProfileData)
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
@@ -36,7 +37,8 @@ enum OWViewActionCallbackType: Codable {
     case adClosed
     case adTapped
     case closeConversationPressed
-    case openPublisherProfile(userId: String)
+    case openPublisherProfile(ssoPublisherId: String, type: OWUserProfileType)
+    case openOWProfile(data: OWOpenProfileData)
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
@@ -65,8 +67,10 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.closeConversationPressed, .closeConversationPressed):
             return true
-        case (let .openPublisherProfile(lhsId), let .openPublisherProfile(rhsId)):
-            return lhsId == rhsId
+        case (let .openPublisherProfile(lhsData), let .openPublisherProfile(rhsData)):
+            return lhsData == rhsData
+        case (let .openOWProfile(lhsData), let .openOWProfile(rhsData)):
+            return lhsData == rhsData
         case (let .openReportReason(lhsId, lhsParent), let .openReportReason(rhsId, rhsParent)):
             return lhsId == rhsId && lhsParent == rhsParent
         case (let .openCommentCreation(lhsId), let .openCommentCreation(rhsId)):
