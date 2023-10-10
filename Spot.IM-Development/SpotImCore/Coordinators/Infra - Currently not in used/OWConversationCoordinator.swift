@@ -264,9 +264,21 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "profile_title")
         let coordinateToSafariObservables = Observable.merge(
             communityGuidelinesURLTapped.map { ($0, "") },
-            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map { ($0.url, profilePageTitle) },
+            conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map {
+                if case .OWProfile(let data) = $0 {
+                    return (data.url, profilePageTitle)
+                } else {
+                    return nil
+                }
+            }.unwrap(),
             conversationVM.outputs.conversationViewVM.outputs.urlClickedOutput.map { ($0, "") },
-            conversationVM.outputs.conversationViewVM.outputs.openProfile.map { ($0.url, profilePageTitle) }
+            conversationVM.outputs.conversationViewVM.outputs.openProfile.map {
+                if case .OWProfile(let data) = $0 {
+                    return (data.url, profilePageTitle)
+                } else {
+                    return nil
+                }
+            }.unwrap()
         )
 
         let coordinateToSafariObservable = coordinateToSafariObservables
@@ -373,7 +385,14 @@ fileprivate extension OWConversationCoordinator {
             viewModel.outputs.openProfile,
             viewModel.outputs.commentingCTAViewModel.outputs.openProfile
         )
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
+            .map { openProfileType in
+                switch(openProfileType) {
+                case .OWProfile(let data):
+                    return OWViewActionCallbackType.openOWProfile(data: data)
+                case .publisherProfile(let ssoPublisherId, let type):
+                    return OWViewActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId, type: type)
+                }
+            }
 
         let openReportReason = viewModel.outputs.openReportReason
             .map { commentVM -> OWViewActionCallbackType in

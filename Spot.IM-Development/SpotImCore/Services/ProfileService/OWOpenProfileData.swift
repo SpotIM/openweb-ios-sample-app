@@ -6,8 +6,24 @@
 //  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
+#if NEW_API
+public struct OWOpenProfileData {
+    let url: URL
+    let userProfileType: OWUserProfileType
+    let userId: String
+}
+#else
 struct OWOpenProfileData {
     let url: URL
     let userProfileType: OWUserProfileType
     let userId: String
+}
+#endif
+
+extension OWOpenProfileData: Equatable, Codable {
+    public static func == (lhs: OWOpenProfileData, rhs: OWOpenProfileData) -> Bool {
+        return rhs.url == lhs.url &&
+                rhs.userProfileType == lhs.userProfileType &&
+                rhs.userId == lhs.userId
+    }
 }
