@@ -8,9 +8,9 @@
 
 #if NEW_API
 public struct OWOpenProfileData {
-    let url: URL
-    let userProfileType: OWUserProfileType
-    let userId: String
+    public let url: URL
+    public let userProfileType: OWUserProfileType
+    public let userId: String
 }
 #else
 struct OWOpenProfileData {
