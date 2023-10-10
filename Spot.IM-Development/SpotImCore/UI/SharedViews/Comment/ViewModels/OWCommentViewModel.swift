@@ -125,9 +125,10 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     init(data: OWCommentRequiredData,
-         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         spacing: CGFloat) {
         self.sharedServiceProvider = sharedServiceProvider
-        _updateSpacing.onNext(data.spacing)
+        _updateSpacing.onNext(spacing)
 
         let status = OWCommentStatusType.commentStatus(from: data.comment.status)
         commentStatusVM = OWCommentStatusViewModel(status: status)
