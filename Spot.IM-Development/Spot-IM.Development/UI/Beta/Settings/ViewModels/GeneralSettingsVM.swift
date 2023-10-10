@@ -280,6 +280,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                 switch $0 {
                 case .server: return false
                 case .local(_): return true
+                default:
+                    return false
                 }
             }
             .asObservable()
