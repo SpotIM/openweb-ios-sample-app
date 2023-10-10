@@ -173,7 +173,14 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         // Coordinate to safari tab
         let coordinateToSafariObservables = Observable.merge(
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { ($0, "") },
-            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map { ($0.url, OWLocalizationManager.shared.localizedString(key: "profile_title")) }
+            commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map {
+                if case .OWProfile(let data) = $0 {
+                    return (data.url, OWLocalizationManager.shared.localizedString(key: "profile_title"))
+                } else {
+                    return nil
+                }
+            }
+                .unwrap()
         )
             .flatMap { [weak self] tuple -> Observable<OWWebTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
@@ -225,7 +232,14 @@ fileprivate extension OWCommentThreadCoordinator {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let openPublisherProfile = viewModel.outputs.openProfile
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
+            .map { openProfileType in
+                switch openProfileType {
+                case .OWProfile(let data):
+                    return OWViewActionCallbackType.openOWProfile(data: data)
+                case .publisherProfile(let ssoPublisherId, let type):
+                    return OWViewActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId, type: type)
+                }
+            }
             .asObservable()
 
         // Open comment creation
