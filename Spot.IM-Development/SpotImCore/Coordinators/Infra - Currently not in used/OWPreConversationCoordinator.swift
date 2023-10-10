@@ -134,7 +134,13 @@ fileprivate extension OWPreConversationCoordinator {
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput.map { ($0, "") },
             viewModel.outputs.urlClickedOutput.map { ($0, "") },
             viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput.map { ($0, "") },
-            viewModel.outputs.openProfile.map { ($0.url, OWLocalizationManager.shared.localizedString(key: "profile_title")) }
+            viewModel.outputs.openProfile.map {
+                if case .OWProfile(let data) = $0 {
+                    return (data.url, OWLocalizationManager.shared.localizedString(key: "profile_title"))
+                } else {
+                    return nil
+                }
+            }.unwrap()
         )
 
         coordinateToSafariObservables
@@ -166,7 +172,14 @@ fileprivate extension OWPreConversationCoordinator {
             .map { OWViewActionCallbackType.contentPressed }
 
         let openPublisherProfile = viewModel.outputs.openProfile
-            .map { OWViewActionCallbackType.openPublisherProfile(userId: $0.userId) }
+            .map { openProfileType in
+                switch openProfileType {
+                case .OWProfile(let data):
+                    return OWViewActionCallbackType.openOWProfile(data: data)
+                case .publisherProfile(let ssoPublisherId, let type):
+                    return OWViewActionCallbackType.openPublisherProfile(ssoPublisherId: ssoPublisherId, type: type)
+                }
+            }
             .asObservable()
 
         let openReportReason = viewModel.outputs.openReportReason
