@@ -75,6 +75,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
     fileprivate var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
 
+    fileprivate let _serverCommentsLoadingState = BehaviorSubject<OWLoadingState>(value: .loading(triggredBy: .initialLoading))
+    fileprivate var serverCommentsLoadingState: Observable<OWLoadingState> {
+        _serverCommentsLoadingState
+            .asObservable()
+    }
+
     fileprivate lazy var commentCellsOptions: Observable<[OWCommentThreadCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
@@ -96,11 +102,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
-        return Observable.combineLatest(commentCellsOptions, errorCellViewModels)
+        return Observable.combineLatest(commentCellsOptions, errorCellViewModels, serverCommentsLoadingState)
             .observe(on: MainScheduler.instance)
-            .flatMapLatest({ [weak self] commentCellsOptions, errorCellViewModels -> Observable<[OWCommentThreadCellOption]> in
+            .flatMapLatest({ [weak self] commentCellsOptions, errorCellViewModels, loadingState -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.never() }
-                if (!errorCellViewModels.isEmpty) {
+                if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
+                    return Observable.just(self.getSkeletonCells())
+                } else if (!errorCellViewModels.isEmpty) {
                     return Observable.just(errorCellViewModels)
                 } else {
                     return Observable.just(commentCellsOptions)
@@ -205,7 +213,18 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
 
     var viewInitialized = PublishSubject<Void>()
+    fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
+        return viewInitialized
+            .map { OWLoadingTriggeredReason.initialLoading }
+    }()
+
     var pullToRefresh = PublishSubject<Void>()
+    fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
+        return pullToRefresh
+            .map { OWLoadingTriggeredReason.pullToRefresh }
+            .asObservable()
+    }()
+
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
 
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
@@ -422,9 +441,14 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self.dataSourceTransition = .reload
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
+            .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
 
-        let commentThreadFetchedObservable = Observable.merge(viewInitialized, pullToRefresh, tryAgainAfterInitialError)
+        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable, pullToRefreshObservable, tryAgainAfterInitialError)
+            .do(onNext: { [weak self] loadingTriggeredReason in
+                guard let self = self else { return }
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+            })
             .flatMap { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
@@ -437,6 +461,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
+                    self._serverCommentsLoadingState.onNext(.notLoading)
                     self._shouldShowErrorLoadingComments.onNext(true)
                     return nil
                 default:
@@ -471,6 +496,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 // Should not be empty
                 guard let comments = response.conversation?.comments,
                       !comments.isEmpty else {
+                    self._serverCommentsLoadingState.onNext(.notLoading)
                     self._shouldShowErrorLoadingComments.onNext(true)
                     return
                 }
@@ -481,6 +507,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                     let commentsPresentationData = self.getCommentsPresentationData(of: responseComments)
 
                     self._commentsPresentationData.replaceAll(with: commentsPresentationData)
+
+                    // Update loading state only after the presented comments are updated
+                    self._serverCommentsLoadingState.onNext(.notLoading)
                 }
             })
             .disposed(by: disposeBag)
