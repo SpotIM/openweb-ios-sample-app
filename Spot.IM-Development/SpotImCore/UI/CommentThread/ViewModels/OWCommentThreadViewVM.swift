@@ -260,14 +260,16 @@ fileprivate extension OWCommentThreadViewViewModel {
                     id: "\(commentPresentationData.id)_expand_only",
                     data: commentPresentationData,
                     mode: .expand,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
             default:
                 cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
@@ -277,7 +279,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             }
@@ -308,7 +311,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 repliesIds: comment.replies?.map { $0.id }.unwrap() ?? [],
                 totalRepliesCount: comment.repliesCount ?? 0,
                 repliesOffset: comment.offset ?? 0,
-                spacing: self.spacingBetweenComments,
                 repliesPresentation: getCommentsPresentationData(of: comment.replies ?? [])
             )
 
@@ -329,7 +331,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
-                    spacing: self.spacingBetweenComments,
                     repliesPresentation: []
                 )
             )

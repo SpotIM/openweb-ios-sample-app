@@ -52,8 +52,9 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     let commentId: String
 
     init(with type: OWCommentThreadActionType,
-         data: OWCommentPresentationData) {
-        self.commentId = data.id
+         commentId: String,
+         spacing: CGFloat) {
+        self.commentId = commentId
         switch type {
         case .collapseThread:
             _actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))
@@ -64,13 +65,13 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
             let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
             _actionLabelText.onNext(String(format: repliesString, count))
             _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
-            _updateSpacing.onNext(data.spacing)
+            _updateSpacing.onNext(spacing)
 
         case .viewMoreRepliesRange(from: let from, to: let to):
             let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
             _actionLabelText.onNext(String(format: repliesString, from, to))
             _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
-            _updateSpacing.onNext(data.spacing)
+            _updateSpacing.onNext(spacing)
         }
     }
 
