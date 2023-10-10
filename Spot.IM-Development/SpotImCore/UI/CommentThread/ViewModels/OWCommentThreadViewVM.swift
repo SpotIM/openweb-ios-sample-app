@@ -51,6 +51,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayForPerformHighlightAnimation: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayBeforeTryAgainAfterError: Int = 2000 // ms
     }
 
     fileprivate var postId: OWPostId {
@@ -65,6 +66,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
+
+    fileprivate let commentThreadViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "commentThreadViewVMScheduler")
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -440,6 +443,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload
                 self._shouldShowErrorLoadingComments.onNext(false)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
@@ -449,9 +453,20 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return }
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
             })
-            .flatMap { _ -> Observable<Event<OWConversationReadRM>> in
+            .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
+            .flatMapLatest({ [weak self] event -> Observable<(Event<OWConversationReadRM>)> in
+                // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
+                guard let self = self else { return .empty() }
+                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .commentThreadLoadingInitialComments)
+                if case .error = event,
+                   timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
+                    return Observable.just((event))
+                        .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError - timeToLoadInitialComments), scheduler: self.commentThreadViewVMScheduler)
+                }
+                return Observable.just((event))
+            })
             .map { [weak self] event -> OWConversationReadRM? in
                 guard let self = self else { return nil }
                 switch event {
@@ -1262,6 +1277,17 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self?.articleUrl = article.url.absoluteString
             })
             .disposed(by: disposeBag)
+    }
+
+    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
+        let measureService = servicesProvider.timeMeasuringService()
+        let measureResult = measureService.endMeasure(forKey: key)
+        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
+           milliseconds < Metrics.delayBeforeTryAgainAfterError {
+            return milliseconds
+        }
+        // If end was called before start for some reason, returning 0 milliseconds here
+        return 0
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
