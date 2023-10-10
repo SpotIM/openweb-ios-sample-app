@@ -43,6 +43,16 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .image(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), state: .normal)
     }()
 
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.contentLayoutGuide.OWSnp.makeConstraints { make in
+            make.width.equalTo(scrollView)
+        }
+        return scrollView
+    }()
+
     fileprivate lazy var topContainerView: UIView = {
         let topContainerView = UIView()
             .enforceSemanticAttribute()
@@ -137,34 +147,42 @@ fileprivate extension OWClarityDetailsView {
             make.top.leading.trailing.equalToSuperview()
         }
 
-        self.addSubview(topParagraphLabel)
-        topParagraphLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(topContainerView.OWSnp.bottom).offset(Metrics.verticalPadding)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
-        }
-
-        self.addSubview(detailsTitleLabel)
-        detailsTitleLabel.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
-            make.top.equalTo(topParagraphLabel.OWSnp.bottom).offset(Metrics.titleTopPadding)
-        }
-
-        self.addSubview(paragraphsStackView)
-        paragraphsStackView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
-            make.top.equalTo(detailsTitleLabel.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
-        }
-
-        self.addSubview(bottomParagraphLabel)
-        bottomParagraphLabel.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
-            make.top.equalTo(paragraphsStackView.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
-        }
-
         self.addSubview(gotItButton)
         gotItButton.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalPadding)
             make.bottom.equalToSuperview().inset(Metrics.buttomBottomPadding)
+        }
+
+        self.addSubview(scrollView)
+        scrollView.OWSnp.makeConstraints { make in
+            make.top.equalTo(topContainerView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(gotItButton.OWSnp.top)
+        }
+
+        scrollView.addSubview(topParagraphLabel)
+        topParagraphLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalPadding)
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalPadding)
+        }
+
+        scrollView.addSubview(detailsTitleLabel)
+        detailsTitleLabel.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalPadding)
+            make.top.equalTo(topParagraphLabel.OWSnp.bottom).offset(Metrics.titleTopPadding)
+        }
+
+        scrollView.addSubview(paragraphsStackView)
+        paragraphsStackView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalPadding)
+            make.top.equalTo(detailsTitleLabel.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
+        }
+
+        scrollView.addSubview(bottomParagraphLabel)
+        bottomParagraphLabel.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalPadding)
+            make.top.equalTo(paragraphsStackView.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
+            make.bottom.equalTo(scrollView.contentLayoutGuide)
         }
     }
 
