@@ -46,7 +46,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate struct Metrics {
         static let numberOfSkeletonComments: Int = 10
-        static let betweenCommentsSpacingDivisor: CGFloat = 2
+        static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 500 // ms
@@ -59,7 +59,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments / Metrics.betweenCommentsSpacingDivisor
+        return self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
     }()
 
     fileprivate let commentThreadData: OWCommentThreadRequiredData

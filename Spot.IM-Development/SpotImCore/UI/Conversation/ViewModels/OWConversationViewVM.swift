@@ -75,7 +75,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate struct Metrics {
         static let defaultNumberOfReplies: Int = 5
         static let numberOfSkeletonComments: Int = 5
-        static let betweenCommentsSpacingDivisor: CGFloat = 2
+        static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
@@ -442,7 +442,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return self.conversationStyle.spacing.betweenComments / Metrics.betweenCommentsSpacingDivisor
+        return self.conversationStyle.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
     }()
 
     var viewInitialized = PublishSubject<Void>()
@@ -1489,33 +1489,6 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // error alert
-        shouldShowErrorLoadingComments
-            .filter { $0 }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                let actions = [OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
-                self.servicesProvider.presenterService()
-                    .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
-                        message: "",
-                        actions: actions,
-                        viewableMode: self.viewableMode
-                    )
-                    .subscribe(onNext: { result in
-                        switch result {
-                        case .completion:
-                            // Do nothing
-                            break
-                        case .selected(_):
-                            break
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
-            })
-            .disposed(by: disposeBag)
-
         // Dynamic should update tableView cells
 
         OWSharedServicesProvider.shared.appLifeCycle()
@@ -1526,8 +1499,7 @@ fileprivate extension OWConversationViewViewModel {
                     .filter { $0 }
                     .take(1)
             }
-            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationAfterContentSizeChanged),
-                   scheduler: MainScheduler.instance)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationAfterContentSizeChanged), scheduler: conversationViewVMScheduler)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
