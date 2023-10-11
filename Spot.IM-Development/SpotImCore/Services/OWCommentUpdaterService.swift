@@ -52,7 +52,9 @@ fileprivate extension OWCommentUpdaterService {
             commentsToCache = [comment]
             if var parentComment = self.servicesProvider.commentsService().get(commentId: parentCommentId, postId: postId) {
                 if let replies = parentComment.replies {
-                    parentComment.replies = [comment] + replies
+                    // Take other replieas from cash to keep local changes
+                    let updatedReplies = replies.map { self.servicesProvider.commentsService().get(commentId: $0.id ?? "", postId: postId) }.unwrap()
+                    parentComment.replies = [comment] + updatedReplies
                 } else {
                     parentComment.replies = [comment]
                 }
