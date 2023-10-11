@@ -14,6 +14,7 @@ fileprivate typealias OWReportedCommentIds = Set<OWCommentId>
 protocol OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment
     func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId)
+    func updateReportedComments(commentsIds: [OWCommentId], postId: OWPostId)
     var commentJustReported: Observable<OWCommentId> { get }
 
     func cleanCache()
@@ -41,6 +42,10 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId) {
         set(reportedCommentIds: [commentId], postId: postId)
         _commentJustReported.onNext(commentId)
+    }
+
+    func updateReportedComments(commentsIds: [OWCommentId], postId: OWPostId) {
+        set(reportedCommentIds: commentsIds, postId: postId)
     }
 
     var commentJustReported: Observable<OWCommentId> {
