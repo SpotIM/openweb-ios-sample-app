@@ -44,7 +44,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldAddContentTapRecognizer: Bool { get }
     var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
-    var openProfile: Observable<OWOpenProfileData> { get }
+    var openProfile: Observable<OWOpenProfileType> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
@@ -220,8 +220,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
-    var openProfile: Observable<OWOpenProfileData> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    var openProfile: Observable<OWOpenProfileType> {
         return _openProfile
             .asObservable()
     }
@@ -719,9 +719,9 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .disposed(by: disposeBag)
 
-        let commentOpenProfileObservable: Observable<OWOpenProfileData> = commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<OWOpenProfileData> in
-                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
+        let commentOpenProfileObservable: Observable<OWOpenProfileType> = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<OWOpenProfileType> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileType>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
                     return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
@@ -731,11 +731,21 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Responding to comment avatar and user name tapped
         commentOpenProfileObservable
-            .do(onNext: { [weak self] openProfileData in
+            .do(onNext: { [weak self] openProfileType in
                 guard let self = self  else { return }
-                switch openProfileData.userProfileType {
+                let profileType: OWUserProfileType
+                let userId: String
+                switch openProfileType {
+                case .OWProfile(let data):
+                    profileType = data.userProfileType
+                    userId = data.userId
+                case .publisherProfile(let ssoPublisherId, let type):
+                    profileType = type
+                    userId = ssoPublisherId
+                }
+                switch profileType {
                 case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
-                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
+                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: userId))
                 }
             })
             .bind(to: _openProfile)
