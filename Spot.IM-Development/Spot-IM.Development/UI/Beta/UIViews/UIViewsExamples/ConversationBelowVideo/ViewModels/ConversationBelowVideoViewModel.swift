@@ -159,7 +159,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self._removeCommentCreation.onNext()
         case (.webView, .closeWebView):
             self._removeWebPage.onNext()
-            // TODO: Add profile integration
+        case (_, .openOWProfile(let data)):
+            let title = NSLocalizedString("ProfileTitle", comment: "")
+            let options = OWWebTabOptions(url: data.url, title: title)
+            self.retrieveWebPageComponent(options: options)
+        case (_, .openLinkInComment(let url)):
+            self.retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
         default:
             break
         }

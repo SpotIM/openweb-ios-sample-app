@@ -54,7 +54,7 @@ protocol OWConversationViewViewModelingOutputs {
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
-    var openProfile: Observable<OWOpenProfileData> { get }
+    var openProfile: Observable<OWOpenProfileType> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
@@ -199,8 +199,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
-    var openProfile: Observable<OWOpenProfileData> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    var openProfile: Observable<OWOpenProfileType> {
         return _openProfile
             .asObservable()
     }
@@ -1567,19 +1567,29 @@ fileprivate extension OWConversationViewViewModel {
 
         // Responding to comment avatar and user name tapped
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileData> in
-                let avatarClickOutputObservable: [Observable<OWOpenProfileData>] = commentCellsVms.map { commentCellVm in
+            .flatMapLatest { commentCellsVms -> Observable<OWOpenProfileType> in
+                let avatarClickOutputObservable: [Observable<OWOpenProfileType>] = commentCellsVms.map { commentCellVm in
                     let avatarVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM.outputs.avatarVM
                     let commentHeaderVM = commentCellVm.outputs.commentVM.outputs.commentHeaderVM
                     return Observable.merge(avatarVM.outputs.openProfile, commentHeaderVM.outputs.openProfile)
                 }
                 return Observable.merge(avatarClickOutputObservable)
             }
-            .do(onNext: { [weak self] openProfileData in
-                guard let self = self else { return }
-                switch openProfileData.userProfileType {
+            .do(onNext: { [weak self] openProfileType in
+                guard let self = self  else { return }
+                let profileType: OWUserProfileType
+                let userId: String
+                switch openProfileType {
+                case .OWProfile(let data):
+                    profileType = data.userProfileType
+                    userId = data.userId
+                case .publisherProfile(let ssoPublisherId, let type):
+                    profileType = type
+                    userId = ssoPublisherId
+                }
+                switch profileType {
                 case .currentUser: self.sendEvent(for: .myProfileClicked(source: .comment))
-                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: openProfileData.userId))
+                case .otherUser: self.sendEvent(for: .userProfileClicked(userId: userId))
                 }
             })
             .bind(to: _openProfile)
