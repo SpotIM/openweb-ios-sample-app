@@ -276,6 +276,7 @@
 		24F175412A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F175402A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift */; };
 		24F4CD8029C057D300261F80 /* OWPreConversationSummaryStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4CD7F29C057D300261F80 /* OWPreConversationSummaryStyle.swift */; };
 		24F611D82AD5577600BAA574 /* OWBadgesKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F611D72AD5577600BAA574 /* OWBadgesKeys.swift */; };
+		24F611DB2AD5757500BAA574 /* OWOpenProfileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
 		3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05E2875994300E6F1AC /* OWConversationVC.swift */; };
@@ -1368,6 +1369,7 @@
 		24F175402A5EC0200078BCF6 /* OWAnalyticsEventCreatorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsEventCreatorService.swift; sourceTree = "<group>"; };
 		24F4CD7F29C057D300261F80 /* OWPreConversationSummaryStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSummaryStyle.swift; sourceTree = "<group>"; };
 		24F611D72AD5577600BAA574 /* OWBadgesKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBadgesKeys.swift; sourceTree = "<group>"; };
+		24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOpenProfileType.swift; sourceTree = "<group>"; };
 		26D6F901C861ED447A2EBD8B /* Pods-SharedTests-OpenWebCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharedTests-OpenWebCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-SharedTests-OpenWebCoreTests/Pods-SharedTests-OpenWebCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		2A26548AC75009E549FCE5E2 /* Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
@@ -6151,6 +6153,7 @@
 			children = (
 				9E4B4E5F2AA604D100F4425F /* OWProfileService.swift */,
 				9E4B4E612AA61DEF00F4425F /* OWOpenProfileData.swift */,
+				24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */,
 			);
 			path = ProfileService;
 			sourceTree = "<group>";
@@ -6901,6 +6904,7 @@
 				3D263D0429C37D540013C532 /* OWHTTPHeaderType.swift in Sources */,
 				16D5A20829D457AA00914AD7 /* OWCommentThreadActionCell.swift in Sources */,
 				3D20A37F27B01C37003F8513 /* OWConstraintMakerFinalizable.swift in Sources */,
+				24F611DB2AD5757500BAA574 /* OWOpenProfileType.swift in Sources */,
 				3D08E0AB28771DCB00E6F1AC /* OWDiff.swift in Sources */,
 				24C3147B2A81115100F22B8C /* OWUserProfileType.swift in Sources */,
 				24C314792A80DBC500F22B8C /* SPRankChange+Analytics.swift in Sources */,
