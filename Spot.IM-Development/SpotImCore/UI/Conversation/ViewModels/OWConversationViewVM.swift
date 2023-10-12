@@ -314,6 +314,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     return Observable.just(communityCellsOptions + commentCellsOptions + loadingCell + errorLoadingMoreCell)
                 }
             })
+            .observe(on: MainScheduler.instance)
             .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
                 guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
