@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWCommentThreadActionsCellViewModelingInputs {
     func update(commentPresentationData: OWCommentPresentationData)
+    var triggerUpdateActionType: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadActionsCellViewModelingOutputs {
@@ -36,6 +37,8 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
         static let expandCommentsCount: Int = 5
     }
 
+    fileprivate let disposeBag = DisposeBag()
+
     var inputs: OWCommentThreadActionsCellViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsCellViewModelingOutputs { return self }
 
@@ -47,6 +50,8 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var mode: OWCommentThreadActionsCellMode = .collapse
 
+    var triggerUpdateActionType = PublishSubject<Void>()
+
     lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread, commentId: self.commentPresentationData.id)
 
     init(id: String = UUID().uuidString, data: OWCommentPresentationData, mode: OWCommentThreadActionsCellMode = .collapse, depth: Int = 0) {
@@ -54,10 +59,8 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
         self.commentPresentationData = data
         self.depth = depth
         self.mode = mode
-
-        let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
-
-        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id)
+        self.setupObservers()
+        self.triggerUpdateActionType.onNext()
     }
 
     init() {
@@ -68,6 +71,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
             repliesOffset: 0,
             repliesPresentation: []
         )
+        self.setupObservers()
     }
 
     func update(commentPresentationData: OWCommentPresentationData) {
@@ -76,6 +80,17 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 }
 
 fileprivate extension OWCommentThreadActionsCellViewModel {
+    func setupObservers() {
+        triggerUpdateActionType
+            .map({ [weak self] _ -> OWCommentThreadActionType? in
+                guard let self = self else { return nil }
+                return self.mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
+            })
+            .unwrap()
+            .bind(to: self.commentActionsVM.inputs.updateActionType)
+            .disposed(by: disposeBag)
+    }
+
     func getCommentThreadActionTypeForExpand() -> OWCommentThreadActionType {
         let visibleRepliesCount = commentPresentationData.repliesPresentation.count
         let totalRepliesCount = commentPresentationData.totalRepliesCount
