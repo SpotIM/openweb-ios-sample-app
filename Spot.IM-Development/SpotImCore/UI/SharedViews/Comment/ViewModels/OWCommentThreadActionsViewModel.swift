@@ -17,6 +17,7 @@ enum OWCommentThreadActionType {
 
 protocol OWCommentThreadActionsViewModelingInputs {
     var tap: PublishSubject<Void> { get }
+    var updateType: PublishSubject<OWCommentThreadActionType> { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
@@ -35,30 +36,25 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var inputs: OWCommentThreadActionsViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
+
     var tap = PublishSubject<Void>()
     var tapOutput: Observable<Void> {
         tap.asObservable()
     }
 
+    var updateType = PublishSubject<OWCommentThreadActionType>()
+    fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
+       return updateType
+            .asObservable()
+    }()
+
     let commentId: String
 
     init(with type: OWCommentThreadActionType, commentId: String) {
         self.commentId = commentId
-        switch type {
-        case .collapseThread:
-            _actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))
-            _disclosureTransform.onNext(.identity)
-
-        case .viewMoreReplies(count: let count):
-            let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
-            _actionLabelText.onNext(String(format: repliesString, count))
-            _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
-
-        case .viewMoreRepliesRange(from: let from, to: let to):
-            let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
-            _actionLabelText.onNext(String(format: repliesString, from, to))
-            _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
-        }
+        self.setupObservers()
+        self.updateType.onNext(type)
     }
 
     let _actionLabelText = BehaviorSubject<String?>(value: nil)
@@ -73,5 +69,30 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
         _disclosureTransform
             .unwrap()
             .asObservable()
+    }
+}
+
+fileprivate extension OWCommentThreadActionsViewModel {
+    func setupObservers() {
+        updatedType
+            .subscribe { [weak self] type in
+                guard let self = self else { return }
+                switch type {
+                case .collapseThread:
+                    self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))
+                    self._disclosureTransform.onNext(.identity)
+
+                case .viewMoreReplies(count: let count):
+                    let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
+                    self._actionLabelText.onNext(String(format: repliesString, count))
+                    self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+
+                case .viewMoreRepliesRange(from: let from, to: let to):
+                    let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
+                    self._actionLabelText.onNext(String(format: repliesString, from, to))
+                    self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
