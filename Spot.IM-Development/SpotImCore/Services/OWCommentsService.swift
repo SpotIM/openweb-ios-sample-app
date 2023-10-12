@@ -28,7 +28,7 @@ class OWCommentsService: OWCommentsServicing {
         return comment
     }
 
-    func set(comments: [OWComment], postId: String) {
+    func set(comments: [OWComment], postId: OWPostId) {
         let commentIdToCommentTupples: [(String, OWComment)] = comments.map {
             guard let id = $0.id else { return nil }
             return (id, $0)
@@ -37,7 +37,8 @@ class OWCommentsService: OWCommentsServicing {
 
         if let existingCommentsForPostId = _mapPostIdToComments[postId] {
             // merge and replacing current comments
-            _mapPostIdToComments[postId] = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: {(_, new) in new })
+            let newPostIdComments: OWCommentsMapper = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: {(_, new) in new })
+            _mapPostIdToComments[postId] = newPostIdComments
         } else {
             _mapPostIdToComments[postId] = commentIdsToComment
         }
