@@ -44,7 +44,7 @@ class OWCommentThreadActionCell: UITableViewCell {
         }
 
         self.setupObservers()
-        self.viewModel.inputs.updateType.onNext()
+        self.viewModel.inputs.triggerUpdateActionType.onNext()
     }
 
     override func prepareForReuse() {
