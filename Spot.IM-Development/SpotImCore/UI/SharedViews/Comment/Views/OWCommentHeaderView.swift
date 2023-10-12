@@ -265,7 +265,6 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowHiddenCommentMessage
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isHiddenMessage in
                 guard let self = self,
                       isHiddenMessage
