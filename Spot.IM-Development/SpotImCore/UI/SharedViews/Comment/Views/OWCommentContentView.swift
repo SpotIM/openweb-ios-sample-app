@@ -108,6 +108,7 @@ fileprivate extension OWCommentContentView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.mediaSize
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
@@ -145,6 +146,7 @@ fileprivate extension OWCommentContentView {
         }
 
         viewModel.outputs.isEdited
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isEdited in
                 guard let self = self else { return }
                 self.editedLabel.OWSnp.updateConstraints { make in
