@@ -17,7 +17,7 @@ enum OWCommentThreadActionType {
 
 protocol OWCommentThreadActionsViewModelingInputs {
     var tap: PublishSubject<Void> { get }
-    var updateType: PublishSubject<OWCommentThreadActionType> { get }
+    var updateActionType: PublishSubject<OWCommentThreadActionType> { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
@@ -43,9 +43,9 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
         tap.asObservable()
     }
 
-    var updateType = PublishSubject<OWCommentThreadActionType>()
+    var updateActionType = PublishSubject<OWCommentThreadActionType>()
     fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
-       return updateType
+       return updateActionType
             .asObservable()
     }()
 
@@ -54,7 +54,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     init(with type: OWCommentThreadActionType, commentId: String) {
         self.commentId = commentId
         self.setupObservers()
-        self.updateType.onNext(type)
+        self.updateActionType.onNext(type)
     }
 
     let _actionLabelText = BehaviorSubject<String?>(value: nil)
