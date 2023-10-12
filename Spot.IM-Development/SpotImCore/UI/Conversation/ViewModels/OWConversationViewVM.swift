@@ -155,7 +155,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return viewableMode == .independent
     }
 
-    fileprivate var paginationOffset = 0
+    fileprivate var conversationPaginationOffset = 0
+    fileprivate var conversationHasNext = false
 
     fileprivate var articleUrl: String = ""
 
@@ -617,7 +618,8 @@ fileprivate extension OWConversationViewViewModel {
         var commentsPresentationData = [OWCommentPresentationData]()
         var repliesPresentationData = [OWCommentPresentationData]()
 
-        self.paginationOffset = response.conversation?.offset ?? 0
+        self.conversationPaginationOffset = response.conversation?.offset ?? 0
+        self.conversationHasNext = response.conversation?.hasNext ?? false
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
@@ -1350,6 +1352,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
+            .filter { _ in self.conversationHasNext }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
             .map { (willDisplayCellEvent, _) -> Int in
@@ -1371,12 +1374,12 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.sendEvent(for: .loadMoreComments(paginationOffset: self.paginationOffset))
+                self.sendEvent(for: .loadMoreComments(paginationOffset: self.conversationPaginationOffset))
             })
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._isLoadingMoreComments.onNext(true)
-                self._loadMoreComments.onNext(self.paginationOffset)
+                self._loadMoreComments.onNext(self.conversationPaginationOffset)
             })
             .disposed(by: disposeBag)
 
