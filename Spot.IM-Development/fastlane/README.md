@@ -76,6 +76,14 @@ Release Sample App (beta preset)
 
 Release Sample App (public preset)
 
+### ios upload_debug_symbols_to_crashlytics
+
+```sh
+[bundle exec] fastlane ios upload_debug_symbols_to_crashlytics
+```
+
+Upload debug symbols to Crashlytics
+
 ### ios set_version
 
 ```sh
