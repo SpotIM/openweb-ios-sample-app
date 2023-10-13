@@ -31,12 +31,26 @@ class OWCommentsService: OWCommentsServicing {
         guard let comments = _mapPostIdToComments[postId],
               let comment = comments[id]
         else { return nil }
+
         return comment
     }
 
     func set(comments: [OWComment], postId: OWPostId) {
         self.lock.lock(); defer { self.lock.unlock() }
 
+        // Using `internalSet` function to avoid deadlock
+        internalSet(comments: comments, postId: postId)
+    }
+
+    func cleanCache() {
+        self.lock.lock(); defer { self.lock.unlock() }
+
+        _mapPostIdToComments.removeAll()
+    }
+}
+
+fileprivate extension OWCommentsService {
+    func internalSet(comments: [OWComment], postId: OWPostId) {
         let commentIdToCommentTupples: [(String, OWComment)] = comments.map {
             guard let id = $0.id else { return nil }
             return (id, $0)
@@ -58,17 +72,11 @@ class OWCommentsService: OWCommentsServicing {
         // add each comment replies as well
         comments.forEach {
             if let commentReplies = $0.replies {
-                set(comments: commentReplies, postId: postId)
+                internalSet(comments: commentReplies, postId: postId)
             }
         }
     }
 
-    func cleanCache() {
-        _mapPostIdToComments.removeAll()
-    }
-}
-
-fileprivate extension OWCommentsService {
     func queueName() -> String {
         if let currentOperationQueue = OperationQueue.current {
             if let currentDispatchQueue = currentOperationQueue.underlyingQueue {
