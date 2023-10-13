@@ -57,10 +57,6 @@ fileprivate extension OWCommentsService {
         }.unwrap()
         let commentIdsToComment: OWCommentsMapper = Dictionary(uniqueKeysWithValues: commentIdToCommentTupples)
 
-        let queueName = self.queueName()
-        let log = "Alon - Inside `set(comments`, \(queueName)"
-        print(log)
-
         if let existingCommentsForPostId = _mapPostIdToComments[postId] {
             // merge and replacing current comments
             let newPostIdComments: OWCommentsMapper = existingCommentsForPostId.merging(commentIdsToComment, uniquingKeysWith: {(_, new) in new })
@@ -74,30 +70,6 @@ fileprivate extension OWCommentsService {
             if let commentReplies = $0.replies {
                 internalSet(comments: commentReplies, postId: postId)
             }
-        }
-    }
-
-    func queueName() -> String {
-        if let currentOperationQueue = OperationQueue.current {
-            if let currentDispatchQueue = currentOperationQueue.underlyingQueue {
-                return "dispatch queue: \(currentDispatchQueue.label.nonEmpty ?? currentDispatchQueue.description)"
-            } else {
-                return "operation queue: \(currentOperationQueue.name?.nonEmpty ?? currentOperationQueue.description)"
-            }
-        } else {
-            let currentThread = Thread.current
-            return "UNKNOWN QUEUE on thread: \(currentThread.name?.nonEmpty ?? currentThread.description)"
-        }
-    }
-}
-
-fileprivate extension String {
-    /// Returns this string if it is not empty, else `nil`.
-    var nonEmpty: String? {
-        if self.isEmpty {
-            return nil
-        } else {
-            return self
         }
     }
 }
