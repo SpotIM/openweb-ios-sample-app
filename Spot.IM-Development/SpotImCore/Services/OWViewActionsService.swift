@@ -57,9 +57,14 @@ fileprivate extension OWViewActionsService {
 
     func triggerAllAvailableActions() {
         guard let postId = OWManager.manager.postId else { return }
-        while !queue.isEmpty(),
-              let action = queue.popFirst() {
-            viewActionsCallbacks?(action, viewSourceType, postId)
+
+        // Ensure callbacks are triggered from main thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            while !self.queue.isEmpty(),
+                  let action = self.queue.popFirst() {
+                self.viewActionsCallbacks?(action, self.viewSourceType, postId)
+            }
         }
     }
 }
