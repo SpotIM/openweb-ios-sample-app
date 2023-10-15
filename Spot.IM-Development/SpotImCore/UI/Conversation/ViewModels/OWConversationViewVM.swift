@@ -715,14 +715,6 @@ fileprivate extension OWConversationViewViewModel {
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
 
-        // Subscribing to start realtime service
-        viewInitialized
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
-
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
             .filter { $0 == .loadConversationComments }
@@ -737,6 +729,14 @@ fileprivate extension OWConversationViewViewModel {
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: conversationViewVMScheduler)
             .asObservable()
+
+        // Subscribing to start realtime service
+        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+            })
+            .disposed(by: disposeBag)
 
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
