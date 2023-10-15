@@ -450,7 +450,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var pullToRefresh = PublishSubject<Void>()
     fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
         return pullToRefresh
-            .map { OWLoadingTriggeredReason.pullToRefresh }
+            .withLatestFrom(shouldShowErrorLoadingComments)
+            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
+                }
+            })
+            .map { _ -> OWLoadingTriggeredReason in
+                OWLoadingTriggeredReason.pullToRefresh
+            }
             .asObservable()
     }()
 
