@@ -27,7 +27,7 @@ struct OWRealTimeData: Decodable {
     }
 
     struct Metrics {
-        static let typingCountKey = "Overall"
+        static let typingCountForNewRootCommentsKey = "NewComment"
         static let defaultRealTimeOnlineViewingUsers = OWRealTimeOnlineViewingUsers(count: 1)
     }
 
@@ -73,7 +73,7 @@ extension OWRealTimeData {
         let conversationId = self.getConversationId(forPostId: postId)
         guard let typingCountDataArray = conversationTypingV2Users[conversationId] else { return 0 }
 
-        return typingCountDataArray.first(where: { $0.key == Metrics.typingCountKey })?.count ?? 0
+        return typingCountDataArray.first(where: { $0.key == Metrics.typingCountForNewRootCommentsKey })?.count ?? 0
     }
 
     func newComments(forPostId postId: OWPostId) -> [OWComment] {
