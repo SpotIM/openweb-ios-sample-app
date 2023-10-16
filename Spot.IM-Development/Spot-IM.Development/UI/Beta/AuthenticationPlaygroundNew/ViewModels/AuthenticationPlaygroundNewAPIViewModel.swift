@@ -332,10 +332,10 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 }
                 return JWTSSO
             }
-            .flatMapLatest { [weak self] JWTSSO -> Observable<Void> in
+            .flatMapLatest { [weak self] JWTSSO -> Observable<String> in
                 // 4. Perform SSO with JWT secret
                 guard let self = self else { return Observable.empty() }
-                return self.sso(jwtSecret: JWTSSO.JWTSecret)
+                return self.sso(provider: .piano, token: JWTSSO.JWTSecret) // TODO: propper mapping to provider
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
@@ -396,9 +396,22 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
         }
     }
 
-    // TODO add new API
-    func sso(jwtSecret: String) -> Observable<Void?> {
-        return .empty()
+    func sso(provider: OWSSOProvider, token: String) -> Observable<String?> {
+        return Observable.create { observer in
+            let authentication = OpenWeb.manager.authentication
+            authentication.sso(.usingProvider(provider: provider, token: token, completion: { result in
+                switch result {
+                case .success(let ssoProviderModel):
+                    observer.onNext(ssoProviderModel.userId)
+                    observer.onCompleted()
+                case .failure(let error):
+                    DLog("Failed in 'sso(provider: , token: )' with error: \(error)")
+                    observer.onError(error)
+                }
+            }))
+
+            return Disposables.create()
+        }
     }
 
     func login(user: UserAuthentication) -> Observable<String?> {
