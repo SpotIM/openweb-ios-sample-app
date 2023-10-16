@@ -9,6 +9,7 @@
 import Foundation
 import SpotImCore
 
+#if NEW_API
 struct ThirdPartySSOAuthentication {
     let displayName: String
     let spotId: String
@@ -34,3 +35,4 @@ extension ThirdPartySSOAuthentication {
     #endif
     }
 }
+#endif
