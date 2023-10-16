@@ -23,11 +23,16 @@ protocol OWReportedCommentsServicing {
 class OWReportedCommentsService: OWReportedCommentsServicing {
 
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
+    fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]() {
+        didSet {
+            savePersistant()
+        }
+    }
     fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        loadPersistence()
     }
 
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment {
@@ -81,5 +86,19 @@ fileprivate extension OWReportedCommentsService {
 
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
+    }
+
+    func loadPersistence() {
+        let keychain = servicesProvider.keychain()
+
+        if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
+            self._mapPostIdToReportedCommentIds = reportedCommentsMapper
+        }
+    }
+
+    func savePersistant() {
+        let keychain = servicesProvider.keychain()
+
+        keychain.save(value: _mapPostIdToReportedCommentIds, forKey: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments)
     }
 }
