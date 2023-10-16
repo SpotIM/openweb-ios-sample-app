@@ -28,7 +28,7 @@ class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol 
         case .complete(let codeB, let completion):
             self.handleSSOComplete(codeB: codeB, completion: completion)
         case .usingProvider(let provider, let token, let completion):
-            self.handleSSOUsingProvider(privder: provider, token: token, completion: completion)
+            self.handleSSOUsingProvider(provider: provider, token: token, completion: completion)
         }
     }
 
@@ -130,9 +130,19 @@ fileprivate extension OWAuthenticationLayer {
             })
     }
 
-    func handleSSOUsingProvider(privder: OWSSOProvider, token: String, completion: @escaping OWProviderSSOHandler) {
+    func handleSSOUsingProvider(provider: OWSSOProvider, token: String, completion: @escaping OWProviderSSOHandler) {
         guard validateSpotIdExist(completion: completion) else { return }
 
+        let authenticationManager = servicesProvider.authenticationManager()
+        _ = authenticationManager
+            .ssoProviderAuthenticate(provider: provider, token: token)
+            .take(1)
+            .subscribe(onNext: { ssoProviderModel in
+                completion(.success(ssoProviderModel))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.ssoProvider
+                completion(.failure(error))
+            })
     }
 
     func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {

@@ -21,3 +21,16 @@ enum OWSSOProvider {
     case auth0
 }
 #endif
+
+internal extension OWSSOProvider {
+    func parameters(token: String) -> OWNetworkParameters {
+        switch self {
+        case .gigya:
+            return ["provider": "gigya", "uid": token]
+        case .piano:
+            return ["provider": "piano", "jwt_token": token]
+        case .auth0:
+            return ["provider": "auth0", "access_token": token]
+        }
+    }
+}
