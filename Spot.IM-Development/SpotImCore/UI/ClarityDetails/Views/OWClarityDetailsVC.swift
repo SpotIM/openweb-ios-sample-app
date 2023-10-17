@@ -42,6 +42,10 @@ class OWClarityDetailsVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+    }
 }
 
 fileprivate extension OWClarityDetailsVC {
