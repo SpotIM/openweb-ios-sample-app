@@ -53,6 +53,7 @@ enum OWAnalyticEventType {
     case configureSortTitle(sort: OWSortOption, title: String)
     case configureLanguageStrategy(strategy: OWLanguageStrategy)
     case localeStrategy(strategy: OWLocaleStrategy)
+    case orientationEnforcement(enforcement: OWOrientationEnforcement)
     case readingTime(milliseconds: Int)
     case commentViewed(commentId: OWCommentId)
     case cameraIconClickedOpen
@@ -153,6 +154,8 @@ extension OWAnalyticEventType {
             return "configureLanguageStrategy"
         case .localeStrategy:
             return "localeStrategy"
+        case .orientationEnforcement:
+            return "orientationEnforcement"
         case .readingTime:
             return "readingTime"
         case .commentViewed:
@@ -232,7 +235,8 @@ extension OWAnalyticEventType {
              .configuredInitialSort,
              .configureSortTitle,
              .configureLanguageStrategy,
-             .localeStrategy:
+             .localeStrategy,
+             .orientationEnforcement:
             return .configuration
         }
     }
@@ -328,6 +332,8 @@ extension OWAnalyticEventType {
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
         case .localeStrategy(let strategy):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.strategy: strategy])
+        case .orientationEnforcement(let enforcement):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.enforcement: enforcement])
         case .readingTime(let milliseconds):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.milliseconds: milliseconds])
         case .commentViewed(let commentId):
