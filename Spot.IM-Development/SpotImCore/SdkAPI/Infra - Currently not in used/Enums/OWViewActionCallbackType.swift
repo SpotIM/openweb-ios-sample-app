@@ -67,8 +67,8 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.closeConversationPressed, .closeConversationPressed):
             return true
-        case (let .openPublisherProfile(lhsData), let .openPublisherProfile(rhsData)):
-            return lhsData == rhsData
+        case (let .openPublisherProfile(lhsId, lhsType), let .openPublisherProfile(rhsId, rhsType)):
+            return lhsId == rhsId && lhsType == rhsType
         case (let .openOWProfile(lhsData), let .openOWProfile(rhsData)):
             return lhsData == rhsData
         case (let .openReportReason(lhsId, lhsParent), let .openReportReason(rhsId, rhsParent)):

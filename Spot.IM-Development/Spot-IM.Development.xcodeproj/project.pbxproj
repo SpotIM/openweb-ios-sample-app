@@ -465,6 +465,7 @@
 		3D611BBC28C8B661003960CE /* OWArticleSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BBB28C8B661003960CE /* OWArticleSettings.swift */; };
 		3D611BBE28C8B6CF003960CE /* OWArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BBD28C8B6CF003960CE /* OWArticle.swift */; };
 		3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BBF28C8B851003960CE /* OWArticle+Stub.swift */; };
+		3D6551892AD9407100A665EA /* OWUnfairLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6551882AD9407100A665EA /* OWUnfairLock.swift */; };
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
 		3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D682888499D00DDBE0B /* OWHelpers.swift */; };
@@ -1570,6 +1571,7 @@
 		3D611BBB28C8B661003960CE /* OWArticleSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleSettings.swift; sourceTree = "<group>"; };
 		3D611BBD28C8B6CF003960CE /* OWArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticle.swift; sourceTree = "<group>"; };
 		3D611BBF28C8B851003960CE /* OWArticle+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWArticle+Stub.swift"; sourceTree = "<group>"; };
+		3D6551882AD9407100A665EA /* OWUnfairLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUnfairLock.swift; sourceTree = "<group>"; };
 		3D6A4C052852482D007420AD /* UIImageView+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URL.swift"; sourceTree = "<group>"; };
 		3D6A4C0728524A40007420AD /* UIImage+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+URL.swift"; sourceTree = "<group>"; };
 		3D76FAE2283CD1B700DB18F6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -5130,6 +5132,7 @@
 				163E02BD2A852C4F00DDB73C /* OWCommentCreatorNetworkHelper.swift */,
 				163E02BF2A852FB300DDB73C /* OWCommentsPresentationDataHelper.swift */,
 				163E02C12A85330D00DDB73C /* OWCommentUpdateType.swift */,
+				3D6551882AD9407100A665EA /* OWUnfairLock.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -7163,6 +7166,7 @@
 				3DB3B98529FAD35300C50192 /* OWTestingCellsGeneratorViewModel.swift in Sources */,
 				3DA2646B2951E3B200688FFF /* OWNetworkMultipartFormData.swift in Sources */,
 				3D08E08F287708FC00E6F1AC /* OWAnimatableSectionModelType+ItemPath.swift in Sources */,
+				3D6551892AD9407100A665EA /* OWUnfairLock.swift in Sources */,
 				3D263CE429BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift in Sources */,
 				16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */,
 				3DB3B96C29F7DA7000C50192 /* OWTestingRedCell.swift in Sources */,
@@ -8000,7 +8004,7 @@
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
@@ -8037,12 +8041,12 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8158,7 +8162,7 @@
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
@@ -8195,12 +8199,12 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8310,7 +8314,7 @@
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8347,12 +8351,12 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8462,7 +8466,7 @@
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8499,12 +8503,12 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8554,12 +8558,12 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8598,12 +8602,12 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -8769,7 +8773,7 @@
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
@@ -8804,7 +8808,7 @@
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				ENABLE_MODULE_VERIFIER = YES;
