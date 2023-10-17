@@ -43,6 +43,8 @@ class OWLoginPromptView: UIView {
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
+    fileprivate var zeroHeighConstraint: OWConstraint? = nil
+
     fileprivate var viewModel: OWLoginPromptViewModeling
     fileprivate var disposeBag: DisposeBag
 
@@ -62,6 +64,11 @@ class OWLoginPromptView: UIView {
 
 fileprivate extension OWLoginPromptView {
     func setupUI() {
+        self.OWSnp.makeConstraints { make in
+            zeroHeighConstraint = make.height.equalTo(0).constraint
+        }
+        zeroHeighConstraint?.isActive = false
+
         self.addSubview(icon)
         icon.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -83,6 +90,18 @@ fileprivate extension OWLoginPromptView {
     }
 
     func setupObservers() {
+        viewModel.outputs.shouldShowView
+            .map { !$0 }
+            .bind(to: self.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        if let constraint = zeroHeighConstraint {
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: constraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
