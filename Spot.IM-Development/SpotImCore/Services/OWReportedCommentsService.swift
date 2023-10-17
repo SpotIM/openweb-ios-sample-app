@@ -26,6 +26,8 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
     fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
 
+    fileprivate let queue = DispatchQueue(label: "OpenWebSDKReportedCommentsService", qos: .utility)
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         loadPersistence()
@@ -90,16 +92,22 @@ fileprivate extension OWReportedCommentsService {
     }
 
     func loadPersistence() {
-        let keychain = servicesProvider.keychain()
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            let keychain = self.servicesProvider.keychain()
 
-        if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
-            self._mapPostIdToReportedCommentIds = reportedCommentsMapper
+            if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
+                self._mapPostIdToReportedCommentIds = reportedCommentsMapper
+            }
         }
     }
 
     func savePersistant() {
-        let keychain = servicesProvider.keychain()
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            let keychain = self.servicesProvider.keychain()
 
-        keychain.save(value: _mapPostIdToReportedCommentIds, forKey: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments)
+            keychain.save(value: self._mapPostIdToReportedCommentIds, forKey: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments)
+        }
     }
 }
