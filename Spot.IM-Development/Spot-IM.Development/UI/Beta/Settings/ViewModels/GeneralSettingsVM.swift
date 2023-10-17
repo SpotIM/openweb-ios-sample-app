@@ -486,6 +486,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 }
 
 fileprivate extension GeneralSettingsVM {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         articleHeaderSelectedStyle
             .skip(1)
@@ -607,6 +608,7 @@ fileprivate extension GeneralSettingsVM {
                 .setValues(key: UserDefaultsProvider.UDKey<OWLocaleStrategy>.localeStrategy))
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
 
 extension GeneralSettingsVM: SettingsGroupVMProtocol { }
