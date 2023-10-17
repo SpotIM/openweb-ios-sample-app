@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 #if NEW_API
 public enum OWOrientationEnforcement: Codable {
@@ -19,3 +20,24 @@ enum OWOrientationEnforcement: Codable {
     case enable(orientations: [OWOrientation])
 }
 #endif
+
+extension OWOrientationEnforcement {
+    var interfaceOrientationMask: UIInterfaceOrientationMask {
+        switch self {
+        case .enableAll:
+            return .all
+        case .enable(let orientations):
+            if orientations.count == 1 {
+                switch orientations[0] {
+                case .portrait:
+                    return .portrait
+                case .landscape:
+                    return .landscape
+                }
+            } else {
+                return .all
+            }
+
+        }
+    }
+}
