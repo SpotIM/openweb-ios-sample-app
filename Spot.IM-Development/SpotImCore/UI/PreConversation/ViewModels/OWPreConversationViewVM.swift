@@ -24,6 +24,7 @@ protocol OWPreConversationViewViewModelingInputs {
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
+    var loginPromptVM: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
@@ -104,6 +105,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
         return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
+    }()
+
+    lazy var loginPromptVM: OWLoginPromptViewModeling = {
+        return OWLoginPromptViewModel()
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
