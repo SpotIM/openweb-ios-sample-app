@@ -721,6 +721,8 @@ fileprivate extension OWConversationViewViewModel {
         if let responseUsers = response.conversation?.users {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
+        // cache reported comments in reported comments service
+        self.servicesProvider.reportedCommentsService().updateReportedComments(forConversationResponse: response, postId: self.postId)
     }
 }
 
