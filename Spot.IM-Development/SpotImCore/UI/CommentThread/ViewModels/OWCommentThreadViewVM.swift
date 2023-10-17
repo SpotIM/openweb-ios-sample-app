@@ -425,10 +425,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
         // cache reported comments in reported comments service
-        if let reported = response.reportedComments {
-            let reportedArray = Array(reported.keys)
-            self.servicesProvider.reportedCommentsService().updateReportedComments(commentsIds: reportedArray, postId: self.postId)
-        }
+        self.servicesProvider.reportedCommentsService().updateReportedComments(forConversationResponse: response, postId: self.postId)
     }
 }
 

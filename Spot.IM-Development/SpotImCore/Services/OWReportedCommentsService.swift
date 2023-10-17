@@ -14,7 +14,7 @@ fileprivate typealias OWReportedCommentIds = Set<OWCommentId>
 protocol OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment
     func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId)
-    func updateReportedComments(commentsIds: [OWCommentId], postId: OWPostId)
+    func updateReportedComments(forConversationResponse conversationResponse: OWConversationReadRM, postId: OWPostId)
     var commentJustReported: Observable<OWCommentId> { get }
 
     func cleanCache()
@@ -23,11 +23,7 @@ protocol OWReportedCommentsServicing {
 class OWReportedCommentsService: OWReportedCommentsServicing {
 
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]() {
-        didSet {
-            savePersistant()
-        }
-    }
+    fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
     fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -49,8 +45,11 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
         _commentJustReported.onNext(commentId)
     }
 
-    func updateReportedComments(commentsIds: [OWCommentId], postId: OWPostId) {
-        set(reportedCommentIds: commentsIds, postId: postId)
+    func updateReportedComments(forConversationResponse conversationResponse: OWConversationReadRM, postId: OWPostId) {
+        if let reported = conversationResponse.reportedComments {
+            let reportedArray = Array(reported.keys)
+            set(reportedCommentIds: reportedArray, postId: postId)
+        }
     }
 
     var commentJustReported: Observable<OWCommentId> {
@@ -60,6 +59,7 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
 
     func cleanCache() {
         self._mapPostIdToReportedCommentIds.removeAll()
+        savePersistant()
     }
 }
 
@@ -72,6 +72,7 @@ fileprivate extension OWReportedCommentsService {
             _mapPostIdToReportedCommentIds[postId] = Set(ids)
         }
         updateCommentsService(with: ids, postId: postId)
+        savePersistant()
     }
 
     func updateCommentsService(with reportedCommentIds: [OWCommentId], postId: OWPostId) {
