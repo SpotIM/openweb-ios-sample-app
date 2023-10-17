@@ -13,4 +13,5 @@ internal struct OWConversationReadRM: Decodable {
     let extractData: SPConversationExtraDataRM?
     let conversation: OWConversation?
     let abData: [SPABData]?
+    let reportedComments: [OWCommentId: EmptyDecodable]?
 }
