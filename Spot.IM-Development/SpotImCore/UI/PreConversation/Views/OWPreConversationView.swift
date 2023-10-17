@@ -34,6 +34,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let tableViewTopPedding: CGFloat = 16
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
         static let tableViewHeightAnimationDuration: CGFloat = 0.2
+        static let loginPromptTopPadding: CGFloat = 20
+        static let loginPromptDividerTopPadding: CGFloat = 16
 
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
@@ -47,7 +49,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptVM)
     }()
 
-    fileprivate lazy var loginPromptBottomDevider: UIView = {
+    fileprivate lazy var loginPromptBottomDivider: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
@@ -200,21 +202,21 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
-            make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(20) // TODO: metrics
+            make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.loginPromptTopPadding)
             make.leading.equalToSuperview().inset(Metrics.horizontalOffset)
             make.trailing.lessThanOrEqualToSuperview().inset(Metrics.horizontalOffset)
         }
 
-        self.addSubview(loginPromptBottomDevider)
-        loginPromptBottomDevider.OWSnp.makeConstraints { make in
-            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(16)  // TODO: metrics
+        self.addSubview(loginPromptBottomDivider)
+        loginPromptBottomDivider.OWSnp.makeConstraints { make in
+            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.loginPromptDividerTopPadding)
             make.height.equalTo(Metrics.separatorHeight)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
-            make.top.equalTo(loginPromptBottomDevider.OWSnp.bottom).offset(Metrics.communityQuestionTopPadding)
+            make.top.equalTo(loginPromptBottomDivider.OWSnp.bottom).offset(Metrics.communityQuestionTopPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
@@ -300,7 +302,7 @@ fileprivate extension OWPreConversationView {
                 self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
-                self.loginPromptBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
+                self.loginPromptBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -317,6 +319,25 @@ fileprivate extension OWPreConversationView {
 
         guard !viewModel.outputs.shouldShowComapactView else { return }
 
+        let shouldShowLoginPrompt = viewModel
+            .outputs.loginPromptVM
+            .outputs.shouldShowView
+
+        shouldShowLoginPrompt
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                self.loginPromptView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.preConversationSummary.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptTopPadding : 0)
+                }
+
+                self.loginPromptBottomDivider.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.loginPromptView.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptDividerTopPadding : 0)
+                    make.height.equalTo(shouldShow ? Metrics.separatorHeight : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
         let shouldShowQuestion = viewModel
             .outputs.communityQuestionViewModel
             .outputs.shouldShowView
@@ -331,7 +352,7 @@ fileprivate extension OWPreConversationView {
                 // Update Question and Guidelines constraints
                 guard let self = self else { return }
                 self.communityQuestionView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.loginPromptBottomDevider.OWSnp.bottom).offset(shouldShowQuestion ? Metrics.communityQuestionTopPadding : 0)
+                    make.top.equalTo(self.loginPromptBottomDivider.OWSnp.bottom).offset(shouldShowQuestion ? Metrics.communityQuestionTopPadding : 0)
                 }
                 self.communityGuidelinesView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(shouldShowGuidelines ? Metrics.communityQuestionDeviderPadding : 0)
