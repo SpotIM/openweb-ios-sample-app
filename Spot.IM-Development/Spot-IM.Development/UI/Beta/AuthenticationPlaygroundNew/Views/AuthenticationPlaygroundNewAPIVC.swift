@@ -120,6 +120,18 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         super.viewDidLoad()
         setupObservers()
     }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isBeingDismissed {
+            // Handling dismiss from "presented" mode
+            viewModel.inputs.dismissing.onNext()
+        } else if isMovingFromParent {
+            // Handling dismiss from "push" mode
+            viewModel.inputs.dismissing.onNext()
+        }
+    }
 }
 
 fileprivate extension AuthenticationPlaygroundNewAPIVC {
