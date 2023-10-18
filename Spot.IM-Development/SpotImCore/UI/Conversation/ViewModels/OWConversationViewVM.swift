@@ -38,6 +38,7 @@ protocol OWConversationViewViewModelingOutputs {
 
     var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
+    var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModel { get }
@@ -219,6 +220,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
         return OWArticleDescriptionViewModel()
+    }()
+
+    lazy var loginPromptViewModel: OWLoginPromptViewModeling = {
+        return OWLoginPromptViewModel()
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
