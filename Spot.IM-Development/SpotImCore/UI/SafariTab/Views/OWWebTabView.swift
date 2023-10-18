@@ -19,8 +19,24 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
     }
 
     fileprivate lazy var webView: WKWebView = {
-        let webView = WKWebView(frame: .zero,
-                                configuration: WKWebViewConfiguration())
+        let preferences = WKPreferences()
+
+        // uncomment if you want to inspect the webview with safari
+        // preferences.setValue(true, forKey: "developerExtrasEnabled")
+
+        let configuration = WKWebViewConfiguration()
+        configuration.preferences = preferences
+
+        // disable local storage persistance
+        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+
+        // uncomment if you want to inspect the webview with safari on iOS > 16.4
+        // if #available(iOS 16.4, *) {
+        //    webView.isInspectable = true
+        // }
+
         return webView
     }()
 

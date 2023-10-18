@@ -126,6 +126,7 @@ fileprivate extension OWTextView {
         textViewPlaceholder.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.placeholderLeadingTrailingPadding)
             make.top.equalTo(textView.OWSnp.top).inset(Metrics.textViewTopBottomPadding)
+            make.bottom.lessThanOrEqualTo(textView).inset(Metrics.textViewTopBottomPadding)
         }
     }
 
