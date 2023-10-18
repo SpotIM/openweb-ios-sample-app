@@ -27,6 +27,7 @@ protocol OWCommentViewModelingOutputs {
     var shouldHideCommentContent: Observable<Bool> { get }
     var shouldShowCommentStatus: Observable<Bool> { get }
     var showBlockingLayoutView: Observable<Bool> { get }
+    var heightChanged: Observable<Void> { get }
 
     var comment: OWComment { get }
     var user: SPUser { get }
@@ -64,7 +65,7 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
-    fileprivate var currentUser: Observable<SPUser> {
+    fileprivate var currentActiveUser: Observable<SPUser> {
         sharedServiceProvider
             .authenticationManager()
             .activeUserAvailability
@@ -77,10 +78,18 @@ class OWCommentViewModel: OWCommentViewModeling,
                 }
             }
             .unwrap()
+            .observe(on: MainScheduler.instance)
+    }
+
+    var heightChanged: Observable<Void> {
+        Observable.merge(
+            contentVM.outputs.collapsableLabelViewModel.outputs.height.voidify(),
+            shouldShowCommentStatus.voidify()
+        )
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, currentUser) { [weak self] status, user in
+        Observable.combineLatest(commentStatusVM.outputs.status, currentActiveUser) { [weak self] status, user in
             guard let self = self,
                   let currentUserId = user.userId,
                   let commentUserId = self.comment.userId,
@@ -91,6 +100,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         }
         .startWith(false)
     }
+
     var showBlockingLayoutView: Observable<Bool> {
         // Using Observable.merge because in the future we might have more cases where we show disable layout
         Observable.merge(shouldShowCommentStatus)
