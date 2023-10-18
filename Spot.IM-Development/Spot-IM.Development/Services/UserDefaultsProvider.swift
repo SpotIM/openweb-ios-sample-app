@@ -107,6 +107,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case languageStrategy = "languageStrategy"
         case localeStrategy = "localeStrategy"
         case openCommentId = "openCommentId"
+        case showLoginPrompt = "showLoginPrompt"
     }
 }
 
@@ -171,13 +172,15 @@ fileprivate extension UserDefaultsProvider.UDKey {
         case .fontGroupType:
             return "Key which stores general setting's font type"
         case .languageStrategy:
-                    return "Key which stores general setting's language strategy"
+            return "Key which stores general setting's language strategy"
         case .localeStrategy:
-                    return "Key which stores general setting's locale strategy"
+            return "Key which stores general setting's locale strategy"
         case .openCommentId:
-                    return "Key which stores comment thread setting's comment id to open"
+            return "Key which stores comment thread setting's comment id to open"
         case .elementsCustomizationStyleIndex:
-                    return "Key which stores general setting's elements customization style index"
+            return "Key which stores general setting's elements customization style index"
+        case .showLoginPrompt:
+            return "Key which stores general setting's shouw login prompt (if needed)"
         }
     }
 }
