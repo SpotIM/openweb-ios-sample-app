@@ -95,6 +95,7 @@ fileprivate extension OWReportedCommentsService {
     }
 
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
+        self.lock.lock(); defer { self.lock.unlock() }
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
     }
 
@@ -104,6 +105,7 @@ fileprivate extension OWReportedCommentsService {
             let keychain = self.servicesProvider.keychain()
 
             if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
+                self.lock.lock(); defer { self.lock.unlock() }
                 self._mapPostIdToReportedCommentIds = reportedCommentsMapper
             }
         }
