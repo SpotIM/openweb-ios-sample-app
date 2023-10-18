@@ -9,7 +9,9 @@
 import Foundation
 import RxSwift
 
-protocol OWLoginPromptViewModelingInputs { }
+protocol OWLoginPromptViewModelingInputs {
+    var loginPromptTap: PublishSubject<Void> { get }
+}
 
 protocol OWLoginPromptViewModelingOutputs {
     var shouldShowView: Observable<Bool> { get }
@@ -36,6 +38,8 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
         self.servicesProvider = servicesProvider
         self.shouldShow = shouldShow
         disposeBag = DisposeBag()
+
+        setupObservers()
     }
 
     var shouldShowView: Observable<Bool> {
@@ -53,5 +57,29 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
                 }
             }
             .startWith(false)
+    }
+
+    var loginPromptTap = PublishSubject<Void>()
+    fileprivate var _openLogin: Observable<Void> {
+        loginPromptTap
+            .asObservable()
+    }
+}
+
+fileprivate extension OWLoginPromptViewModel {
+    func setupObservers() {
+        _openLogin
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .loginPrompt)
+                    .voidify()
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .loginPrompt)
+                    .voidify()
+            }
+            .subscribe(onNext: { _ in return })
+            .disposed(by: disposeBag)
     }
 }
