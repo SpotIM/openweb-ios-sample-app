@@ -22,6 +22,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let throttleObserveTableViewDuration = 500
         static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
+        static let loginPromptVerticalPadding: CGFloat = 12
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -32,6 +33,15 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var articleDescriptionView: OWArticleDescriptionView = {
         return OWArticleDescriptionView(viewModel: self.viewModel.outputs.articleDescriptionViewModel)
             .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var loginPromptView: OWLoginPromptView = {
+        return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
+    }()
+
+    fileprivate lazy var loginPromptBottomDivider: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
 
     fileprivate lazy var conversationSummaryView: OWConversationSummaryView = {
@@ -107,6 +117,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         return dataSource
     }()
 
+    fileprivate var loginPromptTopConstraint: OWConstraint? = nil
+
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -148,17 +160,31 @@ fileprivate extension OWConversationView {
             }
         }
 
-        self.addSubview(conversationSummaryView)
-        conversationSummaryView.OWSnp.makeConstraints { make in
+        self.addSubview(loginPromptView)
+        loginPromptView.OWSnp.makeConstraints { make in
             if shouldShowArticleDescription {
-                make.top.equalTo(articleDescriptionView.OWSnp.bottom)
+                loginPromptTopConstraint = make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
             } else {
                 if shouldShowTitleHeader {
-                    make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
+                    loginPromptTopConstraint = make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
                 } else {
-                    make.top.equalToSuperview()
+                    loginPromptTopConstraint = make.top.equalToSuperview().offset(Metrics.loginPromptVerticalPadding).constraint
                 }
             }
+            make.centerX.equalToSuperview()
+        }
+        loginPromptTopConstraint?.isActive = true
+
+        self.addSubview(loginPromptBottomDivider)
+        loginPromptBottomDivider.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding)
+            make.height.equalTo(Metrics.separatorHeight)
+        }
+
+        self.addSubview(conversationSummaryView)
+        conversationSummaryView.OWSnp.makeConstraints { make in
+            make.top.equalTo(loginPromptBottomDivider.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
         }
 
@@ -255,6 +281,20 @@ fileprivate extension OWConversationView {
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
+        viewModel.outputs.loginPromptViewModel
+                .outputs.shouldShowView
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] shouldShow in
+                    guard let self = self,
+                          let topConstraint = self.loginPromptTopConstraint else { return }
+                    topConstraint.update(offset: shouldShow ? Metrics.loginPromptVerticalPadding : 0)
+                    self.loginPromptBottomDivider.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.loginPromptView.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptVerticalPadding : 0)
+                        make.height.equalTo(shouldShow ? Metrics.separatorHeight : 0)
+                    }
+                })
+                .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -263,6 +303,7 @@ fileprivate extension OWConversationView {
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
+                self.loginPromptBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
