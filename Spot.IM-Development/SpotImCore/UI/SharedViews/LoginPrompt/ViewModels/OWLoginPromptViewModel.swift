@@ -30,16 +30,20 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag: DisposeBag
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    fileprivate let shouldShow: Bool
+
+    init(shouldShow: Bool = true, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.shouldShow = shouldShow
         disposeBag = DisposeBag()
     }
 
     var shouldShowView: Observable<Bool> {
         servicesProvider.authenticationManager()
             .userAuthenticationStatus
-            .map { status in
-                guard OWManager.manager.authentication.shouldDisplayLoginPrompt == true
+            .map { [weak self] status in
+                guard self?.shouldShow == true,
+                      OWManager.manager.authentication.shouldDisplayLoginPrompt == true
                 else { return false }
                 switch status {
                 case .ssoLoggedIn:
