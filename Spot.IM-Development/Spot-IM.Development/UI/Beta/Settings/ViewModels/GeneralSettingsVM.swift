@@ -29,6 +29,7 @@ protocol GeneralSettingsViewModelingInputs {
     var languageStrategySelectedIndex: BehaviorSubject<Int> { get }
     var languageSelectedName: BehaviorSubject<String> { get }
     var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
+    var showLoginPromptSelected: BehaviorSubject<Bool> { get }
 }
 
 protocol GeneralSettingsViewModelingOutputs {
@@ -85,6 +86,9 @@ protocol GeneralSettingsViewModelingOutputs {
     var articleInformationStrategy: Observable<OWArticleInformationStrategy> { get }
     var articleInformationStrategyTitle: String { get }
     var articleInformationStrategySettings: [String] { get }
+
+    var showLoginPrompt: Observable<Bool> { get }
+    var showLoginPromptTitle: String { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -112,6 +116,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
     var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
     var localeStrategySelectedIndex = BehaviorSubject<Int>(value: OWLocaleStrategy.default.index)
+    var showLoginPromptSelected = BehaviorSubject<Bool>(value: false)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
@@ -148,6 +153,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var articleInformationStrategy: Observable<OWArticleInformationStrategy> {
         return userDefaultsProvider.values(key: .articleInformationStrategy, defaultValue: .server)
+    }
+
+    var showLoginPrompt: Observable<Bool> {
+        return userDefaultsProvider.values(key: .showLoginPrompt, defaultValue: false)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -315,6 +324,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     lazy var articleSectionTitle: String = {
         return NSLocalizedString("ArticleSection", comment: "")
+    }()
+
+    lazy var showLoginPromptTitle: String = {
+        return NSLocalizedString("ShowLoginPromptTitle", comment: "")
     }()
 
     lazy var readOnlySettings: [String] = {
@@ -577,6 +590,12 @@ fileprivate extension GeneralSettingsVM {
         localeStrategyObservable
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWLocaleStrategy>.localeStrategy))
+            .disposed(by: disposeBag)
+
+        showLoginPromptSelected
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<Bool>.showLoginPrompt))
             .disposed(by: disposeBag)
     }
 }

@@ -32,6 +32,7 @@ class GeneralSettingsView: UIView {
         static let segmentedLanguageStrategyIdentifier = "language_strategy"
         static let segmentedLocaleStrategyIdentifier = "locale_strategy"
         static let pickerLanguageCodeIdentifier = "language_code"
+        static let loginPromptSwitchIdentifier = "login_prompt"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -188,6 +189,12 @@ class GeneralSettingsView: UIView {
         return picker
     }()
 
+    fileprivate lazy var showLoginPromptSwitch: SwitchSetting = {
+        return SwitchSetting(
+            title: viewModel.outputs.showLoginPromptTitle,
+            accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
+    }()
+
     fileprivate let viewModel: GeneralSettingsViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -237,6 +244,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedLanguageStrategy)
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
+        stackView.addArrangedSubview(showLoginPromptSwitch)
     }
 
     // swiftlint:disable function_body_length
@@ -371,6 +379,14 @@ fileprivate extension GeneralSettingsView {
 
         segmentedLocaleStrategy.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.localeStrategySelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showLoginPrompt
+            .bind(to: showLoginPromptSwitch.rx.isOn)
+            .disposed(by: disposeBag)
+
+        showLoginPromptSwitch.rx.isOn
+            .bind(to: viewModel.inputs.showLoginPromptSelected)
             .disposed(by: disposeBag)
 
         viewModel.outputs.languageName
