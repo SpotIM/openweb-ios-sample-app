@@ -47,7 +47,7 @@ class OWLoginPromptView: UIView {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
-        
+
         return tap
     }()
 
