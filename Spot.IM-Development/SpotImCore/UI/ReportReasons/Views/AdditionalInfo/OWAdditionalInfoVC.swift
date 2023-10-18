@@ -36,6 +36,10 @@ class OWAdditionalInfoVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+    }
 }
 
 fileprivate extension OWAdditionalInfoVC {
