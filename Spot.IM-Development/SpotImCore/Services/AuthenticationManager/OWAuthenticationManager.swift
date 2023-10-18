@@ -311,6 +311,11 @@ extension OWAuthenticationManager {
                 self.update(userAvailability: .notAvailable)
                 self._userAuthenticationStatus.onNext(.notAutenticated)
             })
+            .flatMapLatest { [weak self] _ -> Observable<SPUser> in
+                guard let self = self else { return .empty() }
+                return self.retrieveNetworkNewUser()
+                    .take(1)
+            }
             .voidify()
     }
 
