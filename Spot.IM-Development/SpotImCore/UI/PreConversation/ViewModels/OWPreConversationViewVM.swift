@@ -108,7 +108,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     lazy var loginPromptVM: OWLoginPromptViewModeling = {
-        return OWLoginPromptViewModel()
+        return OWLoginPromptViewModel(shouldShow: preConversationStyle.isLoginPromptVisible)
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
