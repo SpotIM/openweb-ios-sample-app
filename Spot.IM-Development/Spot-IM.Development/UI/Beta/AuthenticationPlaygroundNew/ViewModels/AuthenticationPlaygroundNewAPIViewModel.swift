@@ -335,7 +335,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .flatMapLatest { [weak self] thirdPartySSO -> Observable<String> in
                 // 4. Perform SSO with token
                 guard let self = self else { return Observable.empty() }
-                return self.sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token) // TODO: propper mapping to provider
+                return self.sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
