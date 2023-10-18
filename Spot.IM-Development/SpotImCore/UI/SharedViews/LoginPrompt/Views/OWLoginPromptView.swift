@@ -41,6 +41,7 @@ class OWLoginPromptView: UIView {
             .wrapContent()
             .image(UIImage(spNamed: "loginPromptArrow", supportDarkMode: false)!)
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
@@ -72,6 +73,8 @@ class OWLoginPromptView: UIView {
 
 fileprivate extension OWLoginPromptView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+
         self.OWSnp.makeConstraints { make in
             zeroHeighConstraint = make.height.equalTo(0).constraint
         }
