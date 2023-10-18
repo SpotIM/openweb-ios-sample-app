@@ -43,6 +43,14 @@ class OWLoginPromptView: UIView {
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+        
+        return tap
+    }()
+
     fileprivate var zeroHeighConstraint: OWConstraint? = nil
 
     fileprivate var viewModel: OWLoginPromptViewModeling
@@ -101,6 +109,11 @@ fileprivate extension OWLoginPromptView {
                 .bind(to: constraint.rx.isActive)
                 .disposed(by: disposeBag)
         }
+
+        tapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.loginPromptTap)
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
