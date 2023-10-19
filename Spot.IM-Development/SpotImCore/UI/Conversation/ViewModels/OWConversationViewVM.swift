@@ -624,7 +624,7 @@ fileprivate extension OWConversationViewViewModel {
         return [OWConversationCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM, replies: Bool = false) -> [OWCommentPresentationData] {
+    func getCommentsPresentationData(from response: OWConversationReadRM, isLoadingMoreReplies: Bool = false) -> [OWCommentPresentationData] {
         guard let responseComments = response.conversation?.comments else { return [] }
 
         let comments: [OWComment] = Array(responseComments)
@@ -633,7 +633,7 @@ fileprivate extension OWConversationViewViewModel {
         var repliesPresentationData = [OWCommentPresentationData]()
 
         self.conversationPaginationOffset = response.conversation?.offset ?? 0
-        if !replies {
+        if !isLoadingMoreReplies {
             self.conversationHasNext = response.conversation?.hasNext ?? false
         }
 
@@ -1055,7 +1055,7 @@ fileprivate extension OWConversationViewViewModel {
                     if let response = response {
                         self.cacheConversationRead(response: response)
 
-                        presentationDataFromResponse = self.getCommentsPresentationData(from: response, replies: true)
+                        presentationDataFromResponse = self.getCommentsPresentationData(from: response, isLoadingMoreReplies: true)
 
                         // filter existing comments
                         presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
@@ -1370,7 +1370,6 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
-            .debug("*** willDisplayCell")
             .filter { _ in self.conversationHasNext }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
