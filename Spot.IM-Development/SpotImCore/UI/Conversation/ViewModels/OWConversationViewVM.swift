@@ -624,7 +624,7 @@ fileprivate extension OWConversationViewViewModel {
         return [OWConversationCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
+    func getCommentsPresentationData(from response: OWConversationReadRM, replies: Bool = false) -> [OWCommentPresentationData] {
         guard let responseComments = response.conversation?.comments else { return [] }
 
         let comments: [OWComment] = Array(responseComments)
@@ -633,7 +633,9 @@ fileprivate extension OWConversationViewViewModel {
         var repliesPresentationData = [OWCommentPresentationData]()
 
         self.conversationPaginationOffset = response.conversation?.offset ?? 0
-        self.conversationHasNext = response.conversation?.hasNext ?? false
+        if !replies {
+            self.conversationHasNext = response.conversation?.hasNext ?? false
+        }
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
@@ -1053,7 +1055,7 @@ fileprivate extension OWConversationViewViewModel {
                     if let response = response {
                         self.cacheConversationRead(response: response)
 
-                        presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                        presentationDataFromResponse = self.getCommentsPresentationData(from: response, replies: true)
 
                         // filter existing comments
                         presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
@@ -1368,6 +1370,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
+            .debug("*** willDisplayCell")
             .filter { _ in self.conversationHasNext }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
