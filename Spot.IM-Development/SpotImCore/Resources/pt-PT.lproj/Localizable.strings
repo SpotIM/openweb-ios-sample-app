@@ -53,6 +53,7 @@
 "CameraPermissionsAreNeeded" = "Permissões de câmera são necessários";
 "OpenSettings" = "Ir para Ajustes";
 "Edit" = "Editar";
+"Update" = "Atualizar";
 "Edited" = " (Editado)";
 "Recommend" = "Recomendar";
 "ViolatedPolicyCommentMessage" = "Esta postagem violou nossa política";
