@@ -80,7 +80,7 @@ final class SPCommentReplyHeaderView: SPBaseView {
     }
 
     private func setupReplyingLabel() {
-        replyingLabel.text = SPLocalizationManager.localizedString(key: "Replying to ")
+        replyingLabel.text = SPLocalizationManager.localizedString(key: "ReplyingTo")
         replyingLabel.font = UIFont.spPreferred(style: .regular, of: Theme.titleFontSize)
         replyingLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Theme.topOffset)
