@@ -15,7 +15,7 @@ internal protocol SPCommentsCreationDelegate: AnyObject {
     func editComment(with dataModel: SPMainConversationModel, to id: String)
 }
 
-final class SPMainConversationViewController: SPBaseConversationViewController, OWUserPresentable {
+final class SPMainConversationViewController: SPBaseConversationViewController, SPUserPresentable {
 
     enum ScrollingDirection {
         case up, down, `static`
@@ -68,7 +68,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var collapsableContainerMinHeight: CGFloat = 0.0
     private var collapsableContainerHeightConstraint: OWConstraint?
 
-    weak override var userAuthFlowDelegate: OWUserAuthFlowDelegate? {
+    weak override var userAuthFlowDelegate: SPUserAuthFlowDelegate? {
         didSet {
             self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
         }
@@ -755,7 +755,7 @@ extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
         showActionSheet(
-            title: SPLocalizationManager.localizedString(key: "Sort by").uppercased(),
+            title: SPLocalizationManager.localizedString(key: "SortBy").uppercased(),
             message: nil,
             actions: model.sortActions(),
             sender: sender)

@@ -18,9 +18,9 @@ enum HeaderMode {
     var title: String {
         switch(self) {
         case .add:
-            return SPLocalizationManager.localizedString(key: "Add a comment")
+            return SPLocalizationManager.localizedString(key: "AddComment")
         case .edit:
-            return SPLocalizationManager.localizedString(key: "Edit a comment")
+            return SPLocalizationManager.localizedString(key: "EditComment")
         }
     }
 }
@@ -163,7 +163,7 @@ final class SPCommentCreationNewHeaderView: SPBaseView {
     }
 
     private func setupReplyingLabel() {
-        replyingLabel.text = SPLocalizationManager.localizedString(key: "Replying to ")
+        replyingLabel.text = SPLocalizationManager.localizedString(key: "ReplyingTo")
         replyingLabel.font = UIFont.spPreferred(style: .regular, of: Theme.replyingToFontSize)
         replyingLabel.OWSnp.makeConstraints { make in
             replyingLabelTopConstraint = make.top.equalTo(separatorView.OWSnp.bottom).offset(Theme.replyingTopOffset).constraint

@@ -195,13 +195,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             let localizationKey: String
             let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
             if user.isMuted {
-                localizationKey = "This user is muted."
+                localizationKey = "MutedCommentMessage"
             } else if (model.reported && !isCurrentUserComment) {
-                localizationKey = "This message was reported."
+                localizationKey = "ReportedCommentMessage"
             } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
-                localizationKey = "This comment violated our policy."
+                localizationKey = "ViolatedPolicyCommentMessage"
             } else if model.deleted {
-                localizationKey = "This message was deleted."
+                localizationKey = "DeletedCommentMessage"
             } else {
                 return ""
             }

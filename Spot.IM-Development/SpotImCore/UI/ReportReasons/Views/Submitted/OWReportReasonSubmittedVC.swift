@@ -40,6 +40,10 @@ class OWReportReasonSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtoc
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+    }
 }
 
 fileprivate extension OWReportReasonSubmittedVC {

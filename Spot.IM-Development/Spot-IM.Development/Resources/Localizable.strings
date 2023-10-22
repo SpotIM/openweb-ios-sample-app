@@ -112,6 +112,7 @@
 "Style2" = "Style 2";
 "ArticleHeaderStyle" = "Article header style";
 "ArticleInformationStrategy" = "Article information strategy";
+"OrientationEnforcement" = "Orientation Enforcement";
 "Automation" = "Automation";
 "Fonts" = "Fonts";
 "UserInformation" = "User information";
@@ -127,3 +128,6 @@
 "VideoExample" = "Video example";
 "CommunityGuidelines" = "Community Guidelines";
 "ProfileTitle" = "Profile";
+"EnableAll" = "Enable All";
+"Landscape" = "Landscape";
+"Portrait" = "Portrait";

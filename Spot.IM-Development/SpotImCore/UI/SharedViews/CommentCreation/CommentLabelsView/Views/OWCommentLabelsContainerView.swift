@@ -93,6 +93,7 @@ fileprivate extension OWCommentLabelsContainerView {
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentLabelsTitle
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
                 self.titleLabel.text = title
@@ -101,6 +102,7 @@ fileprivate extension OWCommentLabelsContainerView {
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentLabelsViewModels
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] viewModels in
                 guard let self = self else { return }
                 // clean stackview if needed
