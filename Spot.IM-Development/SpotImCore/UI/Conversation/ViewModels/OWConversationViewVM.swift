@@ -79,6 +79,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
@@ -386,10 +387,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
-            .filter { [weak self] _ in
-                guard let self = self else { return false }
-                return self.dataSourceTransition == .animated
-            }
             .asObservable()
     }
 
@@ -1192,7 +1189,10 @@ fileprivate extension OWConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: conversationViewVMScheduler)
+            // This debounce makes sure performTableViewAnimation is done once per new
+            // cells that are loaded in new replies or new loaded comments
+            // fixes scroll jumps in the tableView
+            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: conversationViewVMScheduler)
             .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
