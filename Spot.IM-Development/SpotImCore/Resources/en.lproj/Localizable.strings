@@ -53,6 +53,7 @@
 "CameraPermissionsAreNeeded" = "Camera permissions are needed";
 "OpenSettings" = "Open settings";
 "Edit" = "Edit";
+"Update" = "Update";
 "Edited" = " (Edited)";
 "EditComment" = "Edit a comment";
 "Recommend" = "Recommend";
@@ -122,6 +123,7 @@
 "ClarityDetailsPendingSummary" = "We let registered users know as soon as their comment has been reviewed.";
 "ClarityDetailsRejectedTopParagraph" = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you.";
 "ViewNewComments" = "View %d new comments";
+"ViewNewComment" = "View %d new comment";
 "TypingNow" = "%d Typing now";
 "EditingComment" = "Editing comment"; // TODO: add to other languages
 "ErrorStateLoadConversationReplies" = "We are unable to load replies right now"; // TODO: add to other languages

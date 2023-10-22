@@ -53,6 +53,7 @@
 "CameraPermissionsAreNeeded" = "هناك حاجة إلى أذونات الكاميرا";
 "OpenSettings" = "أفتح الإعدادات";
 "Edit" = "يحرر";
+"Update" = "تحديث";
 "Edited" = " (تم تحريره)";
 "EditComment" = "تحرير تعليق";
 "Recommend" = "يوصي";
@@ -123,6 +124,7 @@
 "ClarityDetailsPendingSummary" = "نحن نقوم بإبلاغ المستخدمين المسجلين بمجرد مراجعة التعليق الخاص بهم.";
 "ClarityDetailsRejectedTopParagraph" = "من الواضح أن تعليقك قد خالف إرشادات مجتمعنا وبالتالي تم رفضه. سوف يكون مرئيًا لك فقط.";
 "ViewNewComments" = "عرض %d تعليقات جديدة";
+"ViewNewComment" = "عرض %d تعليق جديد";
 "TypingNow" = "يكتب الآن %d";
 
 // Old API
