@@ -53,6 +53,7 @@
 "CameraPermissionsAreNeeded" = "Camera permissions are needed";
 "OpenSettings" = "Open settings";
 "Edit" = "Edit";
+"Update" = "Update";
 "Edited" = " (Edited)";
 "EditComment" = "Edit a comment";
 "Recommend" = "Recommend";
