@@ -29,13 +29,11 @@ class OWRealtimeNewCommentsViewModel: OWRealtimeNewCommentsViewModeling,
     lazy var newCommentsText: Observable<String> = {
         return realtimeIndicatorService.realtimeIndicatorType
             .map { indicatorType -> String? in
-                let newCommentsString = OWLocalizationManager.shared.localizedString(key: "ViewNewComments")
-
                 switch indicatorType {
-                case .all(_, let newCommentsCount):
-                    return String(format: newCommentsString, newCommentsCount)
+                case .all(_, let newCommentsCount), .newComments(let newCommentsCount):
+                    let newCommentsStringKey = newCommentsCount > 1 ? "ViewNewComments" : "ViewNewComment"
+                    let newCommentsString = OWLocalizationManager.shared.localizedString(key: newCommentsStringKey)
 
-                case .newComments(let newCommentsCount):
                     return String(format: newCommentsString, newCommentsCount)
 
                 default:
