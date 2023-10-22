@@ -100,7 +100,7 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
                 }
 
                 if case .edit = self.commentCreationType {
-                    return OWLocalizationManager.shared.localizedString(key: "Edit")
+                    return OWLocalizationManager.shared.localizedString(key: "Update")
                 } else {
                     return OWLocalizationManager.shared.localizedString(key: "Post")
                 }
