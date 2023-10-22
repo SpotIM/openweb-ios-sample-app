@@ -102,7 +102,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readLess = NSAttributedString(
-            string: SPLocalizationManager.localizedString(key: "Read Less"),
+            string: SPLocalizationManager.localizedString(key: "ReadLess"),
             attributes: attribs)
 
         let mutableSelf = mutableCopy() as? NSMutableAttributedString

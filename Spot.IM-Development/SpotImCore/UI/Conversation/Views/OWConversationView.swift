@@ -211,6 +211,7 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
                 guard let self = self else { return }
                 self.commentingCTAView.OWSnp.updateConstraints { make in
@@ -248,6 +249,7 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowConversationEmptyState
+            .observe(on: MainScheduler.instance)
             .map { !$0 }
             .bind(to: conversationEmptyStateView.rx.isHidden)
             .disposed(by: disposeBag)
@@ -337,6 +339,7 @@ fileprivate extension OWConversationView {
             .filter { $0 }
             .voidify()
             .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.scrolledToTop)
             .disposed(by: disposeBag)
 
