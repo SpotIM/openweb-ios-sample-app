@@ -106,7 +106,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
         return Observable.combineLatest(commentCellsOptions, errorCellViewModels, serverCommentsLoadingState)
-            .observe(on: MainScheduler.instance)
+            .observe(on: commentThreadViewVMScheduler)
             .flatMapLatest({ [weak self] commentCellsOptions, errorCellViewModels, loadingState -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.never() }
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
@@ -117,15 +117,19 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                     return Observable.just(commentCellsOptions)
                 }
             })
+            .observe(on: MainScheduler.instance)
             .scan([], accumulator: { [weak self] previousCommentThreadCellsOptions, newCommentThreadCellsOptions in
                 guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
+                var commentThreadActionVmsMapper = [String: OWCommentThreadActionsCellViewModeling]()
 
                 previousCommentThreadCellsOptions.forEach { commentThreadCellOption in
                     switch commentThreadCellOption {
                     case .comment(let commentCellViewModel):
                         guard let commentId = commentCellViewModel.outputs.commentVM.outputs.comment.id else { return }
                         commentsVmsMapper[commentId] = commentCellViewModel
+                    case .commentThreadActions(let commentThreadActionCellViewModel):
+                        commentThreadActionVmsMapper[commentThreadActionCellViewModel.outputs.id] = commentThreadActionCellViewModel
                     default:
                         break
                     }
@@ -151,6 +155,15 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                         } else {
                             return commentThreadCellOptions
                         }
+                    case .commentThreadActions(let viewModel):
+                        if let commentThreadActionVm = commentThreadActionVmsMapper[viewModel.outputs.id] {
+                            if (ObjectIdentifier(viewModel.outputs.commentPresentationData) != ObjectIdentifier(commentThreadActionVm.outputs.commentPresentationData)) {
+                                commentThreadActionVm.inputs.update(commentPresentationData: viewModel.outputs.commentPresentationData)
+                            }
+                            return OWCommentThreadCellOption.commentThreadActions(viewModel: commentThreadActionVm)
+                        } else {
+                            return commentThreadCellOptions
+                        }
                     default:
                         return commentThreadCellOptions
                     }
@@ -158,6 +171,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
                 return adjustedNewCommentCellOptions
             })
+            .asObservable()
             .share(replay: 1)
     }()
 
@@ -410,6 +424,8 @@ fileprivate extension OWCommentThreadViewViewModel {
         if let responseUsers = response.conversation?.users {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
+        // cache reported comments in reported comments service
+        self.servicesProvider.reportedCommentsService().updateReportedComments(forConversationResponse: response, postId: self.postId)
     }
 }
 

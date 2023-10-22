@@ -19,6 +19,7 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
     fileprivate var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
     fileprivate var _languageStrategy: OWLanguageStrategy = OWLanguageStrategy.default
     fileprivate var _localeStrategy: OWLocaleStrategy = OWLocaleStrategy.default
+    fileprivate var _orientationEnforcement: OWOrientationEnforcement = OWOrientationEnforcement.enableAll
     fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
     init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared,
@@ -83,6 +84,16 @@ extension OWHelpersLayer {
             _localeStrategy = newLocaleStrategy
             localizationManager.changeLocale(strategy: newLocaleStrategy)
             sendEvent(for: .localeStrategy(strategy: newLocaleStrategy))
+        }
+    }
+
+    var orientationEnforcement: OWOrientationEnforcement {
+        get {
+            return _orientationEnforcement
+        }
+        set(newOrientationEnforcement) {
+            _orientationEnforcement = newOrientationEnforcement
+            sendEvent(for: .orientationEnforcement(enforcement: newOrientationEnforcement))
         }
     }
 }
