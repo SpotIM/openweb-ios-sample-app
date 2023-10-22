@@ -9,13 +9,13 @@
 import UIKit
 import RxSwift
 
-internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
+internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, SPUserAuthFlowDelegateContainable {
 
     fileprivate struct Metrics {
         static let tableViewBottomPadding: CGFloat = 78
     }
 
-    weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
+    weak var userAuthFlowDelegate: SPUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
 
     // If we are using inheritance let's at least take advantage of it, that's why not private
@@ -247,7 +247,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         var actionButtonTitle: String? = nil
         var action: EmptyActionDataModel.Action? = nil
         if (isReadOnlyModeEnabled()) {
-            actionMessage = SPLocalizationManager.localizedString(key: "Commenting on this article has ended")
+            actionMessage = SPLocalizationManager.localizedString(key: "CommentingReadOnlyMessage")
             actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon", supportDarkMode: true)!
         } else {
             actionMessage = SPLocalizationManager.localizedString(key: "Be the first to comment")
@@ -304,7 +304,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         let noInternetAction = configureNoInternetAction()
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
-                actionMessage: SPLocalizationManager.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
+                actionMessage: SPLocalizationManager.localizedString(key: "ConnectivityErrorMessage"),
                 actionIcon: UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!,
                 actionButtonTitle: SPLocalizationManager.localizedString(key: "Retry"),
                 action: noInternetAction
@@ -958,8 +958,8 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         let noAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
-            title: SPLocalizationManager.localizedString(key: "Delete Comment"),
-            message: SPLocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
+            title: SPLocalizationManager.localizedString(key: "DeleteCommentTitle"),
+            message: SPLocalizationManager.localizedString(key: "DeleteCommentMessage"),
             actions: [noAction, yesAction])
     }
 
@@ -1015,7 +1015,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                                      style: .default)
 
         showAlert(
-            title: SPLocalizationManager.localizedString(key: "Mute User"),
+            title: SPLocalizationManager.localizedString(key: "MuteUser"),
             message: SPLocalizationManager.localizedString(key: "MuteUserMessage"),
             actions: [muteAction, cancelAction])
     }
@@ -1050,10 +1050,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             style: .default) { _ in
                 UIPasteboard.general.string = messageText
         }
-        let gotItAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "Got it"),
+        let gotItAction = UIAlertAction(title: SPLocalizationManager.localizedString(key: "GotIt"),
                                         style: .default)
         showAlert(
-            title: SPLocalizationManager.localizedString(key: "This comment violated our policy."),
+            title: SPLocalizationManager.localizedString(key: "ViolatedPolicyCommentMessage"),
             message: SPLocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
             actions: [copyAction, gotItAction]
         )

@@ -1743,8 +1743,8 @@ fileprivate extension OWConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
-                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1835,7 +1835,7 @@ fileprivate extension OWConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
                         message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
