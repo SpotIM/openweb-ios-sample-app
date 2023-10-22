@@ -122,6 +122,7 @@
 "ClarityDetailsPendingSummary" = "Informamos a los usuarios registrados en cuanto sus comentarios se hayan revisado.";
 "ClarityDetailsRejectedTopParagraph" = "Parece que tu comentario incumple las normativas de nuestra comunidad y por ello ha sido rechazado. Solo tú podrás verlo.";
 "ViewNewComments" = "Ver %d Novos Comentários";
+"ViewNewComment" = "Ver %d nuevo comentario";
 "TypingNow" = "Typing now";
 
 // Old API

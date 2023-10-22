@@ -123,6 +123,7 @@
 "ClarityDetailsPendingSummary" = "Nous informons les utilisateurs enregistrés dès que leur commentaire a été examiné.";
 "ClarityDetailsRejectedTopParagraph" = "Votre commentaire semble violer les lignes directrices de notre communauté et a donc été rejeté. Il ne sera visible que par vous.";
 "ViewNewComments" = "Afficher %d nouveaux commentaires";
+"ViewNewComment" = "Afficher %d nouveau commentaire";
 "TypingNow" = "%d en train de taper";
 
 // Old API
