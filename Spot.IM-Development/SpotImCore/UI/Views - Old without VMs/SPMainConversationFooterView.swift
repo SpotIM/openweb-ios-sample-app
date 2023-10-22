@@ -113,7 +113,7 @@ final class SPMainConversationFooterView: SPBaseView {
         setupAccessibilityIdentifiers()
         readOnlyLabel.font = UIFont.spPreferred(style: .regular, of: Theme.fontSize)
         readOnlyLabel.textColor = .spForeground3
-        readOnlyLabel.text = SPLocalizationManager.localizedString(key: "Commenting on this article has ended")
+        readOnlyLabel.text = SPLocalizationManager.localizedString(key: "CommentingReadOnlyMessage")
 
         readOnlyLabel.OWSnp.makeConstraints { make in
             make.centerY.equalTo(commentCreationEntryView)

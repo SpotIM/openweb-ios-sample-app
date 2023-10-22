@@ -134,9 +134,9 @@ internal final class SPPreConversationFooter: SPBaseView {
 
             var title: String
             if SpotIm.buttonOnlyMode == .withTitle {
-                title = SPLocalizationManager.localizedString(key: "Post a Comment")
+                title = SPLocalizationManager.localizedString(key: "PostAComment")
             } else { // without title
-                title = SPLocalizationManager.localizedString(key: "Show Comments")
+                title = SPLocalizationManager.localizedString(key: "ShowComments")
                 if let commentsCount = showMoreCommentsButton.getCommentsCount() {
                     title += " (\(commentsCount))"
                 }
@@ -155,7 +155,7 @@ internal final class SPPreConversationFooter: SPBaseView {
             make.height.equalTo(1.0)
         }
 
-        let title = SPLocalizationManager.localizedString(key: "Show more comments")
+        let title = SPLocalizationManager.localizedString(key: "ShowMoreComments")
 
         showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
@@ -224,7 +224,7 @@ internal final class SPPreConversationFooter: SPBaseView {
     }
 
     private func setupAddSpotIMButton() {
-        let title = SPLocalizationManager.localizedString(key: "Powered by OpenWeb")
+        let title = SPLocalizationManager.localizedString(key: "PoweredByOpenWeb")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         // Intentionally using Open Sans font which we are using it in OpenWeb
