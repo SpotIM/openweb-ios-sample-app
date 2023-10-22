@@ -53,6 +53,7 @@
 "CameraPermissionsAreNeeded" = "هناك حاجة إلى أذونات الكاميرا";
 "OpenSettings" = "أفتح الإعدادات";
 "Edit" = "يحرر";
+"Update" = "تحديث";
 "Edited" = " (تم تحريره)";
 "EditComment" = "تحرير تعليق";
 "Recommend" = "يوصي";

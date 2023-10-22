@@ -53,6 +53,7 @@
 "CameraPermissionsAreNeeded" = "Autorisation d'accès à l'appareil photo requise";
 "OpenSettings" = "Ouvrir les paramètres";
 "Edit" = "Editer";
+"Update" = "Mettre à jour";
 "Edited" = " (Edité)";
 "EditComment" = "Editer un commentaire";
 "Recommend" = "Recommander";
