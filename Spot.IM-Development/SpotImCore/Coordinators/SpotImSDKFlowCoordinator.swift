@@ -688,7 +688,7 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
 }
 
-extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
+extension SpotImSDKFlowCoordinator: SPUserAuthFlowDelegate {
     func presentAuth() {
         if let loginDelegate = self.loginDelegate {
             if let tag = self.navigationController?.view.tag,
