@@ -43,7 +43,7 @@ internal class OWPreConversationFooterView: UIView {
         return UIImageView(image: UIImage(spNamed: "OpenWeb-logo", supportDarkMode: true))
     }()
     private lazy var poweredByOWButton: UIButton = {
-        let btn = OWLocalizationManager.shared.localizedString(key: "Powered by")
+        let btn = OWLocalizationManager.shared.localizedString(key: "PoweredBy")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .metaText))

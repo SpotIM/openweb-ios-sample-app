@@ -1,5 +1,5 @@
 //
-//  UserFlowPresentable.swift
+//  SPUserFlowPresentable.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/30/19.
@@ -8,25 +8,25 @@
 
 import UIKit
 
-protocol OWUserAuthFlowDelegateContainable: AnyObject {
+protocol SPUserAuthFlowDelegateContainable: AnyObject {
 
-    var userAuthFlowDelegate: OWUserAuthFlowDelegate? { get set }
+    var userAuthFlowDelegate: SPUserAuthFlowDelegate? { get set }
 
 }
 
-protocol OWUserAuthFlowDelegate: AnyObject {
+protocol SPUserAuthFlowDelegate: AnyObject {
     func presentAuth()
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
-protocol OWUserPresentable: AnyObject {
+protocol SPUserPresentable: AnyObject {
 
     var userIcon: SPBaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.
     func setupUserIconHandler()
 }
 
-extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & OWUserAuthFlowDelegateContainable {
+extension SPUserPresentable where Self: UIViewController & OWAlertPresentable & SPUserAuthFlowDelegateContainable {
 
     func updateUserIcon(image: UIImage) {
         let scale = UIScreen.main.scale

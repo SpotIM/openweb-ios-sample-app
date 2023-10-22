@@ -82,9 +82,9 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     var titleText: Observable<String> {
         switch commentCreationData.commentCreationType {
         case .edit:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "Edit a comment"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "EditComment"))
         default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "Add a comment"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "AddComment"))
         }
     }
 
@@ -108,7 +108,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
               let displayName = user.displayName
         else { return .empty() }
 
-        let attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+        let attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
 
         let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
         let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)

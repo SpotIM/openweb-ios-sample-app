@@ -158,6 +158,6 @@ extension SPAvatarView {
         onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image
-        avatarButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "Profile image")
+        avatarButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "ProfileImage")
     }
 }
