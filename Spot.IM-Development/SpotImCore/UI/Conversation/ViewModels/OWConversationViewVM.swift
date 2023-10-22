@@ -387,6 +387,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.dataSourceTransition == .animated
+            }
             .asObservable()
     }
 
@@ -1343,6 +1347,7 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
+                self.dataSourceTransition = .animated
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
