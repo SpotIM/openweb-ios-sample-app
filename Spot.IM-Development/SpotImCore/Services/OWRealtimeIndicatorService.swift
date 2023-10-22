@@ -64,8 +64,8 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
 
     fileprivate var newCommentsObservable: Observable<[OWComment]> {
         return realtimeService.realtimeData
-            .map { [weak self] realtimeData -> [OWComment]? in
-                guard let self = self else { return nil }
+            .withLatestFrom(isRealtimeIndicatorEnabled) { realtimeData, isEnabled -> [OWComment]? in
+                guard isEnabled else { return nil }
                 return realtimeData.data?.newComments(forPostId: self.postId)
             }
             .unwrap()

@@ -171,4 +171,5 @@
 "clarityDetailsPendingSummary" = "نحن نقوم بإبلاغ المستخدمين المسجلين بمجرد مراجعة التعليق الخاص بهم.";
 "clarityDetailsRejectedTopParagraph" = "من الواضح أن تعليقك قد خالف إرشادات مجتمعنا وبالتالي تم رفضه. سوف يكون مرئيًا لك فقط.";
 "ViewNewComments" = "عرض %d تعليقات جديدة";
+"ViewNewComment" = "عرض %d تعليق جديد";
 "TypingNow" = "يكتب الآن %d";
