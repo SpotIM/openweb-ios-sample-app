@@ -17,6 +17,7 @@ enum OWCommentThreadActionType {
 
 protocol OWCommentThreadActionsViewModelingInputs {
     var tap: PublishSubject<Void> { get }
+    var updateActionType: BehaviorSubject<OWCommentThreadActionType> { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
@@ -36,10 +37,18 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var inputs: OWCommentThreadActionsViewModelingInputs { return self }
     var outputs: OWCommentThreadActionsViewModelingOutputs { return self }
 
+    fileprivate let disposeBag = DisposeBag()
+
     var tap = PublishSubject<Void>()
     var tapOutput: Observable<Void> {
         tap.asObservable()
     }
+
+    var updateActionType = BehaviorSubject<OWCommentThreadActionType>(value: .collapseThread)
+    fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
+        return updateActionType
+            .asObservable()
+    }()
 
     fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
     var updateSpacing: Observable<CGFloat> {
@@ -50,29 +59,15 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     }
 
     let commentId: String
+    fileprivate let spacing: CGFloat
 
     init(with type: OWCommentThreadActionType,
          commentId: String,
          spacing: CGFloat) {
         self.commentId = commentId
-        switch type {
-        case .collapseThread:
-            _actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "Collapse thread"))
-            _disclosureTransform.onNext(.identity)
-            _updateSpacing.onNext(0)
-
-        case .viewMoreReplies(count: let count):
-            let repliesString = count > 1 ? OWLocalizationManager.shared.localizedString(key: "View x replies") : OWLocalizationManager.shared.localizedString(key: "View x reply")
-            _actionLabelText.onNext(String(format: repliesString, count))
-            _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
-            _updateSpacing.onNext(spacing)
-
-        case .viewMoreRepliesRange(from: let from, to: let to):
-            let repliesString = OWLocalizationManager.shared.localizedString(key: "View x of x replies")
-            _actionLabelText.onNext(String(format: repliesString, from, to))
-            _disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
-            _updateSpacing.onNext(spacing)
-        }
+        self.spacing = spacing
+        self.setupObservers()
+        self.updateActionType.onNext(type)
     }
 
     let _actionLabelText = BehaviorSubject<String?>(value: nil)
@@ -87,5 +82,36 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
         _disclosureTransform
             .unwrap()
             .asObservable()
+    }
+}
+
+fileprivate extension OWCommentThreadActionsViewModel {
+    func setupObservers() {
+        updatedType
+            .subscribe { [weak self] type in
+                guard let self = self else { return }
+                switch type {
+                case .collapseThread:
+                    self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "CollapseThread"))
+                    self._disclosureTransform.onNext(.identity)
+                    self._updateSpacing.onNext(0)
+
+                case .viewMoreReplies(count: let count):
+                    let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
+                    let singleReplyString = OWLocalizationManager.shared.localizedString(key: "ViewSingleReplyFormat")
+
+                    let repliesString = count > 1 ? multipleRepliesString : singleReplyString
+                    self._actionLabelText.onNext(String(format: repliesString, count))
+                    self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                    self._updateSpacing.onNext(self.spacing)
+
+                case .viewMoreRepliesRange(from: let from, to: let to):
+                    let repliesString = OWLocalizationManager.shared.localizedString(key: "ViewPartOfRepliesFormat")
+                    self._actionLabelText.onNext(String(format: repliesString, from, to))
+                    self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                    self._updateSpacing.onNext(self.spacing)
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }

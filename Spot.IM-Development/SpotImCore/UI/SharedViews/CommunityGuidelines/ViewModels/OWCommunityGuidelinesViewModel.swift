@@ -41,8 +41,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                                       OWCommunityGuidelinesViewModelingOutputs {
 
     struct Metrics {
-        static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "Read our")
-        static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "Community Guidelines").lowercased()
+        static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "ReadOur")
+        static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "CommunityGuidelines").lowercased()
     }
 
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }

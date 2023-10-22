@@ -117,13 +117,13 @@ class SPUserNameViewModel: SPUserNameViewModeling,
                 guard model.isHiddenComment() else { return "" }
                 let localizationKey: String
                 if (model.isCommentAuthorMuted) {
-                    localizationKey = "This user is muted."
+                    localizationKey = "MutedCommentMessage"
                 } else if (model.isReported) {
-                    localizationKey = "This message was reported."
+                    localizationKey = "ReportedCommentMessage"
                 } else if (model.status == .block || model.status == .reject) {
-                    localizationKey = "This comment violated our policy."
+                    localizationKey = "ViolatedPolicyCommentMessage"
                 } else {
-                    localizationKey = "This message was deleted."
+                    localizationKey = "DeletedCommentMessage"
                 }
                 return SPLocalizationManager.localizedString(key: localizationKey)
             }

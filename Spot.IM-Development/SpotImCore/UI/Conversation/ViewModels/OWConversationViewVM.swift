@@ -157,7 +157,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return viewableMode == .independent
     }
 
-    fileprivate var paginationOffset = 0
+    fileprivate var conversationPaginationOffset = 0
+    fileprivate var conversationHasNext = false
 
     fileprivate var articleUrl: String = ""
 
@@ -318,6 +319,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     return Observable.just(communityCellsOptions + commentCellsOptions + loadingCell + errorLoadingMoreCell)
                 }
             })
+            .observe(on: MainScheduler.instance)
             .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
                 guard let self = self else { return [] }
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
@@ -456,7 +458,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var pullToRefresh = PublishSubject<Void>()
     fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
         return pullToRefresh
-            .map { OWLoadingTriggeredReason.pullToRefresh }
+            .withLatestFrom(shouldShowErrorLoadingComments)
+            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
+                }
+            })
+            .map { _ -> OWLoadingTriggeredReason in
+                OWLoadingTriggeredReason.pullToRefresh
+            }
             .asObservable()
     }()
 
@@ -620,7 +636,7 @@ fileprivate extension OWConversationViewViewModel {
         return [OWConversationCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
+    func getCommentsPresentationData(from response: OWConversationReadRM, isLoadingMoreReplies: Bool = false) -> [OWCommentPresentationData] {
         guard let responseComments = response.conversation?.comments else { return [] }
 
         let comments: [OWComment] = Array(responseComments)
@@ -628,7 +644,10 @@ fileprivate extension OWConversationViewViewModel {
         var commentsPresentationData = [OWCommentPresentationData]()
         var repliesPresentationData = [OWCommentPresentationData]()
 
-        self.paginationOffset = response.conversation?.offset ?? 0
+        self.conversationPaginationOffset = response.conversation?.offset ?? 0
+        if !isLoadingMoreReplies {
+            self.conversationHasNext = response.conversation?.hasNext ?? false
+        }
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
@@ -716,6 +735,8 @@ fileprivate extension OWConversationViewViewModel {
         if let responseUsers = response.conversation?.users {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
+        // cache reported comments in reported comments service
+        self.servicesProvider.reportedCommentsService().updateReportedComments(forConversationResponse: response, postId: self.postId)
     }
 }
 
@@ -723,14 +744,6 @@ fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
-
-        // Subscribing to start realtime service
-        viewInitialized
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
@@ -746,6 +759,14 @@ fileprivate extension OWConversationViewViewModel {
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: conversationViewVMScheduler)
             .asObservable()
+
+        // Subscribing to start realtime service
+        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+            })
+            .disposed(by: disposeBag)
 
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
@@ -1046,7 +1067,7 @@ fileprivate extension OWConversationViewViewModel {
                     if let response = response {
                         self.cacheConversationRead(response: response)
 
-                        presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                        presentationDataFromResponse = self.getCommentsPresentationData(from: response, isLoadingMoreReplies: true)
 
                         // filter existing comments
                         presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
@@ -1361,6 +1382,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
+            .filter { _ in self.conversationHasNext }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
             .map { (willDisplayCellEvent, _) -> Int in
@@ -1382,12 +1404,12 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.sendEvent(for: .loadMoreComments(paginationOffset: self.paginationOffset))
+                self.sendEvent(for: .loadMoreComments(paginationOffset: self.conversationPaginationOffset))
             })
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._isLoadingMoreComments.onNext(true)
-                self._loadMoreComments.onNext(self.paginationOffset)
+                self._loadMoreComments.onNext(self.conversationPaginationOffset)
             })
             .disposed(by: disposeBag)
 
@@ -1769,8 +1791,8 @@ fileprivate extension OWConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
-                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1861,7 +1883,7 @@ fileprivate extension OWConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
                         message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
