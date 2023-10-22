@@ -123,6 +123,7 @@
 "ClarityDetailsPendingSummary" = "אנו מודיעים למשתמשים הרשומים ברגע שההערה שלהם נבדקת.";
 "RlarityDetailsRejectedTopParagraph" = "נראה שההערה שלך מפירה את הנחיות הקהילה שלנו ולכן נדחתה. זה יהיה גלוי רק לך.";
 "ViewNewComments" = "הצגת %d תגובות חדשות";
+"ViewNewComment" = "הצגת %d תגובה חדשה";
 "TypingNow" = "מקלידים עכשיו %d";
 
 // Old API
