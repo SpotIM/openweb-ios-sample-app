@@ -14,6 +14,7 @@ fileprivate typealias OWReportedCommentIds = Set<OWCommentId>
 protocol OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment
     func updateCommentReportedSuccessfully(commentId: OWCommentId, postId: OWPostId)
+    func updateReportedComments(forConversationResponse conversationResponse: OWConversationReadRM, postId: OWPostId)
     var commentJustReported: Observable<OWCommentId> { get }
 
     func cleanCache()
@@ -25,8 +26,14 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
     fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
 
+    // Multiple threads / queues access to this class
+    // Avoiding "data race" by using a lock
+    fileprivate let lock: OWLock = OWUnfairLock()
+    fileprivate let queue = DispatchQueue(label: "OpenWebSDKReportedCommentsService", qos: .utility)
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        loadPersistence()
     }
 
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment {
@@ -43,18 +50,30 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
         _commentJustReported.onNext(commentId)
     }
 
+    func updateReportedComments(forConversationResponse conversationResponse: OWConversationReadRM, postId: OWPostId) {
+        if let reported = conversationResponse.reportedComments {
+            let reportedArray = Array(reported.keys)
+            set(reportedCommentIds: reportedArray, postId: postId)
+        }
+    }
+
     var commentJustReported: Observable<OWCommentId> {
         return _commentJustReported
             .share()
     }
 
     func cleanCache() {
+        self.lock.lock(); defer { self.lock.unlock() }
+
         self._mapPostIdToReportedCommentIds.removeAll()
+        savePersistant()
     }
 }
 
 fileprivate extension OWReportedCommentsService {
     func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
+        self.lock.lock(); defer { self.lock.unlock() }
+
         if let existingCommentIdsForPostId = _mapPostIdToReportedCommentIds[postId] {
             // merge and replacing current comments
             _mapPostIdToReportedCommentIds[postId] = existingCommentIdsForPostId.union(ids)
@@ -62,6 +81,7 @@ fileprivate extension OWReportedCommentsService {
             _mapPostIdToReportedCommentIds[postId] = Set(ids)
         }
         updateCommentsService(with: ids, postId: postId)
+        savePersistant()
     }
 
     func updateCommentsService(with reportedCommentIds: [OWCommentId], postId: OWPostId) {
@@ -75,6 +95,28 @@ fileprivate extension OWReportedCommentsService {
     }
 
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
+        self.lock.lock(); defer { self.lock.unlock() }
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
+    }
+
+    func loadPersistence() {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            let keychain = self.servicesProvider.keychain()
+
+            if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
+                self.lock.lock(); defer { self.lock.unlock() }
+                self._mapPostIdToReportedCommentIds = reportedCommentsMapper
+            }
+        }
+    }
+
+    func savePersistant() {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            let keychain = self.servicesProvider.keychain()
+
+            keychain.save(value: self._mapPostIdToReportedCommentIds, forKey: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments)
+        }
     }
 }

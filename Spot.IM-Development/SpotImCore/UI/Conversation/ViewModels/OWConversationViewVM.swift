@@ -450,7 +450,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var pullToRefresh = PublishSubject<Void>()
     fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
         return pullToRefresh
-            .map { OWLoadingTriggeredReason.pullToRefresh }
+            .withLatestFrom(shouldShowErrorLoadingComments)
+            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
+                }
+            })
+            .map { _ -> OWLoadingTriggeredReason in
+                OWLoadingTriggeredReason.pullToRefresh
+            }
             .asObservable()
     }()
 
@@ -610,7 +624,7 @@ fileprivate extension OWConversationViewViewModel {
         return [OWConversationCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
+    func getCommentsPresentationData(from response: OWConversationReadRM, isLoadingMoreReplies: Bool = false) -> [OWCommentPresentationData] {
         guard let responseComments = response.conversation?.comments else { return [] }
 
         let comments: [OWComment] = Array(responseComments)
@@ -619,7 +633,9 @@ fileprivate extension OWConversationViewViewModel {
         var repliesPresentationData = [OWCommentPresentationData]()
 
         self.conversationPaginationOffset = response.conversation?.offset ?? 0
-        self.conversationHasNext = response.conversation?.hasNext ?? false
+        if !isLoadingMoreReplies {
+            self.conversationHasNext = response.conversation?.hasNext ?? false
+        }
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
@@ -707,6 +723,8 @@ fileprivate extension OWConversationViewViewModel {
         if let responseUsers = response.conversation?.users {
             self.servicesProvider.usersService().set(users: responseUsers)
         }
+        // cache reported comments in reported comments service
+        self.servicesProvider.reportedCommentsService().updateReportedComments(forConversationResponse: response, postId: self.postId)
     }
 }
 
@@ -714,14 +732,6 @@ fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
-
-        // Subscribing to start realtime service
-        viewInitialized
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
-            })
-            .disposed(by: disposeBag)
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
@@ -737,6 +747,14 @@ fileprivate extension OWConversationViewViewModel {
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: conversationViewVMScheduler)
             .asObservable()
+
+        // Subscribing to start realtime service
+        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
+            })
+            .disposed(by: disposeBag)
 
         // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
@@ -1037,7 +1055,7 @@ fileprivate extension OWConversationViewViewModel {
                     if let response = response {
                         self.cacheConversationRead(response: response)
 
-                        presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                        presentationDataFromResponse = self.getCommentsPresentationData(from: response, isLoadingMoreReplies: true)
 
                         // filter existing comments
                         presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
