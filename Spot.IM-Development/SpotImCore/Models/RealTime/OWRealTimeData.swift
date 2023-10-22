@@ -51,10 +51,10 @@ extension OWRealTimeData {
     }
 
     func totalCommentsCount(forPostId postId: OWPostId) -> Int {
-        let commentsCounter = commentsCount(forPostId: postId)
+        let rootCommentsCounter = rootCommentsCount(forPostId: postId)
         let repliesCounter = repliesCount(forPostId: postId)
 
-        return commentsCounter + repliesCounter
+        return rootCommentsCounter + repliesCounter
     }
 
     func repliesCount(forPostId postId: OWPostId) -> Int {
@@ -63,13 +63,13 @@ extension OWRealTimeData {
         return conversationCountMessages[conversationId]?.first?.replies ?? 0
     }
 
-    func commentsCount(forPostId postId: OWPostId) -> Int {
+    func rootCommentsCount(forPostId postId: OWPostId) -> Int {
         let conversationId = self.getConversationId(forPostId: postId)
 
         return conversationCountMessages[conversationId]?.first?.comments ?? 0
     }
 
-    func totalTypingCount(forPostId postId: OWPostId) -> Int {
+    func rootCommentsTypingCount(forPostId postId: OWPostId) -> Int {
         let conversationId = self.getConversationId(forPostId: postId)
         guard let typingCountDataArray = conversationTypingV2Users[conversationId] else { return 0 }
 

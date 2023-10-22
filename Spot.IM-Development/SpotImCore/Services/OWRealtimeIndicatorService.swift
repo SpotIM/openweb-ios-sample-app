@@ -54,7 +54,7 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
         return realtimeService.realtimeData
             .map { [weak self] realtimeData -> Int? in
                 guard let self = self else { return nil }
-                return realtimeData.data?.totalTypingCount(forPostId: self.postId)
+                return realtimeData.data?.rootCommentsTypingCount(forPostId: self.postId)
             }
             .unwrap()
             .distinctUntilChanged()
