@@ -35,6 +35,10 @@ class OWWebTabVC: UIViewController {
         super.loadView()
         setupUI()
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+    }
 }
 
 fileprivate extension OWWebTabVC {

@@ -101,7 +101,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var placeholderText: Observable<String> {
         switch commentCreationType {
         case .replyToComment:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "Type your reply…"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "TypeYourReply"))
         default:
             return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
         }

@@ -108,6 +108,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case localeStrategy = "localeStrategy"
         case openCommentId = "openCommentId"
         case showLoginPrompt = "showLoginPrompt"
+        case orientationEnforcement = "orientationEnforcement"
     }
 }
 
@@ -181,6 +182,10 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores general setting's elements customization style index"
         case .showLoginPrompt:
             return "Key which stores general setting's show login prompt (if needed)"
+        case .orientationEnforcement:
+            return "Key wich stores general setting's orientation enforcement"
+        case .elementsCustomizationStyleIndex:
+            return "Key which stores general setting's elements customization style index"
         }
     }
 }

@@ -195,6 +195,15 @@ class GeneralSettingsView: UIView {
             accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
     }()
 
+    fileprivate lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
+        let title = viewModel.outputs.orientationEnforcementTitle
+        let items = viewModel.outputs.orientationEnforcementSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
+                                       items: items)
+    }()
+
     fileprivate let viewModel: GeneralSettingsViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -245,6 +254,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
         stackView.addArrangedSubview(showLoginPromptSwitch)
+        stackView.addArrangedSubview(segmentedOrientationEnforcement)
     }
 
     // swiftlint:disable function_body_length
@@ -257,6 +267,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.articleInformationStrategy
             .map { $0.index }
             .bind(to: segmentedArticleInformationStrategy.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.orientationEnforcement
+            .map { $0.index }
+            .bind(to: segmentedOrientationEnforcement.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.elementsCustomizationStyleIndex
@@ -311,6 +326,11 @@ fileprivate extension GeneralSettingsView {
         segmentedArticleInformationStrategy.rx.selectedSegmentIndex
             .map { OWArticleInformationStrategy.articleInformationStrategy(fromIndex: $0) }
             .bind(to: viewModel.inputs.articleInformationSelectedStrategy)
+            .disposed(by: disposeBag)
+
+        segmentedOrientationEnforcement.rx.selectedSegmentIndex
+            .map { OWOrientationEnforcement.orientationEnforcement(fromIndex: $0) }
+            .bind(to: viewModel.inputs.orientationSelectedEnforcement)
             .disposed(by: disposeBag)
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex

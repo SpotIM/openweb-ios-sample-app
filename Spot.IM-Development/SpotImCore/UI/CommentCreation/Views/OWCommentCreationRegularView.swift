@@ -27,7 +27,7 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(typography: .bodyText))
-            .text(OWLocalizationManager.shared.localizedString(key: "Commenting on"))
+            .text(OWLocalizationManager.shared.localizedString(key: "CommentingOn"))
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .numberOfLines(1)
             .enforceSemanticAttribute()

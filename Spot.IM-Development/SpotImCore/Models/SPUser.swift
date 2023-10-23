@@ -73,7 +73,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
         if isAdmin || isSuperAdmin || isModerator || isJournalist {
             return SPLocalizationManager.localizedString(key: "Staff")
         } else if isCommunityModerator {
-            return SPLocalizationManager.localizedString(key: "Community Moderator")
+            return SPLocalizationManager.localizedString(key: "CommunityModerator")
         } else {
             return nil
         }

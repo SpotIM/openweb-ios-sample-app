@@ -19,8 +19,8 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
 class SPCommentCreationViewController: SPBaseViewController,
                                        OWAlertPresentable,
                                        OWLoaderPresentable,
-                                       OWUserAuthFlowDelegateContainable,
-                                       OWUserPresentable {
+                                       SPUserAuthFlowDelegateContainable,
+                                       SPUserPresentable {
     fileprivate struct Metrics {
         static let identifier = "comment_reply_view_id"
         static let activityIndicatorIdentifier = "comment_reply_view_activity_indicator_id"
@@ -31,7 +31,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         static let replyCounterTrailingOffset = 16.0
         static let replyCounterHeight = 24.0
     }
-    weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
+    weak var userAuthFlowDelegate: SPUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: OWAuthenticationHandler?
     private var model: SPCommentCreationModel
@@ -444,7 +444,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             }
 
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
-            commentingOnLabel.text = SPLocalizationManager.localizedString(key: "Commenting on")
+            commentingOnLabel.text = SPLocalizationManager.localizedString(key: "CommentingOn")
         } else {
             let commentHeaderText = getHeaderTitleBasedOnUserFlow()
             commentingOnLabel.text = commentHeaderText
@@ -469,7 +469,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         topContainerView.addSubview(closeButton)
 
         commentingOnLabel.font = UIFont.spPreferred(style: .regular, of: 16.0)
-        commentingOnLabel.text = SPLocalizationManager.localizedString(key: "Commenting on")
+        commentingOnLabel.text = SPLocalizationManager.localizedString(key: "CommentingOn")
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()
 
@@ -760,7 +760,7 @@ extension SPCommentCreationViewController {
         let postButtonTitle: String
         let action: SPCommentFooterView.PostButtonAction
         if self.signupToPostButtonIsActive() {
-            postButtonTitle = SPLocalizationManager.localizedString(key: "Sign Up to Post")
+            postButtonTitle = SPLocalizationManager.localizedString(key: "SignUpToPost")
             action = presentAuth
         } else if self.model.isInEditMode() {
             postButtonTitle = SPLocalizationManager.localizedString(key: "Edit")

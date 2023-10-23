@@ -311,6 +311,11 @@ extension OWAuthenticationManager {
                 self.update(userAvailability: .notAvailable)
                 self._userAuthenticationStatus.onNext(.notAutenticated)
             })
+            .flatMapLatest { [weak self] _ -> Observable<SPUser> in
+                guard let self = self else { return .empty() }
+                return self.retrieveNetworkNewUser()
+                    .take(1)
+            }
             .voidify()
     }
 
@@ -533,7 +538,7 @@ fileprivate extension OWAuthenticationManager {
         case .commenting:
             return levelAccordingToRegistration
         case .mutingUser:
-            return levelAccordingToRegistration
+            return .loggedIn
         case .votingComment:
             return allowGuestsToLike ? .guest : .loggedIn
         case .reportingComment:
