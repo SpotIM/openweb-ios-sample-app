@@ -553,6 +553,8 @@ fileprivate extension OWAuthenticationManager {
             return .guest
         case .viewingSelfProfile:
             return levelAccordingToRegistration
+        case .loginPrompt:
+            return .loggedIn
         }
     }
 
