@@ -178,8 +178,6 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores general setting's locale strategy"
         case .openCommentId:
             return "Key which stores comment thread setting's comment id to open"
-        case .elementsCustomizationStyleIndex:
-            return "Key which stores general setting's elements customization style index"
         case .showLoginPrompt:
             return "Key which stores general setting's show login prompt (if needed)"
         case .orientationEnforcement:
