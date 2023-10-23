@@ -27,7 +27,7 @@ class OWLoginPromptView: UIView {
     fileprivate lazy var label: UILabel = {
         return UILabel()
             .attributedText(
-                "Authorize to participate" // TODO: translations
+                OWLocalizationManager.shared.localizedString(key: "LoginPromptTitle")
                     .attributedString
                     .underline(1)
             )

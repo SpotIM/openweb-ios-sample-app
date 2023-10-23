@@ -172,3 +172,4 @@
 "clarityDetailsRejectedTopParagraph" = "Parece que tu comentario incumple las normativas de nuestra comunidad y por ello ha sido rechazado. Solo tú podrás verlo.";
 "ViewNewComments" = "Ver %d Novos Comentários";
 "TypingNow" = "Typing now";
+"LoginPromptTitle" = "Autorizar para participar";
