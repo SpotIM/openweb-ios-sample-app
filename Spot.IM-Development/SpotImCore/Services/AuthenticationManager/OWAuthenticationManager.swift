@@ -538,7 +538,7 @@ fileprivate extension OWAuthenticationManager {
         case .commenting:
             return levelAccordingToRegistration
         case .mutingUser:
-            return levelAccordingToRegistration
+            return .loggedIn
         case .votingComment:
             return allowGuestsToLike ? .guest : .loggedIn
         case .reportingComment:
