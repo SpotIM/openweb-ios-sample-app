@@ -177,3 +177,4 @@
 "clarityDetailsRejectedTopParagraph" = "Your comment seems to be in breach of our community guidelines and was therefore rejected. It will only be visible to you.";
 "ViewNewComments" = "View %d new comments";
 "TypingNow" = "%d Typing now";
+"LoginPromptTitle" = "Authorize to participate";

@@ -172,3 +172,4 @@
 "clarityDetailsRejectedTopParagraph" = "من الواضح أن تعليقك قد خالف إرشادات مجتمعنا وبالتالي تم رفضه. سوف يكون مرئيًا لك فقط.";
 "ViewNewComments" = "عرض %d تعليقات جديدة";
 "TypingNow" = "يكتب الآن %d";
+"LoginPromptTitle" = "السماح بالمشاركة";
