@@ -32,11 +32,11 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag: DisposeBag
 
-    fileprivate let shouldShow: Bool
+    fileprivate let isFeatureEnabled: Bool
 
-    init(shouldShow: Bool = true, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(isFeatureEnabled: Bool = true, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
-        self.shouldShow = shouldShow
+        self.isFeatureEnabled = isFeatureEnabled
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -46,11 +46,11 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
         servicesProvider.authenticationManager()
             .userAuthenticationStatus
             .map { [weak self] status in
-                guard self?.shouldShow == true,
+                guard self?.isFeatureEnabled == true,
                       OWManager.manager.authentication.shouldDisplayLoginPrompt == true
                 else { return false }
                 switch status {
-                case .ssoLoggedIn:
+                case .ssoLoggedIn, .ssoRecovering, .ssoRecoveredSuccessfully:
                     return false
                 default:
                     return true
