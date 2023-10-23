@@ -483,7 +483,7 @@ fileprivate extension OWPreConversationViewViewModel {
         conversationFetchedObservable
             .filter { [weak self] _ in
                 guard let self = self else { return false }
-                let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly]
+                let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly, .ctaWithSummary()]
                 let isNonTableViewStyle = stylesWithoutTableView.contains(self.preConversationStyle)
                 return !isNonTableViewStyle
             }
