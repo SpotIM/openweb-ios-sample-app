@@ -488,9 +488,7 @@ fileprivate extension OWPreConversationViewViewModel {
         conversationFetchedObservable
             .filter { [weak self] _ in
                 guard let self = self else { return false }
-                let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly]
-                let isNonTableViewStyle = stylesWithoutTableView.contains(self.preConversationStyle)
-                return !isNonTableViewStyle
+                return !self.isNonTableViewStyle(self.preConversationStyle)
             }
             .subscribe(onNext: { [weak self] response in
                 guard
@@ -1151,6 +1149,15 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func isNonTableViewStyle(_ style: OWPreConversationStyle) -> Bool {
+        switch style {
+        case .compact, .ctaButtonOnly, .ctaWithSummary:
+            return true
+        default:
+            return false
+        }
+    }
 
     func populateInitialUI() {
         if !self.isCompactMode {
