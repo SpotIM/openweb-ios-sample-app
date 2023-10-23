@@ -98,7 +98,7 @@ extension OWPreConversationStyle {
         }
     }
 
-    var isLoginPromptVisible: Bool {
+    var isLoginPromptEnabled: Bool {
         switch self {
         case .ctaButtonOnly, .compact:
             return false

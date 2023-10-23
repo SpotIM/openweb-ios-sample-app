@@ -180,7 +180,7 @@ fileprivate extension UserDefaultsProvider.UDKey {
         case .elementsCustomizationStyleIndex:
             return "Key which stores general setting's elements customization style index"
         case .showLoginPrompt:
-            return "Key which stores general setting's shouw login prompt (if needed)"
+            return "Key which stores general setting's show login prompt (if needed)"
         }
     }
 }
