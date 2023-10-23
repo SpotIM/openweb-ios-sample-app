@@ -78,7 +78,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     lazy var titleAttributedString: Observable<NSAttributedString> = {
-        let commentingOnText = OWLocalizationManager.shared.localizedString(key: "Commenting on")
+        let commentingOnText = OWLocalizationManager.shared.localizedString(key: "CommentingOn")
 
         var replyToComment: OWComment? = nil
         switch commentCreationData.commentCreationType {
@@ -99,7 +99,7 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
               let displayName = user.displayName
         else { return Observable.just(NSAttributedString(string: commentingOnText)) }
 
-        var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+        var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
 
         let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
         let boldUserNameString = NSMutableAttributedString(string: displayName, attributes: attrs)

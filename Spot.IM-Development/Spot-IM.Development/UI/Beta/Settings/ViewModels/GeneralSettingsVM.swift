@@ -15,6 +15,7 @@ import SpotImCore
 protocol GeneralSettingsViewModelingInputs {
     var articleHeaderSelectedStyle: BehaviorSubject<OWArticleHeaderStyle> { get }
     var articleInformationSelectedStrategy: BehaviorSubject<OWArticleInformationStrategy> { get }
+    var orientationSelectedEnforcement: BehaviorSubject<OWOrientationEnforcement> { get }
     var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
@@ -89,6 +90,10 @@ protocol GeneralSettingsViewModelingOutputs {
 
     var showLoginPrompt: Observable<Bool> { get }
     var showLoginPromptTitle: String { get }
+
+    var orientationEnforcement: Observable<OWOrientationEnforcement> { get }
+    var orientationEnforcementTitle: String { get }
+    var orientationEnforcementSettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -102,6 +107,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var articleHeaderSelectedStyle = BehaviorSubject<OWArticleHeaderStyle>(value: OWArticleHeaderStyle.default)
     var articleInformationSelectedStrategy = BehaviorSubject<OWArticleInformationStrategy>(value: .default)
+    var orientationSelectedEnforcement = BehaviorSubject<OWOrientationEnforcement>(value: .default)
     var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
@@ -157,6 +163,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var showLoginPrompt: Observable<Bool> {
         return userDefaultsProvider.values(key: .showLoginPrompt, defaultValue: false)
+    }
+
+    var orientationEnforcement: Observable<OWOrientationEnforcement> {
+        return userDefaultsProvider.values(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
     }
 
     var readOnlyModeIndex: Observable<Int> {
@@ -310,6 +320,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("ArticleInformationStrategy", comment: "")
     }()
 
+    lazy var orientationEnforcementTitle: String = {
+        return NSLocalizedString("OrientationEnforcement", comment: "")
+    }()
+
     lazy var elementsCustomizationStyleTitle: String = {
         return NSLocalizedString("ElementsCustomizationStyle", comment: "")
     }()
@@ -362,6 +376,14 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _local = NSLocalizedString("Local", comment: "")
 
         return [_server, _local]
+    }()
+
+    lazy var orientationEnforcementSettings: [String] = {
+        let _enableAll = NSLocalizedString("EnableAll", comment: "")
+        let _portrait = NSLocalizedString("Portrait", comment: "")
+        let _landscape = NSLocalizedString("Landscape", comment: "")
+
+        return [_enableAll, _portrait, _landscape]
     }()
 
     lazy var elementsCustomizationStyleSettings: [String] = {
@@ -489,6 +511,12 @@ fileprivate extension GeneralSettingsVM {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
                 .setValues(key: UserDefaultsProvider.UDKey<OWArticleInformationStrategy>.articleInformationStrategy))
+            .disposed(by: disposeBag)
+
+        orientationSelectedEnforcement
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWOrientationEnforcement>.orientationEnforcement))
             .disposed(by: disposeBag)
 
         elementsCustomizationStyleSelectedIndex

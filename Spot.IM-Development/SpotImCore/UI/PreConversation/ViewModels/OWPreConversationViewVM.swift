@@ -181,20 +181,20 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnlyObservable, isEmpty) { count, style, isReadOnly, isEmpty in
             switch(style) {
             case .regular, .custom:
-                return OWLocalizationManager.shared.localizedString(key: "Show more comments")
+                return OWLocalizationManager.shared.localizedString(key: "ShowMoreComments")
             case .compact:
                 return nil
             case .ctaButtonOnly:
                 if isEmpty {
-                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "PostAComment")
                 } else {
-                    return OWLocalizationManager.shared.localizedString(key: "Show Comments") + " \(count)"
+                    return OWLocalizationManager.shared.localizedString(key: "ShowComments") + " \(count)"
                 }
             case .ctaWithSummary:
                 if !isEmpty {
-                    return OWLocalizationManager.shared.localizedString(key: "Show Comments")
+                    return OWLocalizationManager.shared.localizedString(key: "ShowComments")
                 } else if !isReadOnly {
-                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "PostAComment")
                 }
             }
             return nil
@@ -959,8 +959,8 @@ fileprivate extension OWPreConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
-                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentAlertMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1043,7 +1043,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
                         message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
