@@ -46,7 +46,7 @@ extension Date {
         case (_, let day, _, _, _)      where day > 0:      return "\(day)" + SPLocalizationManager.localizedString(key: "Days")
         case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)" + SPLocalizationManager.localizedString(key: "Hours")
         case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)" + SPLocalizationManager.localizedString(key: "Minutes")
-        case (_, _, _, _, let second)   where second >= 0:  return SPLocalizationManager.localizedString(key: "Just now")
+        case (_, _, _, _, let second)   where second >= 0:  return SPLocalizationManager.localizedString(key: "JustNow")
         default:                                            return formatDate()
         }
     }

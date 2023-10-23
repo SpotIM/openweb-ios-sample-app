@@ -30,7 +30,7 @@ public extension Date {
         case (_, let day, _, _, _)      where day > 0:      return "\(day)d ago"
         case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)h ago"
         case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)m ago"
-        case (_, _, _, _, let second)   where second > 0:   return "Just now"
+        case (_, _, _, _, let second)   where second > 0:   return "JustNow"
         default:                                            return formatDate()
         }
     }

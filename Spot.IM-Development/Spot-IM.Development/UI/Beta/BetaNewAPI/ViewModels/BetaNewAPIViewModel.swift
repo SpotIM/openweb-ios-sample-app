@@ -271,8 +271,10 @@ fileprivate extension BetaNewAPIViewModel {
         var helpers = OpenWeb.manager.helpers
         helpers.languageStrategy = UserDefaultsProvider.shared.get(key: .languageStrategy, defaultValue: OWLanguageStrategy.default)
         helpers.localeStrategy = UserDefaultsProvider.shared.get(key: .localeStrategy, defaultValue: OWLocaleStrategy.default)
+        helpers.orientationEnforcement = UserDefaultsProvider.shared.get(key: .orientationEnforcement, defaultValue: OWOrientationEnforcement.default)
         var authentication = OpenWeb.manager.authentication
         authentication.shouldDisplayLoginPrompt = UserDefaultsProvider.shared.get(key: .showLoginPrompt, defaultValue: false)
+
         ElementsCustomizationCreatorService.addElementsCustomization()
         setupBICallaback()
     }
