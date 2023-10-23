@@ -164,16 +164,13 @@ fileprivate extension OWConversationView {
         loginPromptView.OWSnp.makeConstraints { make in
             if shouldShowArticleDescription {
                 loginPromptTopConstraint = make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
+            } else if shouldShowTitleHeader {
+                loginPromptTopConstraint = make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
             } else {
-                if shouldShowTitleHeader {
-                    loginPromptTopConstraint = make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
-                } else {
-                    loginPromptTopConstraint = make.top.equalToSuperview().offset(Metrics.loginPromptVerticalPadding).constraint
-                }
+                loginPromptTopConstraint = make.top.equalToSuperview().offset(Metrics.loginPromptVerticalPadding).constraint
             }
             make.centerX.equalToSuperview()
         }
-        loginPromptTopConstraint?.isActive = true
 
         self.addSubview(loginPromptBottomDivider)
         loginPromptBottomDivider.OWSnp.makeConstraints { make in
