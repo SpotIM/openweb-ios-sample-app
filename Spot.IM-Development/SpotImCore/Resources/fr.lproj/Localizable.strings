@@ -173,3 +173,4 @@
 "clarityDetailsRejectedTopParagraph" = "Votre commentaire semble violer les lignes directrices de notre communauté et a donc été rejeté. Il ne sera visible que par vous.";
 "ViewNewComments" = "Afficher %d nouveaux commentaires";
 "TypingNow" = "%d en train de taper";
+"LoginPromptTitle" = "Autoriser à participer";

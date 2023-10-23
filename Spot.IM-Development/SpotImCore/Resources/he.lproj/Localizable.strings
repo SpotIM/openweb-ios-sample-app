@@ -173,3 +173,4 @@
 "clarityDetailsRejectedTopParagraph" = "נראה שההערה שלך מפירה את הנחיות הקהילה שלנו ולכן נדחתה. זה יהיה גלוי רק לך.";
 "ViewNewComments" = "הצגת %d תגובות חדשות";
 "TypingNow" = "מקלידים עכשיו %d";
+"LoginPromptTitle" = "מורשה להשתתף";
