@@ -126,6 +126,7 @@
 "ViewNewComments" = "Afficher %d nouveaux commentaires";
 "ViewNewComment" = "Afficher %d nouveau commentaire";
 "TypingNow" = "%d en train de taper";
+"LoginPromptTitle" = "Autoriser à participer";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";

@@ -125,6 +125,7 @@
 "ViewNewComments" = "View %d new comments";
 "ViewNewComment" = "View %d new comment";
 "TypingNow" = "%d Typing now";
+"LoginPromptTitle" = "Authorize to participate";
 "EditingComment" = "Editing comment"; // TODO: add to other languages
 "ErrorStateLoadConversationReplies" = "We are unable to load replies right now"; // TODO: add to other languages
 "ErrorStateLoadConversationComments" = "We are unable to load comments right now"; // TODO: add to other languages
