@@ -142,8 +142,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             }
     }
 
+    lazy var resetTypeToNewCommentChangedWithText = resetTypeToNewCommentChanged
+        .withLatestFrom(textViewVM.outputs.textViewText)
+        .asObservable()
+
     var ctaEnabled: Observable<Bool> {
-        textViewVM.outputs.textViewText
+        Observable.merge(textViewVM.outputs.textViewText, resetTypeToNewCommentChangedWithText)
             .map { text -> Bool in
                 if case .edit(comment: let comment) = self.commentType,
                    let commentText = comment.text?.text,
