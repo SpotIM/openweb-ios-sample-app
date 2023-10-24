@@ -343,10 +343,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             let updatedCommentVm = viewModel.outputs.commentVM
 
                             if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
-                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
                             }
                             if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
-                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
                             }
                             if (updatedCommentVm.outputs.activeUserId != commentVm.outputs.activeUserId) {
                                 commentVm.inputs.update(activeUserId: updatedCommentVm.outputs.activeUserId)
