@@ -72,9 +72,6 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var tryAgainText: NSAttributedString = {
         let tryAgainText = OWLocalizationManager.shared.localizedString(key: "TryAgain")
         var attributedString = NSMutableAttributedString(string: tryAgainText)
-        attributedString.addAttribute(.foregroundColor,
-                                      value: UIColor.brandColor,
-                                         range: NSRange(location: 0, length: attributedString.length))
         attributedString.addAttribute(.font,
                                       value: OWFontBook.shared.font(typography: .bodyInteraction, forceOpenWebFont: false),
                                          range: NSRange(location: 0, length: attributedString.length))
