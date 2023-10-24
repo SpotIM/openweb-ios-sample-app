@@ -68,7 +68,7 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
-    fileprivate var currentActiveUserId = BehaviorSubject<String?>(value: nil)
+    fileprivate var _currentActiveUserId = BehaviorSubject<String?>(value: nil)
 
     var heightChanged: Observable<Void> {
         Observable.merge(
@@ -78,7 +78,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, currentActiveUserId) { [weak self] status, activeUserId in
+        Observable.combineLatest(commentStatusVM.outputs.status, _currentActiveUserId) { [weak self] status, activeUserId in
             guard let self = self,
                   let commentUserId = self.comment.userId,
                   activeUserId == commentUserId
@@ -115,7 +115,8 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     func update(activeUserId: String?) {
         self.activeUserId = activeUserId
-        currentActiveUserId.onNext(activeUserId)
+        _currentActiveUserId.onNext(activeUserId)
+        commentHeaderVM.inputs.update(activeUserId: activeUserId)
     }
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -129,7 +130,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         comment = data.comment
         user = data.user
         activeUserId = data.activeUserId
-        currentActiveUserId.onNext(data.activeUserId)
+        _currentActiveUserId.onNext(data.activeUserId)
         dictateCommentContentVisibility()
     }
 
