@@ -14,7 +14,6 @@ import UIKit
 protocol OWCommentViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
-    func update(activeUserId: String?)
 }
 
 protocol OWCommentViewModelingOutputs {
@@ -32,7 +31,6 @@ protocol OWCommentViewModelingOutputs {
 
     var comment: OWComment { get }
     var user: SPUser { get }
-    var activeUserId: String? { get }
 }
 
 protocol OWCommentViewModeling {
@@ -47,6 +45,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
 
+    fileprivate let disposedBag = DisposeBag()
     fileprivate let sharedServiceProvider: OWSharedServicesProviding
 
     lazy var commentActionsVM: OWCommentActionsViewModeling = {
@@ -68,7 +67,20 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
-    fileprivate var _currentActiveUserId = BehaviorSubject<String?>(value: nil)
+    fileprivate var _isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
+    fileprivate var _currentUser: Observable<SPUser?> {
+        sharedServiceProvider
+            .authenticationManager()
+            .activeUserAvailability
+            .map { availability in
+                switch availability {
+                case .notAvailable:
+                    return nil
+                case .user(let user):
+                    return user
+                }
+            }
+    }
 
     var heightChanged: Observable<Void> {
         Observable.merge(
@@ -78,11 +90,8 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, _currentActiveUserId) { [weak self] status, activeUserId in
-            guard let self = self,
-                  let commentUserId = self.comment.userId,
-                  activeUserId == commentUserId
-            else { return false }
+        Observable.combineLatest(commentStatusVM.outputs.status, _isCommentOfActiveUser) { status, isCommentOfActiveUser in
+            guard isCommentOfActiveUser else { return false }
 
             return status != .none
         }
@@ -113,12 +122,6 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentHeaderVM.inputs.update(user: user)
     }
 
-    func update(activeUserId: String?) {
-        self.activeUserId = activeUserId
-        _currentActiveUserId.onNext(activeUserId)
-        commentHeaderVM.inputs.update(activeUserId: activeUserId)
-    }
-
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         let status = OWCommentStatusType.commentStatus(from: data.comment.status)
@@ -129,9 +132,8 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
         user = data.user
-        activeUserId = data.activeUserId
-        _currentActiveUserId.onNext(data.activeUserId)
         dictateCommentContentVisibility()
+        setupObservers()
     }
 
     init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -143,6 +145,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentStatusVM = OWCommentStatusViewModel(status: .none)
         comment = OWComment()
         user = SPUser()
+        setupObservers()
     }
 }
 
@@ -153,5 +156,22 @@ fileprivate extension OWCommentViewModel {
             self.comment.reported // reported
 
         self._shouldHideCommentContent.onNext(shouldHide)
+    }
+}
+
+fileprivate extension OWCommentViewModel {
+    func setupObservers() {
+        _currentUser
+            .map { [weak self] user -> Bool in
+                guard let self = self, let user = user else { return false }
+                return user.userId == self.comment.userId
+            }
+            .observe(on: MainScheduler.instance)
+            .bind(to: _isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        _isCommentOfActiveUser
+            .bind(to: commentHeaderVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
     }
 }

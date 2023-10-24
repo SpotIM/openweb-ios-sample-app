@@ -345,20 +345,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate var isEmpty = BehaviorSubject<Bool>(value: false)
 
-    fileprivate var currentActiveUserId: Observable<String?> {
-        servicesProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user.id
-                }
-            }
-    }
-
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
@@ -469,7 +455,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Creating the cells VMs for the pre conversation
         // Do so only for designs which requiring a table view
-        Observable.combineLatest(conversationFetchedObservable, self.currentActiveUserId)
+        conversationFetchedObservable
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly]
@@ -477,7 +463,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 return !isNonTableViewStyle
             }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] response, currentActiveUserId in
+            .subscribe(onNext: { [weak self] response in
                 guard
                     let self = self,
                     let responseComments = response.conversation?.comments,
@@ -511,8 +497,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                        section: self.preConversationData.article.additionalSettings.section,
-                        activeUserId: currentActiveUserId
+                        section: self.preConversationData.article.additionalSettings.section
                     ))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
@@ -784,9 +769,8 @@ fileprivate extension OWPreConversationViewViewModel {
         self.servicesProvider.commentUpdaterService()
             .getUpdatedComments(for: postId)
             .withLatestFrom(commentCellsVmsObservable) { ($0, $1) }
-            .withLatestFrom(self.currentActiveUserId) { ($0.0, $0.1, $1) }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] updateType, commentCellsVms, currentActiveUserId in
+            .subscribe(onNext: { [weak self] updateType, commentCellsVms in
                 guard let self = self else { return }
                 switch updateType {
                 case .insert(let comments):
@@ -799,8 +783,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             user: user,
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                            section: self.preConversationData.article.additionalSettings.section,
-                            activeUserId: currentActiveUserId
+                            section: self.preConversationData.article.additionalSettings.section
                         ))
                     }.unwrap()
                     var viewModels = self._cellsViewModels
