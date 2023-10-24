@@ -23,11 +23,18 @@ enum OWReportReasonType: String, Codable {
 }
 
 extension OWReportReasonType {
+    private var localizationKey: String {
+        return rawValue
+            .split(separator: "_")
+            .map { String($0).capitalized }
+            .joined()
+    }
+
     var localizedTitle: String {
-        return OWLocalizationManager.shared.localizedString(key: "\(self.rawValue)_title")
+        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)Title")
     }
 
     var localizedSubtitle: String {
-        return OWLocalizationManager.shared.localizedString(key: "\(self.rawValue)_subtitle")
+        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)Subtitle")
     }
 }

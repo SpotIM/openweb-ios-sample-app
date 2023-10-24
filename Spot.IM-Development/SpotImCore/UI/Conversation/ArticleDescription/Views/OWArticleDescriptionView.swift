@@ -28,7 +28,7 @@ class OWArticleDescriptionView: UIView {
 
     fileprivate lazy var topSeparatorView: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var conversationImageView: UIImageView = {
@@ -67,7 +67,7 @@ class OWArticleDescriptionView: UIView {
 
     fileprivate lazy var bottomSeparatorView: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
@@ -186,9 +186,9 @@ fileprivate extension OWArticleDescriptionView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                                                   themeStyle: currentStyle))
-                self.bottomSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                self.bottomSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                                                   themeStyle: currentStyle))
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)

@@ -24,6 +24,7 @@ protocol OWPreConversationViewViewModelingInputs {
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
+    var loginPromptVM: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
@@ -106,6 +107,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
     }()
 
+    lazy var loginPromptVM: OWLoginPromptViewModeling = {
+        return OWLoginPromptViewModel(isFeatureEnabled: preConversationStyle.isLoginPromptEnabled)
+    }()
+
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
         return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle)
     }()
@@ -176,20 +181,20 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         Observable.combineLatest(commentsCountObservable, preConversationStyleObservable, isReadOnlyObservable, isEmpty) { count, style, isReadOnly, isEmpty in
             switch(style) {
             case .regular, .custom:
-                return OWLocalizationManager.shared.localizedString(key: "Show more comments")
+                return OWLocalizationManager.shared.localizedString(key: "ShowMoreComments")
             case .compact:
                 return nil
             case .ctaButtonOnly:
                 if isEmpty {
-                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "PostAComment")
                 } else {
-                    return OWLocalizationManager.shared.localizedString(key: "Show Comments") + " \(count)"
+                    return OWLocalizationManager.shared.localizedString(key: "ShowComments") + " \(count)"
                 }
             case .ctaWithSummary:
                 if !isEmpty {
-                    return OWLocalizationManager.shared.localizedString(key: "Show Comments")
+                    return OWLocalizationManager.shared.localizedString(key: "ShowComments")
                 } else if !isReadOnly {
-                    return OWLocalizationManager.shared.localizedString(key: "Post a Comment")
+                    return OWLocalizationManager.shared.localizedString(key: "PostAComment")
                 }
             }
             return nil
@@ -458,9 +463,7 @@ fileprivate extension OWPreConversationViewViewModel {
         conversationFetchedObservable
             .filter { [weak self] _ in
                 guard let self = self else { return false }
-                let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly]
-                let isNonTableViewStyle = stylesWithoutTableView.contains(self.preConversationStyle)
-                return !isNonTableViewStyle
+                return !self.isNonTableViewStyle(self.preConversationStyle)
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
@@ -929,8 +932,8 @@ fileprivate extension OWPreConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
-                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentAlertMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1013,7 +1016,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
                         message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
@@ -1121,6 +1124,15 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func isNonTableViewStyle(_ style: OWPreConversationStyle) -> Bool {
+        switch style {
+        case .compact, .ctaButtonOnly, .ctaWithSummary:
+            return true
+        default:
+            return false
+        }
+    }
 
     func populateInitialUI() {
         if !self.isCompactMode {

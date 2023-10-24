@@ -93,7 +93,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
                 ]
                 return self.servicesProvider.presenterService()
-                    .showAlert(title: OWLocalizationManager.shared.localizedString(key: "Close editor?"), message: "", actions: actions, viewableMode: self.viewableMode)
+                    .showAlert(title: OWLocalizationManager.shared.localizedString(key: "CloseEditor"), message: "", actions: actions, viewableMode: self.viewableMode)
                     .flatMap { [weak self] result -> Observable<Void> in
                         guard let self = self else { return .empty() }
                         switch result {

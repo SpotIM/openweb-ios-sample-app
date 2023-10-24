@@ -38,6 +38,7 @@ protocol OWConversationViewViewModelingOutputs {
 
     var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling { get }
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
+    var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
     var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModel { get }
@@ -79,6 +80,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
+        static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
@@ -219,6 +221,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     lazy var articleDescriptionViewModel: OWArticleDescriptionViewModeling = {
         return OWArticleDescriptionViewModel()
+    }()
+
+    lazy var loginPromptViewModel: OWLoginPromptViewModeling = {
+        return OWLoginPromptViewModel()
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -624,7 +630,7 @@ fileprivate extension OWConversationViewViewModel {
         return [OWConversationCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
-    func getCommentsPresentationData(from response: OWConversationReadRM) -> [OWCommentPresentationData] {
+    func getCommentsPresentationData(from response: OWConversationReadRM, isLoadingMoreReplies: Bool = false) -> [OWCommentPresentationData] {
         guard let responseComments = response.conversation?.comments else { return [] }
 
         let comments: [OWComment] = Array(responseComments)
@@ -633,7 +639,9 @@ fileprivate extension OWConversationViewViewModel {
         var repliesPresentationData = [OWCommentPresentationData]()
 
         self.conversationPaginationOffset = response.conversation?.offset ?? 0
-        self.conversationHasNext = response.conversation?.hasNext ?? false
+        if !isLoadingMoreReplies {
+            self.conversationHasNext = response.conversation?.hasNext ?? false
+        }
 
         for comment in comments {
             guard let commentId = comment.id else { continue }
@@ -1053,7 +1061,7 @@ fileprivate extension OWConversationViewViewModel {
                     if let response = response {
                         self.cacheConversationRead(response: response)
 
-                        presentationDataFromResponse = self.getCommentsPresentationData(from: response)
+                        presentationDataFromResponse = self.getCommentsPresentationData(from: response, isLoadingMoreReplies: true)
 
                         // filter existing comments
                         presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
@@ -1188,7 +1196,10 @@ fileprivate extension OWConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: conversationViewVMScheduler)
+            // This debounce makes sure performTableViewAnimation is done once per new
+            // cells that are loaded in new replies or new loaded comments
+            // fixes scroll jumps in the tableView
+            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: conversationViewVMScheduler)
             .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
@@ -1339,6 +1350,7 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
+                self.dataSourceTransition = .animated
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
@@ -1757,8 +1769,8 @@ fileprivate extension OWConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
-                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1849,7 +1861,7 @@ fileprivate extension OWConversationViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
                         message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
