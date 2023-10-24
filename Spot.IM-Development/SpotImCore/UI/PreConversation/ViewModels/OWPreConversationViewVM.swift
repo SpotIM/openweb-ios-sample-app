@@ -30,6 +30,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
+    var errorStateViewModel: OWErrorStateViewViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -39,6 +40,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowCommentingCTAView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTAButton: Observable<Bool> { get }
+    var shouldShowErrorLoadingComments: Observable<Bool> { get }
     var shouldShowFooter: Observable<Bool> { get }
     var shouldShowComapactView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
@@ -129,6 +131,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
         return OWPreConversationFooterViewModel()
+    }()
+
+    lazy var errorStateViewModel: OWErrorStateViewViewModeling = {
+        return OWErrorStateViewViewModel(errorStateType: .loadConversationComments)
     }()
 
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
@@ -281,14 +287,22 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var shouldShowComments: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isEmpty) { style, isEmpty in
+        Observable.combineLatest(preConversationStyleObservable, isEmpty, shouldShowErrorLoadingComments) { style, isEmpty, isError in
             switch(style) {
             case .regular, .custom:
-                return !isEmpty
+                return !isEmpty && !isError
             case .compact, .ctaWithSummary, .ctaButtonOnly:
                 return false
             }
         }
+        .observe(on: MainScheduler.instance)
+    }
+
+    fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorLoadingComments: Observable<Bool> {
+        return _shouldShowErrorLoadingComments
+            .asObservable()
+            .share(replay: 1)
     }
 
     var shouldShowComapactView: Bool {
@@ -468,13 +482,16 @@ fileprivate extension OWPreConversationViewViewModel {
                 return conversationReadObservable
                     .take(1)
             }
-            .map { event -> OWConversationReadRM? in
+            .map { [weak self] event -> OWConversationReadRM? in
+                guard let self = self else { return nil }
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    self._shouldShowErrorLoadingComments.onNext(false)
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    self._shouldShowErrorLoadingComments.onNext(true)
                     return nil
                 default:
                     return nil
