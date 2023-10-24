@@ -16,7 +16,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         static let navBarTitleFadeDuration = 0.3
         static let floatingOverNavBarOffset: CGFloat = -100
     }
-
+    fileprivate weak var dismissNavigationController: UINavigationController?
     fileprivate let viewModel: OWCommentCreationViewModeling
     let disposeBag = DisposeBag()
 
@@ -81,7 +81,14 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        // If modalPresentationStyle is pageSheet and animated by pulling down the VC
+        // we want to bring back the navigation bar after the VC is dismissed
+        // Fixes navigation bar showing over title bar.
+        if modalPresentationStyle == .pageSheet && animated {
+            dismissNavigationController = navigationController
+        } else {
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
 
         if case .floatingKeyboard = viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
             // Fix navigation title flicker
@@ -95,6 +102,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         floatingNavigationBarOverlayButton.removeFromSuperview()
+        dismissNavigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
