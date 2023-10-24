@@ -85,10 +85,11 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     fileprivate lazy var commentCellsOptions: Observable<[OWCommentThreadCellOption]> = {
-        return Observable.combineLatest(_commentsPresentationData.rx_elements(), self.currentActiveUserId)
-            .flatMapLatest({ [weak self] commentsPresentationData, currentActiveUserId -> Observable<[OWCommentThreadCellOption]> in
+        return _commentsPresentationData
+            .rx_elements()
+            .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.never() }
-                return Observable.just(self.getCells(for: commentsPresentationData, currentActiveUserId: currentActiveUserId))
+                return Observable.just(self.getCells(for: commentsPresentationData))
             })
             .asObservable()
     }()
@@ -149,9 +150,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                             }
                             if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
                                 commentVm.inputs.update(user: updatedCommentVm.outputs.user)
-                            }
-                            if (updatedCommentVm.outputs.activeUserId != commentVm.outputs.activeUserId) {
-                                commentVm.inputs.update(activeUserId: updatedCommentVm.outputs.activeUserId)
                             }
                             return OWCommentThreadCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -270,20 +268,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    fileprivate var currentActiveUserId: Observable<String?> {
-        servicesProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user.id
-                }
-            }
-    }
-
     var dataSourceTransition: OWViewTransition = .reload
 
     init (commentThreadData: OWCommentThreadRequiredData,
@@ -301,11 +285,11 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 }
 
 fileprivate extension OWCommentThreadViewViewModel {
-    func getCells(for commentsPresentationData: [OWCommentPresentationData], currentActiveUserId: String?) -> [OWCommentThreadCellOption] {
+    func getCells(for commentsPresentationData: [OWCommentPresentationData]) -> [OWCommentThreadCellOption] {
         var cellOptions = [OWCommentThreadCellOption]()
 
         for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
-            guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id, currentActiveUserId: currentActiveUserId) else { continue }
+            guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
             if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
                 cellOptions.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel(
@@ -338,7 +322,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     depth: depth
                 )))
 
-                cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation, currentActiveUserId: currentActiveUserId))
+                cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
 
                 if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
                     cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
@@ -389,10 +373,10 @@ fileprivate extension OWCommentThreadViewViewModel {
         return commentsPresentationData
     }
 
-    func getExistingRepliesPresentationData(for commentPresentationData: OWCommentPresentationData, currentActiveUserId: String?) -> [OWCommentPresentationData] {
+    func getExistingRepliesPresentationData(for commentPresentationData: OWCommentPresentationData) -> [OWCommentPresentationData] {
         var existingRepliesPresentationData: [OWCommentPresentationData] = []
         for replyId in commentPresentationData.repliesIds {
-            guard let replyCellVm = self.getCommentCellVm(for: replyId, currentActiveUserId: currentActiveUserId) else { continue }
+            guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
 
             let reply = replyCellVm.outputs.commentVM.outputs.comment
             existingRepliesPresentationData.append(
@@ -408,7 +392,7 @@ fileprivate extension OWCommentThreadViewViewModel {
         return existingRepliesPresentationData
     }
 
-    func getCommentCellVm(for commentId: String, currentActiveUserId: String?) -> OWCommentCellViewModel? {
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
         guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
               let commentUserId = comment.userId,
               let user = self.servicesProvider.usersService().get(userId: commentUserId)
@@ -429,8 +413,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
-            section: self.commentThreadData.article.additionalSettings.section,
-            activeUserId: currentActiveUserId
+            section: self.commentThreadData.article.additionalSettings.section
         ))
     }
 
@@ -617,11 +600,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .withLatestFrom(self.currentActiveUserId) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] commentPresentationData, response, currentActiveUserId in
+            .subscribe(onNext: { [weak self] commentPresentationData, response in
                 guard let self = self else { return }
 
-                let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData, currentActiveUserId: currentActiveUserId)
+                let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
 
                 // add presentation data from response
                 var presentationDataFromResponse: [OWCommentPresentationData] = []
@@ -1220,9 +1202,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         _replyToLocalComment
-            .withLatestFrom(self.currentActiveUserId) { ($0.0, $0.1, $1) }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] comment, parentCommentId, currentActiveUserId in
+            .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
                       let parentCommentPresentationData = self.commentPresentationDataHelper.findVisibleCommentPresentationData(
@@ -1237,7 +1218,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let newCommentPresentationData = OWCommentPresentationData(id: commentId)
                 let existingRepliesPresentationData: [OWCommentPresentationData]
                 if (parentCommentPresentationData.repliesPresentation.count == 0) {
-                    existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData, currentActiveUserId: currentActiveUserId).prefix(4))
+                    existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
                 } else {
                     existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation
                 }
