@@ -14,6 +14,7 @@ import UIKit
 protocol OWCommentViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
+    func update(activeUserId: String?)
 }
 
 protocol OWCommentViewModelingOutputs {
@@ -31,6 +32,7 @@ protocol OWCommentViewModelingOutputs {
 
     var comment: OWComment { get }
     var user: SPUser { get }
+    var activeUserId: String? { get }
 }
 
 protocol OWCommentViewModeling {
@@ -58,6 +60,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentEngagementVM: OWCommentEngagementViewModeling
     var comment: OWComment
     var user: SPUser
+    var activeUserId: String?
 
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
@@ -65,21 +68,7 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
-    fileprivate var currentActiveUser: Observable<SPUser> {
-        sharedServiceProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
-                }
-            }
-            .unwrap()
-            .observe(on: MainScheduler.instance)
-    }
+    fileprivate var currentActiveUserId = BehaviorSubject<String?>(value: nil)
 
     var heightChanged: Observable<Void> {
         Observable.merge(
@@ -89,11 +78,10 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, currentActiveUser) { [weak self] status, user in
+        Observable.combineLatest(commentStatusVM.outputs.status, currentActiveUserId) { [weak self] status, activeUserId in
             guard let self = self,
-                  let currentUserId = user.userId,
                   let commentUserId = self.comment.userId,
-                  currentUserId == commentUserId
+                  activeUserId == commentUserId
             else { return false }
 
             return status != .none
@@ -125,6 +113,11 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentHeaderVM.inputs.update(user: user)
     }
 
+    func update(activeUserId: String?) {
+        self.activeUserId = activeUserId
+        currentActiveUserId.onNext(activeUserId)
+    }
+
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         let status = OWCommentStatusType.commentStatus(from: data.comment.status)
@@ -135,6 +128,8 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
         user = data.user
+        activeUserId = data.activeUserId
+        currentActiveUserId.onNext(data.activeUserId)
         dictateCommentContentVisibility()
     }
 
