@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentHeaderViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
+    func update(activeUserId: String?)
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
@@ -69,6 +70,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
+    fileprivate var _currentActiveUserId = BehaviorSubject<String?>(value: nil)
+
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -81,6 +84,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
+        _currentActiveUserId.onNext(data.activeUserId)
         setupObservers()
     }
 
@@ -97,6 +101,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     func update(user: SPUser) {
         self.user = user
         _user.onNext(user)
+    }
+
+    func update(activeUserId: String?) {
+        _currentActiveUserId.onNext(activeUserId)
     }
 
     func updateEditedCommentLocally(_ comment: OWComment) {
@@ -175,25 +183,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
-    fileprivate var currentUser: Observable<SPUser> {
-        servicesProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
-                }
-            }
-            .unwrap()
-    }
-
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser, currentUser) { model, user, currentUser in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, _currentActiveUserId) { model, user, currentActiveUserId in
             let localizationKey: String
-            let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
+            let isCurrentUserComment = (currentActiveUserId == model.userId) && (currentActiveUserId != nil)
             if user.isMuted {
                 localizationKey = "This user is muted."
             } else if (model.reported && !isCurrentUserComment) {
