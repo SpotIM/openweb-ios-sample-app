@@ -13,7 +13,7 @@ import UIKit
 protocol OWCommentHeaderViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
-    func update(activeUserId: String?)
+    var isCommentOfActiveUser: BehaviorSubject<Bool> { get }
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
@@ -70,7 +70,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
-    fileprivate var _currentActiveUserId = BehaviorSubject<String?>(value: nil)
+    var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
 
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
@@ -84,7 +84,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
-        _currentActiveUserId.onNext(data.activeUserId)
         setupObservers()
     }
 
@@ -101,10 +100,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     func update(user: SPUser) {
         self.user = user
         _user.onNext(user)
-    }
-
-    func update(activeUserId: String?) {
-        _currentActiveUserId.onNext(activeUserId)
     }
 
     func updateEditedCommentLocally(_ comment: OWComment) {
@@ -184,14 +179,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser, _currentActiveUserId) { model, user, currentActiveUserId in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, isCommentOfActiveUser) { model, user, isCommentOfActiveUser in
             let localizationKey: String
-            let isCurrentUserComment = (currentActiveUserId == model.userId) && (currentActiveUserId != nil)
             if user.isMuted {
                 localizationKey = "This user is muted."
-            } else if (model.reported && !isCurrentUserComment) {
+            } else if (model.reported && !isCommentOfActiveUser) {
                 localizationKey = "This message was reported."
-            } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
+            } else if (model.status == .block || model.status == .reject) && !isCommentOfActiveUser {
                 localizationKey = "This comment violated our policy."
             } else if model.deleted {
                 localizationKey = "This message was deleted."

@@ -259,10 +259,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(_commentsPresentationData.rx_elements(), currentActiveUserId)
-            .flatMapLatest({ [weak self] commentsPresentationData, currentActiveUserId -> Observable<[OWConversationCellOption]> in
+        return _commentsPresentationData
+            .rx_elements()
+            .flatMapLatest({ [weak self] commentsPresentationData -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-                return Observable.just(self.getCommentCells(for: commentsPresentationData, currentActiveUserId: currentActiveUserId))
+                return Observable.just(self.getCommentCells(for: commentsPresentationData))
             })
             .asObservable()
     }()
@@ -347,9 +348,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             }
                             if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
                                 commentVm.inputs.update(user: updatedCommentVm.outputs.user)
-                            }
-                            if (updatedCommentVm.outputs.activeUserId != commentVm.outputs.activeUserId) {
-                                commentVm.inputs.update(activeUserId: updatedCommentVm.outputs.activeUserId)
                             }
                             return OWConversationCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -490,20 +488,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var currentActiveUserId: Observable<String?> {
-        servicesProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user.id
-                }
-            }
-    }
-
     var dataSourceTransition: OWViewTransition = .reload
 
     fileprivate let servicesProvider: OWSharedServicesProviding
@@ -530,11 +514,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 }
 
 fileprivate extension OWConversationViewViewModel {
-    func getCommentCells(for commentsPresentationData: [OWCommentPresentationData], currentActiveUserId: String?) -> [OWConversationCellOption] {
+    func getCommentCells(for commentsPresentationData: [OWCommentPresentationData]) -> [OWConversationCellOption] {
         var cellOptions = [OWConversationCellOption]()
 
         for (idx, commentPresentationData) in commentsPresentationData.enumerated() {
-            guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id, currentActiveUserId: currentActiveUserId) else { continue }
+            guard let commentCellVM = self.getCommentCellVm(for: commentPresentationData.id) else { continue }
 
             if (commentCellVM.outputs.commentVM.outputs.comment.depth == 0 && idx > 0) {
                 cellOptions.append(OWConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(
@@ -577,7 +561,7 @@ fileprivate extension OWConversationViewViewModel {
                     depth: depth
                 )))
 
-                cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation, currentActiveUserId: currentActiveUserId))
+                cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
 
                 if self.errorsLoadingReplies[commentPresentationData.id] == nil,
                    repliesToShowCount < commentPresentationData.totalRepliesCount {
@@ -686,10 +670,10 @@ fileprivate extension OWConversationViewViewModel {
         return commentsPresentationData
     }
 
-    func getExistingRepliesPresentationData(for commentPresentationData: OWCommentPresentationData, currentActiveUserId: String?) -> [OWCommentPresentationData] {
+    func getExistingRepliesPresentationData(for commentPresentationData: OWCommentPresentationData) -> [OWCommentPresentationData] {
         var existingRepliesPresentationData: [OWCommentPresentationData] = []
         for replyId in commentPresentationData.repliesIds {
-            guard let replyCellVm = self.getCommentCellVm(for: replyId, currentActiveUserId: currentActiveUserId) else { continue }
+            guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
 
             let reply = replyCellVm.outputs.commentVM.outputs.comment
             existingRepliesPresentationData.append(
@@ -705,7 +689,7 @@ fileprivate extension OWConversationViewViewModel {
         return existingRepliesPresentationData
     }
 
-    func getCommentCellVm(for commentId: String, currentActiveUserId: String?) -> OWCommentCellViewModel? {
+    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
         guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
               let commentUserId = comment.userId,
               let user = self.servicesProvider.usersService().get(userId: commentUserId)
@@ -726,8 +710,7 @@ fileprivate extension OWConversationViewViewModel {
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
-            section: self.conversationData.article.additionalSettings.section,
-            activeUserId: currentActiveUserId
+            section: self.conversationData.article.additionalSettings.section
         ))
     }
 
@@ -1056,15 +1039,14 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .withLatestFrom(self.currentActiveUserId) { ($0.0, $0.1, $0.2, $1) }
-            .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies, currentActiveUserId) in
+            .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
                 self.dataSourceTransition = .animated
                 if shouldShowErrorLoadingReplies {
                     self.errorsLoadingReplies[commentPresentationData.id] = .error
                     commentPresentationData.update.onNext()
                 } else {
-                    let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData, currentActiveUserId: currentActiveUserId)
+                    let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
 
                     // add presentation data from response
                     var presentationDataFromResponse: [OWCommentPresentationData] = []
@@ -1702,8 +1684,7 @@ fileprivate extension OWConversationViewViewModel {
 
         _replyToLocalComment
             .observe(on: MainScheduler.instance)
-            .withLatestFrom(self.currentActiveUserId) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] comment, parentCommentId, currentActiveUserId in
+            .subscribe(onNext: { [weak self] comment, parentCommentId in
                 guard let self = self,
                       let commentId = comment.id,
                       let parentCommentPresentationData = self.commentPresentationDataHelper.findVisibleCommentPresentationData(
@@ -1718,7 +1699,7 @@ fileprivate extension OWConversationViewViewModel {
                 let newCommentPresentationData = OWCommentPresentationData(id: commentId)
                 let existingRepliesPresentationData: [OWCommentPresentationData]
                 if (parentCommentPresentationData.repliesPresentation.count == 0) {
-                    existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData, currentActiveUserId: currentActiveUserId).prefix(4))
+                    existingRepliesPresentationData = Array(self.getExistingRepliesPresentationData(for: parentCommentPresentationData).prefix(4))
                 } else {
                     existingRepliesPresentationData = parentCommentPresentationData.repliesPresentation
                 }
