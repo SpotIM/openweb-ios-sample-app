@@ -182,13 +182,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         Observable.combineLatest(_unwrappedModel, _unwrappedUser, isCommentOfActiveUser) { model, user, isCommentOfActiveUser in
             let localizationKey: String
             if user.isMuted {
-                localizationKey = "This user is muted."
+                localizationKey = "MutedCommentMessage"
             } else if (model.reported && !isCommentOfActiveUser) {
-                localizationKey = "This message was reported."
+                localizationKey = "ReportedCommentMessage"
             } else if (model.status == .block || model.status == .reject) && !isCommentOfActiveUser {
-                localizationKey = "This comment violated our policy."
+                localizationKey = "ViolatedPolicyCommentMessage"
             } else if model.deleted {
-                localizationKey = "This message was deleted."
+                localizationKey = "DeletedCommentMessage"
             } else {
                 return ""
             }

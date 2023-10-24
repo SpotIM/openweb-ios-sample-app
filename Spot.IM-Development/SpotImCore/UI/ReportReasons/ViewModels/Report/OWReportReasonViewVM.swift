@@ -78,7 +78,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }
 
     var errorAlertActionText: String {
-        return OWLocalizationManager.shared.localizedString(key: "Got it")
+        return OWLocalizationManager.shared.localizedString(key: "GotIt")
     }
 
     var titleText: String {

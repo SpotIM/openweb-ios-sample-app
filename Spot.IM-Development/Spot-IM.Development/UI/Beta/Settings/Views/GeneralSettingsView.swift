@@ -32,6 +32,7 @@ class GeneralSettingsView: UIView {
         static let segmentedLanguageStrategyIdentifier = "language_strategy"
         static let segmentedLocaleStrategyIdentifier = "locale_strategy"
         static let pickerLanguageCodeIdentifier = "language_code"
+        static let loginPromptSwitchIdentifier = "login_prompt"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -188,6 +189,21 @@ class GeneralSettingsView: UIView {
         return picker
     }()
 
+    fileprivate lazy var showLoginPromptSwitch: SwitchSetting = {
+        return SwitchSetting(
+            title: viewModel.outputs.showLoginPromptTitle,
+            accessibilityPrefixId: Metrics.loginPromptSwitchIdentifier)
+    }()
+
+    fileprivate lazy var segmentedOrientationEnforcement: SegmentedControlSetting = {
+        let title = viewModel.outputs.orientationEnforcementTitle
+        let items = viewModel.outputs.orientationEnforcementSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedLocaleStrategyIdentifier,
+                                       items: items)
+    }()
+
     fileprivate let viewModel: GeneralSettingsViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -237,6 +253,8 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedLanguageStrategy)
         stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(segmentedLocaleStrategy)
+        stackView.addArrangedSubview(showLoginPromptSwitch)
+        stackView.addArrangedSubview(segmentedOrientationEnforcement)
     }
 
     // swiftlint:disable function_body_length
@@ -249,6 +267,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.articleInformationStrategy
             .map { $0.index }
             .bind(to: segmentedArticleInformationStrategy.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.orientationEnforcement
+            .map { $0.index }
+            .bind(to: segmentedOrientationEnforcement.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.elementsCustomizationStyleIndex
@@ -303,6 +326,11 @@ fileprivate extension GeneralSettingsView {
         segmentedArticleInformationStrategy.rx.selectedSegmentIndex
             .map { OWArticleInformationStrategy.articleInformationStrategy(fromIndex: $0) }
             .bind(to: viewModel.inputs.articleInformationSelectedStrategy)
+            .disposed(by: disposeBag)
+
+        segmentedOrientationEnforcement.rx.selectedSegmentIndex
+            .map { OWOrientationEnforcement.orientationEnforcement(fromIndex: $0) }
+            .bind(to: viewModel.inputs.orientationSelectedEnforcement)
             .disposed(by: disposeBag)
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
@@ -371,6 +399,14 @@ fileprivate extension GeneralSettingsView {
 
         segmentedLocaleStrategy.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.localeStrategySelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showLoginPrompt
+            .bind(to: showLoginPromptSwitch.rx.isOn)
+            .disposed(by: disposeBag)
+
+        showLoginPromptSwitch.rx.isOn
+            .bind(to: viewModel.inputs.showLoginPromptSelected)
             .disposed(by: disposeBag)
 
         viewModel.outputs.languageName

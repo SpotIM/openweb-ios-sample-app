@@ -80,7 +80,7 @@ final class SPCommentTextInputView: SPBaseView, SPTextInputView {
             textInputView.placeholder = SPLocalizationManager.localizedString(key: "WhatDoYouThink")
 
         case .reply:
-            textInputView.placeholder = SPLocalizationManager.localizedString(key: "Type your reply…")
+            textInputView.placeholder = SPLocalizationManager.localizedString(key: "TypeYourReply")
         }
 
         setShowAvatar(showAvatar: showAvatar)
