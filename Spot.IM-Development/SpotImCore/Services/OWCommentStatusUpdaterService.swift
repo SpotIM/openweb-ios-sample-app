@@ -103,7 +103,7 @@ fileprivate extension OWCommentStatusUpdaterService {
                 else { return }
                 var newComment = comment
                 newComment.rawStatus = status
-                self.servicesProvider.commentUpdaterService()
+                self.servicesProvider.conversationUpdaterService()
                     .update(.update(commentId: commentId, withComment: newComment), postId: postId)
             })
             .disposed(by: disposeBag)

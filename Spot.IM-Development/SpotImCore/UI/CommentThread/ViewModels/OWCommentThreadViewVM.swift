@@ -1159,9 +1159,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
             .share()
 
-        self.servicesProvider.commentUpdaterService()
-            .getUpdatedComments(for: postId)
-            .flatMap { updateType -> Observable<OWCommentUpdateType> in
+        self.servicesProvider.conversationUpdaterService()
+            .getConversationUpdates(for: postId)
+            .flatMap { updateType -> Observable<OWConversationUpdateType> in
                 // Making sure comment cells are visible
                 return commentCellsVmsObservable
                     .filter { !$0.isEmpty }
@@ -1179,6 +1179,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                     self._updateLocalComment.onNext((withComment, commentId))
                 case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
+                case .refreshConversation:
+                    // TODO
+                    break
                 }
             })
             .disposed(by: disposeBag)
