@@ -67,10 +67,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayForUICellUpdate: Int = 100 // ms
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayBeforeTryAgainAfterError: Int = 2000 // ms
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
+
+    fileprivate let preConversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "preConversationViewVMScheduler")
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
@@ -164,6 +167,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return _isReadOnly
             .share(replay: 1)
     }()
+
+    fileprivate var tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
 
     lazy var compactCommentVM: OWPreConversationCompactContentViewModeling = {
         return OWPreConversationCompactContentViewModel(imageProvider: imageProvider)
@@ -330,7 +335,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }
 
     var shouldShowCommentingCTAView: Observable<Bool> {
-        Observable.combineLatest(preConversationStyleObservable, isReadOnlyObservable, isEmpty) { style, isReadOnly, isEmpty in
+        Observable.combineLatest(
+            preConversationStyleObservable,
+            isReadOnlyObservable,
+            isEmpty,
+            shouldShowErrorLoadingComments
+        ) { style, isReadOnly, isEmpty, shouldShowErrorLoadingComments in
+            guard shouldShowErrorLoadingComments == false else { return false }
             switch (style) {
             case .regular, .custom:
                 return true
@@ -416,8 +427,23 @@ fileprivate extension OWPreConversationViewViewModel {
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
 
+        // Try again after error loading initial comments
+        let tryAgainAfterInitialError = tryAgainAfterError
+            .filter { $0 == .loadConversationComments }
+            .voidify()
+            .do(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload
+//                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                self._shouldShowErrorLoadingComments.onNext(false)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
+            })
+            .map { return OWLoadingTriggeredReason.tryAgainAfterError }
+            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: preConversationViewVMScheduler)
+            .asObservable()
+
         // Subscribing to start realtime service
-        viewInitialized
+        Observable.merge(viewInitialized, tryAgainAfterInitialError.voidify())
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
@@ -477,7 +503,8 @@ fileprivate extension OWPreConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
-        let conversationFetchedObservable = viewInitialized
+        let conversationFetchedObservable = Observable.merge(viewInitialized,
+                                                             tryAgainAfterInitialError.voidify())
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
                     .take(1)
@@ -558,6 +585,16 @@ fileprivate extension OWPreConversationViewViewModel {
 
         shouldShowErrorLoadingComments
             .bind(to: compactCommentVM.inputs.conversationError)
+            .disposed(by: disposeBag)
+
+        // Responding to error states try again tap
+        errorStateViewModel.outputs.tryAgainTapped
+            .bind(to: tryAgainAfterError)
+            .disposed(by: disposeBag)
+
+        compactCommentVM.outputs.tryAgainTapped
+            .map { .loadConversationComments }
+            .bind(to: tryAgainAfterError)
             .disposed(by: disposeBag)
 
         // First conversation load
