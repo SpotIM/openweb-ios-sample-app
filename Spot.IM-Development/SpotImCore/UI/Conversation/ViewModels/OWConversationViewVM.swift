@@ -822,6 +822,7 @@ fileprivate extension OWConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
                     self._shouldShowErrorLoadingComments.onNext(false)
+                    self._shouldShowErrorLoadingMoreComments.onNext(false)
                     return (conversationRead, result.1)
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
