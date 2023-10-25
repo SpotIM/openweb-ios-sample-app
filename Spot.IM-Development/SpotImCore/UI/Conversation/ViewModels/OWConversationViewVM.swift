@@ -50,6 +50,7 @@ protocol OWConversationViewViewModelingOutputs {
 //    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
+    var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
 
@@ -81,6 +82,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let debouncePerformTableViewAnimation: Int = 50 // ms
+        static let updateTableViewInstantlyDelay: Int = 50 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
@@ -396,6 +398,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 guard let self = self else { return false }
                 return self.dataSourceTransition == .animated
             }
+            .asObservable()
+    }
+
+    fileprivate var _updateTableViewInstantly = PublishSubject<Void>()
+    var updateTableViewInstantly: Observable<Void> {
+        return _updateTableViewInstantly
+            .delay(.milliseconds(Metrics.updateTableViewInstantlyDelay), scheduler: conversationViewVMScheduler)
             .asObservable()
     }
 
@@ -851,7 +860,7 @@ fileprivate extension OWConversationViewViewModel {
         // first load comments / refresh comments / sorted changed / try again after error
         conversationFetchedObservable
             .map { $0.0 }
-            .observe(on: MainScheduler.instance)
+            .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] response in
                 guard let self = self else { return }
 
@@ -861,6 +870,8 @@ fileprivate extension OWConversationViewViewModel {
 
                 // Update loading state only after the presented comments are updated
                 self._serverCommentsLoadingState.onNext(.notLoading)
+
+                self._updateTableViewInstantly.onNext()
             })
             .disposed(by: disposeBag)
 
