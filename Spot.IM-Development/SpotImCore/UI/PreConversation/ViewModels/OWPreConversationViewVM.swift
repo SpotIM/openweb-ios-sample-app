@@ -556,6 +556,10 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: compactCommentVM.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
+        shouldShowErrorLoadingComments
+            .bind(to: compactCommentVM.inputs.conversationError)
+            .disposed(by: disposeBag)
+
         // First conversation load
         conversationFetchedObservable
             .take(1)

@@ -13,4 +13,5 @@ enum OWCompactContentType {
     case emptyConversation
     case closedAndEmpty
     case skelaton
+    case error
 }
