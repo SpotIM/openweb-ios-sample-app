@@ -589,6 +589,7 @@
 		3DBFB4EF2AE95194001105DA /* OWAutomationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4EE2AE95194001105DA /* OWAutomationSettings.swift */; };
 		3DBFB4F12AE95203001105DA /* OWAutomationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4F02AE95203001105DA /* OWAutomationRequiredData.swift */; };
 		3DBFB4F62AE95502001105DA /* OWFontsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4F52AE95502001105DA /* OWFontsCoordinator.swift */; };
+		3DBFB4F92AE99992001105DA /* OWUserStatusCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4F82AE99992001105DA /* OWUserStatusCoordinator.swift */; };
 		3DC7BD9529A4E71500DF72E4 /* OWConversationCountersCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */; };
 		3DC7BD9829A4E80400DF72E4 /* OWConversationCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */; };
 		3DC7BD9A29A4EA4100DF72E4 /* OWLoggerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */; };
@@ -1706,6 +1707,7 @@
 		3DBFB4EE2AE95194001105DA /* OWAutomationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAutomationSettings.swift; sourceTree = "<group>"; };
 		3DBFB4F02AE95203001105DA /* OWAutomationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAutomationRequiredData.swift; sourceTree = "<group>"; };
 		3DBFB4F52AE95502001105DA /* OWFontsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontsCoordinator.swift; sourceTree = "<group>"; };
+		3DBFB4F82AE99992001105DA /* OWUserStatusCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserStatusCoordinator.swift; sourceTree = "<group>"; };
 		3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCountersCompletion.swift; sourceTree = "<group>"; };
 		3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCounter.swift; sourceTree = "<group>"; };
 		3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoggerConfiguration.swift; sourceTree = "<group>"; };
@@ -4279,6 +4281,7 @@
 			isa = PBXGroup;
 			children = (
 				3DBFB4F52AE95502001105DA /* OWFontsCoordinator.swift */,
+				3DBFB4F82AE99992001105DA /* OWUserStatusCoordinator.swift */,
 			);
 			path = AutomationCoordinators;
 			sourceTree = "<group>";
@@ -6974,6 +6977,7 @@
 				240E8FAC2AA5B53400903E51 /* OWArticleExtraData+Extensions.swift in Sources */,
 				73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */,
 				445418A123685154001D0ED0 /* SPConversation.swift in Sources */,
+				3DBFB4F92AE99992001105DA /* OWUserStatusCoordinator.swift in Sources */,
 				161270D629ACCB38001F9715 /* OWCommentThreadCoordinator.swift in Sources */,
 				4454181323685144001D0ED0 /* SPEmptyConversationActionView.swift in Sources */,
 				3DCAE3F029D2FAA7005B9189 /* OWCompactRouteringCompatible.swift in Sources */,
