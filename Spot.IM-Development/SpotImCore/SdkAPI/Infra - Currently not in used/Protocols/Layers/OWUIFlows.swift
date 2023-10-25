@@ -46,6 +46,18 @@ public protocol OWUIFlows {
                            callbacks: OWViewActionsCallbacks?,
                            completion: @escaping OWDefaultCompletion)
 #endif
+
+#if AUTOMATION
+    func fonts(presentationalMode: OWPresentationalMode,
+               additionalSettings: OWAutomationSettingsProtocol,
+               callbacks: OWViewActionsCallbacks?,
+               completion: @escaping OWDefaultCompletion)
+
+    func userStatus(presentationalMode: OWPresentationalMode,
+               additionalSettings: OWAutomationSettingsProtocol,
+               callbacks: OWViewActionsCallbacks?,
+               completion: @escaping OWDefaultCompletion)
+#endif
 }
 #else
 protocol OWUIFlows {

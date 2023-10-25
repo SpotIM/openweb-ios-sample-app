@@ -285,6 +285,68 @@ extension OWUILayer {
         .disposed(by: flowDisposeBag)
     }
 #endif
+
+#if AUTOMATION
+    func fonts(presentationalMode: OWPresentationalMode,
+               additionalSettings: OWAutomationSettingsProtocol,
+               callbacks: OWViewActionsCallbacks? = nil,
+               completion: @escaping OWDefaultCompletion) {
+
+        prepareForNewFlow()
+
+        let automationData = OWAutomationRequiredData(settings: additionalSettings)
+
+        _ = flowsSdkCoordinator.startFontsFlow(automationData: automationData,
+                                                           presentationalMode: presentationalMode,
+                                                           callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
+                completion(.success(()))
+            default:
+                break
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+        .disposed(by: flowDisposeBag)
+    }
+
+    func userStatus(presentationalMode: OWPresentationalMode,
+               additionalSettings: OWAutomationSettingsProtocol,
+               callbacks: OWViewActionsCallbacks? = nil,
+                    completion: @escaping OWDefaultCompletion) {
+
+        prepareForNewFlow()
+
+        let automationData = OWAutomationRequiredData(settings: additionalSettings)
+
+        _ = flowsSdkCoordinator.startUserStatusFlow(automationData: automationData,
+                                                           presentationalMode: presentationalMode,
+                                                           callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .do(onNext: { [weak self] _ in
+            self?.setActiveRouter(for: .partOfFlow)
+        })
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
+                completion(.success(()))
+            default:
+                break
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.missingImplementation
+            completion(.failure(error))
+        })
+        .disposed(by: flowDisposeBag)
+    }
+#endif
 }
 
 // UIViews
