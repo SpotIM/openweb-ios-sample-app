@@ -1,5 +1,5 @@
 //
-//  OWCommentUpdaterService.swift
+//  OWConversationUpdaterService.swift
 //  SpotImCore
 //
 //  Created by Alon Shprung on 02/08/2023.
@@ -9,17 +9,17 @@
 import Foundation
 import RxSwift
 
-protocol OWCommentUpdaterServicing {
-    func update(_ updateType: OWCommentUpdateType, postId: OWPostId)
-    func getUpdatedComments(for postId: OWPostId) -> Observable<OWCommentUpdateType>
+protocol OWConversationUpdaterServicing {
+    func update(_ updateType: OWConversationUpdateType, postId: OWPostId)
+    func getConversationUpdates(for postId: OWPostId) -> Observable<OWConversationUpdateType>
 }
 
-class OWCommentUpdaterService: OWCommentUpdaterServicing {
+class OWConversationUpdaterService: OWConversationUpdaterServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    fileprivate var _updatedCommentsWithPostId = PublishSubject<(OWCommentUpdateType, OWPostId)>()
+    fileprivate var _conversationUpdatesWithPostId = PublishSubject<(OWConversationUpdateType, OWPostId)>()
 
-    fileprivate lazy var _updatedCommentsWithPostIdShared: Observable<(OWCommentUpdateType, OWPostId)> = {
-        _updatedCommentsWithPostId
+    fileprivate lazy var _conversationUpdatesWithPostIdShared: Observable<(OWConversationUpdateType, OWPostId)> = {
+        _conversationUpdatesWithPostId
             .asObservable()
             .share()
     }()
@@ -28,22 +28,24 @@ class OWCommentUpdaterService: OWCommentUpdaterServicing {
         self.servicesProvider = servicesProvider
     }
 
-    func update(_ updateType: OWCommentUpdateType, postId: OWPostId) {
-        self._updatedCommentsWithPostId.onNext((updateType, postId))
+    func update(_ updateType: OWConversationUpdateType, postId: OWPostId) {
+        self._conversationUpdatesWithPostId.onNext((updateType, postId))
         self.cacheUpdatedComments(for: updateType, postId: postId)
     }
 
-    func getUpdatedComments(for postId: OWPostId) -> RxSwift.Observable<OWCommentUpdateType> {
-        return _updatedCommentsWithPostIdShared
+    func getConversationUpdates(for postId: OWPostId) -> Observable<OWConversationUpdateType> {
+        return _conversationUpdatesWithPostIdShared
             .filter { $0.1 == postId }
             .map { $0.0 }
     }
 }
 
-fileprivate extension OWCommentUpdaterService {
-    func cacheUpdatedComments(for updateType: OWCommentUpdateType, postId: OWPostId) {
+fileprivate extension OWConversationUpdaterService {
+    func cacheUpdatedComments(for updateType: OWConversationUpdateType, postId: OWPostId) {
         let commentsToCache: [OWComment]
         switch updateType {
+        case .refreshConversation:
+            commentsToCache = []
         case .insert(let comments):
             commentsToCache = comments
         case .update(_, let withComment):
@@ -63,6 +65,8 @@ fileprivate extension OWCommentUpdaterService {
                 self.servicesProvider.commentsService().set(comments: [parentComment], postId: postId)
             }
         }
-        self.servicesProvider.commentsService().set(comments: commentsToCache, postId: postId)
+        if (!commentsToCache.isEmpty) {
+            self.servicesProvider.commentsService().set(comments: commentsToCache, postId: postId)
+        }
     }
 }

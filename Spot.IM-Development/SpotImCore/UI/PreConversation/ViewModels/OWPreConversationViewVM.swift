@@ -769,8 +769,8 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        self.servicesProvider.commentUpdaterService()
-            .getUpdatedComments(for: postId)
+        self.servicesProvider.conversationUpdaterService()
+            .getConversationUpdates(for: postId)
             .withLatestFrom(commentCellsVmsObservable) { ($0, $1) }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] updateType, commentCellsVms in
@@ -802,6 +802,9 @@ fileprivate extension OWPreConversationViewViewModel {
                     self._updateLocalComment.onNext((withComment, commentId))
                 case .insertReply:
                     // We are not showing replies in pre conversation
+                    break
+                case .refreshConversation:
+                    // TODO
                     break
                 }
             })

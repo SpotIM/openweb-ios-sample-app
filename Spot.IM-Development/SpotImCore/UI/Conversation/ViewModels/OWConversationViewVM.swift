@@ -880,7 +880,7 @@ fileprivate extension OWConversationViewViewModel {
             .subscribe(onNext: { [weak self] newComments in
                 guard let self = self else { return }
                 self.servicesProvider
-                    .commentUpdaterService()
+                    .conversationUpdaterService()
                     .update(.insert(comments: newComments), postId: self.postId)
 
                 self.servicesProvider.realtimeIndicatorService().cleanCache()
@@ -1618,9 +1618,9 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let updatedCommentsObservable = self.servicesProvider.commentUpdaterService()
-            .getUpdatedComments(for: postId)
-            .flatMap { [weak self] updateType -> Observable<OWCommentUpdateType> in
+        let updatedCommentsObservable = self.servicesProvider.conversationUpdaterService()
+            .getConversationUpdates(for: postId)
+            .flatMap { [weak self] updateType -> Observable<OWConversationUpdateType> in
                 guard let self = self else { return .empty() }
 
                 // Waiting for a state in which we are not loading or showing error before updating/adding comments or replies from a local service
@@ -1644,6 +1644,9 @@ fileprivate extension OWConversationViewViewModel {
                     self._updateLocalComment.onNext((withComment, commentId))
                 case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
+                case .refreshConversation:
+                    // TODO
+                    break
                 }
             })
             .disposed(by: disposeBag)
