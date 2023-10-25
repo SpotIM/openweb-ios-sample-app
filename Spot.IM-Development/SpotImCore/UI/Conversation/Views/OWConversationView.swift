@@ -49,12 +49,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
-        return OWConversationEmptyStateView(viewModel: self.viewModel.outputs.conversationEmptyStateViewModel)
-            .enforceSemanticAttribute()
-            .userInteractionEnabled(false)
-    }()
-
     fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
@@ -116,6 +110,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
         return dataSource
     }()
+
+    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewQueue")
 
     fileprivate var loginPromptTopConstraint: OWConstraint? = nil
 
@@ -207,13 +203,6 @@ fileprivate extension OWConversationView {
             make.height.equalTo(Metrics.separatorHeight)
         }
 
-        self.addSubview(self.conversationEmptyStateView)
-        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(self.tableView.OWSnp.top)
-            make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
-            make.leading.trailing.equalToSuperview()
-        }
-
         self.addSubview(self.realtimeIndicationAnimationView)
         realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
             make.bottom.equalTo(self.tableView.OWSnp.bottom)
@@ -243,9 +232,11 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+        let tableViewHeight = tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
             .unwrap()
             .map { $0.size.height }
+
+        tableViewHeight
             .bind(to: viewModel.inputs.tableViewHeight)
             .disposed(by: disposeBag)
 
@@ -256,18 +247,51 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.tableViewContentOffsetY)
             .disposed(by: disposeBag)
 
-        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
+        let tableViewContentSizeHeight = tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.height }
+
+        tableViewContentSizeHeight
             .bind(to: viewModel.inputs.tableViewContentSizeHeight)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.shouldShowConversationEmptyState
-            .observe(on: MainScheduler.instance)
-            .map { !$0 }
-            .bind(to: conversationEmptyStateView.rx.isHidden)
-            .disposed(by: disposeBag)
+        let debouncedContentSizeHeight = tableViewContentSizeHeight
+            .debounce(.milliseconds(100), scheduler: conversationViewScheduler)
+            .filter { $0 > 0 }
+
+        Observable.zip(viewModel.outputs.shouldShowConversationEmptyState.filter { $0 },
+                                 viewModel.outputs.firstIndexAfterCommunityCells,
+                                 tableViewHeight.filter { $0 > 0 },
+                                 debouncedContentSizeHeight)
+        .debug("RIVI 2")
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { [weak self] shouldShowEmptyState, firstIndexAfterCommunityCells, tableViewHeight, contentSizeHeight in
+            //                let shouldShowEmptyState = result.0
+            //                let firstIndexAfterCommunityCells = result.1
+            //                let tableViewHeight = result.2
+            guard shouldShowEmptyState, let self = self else { return }
+
+            // Remove the current empty state cell from contentSizeHeight to calculate the new height of the empty state cell
+            var finalContentSize = contentSizeHeight
+            let indexPath = IndexPath(row: firstIndexAfterCommunityCells, section: 0)
+            if let cell = self.tableView.cellForRow(at: indexPath) {
+                let cellHeight = cell.frame.height
+                print("RIVI - cellHeight: \(cellHeight)")
+                finalContentSize -= cellHeight
+                print("RIVI - finalContentSize: \(finalContentSize)")
+            }
+
+            print("RIVI - tableViewHeight: \(tableViewHeight)")
+            print("RIVI - final: \(tableViewHeight - finalContentSize)")
+            print("RIVI - - -")
+
+            self.viewModel.outputs
+                .conversationEmptyStateCellViewModel.outputs
+                .conversationEmptyStateViewModel.inputs
+                .updateHeight.onNext(tableViewHeight - finalContentSize)
+        })
+        .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)

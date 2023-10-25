@@ -14,6 +14,7 @@ class OWConversationEmptyStateView: UIView {
         static let titleLabelTopOffset: CGFloat = 10
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
+        static let minimumHeight: CGFloat = 130
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
@@ -31,6 +32,7 @@ class OWConversationEmptyStateView: UIView {
     }()
 
     fileprivate lazy var containerView: UIView = { return UIView() }()
+    fileprivate var heightConstraint: OWConstraint?
 
     fileprivate var viewModel: OWConversationEmptyStateViewModeling!
     fileprivate var disposeBag = DisposeBag()
@@ -69,11 +71,14 @@ fileprivate extension OWConversationEmptyStateView {
             make.center.equalToSuperview()
             make.leading.greaterThanOrEqualToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
+            make.top.greaterThanOrEqualToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
+            heightConstraint = make.height.equalTo(Metrics.minimumHeight).constraint
         }
 
         containerView.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.greaterThanOrEqualToSuperview()
             make.centerX.equalToSuperview()
             make.size.equalTo(Metrics.iconSize)
         }
@@ -83,13 +88,20 @@ fileprivate extension OWConversationEmptyStateView {
             make.top.equalTo(iconImageView.OWSnp.bottom).offset(Metrics.titleLabelTopOffset)
             make.leading.trailing.equalToSuperview()
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
         }
     }
 
     func setupObservers() {
         viewModel.outputs.text
             .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.updatedHeight
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                heightConstraint?.update(offset: height)
+            })
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
