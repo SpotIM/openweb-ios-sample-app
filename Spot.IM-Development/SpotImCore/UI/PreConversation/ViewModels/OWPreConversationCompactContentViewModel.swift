@@ -15,6 +15,7 @@ protocol OWPreConversationCompactContentViewModelingInputs {
     var conversationFetched: PublishSubject<OWConversationReadRM> { get }
     var isReadOnly: PublishSubject<Bool> { get }
     var conversationError: PublishSubject<Bool> { get }
+    var tryAgainTap: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
@@ -24,6 +25,7 @@ protocol OWPreConversationCompactContentViewModelingOutputs {
     var isCommentHidden: Observable<Bool> { get }
     var text: Observable<String> { get }
     var shouldShowImagePlaceholder: Observable<Bool> { get }
+    var tryAgainTapped: Observable<Void> { get }
 }
 
 protocol OWPreConversationCompactContentViewModeling {
@@ -107,6 +109,12 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             .asObservable()
     }()
 
+    var tryAgainTap = PublishSubject<Void>()
+    lazy var tryAgainTapped: Observable<Void> = {
+        return tryAgainTap
+            .asObservable()
+    }()
+
     fileprivate let imageProvider: OWImageProviding
     fileprivate let disposeBag = DisposeBag()
     init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
@@ -175,6 +183,12 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                       let self = self else { return }
                 self._contentType.onNext(.error)
             })
+            .disposed(by: disposeBag)
+
+        tryAgainTapped
+            .voidify()
+            .map { .skelaton }
+            .bind(to: _contentType)
             .disposed(by: disposeBag)
     }
 }
