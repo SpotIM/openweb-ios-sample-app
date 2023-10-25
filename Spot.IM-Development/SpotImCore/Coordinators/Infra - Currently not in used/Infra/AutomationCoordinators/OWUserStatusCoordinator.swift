@@ -61,7 +61,7 @@ class OWUserStatusCoordinator: OWBaseCoordinator<OWUserStatusCoordinatorResult> 
         }
 
         let userStatusPoppedObservable = userStatusPopped
-            .map { OWCoordinatorResultProtocol.popped }
+            .map { OWUserStatusCoordinatorResult.popped }
             .asObservable()
 
         return Observable.merge(

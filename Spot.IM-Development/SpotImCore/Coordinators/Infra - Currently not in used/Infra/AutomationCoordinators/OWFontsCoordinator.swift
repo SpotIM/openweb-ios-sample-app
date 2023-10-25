@@ -61,7 +61,7 @@ class OWFontsCoordinator: OWBaseCoordinator<OWFontsCoordinatorResult> {
         }
 
         let fontsPoppedObservable = fontsPopped
-            .map { OWCoordinatorResultProtocol.popped }
+            .map { OWFontsCoordinatorResult.popped }
             .asObservable()
 
         return Observable.merge(
