@@ -315,6 +315,15 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.updateTableViewInstantly
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
+
         tableView.rx.willDisplayCell
             .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.willDisplayCell)
