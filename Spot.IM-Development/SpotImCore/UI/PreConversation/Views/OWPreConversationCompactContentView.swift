@@ -219,6 +219,11 @@ fileprivate extension OWPreConversationCompactContentView {
             .bind(to: cameraIcon.rx.isHidden)
             .disposed(by: disposeBag)
 
+        errorCtaTapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.tryAgainTap)
+            .disposed(by: disposeBag)
+
         // Show avatar/empty/close icons according to content
         viewModel.outputs.contentType
             .observe(on: MainScheduler.instance)
@@ -234,7 +239,7 @@ fileprivate extension OWPreConversationCompactContentView {
             })
             .disposed(by: disposeBag)
 
-        var isErrorObservable: Observable<Bool> = viewModel.outputs.contentType
+        let isErrorObservable: Observable<Bool> = viewModel.outputs.contentType
             .map {
                 if case .error = $0 {
                     return true
