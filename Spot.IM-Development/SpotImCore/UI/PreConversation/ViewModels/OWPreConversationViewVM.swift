@@ -354,6 +354,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWManager.manager.postId ?? ""
     }
 
+    fileprivate var _forceRefresh = PublishSubject<Void>()
+    fileprivate lazy var refreshConversationObservable: Observable<OWLoadingTriggeredReason> = {
+        return Observable.merge(
+            _forceRefresh.map { OWLoadingTriggeredReason.forceRefresh }
+        )
+        .asObservable()
+    }()
+
     var dataSourceTransition: OWViewTransition = .reload
 
     init (
@@ -438,7 +446,10 @@ fileprivate extension OWPreConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
-        let conversationFetchedObservable = viewInitialized
+        let conversationFetchedObservable = Observable.merge(
+            viewInitialized,
+            refreshConversationObservable.voidify()
+        )
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return conversationReadObservable
                     .take(1)
@@ -804,8 +815,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     // We are not showing replies in pre conversation
                     break
                 case .refreshConversation:
-                    // TODO
-                    break
+                    self._forceRefresh.onNext()
                 }
             })
             .disposed(by: disposeBag)
