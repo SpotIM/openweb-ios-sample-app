@@ -590,6 +590,14 @@
 		3DBFB4F12AE95203001105DA /* OWAutomationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4F02AE95203001105DA /* OWAutomationRequiredData.swift */; };
 		3DBFB4F62AE95502001105DA /* OWFontsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4F52AE95502001105DA /* OWFontsCoordinator.swift */; };
 		3DBFB4F92AE99992001105DA /* OWUserStatusCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB4F82AE99992001105DA /* OWUserStatusCoordinator.swift */; };
+		3DBFB5022AE9BB53001105DA /* OWFontsAutomationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB5012AE9BB53001105DA /* OWFontsAutomationViewModel.swift */; };
+		3DBFB5042AE9BB5F001105DA /* OWFontsAutomationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB5032AE9BB5F001105DA /* OWFontsAutomationViewViewModel.swift */; };
+		3DBFB5062AE9BB76001105DA /* OWFontsAutomationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB5052AE9BB76001105DA /* OWFontsAutomationVC.swift */; };
+		3DBFB5082AE9BB83001105DA /* OWFontsAutomationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB5072AE9BB83001105DA /* OWFontsAutomationView.swift */; };
+		3DBFB50A2AE9BB94001105DA /* OWUserStatusAutomationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB5092AE9BB94001105DA /* OWUserStatusAutomationVC.swift */; };
+		3DBFB50C2AE9BB9E001105DA /* OWUserStatusAutomationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB50B2AE9BB9E001105DA /* OWUserStatusAutomationView.swift */; };
+		3DBFB50E2AE9BBAD001105DA /* OWUserStatusAutomationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB50D2AE9BBAD001105DA /* OWUserStatusAutomationViewModel.swift */; };
+		3DBFB5102AE9BBBB001105DA /* OWUserStatusAutomationViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFB50F2AE9BBBB001105DA /* OWUserStatusAutomationViewViewModel.swift */; };
 		3DC7BD9529A4E71500DF72E4 /* OWConversationCountersCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */; };
 		3DC7BD9829A4E80400DF72E4 /* OWConversationCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */; };
 		3DC7BD9A29A4EA4100DF72E4 /* OWLoggerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */; };
@@ -1708,6 +1716,14 @@
 		3DBFB4F02AE95203001105DA /* OWAutomationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAutomationRequiredData.swift; sourceTree = "<group>"; };
 		3DBFB4F52AE95502001105DA /* OWFontsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontsCoordinator.swift; sourceTree = "<group>"; };
 		3DBFB4F82AE99992001105DA /* OWUserStatusCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserStatusCoordinator.swift; sourceTree = "<group>"; };
+		3DBFB5012AE9BB53001105DA /* OWFontsAutomationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontsAutomationViewModel.swift; sourceTree = "<group>"; };
+		3DBFB5032AE9BB5F001105DA /* OWFontsAutomationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontsAutomationViewViewModel.swift; sourceTree = "<group>"; };
+		3DBFB5052AE9BB76001105DA /* OWFontsAutomationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontsAutomationVC.swift; sourceTree = "<group>"; };
+		3DBFB5072AE9BB83001105DA /* OWFontsAutomationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontsAutomationView.swift; sourceTree = "<group>"; };
+		3DBFB5092AE9BB94001105DA /* OWUserStatusAutomationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserStatusAutomationVC.swift; sourceTree = "<group>"; };
+		3DBFB50B2AE9BB9E001105DA /* OWUserStatusAutomationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserStatusAutomationView.swift; sourceTree = "<group>"; };
+		3DBFB50D2AE9BBAD001105DA /* OWUserStatusAutomationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserStatusAutomationViewModel.swift; sourceTree = "<group>"; };
+		3DBFB50F2AE9BBBB001105DA /* OWUserStatusAutomationViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserStatusAutomationViewViewModel.swift; sourceTree = "<group>"; };
 		3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCountersCompletion.swift; sourceTree = "<group>"; };
 		3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCounter.swift; sourceTree = "<group>"; };
 		3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoggerConfiguration.swift; sourceTree = "<group>"; };
@@ -4298,6 +4314,69 @@
 			path = FundamentalsModels;
 			sourceTree = "<group>";
 		};
+		3DBFB4FA2AE9BAA0001105DA /* Automation */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB4FC2AE9BAD6001105DA /* UserStatus */,
+				3DBFB4FB2AE9BAC6001105DA /* Fonts */,
+			);
+			path = Automation;
+			sourceTree = "<group>";
+		};
+		3DBFB4FB2AE9BAC6001105DA /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB4FE2AE9BAE9001105DA /* ViewModels */,
+				3DBFB5002AE9BAF3001105DA /* Views */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		3DBFB4FC2AE9BAD6001105DA /* UserStatus */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB4FD2AE9BADF001105DA /* ViewModels */,
+				3DBFB4FF2AE9BAEE001105DA /* Views */,
+			);
+			path = UserStatus;
+			sourceTree = "<group>";
+		};
+		3DBFB4FD2AE9BADF001105DA /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB50D2AE9BBAD001105DA /* OWUserStatusAutomationViewModel.swift */,
+				3DBFB50F2AE9BBBB001105DA /* OWUserStatusAutomationViewViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3DBFB4FE2AE9BAE9001105DA /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB5012AE9BB53001105DA /* OWFontsAutomationViewModel.swift */,
+				3DBFB5032AE9BB5F001105DA /* OWFontsAutomationViewViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3DBFB4FF2AE9BAEE001105DA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB5092AE9BB94001105DA /* OWUserStatusAutomationVC.swift */,
+				3DBFB50B2AE9BB9E001105DA /* OWUserStatusAutomationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3DBFB5002AE9BAF3001105DA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DBFB5052AE9BB76001105DA /* OWFontsAutomationVC.swift */,
+				3DBFB5072AE9BB83001105DA /* OWFontsAutomationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		3DC7BD9629A4E7F000DF72E4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -4806,6 +4885,7 @@
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views - Old without VMs */,
 				3DB3B95529F7D8DC00C50192 /* TestingPlayground-Beta */,
+				3DBFB4FA2AE9BAA0001105DA /* Automation */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -7229,6 +7309,7 @@
 				3D26B5B128CA37E400A1DAD2 /* OWCommentCreationSettings.swift in Sources */,
 				3DD72C7D280F053A00117946 /* OWSession.swift in Sources */,
 				9E3B8B7F2A025145006BB207 /* UILabel+Extensions.swift in Sources */,
+				3DBFB5062AE9BB76001105DA /* OWFontsAutomationVC.swift in Sources */,
 				3D08E0B8287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift in Sources */,
 				3D263CED29BDFEFE0013C532 /* OWAuthenticationManager.swift in Sources */,
 				3DB9858D2A797698001AC014 /* OWHostApplicationHelper.swift in Sources */,
@@ -7252,6 +7333,7 @@
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
 				8D0DB7322A953FFE0014AD1B /* OWRealTimeMessagesCount.swift in Sources */,
 				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
+				3DBFB5042AE9BB5F001105DA /* OWFontsAutomationViewViewModel.swift in Sources */,
 				3DA2646C2951E3B200688FFF /* OWNetworkParameterEncoding.swift in Sources */,
 				3DBFB4ED2AE9514B001105DA /* OWAutomationSettingsProtocol.swift in Sources */,
 				449F5F74237C5D7300F81EA3 /* OWMulticastDelegate.swift in Sources */,
@@ -7437,6 +7519,7 @@
 				24D7C25529E5302F001F148B /* OWAvatarView.swift in Sources */,
 				161655662A5315AB004EBF6F /* OWCommentCreationContentViewModel.swift in Sources */,
 				169D58E227D11925009936F3 /* OWVotesType.swift in Sources */,
+				3DBFB50C2AE9BB9E001105DA /* OWUserStatusAutomationView.swift in Sources */,
 				4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */,
 				3DDA9A92291A86A600FE3B86 /* OWOptionalEncapsulation.swift in Sources */,
 				24B7A2B82A30AC3900A5D71D /* OWMenuSelectionCellViewModel.swift in Sources */,
@@ -7573,6 +7656,7 @@
 				24B087CB288E747200CAA0EB /* OWAuthenticationEndpoints.swift in Sources */,
 				3DA264622951E3B200688FFF /* OperationQueue+Network.swift in Sources */,
 				16F66EC12A2CCC810089E70E /* OWMenuTypeProtocol.swift in Sources */,
+				3DBFB5022AE9BB53001105DA /* OWFontsAutomationViewModel.swift in Sources */,
 				246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */,
 				3D263D0B29C394510013C532 /* OWNetworkAuthorizationRecoveryInterceptor.swift in Sources */,
 				24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */,
@@ -7609,6 +7693,7 @@
 				3D263CF329C0FD7C0013C532 /* OWBlockerActionType.swift in Sources */,
 				3D5058B02AB1D5A7006CECFA /* OWLoadingState.swift in Sources */,
 				3D08E0912877095C00E6F1AC /* OWAnimatableSectionModel.swift in Sources */,
+				3DBFB50E2AE9BBAD001105DA /* OWUserStatusAutomationViewModel.swift in Sources */,
 				16D5A20C29D457CC00914AD7 /* OWCommentThreadActionsCellViewModel.swift in Sources */,
 				3D20A37127B015D4003F8513 /* OWConstraintInsetTarget.swift in Sources */,
 				3D33C0EE294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift in Sources */,
@@ -7664,6 +7749,7 @@
 				3DF41EF12ACAD6C300887340 /* OWWebTabView.swift in Sources */,
 				3D20A37527B01756003F8513 /* OWConstraintLayoutGuide+Extensions.swift in Sources */,
 				445418AE23685154001D0ED0 /* JSONDecoder+SPExtensions.swift in Sources */,
+				3DBFB50A2AE9BB94001105DA /* OWUserStatusAutomationVC.swift in Sources */,
 				6D22A46623BBA26700DCE08A /* DataRequest+Logging.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
 				3DB1D5A12A785BEC0012388E /* OWStatusBarEnforcement.swift in Sources */,
@@ -7800,6 +7886,8 @@
 				24D74AE62A77FA1A00F454D5 /* OWDecoder.swift in Sources */,
 				160E42E42988103D00EDC5A1 /* OWCommentThreadVC.swift in Sources */,
 				24C314822A8A6D9300F22B8C /* OWBIAnalyticAdditionalInfoProtocol.swift in Sources */,
+				3DBFB5082AE9BB83001105DA /* OWFontsAutomationView.swift in Sources */,
+				3DBFB5102AE9BBBB001105DA /* OWUserStatusAutomationViewViewModel.swift in Sources */,
 				3D0AFC9A29C73901002670D1 /* OWSSOCompletionResponse.swift in Sources */,
 				249DF2952964140E00F5D69A /* OWCommentCreationTypeInternal.swift in Sources */,
 				9E4163BD29F6C9BB00819BC2 /* OWReportReasonCancelVC.swift in Sources */,
