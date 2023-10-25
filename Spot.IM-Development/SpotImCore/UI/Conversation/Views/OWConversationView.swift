@@ -252,7 +252,6 @@ fileprivate extension OWConversationView {
             .bind(to: viewModel.inputs.tableViewContentSizeHeight)
             .disposed(by: disposeBag)
 
-
         viewModel.outputs.conversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
