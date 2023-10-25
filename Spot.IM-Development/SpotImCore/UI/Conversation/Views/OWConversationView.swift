@@ -111,8 +111,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         return dataSource
     }()
 
-    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewQueue")
-
     fileprivate var loginPromptTopConstraint: OWConstraint? = nil
 
     fileprivate let viewModel: OWConversationViewViewModeling

@@ -58,7 +58,6 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var firstIndexAfterCommunityCells: Observable<Int> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -91,7 +90,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
-    fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewVMScheduler")
+    fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewVMQueue")
 
     var tableViewHeight = PublishSubject<CGFloat>()
     fileprivate lazy var tableViewHeightChanged: Observable<CGFloat> = {
@@ -486,18 +485,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var conversationOffset: Observable<CGPoint> {
         return changeConversationOffset
             .asObservable()
-    }
-
-    var firstIndexAfterCommunityCells: Observable<Int> {
-        return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
-            .flatMapLatest({ showCommunityQuestion, showCommunityGuidlines -> Observable<Int> in
-                var index = 0
-                if showCommunityQuestion { index += 1 }
-                if showCommunityQuestion && showCommunityGuidlines { index += 1 } // spacer
-                if showCommunityGuidlines { index += 1 }
-                return .just(index)
-            })
-            .share(replay: 1)
     }
 
     var dataSourceTransition: OWViewTransition = .reload
