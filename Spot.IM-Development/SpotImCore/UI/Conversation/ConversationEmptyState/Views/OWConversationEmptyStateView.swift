@@ -14,7 +14,6 @@ class OWConversationEmptyStateView: UIView {
         static let titleLabelTopOffset: CGFloat = 10
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
-        static let minimumHeight: CGFloat = 130
         static let margins: UIEdgeInsets = UIEdgeInsets(top: 60, left: 6, bottom: 60, right: 6)
     }
 
