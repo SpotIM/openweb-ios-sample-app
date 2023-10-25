@@ -123,6 +123,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return conversationData.article.additionalSettings.headerStyle != .none
     }()
 
+    fileprivate var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
+    var tryAgainAfterError: Observable<OWErrorStateTypes> {
+        return _tryAgainAfterError
+            .asObservable()
+    }
+
     fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorLoadingComments: Observable<Bool> {
         return _shouldShowErrorLoadingComments
@@ -287,7 +293,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate lazy var errorCellViewModels: Observable<[OWConversationCellOption]> = {
         return shouldShowErrorLoadingComments
             .filter { $0 }
-            .flatMap { [weak self] _ -> Observable<[OWConversationCellOption]> in
+            .flatMapLatest { [weak self] _ -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return .empty() }
                 return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
             }
@@ -473,8 +479,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             }
             .asObservable()
     }()
-
-    fileprivate var tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
 
     fileprivate var openReportReasonChange = PublishSubject<OWCommentViewModeling>()
     var openReportReason: Observable<OWCommentViewModeling> {
@@ -955,7 +959,7 @@ fileprivate extension OWConversationViewViewModel {
             .bind(to: communityQuestionCellViewModel.outputs.communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
-        // Try again after error loading more comments
+        // Try again after error loading more replies
         let tryAgainAfterLoadingMoreRepliesError = tryAgainAfterError
             .filter {
                 if case .loadConversationReplies = $0 { return true }
@@ -1237,7 +1241,7 @@ fileprivate extension OWConversationViewViewModel {
                 .unwrap()
                 return Observable.merge(errorStateTryAgainTapped)
             }
-            .bind(to: tryAgainAfterError)
+            .bind(to: _tryAgainAfterError)
             .disposed(by: disposeBag)
 
         // Observable of the comment cell VMs
