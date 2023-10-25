@@ -236,10 +236,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     var pullToRefresh = PublishSubject<Void>()
-    fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
-        return pullToRefresh
-            .map { OWLoadingTriggeredReason.pullToRefresh }
-            .asObservable()
+    fileprivate var _forceRefresh = PublishSubject<Void>()
+    fileprivate lazy var refreshConversationObservable: Observable<OWLoadingTriggeredReason> = {
+        return Observable.merge(
+            pullToRefresh.map { OWLoadingTriggeredReason.pullToRefresh },
+            _forceRefresh.map { OWLoadingTriggeredReason.forceRefresh }
+        )
+        .asObservable()
     }()
 
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -464,7 +467,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
 
-        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable, pullToRefreshObservable, tryAgainAfterInitialError)
+        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable, refreshConversationObservable, tryAgainAfterInitialError)
             .do(onNext: { [weak self] loadingTriggeredReason in
                 guard let self = self else { return }
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
@@ -1169,6 +1172,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .map { _ in updateType }
             }
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
@@ -1180,8 +1184,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 case .refreshConversation:
-                    // TODO
-                    break
+                    self._forceRefresh.onNext()
                 }
             })
             .disposed(by: disposeBag)
