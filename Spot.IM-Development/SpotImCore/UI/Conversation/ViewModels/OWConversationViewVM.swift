@@ -40,14 +40,12 @@ protocol OWConversationViewViewModelingOutputs {
     var articleDescriptionViewModel: OWArticleDescriptionViewModeling { get }
     var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var conversationSummaryViewModel: OWConversationSummaryViewModeling { get }
-    var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling { get }
     var commentingCTAViewModel: OWCommentingCTAViewModel { get }
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
 
     var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling { get }
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
-    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
-//    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
+    var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
@@ -60,6 +58,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var firstIndexAfterCommunityCells: Observable<Int> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -243,13 +242,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
     }()
 
-    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
-//    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
-//        return OWConversationEmptyStateCellViewModel()
-//    }()
-
-    lazy var conversationEmptyStateViewModel: OWConversationEmptyStateViewModeling = {
-        return OWConversationEmptyStateViewModel()
+    lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
+        return OWConversationEmptyStateCellViewModel()
     }()
 
     fileprivate lazy var shouldShowCommunityQuestion: Observable<Bool> = {
@@ -314,7 +308,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     self.dataSourceTransition = .reload
                     return Observable.just(errorCellViewModels)
                 } else if isEmptyState {
-                    return Observable.just([])
+                    let emptyStateCellOption = [OWConversationCellOption.conversationEmptyState(viewModel: self.conversationEmptyStateCellViewModel)]
+                    return Observable.just(communityCellsOptions + emptyStateCellOption)
                 } else {
                     var loadingCell = isLoadingMoreComments ? self.getLoadingCell() : []
                     let errorLoadingMoreCell = shouldShowErrorLoadingMoreComments ? self.getErrorStateCell(errorStateType: .loadMoreConversationComments) : []
@@ -432,10 +427,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return OWConversationCellOption.communityGuidelines(viewModel: communityGuidelinesCellViewModel)
     }()
 
-    // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
-//    fileprivate lazy var conversationEmptyStateCellOption: OWConversationCellOption = {
-//        return OWConversationCellOption.conversationEmptyState(viewModel: conversationEmptyStateCellViewModel)
-//    }()
+    fileprivate lazy var conversationEmptyStateCellOption: OWConversationCellOption = {
+        return OWConversationCellOption.conversationEmptyState(viewModel: conversationEmptyStateCellViewModel)
+    }()
 
     fileprivate lazy var communitySpacerCellOption: OWConversationCellOption = {
         return OWConversationCellOption.spacer(viewModel: communitySpacerCellViewModel)
@@ -492,6 +486,18 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var conversationOffset: Observable<CGPoint> {
         return changeConversationOffset
             .asObservable()
+    }
+
+    var firstIndexAfterCommunityCells: Observable<Int> {
+        return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
+            .flatMapLatest({ showCommunityQuestion, showCommunityGuidlines -> Observable<Int> in
+                var index = 0
+                if showCommunityQuestion { index += 1 }
+                if showCommunityQuestion && showCommunityGuidlines { index += 1 } // spacer
+                if showCommunityGuidlines { index += 1 }
+                return .just(index)
+            })
+            .share(replay: 1)
     }
 
     var dataSourceTransition: OWViewTransition = .reload
@@ -929,11 +935,11 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         isReadOnly
-            .bind(to: conversationEmptyStateViewModel.inputs.isReadOnly)
+            .bind(to: conversationEmptyStateCellViewModel.outputs.conversationEmptyStateViewModel.inputs.isReadOnly)
             .disposed(by: disposeBag)
 
         shouldShowConversationEmptyState
-            .bind(to: conversationEmptyStateViewModel.inputs.isEmpty)
+            .bind(to: conversationEmptyStateCellViewModel.outputs.conversationEmptyStateViewModel.inputs.isEmpty)
             .disposed(by: disposeBag)
 
         commentingCTAViewModel
@@ -1163,14 +1169,34 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to guidelines height change (for updating cell)
+        // Responding to guidelines height change (for updating cell) //CHECK
+//        cellsViewModels
+//            .flatMapLatest { cellsVms -> Observable<Void> in
+//                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
+//                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
+//                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
+//                        return guidelinesVM.outputs.shouldShowView
+//                            .filter { $0 == true }
+//                            .voidify()
+//                    } else {
+//                        return nil
+//                    }
+//                }
+//                .unwrap()
+//                return Observable.merge(sizeChangeObservable)
+//            }
+//            .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
+//            .bind(to: _performTableViewAnimation)
+//            .disposed(by: disposeBag)
+
+        // Responding to guidelines height change (for updating cell) //CHECK
         cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Void> in
+            .flatMapLatest { [weak self] cellsVms -> Observable<Void> in
+                guard let self = self else { return Observable.empty() }
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowView
-                            .filter { $0 == true }
+                    if case.conversationEmptyState(let emptyStateCellViewModel) = vm {
+                        let guidelinesVM = emptyStateCellViewModel.outputs.conversationEmptyStateViewModel
+                        return guidelinesVM.outputs.updatedHeight
                             .voidify()
                     } else {
                         return nil
@@ -1180,6 +1206,7 @@ fileprivate extension OWConversationViewViewModel {
                 return Observable.merge(sizeChangeObservable)
             }
             .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
+            .debug("RIVI")
             .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
