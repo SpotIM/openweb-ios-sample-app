@@ -97,7 +97,7 @@
 "ReportReasonTextViewMandatoryPlaceholder" = "Please provide additional information";
 "ReportReasonHelpUsTitle" = "To help us understand the problem, please choose which of these options best describe the violation (learn more)";
 "ReportReasonHelpUsClickText" = "(learn more)";
-"Community Guidelines" = "Community Guidelines";
+"CommunityGuidelines" = "Community Guidelines";
 "Submit" = "Submit";
 "TryAgain" = "Try again";
 "AdditionalInfoTitle" = "Additional information";
