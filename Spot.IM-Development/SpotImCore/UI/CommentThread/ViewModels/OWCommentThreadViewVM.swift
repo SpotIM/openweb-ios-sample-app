@@ -145,11 +145,11 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                             let commentVm = commentCellVm.outputs.commentVM
                             let updatedCommentVm = viewModel.outputs.commentVM
 
-                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment
-                                || updatedCommentVm.outputs.user != commentVm.outputs.user) {
-
-                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
                                 commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                            }
+                            if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
                             }
                             return OWCommentThreadCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -600,7 +600,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .subscribe(onNext: { [weak self] (commentPresentationData, response) in
+            .subscribe(onNext: { [weak self] commentPresentationData, response in
                 guard let self = self else { return }
 
                 let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
@@ -642,9 +642,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
-                        return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.height
-                            .voidify()
+                        return commentVM.outputs.heightChanged
                     } else {
                         return nil
                     }

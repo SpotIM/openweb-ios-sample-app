@@ -150,6 +150,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
 
     private var tableViewHeightConstraint: OWConstraint?
+    private var commentingCTAHeightConstraint: OWConstraint?
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -242,6 +243,7 @@ fileprivate extension OWPreConversationView {
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom).offset(Metrics.commentingCTATopPadding)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
         self.addSubview(tableView)
@@ -335,6 +337,7 @@ fileprivate extension OWPreConversationView {
                     make.top.equalTo(self.loginPromptView.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptDividerTopPadding : 0)
                     make.height.equalTo(shouldShow ? Metrics.separatorHeight : 0)
                 }
+                self.loginPromptBottomDivider.isHidden(!shouldShow)
             })
             .disposed(by: disposeBag)
 
@@ -403,6 +406,13 @@ fileprivate extension OWPreConversationView {
             .map { !$0 }
             .bind(to: commentingCTAView.rx.isHidden)
             .disposed(by: disposeBag)
+
+        if let constraint = commentingCTAHeightConstraint {
+            viewModel.outputs.shouldShowCommentingCTAView
+                .map { !$0 }
+                .bind(to: constraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         viewModel.outputs.shouldShowCommentingCTAView
             .observe(on: MainScheduler.instance)
