@@ -343,11 +343,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             let commentVm = commentCellVm.outputs.commentVM
                             let updatedCommentVm = viewModel.outputs.commentVM
 
-                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment
-                                || updatedCommentVm.outputs.user != commentVm.outputs.user) {
-
-                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
                                 commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                            }
+                            if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
                             }
                             return OWConversationCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -1182,9 +1182,7 @@ fileprivate extension OWConversationViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
-                        return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.height
-                            .voidify()
+                        return commentVM.outputs.heightChanged
                     }
                     return nil
                 }
@@ -1942,12 +1940,12 @@ fileprivate extension OWConversationViewViewModel {
                 let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == user.id }
                 return (user, userCommentCells.map { $0.outputs.commentVM })
             }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { user, mutedUserCommentCellsVms in
                 mutedUserCommentCellsVms.forEach {
                     $0.inputs.update(user: user)
                 }
             })
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._performTableViewAnimation.onNext()
