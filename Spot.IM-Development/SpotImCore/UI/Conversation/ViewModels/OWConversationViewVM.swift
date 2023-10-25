@@ -1169,34 +1169,14 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to guidelines height change (for updating cell) //CHECK
-//        cellsViewModels
-//            .flatMapLatest { cellsVms -> Observable<Void> in
-//                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-//                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-//                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-//                        return guidelinesVM.outputs.shouldShowView
-//                            .filter { $0 == true }
-//                            .voidify()
-//                    } else {
-//                        return nil
-//                    }
-//                }
-//                .unwrap()
-//                return Observable.merge(sizeChangeObservable)
-//            }
-//            .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
-//            .bind(to: _performTableViewAnimation)
-//            .disposed(by: disposeBag)
-
-        // Responding to guidelines height change (for updating cell) //CHECK
+        // Responding to guidelines height change (for updating cell)
         cellsViewModels
-            .flatMapLatest { [weak self] cellsVms -> Observable<Void> in
-                guard let self = self else { return Observable.empty() }
+            .flatMapLatest { cellsVms -> Observable<Void> in
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                    if case.conversationEmptyState(let emptyStateCellViewModel) = vm {
-                        let guidelinesVM = emptyStateCellViewModel.outputs.conversationEmptyStateViewModel
-                        return guidelinesVM.outputs.updatedHeight
+                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
+                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
+                        return guidelinesVM.outputs.shouldShowView
+                            .filter { $0 == true }
                             .voidify()
                     } else {
                         return nil
@@ -1206,7 +1186,6 @@ fileprivate extension OWConversationViewViewModel {
                 return Observable.merge(sizeChangeObservable)
             }
             .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
-            .debug("RIVI")
             .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
