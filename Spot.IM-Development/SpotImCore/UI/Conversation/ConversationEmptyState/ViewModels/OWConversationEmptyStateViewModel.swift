@@ -14,7 +14,6 @@ protocol OWConversationEmptyStateViewModelingInputs {
     var isReadOnly: PublishSubject<Bool> { get }
     var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
     var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
-    var updateHeight: PublishSubject<CGFloat> { get }
 }
 
 protocol OWConversationEmptyStateViewModelingOutputs {
@@ -22,7 +21,6 @@ protocol OWConversationEmptyStateViewModelingOutputs {
     var text: Observable<String> { get }
     var customizeIconImageViewUI: Observable<UIImageView> { get }
     var customizeTitleLabelUI: Observable<UILabel> { get }
-    var updatedHeight: Observable<CGFloat> { get }
 }
 
 protocol OWConversationEmptyStateViewModeling {
@@ -47,12 +45,6 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
 
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
     var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
-
-    var updateHeight = PublishSubject<CGFloat>()
-    var updatedHeight: Observable<CGFloat> {
-        return updateHeight
-            .asObservable()
-    }
 
     var customizeIconImageViewUI: Observable<UIImageView> {
         return _triggerCustomizeIconImageViewUI

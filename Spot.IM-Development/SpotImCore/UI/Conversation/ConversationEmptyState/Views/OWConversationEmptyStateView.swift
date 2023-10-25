@@ -15,6 +15,7 @@ class OWConversationEmptyStateView: UIView {
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
         static let minimumHeight: CGFloat = 130
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 60, left: 6, bottom: 60, right: 6)
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
@@ -69,11 +70,10 @@ fileprivate extension OWConversationEmptyStateView {
         self.addSubview(containerView)
         containerView.OWSnp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.leading.greaterThanOrEqualToSuperview()
-            make.trailing.lessThanOrEqualToSuperview()
-            make.top.greaterThanOrEqualToSuperview()
-            make.bottom.lessThanOrEqualToSuperview()
-            heightConstraint = make.height.equalTo(Metrics.minimumHeight).constraint
+            make.leading.greaterThanOrEqualToSuperview().offset(Metrics.margins.left)
+            make.trailing.lessThanOrEqualToSuperview().offset(Metrics.margins.right)
+            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
+            make.bottom.lessThanOrEqualToSuperview().offset(Metrics.margins.bottom)
         }
 
         containerView.addSubview(iconImageView)
@@ -95,13 +95,6 @@ fileprivate extension OWConversationEmptyStateView {
     func setupObservers() {
         viewModel.outputs.text
             .bind(to: titleLabel.rx.text)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.updatedHeight
-            .subscribe(onNext: { [weak self] height in
-                guard let self = self else { return }
-                heightConstraint?.update(offset: height)
-            })
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
