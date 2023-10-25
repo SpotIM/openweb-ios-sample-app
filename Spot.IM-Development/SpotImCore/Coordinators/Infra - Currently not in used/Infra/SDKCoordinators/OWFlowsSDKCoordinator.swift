@@ -122,23 +122,23 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 #if AUTOMATION
     func startFontsFlow(automationData: OWAutomationRequiredData,
                         presentationalMode: OWPresentationalMode,
-                        callbacks: OWViewActionsCallbacks,
-                        deepLinkOptions: OWDeepLinkOptions? = nil) {
+                        callbacks: OWViewActionsCallbacks?,
+                        deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWFontsCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
 
         let fontsAutomationCoordinator = OWFontsCoordinator(router: router,
                                                             automationData: automationData,
-                                                            ctionsCallbacks: callbacks)
+                                                            actionsCallbacks: callbacks)
 
         return coordinate(to: fontsAutomationCoordinator, deepLinkOptions: deepLinkOptions)
     }
 
     func startUserStatusFlow(automationData: OWAutomationRequiredData,
                         presentationalMode: OWPresentationalMode,
-                        callbacks: OWViewActionsCallbacks,
-                        deepLinkOptions: OWDeepLinkOptions? = nil) {
+                        callbacks: OWViewActionsCallbacks?,
+                        deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
