@@ -14,6 +14,7 @@ import UIKit
 protocol OWPreConversationCompactContentViewModelingInputs {
     var conversationFetched: PublishSubject<OWConversationReadRM> { get }
     var isReadOnly: PublishSubject<Bool> { get }
+    var conversationError: PublishSubject<Bool> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
@@ -31,14 +32,15 @@ protocol OWPreConversationCompactContentViewModeling {
 }
 
 class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentViewModeling,
-                                 OWPreConversationCompactContentViewModelingInputs,
-                                 OWPreConversationCompactContentViewModelingOutputs {
+                                                OWPreConversationCompactContentViewModelingInputs,
+                                                OWPreConversationCompactContentViewModelingOutputs {
 
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
     var conversationFetched = PublishSubject<OWConversationReadRM>()
     var isReadOnly = PublishSubject<Bool>()
+    var conversationError = PublishSubject<Bool>()
     fileprivate var emptyConversation = PublishSubject<Void>()
     fileprivate var comment = PublishSubject<OWComment>()
 
@@ -98,6 +100,8 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                     case .text(let string):
                         return string
                     }
+                case .error:
+                    return OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadConversationComments")
                 }
             }
             .asObservable()
@@ -161,6 +165,15 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                     return .media
                 }()
                 self._contentType.onNext(.comment(type: commentType))
+            })
+            .disposed(by: disposeBag)
+
+        // Set error
+        conversationError
+            .subscribe(onNext: { [weak self] isError in
+                guard isError == true,
+                      let self = self else { return }
+                self._contentType.onNext(.error)
             })
             .disposed(by: disposeBag)
     }
