@@ -14,6 +14,7 @@ protocol OWFontsAutomationViewModelingInputs { }
 
 protocol OWFontsAutomationViewModelingOutputs {
     var viewVM: OWFontsAutomationViewViewModeling { get }
+    var title: String { get }
 }
 
 protocol OWFontsAutomationViewModeling {
@@ -29,6 +30,10 @@ class OWFontsAutomationViewModel: OWFontsAutomationViewModeling,
 
     lazy var viewVM: OWFontsAutomationViewViewModeling = {
         return OWFontsAutomationViewViewModel()
+    }()
+
+    lazy var title: String = {
+        return OWLocalizationManager.shared.localizedString(key: "Fonts")
     }()
 }
 

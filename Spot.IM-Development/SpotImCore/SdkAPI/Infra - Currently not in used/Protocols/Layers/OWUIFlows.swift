@@ -54,9 +54,9 @@ public protocol OWUIFlows {
                completion: @escaping OWDefaultCompletion)
 
     func userStatus(presentationalMode: OWPresentationalMode,
-               additionalSettings: OWAutomationSettingsProtocol,
-               callbacks: OWViewActionsCallbacks?,
-               completion: @escaping OWDefaultCompletion)
+                    additionalSettings: OWAutomationSettingsProtocol,
+                    callbacks: OWViewActionsCallbacks?,
+                    completion: @escaping OWDefaultCompletion)
 #endif
 }
 #else
