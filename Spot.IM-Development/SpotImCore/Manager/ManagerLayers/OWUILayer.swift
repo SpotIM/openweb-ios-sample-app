@@ -318,8 +318,8 @@ extension OWUILayer {
     }
 
     func userStatus(presentationalMode: OWPresentationalMode,
-               additionalSettings: OWAutomationSettingsProtocol,
-               callbacks: OWViewActionsCallbacks? = nil,
+                    additionalSettings: OWAutomationSettingsProtocol,
+                    callbacks: OWViewActionsCallbacks? = nil,
                     completion: @escaping OWDefaultCompletion) {
 
         prepareForNewFlow()

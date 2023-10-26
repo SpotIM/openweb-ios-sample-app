@@ -9,11 +9,13 @@
 #if AUTOMATION
 
 import UIKit
+import RxSwift
 
 class OWFontsAutomationVC: UIViewController {
     fileprivate struct Metrics { }
 
     fileprivate let viewModel: OWFontsAutomationViewModeling
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var fontsAutomationView: OWFontsAutomationView = {
         return OWFontsAutomationView(viewModel: viewModel.outputs.viewVM)
@@ -32,15 +34,30 @@ class OWFontsAutomationVC: UIViewController {
         super.loadView()
         setupUI()
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupObservers()
+    }
 }
 
 fileprivate extension OWFontsAutomationVC {
     func setupUI() {
         view.addSubview(fontsAutomationView)
         fontsAutomationView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperviewSafeArea()
-            make.leading.trailing.bottom.equalToSuperview()
+            make.edges.equalToSuperviewSafeArea()
         }
+    }
+
+    func setupObservers() {
+        self.title = viewModel.outputs.title
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

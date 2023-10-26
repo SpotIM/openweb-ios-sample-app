@@ -24,7 +24,6 @@ class OWFontsAutomationViewViewModel: OWFontsAutomationViewViewModeling,
                                 OWFontsAutomationViewViewModelingOutputs {
     var inputs: OWFontsAutomationViewViewModelingInputs { return self }
     var outputs: OWFontsAutomationViewViewModelingOutputs { return self }
-
 }
 
 #endif
