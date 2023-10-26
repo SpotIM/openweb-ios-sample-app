@@ -136,9 +136,9 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     }
 
     func startUserStatusFlow(automationData: OWAutomationRequiredData,
-                        presentationalMode: OWPresentationalMode,
-                        callbacks: OWViewActionsCallbacks?,
-                        deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
+                             presentationalMode: OWPresentationalMode,
+                             callbacks: OWViewActionsCallbacks?,
+                             deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
