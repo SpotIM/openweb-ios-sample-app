@@ -132,7 +132,7 @@
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
-"FontStyle" = "Font style";
+"Typography" = "Typography";
 "TitleSmall" = "titleSmall";
 "TitleLarge" = "titleLarge";
 "TitleMedium" = "titleMedium";
