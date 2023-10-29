@@ -451,7 +451,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                 }
 
-                let bottomPadding: CGFloat = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                let bottomPadding = self.window?.safeAreaInsets.bottom ?? 0
 
                 self.mainContainer.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
