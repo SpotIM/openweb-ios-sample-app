@@ -38,6 +38,9 @@ extension OWOrientationEnforcement {
                     return 1
                 case .landscape:
                     return 2
+                @unknown default:
+                    // Intentionally crash the Sample App in this case
+                    fatalError()
                 }
             }
             return 0
