@@ -58,8 +58,8 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var title: String = {
         let key = {
             switch errorStateType {
-            case .loadConversationComments, .loadMoreConversationComments:
-                return "ErrorStateLoadConversationComments"
+            case .loadConversationComments, .loadMoreConversationComments, .loadCommentThreadComments:
+                return "ErrorStateLoadComments"
             case .loadConversationReplies, .loadCommentThreadReplies:
                 return "ErrorStateLoadReplies"
             case .none:
@@ -85,7 +85,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         switch errorStateType {
         case .none, .loadConversationComments:
             return false
-        case .loadMoreConversationComments, .loadConversationReplies, .loadCommentThreadReplies:
+        case .loadMoreConversationComments, .loadConversationReplies, .loadCommentThreadReplies, .loadCommentThreadComments:
             return true
         }
     }()
