@@ -267,18 +267,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var pullToRefresh = PublishSubject<Void>()
     fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
         return pullToRefresh
-            .withLatestFrom(shouldShowErrorLoadingComments)
-            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
-                // This is for pull to refresh while error state for initial comments is shown
-                // We want to show skeletons after this pull to refresh
-                if shouldShowErrorLoadingComments {
-                    guard let self = self else { return }
-                    self.dataSourceTransition = .reload
-                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
-                    self._shouldShowErrorLoadingComments.onNext(false)
-                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
-                }
-            })
             .map { _ -> OWLoadingTriggeredReason in
                 OWLoadingTriggeredReason.pullToRefresh
             }
@@ -389,7 +377,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
 
             if self.errorsLoadingReplies[commentPresentationData.id] == .error {
-                let cellOptionsError = self.getErrorStateCell(errorStateType: .loadConversationReplies(commentPresentationData: commentPresentationData), depth: depth)
+                let cellOptionsError = self.getErrorStateCell(errorStateType: .loadCommentThreadReplies(commentPresentationData: commentPresentationData), depth: depth)
                 cellOptions.append(contentsOf: cellOptionsError)
             }
 
@@ -522,24 +510,18 @@ fileprivate extension OWCommentThreadViewViewModel {
         let tryAgainAfterInitialError = tryAgainAfterError
             .filter { $0 == .loadConversationComments }
             .voidify()
-            .do(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.dataSourceTransition = .reload
-                self._shouldShowErrorLoadingComments.onNext(false)
-                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
-            })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
 
         // Try again after error loading more replies
         let tryAgainAfterLoadingMoreRepliesError = tryAgainAfterError
             .filter {
-                if case .loadConversationReplies = $0 { return true }
+                if case .loadCommentThreadReplies = $0 { return true }
                 return false
             }
             .map { errorState -> OWCommentPresentationData? in
                 switch errorState {
-                case .loadConversationReplies(commentPresentationData: let commentPresentationData):
+                case .loadCommentThreadReplies(commentPresentationData: let commentPresentationData):
                     return commentPresentationData
                 default:
                     return nil
@@ -556,8 +538,22 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .asObservable()
 
-        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable, pullToRefreshObservable, tryAgainAfterInitialError)
-            .do(onNext: { [weak self] loadingTriggeredReason in
+        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable,
+                                                              pullToRefreshObservable,
+                                                              tryAgainAfterInitialError)
+            .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
+            .do(onNext: { [weak self] (loadingTriggeredReason, shouldShowErrorLoadingComments) in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
+                }
+            })
+            .do(onNext: { [weak self] (loadingTriggeredReason, _) in
                 guard let self = self else { return }
                 self.errorsLoadingReplies.removeAll()
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
@@ -663,7 +659,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 let fetchCount = countAfterUpdate - repliesIdsCount
 
-                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id))
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
 
                 return self.servicesProvider
                     .netwokAPI()
@@ -682,7 +678,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentPresentationData, event)) }
-                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id))
+                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
                 if case .error = event,
                    timeToLoadMoreReplies < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((commentPresentationData, event))
