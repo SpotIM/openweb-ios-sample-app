@@ -60,8 +60,8 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
             switch errorStateType {
             case .loadConversationComments, .loadMoreConversationComments:
                 return "ErrorStateLoadConversationComments"
-            case .loadConversationReplies:
-                return "ErrorStateLoadConversationReplies"
+            case .loadConversationReplies, .loadCommentThreadReplies:
+                return "ErrorStateLoadReplies"
             case .none:
                 return ""
             }
@@ -85,7 +85,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         switch errorStateType {
         case .none, .loadConversationComments:
             return false
-        case .loadMoreConversationComments, .loadConversationReplies:
+        case .loadMoreConversationComments, .loadConversationReplies, .loadCommentThreadReplies:
             return true
         }
     }()
