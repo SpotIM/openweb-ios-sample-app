@@ -187,5 +187,16 @@ fileprivate extension OWCommentThreadView {
             .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.changeThreadOffset)
             .disposed(by: disposeBag)
+
+        tableView.rx.willDisplayCell
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+            .unwrap()
+            .map { $0.size.height }
+            .bind(to: viewModel.inputs.tableViewHeight)
+            .disposed(by: disposeBag)
     }
 }
