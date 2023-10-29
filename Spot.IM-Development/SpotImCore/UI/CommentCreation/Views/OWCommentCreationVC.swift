@@ -128,7 +128,7 @@ fileprivate extension OWCommentCreationVC {
 
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
 
