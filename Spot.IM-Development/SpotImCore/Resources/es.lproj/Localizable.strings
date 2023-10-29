@@ -125,6 +125,7 @@
 "ViewNewComments" = "Ver %d Novos Comentários";
 "ViewNewComment" = "Ver %d nuevo comentario";
 "TypingNow" = "Typing now";
+"LoginPromptTitle" = "Autorizar para participar";
 
 // Old API
 "Your Username" = "Tu seudónimo...";

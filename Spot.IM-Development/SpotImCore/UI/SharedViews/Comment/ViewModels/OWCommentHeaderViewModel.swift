@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentHeaderViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
+    var isCommentOfActiveUser: BehaviorSubject<Bool> { get }
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
@@ -68,6 +69,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
+
+    var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
 
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
@@ -175,30 +178,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
-    fileprivate var currentUser: Observable<SPUser> {
-        servicesProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
-                }
-            }
-            .unwrap()
-    }
-
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser, currentUser) { model, user, currentUser in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, isCommentOfActiveUser) { model, user, isCommentOfActiveUser in
             let localizationKey: String
-            let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
             if user.isMuted {
                 localizationKey = "MutedCommentMessage"
-            } else if (model.reported && !isCurrentUserComment) {
+            } else if (model.reported && !isCommentOfActiveUser) {
                 localizationKey = "ReportedCommentMessage"
-            } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
+            } else if (model.status == .block || model.status == .reject) && !isCommentOfActiveUser {
                 localizationKey = "ViolatedPolicyCommentMessage"
             } else if model.deleted {
                 localizationKey = "DeletedCommentMessage"

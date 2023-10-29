@@ -126,6 +126,7 @@
 "ViewNewComments" = "عرض %d تعليقات جديدة";
 "ViewNewComment" = "عرض %d تعليق جديد";
 "TypingNow" = "يكتب الآن %d";
+"LoginPromptTitle" = "السماح بالمشاركة";
 
 // Old API
 "Your Username" = "اسمك المستعار...";

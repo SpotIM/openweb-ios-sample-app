@@ -24,6 +24,7 @@ protocol OWPreConversationViewViewModelingInputs {
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
+    var loginPromptVM: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
@@ -108,6 +109,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
         return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
+    }()
+
+    lazy var loginPromptVM: OWLoginPromptViewModeling = {
+        return OWLoginPromptViewModel(isFeatureEnabled: preConversationStyle.isLoginPromptEnabled)
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
@@ -371,30 +376,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
             sendEvent(for: .preConversationViewed)
     }
-
-    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
-        guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
-              let commentUserId = comment.userId,
-              let user = self.servicesProvider.usersService().get(userId: commentUserId)
-        else { return nil }
-
-        var replyToUser: SPUser? = nil
-        if let replyToCommentId = comment.parentId,
-           let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
-           let replyToUserId = replyToComment.userId {
-            replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
-        }
-
-        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
-        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
-
-        return OWCommentCellViewModel(data: OWCommentRequiredData(comment: commentWithUpdatedStatus,
-                                                                  user: user,
-                                                                  replyToUser: replyToUser,
-                                                                  collapsableTextLineLimit: 0,
-                                                                  section: self.preConversationData.article.additionalSettings.section),
-                                      spacing: Metrics.defaultBetweenCommentsSpacing)
-    }
 }
 
 fileprivate extension OWPreConversationViewViewModel {
@@ -488,10 +469,9 @@ fileprivate extension OWPreConversationViewViewModel {
         conversationFetchedObservable
             .filter { [weak self] _ in
                 guard let self = self else { return false }
-                let stylesWithoutTableView: [OWPreConversationStyle] = [.compact, .ctaButtonOnly]
-                let isNonTableViewStyle = stylesWithoutTableView.contains(self.preConversationStyle)
-                return !isNonTableViewStyle
+                return !self.isNonTableViewStyle(self.preConversationStyle)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard
                     let self = self,
@@ -781,9 +761,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
-                        return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.height
-                            .voidify()
+                        return commentVM.outputs.heightChanged
                     } else {
                         return nil
                     }
@@ -1152,6 +1130,15 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func isNonTableViewStyle(_ style: OWPreConversationStyle) -> Bool {
+        switch style {
+        case .compact, .ctaButtonOnly, .ctaWithSummary:
+            return true
+        default:
+            return false
+        }
+    }
 
     func populateInitialUI() {
         if !self.isCompactMode {

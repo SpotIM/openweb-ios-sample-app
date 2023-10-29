@@ -128,6 +128,7 @@
 "VideoExample" = "Video example";
 "CommunityGuidelines" = "Community Guidelines";
 "ProfileTitle" = "Profile";
+"ShowLoginPromptTitle" = "Show Login Prompt";
 "EnableAll" = "Enable All";
 "Landscape" = "Landscape";
 "Portrait" = "Portrait";

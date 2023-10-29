@@ -58,10 +58,10 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var title: String = {
         let key = {
             switch errorStateType {
-            case .loadConversationComments, .loadMoreConversationComments:
-                return "ErrorStateLoadConversationComments"
-            case .loadConversationReplies:
-                return "ErrorStateLoadConversationReplies"
+            case .loadConversationComments, .loadMoreConversationComments, .loadCommentThreadComments:
+                return "ErrorStateLoadComments"
+            case .loadConversationReplies, .loadCommentThreadReplies:
+                return "ErrorStateLoadReplies"
             case .none:
                 return ""
             }
@@ -72,9 +72,6 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var tryAgainText: NSAttributedString = {
         let tryAgainText = OWLocalizationManager.shared.localizedString(key: "TryAgain")
         var attributedString = NSMutableAttributedString(string: tryAgainText)
-        attributedString.addAttribute(.foregroundColor,
-                                      value: UIColor.brandColor,
-                                         range: NSRange(location: 0, length: attributedString.length))
         attributedString.addAttribute(.font,
                                       value: OWFontBook.shared.font(typography: .bodyInteraction, forceOpenWebFont: false),
                                          range: NSRange(location: 0, length: attributedString.length))
@@ -88,7 +85,7 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         switch errorStateType {
         case .none, .loadConversationComments:
             return false
-        case .loadMoreConversationComments, .loadConversationReplies:
+        case .loadMoreConversationComments, .loadConversationReplies, .loadCommentThreadReplies, .loadCommentThreadComments:
             return true
         }
     }()
