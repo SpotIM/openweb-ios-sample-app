@@ -128,12 +128,7 @@ fileprivate extension OWCommentCreationVC {
 
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.leading.trailing.equalToSuperview()
-            }
+            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
 
