@@ -125,7 +125,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return .empty() }
-                return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
+                return Observable.just(self.getErrorStateCell(errorStateType: .loadCommentThreadComments))
             }
             .startWith([])
     }()
@@ -508,7 +508,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
-            .filter { $0 == .loadConversationComments }
+            .filter { $0 == .loadCommentThreadComments }
             .voidify()
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
@@ -772,7 +772,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { cellVM in
                     if case.conversationErrorState(let errorStateCellViewModeling) = cellVM {
                         let errorStateVM = errorStateCellViewModeling.outputs.errorStateViewModel
-                        if errorStateVM.outputs.errorStateType == .loadConversationComments {
+                        if errorStateVM.outputs.errorStateType == .loadCommentThreadComments {
                             errorStateVM.inputs.heightChange.onNext(tableViewHeight)
                             return errorStateVM.outputs.height
                                 .voidify()
