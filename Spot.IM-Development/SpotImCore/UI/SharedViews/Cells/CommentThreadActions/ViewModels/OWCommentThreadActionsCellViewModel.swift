@@ -67,12 +67,12 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
         self.depth = depth
         self.spacingBetweenComments = spacing
         self.mode = mode
-        self.setupObservers()
-        self.triggerUpdateActionType.onNext()
 
         let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
 
         self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: self.spacingBetweenComments)
+        self.setupObservers()
+        self.triggerUpdateActionType.onNext()
     }
 
     init() {
