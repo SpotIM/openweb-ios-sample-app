@@ -147,6 +147,10 @@
 "FootnoteCaption" = "footnoteCaption";
 "MetaText" = "metaText";
 "InfoCaption" = "infoCaption";
+"UserInformation" = "User information";
+"ActiveSpotId" = "Active spot id";
+"ActivePostId" = "Active post id";
+"UserStatus" = "User status";
 
 // Old API
 "Your Username" = "Your Username";

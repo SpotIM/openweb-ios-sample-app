@@ -12,7 +12,6 @@ import UIKit
 import RxSwift
 
 class OWFontsAutomationVC: UIViewController {
-    fileprivate struct Metrics { }
 
     fileprivate let viewModel: OWFontsAutomationViewModeling
     fileprivate let disposeBag = DisposeBag()
