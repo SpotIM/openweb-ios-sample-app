@@ -9,11 +9,12 @@
 #if AUTOMATION
 
 import UIKit
+import RxSwift
 
 class OWUserStatusAutomationVC: UIViewController {
-    fileprivate struct Metrics { }
 
     fileprivate let viewModel: OWUserStatusAutomationViewModeling
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate lazy var userStatusAutomationView: OWUserStatusAutomationView = {
         return OWUserStatusAutomationView(viewModel: viewModel.outputs.viewVM)
@@ -32,15 +33,30 @@ class OWUserStatusAutomationVC: UIViewController {
         super.loadView()
         setupUI()
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupObservers()
+    }
 }
 
 fileprivate extension OWUserStatusAutomationVC {
     func setupUI() {
         view.addSubview(userStatusAutomationView)
         userStatusAutomationView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperviewSafeArea()
-            make.leading.trailing.bottom.equalToSuperview()
+            make.edges.equalToSuperviewSafeArea()
         }
+    }
+
+    func setupObservers() {
+        self.title = viewModel.outputs.title
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

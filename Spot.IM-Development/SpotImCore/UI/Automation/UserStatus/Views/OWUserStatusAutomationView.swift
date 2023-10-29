@@ -12,13 +12,42 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWUserStatusAutomationView: UIView {
+class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
 
-    fileprivate struct Metrics { }
+    fileprivate struct Metrics {
+        static let horizontalOffset: CGFloat = 20
+        static let verticalOffset: CGFloat = 20
+        static let activeSpotIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActiveSpotId") + ": "
+        static let activePostIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActivePostId") + ": "
+        static let userStatusBaseText: String = OWLocalizationManager.shared.localizedString(key: "UserStatus") + ": "
+    }
 
     fileprivate let disposeBag = DisposeBag()
-
     fileprivate var viewModel: OWUserStatusAutomationViewViewModeling!
+
+    fileprivate lazy var activeSpotIdLbl: UILabel = {
+        return UILabel()
+            .text(Metrics.activeSpotIdBaseText)
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
+            .numberOfLines(0)
+    }()
+
+    fileprivate lazy var activePostIdLbl: UILabel = {
+        return UILabel()
+            .text(Metrics.activePostIdBaseText)
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
+            .numberOfLines(0)
+    }()
+
+    fileprivate lazy var userStatusLbl: UILabel = {
+        return UILabel()
+            .text(Metrics.userStatusBaseText)
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
+            .numberOfLines(0)
+    }()
 
     init(viewModel: OWUserStatusAutomationViewViewModeling) {
         super.init(frame: .zero)
@@ -35,11 +64,49 @@ class OWUserStatusAutomationView: UIView {
 
 fileprivate extension OWUserStatusAutomationView {
     func setupUI() {
+        self.useAsThemeStyleInjector()
 
+        self.addSubview(activeSpotIdLbl)
+        activeSpotIdLbl.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+        }
+
+        self.addSubview(activePostIdLbl)
+        activePostIdLbl.OWSnp.makeConstraints { make in
+            make.top.equalTo(activeSpotIdLbl.OWSnp.bottom).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+        }
+
+        self.addSubview(userStatusLbl)
+        userStatusLbl.OWSnp.makeConstraints { make in
+            make.top.equalTo(activePostIdLbl.OWSnp.bottom).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+        }
     }
 
     func setupObservers() {
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let font = OWFontBook.shared.font(typography: .bodyText)
+                self.activeSpotIdLbl.font = font
+                self.activePostIdLbl.font = font
+                self.userStatusLbl.font = font
+            })
+            .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                let textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
+                self.activeSpotIdLbl.textColor = textColor
+                self.activePostIdLbl.textColor = textColor
+                self.userStatusLbl.textColor = textColor
+            })
+            .disposed(by: disposeBag)
     }
 }
 

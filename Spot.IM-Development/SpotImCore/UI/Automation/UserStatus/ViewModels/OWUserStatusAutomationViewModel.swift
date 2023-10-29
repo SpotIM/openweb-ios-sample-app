@@ -14,6 +14,7 @@ protocol OWUserStatusAutomationViewModelingInputs { }
 
 protocol OWUserStatusAutomationViewModelingOutputs {
     var viewVM: OWUserStatusAutomationViewViewModeling { get }
+    var title: String { get }
 }
 
 protocol OWUserStatusAutomationViewModeling {
@@ -29,6 +30,10 @@ class OWUserStatusAutomationViewModel: OWUserStatusAutomationViewModeling,
 
     lazy var viewVM: OWUserStatusAutomationViewViewModeling = {
         return OWUserStatusAutomationViewViewModel()
+    }()
+
+    lazy var title: String = {
+        return OWLocalizationManager.shared.localizedString(key: "UserInformation")
     }()
 }
 
