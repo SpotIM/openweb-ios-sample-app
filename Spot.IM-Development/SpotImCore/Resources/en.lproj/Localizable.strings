@@ -97,7 +97,7 @@
 "ReportReasonTextViewMandatoryPlaceholder" = "Please provide additional information";
 "ReportReasonHelpUsTitle" = "To help us understand the problem, please choose which of these options best describe the violation (learn more)";
 "ReportReasonHelpUsClickText" = "(learn more)";
-"Community Guidelines" = "Community Guidelines";
+"CommunityGuidelines" = "Community Guidelines";
 "Submit" = "Submit";
 "TryAgain" = "Try again";
 "AdditionalInfoTitle" = "Additional information";
@@ -125,9 +125,10 @@
 "ViewNewComments" = "View %d new comments";
 "ViewNewComment" = "View %d new comment";
 "TypingNow" = "%d Typing now";
+"LoginPromptTitle" = "Authorize to participate";
 "EditingComment" = "Editing comment"; // TODO: add to other languages
-"ErrorStateLoadConversationReplies" = "We are unable to load replies right now"; // TODO: add to other languages
-"ErrorStateLoadConversationComments" = "We are unable to load comments right now"; // TODO: add to other languages
+"ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
+"ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
 
 // Old API
 "Your Username" = "Your Username";
