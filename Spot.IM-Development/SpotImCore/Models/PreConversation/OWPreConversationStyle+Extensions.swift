@@ -98,6 +98,15 @@ extension OWPreConversationStyle {
         }
     }
 
+    var isLoginPromptEnabled: Bool {
+        switch self {
+        case .ctaButtonOnly, .compact:
+            return false
+        default:
+            return true
+        }
+    }
+
 }
 
 #if NEW_API
