@@ -17,7 +17,6 @@ protocol OWErrorStateViewViewModelingInputs {
 
 protocol OWErrorStateViewViewModelingOutputs {
     var title: String { get }
-    var tryAgainText: NSAttributedString { get }
     var tryAgainTapped: Observable<OWErrorStateTypes> { get }
     var shouldHaveBorder: Bool { get }
     var height: Observable<CGFloat> { get }
@@ -67,18 +66,6 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
             }
         }()
         return OWLocalizationManager.shared.localizedString(key: key)
-    }()
-
-    lazy var tryAgainText: NSAttributedString = {
-        let tryAgainText = OWLocalizationManager.shared.localizedString(key: "TryAgain")
-        var attributedString = NSMutableAttributedString(string: tryAgainText)
-        attributedString.addAttribute(.font,
-                                      value: OWFontBook.shared.font(typography: .bodyInteraction, forceOpenWebFont: false),
-                                         range: NSRange(location: 0, length: attributedString.length))
-        attributedString.addAttribute(.underlineStyle,
-                                      value: NSUnderlineStyle.single.rawValue,
-                                      range: NSRange(location: 0, length: attributedString.length))
-        return attributedString
     }()
 
     lazy var shouldHaveBorder: Bool = {
