@@ -448,9 +448,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload
-//                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
-                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: preConversationViewVMScheduler)
