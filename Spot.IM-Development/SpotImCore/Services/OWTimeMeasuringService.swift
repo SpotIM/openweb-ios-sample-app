@@ -25,7 +25,7 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         case conversationLoadingInitialComments
         case conversationLoadingMoreComments
         case conversationLoadingMoreReplies(commentId: OWCommentId)
-
+        case commentThreadLoadingMoreReplies(commentId: OWCommentId)
         case commentThreadLoadingInitialComments
 
         case preConversationLoadingInitialComments
@@ -64,6 +64,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return lhsId == rhsId
         case (.commentThreadLoadingInitialComments, .commentThreadLoadingInitialComments):
             return true
+        case (let .commentThreadLoadingMoreReplies(lhsId), let .commentThreadLoadingMoreReplies(rhsId)):
+            return lhsId == rhsId
         case (.preConversationLoadingInitialComments, .preConversationLoadingInitialComments):
             return true
         default:
@@ -83,6 +85,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "conversationLoadingMoreReplies_\(commentId)"
         case .commentThreadLoadingInitialComments:
             return "commentThreadLoadingInitialComments"
+        case .commentThreadLoadingMoreReplies(commentId: let commentId):
+            return "commentThreadLoadingMoreReplies_\(commentId)"
         case .preConversationLoadingInitialComments:
             return "preConversationLoadingInitialComments"
         }
@@ -100,6 +104,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "Time for loading more replies in conversation view"
         case .commentThreadLoadingInitialComments:
             return "Time for loading initial comments in comment thread view"
+        case .commentThreadLoadingMoreReplies:
+            return "Time for loading more replies in comment thread view"
         case .preConversationLoadingInitialComments:
             return "Time for loading initial comments in pre conversation view"
         }

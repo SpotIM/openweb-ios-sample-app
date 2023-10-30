@@ -49,12 +49,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
-        return OWConversationEmptyStateView(viewModel: self.viewModel.outputs.conversationEmptyStateViewModel)
-            .enforceSemanticAttribute()
-            .userInteractionEnabled(false)
-    }()
-
     fileprivate lazy var commentingCTATopHorizontalSeparator: UIView = {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
@@ -207,13 +201,6 @@ fileprivate extension OWConversationView {
             make.height.equalTo(Metrics.separatorHeight)
         }
 
-        self.addSubview(self.conversationEmptyStateView)
-        self.conversationEmptyStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(self.tableView.OWSnp.top)
-            make.bottom.equalTo(self.commentingCTATopHorizontalSeparator.OWSnp.top)
-            make.leading.trailing.equalToSuperview()
-        }
-
         self.addSubview(self.realtimeIndicationAnimationView)
         realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
             make.bottom.equalTo(self.tableView.OWSnp.bottom)
@@ -231,7 +218,7 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
                 self.commentingCTAView.OWSnp.updateConstraints { make in
                     if shouldShowErrorLoadingComments {
-                        let bottomPadding: CGFloat = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                        let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
                         make.bottom.equalTo(self.safeAreaLayoutGuide).offset(self.commentingCTAView.frame.size.height + bottomPadding)
                     } else {
                         make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
@@ -261,12 +248,6 @@ fileprivate extension OWConversationView {
             .unwrap()
             .map { $0.height }
             .bind(to: viewModel.inputs.tableViewContentSizeHeight)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.shouldShowConversationEmptyState
-            .observe(on: MainScheduler.instance)
-            .map { !$0 }
-            .bind(to: conversationEmptyStateView.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
@@ -312,6 +293,15 @@ fileprivate extension OWConversationView {
                     self.tableView.beginUpdates()
                     self.tableView.endUpdates()
                 }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.updateTableViewInstantly
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
 
