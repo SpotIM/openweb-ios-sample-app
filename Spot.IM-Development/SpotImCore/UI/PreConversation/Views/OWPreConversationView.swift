@@ -236,12 +236,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionBottomDevider.OWSnp.bottom).offset(Metrics.communityQuestionDeviderPadding)
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-            } else {
-                make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-            }
+            make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
 
         self.addSubview(commentingCTAView)

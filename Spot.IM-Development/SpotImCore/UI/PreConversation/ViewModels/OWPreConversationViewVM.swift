@@ -413,31 +413,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
             sendEvent(for: .preConversationViewed)
     }
-
-    func getCommentCellVm(for commentId: String) -> OWCommentCellViewModel? {
-        guard let comment = self.servicesProvider.commentsService().get(commentId: commentId, postId: self.postId),
-              let commentUserId = comment.userId,
-              let user = self.servicesProvider.usersService().get(userId: commentUserId)
-        else { return nil }
-
-        var replyToUser: SPUser? = nil
-        if let replyToCommentId = comment.parentId,
-           let replyToComment = self.servicesProvider.commentsService().get(commentId: replyToCommentId, postId: self.postId),
-           let replyToUserId = replyToComment.userId {
-            replyToUser = self.servicesProvider.usersService().get(userId: replyToUserId)
-        }
-
-        let reportedCommentsService = self.servicesProvider.reportedCommentsService()
-        let commentWithUpdatedStatus = reportedCommentsService.getUpdatedComment(for: comment, postId: self.postId)
-
-        return OWCommentCellViewModel(data: OWCommentRequiredData(
-            comment: commentWithUpdatedStatus,
-            user: user,
-            replyToUser: replyToUser,
-            collapsableTextLineLimit: 0,
-            section: self.preConversationData.article.additionalSettings.section
-        ))
-    }
 }
 
 fileprivate extension OWPreConversationViewViewModel {
@@ -563,6 +538,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return false }
                 return !self.isNonTableViewStyle(self.preConversationStyle)
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard
                     let self = self,
@@ -597,7 +573,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                        section: self.preConversationData.article.additionalSettings.section))
+                        section: self.preConversationData.article.additionalSettings.section
+                    ))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
@@ -865,9 +842,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
-                        return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.height
-                            .voidify()
+                        return commentVM.outputs.heightChanged
                     } else {
                         return nil
                     }
