@@ -74,11 +74,11 @@ fileprivate extension OWLoginPromptViewModel {
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .loginPrompt)
                     .voidify()
             }
-            .flatMapLatest { [weak self] _ -> Observable<Void> in
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .loginPrompt)
-                    .voidify()
             }
+            .filter { $0 }
             .subscribe(onNext: { _ in return })
             .disposed(by: disposeBag)
     }
