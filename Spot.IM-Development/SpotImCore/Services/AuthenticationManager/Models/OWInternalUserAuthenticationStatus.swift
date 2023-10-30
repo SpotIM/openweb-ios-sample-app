@@ -43,6 +43,23 @@ extension OWInternalUserAuthenticationStatus {
             return nil
         }
     }
+
+    var debugInformation: String {
+        switch self {
+        case .notAutenticated:
+            return "There isn't any autenticated user"
+        case .guest(let userId):
+            return "Guest user with userId \(userId)"
+        case .ssoLoggedIn(let userId):
+            return "SSO user with userId \(userId)"
+        case .ssoRecovering(let userId):
+            return "In SSO recovering mode for userId \(userId)"
+        case .ssoRecoveredSuccessfully(let userId):
+            return "SSO recovered successfully for userId \(userId)"
+        case .ssoFailedRecover(let userId):
+            return "SSO failed recover process for userId \(userId)"
+        }
+    }
 }
 
 extension OWInternalUserAuthenticationStatus: Equatable {
