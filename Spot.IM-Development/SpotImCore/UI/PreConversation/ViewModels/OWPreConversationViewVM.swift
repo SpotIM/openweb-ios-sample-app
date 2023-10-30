@@ -288,6 +288,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
 
     var viewInitialized = PublishSubject<Void>()
+    fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
+        return viewInitialized
+            .map { OWLoadingTriggeredReason.initialLoading }
+    }()
 
     var summaryTopPadding: Observable<CGFloat> {
        preConversationStyleObservable
@@ -449,6 +453,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload
                 self._shouldShowErrorLoadingComments.onNext(false)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .preConversationLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: preConversationViewVMScheduler)
@@ -515,14 +520,26 @@ fileprivate extension OWPreConversationViewViewModel {
                 .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
-        let conversationFetchedObservable = Observable.merge(viewInitialized,
-                                                             tryAgainAfterInitialError.voidify())
-            .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
+        let conversationFetchedObservable = Observable.merge(viewInitializedObservable,
+                                                             tryAgainAfterInitialError)
+            .flatMapLatest { loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 return conversationReadObservable
-                    .take(1)
+                    .map { ($0, loadingTriggeredReason) }
             }
-            .map { [weak self] event -> OWConversationReadRM? in
+            .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
+                // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
+                guard let self = self else { return .empty() }
+                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .preConversationLoadingInitialComments)
+                if case .error = event,
+                   timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
+                    return Observable.just((event, loadingTriggeredReason))
+                        .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError - timeToLoadInitialComments), scheduler: self.preConversationViewVMScheduler)
+                }
+                return Observable.just((event, loadingTriggeredReason))
+            })
+            .map { [weak self] result -> OWConversationReadRM? in
                 guard let self = self else { return nil }
+                let event = result.0
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -1219,6 +1236,17 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
+        let measureService = servicesProvider.timeMeasuringService()
+        let measureResult = measureService.endMeasure(forKey: key)
+        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
+           milliseconds < Metrics.delayBeforeTryAgainAfterError {
+            return milliseconds
+        }
+        // If end was called before start for some reason, returning 0 milliseconds here
+        return 0
+    }
 
     func isNonTableViewStyle(_ style: OWPreConversationStyle) -> Bool {
         switch style {
