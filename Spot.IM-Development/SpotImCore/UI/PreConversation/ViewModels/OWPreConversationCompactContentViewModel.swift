@@ -46,7 +46,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     fileprivate var emptyConversation = PublishSubject<Void>()
     fileprivate var comment = PublishSubject<OWComment>()
 
-    fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skelaton)
+    fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skeleton)
     lazy var contentType: Observable<OWCompactContentType> = {
         return _contentType
             .asObservable()
@@ -55,7 +55,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     lazy var isSkelatonHidden: Observable<Bool> = {
         contentType
             .map { type in
-                if case .skelaton = type {
+                if case .skeleton = type {
                     return false
                 }
                 return true
@@ -89,7 +89,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
         contentType
             .map { type in
                 switch type {
-                case .skelaton:
+                case .skeleton:
                     return ""
                 case .emptyConversation:
                     return OWLocalizationManager.shared.localizedString(key: "EmptyConversation")
@@ -187,7 +187,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
 
         tryAgainTapped
             .voidify()
-            .map { .skelaton }
+            .map { .skeleton }
             .bind(to: _contentType)
             .disposed(by: disposeBag)
     }
