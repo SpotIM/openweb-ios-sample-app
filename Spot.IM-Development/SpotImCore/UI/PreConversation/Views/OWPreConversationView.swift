@@ -253,7 +253,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(errorStateView)
         errorStateView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding) // TODO: offset
+            make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
             make.leading.trailing.equalToSuperview()
             errorStateZeroHeightConstraint = make.height.equalTo(0).constraint
         }
@@ -261,7 +261,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(errorStateView.OWSnp.bottom) // .offset(Metrics.tableViewTopPedding) // TODO: offset
+            make.top.equalTo(errorStateView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             tableViewHeightConstraint = make.height.equalTo(0).constraint
         }
