@@ -20,6 +20,10 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
         static let activeSpotIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActiveSpotId") + ": "
         static let activePostIdBaseText: String = OWLocalizationManager.shared.localizedString(key: "ActivePostId") + ": "
         static let userStatusBaseText: String = OWLocalizationManager.shared.localizedString(key: "UserStatus") + ": "
+        static let identifier = "user_status_automation_view_id"
+        static let activeSpotIdentifier = "active_spot_id"
+        static let activePostIdentifier = "active_post_id"
+        static let userStatusIdentifier = "user_status_id"
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -54,6 +58,7 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
         self.viewModel = viewModel
 
         setupUI()
+        applyAccessibility()
         setupObservers()
     }
 
@@ -107,6 +112,13 @@ fileprivate extension OWUserStatusAutomationView {
                 self.userStatusLbl.textColor = textColor
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        activeSpotIdLbl.accessibilityIdentifier = Metrics.activeSpotIdentifier
+        activePostIdLbl.accessibilityIdentifier = Metrics.activePostIdentifier
+        userStatusLbl.accessibilityIdentifier = Metrics.userStatusIdentifier
     }
 }
 
