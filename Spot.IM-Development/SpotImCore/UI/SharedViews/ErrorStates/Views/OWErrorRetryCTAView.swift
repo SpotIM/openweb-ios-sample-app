@@ -33,6 +33,7 @@ class OWErrorRetryCTAView: UIView {
         return UILabel()
             .textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: .light))
             .attributedText(attributedString)
+            .wrapContent(axis: .horizontal)
     }()
 
     fileprivate lazy var retryIcon: UIImageView = {
