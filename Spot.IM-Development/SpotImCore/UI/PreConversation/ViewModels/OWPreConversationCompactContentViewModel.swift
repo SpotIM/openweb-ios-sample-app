@@ -177,19 +177,18 @@ fileprivate extension OWPreConversationCompactContentViewModel {
             .disposed(by: disposeBag)
 
         // Set error
-        conversationError
-            .subscribe(onNext: { [weak self] isError in
-                guard isError == true,
-                      let self = self else { return }
-                self._contentType.onNext(.error)
-            })
-            .disposed(by: disposeBag)
+        let showErrorObservable: Observable<OWCompactContentType> = conversationError
+            .filter { $0 }
+            .voidify()
+            .map { .error }
 
-        tryAgainTapped
+        let showSkeletonObservable: Observable<OWCompactContentType> = tryAgainTapped
             .voidify()
             .map { .skeleton }
-            .bind(to: _contentType)
-            .disposed(by: disposeBag)
+
+        Observable.merge(showErrorObservable, showSkeletonObservable)
+                    .bind(to: _contentType)
+                    .disposed(by: disposeBag)
     }
 }
 
