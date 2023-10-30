@@ -583,10 +583,12 @@ fileprivate extension OWConversationCoordinator {
 
         // Set customized conversation empty state
 
-        let conversationEmptyStateCustomizeIcon = viewModel.outputs.conversationEmptyStateViewModel
+        let conversationEmptyStateCustomizeIcon = viewModel.outputs.conversationEmptyStateCellViewModel
+            .outputs.conversationEmptyStateViewModel
             .outputs.customizeIconImageViewUI
 
-        let conversationEmptyStateCustomizeTitle = viewModel.outputs.conversationEmptyStateViewModel
+        let conversationEmptyStateCustomizeTitle = viewModel.outputs.conversationEmptyStateCellViewModel
+            .outputs.conversationEmptyStateViewModel
             .outputs.customizeTitleLabelUI
 
         let emptyStateCustomizeIcon = conversationEmptyStateCustomizeIcon
