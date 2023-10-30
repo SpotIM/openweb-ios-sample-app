@@ -16,6 +16,22 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate struct Metrics {
         static let verticalOffset: CGFloat = 40
+        static let identifier = "fonts_automation_view_id"
+        static let scrollViewIdentifier = "fonts_scroll_view_id"
+        static let titleSmallIdentifier = "title_small_id"
+        static let titleLargeIdentifier = "title_large_id"
+        static let titleMediumIdentifier = "title_medium_id"
+        static let bodyTextIdentifier = "body_text_id"
+        static let bodyInteractionIdentifier = "body_interaction_id"
+        static let bodyContextIdentifier = "body_context_id"
+        static let bodySpecialIdentifier = "body_special_id"
+        static let footnoteTextIdentifier = "footnote_text_id"
+        static let footnoteLinkIdentifier = "footnote_link_id"
+        static let footnoteContextIdentifier = "footnote_context_id"
+        static let footnoteSpecialIdentifier = "footnote_special_id"
+        static let footnoteCaptionIdentifier = "footnote_caption_id"
+        static let metaTextIdentifier = "meta_text_id"
+        static let infoCaptionIdentifier = "info_caption_id"
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -35,6 +51,24 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         stackView.alignment = .center
         stackView.spacing = Metrics.verticalOffset
         return stackView
+    }()
+
+    fileprivate lazy var accessibilityMapper: [OWWeakEncapsulation<UILabel>: String] = {
+        let mapper: [OWWeakEncapsulation<UILabel>: String] = [OWWeakEncapsulation(value: titleSmall): Metrics.titleSmallIdentifier,
+                                                                        OWWeakEncapsulation(value: titleLarge): Metrics.titleLargeIdentifier,
+                                                                        OWWeakEncapsulation(value: titleMedium): Metrics.titleMediumIdentifier,
+                                                                        OWWeakEncapsulation(value: bodyText): Metrics.bodyTextIdentifier,
+                                                                        OWWeakEncapsulation(value: bodyInteraction): Metrics.bodyInteractionIdentifier,
+                                                                        OWWeakEncapsulation(value: bodyContext): Metrics.bodyContextIdentifier,
+                                                                        OWWeakEncapsulation(value: bodySpecial): Metrics.bodySpecialIdentifier,
+                                                                        OWWeakEncapsulation(value: footnoteText): Metrics.footnoteTextIdentifier,
+                                                                        OWWeakEncapsulation(value: footnoteLink): Metrics.footnoteLinkIdentifier,
+                                                                        OWWeakEncapsulation(value: footnoteContext): Metrics.footnoteContextIdentifier,
+                                                                        OWWeakEncapsulation(value: footnoteSpecial): Metrics.footnoteSpecialIdentifier,
+                                                                        OWWeakEncapsulation(value: footnoteCaption): Metrics.footnoteCaptionIdentifier,
+                                                                        OWWeakEncapsulation(value: metaText): Metrics.metaTextIdentifier,
+                                                                        OWWeakEncapsulation(value: infoCaption): Metrics.infoCaptionIdentifier]
+        return mapper
     }()
 
     fileprivate lazy var fontMapper: [OWWeakEncapsulation<UILabel>: OWFontTypography] = {
@@ -162,6 +196,7 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         self.viewModel = viewModel
 
         setupUI()
+        applyAccessibility()
         setupObservers()
     }
 
@@ -235,6 +270,16 @@ fileprivate extension OWFontsAutomationView {
         for (key, _) in fontMapper {
             guard let label = key.value() else { continue }
             label.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: theme)
+        }
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        scrollView.accessibilityIdentifier = Metrics.scrollViewIdentifier
+
+        for (key, identifier) in accessibilityMapper {
+            guard let label = key.value() else { continue }
+            label.accessibilityIdentifier = identifier
         }
     }
 }
