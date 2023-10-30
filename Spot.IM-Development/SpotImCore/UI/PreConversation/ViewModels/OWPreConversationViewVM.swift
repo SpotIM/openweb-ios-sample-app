@@ -211,7 +211,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             return nil
         }
         .unwrap()
+        .startWith(initialCtaTitle)
     }
+
+    fileprivate lazy var initialCtaTitle: String = {
+        switch preConversationStyle {
+        case .regular, .custom:
+            return OWLocalizationManager.shared.localizedString(key: "ShowMoreComments")
+        case .compact:
+            return ""
+        case .ctaButtonOnly, .ctaWithSummary:
+            return OWLocalizationManager.shared.localizedString(key: "ShowComments")
+        }
+    }()
 
     var fullConversationTap = PublishSubject<Void>()
     var fullConversationCTATap = PublishSubject<Void>()
