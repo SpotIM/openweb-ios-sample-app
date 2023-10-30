@@ -12,6 +12,6 @@ enum OWCompactContentType {
     case comment(type: OWCompactCommentType)
     case emptyConversation
     case closedAndEmpty
-    case skelaton
+    case skeleton
     case error
 }
