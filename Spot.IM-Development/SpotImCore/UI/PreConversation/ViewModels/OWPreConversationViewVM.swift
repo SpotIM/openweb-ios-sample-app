@@ -305,9 +305,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
     var shouldShowErrorLoadingComments: Observable<Bool> {
-        return _shouldShowErrorLoadingComments
-            .asObservable()
-            .share(replay: 1)
+        return Observable.combineLatest(_shouldShowErrorLoadingComments.asObservable(), preConversationStyleObservable) { showError, style in
+            guard style.isLoadingErrorEnabled else { return false }
+            return showError
+        }
+        .share(replay: 1)
     }
 
     var shouldShowComapactView: Bool {
