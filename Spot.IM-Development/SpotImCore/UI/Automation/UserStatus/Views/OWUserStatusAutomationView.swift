@@ -53,6 +53,15 @@ class OWUserStatusAutomationView: UIView, OWThemeStyleInjectorProtocol {
             .numberOfLines(0)
     }()
 
+    fileprivate lazy var warningLbl: UILabel = {
+        return UILabel()
+            .text(OWLocalizationManager.shared.localizedString(key: "SDKNotInitializedWarning"))
+            .font(OWFontBook.shared.font(typography: .bodySpecial))
+            .textColor(.red)
+            .numberOfLines(0)
+            .isHidden(true)
+    }()
+
     init(viewModel: OWUserStatusAutomationViewViewModeling) {
         super.init(frame: .zero)
         self.viewModel = viewModel
@@ -88,6 +97,12 @@ fileprivate extension OWUserStatusAutomationView {
             make.top.equalTo(activePostIdLbl.OWSnp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
+
+        self.addSubview(warningLbl)
+        warningLbl.OWSnp.makeConstraints { make in
+            make.top.equalTo(userStatusLbl.OWSnp.bottom).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+        }
     }
 
     func setupObservers() {
@@ -111,6 +126,22 @@ fileprivate extension OWUserStatusAutomationView {
                 self.activePostIdLbl.textColor = textColor
                 self.userStatusLbl.textColor = textColor
             })
+            .disposed(by: disposeBag)
+
+        activeSpotIdLbl.text = Metrics.activeSpotIdBaseText + viewModel.outputs.activeSpotId
+        activePostIdLbl.text = Metrics.activePostIdBaseText + viewModel.outputs.activePostId
+
+        viewModel.outputs.userStatus
+            .map { $0.debugInformation }
+            .map { Metrics.userStatusBaseText + $0 }
+            .observe(on: MainScheduler.instance)
+            .bind(to: userStatusLbl.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showSDKNotInitializedWarning
+            .map { !$0 }
+            .observe(on: MainScheduler.instance)
+            .bind(to: warningLbl.rx.isHidden)
             .disposed(by: disposeBag)
     }
 
