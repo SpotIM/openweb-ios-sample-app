@@ -781,7 +781,7 @@ fileprivate extension OWConversationViewViewModel {
         let conversationReadObservable = sortOptionObservable
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self._dataSourceTransition.onNext(.reload)
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
@@ -817,7 +817,7 @@ fileprivate extension OWConversationViewViewModel {
                 let event = result.0
                 let loadingTriggeredReason = result.1
                 guard let self = self else { return nil }
-                self._dataSourceTransition.onNext(.reload)
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
