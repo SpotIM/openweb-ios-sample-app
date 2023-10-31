@@ -17,6 +17,7 @@ class OWAppealLabelView: UIView {
         static let padding: CGFloat = 15
         static let skeletonHeight: CGFloat = 48
         static let skeletonCornerRadius: CGFloat = 10
+        static let iconSize: CGFloat = 24
     }
 
     fileprivate let disposeBag: DisposeBag
@@ -41,6 +42,30 @@ class OWAppealLabelView: UIView {
     fileprivate lazy var defaultLabel: UILabel = {
         return UILabel()
             .numberOfLines(0)
+    }()
+
+    fileprivate lazy var icon: UIImageView = {
+        return UIImageView()
+    }()
+    fileprivate lazy var label: UILabel = {
+        return UILabel()
+            .numberOfLines(0)
+    }()
+    fileprivate lazy var iconAndLabelView: UIView = {
+        let view = UIView()
+        view.addSubview(icon)
+        icon.OWSnp.makeConstraints { make in
+            make.top.leading.equalToSuperview()
+            make.width.height.equalTo(Metrics.iconSize)
+        }
+
+        view.addSubview(label)
+        label.OWSnp.makeConstraints { make in
+            make.top.trailing.bottom.equalToSuperview()
+            make.leading.equalTo(icon.OWSnp.trailing).offset(Metrics.padding)
+        }
+
+        return view
     }()
 
     init(viewModel: OWAppealLabelViewModeling) {
@@ -77,12 +102,8 @@ fileprivate extension OWAppealLabelView {
                     contentView = self.skelatonView
                 case .default:
                     contentView = self.defaultLabel
-                case .appealRejected:
-                    contentView = UIView()
-                case .error:
-                    contentView = UIView()
-                case .unavailable:
-                    contentView = UIView()
+                case .appealRejected, .error, .unavailable:
+                    contentView = self.iconAndLabelView
                 }
                 self.subviews.forEach { $0.removeFromSuperview() }
                 self.addSubview(contentView)
@@ -114,6 +135,13 @@ fileprivate extension OWAppealLabelView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.iconImage
+            .bind(to: icon.rx.image)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.labelAttributedString
+            .bind(to: label.rx.attributedText)
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
