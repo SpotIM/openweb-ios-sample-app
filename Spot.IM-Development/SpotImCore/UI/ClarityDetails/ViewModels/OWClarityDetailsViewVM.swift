@@ -26,6 +26,8 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
     var communityGuidelinesClickObservable: Observable<URL> { get }
+    var shouldShowAppealView: Observable<Bool> { get }
+    var appealLabelViewModel: OWAppealLabelViewModeling { get }
 }
 
 protocol OWClarityDetailsViewViewModeling {
@@ -50,6 +52,14 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
 
         setupObservers()
     }
+
+    lazy var appealLabelViewModel: OWAppealLabelViewModeling = {
+        OWAppealLabelViewModel()
+    }()
+
+    lazy var shouldShowAppealView: Observable<Bool> = {
+        Observable.just(type == .rejected)
+    }()
 
     var communityGuidelinesClick = PublishSubject<Void>()
     fileprivate lazy var paragraphsCommunityGuidelinesClick: Observable<Void> = {
