@@ -45,7 +45,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     var shouldShowView: Observable<Bool> {
         Observable.combineLatest(
             servicesProvider.authenticationManager().userAuthenticationStatus,
-            servicesProvider.networkAvailabilityService().networkStatus
+            servicesProvider.networkAvailabilityService().networkAvailable
         ) { status, networkAvailable -> OWInternalUserAuthenticationStatus? in
             guard networkAvailable == true else { return nil }
             return status
