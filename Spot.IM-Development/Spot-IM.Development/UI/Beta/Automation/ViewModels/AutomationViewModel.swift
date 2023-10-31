@@ -8,18 +8,19 @@
 
 import Foundation
 import RxSwift
+import SpotImCore
 
 #if AUTOMATION
 
 protocol AutomationViewModelingInputs {
     var fontsTapped: PublishSubject<Void> { get }
     var userInformationTapped: PublishSubject<Void> { get }
+    func setNavigationController(_ navController: UINavigationController?)
 }
 
 protocol AutomationViewModelingOutputs {
     var title: String { get }
-    var openUserInformation: Observable<SDKConversationDataModel> { get }
-    var openFonts: Observable<SDKConversationDataModel> { get }
+    var showError: Observable<String> { get }
 }
 
 protocol AutomationViewModeling {
@@ -34,20 +35,17 @@ class AutomationViewModel: AutomationViewModeling,
     var outputs: AutomationViewModelingOutputs { return self }
 
     fileprivate let dataModel: SDKConversationDataModel
+    fileprivate weak var navController: UINavigationController?
 
     fileprivate let disposeBag = DisposeBag()
 
     let fontsTapped = PublishSubject<Void>()
     let userInformationTapped = PublishSubject<Void>()
 
-    fileprivate let _openFonts = PublishSubject<SDKConversationDataModel>()
-    var openFonts: Observable<SDKConversationDataModel> {
-        return _openFonts.asObservable()
-    }
-
-    fileprivate let _openUserInformation = PublishSubject<SDKConversationDataModel>()
-    var openUserInformation: Observable<SDKConversationDataModel> {
-        return _openUserInformation.asObservable()
+    fileprivate let _showError = PublishSubject<String>()
+    var showError: Observable<String> {
+        return _showError
+            .asObservable()
     }
 
     lazy var title: String = {
@@ -58,28 +56,65 @@ class AutomationViewModel: AutomationViewModeling,
         self.dataModel = dataModel
         setupObservers()
     }
+
+    func setNavigationController(_ navController: UINavigationController?) {
+        self.navController = navController
+    }
 }
 
 fileprivate extension AutomationViewModel {
 
     func setupObservers() {
-
         fontsTapped
-            .map { [weak self] _ -> SDKConversationDataModel? in
-                guard let self = self else { return nil }
-                return self.dataModel
-            }
-            .unwrap()
-            .bind(to: _openFonts)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let navigationController = self.navController else { return }
+
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                flows.fonts(presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
+                                        additionalSettings: OWAutomationSettings(),
+                                        callbacks: nil,
+                                        completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.fonts error: \(message)")
+                        self._showError.onNext(message)
+                    }
+                })
+            })
             .disposed(by: disposeBag)
 
         userInformationTapped
-            .map { [weak self] _ -> SDKConversationDataModel? in
-                guard let self = self else { return nil }
-                return self.dataModel
-            }
-            .unwrap()
-            .bind(to: _openUserInformation)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let navigationController = self.navController else { return }
+
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                flows.userStatus(presentationalMode: OWPresentationalMode.push(navigationController: navigationController),
+                                        additionalSettings: OWAutomationSettings(),
+                                        callbacks: nil,
+                                        completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.userStatus error: \(message)")
+                        self._showError.onNext(message)
+                    }
+                })
+            })
             .disposed(by: disposeBag)
     }
 }
