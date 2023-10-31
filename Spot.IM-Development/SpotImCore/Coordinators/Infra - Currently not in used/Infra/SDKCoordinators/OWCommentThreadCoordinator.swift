@@ -175,7 +175,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             commentThreadVM.outputs.commentThreadViewVM.outputs.urlClickedOutput.map { ($0, "") },
             commentThreadVM.outputs.commentThreadViewVM.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return (data.url, OWLocalizationManager.shared.localizedString(key: "profile_title"))
+                    return (data.url, OWLocalizationManager.shared.localizedString(key: "profileTitle"))
                 } else {
                     return nil
                 }
