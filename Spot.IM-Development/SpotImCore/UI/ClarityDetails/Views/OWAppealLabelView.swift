@@ -1,0 +1,112 @@
+//
+//  OWAppealLabelView.swift
+//  SpotImCore
+//
+//  Created by  Nogah Melamed on 31/10/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import RxSwift
+
+class OWAppealLabelView: UIView {
+    fileprivate struct Metrics {
+        static let cornerRadius: CGFloat = 5
+        static let borderWidth: CGFloat = 1
+        static let padding: CGFloat = 15
+        static let skeletonHeight: CGFloat = 48
+        static let skeletonCornerRadius: CGFloat = 10
+    }
+
+    fileprivate let disposeBag: DisposeBag
+    fileprivate let viewModel: OWAppealLabelViewModeling
+
+    fileprivate lazy var skeletonContentView: UIView = {
+        return UIView()
+            .corner(radius: Metrics.skeletonCornerRadius)
+            .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor, themeStyle: .light))
+    }()
+    fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
+        let view = OWSkeletonShimmeringView()
+        view.enforceSemanticAttribute()
+        view.addSubview(skeletonContentView)
+        skeletonContentView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.equalTo(Metrics.skeletonHeight)
+        }
+        return view
+    }()
+
+    init(viewModel: OWAppealLabelViewModeling) {
+        self.viewModel = viewModel
+        self.disposeBag = DisposeBag()
+        super.init(frame: .zero)
+
+        setupViews()
+        setupObservers()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+fileprivate extension OWAppealLabelView {
+    func setupViews() {
+        self.enforceSemanticAttribute()
+        self.corner(radius: Metrics.cornerRadius)
+        self.backgroundColor = OWColorPalette.shared.color(type: .skeletonColor, themeStyle: .light)
+//        self.backgroundColor = .green
+//        self.OWSnp.makeConstraints { make in
+//            make.width.height.equalTo(50)
+//        }
+
+        skelatonView.addSkeletonShimmering()
+    }
+
+    func setupObservers() {
+        viewModel.outputs.viewType
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] type in
+                guard let self = self else { return }
+                var contentView: UIView
+                switch type {
+                case .skeleton:
+                    contentView = self.skelatonView
+                case .default:
+                    contentView = UIView()
+                case .appealRejected:
+                    contentView = UIView()
+                case .error:
+                    contentView = UIView()
+                case .unavailable:
+                    contentView = UIView()
+                }
+                self.subviews.forEach { $0.removeFromSuperview() }
+                self.addSubview(contentView)
+                contentView.OWSnp.makeConstraints { make in
+                    make.edges.equalToSuperview().inset(Metrics.padding)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.backgroundColor
+            .bind(to: self.rx.backgroundColor)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.borderColor
+            .subscribe(onNext: { [weak self] borderColor in
+                self?.border(width: Metrics.borderWidth, color: borderColor)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.skeletonContentView.backgroundColor = OWColorPalette.shared.color(type: .skeletonColor, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+    }
+}

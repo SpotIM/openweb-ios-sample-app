@@ -62,6 +62,8 @@ struct OWColor {
         case shadowColor
         case typingDotsColor
         case loaderColor
+        /// Light: G4, Dark: DM/G4
+        case errorColor
 
         var `default`: OWColor {
             switch self {
@@ -152,6 +154,10 @@ struct OWColor {
             case .loaderColor:
                 return OWColor(lightThemeColor: OWDesignColors.L3,
                                darkThemeColor: OWDesignColors.D2)
+
+            case .errorColor:
+                return OWColor(lightThemeColor: OWDesignColors.G4,
+                               darkThemeColor: OWDesignColors.DMG4)
             }
         }
 
