@@ -694,13 +694,14 @@ fileprivate extension OWConversationViewViewModel {
             guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
 
             let reply = replyCellVm.outputs.commentVM.outputs.comment
+            let repliesPresentationData = commentPresentationData.repliesPresentation.first(where: { $0.id == replyId })
             existingRepliesPresentationData.append(
                 OWCommentPresentationData(
                     id: replyId,
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
-                    repliesPresentation: []
+                    repliesPresentation: repliesPresentationData?.repliesPresentation ?? []
                 )
             )
         }
