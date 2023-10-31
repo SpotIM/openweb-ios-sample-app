@@ -316,7 +316,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
                 } else if shouldShowError {
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     return Observable.just(errorCellViewModels)
                 } else if isEmptyState {
                     let emptyStateCellOption = [OWConversationCellOption.conversationEmptyState(viewModel: self.conversationEmptyStateCellViewModel)]
@@ -397,12 +397,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
-        return _performTableViewAnimation
-            .filter { [weak self] _ in
-                guard let self = self else { return false }
-                return self.dataSourceTransition == .animated
-            }
-            .asObservable()
+        return Observable.combineLatest(_performTableViewAnimation, _dataSourceTransition) { _, transition in
+            return transition
+        }
+        .filter { transition in
+            return transition == .animated
+        }
+        .voidify()
+        .asObservable()
     }
 
     fileprivate var _updateTableViewInstantly = PublishSubject<Void>()
@@ -478,7 +480,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 // We want to show skeletons after this pull to refresh
                 if shouldShowErrorLoadingComments {
                     guard let self = self else { return }
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                     self._shouldShowErrorLoadingComments.onNext(false)
                     self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
@@ -508,7 +510,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
     var dataSourceTransition: OWViewTransition = .reload
+    fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
@@ -763,7 +767,7 @@ fileprivate extension OWConversationViewViewModel {
             .voidify()
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
@@ -789,7 +793,7 @@ fileprivate extension OWConversationViewViewModel {
         let conversationReadObservable = sortOptionObservable
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload // Block animations in the table view
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
@@ -825,7 +829,7 @@ fileprivate extension OWConversationViewViewModel {
                 let event = result.0
                 let loadingTriggeredReason = result.1
                 guard let self = self else { return nil }
-                self.dataSourceTransition = .reload // Block animations in the table view
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -941,7 +945,7 @@ fileprivate extension OWConversationViewViewModel {
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
@@ -1070,7 +1074,7 @@ fileprivate extension OWConversationViewViewModel {
         loadMoreRepliesReadUpdated
             .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
                 if shouldShowErrorLoadingReplies {
                     self.errorsLoadingReplies[commentPresentationData.id] = .error
                     commentPresentationData.update.onNext()
@@ -1114,7 +1118,7 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(_loadMoreComments)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
                 self._shouldShowErrorLoadingMoreComments.onNext(false)
                 self._isLoadingMoreComments.onNext(true)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingMoreComments)
@@ -1160,7 +1164,7 @@ fileprivate extension OWConversationViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._shouldShowErrorLoadingMoreComments.onNext(true)
                     return nil
                 default:
@@ -1371,7 +1375,7 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
@@ -2038,6 +2042,12 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(cellsViewModels)
             .map { $0.count - 1 }
             .bind(to: _scrollToCellIndex)
+            .disposed(by: disposeBag)
+
+        _dataSourceTransition
+            .subscribe(onNext: { [weak self] transition in
+                self?.dataSourceTransition = transition
+            })
             .disposed(by: disposeBag)
     }
 

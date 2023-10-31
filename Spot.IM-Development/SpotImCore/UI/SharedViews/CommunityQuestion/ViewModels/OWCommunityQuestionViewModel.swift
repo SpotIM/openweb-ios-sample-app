@@ -59,6 +59,8 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
         _shouldShowView
             .unwrap()
             .asObservable()
+            .startWith(false)
+            .distinctUntilChanged()
             .share(replay: 0)
     }
 

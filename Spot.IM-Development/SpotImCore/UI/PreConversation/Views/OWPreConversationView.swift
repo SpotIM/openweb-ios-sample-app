@@ -75,6 +75,11 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate var commentingCTAZeroHeightConstraint: OWConstraint? = nil
 
+    fileprivate lazy var errorStateView: OWErrorStateView = {
+        return OWErrorStateView(with: viewModel.outputs.errorStateViewModel)
+    }()
+    fileprivate var errorStateZeroHeightConstraint: OWConstraint? = nil
+
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -238,9 +243,17 @@ fileprivate extension OWPreConversationView {
             commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
+        self.addSubview(errorStateView)
+        errorStateView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentingCTAView.OWSnp.bottom).offset(Metrics.tableViewTopPedding)
+            make.leading.trailing.equalToSuperview()
+            errorStateZeroHeightConstraint = make.height.equalTo(0).constraint
+        }
+        errorStateZeroHeightConstraint?.isActive = true
+
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentingCTAView.OWSnp.bottom)
+            make.top.equalTo(errorStateView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             tableViewHeightConstraint = make.height.equalTo(0).constraint
         }
@@ -405,6 +418,18 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.shouldShowErrorLoadingComments
+            .map { !$0 }
+            .bind(to: errorStateView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        if let constraint = errorStateZeroHeightConstraint {
+            viewModel.outputs.shouldShowErrorLoadingComments
+                .map { !$0 }
+                .bind(to: constraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         viewModel.outputs.shouldShowComments
             .map { !$0 }
             .bind(to: tableView.rx.isHidden)
@@ -474,19 +499,16 @@ fileprivate extension OWPreConversationView {
             .outputs.shouldShow
 
         let tableViewHeightChangeObservable = Observable.combineLatest(tableViewContentSizeObservable,
-                                                                 isRealtimeIndicationShownObservable) { size, isShown in
-            return (size, isShown)
+                                                                       isRealtimeIndicationShownObservable,
+                                                                       viewModel.outputs.shouldShowComments) { size, realtimeIsShown, isCommentsVisible -> (CGFloat?, Bool) in
+
+            let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
+            guard isCommentsVisible == true else { return (extraHeight, realtimeIsShown) }
+
+            let height = size.height + extraHeight
+
+            return (height, realtimeIsShown)
         }
-            .withLatestFrom(viewModel.outputs.shouldShowComments) { result, isCommentsVisible -> (CGFloat?, Bool) in
-                let realtimeIsShown = result.1
-                let extraHeight = realtimeIsShown ? Metrics.tableDeviderTopPadding : 0
-                guard isCommentsVisible == true else { return (extraHeight, realtimeIsShown) }
-
-                let size = result.0
-                let height = size.height + extraHeight
-
-                return (height, realtimeIsShown)
-            }
 
         tableViewHeightChangeObservable
             .subscribe(onNext: { [weak self] result in

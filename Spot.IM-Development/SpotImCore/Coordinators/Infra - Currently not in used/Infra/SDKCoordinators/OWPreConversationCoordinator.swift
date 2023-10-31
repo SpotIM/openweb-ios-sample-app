@@ -136,7 +136,7 @@ fileprivate extension OWPreConversationCoordinator {
             viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput.map { ($0, "") },
             viewModel.outputs.openProfile.map {
                 if case .OWProfile(let data) = $0 {
-                    return (data.url, OWLocalizationManager.shared.localizedString(key: "profile_title"))
+                    return (data.url, OWLocalizationManager.shared.localizedString(key: "profileTitle"))
                 } else {
                     return nil
                 }
