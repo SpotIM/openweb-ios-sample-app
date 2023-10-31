@@ -19,6 +19,8 @@ protocol OWAppealLabelViewModelingOutputs {
     var borderColor: Observable<UIColor> { get }
     var defaultAttributedText: Observable<NSAttributedString> { get }
     var appealClickableText: String { get }
+    var iconImage: Observable<UIImage?> { get }
+    var labelAttributedString: Observable<NSAttributedString> { get }
 }
 
 protocol OWAppealLabelViewModeling {
@@ -35,13 +37,14 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
 
     fileprivate let servicesProvider: OWSharedServicesProviding
 
+    // TODO: API call to get if the user can appeal/did appeal/other info and change _viewType accordingly
     fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
             .asObservable()
     }
 
-    var borderColor: Observable<UIColor> {
+    lazy var borderColor: Observable<UIColor> = {
         Observable.combineLatest(
             viewType,
             servicesProvider.themeStyleService().style
@@ -53,9 +56,9 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 return OWColorPalette.shared.color(type: .errorColor, themeStyle: theme)
             }
         }
-    }
+    }()
 
-    var backgroundColor: Observable<UIColor> {
+    lazy var backgroundColor: Observable<UIColor> = {
         Observable.combineLatest(
             viewType,
             servicesProvider.themeStyleService().style
@@ -67,7 +70,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 return .clear
             }
         }
-    }
+    }()
 
     lazy private var accessibilityChange: Observable<Bool> = {
         servicesProvider.appLifeCycle()
@@ -76,7 +79,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .startWith(false)
     }()
 
-    let appealClickableText: String = "appeal" // TODO: translation
+    let appealClickableText: String = "appeal" // TODO: translations
     lazy var defaultAttributedText: Observable<NSAttributedString> = {
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,
@@ -100,6 +103,63 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
         .unwrap()
     }()
 
+    lazy var iconImage: Observable<UIImage?> = {
+        Observable.combineLatest(
+            viewType,
+            servicesProvider.themeStyleService().style
+        ) { type, _ in
+            switch type {
+            case .skeleton:
+                return nil
+            case .appealRejected:
+                return UIImage(spNamed: "appealRejectedIcon", supportDarkMode: true)
+            case .default:
+                return nil
+            case .error:
+                return UIImage(spNamed: "appealErrorIcon", supportDarkMode: false)
+            case .unavailable:
+                return UIImage(spNamed: "appealUnavailableIcon", supportDarkMode: true)
+            }
+        }
+    }()
+
+    lazy var labelAttributedString: Observable<NSAttributedString> = {
+        Observable.combineLatest(
+            viewType,
+            servicesProvider.themeStyleService().style,
+            accessibilityChange
+        ) { type, style, _ -> NSAttributedString? in
+            let attributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
+                .font: OWFontBook.shared.font(typography: .bodyText)
+            ]
+            switch type {
+            case .skeleton:
+                return nil
+            case .appealRejected:
+                return NSAttributedString(
+                    string: "You have already filed an appeal which was rejected. You can only appeal once per comment.", // TODO: translations
+                    attributes: attributes
+                )
+            case .default: // Handeled in different observable for simplicity
+                return nil
+            case .error:
+                return NSAttributedString(
+                    string: "The appeal information is currently unavailable. Please check your internet connection or try again later.", // TODO: translations
+                    attributes: [
+                        .foregroundColor: OWColorPalette.shared.color(type: .errorColor, themeStyle: style),
+                        .font: OWFontBook.shared.font(typography: .bodySpecial)
+                    ]
+                )
+            case .unavailable:
+                return NSAttributedString(
+                    string: "The comment you reported is no longer available.", // TODO: translations
+                    attributes: attributes
+                )
+            }
+        }
+        .unwrap()
+    }()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "appealRejectedIcon.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
