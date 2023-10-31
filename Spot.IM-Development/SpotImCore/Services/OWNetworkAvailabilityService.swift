@@ -11,14 +11,14 @@ import Network
 import RxSwift
 
 protocol OWNetworkAvailabilityServicing {
-    var networkStatus: Observable<Bool> { get }
+    var networkAvailable: Observable<Bool> { get }
 }
 
 // Since OWInternalNetworkAvailabilityService is available from iOS 12 only, we created a wrapper
 class OWNetworkAvailabilityService: OWNetworkAvailabilityServicing {
-    var networkStatus: Observable<Bool> {
+    var networkAvailable: Observable<Bool> {
         if #available(iOS 12.0, *) {
-            return OWInternalNetworkAvailabilityService.shared.networkStatus
+            return OWInternalNetworkAvailabilityService.shared.networkAvailable
         } else {
             return Observable.just(true)
         }
@@ -29,20 +29,20 @@ class OWNetworkAvailabilityService: OWNetworkAvailabilityServicing {
 class OWInternalNetworkAvailabilityService: OWNetworkAvailabilityServicing {
     static let shared = OWInternalNetworkAvailabilityService()
 
-    private var networkMonitor: NWPathMonitor
-    private let networkStatusSubject = BehaviorSubject<Bool>(value: true)
-    var networkStatus: Observable<Bool> {
-        return networkStatusSubject.asObservable()
+    fileprivate var networkMonitor: NWPathMonitor
+    fileprivate let networkAvailableSubject = BehaviorSubject<Bool>(value: true)
+    var networkAvailable: Observable<Bool> {
+        return networkAvailableSubject.asObservable()
             .distinctUntilChanged()
     }
 
-    private init() {
+    fileprivate init() {
         networkMonitor = NWPathMonitor()
 
         networkMonitor.pathUpdateHandler = { [weak self] path in
             if let self = self {
                 let isNetworkAvailable = path.status == .satisfied
-                self.networkStatusSubject.onNext(isNetworkAvailable)
+                self.networkAvailableSubject.onNext(isNetworkAvailable)
             }
         }
 
