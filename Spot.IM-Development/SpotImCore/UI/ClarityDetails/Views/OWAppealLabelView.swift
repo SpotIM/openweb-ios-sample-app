@@ -38,6 +38,11 @@ class OWAppealLabelView: UIView {
         return view
     }()
 
+    fileprivate lazy var defaultLabel: UILabel = {
+        return UILabel()
+            .numberOfLines(0)
+    }()
+
     init(viewModel: OWAppealLabelViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
@@ -57,10 +62,6 @@ fileprivate extension OWAppealLabelView {
         self.enforceSemanticAttribute()
         self.corner(radius: Metrics.cornerRadius)
         self.backgroundColor = OWColorPalette.shared.color(type: .skeletonColor, themeStyle: .light)
-//        self.backgroundColor = .green
-//        self.OWSnp.makeConstraints { make in
-//            make.width.height.equalTo(50)
-//        }
 
         skelatonView.addSkeletonShimmering()
     }
@@ -75,7 +76,7 @@ fileprivate extension OWAppealLabelView {
                 case .skeleton:
                     contentView = self.skelatonView
                 case .default:
-                    contentView = UIView()
+                    contentView = self.defaultLabel
                 case .appealRejected:
                     contentView = UIView()
                 case .error:
@@ -100,6 +101,19 @@ fileprivate extension OWAppealLabelView {
                 self?.border(width: Metrics.borderWidth, color: borderColor)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.defaultAttributedText
+            .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self else { return }
+                self.defaultLabel
+                    .attributedText(attributedText)
+                    .addRangeGesture(targetRange: self.viewModel.outputs.appealClickableText) { [weak self] in
+                        guard let self = self else { return }
+//                        self.viewModel.inputs.communityGuidelinesClick.onNext() // TODO: click
+                    }
+            })
+            .disposed(by: disposeBag)
+
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
