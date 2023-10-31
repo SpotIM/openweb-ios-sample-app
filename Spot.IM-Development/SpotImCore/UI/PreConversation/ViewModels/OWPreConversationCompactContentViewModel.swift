@@ -14,6 +14,8 @@ import UIKit
 protocol OWPreConversationCompactContentViewModelingInputs {
     var conversationFetched: PublishSubject<OWConversationReadRM> { get }
     var isReadOnly: PublishSubject<Bool> { get }
+    var conversationError: PublishSubject<Bool> { get }
+    var tryAgainTap: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
@@ -23,6 +25,7 @@ protocol OWPreConversationCompactContentViewModelingOutputs {
     var isCommentHidden: Observable<Bool> { get }
     var text: Observable<String> { get }
     var shouldShowImagePlaceholder: Observable<Bool> { get }
+    var tryAgainTapped: Observable<Void> { get }
 }
 
 protocol OWPreConversationCompactContentViewModeling {
@@ -31,18 +34,19 @@ protocol OWPreConversationCompactContentViewModeling {
 }
 
 class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentViewModeling,
-                                 OWPreConversationCompactContentViewModelingInputs,
-                                 OWPreConversationCompactContentViewModelingOutputs {
+                                                OWPreConversationCompactContentViewModelingInputs,
+                                                OWPreConversationCompactContentViewModelingOutputs {
 
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
     var conversationFetched = PublishSubject<OWConversationReadRM>()
     var isReadOnly = PublishSubject<Bool>()
+    var conversationError = PublishSubject<Bool>()
     fileprivate var emptyConversation = PublishSubject<Void>()
     fileprivate var comment = PublishSubject<OWComment>()
 
-    fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skelaton)
+    fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skeleton)
     lazy var contentType: Observable<OWCompactContentType> = {
         return _contentType
             .asObservable()
@@ -51,7 +55,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     lazy var isSkelatonHidden: Observable<Bool> = {
         contentType
             .map { type in
-                if case .skelaton = type {
+                if case .skeleton = type {
                     return false
                 }
                 return true
@@ -85,7 +89,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
         contentType
             .map { type in
                 switch type {
-                case .skelaton:
+                case .skeleton:
                     return ""
                 case .emptyConversation:
                     return OWLocalizationManager.shared.localizedString(key: "EmptyConversation")
@@ -98,8 +102,16 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                     case .text(let string):
                         return string
                     }
+                case .error:
+                    return OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadConversationComments")
                 }
             }
+            .asObservable()
+    }()
+
+    var tryAgainTap = PublishSubject<Void>()
+    lazy var tryAgainTapped: Observable<Void> = {
+        return tryAgainTap
             .asObservable()
     }()
 
@@ -163,6 +175,20 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 self._contentType.onNext(.comment(type: commentType))
             })
             .disposed(by: disposeBag)
+
+        // Set error
+        let showErrorObservable: Observable<OWCompactContentType> = conversationError
+            .filter { $0 }
+            .voidify()
+            .map { .error }
+
+        let showSkeletonObservable: Observable<OWCompactContentType> = tryAgainTapped
+            .voidify()
+            .map { .skeleton }
+
+        Observable.merge(showErrorObservable, showSkeletonObservable)
+                    .bind(to: _contentType)
+                    .disposed(by: disposeBag)
     }
 }
 
