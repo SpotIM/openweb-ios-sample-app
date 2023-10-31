@@ -57,6 +57,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 case .none: return nil
                 case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: false)
                 case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
+                case .appealed: return UIImage(spNamed: "appealIcon", supportDarkMode: true)
+                case .appealRejected: return UIImage(spNamed: "appealRejectedIcon", supportDarkMode: false)
                 }
             }
             .unwrap()
@@ -81,6 +83,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 switch(status) {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
                 case .pending: messageString = OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage")
+                case .appealed: messageString = "You have filed an appeal, your comment will be reviewed by a moderator." // TODO: translations
+                case .appealRejected: messageString = "Your appeal was rejected." // TODO: translation
                 case .none: return nil
                 }
 
@@ -89,13 +93,15 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                     .font(OWFontBook.shared.font(typography: .footnoteText))
                     .color(OWColorPalette.shared.color(type: .textColor3, themeStyle: style))
 
-                let learnMoreAttributedString = self.learnMoreClickableString
-                    .attributedString
-                    .underline(1)
-                    .font(OWFontBook.shared.font(typography: .footnoteLink))
-                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
+                if status.shoeLearnMore {
+                    let learnMoreAttributedString = self.learnMoreClickableString
+                        .attributedString
+                        .underline(1)
+                        .font(OWFontBook.shared.font(typography: .footnoteLink))
+                        .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
 
-                messageAttributedString.append(learnMoreAttributedString)
+                    messageAttributedString.append(learnMoreAttributedString)
+                }
 
                 return messageAttributedString
             }
@@ -110,11 +116,11 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             }
             .map { status -> OWClarityDetailsType? in
                 switch status {
-                case .rejected:
+                case .rejected, .appealRejected:
                     return OWClarityDetailsType.rejected
                 case .pending:
                     return OWClarityDetailsType.pending
-                case .none:
+                case .none, .appealed:
                     return nil
                 }
             }
@@ -131,9 +137,12 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
 enum OWCommentStatusType {
     case rejected
     case pending
+    case appealed
+    case appealRejected
     case none
 
     static func commentStatus(from status: OWComment.CommentStatus?) -> OWCommentStatusType {
+        // TODO: do we get status from the BE for appealed, appealRejected?
         guard let status = status else { return .none }
         switch status {
         case .block, .reject:
@@ -142,6 +151,15 @@ enum OWCommentStatusType {
             return .pending
         case .publishAndModerate, .unknown, .approve, .approveAll, .forceApproveAll:
             return .none
+        }
+    }
+
+    var shoeLearnMore: Bool {
+        switch self {
+        case .rejected, .appealRejected, .pending:
+            return true
+        case .appealed, .none:
+            return false
         }
     }
 }
