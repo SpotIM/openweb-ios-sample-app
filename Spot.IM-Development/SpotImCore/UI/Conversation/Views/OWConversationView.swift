@@ -218,7 +218,7 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
                 self.commentingCTAView.OWSnp.updateConstraints { make in
                     if shouldShowErrorLoadingComments {
-                        let bottomPadding: CGFloat = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                        let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
                         make.bottom.equalTo(self.safeAreaLayoutGuide).offset(self.commentingCTAView.frame.size.height + bottomPadding)
                     } else {
                         make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
