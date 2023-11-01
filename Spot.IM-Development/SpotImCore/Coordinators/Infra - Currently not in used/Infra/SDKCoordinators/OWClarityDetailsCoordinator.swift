@@ -123,7 +123,41 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 return Observable.never()
             }
 
-        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation)
+        // Coordinate to appeal
+        let appealTapped = clarityDetailsVM
+                .outputs
+                .clarityDetailsViewViewModel
+                .outputs
+                .appealLabelViewModel
+                .outputs
+                .openAppeal
+
+        let coordinateToAppealObservable = appealTapped
+            .flatMap { [weak self] _ -> Observable<OWCommenterAppealCoordinatorResult> in
+                guard let self = self,
+                      let router = self.router
+                else { return .empty() }
+//                let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
+//                    .outputs.navigationTitle
+
+                let appealCoordinator = OWCommenterAppealCoordinator(router: router,
+                                                                     actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: appealCoordinator, deepLinkOptions: .none)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWClarityDetailsCoordinatorResult> in
+                return Observable.never()
+            }
+
+        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation, coordinateToAppealObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {

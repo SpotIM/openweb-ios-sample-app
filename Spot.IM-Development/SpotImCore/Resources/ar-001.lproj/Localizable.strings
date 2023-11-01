@@ -127,6 +127,7 @@
 "ViewNewComment" = "عرض %d تعليق جديد";
 "TypingNow" = "يكتب الآن %d";
 "LoginPromptTitle" = "السماح بالمشاركة";
+"CommenterAppealTitle" = "سبب الاستئناف";
 
 // Old API
 "Your Username" = "اسمك المستعار...";
