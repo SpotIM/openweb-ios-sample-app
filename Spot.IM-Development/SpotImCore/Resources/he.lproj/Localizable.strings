@@ -127,6 +127,7 @@
 "ViewNewComment" = "הצגת %d תגובה חדשה";
 "TypingNow" = "מקלידים עכשיו %d";
 "LoginPromptTitle" = "מורשה להשתתף";
+"CommenterAppealTitle" = "סיבת ערעור";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";

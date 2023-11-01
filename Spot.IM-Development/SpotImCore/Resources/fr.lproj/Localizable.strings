@@ -127,6 +127,7 @@
 "ViewNewComment" = "Afficher %d nouveau commentaire";
 "TypingNow" = "%d en train de taper";
 "LoginPromptTitle" = "Autoriser à participer";
+"CommenterAppealTitle" = "Motif de votre demande d'appel";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";

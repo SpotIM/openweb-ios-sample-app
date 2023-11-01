@@ -126,6 +126,7 @@
 "ViewNewComment" = "Ver %d Novo Comentário";
 "TypingNow" = "%d A escrever agora";
 "LoginPromptTitle" = "Autorizar participação";
+"CommenterAppealTitle" = "Motivo do recurso";
 
 // Old API
 "Your Username" = "Seu apelido...";
