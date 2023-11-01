@@ -79,8 +79,7 @@ fileprivate extension OWCommentView {
 
         self.addSubviews(commentStatusView)
         commentStatusView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
             commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
@@ -94,7 +93,6 @@ fileprivate extension OWCommentView {
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentStatusView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
-        // make.top.leading.trailing.equalToSuperview()
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
         }
     }
@@ -142,19 +140,11 @@ fileprivate extension OWCommentView {
         }
 
         viewModel.outputs.shouldShowCommentStatus
-            .withLatestFrom(viewModel.outputs.updateSpacing) { shouldShow, spacing in
-                return (shouldShow, spacing)
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shouldShow, spacingBetweenComments in
+            .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
 
                 self.commentHeaderView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : spacingBetweenComments)
-                }
-
-                self.commentStatusView.OWSnp.updateConstraints { make in
-                    make.top.equalToSuperview().offset(shouldShow ? spacingBetweenComments : 0)
+                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
                 }
 
                 self.commentStatusView.isHidden = !shouldShow
@@ -175,28 +165,5 @@ fileprivate extension OWCommentView {
                 self.blockingOpacityView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposedBag)
-
-        // Update bottom spacing
-        Observable.combineLatest(viewModel.outputs.shouldHideCommentContent,
-                                 viewModel.outputs.updateSpacing)
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { [weak self] shouldBlockComment, spacingBetweenComments in
-            guard let self = self else { return }
-
-            if shouldBlockComment {
-                self.commentHeaderView.OWSnp.updateConstraints { make in
-                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
-                }
-            } else {
-                self.commentEngagementView.OWSnp.updateConstraints { make in
-                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
-                }
-            }
-
-            self.blockingOpacityView.OWSnp.updateConstraints { make in
-                make.bottom.equalToSuperview().offset(-spacingBetweenComments)
-            }
-        })
-        .disposed(by: disposedBag)
     }
 }

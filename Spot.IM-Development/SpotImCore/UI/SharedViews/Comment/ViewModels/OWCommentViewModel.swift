@@ -18,7 +18,6 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentActionsVM: OWCommentActionsViewModeling { get }
-
     var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
@@ -28,8 +27,6 @@ protocol OWCommentViewModelingOutputs {
     var shouldShowCommentStatus: Observable<Bool> { get }
     var showBlockingLayoutView: Observable<Bool> { get }
     var heightChanged: Observable<Void> { get }
-    var updateSpacing: Observable<CGFloat> { get }
-
     var comment: OWComment { get }
     var user: SPUser { get }
 }
@@ -65,14 +62,6 @@ class OWCommentViewModel: OWCommentViewModeling,
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
         _shouldHideCommentContent
-            .asObservable()
-    }
-
-    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
-    var updateSpacing: Observable<CGFloat> {
-        _updateSpacing
-            .unwrap()
-            .take(1)
             .asObservable()
     }
 
@@ -132,10 +121,8 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     init(data: OWCommentRequiredData,
-         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         spacing: CGFloat) {
+         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        _updateSpacing.onNext(spacing)
 
         let status = OWCommentStatusType.commentStatus(from: data.comment.status)
         commentStatusVM = OWCommentStatusViewModel(status: status)
