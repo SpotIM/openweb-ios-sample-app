@@ -78,7 +78,6 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
                 .asObservable()
                 .map { OWCommenterAppealCoordinatorResult.popped }
 
-
         return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, resultWithoutPopAnimation)
     }
 
