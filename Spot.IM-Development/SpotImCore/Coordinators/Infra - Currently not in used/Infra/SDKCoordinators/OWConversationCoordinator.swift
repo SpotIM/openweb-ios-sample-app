@@ -261,7 +261,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .urlClickedOutput
 
         // Coordinate to safari tab
-        let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "profileTitle")
+        let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "ProfileTitle")
         let coordinateToSafariObservables = Observable.merge(
             communityGuidelinesURLTapped.map { ($0, "") },
             conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map {
