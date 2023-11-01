@@ -11,6 +11,7 @@ import RxSwift
 import UIKit
 
 protocol OWAppealLabelViewModelingInputs {
+    var appealClick: PublishSubject<Void> { get }
 }
 
 protocol OWAppealLabelViewModelingOutputs {
@@ -21,6 +22,7 @@ protocol OWAppealLabelViewModelingOutputs {
     var appealClickableText: String { get }
     var iconImage: Observable<UIImage?> { get }
     var labelAttributedString: Observable<NSAttributedString> { get }
+    var openAppeal: Observable<Void> { get }
 }
 
 protocol OWAppealLabelViewModeling {
@@ -38,7 +40,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     // TODO: API call to get if the user can appeal/did appeal/other info and change _viewType accordingly
-    fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
+    fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .default)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
             .asObservable()
@@ -160,6 +162,12 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
         }
         .unwrap()
     }()
+
+    var appealClick = PublishSubject<Void>()
+    var openAppeal: Observable<Void> {
+        return appealClick
+            .asObservable()
+    }
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider

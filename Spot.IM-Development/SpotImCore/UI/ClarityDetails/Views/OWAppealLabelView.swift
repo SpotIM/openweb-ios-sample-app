@@ -18,6 +18,12 @@ class OWAppealLabelView: UIView {
         static let skeletonHeight: CGFloat = 48
         static let skeletonCornerRadius: CGFloat = 10
         static let iconSize: CGFloat = 24
+
+        static let identifier = "appeal_label_view_id"
+        static let skeletonIdentifier = "appeal_label_skeleton_id"
+        static let defaultLabelIdentifier = "appeal_label_default_label_id"
+        static let iconIdentifier = "appeal_label_icon_id"
+        static let labelIdentifier = "appeal_label_label_id"
     }
 
     fileprivate let disposeBag: DisposeBag
@@ -75,6 +81,7 @@ class OWAppealLabelView: UIView {
 
         setupViews()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -130,7 +137,7 @@ fileprivate extension OWAppealLabelView {
                     .attributedText(attributedText)
                     .addRangeGesture(targetRange: self.viewModel.outputs.appealClickableText) { [weak self] in
                         guard let self = self else { return }
-//                        self.viewModel.inputs.communityGuidelinesClick.onNext() // TODO: click
+                        self.viewModel.inputs.appealClick.onNext()
                     }
             })
             .disposed(by: disposeBag)
@@ -150,5 +157,13 @@ fileprivate extension OWAppealLabelView {
                 self.skeletonContentView.backgroundColor = OWColorPalette.shared.color(type: .skeletonColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        skeletonContentView.accessibilityIdentifier = Metrics.skeletonIdentifier
+        defaultLabel.accessibilityIdentifier = Metrics.defaultLabelIdentifier
+        icon.accessibilityIdentifier = Metrics.iconIdentifier
+        label.accessibilityIdentifier = Metrics.labelIdentifier
     }
 }
