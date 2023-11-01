@@ -184,6 +184,7 @@
 		247C017D27FED5CC006A3962 /* SPCommentStatusIndicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C017C27FED5CC006A3962 /* SPCommentStatusIndicationView.swift */; };
 		247C017F27FED861006A3962 /* SPCommentStatusIndicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C017E27FED861006A3962 /* SPCommentStatusIndicationViewModel.swift */; };
 		247C01812805A4D3006A3962 /* OWImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C01802805A4D3006A3962 /* OWImageType.swift */; };
+		247EE9812AEFF4D70000D640 /* OWNetworkAvailabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */; };
 		2484039A2ADD23A000EAD59A /* OWOrientationEnforcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248403992ADD23A000EAD59A /* OWOrientationEnforcement.swift */; };
 		2484039C2ADD23E100EAD59A /* OWOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2484039B2ADD23E100EAD59A /* OWOrientation.swift */; };
 		248403A22ADE50C900EAD59A /* OWOrientationEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248403A12ADE50C900EAD59A /* OWOrientationEnforcement+Extensions.swift */; };
@@ -1299,6 +1300,7 @@
 		247C017C27FED5CC006A3962 /* SPCommentStatusIndicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentStatusIndicationView.swift; sourceTree = "<group>"; };
 		247C017E27FED861006A3962 /* SPCommentStatusIndicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentStatusIndicationViewModel.swift; sourceTree = "<group>"; };
 		247C01802805A4D3006A3962 /* OWImageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImageType.swift; sourceTree = "<group>"; };
+		247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAvailabilityService.swift; sourceTree = "<group>"; };
 		248403992ADD23A000EAD59A /* OWOrientationEnforcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOrientationEnforcement.swift; sourceTree = "<group>"; };
 		2484039B2ADD23E100EAD59A /* OWOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOrientation.swift; sourceTree = "<group>"; };
 		248403A12ADE50C900EAD59A /* OWOrientationEnforcement+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWOrientationEnforcement+Extensions.swift"; sourceTree = "<group>"; };
@@ -5410,6 +5412,7 @@
 				3D8209C42A927EE1003FF453 /* OWPageViewIdHolder.swift */,
 				240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */,
 				24C83DCA2A9DC01B0024080F /* OWActiveArticleService.swift */,
+				247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -7458,6 +7461,7 @@
 				9EC88D8D29FAB82400EBD165 /* OWReportReasonSubmittedView.swift in Sources */,
 				4454181F23685144001D0ED0 /* SPPreConversationHeaderView.swift in Sources */,
 				3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */,
+				247EE9812AEFF4D70000D640 /* OWNetworkAvailabilityService.swift in Sources */,
 				441165A52375C4BD00B781F3 /* OWDecodableParser.swift in Sources */,
 				3DA264662951E3B200688FFF /* OWNetworkConcurrency.swift in Sources */,
 				9E4163BF29F6C9C700819BC2 /* OWReportReasonCancelView.swift in Sources */,
