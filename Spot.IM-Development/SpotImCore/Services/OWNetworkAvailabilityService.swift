@@ -35,6 +35,7 @@ class OWInternalNetworkAvailabilityService: OWNetworkAvailabilityServicing {
         return networkAvailableSubject.asObservable()
             .distinctUntilChanged()
     }
+    fileprivate let queue = DispatchQueue(label: "OWInternalNetworkAvailabilityQueue", qos: .background)
 
     fileprivate init() {
         networkMonitor = NWPathMonitor()
@@ -46,6 +47,6 @@ class OWInternalNetworkAvailabilityService: OWNetworkAvailabilityServicing {
             }
         }
 
-        networkMonitor.start(queue: DispatchQueue.global(qos: .background))
+        networkMonitor.start(queue: queue)
     }
 }
