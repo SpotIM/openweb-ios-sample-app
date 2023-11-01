@@ -88,6 +88,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
+        static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
@@ -1061,7 +1062,7 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
+            .do(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.animated)
                 if shouldShowErrorLoadingReplies {
@@ -1097,8 +1098,10 @@ fileprivate extension OWConversationViewViewModel {
                     commentPresentationData.setRepliesPresentation(repliesPresentation)
                     commentPresentationData.update.onNext()
                 }
-
             })
+            .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: conversationViewVMScheduler)
+            .voidify()
+            .bind(to: _updateTableViewInstantly)
             .disposed(by: disposeBag)
 
         // Try again after error loading more comments
