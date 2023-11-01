@@ -43,20 +43,27 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     }
 
     var shouldShowView: Observable<Bool> {
-        servicesProvider.authenticationManager()
-            .userAuthenticationStatus
-            .map { [weak self] status in
-                guard self?.isFeatureEnabled == true,
-                      OWManager.manager.authentication.shouldDisplayLoginPrompt == true
-                else { return false }
-                switch status {
-                case .ssoLoggedIn, .ssoRecovering, .ssoRecoveredSuccessfully:
-                    return false
-                default:
-                    return true
-                }
+        Observable.combineLatest(
+            servicesProvider.authenticationManager().userAuthenticationStatus,
+            servicesProvider.networkAvailabilityService().networkAvailable
+        ) { status, networkAvailable -> OWInternalUserAuthenticationStatus? in
+            guard networkAvailable == true else { return nil }
+            return status
+        }
+        .map { [weak self] status in
+            guard self?.isFeatureEnabled == true,
+                  OWManager.manager.authentication.shouldDisplayLoginPrompt == true,
+                  let status = status
+            else { return false }
+            switch status {
+            case .ssoLoggedIn, .ssoRecovering, .ssoRecoveredSuccessfully:
+                return false
+            default:
+                return true
             }
-            .startWith(false)
+        }
+        .startWith(false)
+        .share(replay: 1)
     }
 
     var loginPromptTap = PublishSubject<Void>()
