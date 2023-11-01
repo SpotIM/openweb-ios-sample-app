@@ -164,11 +164,12 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }()
 
     var appealClick = PublishSubject<Void>()
-    var openAppeal: Observable<Void> {
+    var openAppeal: Observable<Void> { // TODO: probably should pass the comment id or something similar
         return appealClick
             .asObservable()
     }
 
+    // TODO: probably should get the comment id
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
