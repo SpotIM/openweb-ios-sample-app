@@ -82,6 +82,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
 fileprivate extension OWCommentThreadActionsViewModel {
     func setupObservers() {
         updatedType
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
                 switch type {
