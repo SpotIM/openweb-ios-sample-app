@@ -88,7 +88,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
 fileprivate extension OWCommentThreadActionsViewModel {
     func setupObservers() {
         updatedType
-            .subscribe { [weak self] type in
+            .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
                 switch type {
                 case .collapseThread:
@@ -111,7 +111,7 @@ fileprivate extension OWCommentThreadActionsViewModel {
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
                     self._updateSpacing.onNext(self.spacing)
                 }
-            }
+            })
             .disposed(by: disposeBag)
     }
 }
