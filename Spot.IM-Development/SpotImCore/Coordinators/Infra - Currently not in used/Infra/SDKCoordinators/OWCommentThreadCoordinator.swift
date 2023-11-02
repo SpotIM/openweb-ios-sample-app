@@ -207,8 +207,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
     override func showableComponent() -> Observable<OWShowable> {
         viewableMode = .independent
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData,
-                                                                                                viewableMode: viewableMode)
+        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
         setupObservers(forViewModel: commentThreadViewVM)
         setupViewActionsCallbacks(forViewModel: commentThreadViewVM)

@@ -15,6 +15,7 @@ class OWCommentView: UIView {
         static let leadingOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentStatusBottomPadding: CGFloat = 12.0
+        static let commentLabelTopPadding: CGFloat = 10.0
         static let horizontalOffset: CGFloat = 16.0
         static let messageContainerTopOffset: CGFloat = 4.0
         static let commentActionsTopPadding: CGFloat = 15.0
@@ -93,14 +94,14 @@ fileprivate extension OWCommentView {
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentStatusView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
-            commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
+            commentHeaderBottomConstraint = make.bottom.equalToSuperview().constraint
         }
     }
 
     func setupCommentContentUI() {
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
+            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
             make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
         }
@@ -142,11 +143,9 @@ fileprivate extension OWCommentView {
         viewModel.outputs.shouldShowCommentStatus
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
-
                 self.commentHeaderView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
                 }
-
                 self.commentStatusView.isHidden = !shouldShow
                 self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
             })
