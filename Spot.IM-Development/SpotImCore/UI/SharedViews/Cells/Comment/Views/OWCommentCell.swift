@@ -85,7 +85,6 @@ fileprivate extension OWCommentCell {
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateSpacing
-            .delay(.milliseconds(100), scheduler: MainScheduler.instance)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] spacingBetweenComments in
                 guard let self = self else { return }

@@ -120,10 +120,8 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentHeaderVM.inputs.update(user: user)
     }
 
-    init(data: OWCommentRequiredData,
-         sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-
         let status = OWCommentStatusType.commentStatus(from: data.comment.status)
         commentStatusVM = OWCommentStatusViewModel(status: status)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
