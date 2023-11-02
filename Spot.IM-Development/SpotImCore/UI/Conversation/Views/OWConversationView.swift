@@ -371,6 +371,14 @@ fileprivate extension OWConversationView {
                 self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.reloadCellIndex
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 }
