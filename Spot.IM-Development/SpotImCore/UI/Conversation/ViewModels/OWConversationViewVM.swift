@@ -1870,7 +1870,20 @@ fileprivate extension OWConversationViewViewModel {
 
         let muteUserObservable = muteCommentUser
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .mutingUser)
+                    .voidify()
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                // 2. Waiting for authentication required for muting user
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .mutingUser)
+            }
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                // 3. Show alert
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
