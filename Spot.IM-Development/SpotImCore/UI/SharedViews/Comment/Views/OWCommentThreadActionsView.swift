@@ -39,6 +39,12 @@ class OWCommentThreadActionsView: UIView {
         self.disposeBag = DisposeBag()
         self.setupObservers()
         self.applyAccessibility()
+
+        if self.viewModel.outputs.isLoading {
+            self.disclosureImageView.isHidden = true
+            self.activityIndicator.isHidden = false
+            self.activityIndicator.startAnimating()
+        }
     }
 
     func prepareForReuse() {
