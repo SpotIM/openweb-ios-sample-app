@@ -153,9 +153,14 @@ fileprivate extension OWCommentThreadActionsView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isLoading in
                 guard let self = self else { return }
-                self.activityIndicator.startAnimating()
                 self.disclosureImageView.isHidden = isLoading
                 self.activityIndicator.isHidden = !isLoading
+
+                if isLoading {
+                    self.activityIndicator.startAnimating()
+                } else {
+                    self.activityIndicator.stopAnimating()
+                }
             })
             .disposed(by: disposeBag)
     }
