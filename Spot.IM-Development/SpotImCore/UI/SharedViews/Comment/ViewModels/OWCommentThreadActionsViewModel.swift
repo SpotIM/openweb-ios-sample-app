@@ -18,6 +18,7 @@ enum OWCommentThreadActionType {
 protocol OWCommentThreadActionsViewModelingInputs {
     var tap: PublishSubject<Void> { get }
     var updateActionType: BehaviorSubject<OWCommentThreadActionType> { get }
+    var isLoading: Bool { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
@@ -25,6 +26,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
     var commentId: String { get }
+    var isLoading: Bool { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
