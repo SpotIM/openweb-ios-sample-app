@@ -144,6 +144,7 @@ fileprivate extension OWCommentView {
         }
 
         viewModel.outputs.shouldShowCommentStatus
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
                 self.commentHeaderView.OWSnp.updateConstraints { make in
