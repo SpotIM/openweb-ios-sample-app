@@ -18,7 +18,7 @@ enum OWCommentThreadActionType {
 protocol OWCommentThreadActionsViewModelingInputs {
     var tap: PublishSubject<Void> { get }
     var updateActionType: BehaviorSubject<OWCommentThreadActionType> { get }
-    var isLoading: Bool { get }
+    var isLoading: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
@@ -26,7 +26,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
     var commentId: String { get }
-    var isLoading: Bool { get }
+    var isLoadingChanged: Observable<Bool> { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -44,7 +44,11 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var tapOutput: Observable<Void> {
         tap.asObservable()
     }
-    var isLoading: Bool = false
+
+    var isLoading = BehaviorSubject<Bool>(value: false)
+    var isLoadingChanged: Observable<Bool> {
+        return isLoading
+    }
 
     var updateActionType = BehaviorSubject<OWCommentThreadActionType>(value: .collapseThread)
     fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
@@ -102,10 +106,8 @@ fileprivate extension OWCommentThreadActionsViewModel {
             .disposed(by: disposeBag)
 
         tapOutput
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.isLoading = true
-            })
+            .map { return true }
+            .bind(to: isLoading)
             .disposed(by: disposeBag)
     }
 }

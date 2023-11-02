@@ -39,12 +39,6 @@ class OWCommentThreadActionsView: UIView {
         self.disposeBag = DisposeBag()
         self.setupObservers()
         self.applyAccessibility()
-
-        if self.viewModel.outputs.isLoading {
-            self.disclosureImageView.isHidden = true
-            self.activityIndicator.isHidden = false
-            self.activityIndicator.startAnimating()
-        }
     }
 
     func prepareForReuse() {
@@ -152,13 +146,17 @@ fileprivate extension OWCommentThreadActionsView {
 
         tapGesture.rx.event.voidify()
             .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.disclosureImageView.isHidden = true
-                self.activityIndicator.isHidden = false
-                self.activityIndicator.startAnimating()
-            })
             .bind(to: viewModel.inputs.tap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isLoadingChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                guard let self = self else { return }
+                self.activityIndicator.startAnimating()
+                self.disclosureImageView.isHidden = isLoading
+                self.activityIndicator.isHidden = !isLoading
+            })
             .disposed(by: disposeBag)
     }
 }
