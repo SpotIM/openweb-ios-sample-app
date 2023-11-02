@@ -42,6 +42,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var tapOutput: Observable<Void> {
         tap.asObservable()
     }
+    var isLoading: Bool = false
 
     var updateActionType = BehaviorSubject<OWCommentThreadActionType>(value: .collapseThread)
     fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
@@ -95,6 +96,13 @@ fileprivate extension OWCommentThreadActionsViewModel {
                     self._actionLabelText.onNext(String(format: repliesString, from, to))
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
                 }
+            })
+            .disposed(by: disposeBag)
+
+        tapOutput
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.isLoading = true
             })
             .disposed(by: disposeBag)
     }
