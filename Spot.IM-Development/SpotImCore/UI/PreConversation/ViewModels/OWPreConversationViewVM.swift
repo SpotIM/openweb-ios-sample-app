@@ -69,7 +69,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
 
-        static let spacingBetweenCommentsDivisor: CGFloat = 2
+        static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments
         static let defaultCommunityGuidelinesSpacing = OWConversationSpacing.regular.communityGuidelines
         static let defaultCommunityQuestionSpacing = OWConversationSpacing.regular.communityQuestions
     }
@@ -397,10 +397,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return isCompactMode
     }()
 
-    fileprivate lazy var spacingBetweenComments: CGFloat = {
-        return OWConversationSpacing.regular.betweenComments / Metrics.spacingBetweenCommentsDivisor
-    }()
-
     fileprivate var isEmpty = BehaviorSubject<Bool>(value: false)
 
     fileprivate var postId: OWPostId {
@@ -584,7 +580,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                         section: self.preConversationData.article.additionalSettings.section),
-                                                    spacing: self.spacingBetweenComments)
+                                                    spacing: Metrics.defaultBetweenCommentsSpacing)
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
@@ -884,7 +880,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                             section: self.preConversationData.article.additionalSettings.section),
-                                                      spacing: self.spacingBetweenComments)
+                                                      spacing: Metrics.defaultBetweenCommentsSpacing)
                     }.unwrap()
                     var viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in
