@@ -51,6 +51,7 @@ protocol OWConversationViewViewModelingOutputs {
     var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
+    var reloadCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -198,6 +199,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
+            .asObservable()
+    }
+
+    fileprivate var _reloadCellIndex = PublishSubject<Int>()
+    var reloadCellIndex: Observable<Int> {
+        _reloadCellIndex
             .asObservable()
     }
 
@@ -1386,18 +1393,27 @@ fileprivate extension OWConversationViewViewModel {
                 return commentPresentationData
             }
             .withLatestFrom(cellsViewModels) { ($0, $1) }
-            .map { (commentPresentationData, cellsViewModels) -> OWConversationCellOption? in
+            .map { (commentPresentationData, cellsViewModels) -> (OWConversationCellOption, Int)? in
                 let cellOption = cellsViewModels.first(where: {
                     guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
                     return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
                 })
-                return cellOption
+                let cellIndex = cellsViewModels.firstIndex(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                guard let cellOption = cellOption, let cellIndex = cellIndex else { return nil }
+                return (cellOption, cellIndex)
             }
             .unwrap()
-            .subscribe(onNext: { cellOption in
+            .do(onNext: { (cellOption, _) in
                 guard let viewModel = cellOption.viewModel as? OWCommentThreadActionsCellViewModel else { return }
                 viewModel.outputs.commentActionsVM.inputs.isLoading.onNext(false)
             })
+            .map { (_, cellIndex) -> Int in
+                return cellIndex
+            }
+            .bind(to: _reloadCellIndex)
             .disposed(by: disposeBag)
 
         // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
