@@ -51,6 +51,7 @@ protocol OWConversationViewViewModelingOutputs {
     var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
+    var reloadCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -200,6 +201,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
+            .asObservable()
+    }
+
+    fileprivate var _reloadCellIndex = PublishSubject<Int>()
+    var reloadCellIndex: Observable<Int> {
+        _reloadCellIndex
             .asObservable()
     }
 
@@ -1074,7 +1081,7 @@ fileprivate extension OWConversationViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .do(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
+            .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.animated)
                 if shouldShowErrorLoadingReplies {
@@ -1111,9 +1118,6 @@ fileprivate extension OWConversationViewViewModel {
                     commentPresentationData.update.onNext()
                 }
             })
-            .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: conversationViewVMScheduler)
-            .voidify()
-            .bind(to: _updateTableViewInstantly)
             .disposed(by: disposeBag)
 
         // Try again after error loading more comments
@@ -1392,6 +1396,36 @@ fileprivate extension OWConversationViewViewModel {
                 }
 
             })
+            .disposed(by: disposeBag)
+
+        // Reload OWCommentThreadActionsCell at index
+        loadMoreRepliesReadUpdated
+            .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: conversationViewVMScheduler)
+            .map { (commentPresentationData, _, _) -> OWCommentPresentationData in
+                return commentPresentationData
+            }
+            .withLatestFrom(cellsViewModels) { ($0, $1) }
+            .map { (commentPresentationData, cellsViewModels) -> (OWConversationCellOption, Int)? in
+                let cellOption = cellsViewModels.first(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                let cellIndex = cellsViewModels.firstIndex(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                guard let cellOption = cellOption, let cellIndex = cellIndex else { return nil }
+                return (cellOption, cellIndex)
+            }
+            .unwrap()
+            .do(onNext: { (cellOption, _) in
+                guard let viewModel = cellOption.viewModel as? OWCommentThreadActionsCellViewModel else { return }
+                viewModel.outputs.commentActionsVM.inputs.isLoading.onNext(false)
+            })
+            .map { (_, cellIndex) -> Int in
+                return cellIndex
+            }
+            .bind(to: _reloadCellIndex)
             .disposed(by: disposeBag)
 
         // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
