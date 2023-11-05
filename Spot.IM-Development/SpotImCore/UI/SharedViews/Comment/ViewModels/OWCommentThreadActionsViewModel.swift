@@ -18,6 +18,7 @@ enum OWCommentThreadActionType {
 protocol OWCommentThreadActionsViewModelingInputs {
     var tap: PublishSubject<Void> { get }
     var updateActionType: BehaviorSubject<OWCommentThreadActionType> { get }
+    var isLoading: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentThreadActionsViewModelingOutputs {
@@ -26,6 +27,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var disclosureTransform: Observable<CGAffineTransform> { get }
     var updateSpacing: Observable<CGFloat> { get }
     var commentId: String { get }
+    var isLoadingChanged: Observable<Bool> { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -42,6 +44,11 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     var tap = PublishSubject<Void>()
     var tapOutput: Observable<Void> {
         tap.asObservable()
+    }
+
+    var isLoading = BehaviorSubject<Bool>(value: false)
+    var isLoadingChanged: Observable<Bool> {
+        return isLoading
     }
 
     var updateActionType = BehaviorSubject<OWCommentThreadActionType>(value: .collapseThread)
@@ -88,6 +95,7 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
 fileprivate extension OWCommentThreadActionsViewModel {
     func setupObservers() {
         updatedType
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
                 switch type {
@@ -112,6 +120,11 @@ fileprivate extension OWCommentThreadActionsViewModel {
                     self._updateSpacing.onNext(self.spacing)
                 }
             })
+            .disposed(by: disposeBag)
+
+        tapOutput
+            .map { return true }
+            .bind(to: isLoading)
             .disposed(by: disposeBag)
     }
 }
