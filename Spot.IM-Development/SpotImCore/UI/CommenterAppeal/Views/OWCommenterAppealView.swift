@@ -233,6 +233,14 @@ fileprivate extension OWCommenterAppealView {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.submitButtonText
+            .bind(to: submitButton.rx.title(for: .normal))
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.submitInProgress
+            .bind(to: submitButton.rx.isLoading)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

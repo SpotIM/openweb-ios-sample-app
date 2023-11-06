@@ -20,6 +20,8 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var textViewVM: OWTextViewViewModeling { get }
     var appealCellViewModels: Observable<[OWAppealCellViewModeling]> { get }
     var selectedReason: Observable<OWReportReason> { get }
+    var submitButtonText: Observable<String> { get }
+    var submitInProgress: Observable<Bool> { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -68,7 +70,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .asObservable()
             .share(replay: 1)
     }()
-    // TODO: dedicated cell vm
+
     lazy var appealCellViewModels: Observable<[OWAppealCellViewModeling]> = {
         appealOptions
             .map { reasons in
@@ -93,6 +95,21 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             }
             .share(replay: 1)
     }()
+
+    fileprivate var _submitInProgress = PublishSubject<Bool>()
+    var submitInProgress: Observable<Bool> {
+        return _submitInProgress
+            .asObservable()
+    }
+
+    fileprivate var isError = BehaviorSubject<Bool>(value: false)
+    var submitButtonText: Observable<String> {
+        return isError
+            .map { error in
+                return OWLocalizationManager.shared.localizedString(key: error ? "TryAgain" : "Appeal")
+            }
+    }
+
 }
 
 fileprivate extension OWCommenterAppealViewVM {

@@ -130,6 +130,7 @@
 "ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
 "ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
 "CommenterAppealTitle" = "Appeal Reason";
+"Appeal" = "Appeal";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
