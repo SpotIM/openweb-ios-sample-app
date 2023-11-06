@@ -16,6 +16,7 @@ protocol OWCommenterAppealViewViewModelingInputs {
 
 protocol OWCommenterAppealViewViewModelingOutputs {
     var closeButtonPopped: Observable<Void> { get }
+    var textViewVM: OWTextViewViewModeling { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -26,16 +27,26 @@ protocol OWCommenterAppealViewViewModeling {
 class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
                                OWCommenterAppealViewViewModelingInputs,
                                OWCommenterAppealViewViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let defaultTextViewMaxCharecters = 280
+    }
+
     var inputs: OWCommenterAppealViewViewModelingInputs { return self }
     var outputs: OWCommenterAppealViewViewModelingOutputs { return self }
 
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
 
+    let textViewVM: OWTextViewViewModeling
+    
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         disposeBag = DisposeBag()
-
+        let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
+                                          placeholderText: "You can add additional information here", // TODO: placeholder is changed if its mendatory or not
+                                          charectersLimitEnabled: false,
+                                          isEditable: false)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers()
     }
 
