@@ -124,5 +124,11 @@ fileprivate extension OWCommenterAppealViewVM {
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)
             .disposed(by: disposeBag)
+
+        selectedReason
+            .filter { $0.requiredAdditionalInfo == true }
+            .voidify()
+            .bind(to: textViewVM.inputs.textViewTap)
+            .disposed(by: disposeBag)
     }
 }
