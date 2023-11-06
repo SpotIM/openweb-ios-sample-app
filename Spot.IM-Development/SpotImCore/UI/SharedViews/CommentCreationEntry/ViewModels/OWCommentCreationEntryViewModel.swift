@@ -79,18 +79,23 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling,
 
 fileprivate extension OWCommentCreationEntryViewModel {
     func setupObservers() {
-        sharedServiceProvider.authenticationManager()
-            .activeUserAvailability
-            .subscribe(onNext: { [weak self] availability in
-                guard let self = self else { return }
-                switch (availability) {
-                case .notAvailable:
-                    self.avatarViewVM.inputs.userInput.onNext(nil)
-                case .user(let user):
-                    self.avatarViewVM.inputs.userInput.onNext(user)
-                }
-            })
-            .disposed(by: disposeBag)
+        let authenticationManager = sharedServiceProvider.authenticationManager()
+
+        Observable.combineLatest(authenticationManager.activeUserAvailability,
+                                 authenticationManager.userAuthenticationStatus)
+        .subscribe(onNext: { [weak self] userAvailability, userAuthStatus in
+            guard let self = self else { return }
+
+            switch (userAvailability, userAuthStatus) {
+            case (_, .ssoRecovering), (_, .ssoRecoveredSuccessfully), (_, .ssoFailedRecover):
+                return // Do not update avatar VM with new user while sso is recovering
+            case (.notAvailable, _):
+                self.avatarViewVM.inputs.userInput.onNext(nil)
+            case (.user(let user), _):
+                self.avatarViewVM.inputs.userInput.onNext(user)
+            }
+        })
+        .disposed(by: disposeBag)
 
         triggerCustomizeContainerViewUI
             .bind(to: _triggerCustomizeContainerViewUI)
