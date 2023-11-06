@@ -127,6 +127,7 @@
 "TypingNow" = "%d A escrever agora";
 "LoginPromptTitle" = "Autorizar participação";
 "CommenterAppealTitle" = "Motivo do recurso";
+"Appeal" = "Recorrer";
 
 // Old API
 "Your Username" = "Seu apelido...";
