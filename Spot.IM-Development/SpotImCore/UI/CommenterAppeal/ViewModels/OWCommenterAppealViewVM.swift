@@ -18,7 +18,7 @@ protocol OWCommenterAppealViewViewModelingInputs {
 protocol OWCommenterAppealViewViewModelingOutputs {
     var closeButtonPopped: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
-    var appealCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
+    var appealCellViewModels: Observable<[OWAppealCellViewModeling]> { get }
     var selectedReason: Observable<OWReportReason> { get }
 }
 
@@ -69,12 +69,12 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .share(replay: 1)
     }()
     // TODO: dedicated cell vm
-    lazy var appealCellViewModels: Observable<[OWReportReasonCellViewModeling]> = {
+    lazy var appealCellViewModels: Observable<[OWAppealCellViewModeling]> = {
         appealOptions
             .map { reasons in
-                var viewModels: [OWReportReasonCellViewModeling] = []
+                var viewModels: [OWAppealCellViewModeling] = []
                 for reason in reasons {
-                    viewModels.append(OWReportReasonCellViewModel(reason: reason))
+                    viewModels.append(OWAppealCellViewModel(reason: reason))
                 }
                 return viewModels
             }

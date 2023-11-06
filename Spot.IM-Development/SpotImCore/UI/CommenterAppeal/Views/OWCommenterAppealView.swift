@@ -75,7 +75,7 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var tableViewReasons: UITableView = {
         return UITableView(frame: .zero, style: .grouped)
             .separatorStyle(.none)
-            .registerCell(cellClass: OWReportReasonCell.self) // TODO: propper cell
+            .registerCell(cellClass: OWAppealCell.self)
             .backgroundColor(.clear)
     }()
 
@@ -184,18 +184,18 @@ fileprivate extension OWCommenterAppealView {
 
         // TableView binding
         viewModel.outputs.appealCellViewModels
-            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWAppealCell.self.identifierName, cellType: OWAppealCell.self)) { (_, viewModel, cell) in
                 cell.configure(with: viewModel)
             }
             .disposed(by: disposeBag)
 
-        tableViewReasons.rx.modelDeselected(OWReportReasonCellViewModeling.self)
+        tableViewReasons.rx.modelDeselected(OWAppealCellViewModeling.self)
             .subscribe(onNext: { viewModel in
                 viewModel.inputs.setSelected.onNext(false)
             })
             .disposed(by: disposeBag)
 
-        tableViewReasons.rx.modelSelected(OWReportReasonCellViewModeling.self)
+        tableViewReasons.rx.modelSelected(OWAppealCellViewModeling.self)
             .subscribe(onNext: { viewModel in
                 viewModel.inputs.setSelected.onNext(true)
             })
@@ -204,22 +204,14 @@ fileprivate extension OWCommenterAppealView {
         tableViewReasons.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }
-                self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row) // TODO: !
+                self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row)
             })
             .disposed(by: disposeBag)
-
-        // TODO: ?
-//        tableViewReasons.rx.contentOffset
-//            .observe(on: MainScheduler.instance)
-//            .bind(to: viewModel.inputs.changeReportOffset)
-//            .disposed(by: disposeBag)
 
         viewModel.outputs.selectedReason
             .subscribe(onNext: { [weak self] selectedReason in
                 // Show textView after selection
-                guard let self = self//,
-//                      self.textViewHeightConstraint?.isActive == false
-                else { return }
+                guard let self = self else { return }
 
                 self.textViewHeightConstraint?.update(offset: Metrics.textViewHeight)
                 
