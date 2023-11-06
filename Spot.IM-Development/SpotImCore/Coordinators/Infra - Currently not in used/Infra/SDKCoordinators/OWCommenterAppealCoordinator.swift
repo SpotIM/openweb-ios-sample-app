@@ -26,7 +26,7 @@ enum OWCommenterAppealCoordinatorResult: OWCoordinatorResultProtocol {
 class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinatorResult> {
     fileprivate struct Metrics {
         static let fadeDuration: CGFloat = 0.3
-//        static let delayTapForOpenAdditionalInfo = 100 // Time in ms
+        static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
     fileprivate let router: OWRoutering?
@@ -50,6 +50,8 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
         let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM()
         let commenterAppealVC = OWCommenterAppealVC(viewModel: commenterAppealVM)
 
+        setupObservers(for: commenterAppealVM.outputs.commenterAppealViewViewModel)
+        
         let commenterAppealPopped = PublishSubject<Void>()
         router.push(commenterAppealVC,
                     pushStyle: .present,
@@ -91,6 +93,55 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 }
 
 fileprivate extension OWCommenterAppealCoordinator {
+    func setupObservers(for viewModel: OWCommenterAppealViewViewModeling) {
+        // ReportReaon OWTextViewVM - General
+        let reportTextViewVM = viewModel.outputs.textViewVM
+
+        // Additional information observable - General
+        let additionalInformationObservable = reportTextViewVM.outputs.textViewTapped
+            .flatMap { _ -> Observable<String> in
+                return reportTextViewVM.outputs.placeholderText
+                    .take(1)
+            }
+            .flatMap({ placeholderText -> Observable<(String, String)> in
+                return reportTextViewVM.outputs.textViewText
+                    .map { (placeholderText, $0) }
+                    .take(1)
+            })
+//            .flatMap({ placeholderText, textViewText -> Observable<(String, String, Bool)> in
+//                return viewModel.outputs.reportReasonsCharectersLimitEnabled
+//                    .map { (placeholderText, textViewText, $0) }
+//                    .take(1)
+//            })
+            .delay(.milliseconds(Metrics.delayTapForOpenAdditionalInfo), scheduler: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
+            .map { placeholderText, textViewText -> OWAdditionalInfoViewViewModel in
+                return OWAdditionalInfoViewViewModel(viewableMode: .partOfFlow, // TODO: viewModel.outputs.viewableMode,
+                                                     placeholderText: placeholderText,
+                                                     textViewText: textViewText,
+                                                     textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
+                                                     charectersLimitEnabled: true, // TODO: ?
+                                                     isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
+                                                     submitInProgress: viewModel.outputs.submitInProgress,
+                                                     submitText: viewModel.outputs.submitButtonText)
+            }
+            .share()
+
+        // Open Additional information - Flow
+        additionalInformationObservable
+//            .filter { _ in
+//                viewModel.outputs.viewableMode == .partOfFlow
+//            }
+            .subscribe(onNext: { [weak self] additionalInfoViewVM in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
+                router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+            })
+            .disposed(by: disposeBag)
+         // TODO: independed
+    }
+
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
         // MARK: General (Used for both Flow and Independent)
 
