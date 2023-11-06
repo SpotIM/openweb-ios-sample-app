@@ -126,8 +126,8 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     var cancelClick = PublishSubject<Void>()
     fileprivate lazy var isDismissEnable: Observable<Bool> = {
         // Dismiss only if nothing selected yet
-        return selectedReason
-            .map { _ in return false }
+        return textViewVM.outputs.textViewText
+            .map { $0.isEmpty }
             .startWith(true)
     }()
     var dismiss: Observable<Void> {
