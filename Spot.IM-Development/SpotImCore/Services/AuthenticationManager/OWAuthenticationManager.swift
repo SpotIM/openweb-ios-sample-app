@@ -349,15 +349,11 @@ extension OWAuthenticationManager {
                     .withLatestFrom(self._userAuthenticationStatus) { ($0, $1) }
                     .do(onNext: { [weak self] user, currentAuthenticationStatus in
                         guard let self = self else { return }
+                        // Do not update user while we are sso recovering
+                        if case .ssoRecovering = currentAuthenticationStatus { return }
+
                         self.update(userAvailability: .user(user))
-                        let newAuthenticationStatus: OWInternalUserAuthenticationStatus
-                        if case .ssoRecovering = currentAuthenticationStatus {
-                            // keep the ssoRecovering status with the new user ID
-                            newAuthenticationStatus = .ssoRecovering(userId: user.userId ?? "")
-                        } else {
-                            newAuthenticationStatus = .guest(userId: user.userId ?? "")
-                        }
-                        self._userAuthenticationStatus.onNext(newAuthenticationStatus)
+                        self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
                     })
                     .voidify()
             }
