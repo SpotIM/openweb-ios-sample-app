@@ -23,21 +23,19 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
         static let textViewHeight: CGFloat = 62
         static let buttonsPadding: CGFloat = 16
         static let buttonsHeight: CGFloat = 40
-//        static let verticalPadding: CGFloat = 20
-//        static let titleTopPadding: CGFloat = 12
-//        static let spaceBetweenParagraphs: CGFloat = 16
-//        static let buttomBottomPadding: CGFloat = 36
         static let buttonTextPadding: UIEdgeInsets = UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10)
-//        static let appealLabelTopPadding: CGFloat = 24
-//
+        static let delayAnimateTextViewDuration: CGFloat = 0.15
+        static let animateTextViewHeightDuration: CGFloat = 0.3
+        static let animateTextViewAlphaDuration: CGFloat = 0.7
+
         static let identifier = "commenter_appeal_view_id"
+        static let prefixIdentifier = "commenter_appeal"
         static let titleLabelIdentifier = "commenter_appeal_title_id"
         static let closeButtonIdentifier = "commenter_appeal_close_button_id"
+        static let tableViewIdentifier = "commenter_appeal_table_view_id"
         static let footerViewIdentifier = "commenter_appeal_footer_view_id"
-        static let prefixIdentifier = "commenter_appeal"
         static let cancelButtonIdentifier = "commenter_appeal_cancel_buton_id"
         static let submitButtonIdentifier = "commenter_appeal_submit_buton_id"
-//        static let gotItButtonIdentifier = "clarity_details_got_it_button_id"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -74,14 +72,11 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
         return topContainerView
     }()
 
-    fileprivate lazy var scrollView: UIScrollView = {
-        var scrollView = UIScrollView()
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.contentLayoutGuide.OWSnp.makeConstraints { make in
-            make.width.equalTo(scrollView)
-        }
-        return scrollView
+    fileprivate lazy var tableViewReasons: UITableView = {
+        return UITableView(frame: .zero, style: .grouped)
+            .separatorStyle(.none)
+            .registerCell(cellClass: OWReportReasonCell.self) // TODO: propper cell
+            .backgroundColor(.clear)
     }()
 
     fileprivate lazy var footerView: UIView = {
@@ -152,15 +147,15 @@ fileprivate extension OWCommenterAppealView {
             make.top.leading.trailing.equalToSuperview()
         }
 
-        self.addSubview(scrollView)
-        scrollView.OWSnp.makeConstraints { make in
+        self.addSubview(tableViewReasons)
+        tableViewReasons.OWSnp.makeConstraints { make in
             make.top.equalTo(topContainerView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
         }
 
         self.addSubviews(footerView)
         footerView.OWSnp.makeConstraints { make in
-            make.top.equalTo(scrollView.OWSnp.bottom)
+            make.top.equalTo(tableViewReasons.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -185,6 +180,65 @@ fileprivate extension OWCommenterAppealView {
     func setupObservers() {
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeClick)
+            .disposed(by: disposeBag)
+
+        // TableView binding
+        viewModel.outputs.appealCellViewModels
+            .bind(to: tableViewReasons.rx.items(cellIdentifier: OWReportReasonCell.self.identifierName, cellType: OWReportReasonCell.self)) { (_, viewModel, cell) in
+                cell.configure(with: viewModel)
+            }
+            .disposed(by: disposeBag)
+
+        tableViewReasons.rx.modelDeselected(OWReportReasonCellViewModeling.self)
+            .subscribe(onNext: { viewModel in
+                viewModel.inputs.setSelected.onNext(false)
+            })
+            .disposed(by: disposeBag)
+
+        tableViewReasons.rx.modelSelected(OWReportReasonCellViewModeling.self)
+            .subscribe(onNext: { viewModel in
+                viewModel.inputs.setSelected.onNext(true)
+            })
+            .disposed(by: disposeBag)
+
+        tableViewReasons.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                self.viewModel.inputs.reasonIndexSelect.onNext(indexPath.row) // TODO: !
+            })
+            .disposed(by: disposeBag)
+
+        // TODO: ?
+//        tableViewReasons.rx.contentOffset
+//            .observe(on: MainScheduler.instance)
+//            .bind(to: viewModel.inputs.changeReportOffset)
+//            .disposed(by: disposeBag)
+
+        viewModel.outputs.selectedReason
+            .subscribe(onNext: { [weak self] selectedReason in
+                // Show textView after selection
+                guard let self = self//,
+//                      self.textViewHeightConstraint?.isActive == false
+                else { return }
+
+                self.textViewHeightConstraint?.update(offset: Metrics.textViewHeight)
+                
+                if selectedReason.requiredAdditionalInfo { // We do not animate textView if it is a requiredAdditionalInfo reason since we move to the additional info screen
+                    self.layoutIfNeeded()
+                    self.textView.alpha = 1
+                } else {
+                    UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                        self.layoutIfNeeded()
+                    }
+                    UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
+                        self.textView.alpha = 1
+                    }
+                }
+
+                if let selectedIndex = self.tableViewReasons.indexPathForSelectedRow {
+                    self.tableViewReasons.selectRow(at: selectedIndex, animated: true, scrollPosition: .bottom)
+                }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
@@ -215,6 +269,7 @@ fileprivate extension OWCommenterAppealView {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        tableViewReasons.accessibilityIdentifier = Metrics.tableViewIdentifier
         footerView.accessibilityIdentifier = Metrics.footerViewIdentifier
         cancelButton.accessibilityIdentifier = Metrics.cancelButtonIdentifier
         submitButton.accessibilityIdentifier = Metrics.submitButtonIdentifier
