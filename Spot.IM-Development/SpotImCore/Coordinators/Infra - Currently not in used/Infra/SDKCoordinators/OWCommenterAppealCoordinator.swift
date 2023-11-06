@@ -68,7 +68,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
             .map { OWCommenterAppealCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable)
+        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commenterAppealVM.outputs.commenterAppealViewViewModel.outputs.dismiss)
             .map { OWCommenterAppealCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
