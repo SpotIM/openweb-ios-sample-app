@@ -127,6 +127,7 @@
 "TypingNow" = "Typing now";
 "LoginPromptTitle" = "Autorizar para participar";
 "CommenterAppealTitle" = "Motivo de la apelación";
+"Appeal" = "Apelación";
 
 // Old API
 "Your Username" = "Tu seudónimo...";
