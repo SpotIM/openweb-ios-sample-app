@@ -51,6 +51,7 @@ protocol OWConversationViewViewModelingOutputs {
     var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
+    var reloadCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -88,6 +89,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
+        static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
@@ -197,6 +199,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
+            .asObservable()
+    }
+
+    fileprivate var _reloadCellIndex = PublishSubject<Int>()
+    var reloadCellIndex: Observable<Int> {
+        _reloadCellIndex
             .asObservable()
     }
 
@@ -694,13 +702,14 @@ fileprivate extension OWConversationViewViewModel {
             guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
 
             let reply = replyCellVm.outputs.commentVM.outputs.comment
+            let repliesPresentationData = commentPresentationData.repliesPresentation.first(where: { $0.id == replyId })
             existingRepliesPresentationData.append(
                 OWCommentPresentationData(
                     id: replyId,
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
-                    repliesPresentation: []
+                    repliesPresentation: repliesPresentationData?.repliesPresentation ?? []
                 )
             )
         }
@@ -1096,7 +1105,6 @@ fileprivate extension OWConversationViewViewModel {
                     commentPresentationData.setRepliesPresentation(repliesPresentation)
                     commentPresentationData.update.onNext()
                 }
-
             })
             .disposed(by: disposeBag)
 
@@ -1376,6 +1384,36 @@ fileprivate extension OWConversationViewViewModel {
                 }
 
             })
+            .disposed(by: disposeBag)
+
+        // Reload OWCommentThreadActionsCell at index
+        loadMoreRepliesReadUpdated
+            .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: conversationViewVMScheduler)
+            .map { (commentPresentationData, _, _) -> OWCommentPresentationData in
+                return commentPresentationData
+            }
+            .withLatestFrom(cellsViewModels) { ($0, $1) }
+            .map { (commentPresentationData, cellsViewModels) -> (OWConversationCellOption, Int)? in
+                let cellOption = cellsViewModels.first(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                let cellIndex = cellsViewModels.firstIndex(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                guard let cellOption = cellOption, let cellIndex = cellIndex else { return nil }
+                return (cellOption, cellIndex)
+            }
+            .unwrap()
+            .do(onNext: { (cellOption, _) in
+                guard let viewModel = cellOption.viewModel as? OWCommentThreadActionsCellViewModel else { return }
+                viewModel.outputs.commentActionsVM.inputs.isLoading.onNext(false)
+            })
+            .map { (_, cellIndex) -> Int in
+                return cellIndex
+            }
+            .bind(to: _reloadCellIndex)
             .disposed(by: disposeBag)
 
         // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
@@ -1866,7 +1904,20 @@ fileprivate extension OWConversationViewViewModel {
 
         let muteUserObservable = muteCommentUser
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .mutingUser)
+                    .voidify()
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                // 2. Waiting for authentication required for muting user
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .mutingUser)
+            }
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                // 3. Show alert
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
