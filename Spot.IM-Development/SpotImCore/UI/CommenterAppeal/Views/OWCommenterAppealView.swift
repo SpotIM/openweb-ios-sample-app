@@ -250,6 +250,10 @@ fileprivate extension OWCommenterAppealView {
             .bind(to: submitButton.rx.alpha)
             .disposed(by: disposeBag)
 
+        cancelButton.rx.tap
+            .bind(to: viewModel.inputs.cancelClick)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommenterAppealViewViewModelingInputs {
     var closeClick: PublishSubject<Void> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
+    var cancelClick: PublishSubject<Void> { get }
 }
 
 protocol OWCommenterAppealViewViewModelingOutputs {
@@ -23,6 +24,7 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var submitButtonText: Observable<String> { get }
     var submitInProgress: Observable<Bool> { get }
     var isSubmitEnabled: Observable<Bool> { get }
+    var dismiss: Observable<Void> { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -119,6 +121,22 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
                 return text.count > 0
             }
             .asObservable()
+    }
+
+    var cancelClick = PublishSubject<Void>()
+    fileprivate lazy var isDismissEnable: Observable<Bool> = {
+        // Dismiss only if nothing selected yet
+        return selectedReason
+            .map { _ in return false }
+            .startWith(true)
+    }()
+    var dismiss: Observable<Void> {
+        return cancelClick
+            .withLatestFrom(isDismissEnable) { _, enable in
+                return enable
+            }
+            .filter { $0 }
+            .voidify()
     }
 }
 
