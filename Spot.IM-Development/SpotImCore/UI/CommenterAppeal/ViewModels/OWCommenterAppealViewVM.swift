@@ -48,7 +48,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
         self.servicesProvider = servicesProvider
         disposeBag = DisposeBag()
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
-                                          placeholderText: "You can add additional information here", // TODO: placeholder is changed if its mendatory or not
+                                          placeholderText: "",
                                           charectersLimitEnabled: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
@@ -114,5 +114,15 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 
 fileprivate extension OWCommenterAppealViewVM {
     func setupObservers() {
+        selectedReason
+            .map {
+                if $0.requiredAdditionalInfo == false {
+                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder")
+                } else {
+                    return OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewMandatoryPlaceholder")
+                }
+            }
+            .bind(to: textViewVM.inputs.placeholderTextChange)
+            .disposed(by: disposeBag)
     }
 }
