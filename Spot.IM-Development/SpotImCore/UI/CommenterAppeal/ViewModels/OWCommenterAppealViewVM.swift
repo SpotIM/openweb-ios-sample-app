@@ -12,11 +12,14 @@ import UIKit
 
 protocol OWCommenterAppealViewViewModelingInputs {
     var closeClick: PublishSubject<Void> { get }
+    var reasonIndexSelect: BehaviorSubject<Int?> { get }
 }
 
 protocol OWCommenterAppealViewViewModelingOutputs {
     var closeButtonPopped: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
+    var appealCellViewModels: Observable<[OWReportReasonCellViewModeling]> { get }
+    var selectedReason: Observable<OWReportReason> { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -38,7 +41,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     let textViewVM: OWTextViewViewModeling
-    
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         disposeBag = DisposeBag()
@@ -54,6 +57,41 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     lazy var closeButtonPopped: Observable<Void> = {
         return closeClick
             .asObservable()
+    }()
+
+    // TODO: where do we get it from?
+    lazy var appealOptions: Observable<[OWReportReason]> = {
+        self.servicesProvider.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { $0.shared?.reportReasonsOptions?.reportReasons }
+            .unwrap()
+            .asObservable()
+            .share(replay: 1)
+    }()
+    // TODO: dedicated cell vm
+    lazy var appealCellViewModels: Observable<[OWReportReasonCellViewModeling]> = {
+        appealOptions
+            .map { reasons in
+                var viewModels: [OWReportReasonCellViewModeling] = []
+                for reason in reasons {
+                    viewModels.append(OWReportReasonCellViewModel(reason: reason))
+                }
+                return viewModels
+            }
+            .asObservable()
+    }()
+
+    var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
+    lazy var selectedReason: Observable<OWReportReason> = {
+        reasonIndexSelect
+            .skip(1)
+            .unwrap()
+            .flatMap { [weak self] index -> Observable<OWReportReason> in
+                guard let self = self else { return .empty() }
+                return self.appealOptions
+                    .map { $0[index] }
+            }
+            .share(replay: 1)
     }()
 }
 
