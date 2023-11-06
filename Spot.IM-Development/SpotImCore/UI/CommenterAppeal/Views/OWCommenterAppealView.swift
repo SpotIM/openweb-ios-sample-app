@@ -241,6 +241,15 @@ fileprivate extension OWCommenterAppealView {
             .bind(to: submitButton.rx.isLoading)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.isSubmitEnabled
+            .bind(to: submitButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isSubmitEnabled
+            .map { $0 ? 1 : Metrics.submitDisabledOpacity }
+            .bind(to: submitButton.rx.alpha)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

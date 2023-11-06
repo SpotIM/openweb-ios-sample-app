@@ -22,6 +22,7 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var selectedReason: Observable<OWReportReason> { get }
     var submitButtonText: Observable<String> { get }
     var submitInProgress: Observable<Bool> { get }
+    var isSubmitEnabled: Observable<Bool> { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -110,6 +111,15 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             }
     }
 
+    fileprivate var _isSubmitEnabled = PublishSubject<Bool>()
+    var isSubmitEnabled: Observable<Bool> {
+        return Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText)
+            .map { reason, text -> Bool in
+                guard reason.requiredAdditionalInfo else { return true }
+                return text.count > 0
+            }
+            .asObservable()
+    }
 }
 
 fileprivate extension OWCommenterAppealViewVM {
