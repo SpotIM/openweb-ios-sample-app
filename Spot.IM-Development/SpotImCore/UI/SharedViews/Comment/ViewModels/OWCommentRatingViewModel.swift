@@ -199,12 +199,13 @@ fileprivate extension OWCommentRatingViewModel {
                 return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
                     .map { _ in ranked }
             }
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+            .flatMapLatest { [weak self] ranked -> Observable<Int?> in
                 // 2. Waiting for authentication required for voting
                 guard let self = self else { return .empty() }
                 return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { _ in ranked }
+                    .map { $0 ? ranked : nil }
             }
+            .unwrap()
             .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
@@ -218,12 +219,13 @@ fileprivate extension OWCommentRatingViewModel {
                 return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
                     .map { _ in ranked }
             }
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
+            .flatMapLatest { [weak self] ranked -> Observable<Int?> in
                 // 2. Waiting for authentication required for voting
                 guard let self = self else { return .empty() }
                 return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { _ in ranked }
+                    .map { $0 ? ranked : nil }
             }
+            .unwrap()
             .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
