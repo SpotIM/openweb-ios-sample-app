@@ -214,7 +214,7 @@ fileprivate extension OWCommenterAppealView {
                 guard let self = self else { return }
 
                 self.textViewHeightConstraint?.update(offset: Metrics.textViewHeight)
-                
+
                 if selectedReason.requiredAdditionalInfo { // We do not animate textView if it is a requiredAdditionalInfo reason since we move to the additional info screen
                     self.layoutIfNeeded()
                     self.textView.alpha = 1
