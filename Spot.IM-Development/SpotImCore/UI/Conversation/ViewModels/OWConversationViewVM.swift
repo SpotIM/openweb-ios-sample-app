@@ -61,9 +61,8 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
 
-    var displayToast: Observable<OWToastRequiredData> { get }
+    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
     var hideToast: Observable<Void> { get }
-    var toastActionCompletion: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -514,22 +513,18 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _displayToast = PublishSubject<OWToastRequiredData?>()
-    var displayToast: Observable<OWToastRequiredData> {
+    fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
+    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
         return _displayToast
             .unwrap()
             .asObservable()
     }
     var hideToast: Observable<Void> {
         return _displayToast
-            .map { data -> Bool? in
-                return data == nil ? true : nil
-            }
-            .unwrap()
+            .filter { $0 == nil }
             .voidify()
             .asObservable()
     }
-    var toastActionCompletion = PublishSubject<Void>()
 
     // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
     var dataSourceTransition: OWViewTransition = .reload
@@ -777,22 +772,12 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-        toastActionCompletion
-            .asObservable()
-            .subscribe(onNext: {
-                print("NOGAH: toast action")
-            })
-            .disposed(by: disposeBag)
-
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
 
         servicesProvider.toastNotificationService()
             .toastToShow
-//            .debug("NOGAH: VM servicesProvider.toastNotificationService().toastToShow")
-            .subscribe(onNext: { [weak self] data in
-                let data = data?.data
-                self?._displayToast.onNext(data)
-            })
+            .observe(on: MainScheduler.instance)
+            .bind(to: _displayToast)
             .disposed(by: disposeBag)
 
         // Try again after error loading initial comments
@@ -827,11 +812,6 @@ fileprivate extension OWConversationViewViewModel {
         let conversationReadObservable = sortOptionObservable
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                // TODO: remove
-                let data = OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast....")
-                self.servicesProvider.toastNotificationService()
-                    .showToast(presentData: OWToastNotificationPresentData(data: data))
-
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
@@ -1998,7 +1978,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self._shouldShowErrorMuteUser.onNext(false)
             })
-            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
@@ -2013,9 +1993,16 @@ fileprivate extension OWConversationViewViewModel {
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    // TODO: cancel action when supported
+                    let data = OWToastRequiredData(type: .success, action: .none, title: "User muted") // TODO: translations
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: nil)
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: "Oops, something went wrong")
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: nil) // TODO: action
                     self._shouldShowErrorMuteUser.onNext(true)
                     return false
                 default:

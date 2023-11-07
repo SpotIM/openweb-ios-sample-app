@@ -215,9 +215,8 @@ fileprivate extension OWConversationView {
     // swiftlint:disable function_body_length
     func setupObservers() {
         viewModel.outputs.displayToast
-            .subscribe(onNext: { [weak self] data in
-                guard let weakself = self else { return }
-                self?.displayToast(requiredData: data, actionCompletion: weakself.viewModel.outputs.toastActionCompletion)
+            .subscribe(onNext: { [weak self] (data, action) in
+                self?.displayToast(requiredData: data.data, actionCompletion: action)
             })
             .disposed(by: disposeBag)
 

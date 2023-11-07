@@ -41,7 +41,7 @@ enum OWUserEndpoints: OWEndpoints {
 
 protocol OWUserAPI {
     func userData() -> OWNetworkResponse<SPUser>
-    func mute(userId: String) -> OWNetworkResponse<EmptyDecodable>
+    func mute(userId: String) -> OWNetworkResponse<OWNetworkEmpty>
 }
 
 extension OWNetworkAPI: OWUserAPI {
@@ -54,7 +54,7 @@ extension OWNetworkAPI: OWUserAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func mute(userId: String) -> OWNetworkResponse<EmptyDecodable> {
+    func mute(userId: String) -> OWNetworkResponse<OWNetworkEmpty> {
         let endpoint = OWUserEndpoints.mute(userId: userId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
