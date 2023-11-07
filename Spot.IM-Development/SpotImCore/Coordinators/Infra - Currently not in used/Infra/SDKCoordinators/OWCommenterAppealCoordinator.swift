@@ -51,7 +51,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
         let commenterAppealVC = OWCommenterAppealVC(viewModel: commenterAppealVM)
 
         setupObservers(for: commenterAppealVM.outputs.commenterAppealViewViewModel)
-        
+
         let commenterAppealPopped = PublishSubject<Void>()
         router.push(commenterAppealVC,
                     pushStyle: .present,
