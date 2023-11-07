@@ -123,7 +123,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }
 
     func updateStatus(for comment: OWComment) {
-        let newStatus = OWCommentStatusType.commentStatus(from: comment.status)
+        let newStatus = OWCommentStatusType.commentStatus(from: comment)
         self._status.onNext(newStatus)
     }
 }
@@ -133,8 +133,10 @@ enum OWCommentStatusType {
     case pending
     case none
 
-    static func commentStatus(from status: OWComment.CommentStatus?) -> OWCommentStatusType {
-        guard let status = status else { return .none }
+    static func commentStatus(from comment: OWComment) -> OWCommentStatusType {
+        guard let status = comment.status,
+              comment.published == false
+        else { return .none }
         switch status {
         case .block, .reject:
             return .rejected
