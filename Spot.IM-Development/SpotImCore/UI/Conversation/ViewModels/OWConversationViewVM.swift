@@ -831,9 +831,9 @@ fileprivate extension OWConversationViewViewModel {
                 let data = OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast....")
                 let data2 = OWToastRequiredData(type: .error, action: .close, title: "Error toast....")
                 self.servicesProvider.toastNotificationService()
-                    .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data2))
+                    .showToast(presentData: OWToastNotificationPresentData(data: data2))
                 self.servicesProvider.toastNotificationService()
-                    .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data))
+                    .showToast(presentData: OWToastNotificationPresentData(data: data))
 
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)

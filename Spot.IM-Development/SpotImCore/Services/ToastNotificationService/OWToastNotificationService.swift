@@ -65,12 +65,15 @@ fileprivate extension OWToastNotificationService {
                 let action = OWDefaultBlockerAction(blockerType: .toastNotification)
                 self.servicesProvider.blockerServicing().add(blocker: action)
                 // Show toast
-                let toast = self.queue.popFirst()
+                guard let toast = self.queue.popFirst() else {
+                    action.finish()
+                    return
+                }
                 self._toastToShow.onNext(toast)
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) { [weak self] in // TODO: handle properly
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec) { [weak self] in
                     self?._toastToShow.onNext(nil)
                     // Wait for the exiting animation to complete before unblocking next toast
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.6) { // TODO: handle properly
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ToastMetrics.animationDuration) {
                         action.finish()
                     }
                 }
@@ -79,13 +82,8 @@ fileprivate extension OWToastNotificationService {
     }
 }
 
-enum OWToastNotificationDismissStrategy: Codable, Equatable {
-    case byUser
-    case time(durationMs: Double) // TODO: double?
-}
-
 struct OWToastNotificationPresentData: Codable, Equatable {
-    let dismissStrategy: OWToastNotificationDismissStrategy
     let data: OWToastRequiredData
+    var durationInSec: Double = 5
     // Show on specific view? all views??
 }
