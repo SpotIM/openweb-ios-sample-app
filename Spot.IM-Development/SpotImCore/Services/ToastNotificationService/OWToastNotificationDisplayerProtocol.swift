@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 protocol OWToastNotificationDisplayerProtocol {
-    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>)
+    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?)
     func dismissToast()
     var toastView: OWToastView? { get set }
     var panGesture: UIPanGestureRecognizer { get set }
@@ -28,7 +28,7 @@ struct ToastMetrics {
 
 extension OWToastNotificationDisplayerProtocol where Self: UIView {
 
-    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>) {
+    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?) {
         // Make sure no old toast is visible
         removeToast()
 

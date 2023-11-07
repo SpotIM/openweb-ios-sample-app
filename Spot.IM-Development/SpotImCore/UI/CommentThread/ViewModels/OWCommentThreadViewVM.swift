@@ -1376,7 +1376,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Handling mute user from network
         muteUserObservable
-            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
