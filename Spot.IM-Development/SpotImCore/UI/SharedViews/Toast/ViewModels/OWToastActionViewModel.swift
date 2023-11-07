@@ -55,9 +55,9 @@ fileprivate extension OWToastActionViewModel {
     func title(for action: OWToastAction) -> String {
         switch(action) {
         case .learnMore:
-            return OWLocalizationManager.shared.localizedString(key: "Learn More")
+            return OWLocalizationManager.shared.localizedString(key: "LearnMore")
         case .tryAgain:
-            return OWLocalizationManager.shared.localizedString(key: "Try Again")
+            return OWLocalizationManager.shared.localizedString(key: "TryAgain")
         case .undo:
             return OWLocalizationManager.shared.localizedString(key: "Undo") // TODO: missing translations
         case .close:
