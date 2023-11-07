@@ -100,7 +100,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
                let displayName = user.displayName {
                 name = displayName
             }
-            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
 
             let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             let boldUserNameString = NSMutableAttributedString(string: name, attributes: attrs)
@@ -363,7 +363,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.inputs.resetTypeToNewCommentChange)
             .disposed(by: disposeBag)
 
-        Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
+        let postedOrClosedObservable = Observable.merge(closeButton.rx.tap.asObservable(), viewModel.outputs.closedWithDelay.asObservable())
             .observe(on: MainScheduler.instance)
             .flatMap({ [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
@@ -377,6 +377,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 }
                 return Observable.just(())
             })
+            .share()
+
+        postedOrClosedObservable
             .bind(to: viewModel.outputs.textViewVM.inputs.resignFirstResponderCall)
             .disposed(by: disposeBag)
 
@@ -387,7 +390,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: viewModel.inputs.closeInstantly)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.isSendingChanged
+        viewModel.outputs.ctaButtonLoading
             .bind(to: ctaButton.rx.isLoading)
             .disposed(by: disposeBag)
 
@@ -399,7 +402,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
 
         ctaButton.rx.tap
-            .bind(to: viewModel.inputs.ctaTap)
+            .subscribe(onNext: { [weak self] _ in
+                self?.viewModel.inputs.ctaTap.onNext()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.ctaEnabled
@@ -446,12 +451,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                 }
 
-                let bottomPadding: CGFloat
-                if #available(iOS 11.0, *) {
-                    bottomPadding = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
-                } else {
-                    bottomPadding = 0
-                }
+                let bottomPadding = self.window?.safeAreaInsets.bottom ?? 0
 
                 self.mainContainer.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
@@ -471,7 +471,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
             .withLatestFrom(viewModel.outputs.textViewVM.outputs.textViewText) { ($0, $1) }
-            .withLatestFrom(viewModel.outputs.isSendingChanged) { ($0.0, $0.1, $1) }
+            .withLatestFrom(viewModel.outputs.ctaButtonLoading) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] (notification, textViewText, isSendingComment) in
                 guard
                     let self = self,

@@ -45,18 +45,14 @@ class OWCommunityGuidelinesCell: UITableViewCell {
 
 fileprivate extension OWCommunityGuidelinesCell {
     func setupUI() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         self.contentView.isUserInteractionEnabled = false
 
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(Metrics.edgesPadding)
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.edgesPadding)
-            } else {
-                make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
-            }
+            make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.edgesPadding)
         }
     }
 

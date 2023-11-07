@@ -10,7 +10,7 @@ import RxSwift
 import Foundation
 
 protocol OWProfileServicing {
-    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileData>
+    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileType>
 }
 
 class OWProfileService: OWProfileServicing {
@@ -21,7 +21,7 @@ class OWProfileService: OWProfileServicing {
         self.sharedServicesProvider = sharedServicesProvider
     }
 
-    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileData> {
+    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileType> {
         let profileOptionToUse = profileOptionToUse(user: user)
 
         // Check if sdk profile should be opened
@@ -36,18 +36,35 @@ class OWProfileService: OWProfileServicing {
             .filter { $0 }
             .voidify()
 
+        let isCurrentUserProfile: Observable<Bool> = self.sharedServicesProvider.authenticationManager()
+            .activeUserAvailability
+            .map { availability -> Bool in
+                switch availability {
+                case .notAvailable:
+                    return false
+                case .user(let sessionUser):
+                    guard sessionUser.id == user.id else { return false }
+                    return true
+                }
+            }
+            .asObservable()
+
+        // Check if publisher profile should be opened
+        let openPublisherProfile: Observable<OWOpenProfileType> = profileOptionToUse
+            .withLatestFrom(isCurrentUserProfile) { profileOptionToUse, isCurrentUser -> OWOpenProfileType? in
+                if case .publisherProfile(let ssoPublisherId) = profileOptionToUse {
+                    return OWOpenProfileType.publisherProfile(ssoPublisherId: ssoPublisherId, type: isCurrentUser ? .currentUser : .otherUser)
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+
         // Check if this is current user and token is needed
         let shouldOpenUserProfileWithToken: Observable<Bool> = shouldOpenSDKProfile
-            .withLatestFrom(self.sharedServicesProvider.authenticationManager()
-                .activeUserAvailability) { _, availability -> Bool in
-                    switch availability {
-                    case .notAvailable:
-                        return false
-                    case .user(let sessionUser):
-                        guard sessionUser.id == user.id else { return false }
-                        return true
-                    }
-                }
+            .withLatestFrom(isCurrentUserProfile) { _, isCurrentUserProfile -> Bool in
+                return isCurrentUserProfile
+            }
 
         // Create URL for user profie with token
         let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
@@ -85,20 +102,20 @@ class OWProfileService: OWProfileServicing {
             .unwrap()
 
         let userProfileWithTokenObservable = userProfileWithToken
-            .map { url -> OWOpenProfileData? in
+            .map { url -> OWOpenProfileType? in
                 guard let userId = user.id else { return nil }
-                return OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId)
+                return .OWProfile(data: OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId))
             }
             .unwrap()
 
         let userProfileWithoutTokenObservable = userProfileWithoutToken
-            .map { url -> OWOpenProfileData? in
+            .map { url -> OWOpenProfileType? in
                 guard let userId = user.id else { return nil }
-                return OWOpenProfileData(url: url, userProfileType: .otherUser, userId: userId)
+                return .OWProfile(data: OWOpenProfileData(url: url, userProfileType: .otherUser, userId: userId))
             }
             .unwrap()
 
-        return Observable.merge(userProfileWithTokenObservable, userProfileWithoutTokenObservable)
+        return Observable.merge(userProfileWithTokenObservable, userProfileWithoutTokenObservable, openPublisherProfile)
     }
 }
 

@@ -17,29 +17,51 @@ struct OWColor {
         case skeletonColor
         case skeletonShimmeringColor
         case foreground2Color
+        /// Light: L3, Dark: D2
         case separatorColor1
+        /// Light: L2, Dark: D2
         case separatorColor2
+        /// Light: L1, Dark: D1
         case separatorColor3
+        /// Light: L6, Dark: G1
         case textColor1
+        /// Light: L5, Dark: D3
         case textColor2
+        /// Light: L6, Dark: D4
         case textColor3
+        /// Light: G2, Dark: G1
         case textColor4
+        /// Light: L5, Dark: D4
         case textColor5
+        /// Light: L4, Dark: D2
         case textColor6
+        /// Light: G5, Dark: DMG5
         case textColor7
+        /// Light: L1.withAlphaComponent(0.03), Dark: D1.withAlphaComponent(0.1)
         case backgroundColor1
+        /// Light: G1, Dark: L6
         case backgroundColor2
+        /// Light: L1, Dark: D1
         case backgroundColor3
+        /// Light: G1, Dark: G2
         case backgroundColor4
+        /// Light: L1ALT, Dark: D1ALT
         case backgroundColor5 // Used only in pre conversation compact style
+        /// Light: L1, Dark: D1
         case borderColor1
+        /// Light: L2, Dark: D1
         case borderColor2
+        /// Light: D3, Dark: L3
         case borderColor3
+        /// Light: G3, Dark: G3
         case green
+        /// Changes from server according to current spot id
         case brandColor
+        /// Light: L6, Dark: D4
         case cursorColor
         case shadowColor
         case typingDotsColor
+        case loaderColor
 
         var `default`: OWColor {
             switch self {
@@ -126,6 +148,10 @@ struct OWColor {
             case .typingDotsColor:
                 return OWColor(lightThemeColor: OWDesignColors.G2,
                                darkThemeColor: OWDesignColors.D3)
+
+            case .loaderColor:
+                return OWColor(lightThemeColor: OWDesignColors.L3,
+                               darkThemeColor: OWDesignColors.D2)
             }
         }
 

@@ -43,6 +43,19 @@ public protocol OWUIViews {
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
 
+    func clarityDetails(postId: OWPostId,
+                        commentId: OWCommentId,
+                        type: OWClarityDetailsType,
+                        additionalSettings: OWAdditionalSettingsProtocol,
+                        callbacks: OWViewActionsCallbacks?,
+                        completion: @escaping OWViewCompletion)
+
+    func webTab(postId: OWPostId,
+                tabOptions: OWWebTabOptions,
+                additionalSettings: OWAdditionalSettingsProtocol,
+                callbacks: OWViewActionsCallbacks?,
+                completion: @escaping OWViewCompletion)
+
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol,
@@ -84,5 +97,18 @@ protocol OWUIViews {
                       additionalSettings: OWAdditionalSettingsProtocol,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWViewCompletion)
+
+    func clarityDetails(postId: OWPostId,
+                        commentId: OWCommentId,
+                        type: OWClarityDetailsType,
+                        additionalSettings: OWAdditionalSettingsProtocol,
+                        callbacks: OWViewActionsCallbacks?,
+                        completion: @escaping OWViewCompletion)
+
+    func webTab(postId: OWPostId,
+                tabOptions: OWWebTabOptions,
+                additionalSettings: OWAdditionalSettingsProtocol,
+                callbacks: OWViewActionsCallbacks?,
+                completion: @escaping OWViewCompletion)
 }
 #endif

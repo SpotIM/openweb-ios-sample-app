@@ -11,8 +11,11 @@ import UIKit
 import RxSwift
 
 class OWCommentCell: UITableViewCell {
-    fileprivate struct Metrics {
+    struct ExternalMetrics {
         static let maxDepth: Int = 4
+    }
+
+    fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
     }
@@ -40,7 +43,7 @@ class OWCommentCell: UITableViewCell {
         self.viewModel = vm
         self.commentView.configure(with: self.viewModel.outputs.commentVM)
 
-        let depth = min(self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0, Metrics.maxDepth)
+        let depth = min(self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0, ExternalMetrics.maxDepth)
         commentView.OWSnp.updateConstraints { make in
             make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
         }
@@ -61,7 +64,8 @@ fileprivate extension OWCommentCell {
     }
 
     func setupUI() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: .light)
+        self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         self.contentView.addSubviews(commentView)
         self.selectionStyle = .none
 

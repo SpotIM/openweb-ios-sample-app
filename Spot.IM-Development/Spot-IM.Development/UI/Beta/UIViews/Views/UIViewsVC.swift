@@ -21,7 +21,9 @@ class UIViewsVC: UIViewController {
         static let btnFullConversationIdentifier = "btn_full_conversation_id"
         static let btnCommentCreationIdentifier = "btn_comment_creation_id"
         static let btnCommentThreadIdentifier = "btn_comment_thread_id"
+        static let btnClarityDetailsIdentifier = "btn_clarity_details_id"
         static let btnIndependentAdUnitIdentifier = "btn_independent_ad_unit_id"
+        static let btnExamplesIdentifier = "btn_examples_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -54,8 +56,16 @@ class UIViewsVC: UIViewController {
         return NSLocalizedString("CommentThread", comment: "").blueRoundedButton
     }()
 
+    fileprivate lazy var btnClarityDetails: UIButton = {
+        return NSLocalizedString("ClarityDetails", comment: "").blueRoundedButton
+    }()
+
     fileprivate lazy var btnIndependentAdUnit: UIButton = {
         return NSLocalizedString("IndependentAdUnit", comment: "").blueRoundedButton
+    }()
+
+    fileprivate lazy var btnExamples: UIButton = {
+        return NSLocalizedString("Examples", comment: "").blueRoundedButton
     }()
 
     init(viewModel: UIViewsViewModeling) {
@@ -86,7 +96,9 @@ fileprivate extension UIViewsVC {
         btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnCommentThread.accessibilityIdentifier = Metrics.btnCommentThreadIdentifier
+        btnClarityDetails.accessibilityIdentifier = Metrics.btnClarityDetailsIdentifier
         btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
+        btnExamples.accessibilityIdentifier = Metrics.btnExamplesIdentifier
     }
 
     func setupViews() {
@@ -137,12 +149,30 @@ fileprivate extension UIViewsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
+        // Adding clarity details button
+        scrollView.addSubview(btnClarityDetails)
+        btnClarityDetails.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentThread.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
         // Adding independent ad unit button
         scrollView.addSubview(btnIndependentAdUnit)
         btnIndependentAdUnit.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentThread.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnClarityDetails.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
+        // Adding examples button
+        scrollView.addSubview(btnExamples)
+        btnExamples.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnIndependentAdUnit.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
@@ -168,8 +198,16 @@ fileprivate extension UIViewsVC {
             .bind(to: viewModel.inputs.commentThreadTapped)
             .disposed(by: disposeBag)
 
+        btnClarityDetails.rx.tap
+            .bind(to: viewModel.inputs.clarityDetailsTapped)
+            .disposed(by: disposeBag)
+
         btnIndependentAdUnit.rx.tap
             .bind(to: viewModel.inputs.independentAdUnitTapped)
+            .disposed(by: disposeBag)
+
+        btnExamples.rx.tap
+            .bind(to: viewModel.inputs.examplesTapped)
             .disposed(by: disposeBag)
 
         viewModel.outputs.openMockArticleScreen
@@ -177,6 +215,14 @@ fileprivate extension UIViewsVC {
                 let mockArticleIndependentViewsVM = MockArticleIndependentViewsViewModel(actionSettings: settings)
                 let mockArticleIndependentViewsVC = MockArticleIndependentViewsVC(viewModel: mockArticleIndependentViewsVM)
                 self?.navigationController?.pushViewController(mockArticleIndependentViewsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.openExamplesScreen
+            .subscribe(onNext: { [weak self] postId in
+                let viewsExamplesVM = UIViewsExamplesViewModel(postId: postId)
+                let viewsExamplesVC = UIViewsExamplesVC(viewModel: viewsExamplesVM)
+                self?.navigationController?.pushViewController(viewsExamplesVC, animated: true)
             })
             .disposed(by: disposeBag)
     }

@@ -16,7 +16,7 @@ references:
     macos:
       xcode: << parameters.xcode >>
     working_directory: ~/project/Spot.IM-Development
-    
+
   define_var_release_version: &define_var_release_version
     run:
       name: Export new version number to environment variable
@@ -89,7 +89,7 @@ commands:
             - "vendor/bundle"
 
       - swiftlint
-      
+
       - run:
           name: Installing Rosetta 2 if needed
           command: |
@@ -420,6 +420,18 @@ jobs:
           arguments: |
             --region $AWS_REGION
 
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          arguments: |
+            --region $AWS_REGION
+
   release_beta_app_job:
     <<: *ios_config_xcode
     steps:
@@ -442,6 +454,18 @@ jobs:
           arguments: |
             --region $AWS_REGION
 
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          arguments: |
+            --region $AWS_REGION
+
   release_public_app_job:
     <<: *ios_config_xcode
     steps:
@@ -461,6 +485,18 @@ jobs:
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -503,6 +539,18 @@ jobs:
           arguments: |
             --region $AWS_REGION
 
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          arguments: |
+            --region $AWS_REGION
+
   upload_beta_app_build_to_s3_job:
     <<: *ios_config_xcode
     steps:
@@ -539,6 +587,18 @@ jobs:
       - aws-s3/sync:
           from: ipa-build
           to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -581,6 +641,18 @@ jobs:
           arguments: |
             --region $AWS_REGION
 
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp Spot-IM.Development.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          arguments: |
+            --region $AWS_REGION
+
 workflows:
   version: 2
   independent_job_workflow:
@@ -614,14 +686,21 @@ workflows:
               only:
                 - /^release/tag14.3/.*/
           xcode: "14.3.0"
-          
+
       - release_tag:
           filters:
             branches:
               only:
                 - /^release/tag14.3.1/.*/
           xcode: "14.3.1"
-          
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/tag15.0/.*/
+          xcode: "15.0"
+
       - release_sdk_job:
           filters:
             branches:
@@ -645,7 +724,7 @@ workflows:
                 - /^release/beta_tag14.3/.*/
           xcode: "14.3.0"
           buildConfig: "ReleaseBeta"
-          
+
       - release_tag:
           filters:
             branches:
@@ -653,7 +732,14 @@ workflows:
                 - /^release/beta_tag14.3.1/.*/
           xcode: "14.3.1"
           buildConfig: "ReleaseBeta"
-          
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag15.0/.*/
+          xcode: "15.0"
+          buildConfig: "ReleaseBeta"
 
       - release_app_job:
           context: mobile-automation
@@ -715,7 +801,7 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.3.0"
-          
+
       - release_tag:
           requires:
             - "release_sdk_job"
@@ -783,7 +869,7 @@ workflows:
               only:
                 - /^validate/cocoapods/sdk/.*/
           xcode: "14.3.1"
-      
+
       - validate_spm_job:
           filters:
             branches:

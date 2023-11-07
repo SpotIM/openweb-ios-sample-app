@@ -91,6 +91,7 @@ fileprivate extension OWCommentContentView {
 
     func setupObservers() {
         viewModel.outputs.image
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] imageType in
                 guard let self = self,
                       case .custom(let url) = imageType else { return }

@@ -19,7 +19,7 @@ protocol OWAvatarViewModelingInputs {
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var shouldShowOnlineIndicator: Observable<Bool> { get }
-    var openProfile: Observable<OWOpenProfileData> { get }
+    var openProfile: Observable<OWOpenProfileType> { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -41,10 +41,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var tapAvatar = PublishSubject<Void>()
     var avatarTapped: Observable<SPUser> {
         return tapAvatar
-            .flatMapLatest { [weak self] _ -> Observable<Bool> in
-                guard let self = self else { return .empty() }
-                return self.shouldBlockAvatar
-            }
+            .withLatestFrom(self.shouldBlockAvatar)
             .filter { !$0 }
             .voidify()
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
@@ -54,8 +51,8 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             }
     }
 
-    fileprivate var _openProfile = PublishSubject<OWOpenProfileData>()
-    var openProfile: Observable<OWOpenProfileData> {
+    fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
+    var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
@@ -83,9 +80,13 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }()
 
     var imageType: Observable<OWImageType> {
-        Observable.combineLatest(self.user, self.shouldBlockAvatar.asObserver())
+        Observable.combineLatest(
+            self.userInput,
+            self.shouldBlockAvatar.asObservable()
+        )
             .flatMapLatest { [weak self] (user, shouldBlockAvatar) -> Observable<URL?> in
                 guard let self = self,
+                      let user = user,
                       let imageId = user.imageId,
                       !shouldBlockAvatar
                 else { return Observable.just(nil) }
@@ -134,7 +135,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
 fileprivate extension OWAvatarViewModel {
     func setupObservers() {
         avatarTapped
-            .flatMapLatest { [weak self] user -> Observable<OWOpenProfileData> in
+            .flatMapLatest { [weak self] user -> Observable<OWOpenProfileType> in
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.profileService().openProfileTapped(user: user)
             }

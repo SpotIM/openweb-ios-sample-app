@@ -12,4 +12,5 @@ enum OWLoadingTriggeredReason {
     case initialLoading
     case pullToRefresh
     case sortingChanged
+    case tryAgainAfterError
 }

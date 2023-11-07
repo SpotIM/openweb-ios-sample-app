@@ -20,7 +20,7 @@ protocol OWCommentingCTAViewModelingOutputs {
     var style: Observable<OWCommentingCTAStyle> { get }
     var shouldShowCommentCreationEntry: Observable<Bool> { get }
     var shouldShowCommentingReadOnly: Observable<Bool> { get }
-    var openProfile: Observable<OWOpenProfileData> { get }
+    var openProfile: Observable<OWOpenProfileType> { get }
     var commentCreationTapped: Observable<Void> { get }
     var shouldShowView: Observable<Bool> { get }
 }
@@ -94,8 +94,8 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
             .share(replay: 0)
     }
 
-    fileprivate let _openProfile = PublishSubject<OWOpenProfileData>()
-    var openProfile: Observable<OWOpenProfileData> {
+    fileprivate let _openProfile = PublishSubject<OWOpenProfileType>()
+    var openProfile: Observable<OWOpenProfileType> {
         _openProfile
             .asObservable()
     }
