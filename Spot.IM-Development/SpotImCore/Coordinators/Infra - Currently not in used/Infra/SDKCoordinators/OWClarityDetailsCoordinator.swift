@@ -153,7 +153,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 }
             }
 
-
         return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation, coordinateToAppealObservable)
     }
 
