@@ -137,25 +137,22 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 guard let self = self,
                       let router = self.router
                 else { return .empty() }
-//                let title = clarityDetailsVM.outputs.clarityDetailsViewViewModel
-//                    .outputs.navigationTitle
 
                 let appealCoordinator = OWCommenterAppealCoordinator(router: router,
                                                                      actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: appealCoordinator, deepLinkOptions: .none)
             }
-            .do(onNext: { result in
+            .flatMap { [weak self] result -> Observable<OWClarityDetailsCoordinatorResult> in
                 switch result {
                 case .loadedToScreen:
-                    break
+                    return Observable.never()
                     // Nothing
                 case .popped:
-                    break
+                    self?.router?.pop(popStyle: .dismiss, animated: false)
+                    return Observable.just(OWClarityDetailsCoordinatorResult.popped)
                 }
-            })
-            .flatMap { _ -> Observable<OWClarityDetailsCoordinatorResult> in
-                return Observable.never()
             }
+
 
         return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation, coordinateToAppealObservable)
     }
