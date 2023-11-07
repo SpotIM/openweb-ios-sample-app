@@ -10,20 +10,21 @@ import Foundation
 import RxSwift
 
 protocol OWToastNotificationServicing {
-    func showToast(presentData: OWToastNotificationPresentData)
+    func showToast(presentData: OWToastNotificationPresentData, actionCompletion: PublishSubject<Void>?)
     func clearNotifications()
 
-    var toastToShow: Observable<OWToastNotificationPresentData?> { get }
+    var toastToShow: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
 }
 
 class OWToastNotificationService: OWToastNotificationServicing {
     fileprivate let queue = OWQueue<OWToastNotificationPresentData>()
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    fileprivate var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
 
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
-    fileprivate var _toastToShow = BehaviorSubject<OWToastNotificationPresentData?>(value: nil)
-    var toastToShow: Observable<OWToastNotificationPresentData?> {
+    fileprivate var _toastToShow = BehaviorSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>(value: nil)
+    var toastToShow: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)?> {
         return _toastToShow
             .asObservable()
     }
@@ -40,8 +41,9 @@ class OWToastNotificationService: OWToastNotificationServicing {
         setupObservers()
     }
 
-    func showToast(presentData: OWToastNotificationPresentData) {
+    func showToast(presentData: OWToastNotificationPresentData, actionCompletion: PublishSubject<Void>?) {
         queue.insert(presentData)
+        mapToastToActionPublishSubject[presentData.uuid] = actionCompletion
         newToast.onNext()
     }
 
@@ -69,10 +71,12 @@ fileprivate extension OWToastNotificationService {
                     action.finish()
                     return
                 }
-                self._toastToShow.onNext(toast)
+                let actionCompletion = self.mapToastToActionPublishSubject[toast.uuid] ?? nil
+                self._toastToShow.onNext((toast, actionCompletion))
                 // Dismiss toast after duration
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec) { [weak self] in
                     self?._toastToShow.onNext(nil)
+                    self?.mapToastToActionPublishSubject.removeValue(forKey: toast.uuid)
                     // Wait for the exiting animation to complete before unblocking next toast
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ToastMetrics.animationDuration) {
                         action.finish()
@@ -84,6 +88,7 @@ fileprivate extension OWToastNotificationService {
 }
 
 struct OWToastNotificationPresentData: Codable, Equatable {
+    var uuid = UUID().uuidString
     let data: OWToastRequiredData
     var durationInSec: Double = 5
     // Show on specific view? all views??
