@@ -16,6 +16,11 @@ protocol OWToastNotificationDisplayerProtocol {
     var toastView: OWToastView? { get set }
 }
 
+struct ToastMetrics {
+    static var bottomOffsetForAnimation: CGFloat = 50
+    static var animationDuration: TimeInterval = 0.5
+}
+
 extension OWToastNotificationDisplayerProtocol where Self: UIView {
     mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>) {
         // Make sure no old toast is visible
@@ -31,12 +36,12 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
         self.addSubview(toastView)
         toastView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(50)
+            make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
         }
         self.setNeedsLayout()
         self.layoutIfNeeded()
 
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+        UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
             guard let toastView = self?.toastView else { return }
             toastView.OWSnp.updateConstraints { make in
                 make.bottom.equalToSuperview().inset(requiredData.bottomPadding)
@@ -47,10 +52,10 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
     }
 
     func dismissToast() {
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+        UIView.animate(withDuration: ToastMetrics.animationDuration, animations: { [weak self] in
             guard let toastView = self?.toastView else { return }
             toastView.OWSnp.updateConstraints { make in
-                make.bottom.equalToSuperview().offset(50)
+                make.bottom.equalToSuperview().offset(ToastMetrics.bottomOffsetForAnimation)
             }
             self?.setNeedsLayout()
             self?.layoutIfNeeded()

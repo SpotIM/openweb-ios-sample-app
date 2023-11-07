@@ -99,7 +99,6 @@ fileprivate extension OWToastView {
 
     func setupObservers() {
         tapGesture.rx.event.voidify()
-            .debug("NOGAH: tap")
             .bind(to: viewModel.inputs.actionClick)
             .disposed(by: disposeBag)
 
