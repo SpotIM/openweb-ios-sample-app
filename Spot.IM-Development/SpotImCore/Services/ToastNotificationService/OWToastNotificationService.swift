@@ -70,6 +70,7 @@ fileprivate extension OWToastNotificationService {
                     return
                 }
                 self._toastToShow.onNext(toast)
+                // Dismiss toast after duration
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec) { [weak self] in
                     self?._toastToShow.onNext(nil)
                     // Wait for the exiting animation to complete before unblocking next toast

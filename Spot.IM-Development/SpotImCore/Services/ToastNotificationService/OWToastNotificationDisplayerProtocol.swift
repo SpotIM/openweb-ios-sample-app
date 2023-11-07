@@ -15,7 +15,7 @@ protocol OWToastNotificationDisplayerProtocol {
     func dismissToast()
     var toastView: OWToastView? { get set }
     var panGesture: UIPanGestureRecognizer { get set }
-    var disposeBag: DisposeBag { get }
+    func setupToastObservers(disposeBag: DisposeBag)
 }
 
 struct ToastMetrics {
@@ -53,7 +53,7 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
             self?.layoutIfNeeded()
         })
 
-        self.applySwipeRecognition()
+        toastView.addGestureRecognizer(panGesture)
     }
 
     func dismissToast() {
@@ -68,16 +68,13 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
             self?.removeToast()
         })
     }
-}
 
-fileprivate extension OWToastNotificationDisplayerProtocol where Self: UIView {
-    func applySwipeRecognition() {
-        guard let toastView = self.toastView else { return }
-
-        toastView.addGestureRecognizer(panGesture)
+    func setupToastObservers(disposeBag: DisposeBag) {
         panGesture.rx.event
             .subscribe(onNext: { [weak self] recognizer in
-                guard let self = self, let superView = self.superview else { return }
+                guard let self = self,
+                      let toastView = self.toastView,
+                      let superView = toastView.superview else { return }
 
                 switch recognizer.state {
                 case .changed, .began:
@@ -114,7 +111,9 @@ fileprivate extension OWToastNotificationDisplayerProtocol where Self: UIView {
             })
             .disposed(by: disposeBag)
     }
+}
 
+fileprivate extension OWToastNotificationDisplayerProtocol where Self: UIView {
     mutating func removeToast() {
         guard let toastView = self.toastView else { return }
         toastView.removeFromSuperview()

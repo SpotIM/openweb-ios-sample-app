@@ -117,7 +117,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     fileprivate var loginPromptTopConstraint: OWConstraint? = nil
 
     fileprivate let viewModel: OWConversationViewViewModeling
-    internal let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -215,7 +215,6 @@ fileprivate extension OWConversationView {
     // swiftlint:disable function_body_length
     func setupObservers() {
         viewModel.outputs.displayToast
-//            .debug("NOGAH: View display toast")
             .subscribe(onNext: { [weak self] data in
                 guard let weakself = self else { return }
                 self?.displayToast(requiredData: data, actionCompletion: weakself.viewModel.outputs.toastActionCompletion)
@@ -227,6 +226,8 @@ fileprivate extension OWConversationView {
                 self?.dismissToast()
             })
             .disposed(by: disposeBag)
+
+        setupToastObservers(disposeBag: disposeBag)
 
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)

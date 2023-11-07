@@ -47,7 +47,7 @@ fileprivate extension OWViewActionsService {
         guard let dispose = disposeBag else { return }
         let blockerService = servicesProvider.blockerServicing()
 
-        blockerService.waitForNonBlocker()
+        blockerService.waitForNonBlocker(for: [.authentication, .renewAuthentication])
             .take(1) // Exist already in the blocker service side, but for clarity written here as well
             .subscribe(onNext: { [weak self] _ in
                 self?.triggerAllAvailableActions()
