@@ -156,7 +156,7 @@ extension OWAuthenticationManager {
         let authenticationForActionObserver: Observable<Bool>
 
         if waitForBlockingCompletions {
-            authenticationForActionObserver = self.servicesProvider.blockerServicing().waitForNonBlocker()
+            authenticationForActionObserver = self.servicesProvider.blockerServicing().waitForNonBlocker(for: [.authentication, .renewAuthentication])
                 .withLatestFrom(self.userHasAuthenticationLevel(for: action))
         } else {
             authenticationForActionObserver = self.requiredAuthenticationLevel(for: action)
