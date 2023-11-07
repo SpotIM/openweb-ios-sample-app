@@ -835,7 +835,6 @@ fileprivate extension OWConversationViewViewModel {
                 self.servicesProvider.toastNotificationService()
                     .showToast(presentData: OWToastNotificationPresentData(dismissStrategy: .time(durationMs: 5), data: data))
 
-
                 self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
