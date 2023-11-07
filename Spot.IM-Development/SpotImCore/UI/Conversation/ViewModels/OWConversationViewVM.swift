@@ -827,11 +827,8 @@ fileprivate extension OWConversationViewViewModel {
         let conversationReadObservable = sortOptionObservable
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-//                print("NOGAH: send toasts")
+                // TODO: remove
                 let data = OWToastRequiredData(type: .success, action: .tryAgain, title: "A toast....")
-                let data2 = OWToastRequiredData(type: .error, action: .close, title: "Error toast....")
-                self.servicesProvider.toastNotificationService()
-                    .showToast(presentData: OWToastNotificationPresentData(data: data2))
                 self.servicesProvider.toastNotificationService()
                     .showToast(presentData: OWToastNotificationPresentData(data: data))
 
