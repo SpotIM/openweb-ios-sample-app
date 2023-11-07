@@ -12,37 +12,43 @@ import Foundation
 public enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
-    case writeCommentPressed
-    case articleHeaderPressed
     case communityGuidelinesPressed(url: URL)
-    case communityQuestionsPressed
-    case postCommentPressed
     case adClosed
     case adTapped
     case closeConversationPressed
-    case openPublisherProfile(userId: String)
+    case openPublisherProfile(ssoPublisherId: String, type: OWUserProfileType)
+    case openOWProfile(data: OWOpenProfileData)
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
+    case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
+    case openClarityDetails(type: OWClarityDetailsType)
     case closeClarityDetails
+    case floatingCommentCreationDismissed
     case error(_ error: OWError)
+    case commentSubmitted
+    case closeWebView
+    case openLinkInComment(url: URL)
 }
 #else
 enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
-    case writeCommentPressed
-    case articleHeaderPressed
     case communityGuidelinesPressed(url: URL)
-    case communityQuestionsPressed
-    case postCommentPressed
     case adClosed
     case adTapped
     case closeConversationPressed
-    case openPublisherProfile(userId: String)
+    case openPublisherProfile(ssoPublisherId: String, type: OWUserProfileType)
+    case openOWProfile(data: OWOpenProfileData)
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
+    case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
+    case openClarityDetails(type: OWClarityDetailsType)
     case closeClarityDetails
+    case floatingCommentCreationDismissed
     case error(_ error: OWError)
+    case commentSubmitted
+    case closeWebView
+    case openLinkInComment(url: URL)
 }
 #endif
 
@@ -53,15 +59,7 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.showMoreCommentsPressed, .showMoreCommentsPressed):
             return true
-        case (.writeCommentPressed, .writeCommentPressed):
-            return true
-        case (.articleHeaderPressed, .articleHeaderPressed):
-            return true
         case (.communityGuidelinesPressed, .communityGuidelinesPressed):
-            return true
-        case (.communityQuestionsPressed, .communityQuestionsPressed):
-            return true
-        case (.postCommentPressed, .postCommentPressed):
             return true
         case (.adClosed, .adClosed):
             return true
@@ -69,10 +67,30 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.closeConversationPressed, .closeConversationPressed):
             return true
-        case (let .openPublisherProfile(lhsId), let .openPublisherProfile(rhsId)):
+        case (let .openPublisherProfile(lhsId, lhsType), let .openPublisherProfile(rhsId, rhsType)):
+            return lhsId == rhsId && lhsType == rhsType
+        case (let .openOWProfile(lhsData), let .openOWProfile(rhsData)):
+            return lhsData == rhsData
+        case (let .openReportReason(lhsId, lhsParent), let .openReportReason(rhsId, rhsParent)):
+            return lhsId == rhsId && lhsParent == rhsParent
+        case (let .openCommentCreation(lhsId), let .openCommentCreation(rhsId)):
             return lhsId == rhsId
+        case (.closeReportReason, .closeReportReason):
+            return true
+        case (let .openClarityDetails(lhsType), let .openClarityDetails(rhsType)):
+            return lhsType == rhsType
         case (.closeClarityDetails, .closeClarityDetails):
             return true
+        case (.floatingCommentCreationDismissed, .floatingCommentCreationDismissed):
+            return true
+        case (let .error(lhsErr), let .error(rhsErr)):
+            return lhsErr.description == rhsErr.description
+        case (.commentSubmitted, .commentSubmitted):
+            return true
+        case (.closeWebView, .closeWebView):
+            return true
+        case (.openLinkInComment(let lhsUrl), .openLinkInComment(let rhsUrl)):
+            return lhsUrl == rhsUrl
         default:
             return false
         }

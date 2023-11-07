@@ -25,7 +25,7 @@ class OWConversationSortView: UIView {
     fileprivate lazy var sortByLabel: UILabel = {
         return UILabel()
             .wrapContent()
-            .text(OWLocalizationManager.shared.localizedString(key: "Sort by"))
+            .text(OWLocalizationManager.shared.localizedString(key: "SortBy"))
             .font(OWFontBook.shared.font(typography: .bodyText))
             .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))

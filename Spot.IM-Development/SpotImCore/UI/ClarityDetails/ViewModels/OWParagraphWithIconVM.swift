@@ -43,7 +43,7 @@ class OWParagraphWithIconVM: OWParagraphWithIconViewModeling,
             .unwrap()
             .asObservable()
     }()
-    var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "Community Guidelines").lowercased()
+    var communityGuidelinesClickablePlaceholder = OWLocalizationManager.shared.localizedString(key: "CommunityGuidelines").lowercased()
 
     var communityGuidelinesClick = PublishSubject<Void>()
     var communityGuidelinesClickObservable: Observable<Void> {

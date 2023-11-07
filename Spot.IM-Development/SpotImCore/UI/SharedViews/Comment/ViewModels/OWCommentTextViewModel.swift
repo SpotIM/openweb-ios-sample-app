@@ -46,7 +46,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let collapsableTextLineLimit: Int
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "Read More")
+    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "ReadMore")
 
     var labelClickIndex = PublishSubject<Int>()
 
@@ -93,9 +93,9 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .asObservable()
     }
 
-    fileprivate var _lines: Observable<[CTLine]> {
+    fileprivate var _linesAndFullAttributedString: Observable<([CTLine], NSMutableAttributedString)> {
         Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
-            return messageAttributedString.getLines(with: currentWidth)
+            return (messageAttributedString.getLines(with: currentWidth), messageAttributedString)
         }
         .unwrap()
         .asObservable()
@@ -109,9 +109,11 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .voidify()
     }()
     lazy var attributedString: Observable<NSMutableAttributedString> = {
-        Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
-            .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
+        Observable.combineLatest(_linesAndFullAttributedString, _textState, _themeStyleObservable)
+            .map { [weak self] linesAndAttributedString, currentState, style -> (NSMutableAttributedString, OWThemeStyle)? in
                 guard let self = self else { return nil }
+                let lines = linesAndAttributedString.0
+                let fullAttributedString = linesAndAttributedString.1
                 let attString = self.appendReadMoreIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
                 return (attString, style)
             }
@@ -125,10 +127,9 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }()
 
     var height: Observable<CGFloat> {
-        attributedString
-            .withLatestFrom(widthObservable) { attributedString, width in
-                let newHeight = attributedString.height(withConstrainedWidth: width)
-                return newHeight
+        Observable.combineLatest(attributedString, widthObservable) { attributedString, width in
+            let newHeight = attributedString.height(withConstrainedWidth: width)
+            return newHeight
         }
         .unwrap()
         .distinctUntilChanged()

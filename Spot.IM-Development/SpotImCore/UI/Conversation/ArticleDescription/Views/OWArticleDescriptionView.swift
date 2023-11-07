@@ -28,7 +28,7 @@ class OWArticleDescriptionView: UIView {
 
     fileprivate lazy var topSeparatorView: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var conversationImageView: UIImageView = {
@@ -67,7 +67,7 @@ class OWArticleDescriptionView: UIView {
 
     fileprivate lazy var bottomSeparatorView: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
@@ -75,6 +75,7 @@ class OWArticleDescriptionView: UIView {
         return UITapGestureRecognizer()
     }()
 
+    fileprivate var zeroHeightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWArticleDescriptionViewModeling!
     fileprivate let disposeBag = DisposeBag()
 
@@ -93,6 +94,11 @@ class OWArticleDescriptionView: UIView {
 
 fileprivate extension OWArticleDescriptionView {
     func setupUI() {
+        self.OWSnp.makeConstraints { make in
+            zeroHeightConstraint = make.height.equalTo(0).constraint
+            zeroHeightConstraint?.isActive = false
+        }
+
         // Setup top separator
         self.addSubview(topSeparatorView)
         topSeparatorView.OWSnp.makeConstraints { make in
@@ -168,14 +174,21 @@ fileprivate extension OWArticleDescriptionView {
             .bind(to: viewModel.inputs.tap)
             .disposed(by: disposeBag)
 
+        if let zeroHeightConstraint = zeroHeightConstraint {
+            viewModel.outputs.shouldShow
+                .map { !$0 }
+                .bind(to: zeroHeightConstraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                                                   themeStyle: currentStyle))
-                self.bottomSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                self.bottomSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                                                   themeStyle: currentStyle))
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)

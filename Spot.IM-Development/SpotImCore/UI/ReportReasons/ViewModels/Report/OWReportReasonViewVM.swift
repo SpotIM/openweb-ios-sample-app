@@ -78,7 +78,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }
 
     var errorAlertActionText: String {
-        return OWLocalizationManager.shared.localizedString(key: "Got it")
+        return OWLocalizationManager.shared.localizedString(key: "GotIt")
     }
 
     var titleText: String {
@@ -303,12 +303,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .reportingComment)
                     .voidify()
             }
-            .flatMapLatest { [weak self] _ -> Observable<Void> in
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // 2. Waiting for authentication required for reporting
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .reportingComment)
-                    .voidify()
             }
+            .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<OWReportReason> in
                 guard let self = self else { return .empty() }
                 return self.selectedReason.take(1)

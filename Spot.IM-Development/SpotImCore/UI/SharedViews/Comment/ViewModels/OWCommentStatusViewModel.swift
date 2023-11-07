@@ -62,7 +62,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             .unwrap()
     }()
 
-    let learnMoreClickableString = OWLocalizationManager.shared.localizedString(key: "Learn more")
+    let learnMoreClickableString = OWLocalizationManager.shared.localizedString(key: "LearnMore")
 
     lazy private var accessibilityChange: Observable<Bool> = {
         sharedServicesProvider.appLifeCycle()
@@ -79,8 +79,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 guard let self = self else { return nil }
                 let messageString: String
                 switch(status) {
-                case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "Your comment was rejected.")
-                case .pending: messageString = OWLocalizationManager.shared.localizedString(key: "Hold on, your comment is waiting for approval.")
+                case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
+                case .pending: messageString = OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage")
                 case .none: return nil
                 }
 

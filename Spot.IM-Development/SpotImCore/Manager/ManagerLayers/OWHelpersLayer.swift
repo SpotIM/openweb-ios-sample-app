@@ -19,6 +19,7 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
     fileprivate var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
     fileprivate var _languageStrategy: OWLanguageStrategy = OWLanguageStrategy.default
     fileprivate var _localeStrategy: OWLocaleStrategy = OWLocaleStrategy.default
+    fileprivate var _orientationEnforcement: OWOrientationEnforcement = OWOrientationEnforcement.enableAll
     fileprivate let sharedServicesProvider: OWSharedServicesProviding
 
     init(localizationManager: OWLocalizationManagerConfigurable = OWLocalizationManager.shared,
@@ -35,8 +36,20 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 // Will be public extension
 extension OWHelpersLayer {
     func conversationCounters(forPostIds postIds: [OWPostId],
-                              completion: OWConversationCountersCompletion) {
+                              completion: @escaping OWConversationCountersCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
+        _ = sharedServicesProvider.netwokAPI()
+            .conversation
+            .commentsCounters(conversationIds: postIds)
+            .response
+            .take(1)
+            .subscribe(onNext: { res in
+                completion(.success(res.counts))
+            },
+            onError: { _ in
+                completion(.failure(OWError.conversationCounters))
+            })
     }
 
     var additionalConfigurations: [OWAdditionalConfiguration] {
@@ -73,9 +86,29 @@ extension OWHelpersLayer {
             sendEvent(for: .localeStrategy(strategy: newLocaleStrategy))
         }
     }
+
+    var orientationEnforcement: OWOrientationEnforcement {
+        get {
+            return _orientationEnforcement
+        }
+        set(newOrientationEnforcement) {
+            _orientationEnforcement = newOrientationEnforcement
+            sendEvent(for: .orientationEnforcement(enforcement: newOrientationEnforcement))
+        }
+    }
 }
 
 fileprivate extension OWHelpersLayer {
+    func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {
+        let spotId = OpenWeb.manager.spotId
+        guard !spotId.isEmpty else {
+            completion(.failure(.missingSpotId))
+            return false
+        }
+
+        return true
+    }
+
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
         return sharedServicesProvider
             .analyticsEventCreatorService()

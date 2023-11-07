@@ -113,7 +113,7 @@ extension OWObservableArray: MutableCollection {
         let end = elements.count
         elements.append(contentsOf: newElements)
         setupObserversForElementsUpdater()
-        guard end != elements.count else {
+        guard end < elements.count else {
             return
         }
         arrayDidChange(OWArrayChangeEvent(inserted: Array(end..<elements.count)))
