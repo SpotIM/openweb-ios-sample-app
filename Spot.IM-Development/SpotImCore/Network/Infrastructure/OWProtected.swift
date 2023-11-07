@@ -8,11 +8,6 @@
 
 import Foundation
 
-private protocol OWLock {
-    func lock()
-    func unlock()
-}
-
 extension OWLock {
     /// Executes a closure returning a value while acquiring the lock.
     ///
@@ -30,29 +25,6 @@ extension OWLock {
     func around(_ closure: () throws -> Void) rethrows {
         lock(); defer { unlock() }
         try closure()
-    }
-}
-
-/// An `os_unfair_lock` wrapper.
-class OWUnfairLock: OWLock {
-    private let unfairLock: os_unfair_lock_t
-
-    init() {
-        unfairLock = .allocate(capacity: 1)
-        unfairLock.initialize(to: os_unfair_lock())
-    }
-
-    deinit {
-        unfairLock.deinitialize(count: 1)
-        unfairLock.deallocate()
-    }
-
-    fileprivate func lock() {
-        os_unfair_lock_lock(unfairLock)
-    }
-
-    fileprivate func unlock() {
-        os_unfair_lock_unlock(unfairLock)
     }
 }
 

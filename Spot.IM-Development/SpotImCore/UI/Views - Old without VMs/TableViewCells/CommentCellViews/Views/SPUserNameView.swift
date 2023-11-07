@@ -283,6 +283,6 @@ extension SPUserNameView {
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
 
         moreButton.accessibilityTraits = .button
-        moreButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "Options menu")
+        moreButton.accessibilityLabel = SPLocalizationManager.localizedString(key: "OptionsMenu")
     }
 }

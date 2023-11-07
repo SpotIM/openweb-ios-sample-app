@@ -47,6 +47,7 @@
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
 "CommentThread" = "Comment Thread";
+"ClarityDetails" = "Clarity Details";
 "IndependentAdUnit" = "IAU - Independent Ad Unit";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
@@ -105,12 +106,14 @@
 "PlaygroundIndependentMode" = "Playground - Independent Mode";
 "TestingPlaygroundLogger" = "Testing playground logger";
 "CommentThreadSettings" = "Comment Thread:";
+"ClarityDetailsSettings" = "Clarity Details:";
 "OpenCommentId" = "Open comment id";
 "ElementsCustomizationStyle" = "Elements customization style:";
 "Style1" = "Style 1";
 "Style2" = "Style 2";
 "ArticleHeaderStyle" = "Article header style";
 "ArticleInformationStrategy" = "Article information strategy";
+"OrientationEnforcement" = "Orientation Enforcement";
 "Automation" = "Automation";
 "Fonts" = "Fonts";
 "UserInformation" = "User information";
@@ -121,3 +124,12 @@
 "KeepOriginal" = "Keep original";
 "AccessoryView" = "Accessory View";
 "Toolbar" = "Toolbar";
+"Examples" = "Examples";
+"ConversationBelowVideo" = "Conversation below video";
+"VideoExample" = "Video example";
+"CommunityGuidelines" = "Community Guidelines";
+"ProfileTitle" = "Profile";
+"ShowLoginPromptTitle" = "Show Login Prompt";
+"EnableAll" = "Enable All";
+"Landscape" = "Landscape";
+"Portrait" = "Portrait";

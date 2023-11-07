@@ -17,12 +17,22 @@ class OWAvatarView: UIView {
         static let onlineIndicatorIdentifier = "online_indicator_id"
         static let onlineGreenIndicatorIdentifier = "online_green_indicator_id"
 
-        static let defaultAvatarImageName = "defaultAvatar"
-
         static let onlineIndicatorSize: CGFloat = 10
         static let innerIndicatorSize: CGFloat = 8
         static let onlineIndicatorBlurStyle: String = "CIGaussianBlur"
         static let onlineIndicatorBlurRadius: CGFloat = 2
+
+        static let lightDefaultAvatar: UIImage? = UIImage(spNamed: "defaultAvatar", supportDarkMode: false)
+        static let darkDefaultAvatar: UIImage? = UIImage(spNamed: "defaultAvatar-dark", supportDarkMode: false)
+
+        static func defaultAvatar(style: OWThemeStyle) -> UIImage? {
+            switch style {
+            case .dark:
+                return darkDefaultAvatar
+            case .light:
+                return lightDefaultAvatar
+            }
+        }
     }
 
     fileprivate lazy var avatarButton: UIButton = {
@@ -58,10 +68,6 @@ class OWAvatarView: UIView {
         return view
     }()
 
-    fileprivate lazy var defaultAvatar: UIImage? = {
-        return UIImage(spNamed: Metrics.defaultAvatarImageName, supportDarkMode: true)
-    }()
-
     fileprivate var viewModel: OWAvatarViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
@@ -82,7 +88,7 @@ class OWAvatarView: UIView {
     }
 
     func prepareForReuse() {
-        updateAvatar(avatarImageType: .defaultImage)
+        updateAvatar(avatarImageType: .defaultImage, style: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
     }
 
     override func layoutSubviews() {
@@ -117,10 +123,13 @@ fileprivate extension OWAvatarView {
             .bind(to: onlineIndicatorView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.imageType
+        Observable.combineLatest(
+            viewModel.outputs.imageType,
+            OWSharedServicesProvider.shared.themeStyleService().style
+        )
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] avatarImageType in
-                self?.updateAvatar(avatarImageType: avatarImageType)
+            .subscribe(onNext: { [weak self] avatarImageType, style in
+                self?.updateAvatar(avatarImageType: avatarImageType, style: style)
             })
             .disposed(by: disposeBag)
 
@@ -133,19 +142,18 @@ fileprivate extension OWAvatarView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.onlineIndicatorView.backgroundColor = OWColorPalette.shared.color(type: .borderColor3, themeStyle: currentStyle)
-                self.avatarImageView.image = UIImage(spNamed: Metrics.defaultAvatarImageName, supportDarkMode: true)
             })
             .disposed(by: disposeBag)
     }
 
-    func updateAvatar(avatarImageType: OWImageType) {
+    func updateAvatar(avatarImageType: OWImageType, style: OWThemeStyle) {
         switch avatarImageType {
         case .defaultImage:
-            avatarImageView.image = defaultAvatar
+            avatarImageView.image = Metrics.defaultAvatar(style: style)
         case .custom(let url):
             avatarImageView.setImage(with: url) { [weak self] (image, _) in
                 guard let self = self else { return }
-                self.avatarImageView.image = image ?? self.defaultAvatar
+                self.avatarImageView.image = image ?? Metrics.defaultAvatar(style: style)
             }
         }
     }
@@ -158,6 +166,6 @@ fileprivate extension OWAvatarView {
         onlineGreenView.accessibilityIdentifier = Metrics.onlineGreenIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image
-        avatarButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Profile image")
+        avatarButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "ProfileImage")
     }
 }

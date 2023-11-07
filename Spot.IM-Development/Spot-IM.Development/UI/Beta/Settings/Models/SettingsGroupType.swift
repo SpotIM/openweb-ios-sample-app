@@ -16,10 +16,11 @@ enum SettingsGroupType {
     case conversation
     case commentCreation
     case commentThread
+    case clarityDetails
     case iau // Independent Ad Unit
 
     static var all: [SettingsGroupType] {
-        return [.general, .preConversation, .conversation, .commentCreation, .commentThread, .iau]
+        return [.general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau]
     }
 }
 
@@ -36,6 +37,8 @@ extension SettingsGroupType {
             return CommentCreationSettingsVM(userDefaultsProvider: userDefaultsProvider)
         case .commentThread:
             return CommentThreadSettingsVM(userDefaultsProvider: userDefaultsProvider)
+        case .clarityDetails:
+            return ClarityDetailsSettingsVM(userDefaultsProvider: userDefaultsProvider)
         case .iau:
             return IAUSettingsVM(userDefaultsProvider: userDefaultsProvider)
         }
@@ -51,6 +54,8 @@ extension SettingsGroupType {
             self = .commentCreation
         case .commentThread:
             self = .commentThread
+        case .clarityDetails:
+            self = .clarityDetails
         case .independentAdUnit:
             self = .iau
         }

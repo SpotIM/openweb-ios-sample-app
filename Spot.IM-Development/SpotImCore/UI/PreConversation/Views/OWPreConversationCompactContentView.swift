@@ -44,6 +44,25 @@ class OWPreConversationCompactContentView: UIView {
         return imageView
     }()
 
+    fileprivate lazy var errorConversationImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
+        return imageView
+    }()
+
+    fileprivate lazy var errorRetryView: OWErrorRetryCTAView = {
+        let tryAgainView = OWErrorRetryCTAView()
+            .backgroundColor(.clear)
+        tryAgainView.addGestureRecognizer(errorCtaTapGesture)
+        return tryAgainView
+    }()
+
+    fileprivate lazy var errorCtaTapGesture: UITapGestureRecognizer = {
+        return UITapGestureRecognizer()
+    }()
+
+    fileprivate var errorRetryZeroWidthConstraint: OWConstraint? = nil
+
     fileprivate lazy var leftViewContainer: UIView = {
         return UIView()
     }()
@@ -159,10 +178,19 @@ fileprivate extension OWPreConversationCompactContentView {
         }
         cameraIcon.isHidden = true
 
+        self.addSubviews(errorRetryView)
+        errorRetryView.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview()
+            errorRetryZeroWidthConstraint = make.width.equalTo(0).constraint
+        }
+        errorRetryView.isHidden = true
+
         self.addSubview(textLabel)
         textLabel.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperview()
             make.leading.equalTo(cameraIcon.OWSnp.trailing).offset(Metrics.textLeftPadding)
+            make.trailing.lessThanOrEqualTo(errorRetryView.OWSnp.leading)
         }
         textLabel.isHidden = true
     }
@@ -191,6 +219,11 @@ fileprivate extension OWPreConversationCompactContentView {
             .bind(to: cameraIcon.rx.isHidden)
             .disposed(by: disposeBag)
 
+        errorCtaTapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.tryAgainTap)
+            .disposed(by: disposeBag)
+
         // Show avatar/empty/close icons according to content
         viewModel.outputs.contentType
             .observe(on: MainScheduler.instance)
@@ -205,6 +238,26 @@ fileprivate extension OWPreConversationCompactContentView {
                 }
             })
             .disposed(by: disposeBag)
+
+        let isErrorObservable: Observable<Bool> = viewModel.outputs.contentType
+            .map {
+                if case .error = $0 {
+                    return true
+                }
+                return false
+            }
+
+        isErrorObservable
+            .map { !$0 }
+            .bind(to: errorRetryView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        if let constraint = errorRetryZeroWidthConstraint {
+            isErrorObservable
+                .map { !$0 }
+                .bind(to: constraint.rx.isActive)
+                .disposed(by: disposeBag)
+        }
 
         // Set image placeholder if needed
         viewModel.outputs.shouldShowImagePlaceholder
@@ -228,6 +281,7 @@ fileprivate extension OWPreConversationCompactContentView {
                 self.emptyConversationImageView.image = UIImage(spNamed: "emptyConversation-icon", supportDarkMode: true)
                 self.closedImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
                 self.cameraIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
+                self.errorConversationImageView.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
             })
             .disposed(by: disposeBag)
 
@@ -248,6 +302,8 @@ fileprivate extension OWPreConversationCompactContentView {
             return self.emptyConversationImageView
         case .closedAndEmpty:
             return self.closedImageView
+        case .error:
+            return self.errorConversationImageView
         default:
             return UIView()
         }

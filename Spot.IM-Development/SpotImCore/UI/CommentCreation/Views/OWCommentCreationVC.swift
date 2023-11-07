@@ -16,7 +16,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         static let navBarTitleFadeDuration = 0.3
         static let floatingOverNavBarOffset: CGFloat = -100
     }
-
+    fileprivate weak var dismissNavigationController: UINavigationController?
     fileprivate let viewModel: OWCommentCreationViewModeling
     let disposeBag = DisposeBag()
 
@@ -81,7 +81,14 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        // If modalPresentationStyle is pageSheet and animated by pulling down the VC
+        // we want to bring back the navigation bar after the VC is dismissed
+        // Fixes navigation bar showing over title bar.
+        if modalPresentationStyle == .pageSheet && animated {
+            dismissNavigationController = navigationController
+        } else {
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
 
         if case .floatingKeyboard = viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
             // Fix navigation title flicker
@@ -95,10 +102,15 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         floatingNavigationBarOverlayButton.removeFromSuperview()
+        dismissNavigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return OWSharedServicesProvider.shared.statusBarStyleService().currentStyle
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
     }
 }
 
@@ -116,7 +128,7 @@ fileprivate extension OWCommentCreationVC {
 
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
 
@@ -166,7 +178,7 @@ fileprivate extension OWCommentCreationVC {
                 switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                 case .regular, .light:
                     let bottomPadding: CGFloat
-                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
+                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? self.view.window?.safeAreaInsets.bottom ?? 0
                     self.commentCreationView.OWSnp.updateConstraints { make in
                         make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
                     }

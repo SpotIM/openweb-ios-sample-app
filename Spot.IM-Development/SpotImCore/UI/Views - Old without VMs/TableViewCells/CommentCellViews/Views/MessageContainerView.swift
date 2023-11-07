@@ -61,7 +61,7 @@ final class MessageContainerView: SPBaseView {
     @objc
     private func handleTap(gesture: UITapGestureRecognizer) {
         let readMoreString = SPLocalizationManager.localizedString(key: "Read More")
-        let readLessString = SPLocalizationManager.localizedString(key: "Read Less")
+        let readLessString = SPLocalizationManager.localizedString(key: "ReadLess")
 
         if isTarget(substring: readMoreString, destinationOf: gesture) {
             handleReadMoreTap()
@@ -110,7 +110,7 @@ final class MessageContainerView: SPBaseView {
 
     private func didHitCustomTarget(with recognizer: UIGestureRecognizer) -> Bool {
         let readMoreString = SPLocalizationManager.localizedString(key: "Read More")
-        let readLessString = SPLocalizationManager.localizedString(key: "Read Less")
+        let readLessString = SPLocalizationManager.localizedString(key: "ReadLess")
 
         if isTarget(substring: readMoreString, destinationOf: recognizer) ||
             isTarget(substring: readLessString, destinationOf: recognizer) ||

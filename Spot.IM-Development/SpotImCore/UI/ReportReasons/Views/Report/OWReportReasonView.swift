@@ -39,7 +39,8 @@ class OWReportReasonView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var titleView: OWTitleView = {
         return OWTitleView(title: viewModel.outputs.titleText,
-                           prefixIdentifier: Metrics.prefixIdentifier)
+                           prefixIdentifier: Metrics.prefixIdentifier,
+                           viewModel: viewModel.outputs.titleViewVM)
     }()
 
     fileprivate lazy var footerView: UIView = {
@@ -163,7 +164,7 @@ fileprivate extension OWReportReasonView {
             make.top.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewHorizontalPadding)
             // Low priority so that when the next line textViewHeightConstraint will be active it will take over this constraint
             make.height.equalTo(0).priority(1)
-            self.textViewHeightConstraint = make.height.equalTo(Metrics.textViewHeight).constraint
+            self.textViewHeightConstraint = make.height.greaterThanOrEqualTo(Metrics.textViewHeight).constraint
         }
         self.textViewHeightConstraint?.isActive = false
 

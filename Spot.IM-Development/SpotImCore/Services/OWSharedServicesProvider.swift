@@ -54,6 +54,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
     func toastNotificationService() -> OWToastNotificationServicing
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
+    func networkAvailabilityService() -> OWNetworkAvailabilityServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -217,6 +218,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCommentStatusUpdaterService(servicesProvider: self)
     }()
 
+    fileprivate lazy var _networkAvailabilityService: OWNetworkAvailabilityServicing = {
+        return OWNetworkAvailabilityService()
+    }()
+
     func profileService() -> OWProfileServicing {
         return _profileService
     }
@@ -351,6 +356,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing {
         return _commentStatusUpdaterService
+    }
+
+    func networkAvailabilityService() -> OWNetworkAvailabilityServicing {
+        return _networkAvailabilityService
     }
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
