@@ -231,7 +231,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         tapMore
             .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView)> in
                 guard let self = self else { return .empty() }
-                let actions: [OWUserAction] = [.reportingComment, .deletingComment, .editingComment, .mutingUser]
+                let actions: [OWUserAction] = [.deletingComment, .editingComment]
                 let authentication = self.servicesProvider.authenticationManager()
 
                 return authentication.userHasAuthenticationLevel(for: actions)
@@ -241,13 +241,11 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
             .withLatestFrom(_unwrappedUser) { ($0.0, $0.1, $0.2, $1) }
             .map { actionsAuthenticationLevel, view, isLoggedInUserComment, user in
-                let allowReportingComment = actionsAuthenticationLevel[.reportingComment] ?? false
                 let allowDeletingComment = actionsAuthenticationLevel[.deletingComment] ?? false
                 let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
-                let allowMuteUser = actionsAuthenticationLevel[.mutingUser] ?? false
 
                 var optionsActions: [OWRxPresenterAction] = []
-                if (allowReportingComment && !isLoggedInUserComment) {
+                if (!isLoggedInUserComment) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Report"),
                         type: OWCommentOptionsMenu.reportComment)
@@ -265,7 +263,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                         type: OWCommentOptionsMenu.deleteComment)
                     )
                 }
-                if (allowMuteUser && !isLoggedInUserComment && !user.isAdmin) {
+                if (!isLoggedInUserComment && !user.isAdmin) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Mute"),
                         type: OWCommentOptionsMenu.muteUser)

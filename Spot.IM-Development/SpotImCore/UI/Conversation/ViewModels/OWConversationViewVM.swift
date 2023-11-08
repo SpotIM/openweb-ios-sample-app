@@ -51,6 +51,7 @@ protocol OWConversationViewViewModelingOutputs {
     var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
+    var reloadCellIndex: Observable<Int> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -88,6 +89,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
+        static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
@@ -197,6 +199,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
+            .asObservable()
+    }
+
+    fileprivate var _reloadCellIndex = PublishSubject<Int>()
+    var reloadCellIndex: Observable<Int> {
+        _reloadCellIndex
             .asObservable()
     }
 
@@ -312,7 +320,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
                 } else if shouldShowError {
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     return Observable.just(errorCellViewModels)
                 } else if isEmptyState {
                     let emptyStateCellOption = [OWConversationCellOption.conversationEmptyState(viewModel: self.conversationEmptyStateCellViewModel)]
@@ -393,12 +401,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
-        return _performTableViewAnimation
-            .filter { [weak self] _ in
-                guard let self = self else { return false }
-                return self.dataSourceTransition == .animated
-            }
-            .asObservable()
+        return Observable.combineLatest(_performTableViewAnimation, _dataSourceTransition) { _, transition in
+            return transition
+        }
+        .filter { transition in
+            return transition == .animated
+        }
+        .voidify()
+        .asObservable()
     }
 
     fileprivate var _updateTableViewInstantly = PublishSubject<Void>()
@@ -474,7 +484,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             // We want to show skeletons after this pull to refresh
             if shouldShowErrorLoadingComments {
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
@@ -502,7 +512,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
     var dataSourceTransition: OWViewTransition = .reload
+    fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
@@ -692,13 +704,14 @@ fileprivate extension OWConversationViewViewModel {
             guard let replyCellVm = self.getCommentCellVm(for: replyId) else { continue }
 
             let reply = replyCellVm.outputs.commentVM.outputs.comment
+            let repliesPresentationData = commentPresentationData.repliesPresentation.first(where: { $0.id == replyId })
             existingRepliesPresentationData.append(
                 OWCommentPresentationData(
                     id: replyId,
                     repliesIds: reply.replies?.map { $0.id }.unwrap() ?? [],
                     totalRepliesCount: reply.repliesCount ?? 0,
                     repliesOffset: reply.offset ?? 0,
-                    repliesPresentation: []
+                    repliesPresentation: repliesPresentationData?.repliesPresentation ?? []
                 )
             )
         }
@@ -753,7 +766,7 @@ fileprivate extension OWConversationViewViewModel {
             .voidify()
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
@@ -779,7 +792,7 @@ fileprivate extension OWConversationViewViewModel {
         let conversationReadObservable = sortOptionObservable
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload // Block animations in the table view
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 self._shouldShowErrorLoadingComments.onNext(false)
             })
             .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
@@ -815,7 +828,7 @@ fileprivate extension OWConversationViewViewModel {
                 let event = result.0
                 let loadingTriggeredReason = result.1
                 guard let self = self else { return nil }
-                self.dataSourceTransition = .reload // Block animations in the table view
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
@@ -931,7 +944,7 @@ fileprivate extension OWConversationViewViewModel {
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
@@ -1060,7 +1073,7 @@ fileprivate extension OWConversationViewViewModel {
         loadMoreRepliesReadUpdated
             .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
                 if shouldShowErrorLoadingReplies {
                     self.errorsLoadingReplies[commentPresentationData.id] = .error
                     commentPresentationData.update.onNext()
@@ -1094,7 +1107,6 @@ fileprivate extension OWConversationViewViewModel {
                     commentPresentationData.setRepliesPresentation(repliesPresentation)
                     commentPresentationData.update.onNext()
                 }
-
             })
             .disposed(by: disposeBag)
 
@@ -1104,7 +1116,7 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(_loadMoreComments)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
                 self._shouldShowErrorLoadingMoreComments.onNext(false)
                 self._isLoadingMoreComments.onNext(true)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingMoreComments)
@@ -1150,7 +1162,7 @@ fileprivate extension OWConversationViewViewModel {
                     return conversationRead
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._shouldShowErrorLoadingMoreComments.onNext(true)
                     return nil
                 default:
@@ -1361,7 +1373,7 @@ fileprivate extension OWConversationViewViewModel {
             .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] commentPresentationData, mode in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
@@ -1374,6 +1386,36 @@ fileprivate extension OWConversationViewViewModel {
                 }
 
             })
+            .disposed(by: disposeBag)
+
+        // Reload OWCommentThreadActionsCell at index
+        loadMoreRepliesReadUpdated
+            .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: conversationViewVMScheduler)
+            .map { (commentPresentationData, _, _) -> OWCommentPresentationData in
+                return commentPresentationData
+            }
+            .withLatestFrom(cellsViewModels) { ($0, $1) }
+            .map { (commentPresentationData, cellsViewModels) -> (OWConversationCellOption, Int)? in
+                let cellOption = cellsViewModels.first(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                let cellIndex = cellsViewModels.firstIndex(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                guard let cellOption = cellOption, let cellIndex = cellIndex else { return nil }
+                return (cellOption, cellIndex)
+            }
+            .unwrap()
+            .do(onNext: { (cellOption, _) in
+                guard let viewModel = cellOption.viewModel as? OWCommentThreadActionsCellViewModel else { return }
+                viewModel.outputs.commentActionsVM.inputs.isLoading.onNext(false)
+            })
+            .map { (_, cellIndex) -> Int in
+                return cellIndex
+            }
+            .bind(to: _reloadCellIndex)
             .disposed(by: disposeBag)
 
         // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
@@ -1867,7 +1909,20 @@ fileprivate extension OWConversationViewViewModel {
 
         let muteUserObservable = muteCommentUser
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .mutingUser)
+                    .voidify()
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                // 2. Waiting for authentication required for muting user
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .mutingUser)
+            }
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                // 3. Show alert
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
@@ -2013,6 +2068,12 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(cellsViewModels)
             .map { $0.count - 1 }
             .bind(to: _scrollToCellIndex)
+            .disposed(by: disposeBag)
+
+        _dataSourceTransition
+            .subscribe(onNext: { [weak self] transition in
+                self?.dataSourceTransition = transition
+            })
             .disposed(by: disposeBag)
     }
 
