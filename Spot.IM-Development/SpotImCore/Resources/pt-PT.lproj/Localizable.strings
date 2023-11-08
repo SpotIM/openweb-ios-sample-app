@@ -21,7 +21,7 @@
 "ConnectivityErrorMessage" = "Ups! Parece que estamos\na passar por alguns\nproblemas de ligação.";
 "Delete" = "Eliminar";
 "DeleteCommentTitle" = "Eliminar Comentário";
-"DeleteCommentMessage" = "Tem a certeza de que quer eliminar este comentário?";
+"DeleteCommentMessage" = "Você tem certeza que quer excluir este comentário?";
 "Report" = "Denunciar";
 "GotIt" = "Entendi";
 "SortBy" = "Ordenar por";
