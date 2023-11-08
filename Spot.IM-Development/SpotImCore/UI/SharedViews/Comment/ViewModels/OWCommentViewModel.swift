@@ -95,7 +95,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 
             return status != .none
         }
-        .observe(on: MainScheduler.instance)
         .startWith(false)
     }
 
