@@ -60,6 +60,7 @@
 "Mute" = "Mudo";
 "MuteUser" = "Ativar mudo para usuário";
 "MuteUserMessage" = "Após silenciar este utilizador, não irá voltar a ver a sua atividade. Para gerir os utilizadores silenciados vá ao ser perfil > Definições de privacidade";
+"MuteSuccessToast" = "Utilizador silenciado";
 "Image" = "Imagem";
 "ClosedAndEmptyConversation" = "Esta conversa terminou e os comentários já não são aceites.";
 "EmptyConversation" = "Comece a conversa e partilhe os seus pensamentos e ideias com a comunidade.";
@@ -127,6 +128,7 @@
 "ViewNewComment" = "Ver %d Novo Comentário";
 "TypingNow" = "%d A escrever agora";
 "LoginPromptTitle" = "Autorizar participação";
+"SomethingWentWrong" = "Ups, ocorreu algum erro";
 
 // Old API
 "Your Username" = "Seu apelido...";

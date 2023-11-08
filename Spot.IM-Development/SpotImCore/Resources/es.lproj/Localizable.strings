@@ -60,6 +60,7 @@
 "Mute" = "Silenciar";
 "MuteUser" = "Silenciar usuario";
 "MuteUserMessage" = "Tras silenciar a este usuario no podrás ver su actividad. Para gestionar a los usuarios que hayas silenciado, dirígete a a los ajustes de privacidad de tu perfil.";
+"MuteSuccessToast" = "Usuario silenciado";
 "Image" = "Imagen";
 "ClosedAndEmptyConversation" = "Esta conversación ha terminado y ya no se admiten comentarios.";
 "EmptyConversation" = "Empieza la conversación y comparte tu opinión y tus ideas con la comunidad.";
@@ -127,6 +128,7 @@
 "ViewNewComment" = "Ver %d nuevo comentario";
 "TypingNow" = "Typing now";
 "LoginPromptTitle" = "Autorizar para participar";
+"SomethingWentWrong" = "Vaya, algo salió mal";
 
 // Old API
 "Your Username" = "Tu seudónimo...";
