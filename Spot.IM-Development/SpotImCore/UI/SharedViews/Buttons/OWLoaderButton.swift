@@ -13,10 +13,11 @@ import RxCocoa
 class OWLoaderButton: UIButton {
     fileprivate let disposeBag = DisposeBag()
     fileprivate var spinner = UIActivityIndicatorView()
-    fileprivate var wasLoading = false
     fileprivate var isLoading = false {
         didSet {
-            updateView()
+            if isLoading != oldValue {
+                updateView()
+            }
         }
     }
 
@@ -45,7 +46,6 @@ class OWLoaderButton: UIButton {
     fileprivate var originalTextColor: UIColor?
     fileprivate func updateView() {
         if isLoading {
-            wasLoading = true
             spinner.startAnimating()
 
             image = image(for: .normal)
@@ -57,8 +57,7 @@ class OWLoaderButton: UIButton {
 
             // Prevent multiple clicks while in process
             isEnabled = false
-        } else if wasLoading {
-            wasLoading = false
+        } else {
             spinner.stopAnimating()
             if let image = image {
                 setImage(image, for: .normal)
