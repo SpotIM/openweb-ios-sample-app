@@ -100,7 +100,6 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         let openClarityDetailsObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openClarityDetails
-            .observe(on: MainScheduler.instance)
             .map { clarityDetailsType -> OWDeepLinkOptions? in
                 return OWDeepLinkOptions.clarityDetails(type: clarityDetailsType)
             }
