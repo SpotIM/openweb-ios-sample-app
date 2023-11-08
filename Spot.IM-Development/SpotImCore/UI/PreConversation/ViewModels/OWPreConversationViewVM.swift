@@ -441,7 +441,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .observe(on: MainScheduler.instance)
             .bind(to: _displayToast)
             .disposed(by: disposeBag)
-        
+
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
             .filter { $0 == .loadConversationComments }

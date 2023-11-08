@@ -510,7 +510,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .observe(on: MainScheduler.instance)
             .bind(to: _displayToast)
             .disposed(by: disposeBag)
-        
+
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
             .unwrap()
