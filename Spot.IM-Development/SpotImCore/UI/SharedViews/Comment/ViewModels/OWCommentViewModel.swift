@@ -95,6 +95,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
             return status != .none
         }
+        .observe(on: MainScheduler.instance)
         .startWith(false)
     }
 
@@ -124,7 +125,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        let status = OWCommentStatusType.commentStatus(from: data.comment.status)
+        let status = OWCommentStatusType.commentStatus(from: data.comment)
         commentStatusVM = OWCommentStatusViewModel(status: status)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)

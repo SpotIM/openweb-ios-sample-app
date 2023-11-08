@@ -130,6 +130,29 @@
 "ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
 "ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
 
+// Automotion only - does not required other languages translations
+"Fonts" = "Fonts";
+"Typography" = "Typography";
+"TitleSmall" = "titleSmall";
+"TitleLarge" = "titleLarge";
+"TitleMedium" = "titleMedium";
+"BodyText" = "bodyText";
+"BodyInteraction" = "bodyInteraction";
+"BodyContext" = "bodyContext";
+"BodySpecial" = "bodySpecial";
+"FootnoteText" = "footnoteText";
+"FootnoteLink" = "footnoteLink";
+"FootnoteContext" = "footnoteContext";
+"FootnoteSpecial" = "footnoteSpecial";
+"FootnoteCaption" = "footnoteCaption";
+"MetaText" = "metaText";
+"InfoCaption" = "infoCaption";
+"UserInformation" = "User information";
+"ActiveSpotId" = "Active spot id";
+"ActivePostId" = "Active post id";
+"UserStatus" = "User status";
+"SDKNotInitializedWarning" = "Warning ‼️ Seems like the SDK isn't initialized";
+
 // Old API
 "Your Username" = "Your Username";
 "Please provide Spot Key" = "Please provide Spot Key";

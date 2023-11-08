@@ -3,16 +3,6 @@
     {
       "filename" : "exclamation-triangle.pdf",
       "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "errorStateIcon.svg",
-      "idiom" : "universal"
     }
   ],
   "info" : {

@@ -73,6 +73,7 @@ fileprivate extension AutomationVC {
 
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
+        self.navigationItem.largeTitleDisplayMode = .never
 
         // Adding scroll view
         view.addSubview(scrollView)
@@ -106,6 +107,8 @@ fileprivate extension AutomationVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
+        viewModel.inputs.setNavigationController(self.navigationController)
+
         btnFonts.rx.tap
             .bind(to: viewModel.inputs.fontsTapped)
             .disposed(by: disposeBag)
@@ -113,6 +116,19 @@ fileprivate extension AutomationVC {
         btnUserInformation.rx.tap
             .bind(to: viewModel.inputs.userInformationTapped)
             .disposed(by: disposeBag)
+
+        // Showing error if needed
+        viewModel.outputs.showError
+            .subscribe(onNext: { [weak self] message in
+                self?.showError(message: message)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
