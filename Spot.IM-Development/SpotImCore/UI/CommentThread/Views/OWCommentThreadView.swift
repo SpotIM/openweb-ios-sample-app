@@ -10,7 +10,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
+class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
+
     fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
         static let tableViewAnimationDuration: Double = 0.25
@@ -23,6 +24,9 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
         static let tableViewRowEstimatedHeight: Double = 130.0
     }
+
+    var toastView: OWToastView? = nil
+    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
@@ -98,6 +102,20 @@ fileprivate extension OWCommentThreadView {
     }
 
     func setupObservers() {
+        viewModel.outputs.displayToast
+            .subscribe(onNext: { [weak self] (data, action) in
+                self?.displayToast(requiredData: data.data, actionCompletion: action)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
+        setupToastObservers(disposeBag: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
