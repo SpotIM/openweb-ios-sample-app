@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
     internal struct Metrics {
         static let commentingCTATopPadding: CGFloat = 20
         static let commentingCTAHeight: CGFloat = 72
@@ -40,6 +40,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
+
+    var toastView: OWToastView? = nil
+    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
         return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
@@ -303,6 +306,21 @@ fileprivate extension OWPreConversationView {
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.displayToast
+            .subscribe(onNext: { [weak self] (data, action) in
+                self?.displayToast(requiredData: data.data, actionCompletion: action)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
+        setupToastObservers(disposeBag: disposeBag)
+
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
