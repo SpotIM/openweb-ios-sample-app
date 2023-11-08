@@ -60,6 +60,7 @@
 "Mute" = "Mute";
 "MuteUser" = "Mute User";
 "MuteUserMessage" = "After muting this user, you will no longer see their activity. To manage your muted users, go to your profile > Privacy settings";
+"MuteSuccessToast" = "User muted";
 "ReadOur" = "Read our";
 "Image" = "Image";
 "ClosedAndEmptyConversation" = "This conversation has ended and comments are no longer being accepted.";
@@ -130,6 +131,7 @@
 "EditingComment" = "Editing comment"; // TODO: add to other languages
 "ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
 "ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
+"SomethingWentWrong" = "Oops, something went wrong";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";

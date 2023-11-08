@@ -61,6 +61,7 @@
 "Mute" = "Son désactivé";
 "MuteUser" = "Utilisateur muet";
 "MuteUserMessage" = "Une fois que vous aurez ignoré cet utilisateur, vous ne verrez plus son activité. Pour gérer les utilisateurs ignorés, rendez-vous dans votre profil > Paramètres de confidentialité";
+"MuteSuccessToast" = "Utilisateur mis en sourdine";
 "Image" = "Image";
 "ClosedAndEmptyConversation" = "Cette conversation est close et les commentaires ne sont plus acceptés.";
 "EmptyConversation" = "Engagez la conversation et partagez vos pensées et vos idées avec la communauté.";
@@ -128,6 +129,7 @@
 "ViewNewComment" = "Afficher %d nouveau commentaire";
 "TypingNow" = "%d en train de taper";
 "LoginPromptTitle" = "Autoriser à participer";
+"SomethingWentWrong" = "Aïe, une erreur s'est produite";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";
