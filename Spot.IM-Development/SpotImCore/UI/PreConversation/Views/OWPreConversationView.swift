@@ -321,7 +321,6 @@ fileprivate extension OWPreConversationView {
 
         setupToastObservers(disposeBag: disposeBag)
 
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

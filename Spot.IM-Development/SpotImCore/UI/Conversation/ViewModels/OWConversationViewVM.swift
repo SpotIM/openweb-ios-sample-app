@@ -2015,7 +2015,7 @@ fileprivate extension OWConversationViewViewModel {
                 // successfully muted
             })
             .disposed(by: disposeBag)
-        
+
         // Retry when triggerd
         retryMute
             .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
