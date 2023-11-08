@@ -231,6 +231,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var retryMute = PublishSubject<Void>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -2002,7 +2003,7 @@ fileprivate extension OWConversationViewViewModel {
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: "Oops, something went wrong")
                     self.servicesProvider.toastNotificationService()
-                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: nil) // TODO: action
+                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self.retryMute)
                     self._shouldShowErrorMuteUser.onNext(true)
                     return false
                 default:
@@ -2012,6 +2013,16 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+        
+        // Retry when triggerd
+        retryMute
+            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
+                return comment
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.muteCommentUser.onNext(comment)
             })
             .disposed(by: disposeBag)
 
