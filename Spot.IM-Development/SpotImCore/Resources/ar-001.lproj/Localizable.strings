@@ -21,7 +21,7 @@
 "ConnectivityErrorMessage" = "عفوًا! يبدو أن لدينا مشكلة في\nالاتصال. حاول مجددا";
 "Delete" = "حذف";
 "DeleteCommentTitle" = "حذف التعليق";
-"DeleteCommentMessage" = "هل انت متاكد من حذف هذا التعليق؟";
+"DeleteCommentMessage" = "هل أنت متأكد من أنك تريد حذف هذا التعليق؟";
 "Report" = "ابلغ";
 "GotIt" = "فهمت";
 "SortBy" = "الترتيب حسب";

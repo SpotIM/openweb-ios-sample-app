@@ -20,7 +20,7 @@
 "ConnectivityErrorMessage" = "Whoops! Parece que estamos\nexperimentando algunos\nproblemas de conectividad.";
 "Delete" = "Borrar";
 "DeleteCommentTitle" = "Borrar comentario";
-"DeleteCommentMessage" = "¿Está seguro de quere borrar este comentario?";
+"DeleteCommentMessage" = "¿Estás seguro de que quieres borrar este comentario?";
 "Report" = "Reportar";
 "GotIt" = "Comprendido";
 "SortBy" = "Ordenar por";

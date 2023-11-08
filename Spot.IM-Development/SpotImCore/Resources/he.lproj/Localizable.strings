@@ -21,7 +21,7 @@
 "ConnectivityErrorMessage" = "אופססס! נראה שאנו חווים בעיה בתקשורת";
 "Delete" = "מחיקת תגובה";
 "DeleteCommentTitle" = "מחיקת תגובה";
-"DeleteCommentMessage" = "אישור המחיקה ימחק לאלתר את התגובה מהשיחה. האם ברצונך למחוק את ההודעה?";
+"DeleteCommentMessage" = "האם ברצונך למחוק תגובה זו?";
 "Report" = "דיווח תגובה";
 "GotIt" = "תודה, קיבלתי";
 "SortBy" = "סנן לפי";
