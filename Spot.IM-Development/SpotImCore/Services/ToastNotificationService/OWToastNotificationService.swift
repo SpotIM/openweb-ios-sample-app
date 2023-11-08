@@ -11,8 +11,6 @@ import RxSwift
 
 protocol OWToastNotificationServicing {
     func showToast(presentData: OWToastNotificationPresentData, actionCompletion: PublishSubject<Void>?)
-    func clearNotifications()
-
     var toastToShow: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
 }
 
@@ -45,11 +43,6 @@ class OWToastNotificationService: OWToastNotificationServicing {
         queue.insert(presentData)
         mapToastToActionPublishSubject[presentData.uuid] = actionCompletion
         newToast.onNext()
-    }
-
-    func clearNotifications() {
-        // TODO: should add to OWQueue?
-        // Should be called when post changes
     }
 }
 
@@ -91,5 +84,4 @@ struct OWToastNotificationPresentData: Codable, Equatable {
     var uuid = UUID().uuidString
     let data: OWToastRequiredData
     var durationInSec: Double = 5
-    // Show on specific view? all views??
 }
