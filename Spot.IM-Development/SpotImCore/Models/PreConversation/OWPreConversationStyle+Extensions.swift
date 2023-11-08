@@ -107,6 +107,14 @@ extension OWPreConversationStyle {
         }
     }
 
+    var isLoadingErrorEnabled: Bool {
+        switch self {
+        case .regular, .compact, .custom:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 #if NEW_API
