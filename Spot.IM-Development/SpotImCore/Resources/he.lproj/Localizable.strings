@@ -61,6 +61,7 @@
 "Mute" = "השתק";
 "MuteUser" = "השתק משתמש";
 "MuteUserMessage" = "לאחר השתקת משתמש זה, לא תראו יותר את הפעילות שלו. כדי לנהל את המשתמשים המושתקים שלכם, עברו אל הפרופיל שלכם > הגדרות פרטיות";
+"MuteSuccessToast" = "המשתמש הושתק";
 "ReadOur" = "קרא/י את";
 "Image" = "תמונה";
 "Undo" = "Undo";
@@ -128,6 +129,7 @@
 "ViewNewComment" = "הצגת %d תגובה חדשה";
 "TypingNow" = "מקלידים עכשיו %d";
 "LoginPromptTitle" = "מורשה להשתתף";
+"SomethingWentWrong" = "אופס, משהו השתבש";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";
