@@ -940,7 +940,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // responding to thread action clicked
         commentThreadActionsCellsVmsObservable
-            .flatMap { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
+            .flatMapLatest { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
                 let threadActionsClickObservable = commentThreadActionsCellsVms.map { commentThreadActionsCellsVm in
                     return commentThreadActionsCellsVm.outputs.commentActionsVM
                         .outputs.tapOutput
