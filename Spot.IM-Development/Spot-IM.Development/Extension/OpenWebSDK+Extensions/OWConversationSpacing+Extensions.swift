@@ -12,14 +12,13 @@ import SpotImCore
 #if NEW_API
 
 extension OWConversationSpacing {
-    init(index: Int, betweenComments: CGFloat, belowHeader: CGFloat, belowCommunityGuidelines: CGFloat, belowCommunityQuestions: CGFloat) {
+    init(index: Int, betweenComments: CGFloat, communityGuidelines: CGFloat, communityQuestions: CGFloat) {
         switch index {
         case OWConversationSpacingIndexer.regular.index: self = .regular
         case OWConversationSpacingIndexer.compact.index: self = .compact
         case OWConversationSpacingIndexer.custom.index: self = .custom(betweenComments: betweenComments,
-                                                                       belowHeader: belowHeader,
-                                                                       belowCommunityGuidelines: belowCommunityGuidelines,
-                                                                       belowCommunityQuestions: belowCommunityQuestions)
+                                                                       communityGuidelines: communityGuidelines,
+                                                                       communityQuestions: communityQuestions)
         default:
             self = .regular
         }
@@ -27,16 +26,13 @@ extension OWConversationSpacing {
 
     // Validate and correct spacing inputs from setting's text fields
     static func validateSpacing(_ spacing: String) -> CGFloat {
-        if let number = NumberFormatter().number(from: spacing) {
-            let cgFloat = CGFloat(truncating: number)
-            if cgFloat > OWConversationSpacing.Metrics.maxSpace {
-                return OWConversationSpacing.Metrics.maxSpace
-            } else if cgFloat < OWConversationSpacing.Metrics.minSpace {
-                return OWConversationSpacing.Metrics.minSpace
-            }
-            return cgFloat
+        guard let spacingDouble = Double(spacing) else {
+            // Return a default value or handle the error if the conversion fails
+            return OWConversationSpacing.Metrics.minSpace
         }
-        return OWConversationSpacing.Metrics.defaultSpaceBelowHeader
+
+        let cgFloatSpacing = CGFloat(spacingDouble)
+        return min(max(cgFloatSpacing, Metrics.minSpace), Metrics.maxSpace)
     }
 
     static var defaultIndex: Int {

@@ -10,6 +10,14 @@ import Foundation
 
 extension OWConversationStyle {
 
+    func validate() -> OWConversationStyle {
+        guard case let .custom(communityGuidelinesStyle, communityQuestionsStyle, spacing) = self else { return self }
+        let validatedSpacing = spacing.validate()
+        return .custom(communityGuidelinesStyle: communityGuidelinesStyle,
+                       communityQuestionsStyle: communityQuestionsStyle,
+                       spacing: validatedSpacing)
+    }
+
     var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
         switch self {
         case .regular:
@@ -32,6 +40,16 @@ extension OWConversationStyle {
         }
     }
 
+    var spacing: OWConversationSpacing {
+        switch self {
+        case .regular:
+            return .regular
+        case .compact:
+            return .compact
+        case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacing):
+            return spacing.validate()
+        }
+    }
 }
 
 #if NEW_API
@@ -42,9 +60,11 @@ extension OWConversationStyle: Equatable {
             return true
         case (.regular, .regular):
             return true
-        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, _),
-              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, _)):
-            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle && lhsCommunityQuestionStyle == rhsCommunityQuestionStyle// && lhsSpacing == rhsSpacing
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, let lhsSpacing),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, let rhsSpacing)):
+            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle &&
+            lhsSpacing == rhsSpacing
         default:
             return false
         }
@@ -58,9 +78,11 @@ extension OWConversationStyle: Equatable {
             return true
         case (.regular, .regular):
             return true
-        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, _),
-              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, _)):
-            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle && lhsCommunityQuestionStyle == rhsCommunityQuestionStyle// && lhsSpacing == rhsSpacing
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, let lhsSpacing),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, let rhsSpacing)):
+            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle &&
+            lhsSpacing == rhsSpacing
         default:
             return false
         }
