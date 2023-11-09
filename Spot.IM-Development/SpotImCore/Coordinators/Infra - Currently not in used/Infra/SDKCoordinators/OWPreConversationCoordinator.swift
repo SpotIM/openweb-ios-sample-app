@@ -99,10 +99,16 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWDeepLinkOptions.reportReason(reportData: reportData)
             }
 
+        let openClarityDetailsObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openClarityDetails
+            .map { clarityDetailsType -> OWDeepLinkOptions? in
+                return OWDeepLinkOptions.clarityDetails(type: clarityDetailsType)
+            }
+
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable,
                          openCommentCreationObservable,
-                         openReportReasonObservable)
+                         openReportReasonObservable,
+                         openClarityDetailsObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
