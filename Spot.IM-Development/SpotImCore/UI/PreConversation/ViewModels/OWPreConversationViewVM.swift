@@ -69,6 +69,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let viewAccessibilityIdentifier = "pre_conversation_view_@_style_id"
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
+
+        static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments
+        static let defaultCommunityGuidelinesSpacing = OWConversationSpacing.regular.communityGuidelines
+        static let defaultCommunityQuestionSpacing = OWConversationSpacing.regular.communityQuestions
     }
 
     var inputs: OWPreConversationViewViewModelingInputs { return self }
@@ -118,11 +122,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle)
+        return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle,
+                                              spacing: Metrics.defaultCommunityGuidelinesSpacing)
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
+        return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle,
+                                            spacing: Metrics.defaultCommunityQuestionSpacing)
     }()
 
     lazy var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling = {
@@ -580,8 +586,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         user: user,
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                        section: self.preConversationData.article.additionalSettings.section
-                    ))
+                        section: self.preConversationData.article.additionalSettings.section),
+                                                    spacing: Metrics.defaultBetweenCommentsSpacing)
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
@@ -880,8 +886,8 @@ fileprivate extension OWPreConversationViewViewModel {
                             user: user,
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
-                            section: self.preConversationData.article.additionalSettings.section
-                        ))
+                            section: self.preConversationData.article.additionalSettings.section),
+                                                      spacing: Metrics.defaultBetweenCommentsSpacing)
                     }.unwrap()
                     var viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in

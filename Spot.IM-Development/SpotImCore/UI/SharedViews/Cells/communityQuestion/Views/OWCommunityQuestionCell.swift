@@ -53,7 +53,8 @@ fileprivate extension OWCommunityQuestionCell {
 
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.edgesPadding)
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
         }
     }
 

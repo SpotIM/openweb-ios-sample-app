@@ -10,12 +10,12 @@ import UIKit
 
 #if NEW_API
 public enum OWCommunityGuidelinesCustomizableElement {
-    case regular(textView: UITextView)
-    case compact(containerView: UIView, icon: UIImageView, textView: UITextView)
+    case regular(label: UILabel)
+    case compact(containerView: UIView, icon: UIImageView, label: UILabel)
 }
 #else
 enum OWCommunityGuidelinesCustomizableElement {
-    case regular(textView: UITextView)
-    case compact(containerView: UIView, icon: UIImageView, textView: UITextView)
+    case regular(label: UILabel)
+    case compact(containerView: UIView, icon: UIImageView, label: UILabel)
 }
 #endif
