@@ -1020,7 +1020,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 return self.servicesProvider.presenterService()
                     .showAlert(
                         title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
-                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentAlertMessage"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
