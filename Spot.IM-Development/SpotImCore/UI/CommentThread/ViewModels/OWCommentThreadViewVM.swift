@@ -36,6 +36,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var updateTableViewInstantly: Observable<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -57,6 +58,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
+        static let updateTableViewInstantlyDelay: Int = 50 // ms
     }
 
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
@@ -101,6 +103,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
     var tryAgainAfterError: Observable<OWErrorStateTypes> {
         return _tryAgainAfterError
+            .asObservable()
+    }
+
+    fileprivate var _updateTableViewInstantly = PublishSubject<Void>()
+    var updateTableViewInstantly: Observable<Void> {
+        return _updateTableViewInstantly
+            .delay(.milliseconds(Metrics.updateTableViewInstantlyDelay), scheduler: commentThreadViewVMScheduler)
             .asObservable()
     }
 
@@ -278,6 +287,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
+            .filter { [weak self] in
+                return self?.dataSourceTransition ?? .reload == .animated
+            }
+            .voidify()
             .asObservable()
     }
 
@@ -592,21 +605,21 @@ fileprivate extension OWCommentThreadViewViewModel {
             .share()
 
         // Set read only mode
-        commentThreadFetchedObservable
-            .subscribe(onNext: { [weak self] response in
-                guard let self = self else { return }
-                var isReadOnly: Bool = response.conversation?.readOnly ?? false
-                switch self.commentThreadData.article.additionalSettings.readOnlyMode {
-                case .disable:
-                    isReadOnly = false
-                case .enable:
-                    isReadOnly = true
-                case .server:
-                    break
-                }
-                self._isReadOnly.onNext(isReadOnly)
-            })
-            .disposed(by: disposeBag)
+//        commentThreadFetchedObservable
+//            .subscribe(onNext: { [weak self] response in
+//                guard let self = self else { return }
+//                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+//                switch self.commentThreadData.article.additionalSettings.readOnlyMode {
+//                case .disable:
+//                    isReadOnly = false
+//                case .enable:
+//                    isReadOnly = true
+//                case .server:
+//                    break
+//                }
+//                self._isReadOnly.onNext(isReadOnly)
+//            })
+//            .disposed(by: disposeBag)
 
         // first load comments or refresh comments
         commentThreadFetchedObservable
@@ -630,11 +643,13 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                     // Update loading state only after the presented comments are updated
                     self._serverCommentsLoadingState.onNext(.notLoading)
+
+                    self._updateTableViewInstantly.onNext()
                 }
             })
             .disposed(by: disposeBag)
 
-        // Re-enabling animations in the pre conversation table view
+        // Re-enabling animations in the comment thread table view
         commentThreadFetchedObservable
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] _ in
