@@ -62,6 +62,8 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
+        refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
+                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         refresh.userInteractionEnabled(false)
         return refresh
     }()
@@ -103,6 +105,7 @@ fileprivate extension OWCommentThreadView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 

@@ -43,7 +43,6 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
     var outputs: OWCommentThreadActionsCellViewModelingOutputs { return self }
 
     var id: String = UUID().uuidString
-
     var depth: Int = 0
 
     var commentPresentationData: OWCommentPresentationData
@@ -52,13 +51,26 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var triggerUpdateActionType = PublishSubject<Void>()
 
-    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread, commentId: self.commentPresentationData.id)
+    fileprivate var spacingBetweenComments: CGFloat = 0
 
-    init(id: String = UUID().uuidString, data: OWCommentPresentationData, mode: OWCommentThreadActionsCellMode = .collapse, depth: Int = 0) {
+    lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
+                                                                                                 commentId: self.commentPresentationData.id,
+                                                                                                 spacing: self.spacingBetweenComments)
+
+    init(id: String = UUID().uuidString,
+         data: OWCommentPresentationData,
+         mode: OWCommentThreadActionsCellMode = .collapse,
+         depth: Int = 0,
+         spacing: CGFloat) {
         self.id = id
         self.commentPresentationData = data
         self.depth = depth
+        self.spacingBetweenComments = spacing
         self.mode = mode
+
+        let commentThreadActionType: OWCommentThreadActionType = mode == .collapse ? .collapseThread : self.getCommentThreadActionTypeForExpand()
+
+        self.commentActionsVM = OWCommentThreadActionsViewModel(with: commentThreadActionType, commentId: self.commentPresentationData.id, spacing: self.spacingBetweenComments)
         self.setupObservers()
         self.triggerUpdateActionType.onNext()
     }

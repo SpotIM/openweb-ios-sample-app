@@ -13,7 +13,6 @@ import RxCocoa
 class OWCommentView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16.0
-        static let bottomOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentStatusBottomPadding: CGFloat = 12.0
         static let commentLabelTopPadding: CGFloat = 10.0
@@ -81,8 +80,7 @@ fileprivate extension OWCommentView {
 
         self.addSubviews(commentStatusView)
         commentStatusView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.commentHeaderVerticalOffset)
+            make.top.leading.trailing.equalToSuperview()
             commentStatusZeroHeightConstraint = make.height.equalTo(0).constraint
         }
 
@@ -96,7 +94,7 @@ fileprivate extension OWCommentView {
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentStatusView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
-            commentHeaderBottomConstraint = make.bottom.equalToSuperview().offset(-Metrics.commentHeaderVerticalOffset).constraint
+            commentHeaderBottomConstraint = make.bottom.equalToSuperview().constraint
         }
     }
 
@@ -117,9 +115,8 @@ fileprivate extension OWCommentView {
 
         self.addSubview(commentEngagementView)
         commentEngagementView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
-            make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
         self.bringSubviewToFront(blockingOpacityView)
     }
