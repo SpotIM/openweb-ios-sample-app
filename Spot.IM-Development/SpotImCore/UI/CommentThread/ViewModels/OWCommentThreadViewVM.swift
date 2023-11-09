@@ -605,21 +605,21 @@ fileprivate extension OWCommentThreadViewViewModel {
             .share()
 
         // Set read only mode
-//        commentThreadFetchedObservable
-//            .subscribe(onNext: { [weak self] response in
-//                guard let self = self else { return }
-//                var isReadOnly: Bool = response.conversation?.readOnly ?? false
-//                switch self.commentThreadData.article.additionalSettings.readOnlyMode {
-//                case .disable:
-//                    isReadOnly = false
-//                case .enable:
-//                    isReadOnly = true
-//                case .server:
-//                    break
-//                }
-//                self._isReadOnly.onNext(isReadOnly)
-//            })
-//            .disposed(by: disposeBag)
+        commentThreadFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+                switch self.commentThreadData.article.additionalSettings.readOnlyMode {
+                case .disable:
+                    isReadOnly = false
+                case .enable:
+                    isReadOnly = true
+                case .server:
+                    break
+                }
+                self._isReadOnly.onNext(isReadOnly)
+            })
+            .disposed(by: disposeBag)
 
         // first load comments or refresh comments
         commentThreadFetchedObservable
