@@ -19,6 +19,7 @@
 "Post" = "הגב";
 "SignUpToPost" = "הירשם כדי להגיב";
 "ConnectivityErrorMessage" = "אופססס! נראה שאנו חווים בעיה בתקשורת";
+"CloseEditor" = "לסגור את העורך?";
 "Delete" = "מחיקת תגובה";
 "DeleteCommentTitle" = "מחיקת תגובה";
 "DeleteCommentMessage" = "האם ברצונך למחוק תגובה זו?";

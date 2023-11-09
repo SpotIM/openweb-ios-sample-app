@@ -19,6 +19,7 @@
 "Post" = "Publicar";
 "SignUpToPost" = "Registe-se para Publicar";
 "ConnectivityErrorMessage" = "Ups! Parece que estamos\na passar por alguns\nproblemas de ligação.";
+"CloseEditor" = "Fechar editor?";
 "Delete" = "Eliminar";
 "DeleteCommentTitle" = "Eliminar Comentário";
 "DeleteCommentMessage" = "Você tem certeza que quer excluir este comentário?";
