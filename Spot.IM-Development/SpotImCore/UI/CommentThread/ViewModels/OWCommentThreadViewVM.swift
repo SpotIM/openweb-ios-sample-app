@@ -276,6 +276,18 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var pullToRefresh = PublishSubject<Void>()
     fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
         return pullToRefresh
+            .withLatestFrom(shouldShowErrorLoadingComments)
+            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
+                }
+            })
             .map { _ -> OWLoadingTriggeredReason in
                 OWLoadingTriggeredReason.pullToRefresh
             }
@@ -523,7 +535,15 @@ fileprivate extension OWCommentThreadViewViewModel {
         let tryAgainAfterInitialError = tryAgainAfterError
             .filter { $0 == .loadCommentThreadComments }
             .voidify()
+            .do(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                self._shouldShowErrorLoadingComments.onNext(false)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
+            })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
+            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: commentThreadViewVMScheduler)
             .asObservable()
 
         // Try again after error loading more replies
@@ -551,26 +571,17 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .asObservable()
 
+        pullToRefreshObservable
+            .voidify()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.errorsLoadingReplies.removeAll()
+            })
+            .disposed(by: disposeBag)
+
         let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable,
                                                               pullToRefreshObservable,
                                                               tryAgainAfterInitialError)
-            .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
-            .do(onNext: { [weak self] (loadingTriggeredReason, shouldShowErrorLoadingComments) in
-                // This is for pull to refresh while error state for initial comments is shown
-                // We want to show skeletons after this pull to refresh
-                if shouldShowErrorLoadingComments {
-                    guard let self = self else { return }
-                    self.dataSourceTransition = .reload
-                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
-                    self._shouldShowErrorLoadingComments.onNext(false)
-                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
-                }
-            })
-            .do(onNext: { [weak self] (loadingTriggeredReason, _) in
-                guard let self = self else { return }
-                self.errorsLoadingReplies.removeAll()
-                self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
-            })
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
