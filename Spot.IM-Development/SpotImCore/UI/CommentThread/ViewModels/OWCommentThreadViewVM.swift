@@ -543,7 +543,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
-            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: commentThreadViewVMScheduler)
             .asObservable()
 
         // Try again after error loading more replies
