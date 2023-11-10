@@ -438,7 +438,6 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .preConversationLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
-            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: preConversationViewVMScheduler)
             .asObservable()
 
         // Subscribing to start realtime service
