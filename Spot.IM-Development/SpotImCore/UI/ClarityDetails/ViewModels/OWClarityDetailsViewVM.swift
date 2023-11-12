@@ -42,15 +42,18 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
     fileprivate let type: OWClarityDetailsType
+    fileprivate let commentId: OWCommentId
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
 
-    init(type: OWClarityDetailsType, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.type = type
+    init(data: OWClarityDetailsRequireData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.type = data.type
+        self.commentId = data.commentId
         self.servicesProvider = servicesProvider
         disposeBag = DisposeBag()
 
         setupObservers()
+        fetchEligibleToAppeal()
     }
 
     lazy var appealLabelViewModel: OWAppealLabelViewModeling = {
@@ -225,5 +228,12 @@ fileprivate extension OWClarityDetailsViewVM {
                 attributes: attributes
             )
         }
+    }
+
+    func fetchEligibleToAppeal() {
+//        guard let commentId = comment.id else { return }
+//        servicesProvider.netwokAPI()
+        
+
     }
 }

@@ -149,9 +149,9 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+            .flatMap { [weak self] data -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
                                                                             actionsCallbacks: self.actionsCallbacks,
                                                                             presentationalMode: self.commentThreadData.presentationalStyle)
@@ -258,7 +258,7 @@ fileprivate extension OWCommentThreadCoordinator {
 
         // Open clarity details
         let openClarityDetails = viewModel.outputs.openClarityDetails
-            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+            .map { OWViewActionCallbackType.openClarityDetails(data: $0) }
 
         // Open report reason
         let openReportReason = viewModel.outputs.openReportReason

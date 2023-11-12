@@ -35,7 +35,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var threadOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
-    var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -293,8 +293,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
-    var openClarityDetails: Observable<OWClarityDetailsType> {
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> {
         return openClarityDetailsChange
             .asObservable()
     }
@@ -1143,15 +1143,16 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Observe open clarity details
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
-                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsRequireData> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsRequireData>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsRequireData> in
                     let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
                     return commentStatusVm.outputs.learnMoreClicked
+                        .map { OWClarityDetailsRequireData(commentId: commentCellVm.outputs.id, type: $0) }
                 }
                 return Observable.merge(learnMoreClickObservable)
             }
-            .subscribe(onNext: { [weak self] clarityDetailsType in
-                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            .subscribe(onNext: { [weak self] data in
+                self?.openClarityDetailsChange.onNext(data)
             })
             .disposed(by: disposeBag)
 
