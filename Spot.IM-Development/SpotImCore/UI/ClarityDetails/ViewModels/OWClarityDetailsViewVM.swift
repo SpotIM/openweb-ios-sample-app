@@ -233,7 +233,6 @@ fileprivate extension OWClarityDetailsViewVM {
     func fetchEligibleToAppeal() {
 //        guard let commentId = comment.id else { return }
 //        servicesProvider.netwokAPI()
-        
 
     }
 }
