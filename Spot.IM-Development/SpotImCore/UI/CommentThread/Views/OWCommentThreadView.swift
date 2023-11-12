@@ -201,5 +201,14 @@ fileprivate extension OWCommentThreadView {
             .map { $0.size.height }
             .bind(to: viewModel.inputs.tableViewHeight)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.updateTableViewInstantly
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
     }
 }
