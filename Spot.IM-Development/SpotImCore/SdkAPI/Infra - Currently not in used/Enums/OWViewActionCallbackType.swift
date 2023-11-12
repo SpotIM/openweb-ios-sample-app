@@ -21,7 +21,7 @@ public enum OWViewActionCallbackType: Codable {
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
-    case openClarityDetails(type: OWClarityDetailsType)
+    case openClarityDetails(data: OWClarityDetailsRequireData)
     case closeClarityDetails
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
@@ -42,7 +42,7 @@ enum OWViewActionCallbackType: Codable {
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
-    case openClarityDetails(type: OWClarityDetailsType)
+    case openClarityDetails(data: OWClarityDetailsRequireData)
     case closeClarityDetails
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
@@ -77,8 +77,8 @@ extension OWViewActionCallbackType: Equatable {
             return lhsId == rhsId
         case (.closeReportReason, .closeReportReason):
             return true
-        case (let .openClarityDetails(lhsType), let .openClarityDetails(rhsType)):
-            return lhsType == rhsType
+        case (let .openClarityDetails(lhsData), let .openClarityDetails(rhsData)):
+            return lhsData.type == rhsData.type && lhsData.commentId == rhsData.commentId
         case (.closeClarityDetails, .closeClarityDetails):
             return true
         case (.floatingCommentCreationDismissed, .floatingCommentCreationDismissed):

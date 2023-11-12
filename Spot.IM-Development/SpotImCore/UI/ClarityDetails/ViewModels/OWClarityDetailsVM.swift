@@ -36,13 +36,13 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
         return viewDidLoad.asObservable()
     }
 
-    fileprivate let type: OWClarityDetailsType
+    fileprivate let data: OWClarityDetailsRequireData
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
-        return OWClarityDetailsViewVM(type: type)
+        return OWClarityDetailsViewVM(data: data)
     }()
 
-    init(type: OWClarityDetailsType, viewableMode: OWViewableMode) {
-        self.type = type
+    init(data: OWClarityDetailsRequireData, viewableMode: OWViewableMode) {
+        self.data = data
     }
 }
 

@@ -15,5 +15,5 @@ enum OWDeepLinkOptions {
     case commentThread(commentThreadData: OWCommentThreadRequiredData)
     case authentication
     case reportReason(reportData: OWReportReasonsRequiredData)
-    case clarityDetails(type: OWClarityDetailsType)
+    case clarityDetails(clarityData: OWClarityDetailsRequireData)
 }
