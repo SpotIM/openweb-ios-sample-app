@@ -668,8 +668,8 @@ fileprivate extension OWConversationViewViewModel {
         var commentsPresentationData = [OWCommentPresentationData]()
         var repliesPresentationData = [OWCommentPresentationData]()
 
-        self.conversationPaginationOffset = response.conversation?.offset ?? 0
         if !isLoadingMoreReplies {
+            self.conversationPaginationOffset = response.conversation?.offset ?? 0
             self.conversationHasNext = response.conversation?.hasNext ?? false
         }
 
