@@ -28,8 +28,15 @@ enum OWAppealEndpoints: OWEndpoints {
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
+        case .isEligibleToAppeal:
+            return nil
+        }
+    }
+
+    var queryParams: [Foundation.URLQueryItem]? {
+        switch self {
         case .isEligibleToAppeal(let commentId):
-            return ["message_id": commentId]
+            return [Foundation.URLQueryItem(name: "messageId", value: commentId)]
         }
     }
 }
@@ -40,7 +47,7 @@ protocol OWAppealAPI {
 
 extension OWNetworkAPI: OWAppealAPI {
     // Access by .appeal for readability
-    var commenterAppeal: OWAppealAPI { return self }
+    var appeal: OWAppealAPI { return self }
 
     func isEligibleToAppeal(commentId: String) -> OWNetworkResponse<IsEligibleToAppealResponse> {
         let endpoint = OWAppealEndpoints.isEligibleToAppeal(commentId: commentId)

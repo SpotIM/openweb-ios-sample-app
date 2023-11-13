@@ -53,11 +53,10 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
         disposeBag = DisposeBag()
 
         setupObservers()
-        fetchEligibleToAppeal()
     }
 
     lazy var appealLabelViewModel: OWAppealLabelViewModeling = {
-        OWAppealLabelViewModel()
+        OWAppealLabelViewModel(commentId: commentId)
     }()
 
     lazy var shouldShowAppealView: Observable<Bool> = {
@@ -228,11 +227,5 @@ fileprivate extension OWClarityDetailsViewVM {
                 attributes: attributes
             )
         }
-    }
-
-    func fetchEligibleToAppeal() {
-//        guard let commentId = comment.id else { return }
-//        servicesProvider.netwokAPI()
-
     }
 }
