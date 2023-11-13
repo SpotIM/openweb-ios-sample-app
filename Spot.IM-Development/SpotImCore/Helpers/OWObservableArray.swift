@@ -80,7 +80,7 @@ extension OWObservableArray {
     }
 }
 
-extension OWObservableArray: Collection {
+extension OWObservableArray {
     var capacity: Int {
         return elements.capacity
     }
@@ -98,7 +98,7 @@ extension OWObservableArray: Collection {
     }
 }
 
-extension OWObservableArray: MutableCollection {
+extension OWObservableArray {
     func reserveCapacity(_ minimumCapacity: Int) {
         elements.reserveCapacity(minimumCapacity)
     }
@@ -188,7 +188,7 @@ extension OWObservableArray: MutableCollection {
         arrayDidChange(OWArrayChangeEvent(deleted: Array(0..<originalElements.count)))
     }
 
-    func insertContentsOf(_ newElements: [Element], atIndex i: Int) {
+    func insert(contentsOf newElements: [Element], at i: Int) {
         guard !newElements.isEmpty else {
             return
         }
