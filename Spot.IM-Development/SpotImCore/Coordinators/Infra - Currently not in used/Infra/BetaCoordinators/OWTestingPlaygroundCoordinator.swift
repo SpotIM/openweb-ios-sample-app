@@ -75,7 +75,7 @@ class OWTestingPlaygroundCoordinator: OWBaseCoordinator<OWTestingPlaygroundCoord
 
     override func showableComponent() -> Observable<OWShowable> {
         // Add the View and VM you would like to test
-        let someViewVM: OWAppealLabelViewModeling = OWAppealLabelViewModel()
+        let someViewVM: OWAppealLabelViewModeling = OWAppealLabelViewModel(commentId: "TODO")
         let someView = OWAppealLabelView(viewModel: someViewVM)
 //        let someViewVM = OWTestingRxTableViewAnimationsViewViewModel()
 //        let someView = OWTestingRxTableViewAnimationsView(viewModel: someViewVM)
