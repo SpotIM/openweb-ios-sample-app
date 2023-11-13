@@ -75,10 +75,10 @@ class OWRealtimeIndicatorService: OWRealtimeIndicatorServicing {
     var newComments: Observable<[OWComment]> {
         return _newCommentsCache.map { comments in
             comments.values
-                .sorted { (comment1, comment2) in
-                    switch (comment1.writtenAt, comment2.writtenAt) {
-                    case let (date1?, date2?):
-                        return date1 > date2
+                .sorted { (lhsComment, rhsComment) in
+                    switch (lhsComment.writtenAt, rhsComment.writtenAt) {
+                    case let (lhsDate?, rhsDate?):
+                        return lhsDate > rhsDate
                     case (nil, _):
                         return true // Place nil values at the beginning
                     case (_, nil):
