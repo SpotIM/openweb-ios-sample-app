@@ -16,6 +16,7 @@ protocol OWEndpoints {
     var method: OWNetworkHTTPMethod { get }
     var path: String { get }
     var parameters: OWNetworkParameters? { get }
+    var queryParams: [Foundation.URLQueryItem]? { get }
     var overrideBaseURL: URL? { get }
     var additionalMiddlewares: [OWRequestMiddleware]? { get }
 }
@@ -26,6 +27,10 @@ extension OWEndpoints {
     }
 
     var additionalMiddlewares: [OWRequestMiddleware]? {
+        return nil
+    }
+
+    var queryParams: [Foundation.URLQueryItem]? {
         return nil
     }
 }

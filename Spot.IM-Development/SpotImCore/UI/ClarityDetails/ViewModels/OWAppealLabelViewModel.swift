@@ -40,7 +40,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     // TODO: API call to get if the user can appeal/did appeal/other info and change _viewType accordingly
-    fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .default)
+    fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
             .asObservable()
@@ -169,9 +169,35 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .asObservable()
     }
 
-    // TODO: probably should get the comment id
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    fileprivate let commentId: OWCommentId
+    init(commentId: OWCommentId, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.commentId = commentId
+
+        fetchEligibleToAppeal()
+    }
+}
+
+fileprivate extension OWAppealLabelViewModel {
+    func fetchEligibleToAppeal() {
+        // TODO: when comment is deleted?
+        _ = servicesProvider.netwokAPI()
+            .appeal
+            .isEligibleToAppeal(commentId: commentId)
+            .response
+            .take(1)
+            .subscribe(
+                onNext: { [weak self] response in
+                    if response.canAppeal {
+                        self?._viewType.onNext(.default)
+                    } else {
+                        self?._viewType.onNext(.appealRejected) // is it right? should it be empty?
+                    }
+            },
+                onError: { [weak self] _ in
+                    self?._viewType.onNext(.error)
+                }
+            )
     }
 }
 
