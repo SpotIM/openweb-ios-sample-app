@@ -192,40 +192,16 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
 fileprivate extension OWCommentRatingViewModel {
     func setupObservers() {
-        let rankUpTriggeredObservable = tapRankUp.withLatestFrom(_rankedByUser.unwrap())
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in ranked }
-            }
-            .flatMapLatest { [weak self] ranked -> Observable<Int?> in
-                // 2. Waiting for authentication required for voting
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { $0 ? ranked : nil }
-            }
-            .unwrap()
+        let rankUpTriggeredObservable = tapRankUp
+            .withLatestFrom(_rankedByUser.unwrap())
             .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
                 return SPRankChange(from: from, to: to)
             }
 
-        let rankDownTriggeredObservable = tapRankDown.withLatestFrom(_rankedByUser.unwrap())
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in ranked }
-            }
-            .flatMapLatest { [weak self] ranked -> Observable<Int?> in
-                // 2. Waiting for authentication required for voting
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { $0 ? ranked : nil }
-            }
-            .unwrap()
+        let rankDownTriggeredObservable = tapRankDown
+            .withLatestFrom(_rankedByUser.unwrap())
             .map { ranked -> SPRankChange in
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
@@ -233,7 +209,20 @@ fileprivate extension OWCommentRatingViewModel {
             }
 
         let rankChangedLocallyObservable: Observable<SPRankChange> = Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
-            .flatMap { [weak self] rankChange -> Observable<SPRankChange> in
+            .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in rankChange }
+            }
+            .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange?> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { $0 ? rankChange : nil }
+            }
+            .unwrap()
+            .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange> in
                 guard let self = self else { return .empty() }
 
                 return Observable.combineLatest(self._rankUp, self._rankDown)
@@ -247,7 +236,7 @@ fileprivate extension OWCommentRatingViewModel {
 
         // Updating Network/Remote about rank change
         rankChangedLocallyObservable
-            .flatMap { [weak self] rankChange -> Observable<EmptyDecodable> in
+            .flatMapLatest { [weak self] rankChange -> Observable<EmptyDecodable> in
                 guard let self = self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
