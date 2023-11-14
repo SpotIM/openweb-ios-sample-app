@@ -1,5 +1,5 @@
 //
-//  OWEmptyViewController.swift
+//  OWNavigationPlaceholderVC.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 13/11/2023.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class OWEmptyViewController: UIViewController {
+class OWNavigationPlaceholderVC: UIViewController {
 
     fileprivate let onFirstChild: () -> Void
     fileprivate var timer: Timer? = nil
