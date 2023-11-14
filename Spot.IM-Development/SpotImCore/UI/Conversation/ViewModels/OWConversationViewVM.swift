@@ -1552,20 +1552,40 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe on rank click
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWCommentId, SPRankChange)> in
-                let rankClickObservable: [Observable<(OWCommentId, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentId, SPRankChange)> in
-                    let commentRankVm = commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.votingVM
+            .flatMap { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
+                let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
+                    let commentVm = commentCellVm.outputs.commentVM
+                    let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
 
-                    return commentRankVm.outputs.rankChanged
-                        .map { (commentCellVm.outputs.commentVM.outputs.comment.id ?? "", $0) }
+                    return commentRankVm.outputs.rankChangeTriggered
+                        .map { (commentVm, $0) }
                 }
                 return Observable.merge(rankClickObservable)
             }
-            .subscribe(onNext: { [weak self] commentId, rank in
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in (commentVm, rankChange) }
+            }
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)?> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { $0 ? (commentVm, rankChange) : nil }
+            }
+            .unwrap()
+            .do(onNext: { [weak self] commentVm, rankChange in
                 guard let self = self,
-                      let eventType = rank.analyticsEventType(commentId: commentId)
+                      let commentId = commentVm.outputs.comment.id,
+                      let eventType = rankChange.analyticsEventType(commentId: commentId)
                 else { return }
                 self.sendEvent(for: eventType)
+            })
+            .subscribe(onNext: { [weak self] commentVm, rankChange in
+                guard let self = self else { return }
+                let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
+                commentRankVm.inputs.rankChanged.onNext(rankChange)
             })
             .disposed(by: disposeBag)
 
