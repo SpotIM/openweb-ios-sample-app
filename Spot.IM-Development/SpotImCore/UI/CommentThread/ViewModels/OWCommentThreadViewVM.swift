@@ -287,7 +287,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             _forceRefresh.map { OWLoadingTriggeredReason.forceRefresh }
         )
         .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
-        .do(onNext: { [weak self] loadingTriggeredReason, shouldShowErrorLoadingComments in
+        .do(onNext: { [weak self] _, shouldShowErrorLoadingComments in
             // This is for pull to refresh while error state for initial comments is shown
             // We want to show skeletons after this pull to refresh
             if shouldShowErrorLoadingComments {
