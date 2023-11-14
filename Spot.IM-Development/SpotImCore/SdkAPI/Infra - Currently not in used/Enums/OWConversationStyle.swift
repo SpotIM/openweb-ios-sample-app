@@ -14,9 +14,8 @@ public enum OWConversationStyle: Codable {
         public static let defaultCommunityGuidelinesStyle: OWCommunityGuidelinesStyle = .regular
         public static let defaultCommunityQuestionsStyle: OWCommunityQuestionStyle = .regular
         public static let defaultSpacing: OWConversationSpacing = .custom(betweenComments: OWConversationSpacing.Metrics.defaultSpaceBetweenComments,
-                                                                          belowHeader: OWConversationSpacing.Metrics.defaultSpaceBelowHeader,
-                                                                          belowCommunityGuidelines: OWConversationSpacing.Metrics.defaultSpaceBelowCommunityGuidelines,
-                                                                          belowCommunityQuestions: OWConversationSpacing.Metrics.defaultSpaceBelowCommunityQuestions)
+                                                                          communityGuidelines: OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines,
+                                                                          communityQuestions: OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)
     }
 
     case regular
