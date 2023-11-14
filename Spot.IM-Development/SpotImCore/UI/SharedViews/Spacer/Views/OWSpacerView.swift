@@ -58,8 +58,7 @@ extension OWSpacerView {
             seperatorView.OWSnp.makeConstraints { make in
                 make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalPadding)
-                make.top.equalToSuperview().offset(Metrics.verticalPadding)
-                make.bottom.equalToSuperview().offset(-Metrics.verticalPadding)
+                make.bottom.top.equalToSuperview()
                 make.height.equalTo(Metrics.height)
             }
         } else if viewModel.outputs.shouldShowCommunityStyle {

@@ -29,8 +29,8 @@ class OWConversationUpdaterService: OWConversationUpdaterServicing {
     }
 
     func update(_ updateType: OWConversationUpdateType, postId: OWPostId) {
-        self._conversationUpdatesWithPostId.onNext((updateType, postId))
         self.cacheUpdatedComments(for: updateType, postId: postId)
+        self._conversationUpdatesWithPostId.onNext((updateType, postId))
     }
 
     func getConversationUpdates(for postId: OWPostId) -> Observable<OWConversationUpdateType> {

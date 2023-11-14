@@ -75,11 +75,11 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
-    ) {
+         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
         self.user = data.user
+
         avatarVM = OWAvatarViewModel(user: data.user, imageURLProvider: imageProvider)
         _model.onNext(data.comment)
         _user.onNext(data.user)
