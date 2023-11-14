@@ -115,12 +115,12 @@ extension OWAuthenticationManager {
                 }
 
                 // For Pre-conversation present mode where the VC not started yet
-                if let router = router, router.isEmpty() == true {
-                    let vc = OWNavigationPlaceholderVC(onFirstChild: {
+                if let router = router, router.isEmpty() {
+                    let vm = OWNavigationPlaceholderViewModel(onFirstChild: {
                         router.start()
                     })
+                    let vc = OWNavigationPlaceholderVC(viewModel: vm)
                     router.setRoot(vc, animated: false, dismissCompletion: nil)
-                    vc.navigationSet()
                 }
 
                 authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
