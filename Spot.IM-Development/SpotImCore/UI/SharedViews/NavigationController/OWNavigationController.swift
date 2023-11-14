@@ -50,7 +50,7 @@ class OWNavigationController: UINavigationController, OWNavigationControllerProt
 
     override func popViewController(animated: Bool) -> UIViewController? {
         let vcCount = viewControllers.count
-        let poppedVC = super.popViewController(animated: true)
+        let poppedVC = super.popViewController(animated: animated)
         // Dismiss the navigation controller if it's empty
         if vcCount == 1 {
             dismiss(animated: animated, completion: nil)
