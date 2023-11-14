@@ -309,7 +309,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
         viewModel.outputs.dismissVC
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                if let navController = self.navigationController {
+                if let navController = self.navigationController, navController.children.count > 1 {
                     navController.popViewController(animated: true)
                 } else {
                     self.dismiss(animated: true, completion: nil)
