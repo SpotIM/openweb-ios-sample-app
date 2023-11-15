@@ -151,6 +151,10 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveClarityDetailsComponent(data: data)
         case (.clarityDetails, .closeClarityDetails):
             self._removeClarityDetails.onNext()
+        case (.commenterAppeal, .closeClarityDetails):
+            self._removeClarityDetails.onNext()
+        case (_, .openCommenterAppeal):
+            self.retrieveCommenterAppealComponent()
         case (_, .communityGuidelinesPressed(let url)):
             let title = NSLocalizedString("CommunityGuidelines", comment: "")
             let options = OWWebTabOptions(url: url, title: title)
@@ -337,6 +341,25 @@ fileprivate extension ConversationBelowVideoViewModel {
                                     additionalSettings: additionalSettings,
                                     callbacks: self.actionsCallbacks,
                                     completion: { [weak self] result in
+
+            guard let self = self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.onNext(err)
+            case.success(let view):
+                self._clarityDetailsRetrieved.onNext(view)
+            }
+        })
+    }
+
+    func retrieveCommenterAppealComponent() { // TODO: data
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let additionalSettings = OWAdditionalSettings()
+
+        uiViewsLayer.commenterAppeal(postId: self.postId,
+                                     additionalSettings: additionalSettings,
+                                     callbacks: self.actionsCallbacks,
+                                     completion: { [weak self] result in
 
             guard let self = self else { return }
             switch result {

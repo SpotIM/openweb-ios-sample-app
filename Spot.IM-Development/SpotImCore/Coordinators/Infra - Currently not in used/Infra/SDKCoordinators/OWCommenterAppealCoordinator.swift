@@ -196,21 +196,18 @@ fileprivate extension OWCommenterAppealCoordinator {
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
-        // MARK: General (Used for both Flow and Independent)
+//        guard viewModel.outputs.viewableMode == .independent else { return } // TODO: 
+        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-//        viewModel.outputs.viewableMode == .independent guard
-        // TODO:
-//        guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
-//
-//        let closeButtonClick = viewModel.outputs.closeButtonPopped
-//            .map { OWViewActionCallbackType.closeClarityDetails }
-//
-//        Observable.merge(
-//            closeButtonClick
-//        )
-//        .subscribe(onNext: { [weak self] viewActionType in
-//            self?.viewActionsService.append(viewAction: viewActionType)
-//        })
-//        .disposed(by: disposeBag)
+        let closeButtonClick = viewModel.outputs.closeButtonPopped
+            .map { OWViewActionCallbackType.closeClarityDetails }
+
+        Observable.merge(
+            closeButtonClick
+        )
+        .subscribe(onNext: { [weak self] viewActionType in
+            self?.viewActionsService.append(viewAction: viewActionType)
+        })
+        .disposed(by: disposeBag)
     }
 }
