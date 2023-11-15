@@ -104,8 +104,6 @@ class OWCommentViewModel: OWCommentViewModeling,
     func update(comment: OWComment) {
         self.comment = comment
 
-        dictateCommentContentVisibility()
-
         commentHeaderVM.inputs.update(comment: comment)
         commentLabelsContainerVM.inputs.update(comment: comment)
         contentVM.inputs.update(comment: comment)
@@ -114,8 +112,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     func update(user: SPUser) {
         self.user = user
-
-        dictateCommentContentVisibility()
 
         commentHeaderVM.inputs.update(user: user)
     }
@@ -130,7 +126,6 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
         user = data.user
-        dictateCommentContentVisibility()
         setupObservers()
     }
 
@@ -148,16 +143,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 }
 
 fileprivate extension OWCommentViewModel {
-    func dictateCommentContentVisibility() {
-        let shouldHide = self.user.isMuted || // muted
-            self.comment.deleted || // deleted
-            self.comment.reported // reported
-
-        self._shouldHideCommentContent.onNext(shouldHide)
-    }
-}
-
-fileprivate extension OWCommentViewModel {
     func setupObservers() {
         _currentUser
             .map { [weak self] user -> Bool in
@@ -170,6 +155,10 @@ fileprivate extension OWCommentViewModel {
 
         _isCommentOfActiveUser
             .bind(to: commentHeaderVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        commentHeaderVM.outputs.shouldShowHiddenCommentMessage
+            .bind(to: _shouldHideCommentContent)
             .disposed(by: disposedBag)
     }
 }
