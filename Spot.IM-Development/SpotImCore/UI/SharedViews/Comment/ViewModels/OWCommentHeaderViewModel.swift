@@ -196,6 +196,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             } else {
                 return ""
             }
+
             return OWLocalizationManager.shared.localizedString(key: localizationKey)
         }
     }
