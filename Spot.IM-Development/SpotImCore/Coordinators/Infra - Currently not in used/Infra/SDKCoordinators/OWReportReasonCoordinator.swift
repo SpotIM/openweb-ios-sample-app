@@ -278,15 +278,15 @@ fileprivate extension OWReportReasonCoordinator {
           // Open cancel observable - General
           let cancelReportReasonTapped = Observable.merge(viewModel.outputs.cancelReportReasonTapped,
                                                           cancelAdditionalInfoTapped)
-              .map { _ -> OWReportReasonCancelViewViewModel in
-                  return OWReportReasonCancelViewViewModel()
+              .map { _ -> OWCancelViewViewModel in
+                  return OWCancelViewViewModel(type: .reportReason)
               }
               .share()
 
           // Cancel tapped in cancel view - General
           let cancelReportCancelTapped = cancelReportReasonTapped
               .flatMap { reportReasonCancelViewVM -> Observable<Void> in
-                  return reportReasonCancelViewVM.outputs.cancelReportReasonCancelTapped
+                  return reportReasonCancelViewVM.outputs.cancelTapped
               }
 
           // Close ReportReason observable - General
@@ -294,8 +294,8 @@ fileprivate extension OWReportReasonCoordinator {
                                                  additionalInfoCloseReportReasonTapped,
                                                  cancelReportCancelTapped,
                                                  closeReportReasonSubmittedTapped)
-              .map { _ -> OWReportReasonCancelViewViewModel in
-                  return OWReportReasonCancelViewViewModel()
+              .map { _ -> OWCancelViewViewModel in
+                  return OWCancelViewViewModel(type: .reportReason)
               }
               .share()
 
@@ -305,7 +305,7 @@ fileprivate extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .flatMap { reportReasonCancelViewVM -> Observable<Void> in
-                return reportReasonCancelViewVM.outputs.closeReportReasonCancelTapped
+                return reportReasonCancelViewVM.outputs.closeTapped
             }
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -361,8 +361,8 @@ fileprivate extension OWReportReasonCoordinator {
             .subscribe(onNext: { [weak self] reportReasonViewModel in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                let ReportReasonCancelVM = OWReportReasonCancelViewModel(reportReasonCancelViewViewModel: reportReasonViewModel)
-                let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewModel: ReportReasonCancelVM)
+                let ReportReasonCancelVM = OWCancelViewModel(cancelViewViewModel: reportReasonViewModel)
+                let reportReasonCancelVC = OWCancelVC(cancelViewModel: ReportReasonCancelVM)
                 switch self.presentationalMode {
                 case .present(style: .fullScreen):
                     reportReasonCancelVC.modalPresentationStyle = .fullScreen
@@ -401,9 +401,9 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
-            .map { [weak self] reportReasonCancelViewVM -> OWReportReasonCancelView? in
+            .map { [weak self] reportReasonCancelViewVM -> OWCancelView? in
                 guard let self = self else { return nil }
-                let reportReasonCancelView = OWReportReasonCancelView(viewModel: reportReasonCancelViewVM)
+                let reportReasonCancelView = OWCancelView(viewModel: reportReasonCancelViewVM)
                 reportReasonCancelView.alpha = 0
                 self.reportReasonView?.addSubview(reportReasonCancelView)
                 UIView.animate(withDuration: Metrics.fadeDuration) {
@@ -429,9 +429,9 @@ fileprivate extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .flatMap { reportReasonCancelViewVM -> Observable<Void> in
-                return reportReasonCancelViewVM.outputs.closeReportReasonCancelTapped.take(1)
+                return reportReasonCancelViewVM.outputs.closeTapped.take(1)
             }
-            .flatMap { _ -> Observable<OWReportReasonCancelView> in
+            .flatMap { _ -> Observable<OWCancelView> in
                 return cancelViewObservable.take(1)
             }
             .subscribe(onNext: { reportReasonCancelView in
