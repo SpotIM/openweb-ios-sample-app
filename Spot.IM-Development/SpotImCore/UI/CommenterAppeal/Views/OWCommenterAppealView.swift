@@ -179,7 +179,7 @@ fileprivate extension OWCommenterAppealView {
 
     func setupObservers() {
         closeButton.rx.tap
-            .bind(to: viewModel.inputs.closeClick)
+            .bind(to: viewModel.inputs.closeOrCancelClick)
             .disposed(by: disposeBag)
 
         // TableView binding
@@ -251,7 +251,7 @@ fileprivate extension OWCommenterAppealView {
             .disposed(by: disposeBag)
 
         cancelButton.rx.tap
-            .bind(to: viewModel.inputs.cancelClick)
+            .bind(to: viewModel.inputs.closeOrCancelClick)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

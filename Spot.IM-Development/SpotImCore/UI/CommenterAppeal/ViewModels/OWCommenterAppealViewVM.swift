@@ -11,20 +11,20 @@ import RxSwift
 import UIKit
 
 protocol OWCommenterAppealViewViewModelingInputs {
-    var closeClick: PublishSubject<Void> { get }
+    var closeOrCancelClick: PublishSubject<Void> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
-    var cancelClick: PublishSubject<Void> { get }
+    var textViewTextChange: PublishSubject<String> { get }
 }
 
 protocol OWCommenterAppealViewViewModelingOutputs {
     var closeButtonPopped: Observable<Void> { get }
+    var cancelAppeal: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var appealCellViewModels: Observable<[OWAppealCellViewModeling]> { get }
     var selectedReason: Observable<OWReportReason> { get }
     var submitButtonText: Observable<String> { get }
     var submitInProgress: Observable<Bool> { get }
     var isSubmitEnabled: Observable<Bool> { get }
-    var dismiss: Observable<Void> { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -58,11 +58,29 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
         setupObservers()
     }
 
-    var closeClick = PublishSubject<Void>()
-    lazy var closeButtonPopped: Observable<Void> = {
-        return closeClick
-            .asObservable()
-    }()
+    var closeOrCancelClick = PublishSubject<Void>()
+    fileprivate var isDismissEnable: Observable<Bool> {
+        // Dismiss only if no text was added
+        return textViewVM.outputs.textViewText
+            .map { $0.isEmpty }
+            .startWith(true)
+    }
+    var cancelAppeal: Observable<Void> {
+        return closeOrCancelClick
+            .withLatestFrom(isDismissEnable) { _, enable in
+                return enable
+            }
+            .filter { !$0 }
+            .voidify()
+    }
+    var closeButtonPopped: Observable<Void> {
+        return closeOrCancelClick
+            .withLatestFrom(isDismissEnable) { _, enable in
+                return enable
+            }
+            .filter { $0 }
+            .voidify()
+    }
 
     // TODO: where do we get it from?
     lazy var appealOptions: Observable<[OWReportReason]> = {
@@ -85,6 +103,8 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             }
             .asObservable()
     }()
+
+    var textViewTextChange = PublishSubject<String>()
 
     var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
     lazy var selectedReason: Observable<OWReportReason> = {
@@ -122,22 +142,6 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             }
             .asObservable()
     }
-
-    var cancelClick = PublishSubject<Void>()
-    fileprivate lazy var isDismissEnable: Observable<Bool> = {
-        // Dismiss only if nothing selected yet
-        return textViewVM.outputs.textViewText
-            .map { $0.isEmpty }
-            .startWith(true)
-    }()
-    var dismiss: Observable<Void> {
-        return cancelClick
-            .withLatestFrom(isDismissEnable) { _, enable in
-                return enable
-            }
-            .filter { $0 }
-            .voidify()
-    }
 }
 
 fileprivate extension OWCommenterAppealViewVM {
@@ -151,6 +155,10 @@ fileprivate extension OWCommenterAppealViewVM {
                 }
             }
             .bind(to: textViewVM.inputs.placeholderTextChange)
+            .disposed(by: disposeBag)
+
+        textViewTextChange
+            .bind(to: textViewVM.inputs.textExternalChange)
             .disposed(by: disposeBag)
 
         selectedReason
