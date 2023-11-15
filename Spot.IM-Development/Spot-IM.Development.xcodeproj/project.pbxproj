@@ -2976,6 +2976,32 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		242316592B04CBCB0002BCD2 /* AdditionalInfo */ = {
+			isa = PBXGroup;
+			children = (
+				2423165B2B04CBED0002BCD2 /* ViewModels */,
+				2423165A2B04CBDE0002BCD2 /* Views */,
+			);
+			path = AdditionalInfo;
+			sourceTree = "<group>";
+		};
+		2423165A2B04CBDE0002BCD2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9E3B8B6A29FFB95B006BB207 /* OWAdditionalInfoVC.swift */,
+				9E3B8B6829FFB944006BB207 /* OWAdditionalInfoView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2423165B2B04CBED0002BCD2 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9E3B8B6C29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		244193142A9358510085BB30 /* ClarityDetails */ = {
 			isa = PBXGroup;
 			children = (
@@ -4933,6 +4959,7 @@
 		445417AC23685144001D0ED0 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				242316592B04CBCB0002BCD2 /* AdditionalInfo */,
 				247EE9862AF231580000D640 /* CommenterAppeal */,
 				3DF41EEA2ACAD0C700887340 /* SafariTab */,
 				244193142A9358510085BB30 /* ClarityDetails */,
@@ -6333,23 +6360,6 @@
 			path = Submitted;
 			sourceTree = "<group>";
 		};
-		9E3B8B7229FFBECF006BB207 /* AdditionalInfo */ = {
-			isa = PBXGroup;
-			children = (
-				9E3B8B6A29FFB95B006BB207 /* OWAdditionalInfoVC.swift */,
-				9E3B8B6829FFB944006BB207 /* OWAdditionalInfoView.swift */,
-			);
-			path = AdditionalInfo;
-			sourceTree = "<group>";
-		};
-		9E3B8B7329FFBEED006BB207 /* AdditionalInfo */ = {
-			isa = PBXGroup;
-			children = (
-				9E3B8B6C29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift */,
-			);
-			path = AdditionalInfo;
-			sourceTree = "<group>";
-		};
 		9E3B8B7429FFBEF7006BB207 /* Submitted */ = {
 			isa = PBXGroup;
 			children = (
@@ -6552,7 +6562,6 @@
 			children = (
 				9E3B8B6E29FFBE4C006BB207 /* Report */,
 				9E3B8B6F29FFBE66006BB207 /* Miscellaneous */,
-				9E3B8B7229FFBECF006BB207 /* AdditionalInfo */,
 				9E3B8B7129FFBEB5006BB207 /* Submitted */,
 				9E3B8B7029FFBEA5006BB207 /* Cancel */,
 			);
@@ -6564,7 +6573,6 @@
 			children = (
 				9E3B8B7629FFBF02006BB207 /* Report */,
 				9E3B8B7729FFBF09006BB207 /* Miscellaneous */,
-				9E3B8B7329FFBEED006BB207 /* AdditionalInfo */,
 				9E3B8B7429FFBEF7006BB207 /* Submitted */,
 				9E3B8B7529FFBEFD006BB207 /* Cancel */,
 			);

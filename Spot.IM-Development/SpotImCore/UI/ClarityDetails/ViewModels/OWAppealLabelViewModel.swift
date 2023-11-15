@@ -180,7 +180,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
 
 fileprivate extension OWAppealLabelViewModel {
     func fetchEligibleToAppeal() {
-        // TODO: when comment is deleted?
+        // TODO: when comment is deleted? unavailable?
         _ = servicesProvider.netwokAPI()
             .appeal
             .isEligibleToAppeal(commentId: commentId)
