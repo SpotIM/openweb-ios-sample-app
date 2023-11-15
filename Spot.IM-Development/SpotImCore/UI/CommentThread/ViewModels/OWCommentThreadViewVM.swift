@@ -1509,12 +1509,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == user.id }
                 return (user, userCommentCells.map { $0.outputs.commentVM })
             }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { user, mutedUserCommentCellsVms in
                 mutedUserCommentCellsVms.forEach {
                     $0.inputs.update(user: user)
                 }
             })
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._performTableViewAnimation.onNext()
