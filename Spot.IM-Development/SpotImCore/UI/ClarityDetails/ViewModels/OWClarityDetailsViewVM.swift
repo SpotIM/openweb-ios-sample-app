@@ -60,7 +60,20 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     }()
 
     lazy var shouldShowAppealView: Observable<Bool> = {
-        Observable.just(type == .rejected)
+        let configurationService = servicesProvider.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> Bool in
+                guard let self = self,
+                      let conversationConfig = config.conversation,
+                      conversationConfig.isAppealEnabled == true
+                else {
+                    return false
+                }
+
+                return self.type == .rejected
+            }
+            .asObservable()
     }()
 
     var communityGuidelinesClick = PublishSubject<Void>()
