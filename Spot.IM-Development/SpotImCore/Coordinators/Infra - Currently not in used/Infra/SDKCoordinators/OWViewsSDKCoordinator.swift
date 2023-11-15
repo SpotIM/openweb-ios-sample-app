@@ -135,6 +135,23 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 }
     }
 
+    func commenterAppealView(// TODO: data?
+                            callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWCommenterAppealCoordinatorResult>.self)
+            })
+                .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                    guard let self = self else { return .empty() }
+                    let commenterAppealCoordinator = OWCommenterAppealCoordinator(actionsCallbacks: callbacks)
+
+                    self.store(coordinator: commenterAppealCoordinator)
+                    return commenterAppealCoordinator.showableComponent()
+                }
+    }
+
     func webTabView(tabOptions: OWWebTabOptions, callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)

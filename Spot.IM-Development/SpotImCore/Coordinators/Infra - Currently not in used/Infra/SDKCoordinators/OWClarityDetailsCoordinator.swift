@@ -178,10 +178,15 @@ fileprivate extension OWClarityDetailsCoordinator {
         let openCommunityGuidelines = viewModel.outputs.communityGuidelinesClickObservable
             .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
 
+        let openCommenterAppeal = viewModel.outputs.appealLabelViewModel
+            .outputs.openAppeal
+            .map { OWViewActionCallbackType.openCommenterAppeal }
+
         Observable.merge(
             dismissView,
             closeButtonClick,
-            openCommunityGuidelines
+            openCommunityGuidelines,
+            openCommenterAppeal
         )
         .subscribe(onNext: { [weak self] viewActionType in
             self?.viewActionsService.append(viewAction: viewActionType)

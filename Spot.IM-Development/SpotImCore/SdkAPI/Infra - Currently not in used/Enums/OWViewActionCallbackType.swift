@@ -28,6 +28,7 @@ public enum OWViewActionCallbackType: Codable {
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
+    case openCommenterAppeal // TODO: probably should have data
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -49,6 +50,7 @@ enum OWViewActionCallbackType: Codable {
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
+    case openCommenterAppeal // TODO: probably should have data
 }
 #endif
 
@@ -91,6 +93,8 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.openLinkInComment(let lhsUrl), .openLinkInComment(let rhsUrl)):
             return lhsUrl == rhsUrl
+        case (.openCommenterAppeal, .openCommenterAppeal):
+            return true
         default:
             return false
         }

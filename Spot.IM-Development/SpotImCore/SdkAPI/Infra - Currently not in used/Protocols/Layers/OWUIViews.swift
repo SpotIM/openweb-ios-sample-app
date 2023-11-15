@@ -56,6 +56,12 @@ public protocol OWUIViews {
                 callbacks: OWViewActionsCallbacks?,
                 completion: @escaping OWViewCompletion)
 
+    func commenterAppeal(postId: OWPostId, // TODO: what more info is needed ?
+//                         commentId: OWCommentId, // TODO: what more info is needed ?
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
+
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol,
@@ -110,5 +116,11 @@ protocol OWUIViews {
                 additionalSettings: OWAdditionalSettingsProtocol,
                 callbacks: OWViewActionsCallbacks?,
                 completion: @escaping OWViewCompletion)
+
+    func commenterAppeal(postId: OWPostId, // TODO: what more info is needed ?
+//                         commentId: OWCommentId, // TODO: what more info is needed ?
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
 }
 #endif
