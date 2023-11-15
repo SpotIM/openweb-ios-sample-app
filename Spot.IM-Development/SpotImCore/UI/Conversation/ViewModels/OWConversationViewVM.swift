@@ -1998,10 +1998,10 @@ fileprivate extension OWConversationViewViewModel {
                 // 6. Wait for conversation to refresh in case user logged in
                 guard let self = self else { return .empty() }
                 if needToRefreshConversation {
-                    return serverCommentsLoadingState
+                    return self.serverCommentsLoadingState
                         .filter { $0 == .notLoading }
                         .take(1)
-                        .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: conversationViewVMScheduler)
+                        .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: self.conversationViewVMScheduler)
                         .map { _ in shouldMute }
                 } else {
                     return Observable.just(shouldMute)
