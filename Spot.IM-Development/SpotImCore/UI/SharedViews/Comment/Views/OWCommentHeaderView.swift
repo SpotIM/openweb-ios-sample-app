@@ -266,9 +266,7 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.shouldShowHiddenCommentMessage
             .subscribe(onNext: { [weak self] isHiddenMessage in
-                guard let self = self,
-                      isHiddenMessage
-                else { return }
+                guard let self = self else { return }
 
                 self.dateLabel.isHidden = isHiddenMessage
                 self.optionButton.isHidden = isHiddenMessage
