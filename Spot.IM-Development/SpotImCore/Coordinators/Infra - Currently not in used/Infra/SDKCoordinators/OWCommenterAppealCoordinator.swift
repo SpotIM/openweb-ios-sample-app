@@ -68,7 +68,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
             .map { OWCommenterAppealCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commenterAppealVM.outputs.commenterAppealViewViewModel.outputs.dismiss)
+        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commenterAppealVM.outputs.commenterAppealViewViewModel.outputs.closeButtonPopped)
             .map { OWCommenterAppealCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -140,7 +140,59 @@ fileprivate extension OWCommenterAppealCoordinator {
             })
             .disposed(by: disposeBag)
 
+        // Additional information cancel - General
+        let cancelAdditionalInfoTapped = additionalInformationObservable
+            .flatMap { additionalInfoViewVM -> Observable<Void> in
+                return additionalInfoViewVM.outputs.cancelAdditionalInfoTapped
+            }
+
+        // Additional information empty text close - General
+        let additionalInfoCloseReportReasonTapped = additionalInformationObservable
+            .flatMap { additionalInfoViewVM -> Observable<Void> in
+                return additionalInfoViewVM.outputs.closeReportReasonTapped
+            }
+
+        // Additional information text changed - General
+        additionalInformationObservable
+            .flatMap { additionalInformationViewVM -> Observable<String> in
+                return additionalInformationViewVM.outputs.additionalInfoTextChanged
+            }
+            .bind(to: viewModel.inputs.textViewTextChange)
+            .disposed(by: disposeBag)
+
         // TODO: independed
+
+
+        // Open cancel observable - General
+        let cancelReportReasonTapped = Observable.merge(viewModel.outputs.cancelAppeal,
+                                                        cancelAdditionalInfoTapped)
+            .map { _ -> OWCancelViewViewModel in
+                return OWCancelViewViewModel(type: .commenterAppeal)
+            }
+            .share()
+
+        // Open cancel view - Flow
+        cancelReportReasonTapped
+//            .filter { _ in
+//                viewModel.outputs.viewableMode == .partOfFlow
+//            }
+            .subscribe(onNext: { [weak self] vm in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                let cancelVM = OWCancelViewModel(cancelViewViewModel: vm)
+                let cancelVC = OWCancelVC(cancelViewModel: cancelVM)
+                switch self.presentationalMode {
+                case .present(style: .fullScreen):
+                    cancelVC.modalPresentationStyle = .fullScreen
+                case .present(style: .pageSheet):
+                    cancelVC.modalPresentationStyle = .pageSheet
+                default:
+                    cancelVC.modalPresentationStyle = .fullScreen
+                }
+                router.present(cancelVC, animated: true, dismissCompletion: nil)
+            })
+            .disposed(by: disposeBag)
+
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
