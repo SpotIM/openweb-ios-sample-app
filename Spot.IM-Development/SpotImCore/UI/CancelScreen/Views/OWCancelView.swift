@@ -1,5 +1,5 @@
 //
-//  OWReportReasonCancelView.swift
+//  OWCancelView.swift
 //  SpotImCore
 //
 //  Created by Refael Sommer on 24/04/2023.
@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
+class OWCancelView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
-        static let identifier = "report_reason_cancel_view_id"
-        static let closeButtonIdentifier = "report_reason_cancel_close_button_id"
-        static let continueButtonIdentifier = "report_reason_cancel_continue_button_id"
-        static let cancelButtonIdentifier = "report_reason_cancel_cancel_button_id"
+        static let identifier = "cancel_view_id"
+        static let closeButtonIdentifier = "cancel_close_button_id"
+        static let continueButtonIdentifier = "cancel_continue_button_id"
+        static let cancelButtonIdentifier = "cancel_cancel_button_id"
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
         static let horizontalSpacing: CGFloat = 16
@@ -67,10 +67,10 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Metrics.trashIconPadding))
     }()
 
-    fileprivate let viewModel: OWReportReasonCancelViewViewModeling
+    fileprivate let viewModel: OWCancelViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWReportReasonCancelViewViewModeling = OWReportReasonCancelViewViewModel()) {
+    init(viewModel: OWCancelViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -83,7 +83,7 @@ class OWReportReasonCancelView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWReportReasonCancelView {
+fileprivate extension OWCancelView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
@@ -121,11 +121,11 @@ fileprivate extension OWReportReasonCancelView {
     func setupObservers() {
         Observable.of(closeButton.rx.tap, continueButton.rx.tap)
             .merge()
-            .bind(to: viewModel.inputs.closeReportReasonCancelTap)
+            .bind(to: viewModel.inputs.closeTap)
             .disposed(by: disposeBag)
 
         cancelButton.rx.tap
-            .bind(to: viewModel.inputs.cancelReportReasonCancelTap)
+            .bind(to: viewModel.inputs.cancelTap)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
