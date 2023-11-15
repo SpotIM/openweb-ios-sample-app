@@ -95,16 +95,16 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 fileprivate extension OWCommenterAppealCoordinator {
     func setupObservers(for viewModel: OWCommenterAppealViewViewModeling) {
         // ReportReaon OWTextViewVM - General
-        let reportTextViewVM = viewModel.outputs.textViewVM
+        let textViewVM = viewModel.outputs.textViewVM
 
         // Additional information observable - General
-        let additionalInformationObservable = reportTextViewVM.outputs.textViewTapped
+        let additionalInformationObservable = textViewVM.outputs.textViewTapped
             .flatMap { _ -> Observable<String> in
-                return reportTextViewVM.outputs.placeholderText
+                return textViewVM.outputs.placeholderText
                     .take(1)
             }
             .flatMap({ placeholderText -> Observable<(String, String)> in
-                return reportTextViewVM.outputs.textViewText
+                return textViewVM.outputs.textViewText
                     .map { (placeholderText, $0) }
                     .take(1)
             })
@@ -139,7 +139,8 @@ fileprivate extension OWCommenterAppealCoordinator {
                 router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
-         // TODO: independed
+
+        // TODO: independed
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
