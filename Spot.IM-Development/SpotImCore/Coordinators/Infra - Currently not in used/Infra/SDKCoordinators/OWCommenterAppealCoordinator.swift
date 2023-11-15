@@ -162,7 +162,6 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // TODO: independed
 
-
         // Open cancel observable - General
         let cancelReportReasonTapped = Observable.merge(viewModel.outputs.cancelAppeal,
                                                         cancelAdditionalInfoTapped)
