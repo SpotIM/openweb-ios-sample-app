@@ -28,13 +28,17 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
     var inputs: OWNavigationPlaceholderViewModelingInputs { return self }
     var outputs: OWNavigationPlaceholderViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let intervalForObservingNewVC = 300
+    }
+
     fileprivate weak var vc: UIViewController? = nil
-    fileprivate let onFirstChild: () -> Void
+    fileprivate let onFirstActualVC: () -> Void
     fileprivate var disposeBag = DisposeBag()
     fileprivate let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")
 
-    init(onFirstChild: @escaping () -> Void) {
-        self.onFirstChild = onFirstChild
+    init(onFirstActualVC: @escaping () -> Void) {
+        self.onFirstActualVC = onFirstActualVC
 
     }
 
@@ -48,7 +52,7 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
 fileprivate extension OWNavigationPlaceholderViewModel {
     func setupObservers() {
         Observable<Int>
-            .interval(.milliseconds(300), scheduler: scheduler)
+            .interval(.milliseconds(Metrics.intervalForObservingNewVC), scheduler: scheduler)
             .observe(on: scheduler)
             .map { [weak self] _ -> Bool in
                 // Make sure vc exist before checking its navigation controller
@@ -63,7 +67,7 @@ fileprivate extension OWNavigationPlaceholderViewModel {
                       let vc = self.vc else { return }
 
                 if let topVC = vc.navigationController?.topViewController, topVC != vc {
-                    self.onFirstChild()
+                    self.onFirstActualVC()
                     // Once new VC added no need to have this empty VC so it is removed
                     if var viewControllers = vc.navigationController?.viewControllers,
                        let index = viewControllers.firstIndex(of: vc) {
@@ -71,6 +75,7 @@ fileprivate extension OWNavigationPlaceholderViewModel {
                         vc.navigationController?.viewControllers = viewControllers
                     }
                     vc.dismiss(animated: false)
+                    // Ending the subscription
                     self.disposeBag = DisposeBag()
                 }
             })
