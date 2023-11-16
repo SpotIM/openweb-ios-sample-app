@@ -116,7 +116,7 @@ extension OWAuthenticationManager {
 
                 // For Pre-conversation present mode where the VC not started yet
                 if let router = router, router.isEmpty() {
-                    let vm = OWNavigationPlaceholderViewModel(onFirstChild: {
+                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: {
                         router.start()
                     })
                     let vc = OWNavigationPlaceholderVC(viewModel: vm)
