@@ -1047,6 +1047,7 @@
 		9EBE5C2C29AE16B1001150DA /* OWConversationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2B29AE16B0001150DA /* OWConversationStyle+Extensions.swift */; };
 		9EBE5C2E29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2D29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift */; };
 		9EBE5C3029AE29B3001150DA /* OWFontGroupFamily+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2F29AE29B3001150DA /* OWFontGroupFamily+Extensions.swift */; };
+		9EC016CD2B0A591A006E30B4 /* OWConversationScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC016CC2B0A591A006E30B4 /* OWConversationScanData.swift */; };
 		9EC33FCE29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */; };
 		9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */; };
 		9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */; };
@@ -2212,6 +2213,7 @@
 		9EBE5C2B29AE16B0001150DA /* OWConversationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EBE5C2D29AE1910001150DA /* OWCommentCreationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommentCreationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EBE5C2F29AE29B3001150DA /* OWFontGroupFamily+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWFontGroupFamily+Extensions.swift"; sourceTree = "<group>"; };
+		9EC016CC2B0A591A006E30B4 /* OWConversationScanData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationScanData.swift; sourceTree = "<group>"; };
 		9EC33FCD29CC682600F04B18 /* OWCommunityGuidelinesStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityGuidelinesStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EC33FCF29CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWCommunityQuestionsStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9EC33FD029CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Extensions.swift"; sourceTree = "<group>"; };
@@ -4805,6 +4807,7 @@
 			children = (
 				3DFC32C428916760005F1C5A /* OWConversationCellOption.swift */,
 				8D99C6882A13516400DAB542 /* OWConversationContentType.swift */,
+				9EC016CC2B0A591A006E30B4 /* OWConversationScanData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -7119,6 +7122,7 @@
 				2473A2772A49BFA30086B339 /* OWMenuConstraintOption.swift in Sources */,
 				3D20A35A27A96915003F8513 /* TableView+Registration.swift in Sources */,
 				247C017927FC142A006A3962 /* SPConversationSortViewModel.swift in Sources */,
+				9EC016CD2B0A591A006E30B4 /* OWConversationScanData.swift in Sources */,
 				4454182023685144001D0ED0 /* PreConversationFooter.swift in Sources */,
 				3DF95BD527CE54C30008A380 /* OWDeepLinkOptions.swift in Sources */,
 				3D301BDE2A86BC4A0012B526 /* OWNavigationControllerCustomizer.swift in Sources */,
