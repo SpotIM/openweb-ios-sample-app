@@ -186,11 +186,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             } else if (model.reported && !isCommentOfActiveUser) {
                 localizationKey = "ReportedCommentMessage"
             } else if model.status == .block || model.status == .reject {
-                if !isCommentOfActiveUser {
-                    localizationKey = "ViolatedPolicyCommentMessage"
-                } else {
-                    return ""
-                }
+                localizationKey = isCommentOfActiveUser ? "AuthorViolatedPolicyCommentMessage" : "ViolatedPolicyCommentMessage"
             } else if model.deleted {
                 localizationKey = "DeletedCommentMessage"
             } else {

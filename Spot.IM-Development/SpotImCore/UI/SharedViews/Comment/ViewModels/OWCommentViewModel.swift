@@ -118,8 +118,9 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        let status = OWCommentStatusType.commentStatus(from: data.comment)
-        commentStatusVM = OWCommentStatusViewModel(status: status)
+        var status = OWCommentStatusType.commentStatus(from: data.comment)
+        if status == .rejected { status = .none } // We display rejected status only for new created comments and not for ones from /read request
+        commentStatusVM = OWCommentStatusViewModel(status: status, commentId: data.comment.id ?? "")
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
@@ -135,7 +136,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
-        commentStatusVM = OWCommentStatusViewModel(status: .none)
+        commentStatusVM = OWCommentStatusViewModel(status: .none, commentId: "")
         comment = OWComment()
         user = SPUser()
         setupObservers()
