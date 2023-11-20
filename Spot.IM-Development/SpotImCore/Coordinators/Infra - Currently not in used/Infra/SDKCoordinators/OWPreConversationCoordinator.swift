@@ -101,7 +101,7 @@ fileprivate extension OWPreConversationCoordinator {
 
         let openClarityDetailsObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openClarityDetails
             .map { clarityDetailsType -> OWDeepLinkOptions? in
-                return OWDeepLinkOptions.clarityDetails(type: clarityDetailsType)
+                return OWDeepLinkOptions.clarityDetails(clarityData: clarityDetailsType)
             }
 
         // Coordinate to full conversation
