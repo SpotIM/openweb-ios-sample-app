@@ -52,7 +52,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             servicesProvider.themeStyleService().style
         ) { type, theme in
             switch type {
-            case .skeleton, .appealRejected, .default, .unavailable:
+            case .skeleton, .default, .unavailable:
                 return OWColorPalette.shared.color(type: .separatorColor3, themeStyle: theme)
             case .error:
                 return OWColorPalette.shared.color(type: .errorColor, themeStyle: theme)
@@ -66,7 +66,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             servicesProvider.themeStyleService().style
         ) { type, _ in
             switch type {
-            case .skeleton, .appealRejected, .default, .unavailable:
+            case .skeleton, .default, .unavailable:
                 return OWDesignColors.D1
             case .error:
                 return .clear
@@ -113,8 +113,6 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             switch type {
             case .skeleton:
                 return nil
-            case .appealRejected:
-                return UIImage(spNamed: "appealRejectedIcon", supportDarkMode: true)
             case .default:
                 return nil
             case .error:
@@ -138,11 +136,6 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             switch type {
             case .skeleton:
                 return nil
-            case .appealRejected:
-                return NSAttributedString(
-                    string: "You have already filed an appeal which was rejected. You can only appeal once per comment.", // TODO: translations
-                    attributes: attributes
-                )
             case .default: // Handeled in different observable for simplicity
                 return nil
             case .error:
@@ -190,9 +183,8 @@ fileprivate extension OWAppealLabelViewModel {
                 onNext: { [weak self] response in
                     if response.canAppeal {
                         self?._viewType.onNext(.default)
-                    } else {
-                        self?._viewType.onNext(.appealRejected) // is it right? should it be empty?
                     }
+                    // TODO: do not show label - create none type
             },
                 onError: { [weak self] _ in
                     self?._viewType.onNext(.error)
@@ -203,7 +195,6 @@ fileprivate extension OWAppealLabelViewModel {
 
 enum OWAppealLabelViewType {
     case skeleton
-    case appealRejected
     case `default`
     case error
     case unavailable
