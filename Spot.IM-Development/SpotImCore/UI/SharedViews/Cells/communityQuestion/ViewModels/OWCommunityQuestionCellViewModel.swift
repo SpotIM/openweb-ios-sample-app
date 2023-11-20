@@ -14,6 +14,7 @@ protocol OWCommunityQuestionCellViewModelingInputs { }
 protocol OWCommunityQuestionCellViewModelingOutputs {
     var id: String { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
+    var communityQuestionSpacing: CGFloat { get }
 }
 
 protocol OWCommunityQuestionCellViewModeling: OWCellViewModel {
@@ -28,16 +29,23 @@ class OWCommunityQuestionCellViewModel: OWCommunityQuestionCellViewModeling,
     var outputs: OWCommunityQuestionCellViewModelingOutputs { return self }
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel(style: self.style)
+        return OWCommunityQuestionViewModel(style: self.style, spacing: self.spacing)
+    }()
+
+    lazy var communityQuestionSpacing: CGFloat = {
+        return self.spacing
     }()
 
     fileprivate let style: OWCommunityQuestionStyle
+    fileprivate let spacing: CGFloat
 
     // Unique identifier
     let id: String = UUID().uuidString
 
-    init(style: OWCommunityQuestionStyle = .regular) {
+    init(style: OWCommunityQuestionStyle = .regular,
+         spacing: OWConversationSpacing = .regular) {
         self.style = style
+        self.spacing = spacing.communityQuestions
     }
 }
 

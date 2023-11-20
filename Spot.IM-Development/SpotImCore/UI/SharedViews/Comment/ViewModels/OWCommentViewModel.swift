@@ -18,7 +18,6 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentActionsVM: OWCommentActionsViewModeling { get }
-
     var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
@@ -28,7 +27,6 @@ protocol OWCommentViewModelingOutputs {
     var shouldShowCommentStatus: Observable<Bool> { get }
     var showBlockingLayoutView: Observable<Bool> { get }
     var heightChanged: Observable<Void> { get }
-
     var comment: OWComment { get }
     var user: SPUser { get }
 }
@@ -95,7 +93,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 
             return status != .none
         }
-        .observe(on: MainScheduler.instance)
         .startWith(false)
     }
 
@@ -125,7 +122,7 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        let status = OWCommentStatusType.commentStatus(from: data.comment.status)
+        let status = OWCommentStatusType.commentStatus(from: data.comment)
         commentStatusVM = OWCommentStatusViewModel(status: status)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
