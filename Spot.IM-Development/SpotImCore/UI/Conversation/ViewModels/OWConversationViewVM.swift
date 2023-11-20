@@ -90,7 +90,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
-        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
+        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
