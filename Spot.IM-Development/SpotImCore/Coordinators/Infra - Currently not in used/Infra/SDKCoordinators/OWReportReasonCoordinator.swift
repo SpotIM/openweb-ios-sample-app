@@ -201,8 +201,8 @@ fileprivate extension OWReportReasonCoordinator {
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 guard let router = self.router else { return .empty() }
-                let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
-                let reportReasonSubmittedVC = OWReportReasonSubmittedVC(reportReasonSubmittedViewViewModel: reportReasonSubmittedViewVM)
+                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel()
+                let reportReasonSubmittedVC = OWSubmittedVC(submittedViewViewModel: reportReasonSubmittedViewVM)
                 switch self.presentationalMode {
                 case .present(let style):
                     reportReasonSubmittedVC.modalPresentationStyle = style.toOSModalPresentationStyle
@@ -210,7 +210,7 @@ fileprivate extension OWReportReasonCoordinator {
                     reportReasonSubmittedVC.modalPresentationStyle = .fullScreen
                 }
                 router.present(reportReasonSubmittedVC, animated: true, dismissCompletion: nil)
-                return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
+                return reportReasonSubmittedViewVM.outputs.closeSubmittedTapped
             }
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -382,8 +382,8 @@ fileprivate extension OWReportReasonCoordinator {
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
-                let reportReasonSubmittedView = OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewVM)
+                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel()
+                let reportReasonSubmittedView = OWSubmittedView(viewModel: reportReasonSubmittedViewVM)
 
                 reportReasonSubmittedView.alpha = 0
                 self.reportReasonView?.addSubview(reportReasonSubmittedView)
@@ -393,7 +393,7 @@ fileprivate extension OWReportReasonCoordinator {
                 reportReasonSubmittedView.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
-                return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
+                return reportReasonSubmittedViewVM.outputs.closeSubmittedTapped
             }
 
         // Open cancel view - Independent
