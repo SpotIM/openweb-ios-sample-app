@@ -50,7 +50,7 @@ class OWSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate let viewModel: OWSubmittedViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWSubmittedViewViewModeling = OWSubmittedViewViewModel()) {
+    init(viewModel: OWSubmittedViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()

@@ -201,7 +201,7 @@ fileprivate extension OWReportReasonCoordinator {
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 guard let router = self.router else { return .empty() }
-                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel()
+                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel(type: .reportReason)
                 let reportReasonSubmittedVC = OWSubmittedVC(submittedViewViewModel: reportReasonSubmittedViewVM)
                 switch self.presentationalMode {
                 case .present(let style):
@@ -382,7 +382,7 @@ fileprivate extension OWReportReasonCoordinator {
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel()
+                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel(type: .reportReason)
                 let reportReasonSubmittedView = OWSubmittedView(viewModel: reportReasonSubmittedViewVM)
 
                 reportReasonSubmittedView.alpha = 0
