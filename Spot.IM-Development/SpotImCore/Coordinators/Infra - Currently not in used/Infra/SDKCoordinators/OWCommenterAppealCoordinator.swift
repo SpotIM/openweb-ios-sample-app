@@ -36,6 +36,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     }()
 
     let presentationalMode: OWPresentationalModeCompact
+    let popAppealWithAnimation = PublishSubject<Void>()
 
     init(router: OWRoutering? = nil,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -68,12 +69,16 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
             .map { OWCommenterAppealCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commenterAppealVM.outputs.commenterAppealViewViewModel.outputs.closeButtonPopped)
+        let resultsWithPopAnimation = Observable.merge(
+            poppedFromCloseButtonObservable,
+            commenterAppealVM.outputs.commenterAppealViewViewModel.outputs.closeButtonPopped,
+            popAppealWithAnimation.asObservable()
+        )
             .map { OWCommenterAppealCoordinatorResult.popped }
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.router?.pop(popStyle: .dismiss, animated: false)
+                self.router?.pop(popStyle: .dismiss, animated: true)
             })
 
         let resultWithoutPopAnimation = commenterAppealPopped
@@ -207,6 +212,20 @@ fileprivate extension OWCommenterAppealCoordinator {
             })
             .disposed(by: disposeBag)
 
+        // Cancel Appeal - Flow
+        cancelAppeal
+            .flatMap { cancelViewVM -> Observable<Void> in
+                return cancelViewVM.outputs.cancelTapped
+            }
+            .do(onNext: { [weak self] in
+                guard let self = self else { return }
+                let visableViewController = self.router?.navigationController?.visibleViewController
+
+                // dismiss cancel appeal VC
+                visableViewController?.dismiss(animated: false)
+            })
+            .bind(to: self.popAppealWithAnimation)
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
