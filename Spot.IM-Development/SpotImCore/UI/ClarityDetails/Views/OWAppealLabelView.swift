@@ -109,7 +109,7 @@ fileprivate extension OWAppealLabelView {
                     contentView = self.skelatonView
                 case .default:
                     contentView = self.defaultLabel
-                case .appealRejected, .error, .unavailable:
+                case .error, .unavailable:
                     contentView = self.iconAndLabelView
                 }
                 self.subviews.forEach { $0.removeFromSuperview() }
