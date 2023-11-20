@@ -159,6 +159,21 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     var appealClick = PublishSubject<Void>()
     var openAppeal: Observable<Void> { // TODO: probably should pass the comment id or something similar
         return appealClick
+            .withLatestFrom(servicesProvider.authenticationManager().currentAuthenticationLevelAvailability) { _, availability -> Bool in
+                switch availability {
+                case .level(let level):
+                    switch level {
+                    case .loggedIn:
+                        return true
+                    default:
+                        return false
+                    }
+                default:
+                    return false
+                }
+            }
+            .filter { $0 }
+            .voidify()
             .asObservable()
     }
 
