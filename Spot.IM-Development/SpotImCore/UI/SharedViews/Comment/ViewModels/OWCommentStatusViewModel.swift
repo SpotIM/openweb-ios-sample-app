@@ -137,12 +137,12 @@ fileprivate extension OWCommentStatusViewModel {
     func setupObservers() {
         sharedServicesProvider.commentStatusUpdaterService()
             .statusUpdate
-            .filter { [weak self] (commentId, status) in
+            .filter { [weak self] commentId, _ in
                 guard let self = self else { return false }
                 return commentId == self.commentId
             }
-            .subscribe(onNext: { [weak self] _, type in
-                self?._status.onNext(type)
+            .subscribe(onNext: { [weak self] _, status in
+                self?._status.onNext(status)
             })
             .disposed(by: disposeBag)
     }
