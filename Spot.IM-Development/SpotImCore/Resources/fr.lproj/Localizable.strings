@@ -19,9 +19,10 @@
 "Post" = "Commenter";
 "SignUpToPost" = "Se connecter pour commenter";
 "ConnectivityErrorMessage" = "Oups ! Il semblerait que nous \nrencontrions des problèmes de \nconnexion.";
+"CloseEditor" = "Fermer l'éditeur ?";
 "Delete" = "Supprimer";
 "DeleteCommentTitle" = "Supprimer le commentaire";
-"DeleteCommentMessage" = "Souhaitez-vous vraiment supprimer ce commentaire ?";
+"DeleteCommentMessage" = "Êtes-vous sûr de supprimer ce commentaire ?";
 "Report" = "Signaler";
 "GotIt" = "Bien compris";
 "SortBy" = "Trier par";

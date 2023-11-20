@@ -11,19 +11,23 @@ import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
     var triggerCustomizeContainerViewUI: PublishSubject<UIView> { get }
-    var triggerCustomizeTitleTextViewUI: PublishSubject<UITextView> { get }
+    var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
-    var urlClicked: PublishSubject<URL> { get }
+    var urlClicked: PublishSubject<Void> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var customizeContainerViewUI: Observable<UIView> { get }
-    var customizeTitleTextViewUI: Observable<UITextView> { get }
+    var customizeTitleLabelUI: Observable<UILabel> { get }
     var customizeIconImageViewUI: Observable<UIImageView> { get }
-    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
+
+    var communityGuidelinesAttributedString: Observable<NSAttributedString> { get }
+    var communityGuidelinesClickableString: Observable<String> { get }
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowView: Observable<Bool> { get }
-    var showContainer: Bool { get }
+
+    var shouldShowContainer: Bool { get }
+    var spacing: CGFloat { get }
     var style: OWCommunityGuidelinesStyle { get }
 }
 
@@ -34,7 +38,8 @@ protocol OWCommunityGuidelinesViewModeling {
 
 class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                                         OWCommunityGuidelinesViewModelingInputs,
-                                        OWCommunityGuidelinesViewModelingOutputs {
+                                      OWCommunityGuidelinesViewModelingOutputs {
+
     struct Metrics {
         static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "ReadOur")
         static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "CommunityGuidelines").lowercased()
@@ -45,16 +50,21 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
     fileprivate let _triggerCustomizeContainerViewUI = BehaviorSubject<UIView?>(value: nil)
-    fileprivate let _triggerCustomizeTitleTextViewUI = BehaviorSubject<UITextView?>(value: nil)
+    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
     fileprivate let _triggerCustomizeIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
 
     var triggerCustomizeContainerViewUI = PublishSubject<UIView>()
-    var triggerCustomizeTitleTextViewUI = PublishSubject<UITextView>()
+    var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
     var triggerCustomizeIconImageViewUI = PublishSubject<UIImageView>()
-    let urlClicked = PublishSubject<URL>()
+    let urlClicked = PublishSubject<Void>()
 
+    fileprivate var _communityGuidelinesUrl = BehaviorSubject<URL?>(value: nil)
     var urlClickedOutput: Observable<URL> {
-        urlClicked.asObservable()
+        urlClicked
+            .withLatestFrom(_communityGuidelinesUrl.unwrap()) { _, url in
+                return url
+            }
+            .asObservable()
     }
 
     var customizeContainerViewUI: Observable<UIView> {
@@ -63,8 +73,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .asObservable()
     }
 
-    var customizeTitleTextViewUI: Observable<UITextView> {
-        return _triggerCustomizeTitleTextViewUI
+    var customizeTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeTitleLabelUI
             .unwrap()
             .asObservable()
     }
@@ -83,7 +93,14 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .share(replay: 1)
     }
 
-    fileprivate var _communityGuidelinesTitle: Observable<String?> {
+    fileprivate lazy var contentSizeChanged: Observable<Bool> = {
+        servicesProvider.appLifeCycle()
+            .didChangeContentSizeCategory
+            .map { true }
+            .startWith(false)
+    }()
+
+    fileprivate var communityGuidelinesTitleFromConfig: Observable<String> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
         return configurationService.config(spotId: OWManager.manager.spotId)
             .take(1)
@@ -92,44 +109,55 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
                 return config.conversation?.communityGuidelinesTitle?.value
             }
+            .unwrap()
     }
 
-    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
-        return _communityGuidelinesTitle
-            .unwrap()
+    fileprivate var _updateCommunityGuidelinesAttributedString = BehaviorSubject<OWThemeStyle?>(value: nil)
+    var communityGuidelinesAttributedString: Observable<NSAttributedString> {
+        return Observable.combineLatest(communityGuidelinesTitleFromConfig,
+                                _updateCommunityGuidelinesAttributedString)
             .observe(on: MainScheduler.asyncInstance)
-            .map { [weak self] communityGuidelines in
+            .map { [weak self] communityGuidelinesTitle, themeStyle -> NSAttributedString? in
                 guard let self = self else { return nil }
-                if self.style == .compact {
-                    return self.getCommunityGuidelinesCompactString(communityGuidelinesTitle: communityGuidelines)
-                } else {
-                    let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelines)
-                    return self.getTitleTextViewAttributedText(htmlString: string)
-                }
+                return self.getAttributedText(style: self.style,
+                                              themeStyle: themeStyle,
+                                              communityGuidelinesText: communityGuidelinesTitle)
             }
+            .unwrap()
+    }
+
+    fileprivate var _communityGuidelinesClickableString = PublishSubject<String>()
+    var communityGuidelinesClickableString: Observable<String> {
+        return _communityGuidelinesClickableString
             .asObservable()
     }
 
-    lazy var showContainer: Bool = {
+    lazy var shouldShowContainer: Bool = {
         return style == .compact
     }()
 
     let style: OWCommunityGuidelinesStyle
+    let spacing: CGFloat
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(style: OWCommunityGuidelinesStyle) {
+    init(style: OWCommunityGuidelinesStyle,
+         spacing: CGFloat,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.style = style
+        self.spacing = spacing
+        self.servicesProvider = servicesProvider
         setupObservers()
     }
 }
 
 fileprivate extension OWCommunityGuidelinesViewModel {
     func setupObservers() {
-        _communityGuidelinesTitle
-            .subscribe(onNext: { [weak self] text in
+        communityGuidelinesAttributedString
+            .take(1)
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                let shouldShow = (text != nil) && (self.style != .none)
-                self._shouldShowView.onNext(shouldShow)
+                self._shouldShowView.onNext(self.style != .none)
             })
             .disposed(by: disposeBag)
 
@@ -141,62 +169,61 @@ fileprivate extension OWCommunityGuidelinesViewModel {
             .bind(to: _triggerCustomizeIconImageViewUI)
             .disposed(by: disposeBag)
 
-        triggerCustomizeTitleTextViewUI
-            .flatMapLatest { [weak self] textView -> Observable<UITextView> in
+        triggerCustomizeTitleLabelUI
+            .flatMapLatest { [weak self] label -> Observable<UILabel> in
                 guard let self = self else { return .empty() }
-                return self.communityGuidelinesHtmlAttributedString
-                    .map { _ in return textView }
+                return self.communityGuidelinesAttributedString
+                    .map { _ in return label }
             }
-            .bind(to: _triggerCustomizeTitleTextViewUI)
+            .bind(to: _triggerCustomizeTitleLabelUI)
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(
+            servicesProvider.themeStyleService().style,
+            contentSizeChanged) { style, _ in
+                return style
+            }
+            .subscribe(onNext: { [weak self] style in
+                guard let self = self else { return }
+                self._updateCommunityGuidelinesAttributedString.onNext(style)
+            })
             .disposed(by: disposeBag)
     }
 
-    func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: String) -> String {
-        var htmlString = communityGuidelinesTitle
+    func getAttributedText(style: OWCommunityGuidelinesStyle, themeStyle: OWThemeStyle?, communityGuidelinesText: String) -> NSMutableAttributedString? {
+        let currentThemeStyle = themeStyle ?? servicesProvider.themeStyleService().currentStyle
 
-        // remove <p> and </p> tags to control the text height by the sdk
-        htmlString = htmlString.replacingOccurrences(of: "<p>", with: "")
-        htmlString = htmlString.replacingOccurrences(of: "</p>", with: "")
+        let communityGuidelinesByStyle = getTextAndLinkedText(style: self.style,
+                                                              themeStyle: currentThemeStyle,
+                                                              communityGuidelinesText: communityGuidelinesText)
+        let url = communityGuidelinesText.locateURLInText
+        _communityGuidelinesUrl.onNext(url)
 
-        return htmlString
+        guard let text = communityGuidelinesByStyle.text,
+              let linkedText = communityGuidelinesByStyle.linkedText else { return nil }
+        _communityGuidelinesClickableString.onNext(linkedText)
+
+        return text.getAttributedText(textColor: OWColorPalette.shared.color(type: .textColor2, themeStyle: currentThemeStyle),
+                                      textFont: OWFontBook.shared.font(typography: .bodyText),
+                                      linkedText: linkedText,
+                                      linkURL: url,
+                                      linkColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: currentThemeStyle),
+                                      linkFont: OWFontBook.shared.font(typography: .bodyInteraction),
+                                      paragraphAlignment: OWLocalizationManager.shared.textAlignment)
     }
 
-    func getTitleTextViewAttributedText(htmlString: String, url: URL? = nil) -> NSMutableAttributedString? {
-        if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
-
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
-
-            htmlMutableAttributedString.addAttribute(
-                .paragraphStyle,
-                value: paragraphStyle,
-                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
-            )
-            htmlMutableAttributedString.addAttribute(
-                .font,
-                value: OWFontBook.shared.font(typography: .bodyText),
-                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
-            )
-            htmlMutableAttributedString.addAttribute(
-                .foregroundColor,
-                value: OWColorPalette.shared.color(type: .textColor2,
-                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle),
-                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
-            )
-
-            if let url = url {
-                htmlMutableAttributedString.setAsLink(textToFind: Metrics.communityGuidelinesTitle, linkURL: url.absoluteString)
-            }
-
-            return htmlMutableAttributedString
-        } else {
-            return nil
+    func getTextAndLinkedText(style: OWCommunityGuidelinesStyle, themeStyle: OWThemeStyle, communityGuidelinesText text: String) -> (text: String?, linkedText: String?) {
+        switch style {
+        case .compact:
+            let compactString = Metrics.readOurTitle + " " + Metrics.communityGuidelinesTitle
+            let compactLinkedText = Metrics.communityGuidelinesTitle
+            return (compactString, compactLinkedText)
+        case .regular:
+            let regularString = text.stringWithoutURL
+            let regularLinkedText = text.linkedText
+            return (regularString, regularLinkedText)
+        case .none:
+            return (nil, nil)
         }
-    }
-
-    func getCommunityGuidelinesCompactString(communityGuidelinesTitle: String) -> NSMutableAttributedString? {
-        let communityGuidelinesString = Metrics.readOurTitle + " " + Metrics.communityGuidelinesTitle
-        let url = communityGuidelinesTitle.locateURLInText
-        return self.getTitleTextViewAttributedText(htmlString: communityGuidelinesString, url: url)
     }
 }

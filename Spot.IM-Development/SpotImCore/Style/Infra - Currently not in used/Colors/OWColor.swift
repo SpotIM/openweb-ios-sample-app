@@ -152,7 +152,7 @@ struct OWColor {
                                darkThemeColor: OWDesignColors.D3)
 
             case .loaderColor:
-                return OWColor(lightThemeColor: OWDesignColors.L3,
+                return OWColor(lightThemeColor: OWDesignColors.L2,
                                darkThemeColor: OWDesignColors.D2)
 
             case .errorColor:

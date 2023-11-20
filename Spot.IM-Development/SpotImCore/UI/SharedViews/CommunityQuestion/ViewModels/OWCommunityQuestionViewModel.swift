@@ -13,17 +13,17 @@ protocol OWCommunityQuestionViewModelingInputs {
     var conversationFetched: PublishSubject<OWConversationReadRM> { get }
     var triggerCustomizeQuestionTitleLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeQuestionContainerViewUI: PublishSubject<UIView> { get }
-    var triggerCustomizeQuestionTitleTextViewUI: PublishSubject<UITextView> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
     var communityQuestion: Observable<String> { get }
-    var attributedCommunityQuestion: Observable<NSAttributedString> { get }
     var shouldShowView: Observable<Bool> { get }
-    var showContainer: Bool { get }
     var customizeQuestionTitleLabelUI: Observable<UILabel> { get }
     var customizeQuestionContainerViewUI: Observable<UIView> { get }
-    var customizeQuestionTitleTextViewUI: Observable<UITextView> { get }
+
+    var shouldShowContainer: Bool { get }
+    var titleFont: UIFont { get }
+    var spacing: CGFloat { get }
     var style: OWCommunityQuestionStyle { get }
 }
 
@@ -54,24 +54,6 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
             .unwrap()
     }
 
-    lazy var attributedCommunityQuestion: Observable<NSAttributedString> = {
-        communityQuestion
-            .distinctUntilChanged()
-            .map { question in
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = OWLocalizationManager.shared.textAlignment
-
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .paragraphStyle: paragraphStyle,
-                    .font: OWFontBook.shared.font(typography: .bodyText),
-                    .foregroundColor: OWColorPalette.shared.color(type: .textColor2,
-                                                                  themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-                ]
-
-                return NSAttributedString(string: question, attributes: attributes)
-            }
-    }()
-
     var _shouldShowView = BehaviorSubject<Bool?>(value: nil)
     var shouldShowView: Observable<Bool> {
         _shouldShowView
@@ -100,20 +82,28 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
             .asObservable()
     }
 
-    lazy var showContainer: Bool = {
+    lazy var shouldShowContainer: Bool = {
         return style == .compact
     }()
 
+    lazy var titleFont: UIFont = {
+        return style == .compact ? OWFontBook.shared.font(typography: .bodySpecial) : OWFontBook.shared.font(typography: .titleMediumSpecial)
+    }()
+
     let style: OWCommunityQuestionStyle
+    let spacing: CGFloat
     fileprivate let disposeBag = DisposeBag()
 
-    init(style: OWCommunityQuestionStyle) {
+    init(style: OWCommunityQuestionStyle,
+         spacing: CGFloat) {
         self.style = style
+        self.spacing = spacing
         setupObservers()
     }
 
     init() {
         style = .regular
+        spacing = OWConversationSpacing.regular.communityQuestions
     }
 }
 

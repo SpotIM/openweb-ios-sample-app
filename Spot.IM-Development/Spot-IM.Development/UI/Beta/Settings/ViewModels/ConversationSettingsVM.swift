@@ -18,9 +18,8 @@ protocol ConversationSettingsViewModelingInputs {
     var communityQuestionsStyleModeSelectedIndex: BehaviorSubject<Int> { get }
     var conversationSpacingSelectedIndex: BehaviorSubject<Int> { get }
     var betweenCommentsSpacingSelected: BehaviorSubject<String> { get }
-    var belowHeaderSpacingSelected: BehaviorSubject<String> { get }
-    var belowCommunityGuidelinesSpacingSelected: BehaviorSubject<String> { get }
-    var belowCommunityQuestionsGuidelinesSpacingSelected: BehaviorSubject<String> { get }
+    var communityGuidelinesSpacingSelected: BehaviorSubject<String> { get }
+    var communityQuestionsGuidelinesSpacingSelected: BehaviorSubject<String> { get }
 }
 
 protocol ConversationSettingsViewModelingOutputs {
@@ -30,17 +29,15 @@ protocol ConversationSettingsViewModelingOutputs {
     var communityQuestionsStyleModeTitle: String { get }
     var conversationSpacingModeTitle: String { get }
     var betweenCommentsSpacingTitle: String { get }
-    var belowHeaderSpacingTitle: String { get }
-    var belowCommunityGuidelinesSpacingTitle: String { get }
-    var belowCommunityQuestionsGuidelinesSpacingTitle: String { get }
+    var communityGuidelinesSpacingTitle: String { get }
+    var communityQuestionsGuidelinesSpacingTitle: String { get }
     var styleModeIndex: Observable<Int> { get }
     var communityGuidelinesStyleModeIndex: Observable<Int> { get }
     var communityQuestionsStyleModeIndex: Observable<Int> { get }
     var conversationSpacingModeIndex: Observable<Int> { get }
     var betweenCommentsSpacing: Observable<String> { get }
-    var belowHeaderSpacing: Observable<String> { get }
-    var belowCommunityGuidelinesSpacing: Observable<String> { get }
-    var belowCommunityQuestionsGuidelinesSpacing: Observable<String> { get }
+    var communityGuidelinesSpacing: Observable<String> { get }
+    var communityQuestionsGuidelinesSpacing: Observable<String> { get }
     var styleModeSettings: [String] { get }
     var communityGuidelinesModeSettings: [String] { get }
     var communityQuestionsStyleModeSettings: [String] { get }
@@ -54,7 +51,9 @@ protocol ConversationSettingsViewModeling {
     var outputs: ConversationSettingsViewModelingOutputs { get }
 }
 
-class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSettingsViewModelingInputs, ConversationSettingsViewModelingOutputs {
+class ConversationSettingsVM: ConversationSettingsViewModeling,
+                              ConversationSettingsViewModelingInputs,
+                              ConversationSettingsViewModelingOutputs {
     fileprivate struct Metrics {
         static let delayInsertDataToPersistense = 100
     }
@@ -67,9 +66,8 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
     var communityQuestionsStyleModeSelectedIndex = BehaviorSubject<Int>(value: OWCommunityQuestionStyle.default.index)
     var conversationSpacingSelectedIndex = BehaviorSubject<Int>(value: OWConversationSpacing.defaultIndex)
     var betweenCommentsSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)")
-    var belowHeaderSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)")
-    var belowCommunityGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBelowCommunityGuidelines)")
-    var belowCommunityQuestionsGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceBelowCommunityQuestions)")
+    var communityGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)")
+    var communityQuestionsGuidelinesSpacingSelected = BehaviorSubject<String>(value: "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)")
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
 
@@ -144,67 +142,49 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                 switch conversationStyle {
                 case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
                     switch spacingMode {
-                    case .custom(betweenComments: let betweenComments, belowHeader: _, belowCommunityGuidelines: _, belowCommunityQuestions: _):
+                    case .custom(betweenComments: let betweenComments, communityGuidelines: _, communityQuestions: _):
                         return "\(betweenComments)"
                     default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
+                        return "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)"
                     }
                 default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
+                    return "\(OWConversationSpacing.Metrics.defaultSpaceBetweenComments)"
                 }
             }
             .asObservable()
     }
 
-    var belowHeaderSpacing: Observable<String> {
+    var communityGuidelinesSpacing: Observable<String> {
         return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .map { conversationStyle in
                 switch conversationStyle {
                 case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
                     switch spacingMode {
-                    case .custom(betweenComments: _, belowHeader: let belowHeader, belowCommunityGuidelines: _, belowCommunityQuestions: _):
-                        return "\(belowHeader)"
+                    case .custom(betweenComments: _, communityGuidelines: let communityGuidelinesSpacing, communityQuestions: _):
+                        return "\(communityGuidelinesSpacing)"
                     default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
+                        return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)"
                     }
                 default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
+                    return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityGuidelines)"
                 }
             }
             .asObservable()
     }
 
-    var belowCommunityGuidelinesSpacing: Observable<String> {
+    var communityQuestionsGuidelinesSpacing: Observable<String> {
         return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
             .map { conversationStyle in
                 switch conversationStyle {
                 case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
                     switch spacingMode {
-                    case .custom(betweenComments: _, belowHeader: _, belowCommunityGuidelines: let belowCommunityGuidelines, belowCommunityQuestions: _):
-                        return "\(belowCommunityGuidelines)"
+                    case .custom(betweenComments: _, communityGuidelines: _, communityQuestions: let communityQuestionsSpacing):
+                        return "\(communityQuestionsSpacing)"
                     default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
+                        return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
                     }
                 default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
-                }
-            }
-            .asObservable()
-    }
-
-    var belowCommunityQuestionsGuidelinesSpacing: Observable<String> {
-        return userDefaultsProvider.values(key: .conversationStyle, defaultValue: OWConversationStyle.default)
-            .map { conversationStyle in
-                switch conversationStyle {
-                case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacingMode):
-                    switch spacingMode {
-                    case .custom(betweenComments: _, belowHeader: _, belowCommunityGuidelines: _, belowCommunityQuestions: let belowCommunityQuestions):
-                        return "\(belowCommunityQuestions)"
-                    default:
-                        return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
-                    }
-                default:
-                    return "\(OWConversationSpacing.Metrics.defaultSpaceBelowHeader)"
+                    return "\(OWConversationSpacing.Metrics.defaultSpaceCommunityQuestions)"
                 }
             }
             .asObservable()
@@ -236,16 +216,12 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
         return NSLocalizedString("BetweenCommentsSpacingTitle", comment: "")
     }()
 
-    lazy var belowHeaderSpacingTitle: String = {
-        return NSLocalizedString("BelowHeaderSpacingTitle", comment: "")
+    lazy var communityGuidelinesSpacingTitle: String = {
+        return NSLocalizedString("CommunityGuidelinesSpacingTitle", comment: "")
     }()
 
-    lazy var belowCommunityGuidelinesSpacingTitle: String = {
-        return NSLocalizedString("BelowCommunityGuidelinesSpacingTitle", comment: "")
-    }()
-
-    lazy var belowCommunityQuestionsGuidelinesSpacingTitle: String = {
-        return NSLocalizedString("BelowCommunityQuestionsGuidelinesSpacingTitle", comment: "")
+    lazy var communityQuestionsGuidelinesSpacingTitle: String = {
+        return NSLocalizedString("CommunityQuestionsGuidelinesSpacingTitle", comment: "")
     }()
 
     lazy var styleModeSettings: [String] = {
@@ -299,17 +275,15 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                                         communityGuidelinesStyleSelectedIndex,
                                         communityQuestionsStyleModeSelectedIndex,
                                         betweenCommentsSpacingSelected,
-                                        belowHeaderSpacingSelected,
-                                        belowCommunityGuidelinesSpacingSelected,
-                                        belowCommunityQuestionsGuidelinesSpacingSelected,
+                                        communityGuidelinesSpacingSelected,
+                                        communityQuestionsGuidelinesSpacingSelected,
                                         conversationSpacingSelectedIndex) {
             styleIndex,
             communityGuidelinesStyleIndex,
             questionsStyleIndex,
             betweenCommentsSpace,
-            belowHeaderSpace,
-            belowCommunityGuidelinesSpace,
-            belowCommunityQuestionsGuidelinesSpace,
+            communityGuidelinesSpace,
+            communityQuestionsGuidelinesSpace,
             conversationSpacingIndex -> OWConversationStyle in
 
             return OWConversationStyle.conversationStyle(fromIndex: styleIndex,
@@ -317,9 +291,8 @@ class ConversationSettingsVM: ConversationSettingsViewModeling, ConversationSett
                                                          communityQuestionsStyleIndex: questionsStyleIndex,
                                                          spacingIndex: conversationSpacingIndex,
                                                          betweenComments: OWConversationSpacing.validateSpacing(betweenCommentsSpace),
-                                                         belowHeader: OWConversationSpacing.validateSpacing(belowHeaderSpace),
-                                                         belowCommunityGuidelines: OWConversationSpacing.validateSpacing(belowCommunityGuidelinesSpace),
-                                                         belowCommunityQuestions: OWConversationSpacing.validateSpacing(belowCommunityQuestionsGuidelinesSpace))
+                                                         belowCommunityGuidelines: OWConversationSpacing.validateSpacing(communityGuidelinesSpace),
+                                                         belowCommunityQuestions: OWConversationSpacing.validateSpacing(communityQuestionsGuidelinesSpace))
         }
                                         .asObservable()
     }()

@@ -15,7 +15,9 @@ class OWLoaderButton: UIButton {
     fileprivate var spinner = UIActivityIndicatorView()
     fileprivate var isLoading = false {
         didSet {
-            updateView()
+            if isLoading != oldValue {
+                updateView()
+            }
         }
     }
 
