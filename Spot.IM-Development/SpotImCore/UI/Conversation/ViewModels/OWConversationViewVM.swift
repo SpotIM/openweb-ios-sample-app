@@ -76,6 +76,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate struct Metrics {
         static let defaultNumberOfReplies: Int = 5
         static let numberOfSkeletonComments: Int = 5
+        static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
         static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
@@ -86,6 +87,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
@@ -246,7 +248,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling = {
-        return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle)
+        return OWCommunityQuestionCellViewModel(style: conversationStyle.communityQuestionStyle,
+                                                spacing: conversationStyle.spacing)
     }()
 
     lazy var communitySpacerCellViewModel: OWSpacerCellViewModeling = {
@@ -254,7 +257,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var communityGuidelinesCellViewModel: OWCommunityGuidelinesCellViewModeling = {
-        return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle)
+        return OWCommunityGuidelinesCellViewModel(style: conversationStyle.communityGuidelinesStyle,
+                                                  spacing: conversationStyle.spacing)
     }()
 
     lazy var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling = {
@@ -463,6 +467,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         return self.conversationData.settings.fullConversationSettings.style
     }()
 
+    fileprivate lazy var spacingBetweenComments: CGFloat = {
+        return self.conversationStyle.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
+    }()
+
     var viewInitialized = PublishSubject<Void>()
     fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
         return viewInitialized
@@ -566,7 +574,8 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_collapse",
                         data: commentPresentationData,
                         mode: .collapse,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 } else {
                     // This is expand in a reply or more in depth replies
@@ -574,7 +583,8 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_expand_only",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             default:
@@ -582,7 +592,8 @@ fileprivate extension OWConversationViewViewModel {
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -594,7 +605,8 @@ fileprivate extension OWConversationViewViewModel {
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             }
@@ -656,8 +668,8 @@ fileprivate extension OWConversationViewViewModel {
         var commentsPresentationData = [OWCommentPresentationData]()
         var repliesPresentationData = [OWCommentPresentationData]()
 
-        self.conversationPaginationOffset = response.conversation?.offset ?? 0
         if !isLoadingMoreReplies {
+            self.conversationPaginationOffset = response.conversation?.offset ?? 0
             self.conversationHasNext = response.conversation?.hasNext ?? false
         }
 
@@ -737,8 +749,8 @@ fileprivate extension OWConversationViewViewModel {
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
-            section: self.conversationData.article.additionalSettings.section
-        ))
+            section: self.conversationData.article.additionalSettings.section),
+                                      spacing: self.spacingBetweenComments)
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
@@ -770,7 +782,6 @@ fileprivate extension OWConversationViewViewModel {
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .conversationLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
-            .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError), scheduler: conversationViewVMScheduler)
             .asObservable()
 
         // Subscribing to start realtime service
@@ -1556,6 +1567,24 @@ fileprivate extension OWConversationViewViewModel {
                       let eventType = rank.analyticsEventType(commentId: commentId)
                 else { return }
                 self.sendEvent(for: eventType)
+            })
+            .disposed(by: disposeBag)
+
+        // Dynamic should update tableView cells
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .flatMapLatest {
+                return OWSharedServicesProvider.shared.appLifeCycle()
+                    .isActive
+                    .filter { $0 }
+                    .take(1)
+            }
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationAfterContentSizeChanged), scheduler: conversationViewVMScheduler)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self._performTableViewAnimation.onNext()
             })
             .disposed(by: disposeBag)
 

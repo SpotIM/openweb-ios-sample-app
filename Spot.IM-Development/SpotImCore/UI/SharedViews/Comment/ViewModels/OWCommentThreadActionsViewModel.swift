@@ -25,6 +25,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var tapOutput: Observable<Void> { get }
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
+    var updateSpacing: Observable<CGFloat> { get }
     var commentId: String { get }
     var isLoadingChanged: Observable<Bool> { get }
 }
@@ -52,14 +53,26 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
 
     var updateActionType = BehaviorSubject<OWCommentThreadActionType>(value: .collapseThread)
     fileprivate lazy var updatedType: Observable<OWCommentThreadActionType> = {
-       return updateActionType
+        return updateActionType
             .asObservable()
     }()
 
-    let commentId: String
+    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
+    var updateSpacing: Observable<CGFloat> {
+        _updateSpacing
+            .unwrap()
+            .take(1)
+            .asObservable()
+    }
 
-    init(with type: OWCommentThreadActionType, commentId: String) {
+    let commentId: String
+    fileprivate let spacing: CGFloat
+
+    init(with type: OWCommentThreadActionType,
+         commentId: String,
+         spacing: CGFloat) {
         self.commentId = commentId
+        self.spacing = spacing
         self.setupObservers()
         self.updateActionType.onNext(type)
     }
@@ -89,6 +102,7 @@ fileprivate extension OWCommentThreadActionsViewModel {
                 case .collapseThread:
                     self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "CollapseThread"))
                     self._disclosureTransform.onNext(.identity)
+                    self._updateSpacing.onNext(0)
 
                 case .viewMoreReplies(count: let count):
                     let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
@@ -97,11 +111,13 @@ fileprivate extension OWCommentThreadActionsViewModel {
                     let repliesString = count > 1 ? multipleRepliesString : singleReplyString
                     self._actionLabelText.onNext(String(format: repliesString, count))
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                    self._updateSpacing.onNext(self.spacing)
 
                 case .viewMoreRepliesRange(from: let from, to: let to):
                     let repliesString = OWLocalizationManager.shared.localizedString(key: "ViewPartOfRepliesFormat")
                     self._actionLabelText.onNext(String(format: repliesString, from, to))
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                    self._updateSpacing.onNext(self.spacing)
                 }
             })
             .disposed(by: disposeBag)
