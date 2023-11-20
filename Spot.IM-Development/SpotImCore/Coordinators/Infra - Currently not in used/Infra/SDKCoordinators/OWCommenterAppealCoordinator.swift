@@ -163,7 +163,7 @@ fileprivate extension OWCommenterAppealCoordinator {
         // TODO: independed
 
         // Open cancel observable - General
-        let cancelReportReasonTapped = Observable.merge(viewModel.outputs.cancelAppeal,
+        let cancelAppeal = Observable.merge(viewModel.outputs.cancelAppeal,
                                                         cancelAdditionalInfoTapped)
             .map { _ -> OWCancelViewViewModel in
                 return OWCancelViewViewModel(type: .commenterAppeal)
@@ -171,7 +171,7 @@ fileprivate extension OWCommenterAppealCoordinator {
             .share()
 
         // Open cancel view - Flow
-        cancelReportReasonTapped
+        cancelAppeal
 //            .filter { _ in
 //                viewModel.outputs.viewableMode == .partOfFlow
 //            }
@@ -189,6 +189,21 @@ fileprivate extension OWCommenterAppealCoordinator {
                     cancelVC.modalPresentationStyle = .fullScreen
                 }
                 router.present(cancelVC, animated: true, dismissCompletion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        // Close cancel screen - Flow
+        cancelAppeal
+//            .filter { _ in
+//                viewModel.outputs.viewableMode == .partOfFlow
+//            }
+            .flatMap { cancelViewVM -> Observable<Void> in
+                return cancelViewVM.outputs.closeTapped
+            }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                guard let router = self.router else { return }
+                router.navigationController?.visibleViewController?.dismiss(animated: true)
             })
             .disposed(by: disposeBag)
 
