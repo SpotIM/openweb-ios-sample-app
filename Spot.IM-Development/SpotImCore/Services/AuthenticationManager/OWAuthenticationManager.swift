@@ -556,6 +556,8 @@ fileprivate extension OWAuthenticationManager {
             return levelAccordingToRegistration
         case .loginPrompt:
             return .loggedIn
+        case .commenterAppeal:
+            return .loggedIn
         }
     }
 

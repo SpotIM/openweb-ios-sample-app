@@ -38,6 +38,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     var outputs: OWAppealLabelViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
 
     // TODO: API call to get if the user can appeal/did appeal/other info and change _viewType accordingly
     fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
@@ -159,13 +160,14 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     var appealClick = PublishSubject<Void>()
     var openAppeal: Observable<Void> { // TODO: probably should pass the comment id or something similar
         return appealClick
-            .withLatestFrom(servicesProvider.authenticationManager().currentAuthenticationLevelAvailability) { _, availability -> Bool in
+            .withLatestFrom(servicesProvider.authenticationManager().currentAuthenticationLevelAvailability) { [weak self] _, availability -> Bool in
                 switch availability {
                 case .level(let level):
                     switch level {
                     case .loggedIn:
                         return true
                     default:
+                        self?.openNotLogeedInAlert()
                         return false
                     }
                 default:
@@ -206,6 +208,40 @@ fileprivate extension OWAppealLabelViewModel {
                 }
             )
     }
+
+    func openNotLogeedInAlert() {
+        // TODO: translations
+        self.servicesProvider.presenterService()
+            .showAlert(
+                title: "Authorization Required",
+                message: "Ensure you're signed in to continue your appeal. Not a member? You'll need to register first.",
+                actions: [
+                    OWRxPresenterAction(title: "Cancel", type: OWAuthToAppealAlert.cancel),
+                    OWRxPresenterAction(title: "Authorize", type: OWAuthToAppealAlert.authenticate)
+                ], preferredStyle: .alert, viewableMode: .partOfFlow)
+            .map { result -> Bool in
+                if case .selected(let action) = result,
+                   case OWAuthToAppealAlert.authenticate = action.type {
+                    return true
+                }
+                return false
+            }
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager()
+                    .ifNeededTriggerAuthenticationUI(for: .commenterAppeal)
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .commenterAppeal)
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                self?.appealClick.onNext()
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 enum OWAppealLabelViewType {
@@ -213,4 +249,9 @@ enum OWAppealLabelViewType {
     case `default`
     case error
     case unavailable
+}
+
+enum OWAuthToAppealAlert: String, OWMenuTypeProtocol {
+    case cancel
+    case authenticate
 }
