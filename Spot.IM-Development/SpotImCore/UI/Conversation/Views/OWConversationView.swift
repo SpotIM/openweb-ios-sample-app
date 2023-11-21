@@ -23,6 +23,11 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
         static let loginPromptVerticalPadding: CGFloat = 12
+
+        static let highlightScrollAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDelay: Double = 1.0
+        static let highlightBackgroundColorAlpha: Double = 0.2
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -365,10 +370,59 @@ fileprivate extension OWConversationView {
 
         viewModel.outputs.scrollToCellIndex
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
+            .do(onNext: { [weak self] index in
                 guard let self = self else { return }
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+            })
+            .delay(.milliseconds(400), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.inputs.scrolledToCellIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndexIfNotVisible
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] index in
+                guard let self = self else { return }
+
+                // only if cell not visible scroll to it
+                guard let visibleRows = self.tableView.indexPathsForVisibleRows,
+                        !visibleRows.contains(IndexPath(row: index, section: 0)) else {
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                    return
+                }
+
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+            })
+            .delay(.milliseconds(400), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.inputs.scrolledToCellIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.highlightCellIndex
+            .observe(on: MainScheduler.instance)
+            .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self else { return }
+                let highlightedCells = Set(indexes.map { IndexPath(row: $0, section: 0) })
+
+                // Reload or animate visible cells that need highlighting
+                for indexPath in self.tableView.indexPathsForVisibleRows ?? [] {
+                    if highlightedCells.contains(indexPath) {
+                        guard let cell = self.tableView.cellForRow(at: indexPath) else { continue }
+
+                        let prevBackgroundColor = cell.backgroundColor
+                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
+                            cell.backgroundColor = OWColorPalette.shared.color(
+                                type: .brandColor,
+                                themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
+                            ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
+                        }) { _ in
+                            UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
+                                cell.backgroundColor = prevBackgroundColor
+                            }
+                        }
+                    }
+                }
             })
             .disposed(by: disposeBag)
 
