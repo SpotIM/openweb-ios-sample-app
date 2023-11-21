@@ -44,7 +44,7 @@ fileprivate extension OWCommentUpdaterService {
     func cacheUpdatedComments(for updateType: OWCommentUpdateType, postId: OWPostId) {
         let commentsToCache: [OWComment]
         switch updateType {
-        case .insert(let comments):
+        case .insert(let comments), .insertRealtime(let comments):
             commentsToCache = comments
         case .update(_, let withComment):
             commentsToCache = [withComment]

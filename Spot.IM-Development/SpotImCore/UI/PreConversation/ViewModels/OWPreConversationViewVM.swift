@@ -875,7 +875,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] updateType, commentCellsVms in
                 guard let self = self else { return }
                 switch updateType {
-                case .insert(let comments):
+                case .insert(let comments), .insertRealtime(let comments):
                     let commentsVms: [OWCommentCellViewModel] = comments.map { comment -> OWCommentCellViewModel? in
                         guard let userId = comment.userId,
                               let user = self.servicesProvider.usersService().get(userId: userId)
