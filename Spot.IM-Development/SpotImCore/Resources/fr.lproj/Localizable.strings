@@ -130,6 +130,11 @@
 "LoginPromptTitle" = "Autoriser à participer";
 "CommenterAppealTitle" = "Motif de votre demande d'appel";
 "Appeal" = "Faire appel";
+"DisagreeGuidelinesAppealTitle" = "Je ne suis pas d'accord avec les recommandations de la communauté";
+"DontUnderstandGuidelinesAppealTitle" = "Je ne comprends pas les recommandations de la communauté";
+"CommentFollowsGuidelinesAppealTitle" = "Je pense que mon commentaire est en accord avec les recommandations de la communauté";
+"MisunderstandingAppealTitle" = "Je pense que vous avez mal compris l'intention ou le contexte entourant mon commentaire";
+"OtherAppealTitle" = "Autre";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";
