@@ -62,7 +62,7 @@ extension OWNetworkAPI: OWAppealAPI {
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func isEligibleToAppeal(commentId: String) -> OWNetworkResponse<IsEligibleToAppealResponse> {
         let endpoint = OWAppealEndpoints.isEligibleToAppeal(commentId: commentId)
         let requestConfigure = request(for: endpoint)
