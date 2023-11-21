@@ -1350,7 +1350,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
-                case .insert:
+                case .insert, .insertRealtime:
                     // Not relevant in comment thread
                     break
                 case let .update(commentId, withComment):
