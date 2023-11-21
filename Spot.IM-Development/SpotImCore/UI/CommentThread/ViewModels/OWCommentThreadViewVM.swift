@@ -1044,7 +1044,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         // Observe on rank click
-        commentCellsVmsObservable
+        let userTryingToChangeRankObservable = commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
                 let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
                     let commentVm = commentCellVm.outputs.commentVM
@@ -1068,6 +1068,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .map { $0 ? (commentVm, rankChange) : nil }
             }
             .unwrap()
+
+        userTryingToChangeRankObservable
             .do(onNext: { [weak self] commentVm, rankChange in
                 guard let self = self,
                       let commentId = commentVm.outputs.comment.id,
@@ -1075,8 +1077,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 else { return }
                 self.sendEvent(for: eventType)
             })
-            .subscribe(onNext: { [weak self] commentVm, rankChange in
-                guard let self = self else { return }
+            .subscribe(onNext: { commentVm, rankChange in
                 let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
                 commentRankVm.inputs.rankChanged.onNext(rankChange)
             })
