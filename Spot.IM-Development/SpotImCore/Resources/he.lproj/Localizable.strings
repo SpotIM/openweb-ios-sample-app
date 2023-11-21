@@ -130,6 +130,11 @@
 "LoginPromptTitle" = "מורשה להשתתף";
 "CommenterAppealTitle" = "סיבת ערעור";
 "Appeal" = "ערעור";
+"DisagreeGuidelinesAppealTitle" = "אני לא מסכים עם הנחיות הקהילה";
+"DontUnderstandGuidelinesAppealTitle" = "אני לא מבין את הנחיות הקהילה";
+"CommentFollowsGuidelinesAppealTitle" = "אני מאמין שהתגובה שלי תואמת את הנחיות הקהילה";
+"MisunderstandingAppealTitle" = "אני מאמין שהבנתם לא נכון את הכוונה או ההקשר של התגובה שלי";
+"OtherAppealTitle" = "אחר";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";
