@@ -1145,7 +1145,7 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let muteUserObservable = muteCommentUser
+        let muteUserConfirmationObservable = muteCommentUser
             .asObservable()
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // 1. Triggering authentication UI if needed
@@ -1176,6 +1176,8 @@ fileprivate extension OWPreConversationViewViewModel {
                     )
                     .map { (needToRefreshConversation, $0) }
             }
+
+        let muteUserObservable = muteUserConfirmationObservable
             .map { needToRefreshConversation, result -> (Bool, Bool) in
                 // 4. Handle alert result
                 switch result {
