@@ -129,6 +129,11 @@
 "LoginPromptTitle" = "Autorizar para participar";
 "CommenterAppealTitle" = "Motivo de la apelación";
 "Appeal" = "Apelación";
+"DisagreeGuidelinesAppealTitle" = "Estoy en desacuerdo con las directrices de la comunidad";
+"DontUnderstandGuidelinesAppealTitle" = "No entiendo las directrices de la comunidad";
+"CommentFollowsGuidelinesAppealTitle" = "Considero que mi comentario cumple las normas de la comunidad";
+"MisunderstandingAppealTitle" = "Me parece que no ha entendido la intención o el contexto de mi comentario";
+"OtherAppealTitle" = "Otros";
 
 // Old API
 "Your Username" = "Tu seudónimo...";

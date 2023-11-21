@@ -130,6 +130,11 @@
 "LoginPromptTitle" = "السماح بالمشاركة";
 "CommenterAppealTitle" = "سبب الاستئناف";
 "Appeal" = "طلب استئناف";
+"DisagreeGuidelinesAppealTitle" = "أنا لا أتفق مع إرشادات المجتمع";
+"DontUnderstandGuidelinesAppealTitle" = "أنا لا أفهم إرشادات المنتدى";
+"CommentFollowsGuidelinesAppealTitle" = "أعتقد أن تعليقي يتبع إرشادات المنتدى";
+"MisunderstandingAppealTitle" = "أعتقد أنك أسأت فهم نية أو سياق تعليقي";
+"OtherAppealTitle" = "غير ذلك";
 
 // Old API
 "Your Username" = "اسمك المستعار...";

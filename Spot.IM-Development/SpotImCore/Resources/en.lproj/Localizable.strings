@@ -132,6 +132,11 @@
 "ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
 "CommenterAppealTitle" = "Appeal Reason";
 "Appeal" = "Appeal";
+"DisagreeGuidelinesAppealTitle" = "I disagree with the community guidelines";
+"DontUnderstandGuidelinesAppealTitle" = "I don’t understand the community guidelines";
+"CommentFollowsGuidelinesAppealTitle" = "I believe my comment follows the community guidelines";
+"MisunderstandingAppealTitle" = "I believe you misunderstood the intent or context of my comment";
+"OtherAppealTitle" = "Other";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";

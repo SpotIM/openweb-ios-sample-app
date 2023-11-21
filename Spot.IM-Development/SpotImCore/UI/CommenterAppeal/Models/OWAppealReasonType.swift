@@ -9,18 +9,11 @@
 import Foundation
 
 enum OWAppealReasonType: String, Codable {
-    // TODO: real cases
-    case identityAttack = "identity_attack"
-//    case hateSpeech = "hate_speech"
-//    case inappropriateLanguage = "inappropriate_language"
-//    case spam
-//    case falseInformation = "false_information"
-//    case sexualActivity = "sexual_activity"
-//    case profile
-//    case childAbuse = "child_abuse"
-//    case terrorism
-//    case copyrightInfringement = "copyright_infringement"
-//    case other
+    case disagreeGuidelines = "disagree-guidelines"
+    case dontUnderstandGuidelines = "dont-understand-guidelines"
+    case commentFollowsGuidelines = "comment-follows-guidelines"
+    case misunderstanding
+    case other
 }
 
 extension OWAppealReasonType {
@@ -32,6 +25,6 @@ extension OWAppealReasonType {
     }
 
     var localizedTitle: String {
-        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)Title")
+        return OWLocalizationManager.shared.localizedString(key: "\(self.localizationKey)AppealTitle")
     }
 }
