@@ -1061,10 +1061,12 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .subscribe(onNext: { [weak self] commentVm, rankChange, userLoggedIn in
                 // 5. Handle rank change
-                guard let self = self else { return }
+                guard let self = self,
+                      let commentId = commentVm.outputs.comment.id
+                else { return }
                 if userLoggedIn {
                     // TODO - Refresh conversation
-                    self._openCommentThread.onNext(commentVm.outputs.comment.id!)
+                    self._openCommentThread.onNext(commentId)
                 } else {
                     let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
                     commentRankVm.inputs.rankChanged.onNext(rankChange)
