@@ -89,8 +89,19 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
 
-        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+        let openCommentThreadObservable = viewModel.outputs.openCommentThread
             .observe(on: MainScheduler.instance)
+            .map { [weak self] commentId -> OWDeepLinkOptions? in
+                guard let self = self else { return nil }
+                let commentThreadData = OWCommentThreadRequiredData(article: self.preConversationData.article,
+                                                   settings: self.preConversationData.settings,
+                                                   commentId: commentId,
+                                                   presentationalStyle: self.preConversationData.presentationalStyle)
+                return OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+            }
+
+        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+
             .map { commentVM -> OWDeepLinkOptions? in
                 // 3. Perform deeplink to comment creation screen
                 guard let commentId = commentVM.outputs.comment.id,
@@ -108,7 +119,8 @@ fileprivate extension OWPreConversationCoordinator {
         Observable.merge(openFullConversationObservable,
                          openCommentCreationObservable,
                          openReportReasonObservable,
-                         openClarityDetailsObservable)
+                         openClarityDetailsObservable,
+                         openCommentThreadObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow

@@ -60,6 +60,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var openCommentThread: Observable<OWCommentId> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -219,6 +220,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
     var openProfile: Observable<OWOpenProfileType> {
         return _openProfile
+            .asObservable()
+    }
+
+    fileprivate var _openCommentThread = PublishSubject<OWCommentId>()
+    var openCommentThread: Observable<OWCommentId> {
+        _openCommentThread
             .asObservable()
     }
 
@@ -1552,6 +1559,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe on rank click
         let userTryingToChangeRankObservable = commentCellsVmsObservable
+            // 1. Observe comments rank clicked
             .flatMap { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
                 let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
                     let commentVm = commentCellVm.outputs.commentVM
@@ -1562,31 +1570,39 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(rankClickObservable)
             }
-            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)> in
-                // 1. Triggering authentication UI if needed
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange, Bool)> in
+                // 2. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in (commentVm, rankChange) }
+                    .map { (commentVm, rankChange, $0) }
             }
-            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)?> in
-                // 2. Waiting for authentication required for voting
+            .flatMapLatest { [weak self] commentVm, rankChange, neededToAuthenticate -> Observable<(OWCommentViewModeling, SPRankChange, Bool)?> in
+                // 3. Waiting for authentication required for voting
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { $0 ? (commentVm, rankChange) : nil }
+                    .map { $0 ? (commentVm, rankChange, neededToAuthenticate) : nil }
             }
             .unwrap()
 
         userTryingToChangeRankObservable
-            .do(onNext: { [weak self] commentVm, rankChange in
+            .do(onNext: { [weak self] commentVm, rankChange, _ in
+                // 4. Send rank changed analytics event
                 guard let self = self,
                       let commentId = commentVm.outputs.comment.id,
                       let eventType = rankChange.analyticsEventType(commentId: commentId)
                 else { return }
                 self.sendEvent(for: eventType)
             })
-            .subscribe(onNext: { commentVm, rankChange in
-                let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
-                commentRankVm.inputs.rankChanged.onNext(rankChange)
+            .subscribe(onNext: { [weak self] commentVm, rankChange, userLoggedIn in
+                // 5. Handle rank change
+                guard let self = self else { return }
+                if userLoggedIn {
+                    // TODO - Refresh conversation
+                    self._openCommentThread.onNext(commentVm.outputs.comment.id!)
+                } else {
+                    let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
+                    commentRankVm.inputs.rankChanged.onNext(rankChange)
+                }
             })
             .disposed(by: disposeBag)
 
