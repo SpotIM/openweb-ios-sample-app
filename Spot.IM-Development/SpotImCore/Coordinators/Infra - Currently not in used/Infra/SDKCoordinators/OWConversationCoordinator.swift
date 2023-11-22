@@ -248,8 +248,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .flatMap { [weak self] commentThreadData -> Observable<OWCommentThreadCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(router: self.router,
-                                                                              commentThreadData: commentThreadData,
-                                                                              actionsCallbacks: self.actionsCallbacks)
+                                                                          commentThreadData: commentThreadData,
+                                                                          actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: commentThreadCoordinator)
             }
             .do(onNext: { result in
