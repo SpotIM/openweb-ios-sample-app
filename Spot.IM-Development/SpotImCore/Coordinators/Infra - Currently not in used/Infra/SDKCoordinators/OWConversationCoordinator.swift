@@ -227,8 +227,20 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        let openCommentThreadObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentThread
+            .observe(on: MainScheduler.instance)
+            .map { [weak self] commentId -> OWCommentThreadRequiredData? in
+                guard let self = self else { return nil }
+                return OWCommentThreadRequiredData(article: self.conversationData.article,
+                                                   settings: self.conversationData.settings,
+                                                   commentId: commentId,
+                                                   presentationalStyle: self.conversationData.presentationalStyle)
+            }
+            .unwrap()
+
         // Coordinate to comment thread
-        let coordinateCommentThreadObservable = deepLinkToCommentThread.unwrap().asObservable()
+        let coordinateCommentThreadObservable = Observable.merge(deepLinkToCommentThread.unwrap().asObservable(),
+                                                                 openCommentThreadObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
