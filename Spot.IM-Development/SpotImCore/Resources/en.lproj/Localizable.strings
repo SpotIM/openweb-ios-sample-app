@@ -33,6 +33,7 @@
 "ReportedCommentMessage" = "This message was reported.";
 "MutedCommentMessage" = "This user is muted.";
 "ViolatedPolicyCommentMessage" = "This comment violated our policy.";
+"AuthorViolatedPolicyCommentMessage" = "Your comment violated our policy.";
 "ShowMoreComments" = "SHOW MORE COMMENTS";
 "Terms" = "Terms";
 "Privacy" = "Privacy";

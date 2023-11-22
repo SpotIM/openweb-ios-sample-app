@@ -59,6 +59,7 @@
 "EditComment" = "Editer un commentaire";
 "Recommend" = "Recommander";
 "ViolatedPolicyCommentMessage" = "Ce message a violé notre politique";
+"AuthorViolatedPolicyCommentMessage" = "Votre publication va à l'encontre de notre règlement.";
 "Mute" = "Son désactivé";
 "MuteUser" = "Utilisateur muet";
 "MuteUserMessage" = "Une fois que vous aurez ignoré cet utilisateur, vous ne verrez plus son activité. Pour gérer les utilisateurs ignorés, rendez-vous dans votre profil > Paramètres de confidentialité";
