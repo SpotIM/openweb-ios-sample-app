@@ -93,7 +93,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
-        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
+        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
@@ -333,10 +333,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                                         shouldShowErrorLoadingComments,
                                         errorCellViewModels,
                                         shouldShowConversationEmptyState,
-                                        isLoadingMoreComments,
                                         shouldShowErrorLoadingMoreComments)
         .observe(on: conversationViewVMScheduler)
-        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, isLoadingMoreComments, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
+        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
 
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
@@ -348,16 +347,25 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     let emptyStateCellOption = [OWConversationCellOption.conversationEmptyState(viewModel: self.conversationEmptyStateCellViewModel)]
                     return Observable.just(communityCellsOptions + emptyStateCellOption)
                 } else {
-                    var loadingCell = isLoadingMoreComments ? self.getLoadingCell() : []
                     let errorLoadingMoreCell = shouldShowErrorLoadingMoreComments ? self.getErrorStateCell(errorStateType: .loadMoreConversationComments) : []
+                    var loadingCell = self.conversationHasNext && !shouldShowErrorLoadingMoreComments ? self.getLoadingCell() : []
                     return Observable.just(communityCellsOptions + commentCellsOptions + loadingCell + errorLoadingMoreCell)
                 }
             })
-            .observe(on: MainScheduler.instance)
-            .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
-                guard let self = self else { return [] }
+            .map { cellOptions in
+                return OWConversationScanData(cellOptions: cellOptions)
+            }
+            .scan(OWConversationScanData.empty, accumulator: { [weak self] previousScanData, newScanData in
+                guard let self = self else { return OWConversationScanData.empty }
+
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
                 var commentThreadActionVmsMapper = [String: OWCommentThreadActionsCellViewModeling]()
+
+                var commentVMsUpdateComment: [(OWCommentViewModeling, OWCommentViewModeling)] = []
+                var commentVMsUpdateUser: [(OWCommentViewModeling, OWCommentViewModeling)] = []
+
+                var previousConversationCellsOptions = previousScanData.cellOptions
+                var newConversationCellsOptions = newScanData.cellOptions
 
                 previousConversationCellsOptions.forEach { conversationCellOption in
                     switch conversationCellOption {
@@ -382,10 +390,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             let updatedCommentVm = viewModel.outputs.commentVM
 
                             if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
-                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                                commentVMsUpdateComment.append((commentVm, updatedCommentVm))
                             }
                             if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
-                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                                commentVMsUpdateUser.append((commentVm, updatedCommentVm))
                             }
                             return OWConversationCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -405,8 +413,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     }
                 }
 
-                return adjustedNewCommentCellOptions
+                return OWConversationScanData(commentVMsUpdateComment: commentVMsUpdateComment,
+                                              commentVMsUpdateUser: commentVMsUpdateUser,
+                                              cellOptions: adjustedNewCommentCellOptions)
             })
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { conversationScanData in
+                for updateCommentTuples in conversationScanData.commentVMsUpdateComment {
+                    updateCommentTuples.0.inputs.update(comment: updateCommentTuples.1.outputs.comment)
+                }
+                for updateUserTuples in conversationScanData.commentVMsUpdateUser {
+                    updateUserTuples.0.inputs.update(comment: updateUserTuples.1.outputs.comment)
+                }
+            })
+            .observe(on: conversationViewVMScheduler)
+            .map { return $0.cellOptions }
             .asObservable()
             .share(replay: 1)
     }()
