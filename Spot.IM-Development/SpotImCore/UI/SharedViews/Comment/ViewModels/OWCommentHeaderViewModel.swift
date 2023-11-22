@@ -185,13 +185,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 localizationKey = "MutedCommentMessage"
             } else if (model.reported && !isCommentOfActiveUser) {
                 localizationKey = "ReportedCommentMessage"
-            } else if (model.status == .block || model.status == .reject) && !isCommentOfActiveUser {
-                localizationKey = "ViolatedPolicyCommentMessage"
+            } else if model.status == .block || model.status == .reject {
+                localizationKey = isCommentOfActiveUser ? "AuthorViolatedPolicyCommentMessage" : "ViolatedPolicyCommentMessage"
             } else if model.deleted {
                 localizationKey = "DeletedCommentMessage"
             } else {
                 return ""
             }
+
             return OWLocalizationManager.shared.localizedString(key: localizationKey)
         }
     }
