@@ -21,7 +21,7 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var cancelAppeal: Observable<Void> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var appealCellViewModels: Observable<[OWAppealCellViewModeling]> { get }
-    var selectedReason: Observable<OWReportReason> { get }
+    var selectedReason: Observable<OWAppealReason> { get }
     var submitButtonText: Observable<String> { get }
     var submitInProgress: Observable<Bool> { get }
     var isSubmitEnabled: Observable<Bool> { get }
@@ -55,6 +55,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
                                           charectersLimitEnabled: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
+        fetchAppealOptions()
         setupObservers()
     }
 
@@ -83,11 +84,9 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     }
 
     // TODO: where do we get it from?
-    lazy var appealOptions: Observable<[OWReportReason]> = {
-        self.servicesProvider.spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId)
-            .map { $0.shared?.reportReasonsOptions?.reportReasons }
-            .unwrap()
+    fileprivate let _appealOptions = PublishSubject<[OWAppealReason]>()
+    lazy var appealOptions: Observable<[OWAppealReason]> = {
+        _appealOptions
             .asObservable()
             .share(replay: 1)
     }()
@@ -107,11 +106,11 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     var textViewTextChange = PublishSubject<String>()
 
     var reasonIndexSelect = BehaviorSubject<Int?>(value: nil)
-    lazy var selectedReason: Observable<OWReportReason> = {
+    lazy var selectedReason: Observable<OWAppealReason> = {
         reasonIndexSelect
             .skip(1)
             .unwrap()
-            .flatMap { [weak self] index -> Observable<OWReportReason> in
+            .flatMap { [weak self] index -> Observable<OWAppealReason> in
                 guard let self = self else { return .empty() }
                 return self.appealOptions
                     .map { $0[index] }
@@ -145,6 +144,17 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 }
 
 fileprivate extension OWCommenterAppealViewVM {
+    func fetchAppealOptions() {
+        _ = servicesProvider.netwokAPI()
+            .appeal
+            .getAppealOptions()
+            .response
+            .take(1)
+            .subscribe(onNext: { [weak self] options in
+                self?._appealOptions.onNext(options)
+            })
+    }
+
     func setupObservers() {
         selectedReason
             .map {

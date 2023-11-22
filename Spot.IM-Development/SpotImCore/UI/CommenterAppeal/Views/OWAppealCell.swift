@@ -32,6 +32,7 @@ class OWAppealCell: UITableViewCell {
             .textColor(OWColorPalette.shared.color(type: .textColor4, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .bodyText))
             .lineBreakMode(.byWordWrapping)
+            .numberOfLines(0)
     }()
 
     fileprivate lazy var checkBox: OWRoundCheckBox = {

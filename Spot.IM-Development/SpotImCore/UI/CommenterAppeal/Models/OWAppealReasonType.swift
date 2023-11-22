@@ -19,7 +19,7 @@ enum OWAppealReasonType: String, Codable {
 extension OWAppealReasonType {
     private var localizationKey: String {
         return rawValue
-            .split(separator: "_")
+            .split(separator: "-")
             .map { String($0).capitalized }
             .joined()
     }
