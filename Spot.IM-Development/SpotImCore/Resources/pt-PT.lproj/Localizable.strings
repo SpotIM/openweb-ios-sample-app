@@ -58,6 +58,7 @@
 "Edited" = " (Editado)";
 "Recommend" = "Recomendar";
 "ViolatedPolicyCommentMessage" = "Esta postagem violou nossa política";
+"AuthorViolatedPolicyCommentMessage" = "Sua postagem violou nossa política";
 "Mute" = "Mudo";
 "MuteUser" = "Ativar mudo para usuário";
 "MuteUserMessage" = "Após silenciar este utilizador, não irá voltar a ver a sua atividade. Para gerir os utilizadores silenciados vá ao ser perfil > Definições de privacidade";
