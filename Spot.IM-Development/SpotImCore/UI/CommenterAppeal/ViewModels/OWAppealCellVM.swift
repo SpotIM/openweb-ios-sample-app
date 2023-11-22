@@ -36,8 +36,7 @@ class OWAppealCellViewModel: OWAppealCellViewModelingInputs, OWAppealCellViewMod
     var inputs: OWAppealCellViewModelingInputs { return self }
     var outputs: OWAppealCellViewModelingOutputs { return self }
 
-    // TODO: OWReportReason will be replaced with proppen structs
-    init(reason: OWReportReason) {
+    init(reason: OWAppealReason) {
         self.title = reason.type.localizedTitle
     }
 }
