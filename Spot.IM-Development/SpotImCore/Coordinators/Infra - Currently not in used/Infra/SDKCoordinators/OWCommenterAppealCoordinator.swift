@@ -38,17 +38,21 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     let presentationalMode: OWPresentationalModeCompact
     let popAppealWithAnimation = PublishSubject<Void>()
 
+    fileprivate let data: OWAppealRequiredData
+
     init(router: OWRoutering? = nil,
+         appealData: OWAppealRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
          presentationalMode: OWPresentationalModeCompact = .none) {
         self.router = router
         self.actionsCallbacks = actionsCallbacks
         self.presentationalMode = presentationalMode
+        self.data = appealData
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
         guard let router = router else { return .empty() }
-        let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM()
+        let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(commentId: data.commentId)
         let commenterAppealVC = OWCommenterAppealVC(viewModel: commenterAppealVM)
 
         setupObservers(for: commenterAppealVM.outputs.commenterAppealViewViewModel)
@@ -89,7 +93,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commenterAppealViewVM: OWCommenterAppealViewViewModeling = OWCommenterAppealViewVM()
+        let commenterAppealViewVM: OWCommenterAppealViewViewModeling = OWCommenterAppealViewVM(commentId: data.commentId)
         setupViewActionsCallbacks(forViewModel: commenterAppealViewVM)
 
         let commenterAppealView = OWCommenterAppealView(viewModel: commenterAppealViewVM)
@@ -165,11 +169,19 @@ fileprivate extension OWCommenterAppealCoordinator {
             .bind(to: viewModel.inputs.textViewTextChange)
             .disposed(by: disposeBag)
 
+        // Additional information submit - General
+        additionalInformationObservable
+            .flatMap { additionalInformationViewVM -> Observable<Void> in
+                return additionalInformationViewVM.outputs.submitAdditionalInfoTapped
+            }
+            .bind(to: viewModel.inputs.submitAppealTap)
+            .disposed(by: disposeBag)
+
         // TODO: independed
 
         // Open cancel observable - General
         let cancelAppeal = Observable.merge(viewModel.outputs.cancelAppeal,
-                                                        cancelAdditionalInfoTapped)
+                                            cancelAdditionalInfoTapped)
             .map { _ -> OWCancelViewViewModel in
                 return OWCancelViewViewModel(type: .commenterAppeal)
             }

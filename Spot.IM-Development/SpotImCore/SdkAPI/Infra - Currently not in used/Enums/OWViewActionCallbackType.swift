@@ -28,7 +28,7 @@ public enum OWViewActionCallbackType: Codable {
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
-    case openCommenterAppeal // TODO: probably should have data
+    case openCommenterAppeal(commentId: OWCommentId)
 }
 #else
 enum OWViewActionCallbackType: Codable {
@@ -50,7 +50,7 @@ enum OWViewActionCallbackType: Codable {
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
-    case openCommenterAppeal // TODO: probably should have data
+    case openCommenterAppeal(commentId: OWCommentId)
 }
 #endif
 

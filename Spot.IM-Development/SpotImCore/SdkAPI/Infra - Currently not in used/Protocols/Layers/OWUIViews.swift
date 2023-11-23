@@ -56,8 +56,8 @@ public protocol OWUIViews {
                 callbacks: OWViewActionsCallbacks?,
                 completion: @escaping OWViewCompletion)
 
-    func commenterAppeal(postId: OWPostId, // TODO: what more info is needed ?
-//                         commentId: OWCommentId, // TODO: what more info is needed ?
+    func commenterAppeal(postId: OWPostId,
+                         commentId: OWCommentId,
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion)
