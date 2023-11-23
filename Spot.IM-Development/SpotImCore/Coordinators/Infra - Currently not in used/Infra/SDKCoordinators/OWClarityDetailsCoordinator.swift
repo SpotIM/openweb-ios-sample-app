@@ -139,6 +139,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 else { return .empty() }
 
                 let appealCoordinator = OWCommenterAppealCoordinator(router: router,
+                                                                     appealData: OWAppealRequiredData(commentId: self.data.commentId),
                                                                      actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: appealCoordinator, deepLinkOptions: .none)
             }
@@ -180,7 +181,7 @@ fileprivate extension OWClarityDetailsCoordinator {
 
         let openCommenterAppeal = viewModel.outputs.appealLabelViewModel
             .outputs.openAppeal
-            .map { OWViewActionCallbackType.openCommenterAppeal }
+            .map { OWViewActionCallbackType.openCommenterAppeal(commentId: $0) }
 
         Observable.merge(
             dismissView,

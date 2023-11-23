@@ -14,6 +14,7 @@ protocol OWCommenterAppealViewViewModelingInputs {
     var closeOrCancelClick: PublishSubject<Void> { get }
     var reasonIndexSelect: BehaviorSubject<Int?> { get }
     var textViewTextChange: PublishSubject<String> { get }
+    var submitAppealTap: PublishSubject<Void> { get }
 }
 
 protocol OWCommenterAppealViewViewModelingOutputs {
@@ -44,11 +45,13 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let commentId: OWCommentId
 
     let textViewVM: OWTextViewViewModeling
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentId: OWCommentId, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.commentId = commentId
         disposeBag = DisposeBag()
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: "",
@@ -83,7 +86,6 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .voidify()
     }
 
-    // TODO: where do we get it from?
     fileprivate let _appealOptions = PublishSubject<[OWAppealReason]>()
     lazy var appealOptions: Observable<[OWAppealReason]> = {
         _appealOptions
@@ -118,7 +120,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .share(replay: 1)
     }()
 
-    fileprivate var _submitInProgress = PublishSubject<Bool>()
+    fileprivate var _submitInProgress = BehaviorSubject<Bool>(value: false)
     var submitInProgress: Observable<Bool> {
         return _submitInProgress
             .asObservable()
@@ -134,13 +136,17 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 
     fileprivate var _isSubmitEnabled = PublishSubject<Bool>()
     var isSubmitEnabled: Observable<Bool> {
-        return Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText)
-            .map { reason, text -> Bool in
+        return Observable.combineLatest(selectedReason, textViewVM.outputs.textViewText, submitInProgress)
+            .map { reason, text, submitInProgress -> Bool in
+                guard !submitInProgress else { return false }
                 guard reason.requiredAdditionalInfo else { return true }
+
                 return text.count > 0
             }
             .asObservable()
     }
+
+    var submitAppealTap = PublishSubject<Void>()
 }
 
 fileprivate extension OWCommenterAppealViewVM {
@@ -175,6 +181,40 @@ fileprivate extension OWCommenterAppealViewVM {
             .filter { $0.requiredAdditionalInfo == true }
             .voidify()
             .bind(to: textViewVM.inputs.textViewTap)
+            .disposed(by: disposeBag)
+
+        submitAppealTap
+            .withLatestFrom(selectedReason) { _, reason in
+                return reason.type
+            }
+            .withLatestFrom(textViewVM.outputs.textViewText) { reason, message in
+                return (reason, message)
+            }
+            .flatMapLatest { [weak self] reason, message -> Observable<Event<OWNetworkEmpty>> in
+                guard let self = self else { return .empty() }
+                self._submitInProgress.onNext(true)
+                return self.servicesProvider.netwokAPI()
+                    .appeal
+                    .submitAppeal(commentId: self.commentId, reason: reason, message: message)
+                    .response
+                    .materialize()
+            }
+            .map { [weak self] event -> Bool in
+                self?._submitInProgress.onNext(false)
+
+                switch event {
+                case .next:
+                    return true
+                case .error:
+                    return false
+                default:
+                    return false
+                }
+            }
+            .subscribe(onNext: { [weak self] success in
+                self?.isError.onNext(!success)
+                // TODO: handle success - new screen in coordinator.
+            })
             .disposed(by: disposeBag)
     }
 }

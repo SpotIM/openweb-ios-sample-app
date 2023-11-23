@@ -37,7 +37,12 @@ class OWCommenterAppealVM: OWCommenterAppealViewModeling,
     }
 
     lazy var commenterAppealViewViewModel: OWCommenterAppealViewViewModeling = {
-        return OWCommenterAppealViewVM()
+        return OWCommenterAppealViewVM(commentId: commentId)
     }()
+
+    fileprivate let commentId: OWCommentId
+    init(commentId: OWCommentId) {
+        self.commentId = commentId
+    }
 }
 

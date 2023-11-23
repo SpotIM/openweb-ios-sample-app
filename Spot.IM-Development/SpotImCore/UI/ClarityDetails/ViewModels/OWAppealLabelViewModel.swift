@@ -22,7 +22,7 @@ protocol OWAppealLabelViewModelingOutputs {
     var appealClickableText: String { get }
     var iconImage: Observable<UIImage?> { get }
     var labelAttributedString: Observable<NSAttributedString> { get }
-    var openAppeal: Observable<Void> { get }
+    var openAppeal: Observable<OWCommentId> { get }
 }
 
 protocol OWAppealLabelViewModeling {
@@ -40,7 +40,6 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    // TODO: API call to get if the user can appeal/did appeal/other info and change _viewType accordingly
     fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
@@ -158,7 +157,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }()
 
     var appealClick = PublishSubject<Void>()
-    var openAppeal: Observable<Void> { // TODO: probably should pass the comment id or something similar
+    var openAppeal: Observable<OWCommentId> {
         return appealClick
             .withLatestFrom(servicesProvider.authenticationManager().currentAuthenticationLevelAvailability) { [weak self] _, availability -> Bool in
                 switch availability {
@@ -175,7 +174,10 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 }
             }
             .filter { $0 }
-            .voidify()
+            .map { [weak self] _ in
+                return self?.commentId
+            }
+            .unwrap()
             .asObservable()
     }
 
