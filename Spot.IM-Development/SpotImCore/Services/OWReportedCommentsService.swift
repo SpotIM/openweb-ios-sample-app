@@ -26,6 +26,9 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     fileprivate var _mapPostIdToReportedCommentIds = [OWPostId: OWReportedCommentIds]()
     fileprivate var _commentJustReported = PublishSubject<OWCommentId>()
 
+    // Multiple threads / queues access to this class
+    // Avoiding "data race" by using a lock
+    fileprivate let lock: OWLock = OWUnfairLock()
     fileprivate let queue = DispatchQueue(label: "OpenWebSDKReportedCommentsService", qos: .utility)
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -60,6 +63,8 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     }
 
     func cleanCache() {
+        self.lock.lock(); defer { self.lock.unlock() }
+
         self._mapPostIdToReportedCommentIds.removeAll()
         savePersistant()
     }
@@ -67,6 +72,8 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
 
 fileprivate extension OWReportedCommentsService {
     func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
+        self.lock.lock(); defer { self.lock.unlock() }
+
         if let existingCommentIdsForPostId = _mapPostIdToReportedCommentIds[postId] {
             // merge and replacing current comments
             _mapPostIdToReportedCommentIds[postId] = existingCommentIdsForPostId.union(ids)
@@ -88,6 +95,7 @@ fileprivate extension OWReportedCommentsService {
     }
 
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
+        self.lock.lock(); defer { self.lock.unlock() }
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
     }
 
@@ -97,6 +105,7 @@ fileprivate extension OWReportedCommentsService {
             let keychain = self.servicesProvider.keychain()
 
             if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
+                self.lock.lock(); defer { self.lock.unlock() }
                 self._mapPostIdToReportedCommentIds = reportedCommentsMapper
             }
         }

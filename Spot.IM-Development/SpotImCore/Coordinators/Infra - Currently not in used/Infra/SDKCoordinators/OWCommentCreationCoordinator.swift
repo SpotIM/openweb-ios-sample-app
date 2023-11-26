@@ -129,7 +129,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
-            .subscribe { [weak self] _ in
+            .subscribe(onNext: {[weak self] _ in
                 guard let self = self else { return }
                 let popStyle: OWScreenPopStyle = {
                     switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
@@ -140,7 +140,7 @@ fileprivate extension OWCommentCreationCoordinator {
                     }
                 }()
                 self.router.pop(popStyle: popStyle, animated: true)
-            }
+            })
             .disposed(by: disposeBag)
     }
 

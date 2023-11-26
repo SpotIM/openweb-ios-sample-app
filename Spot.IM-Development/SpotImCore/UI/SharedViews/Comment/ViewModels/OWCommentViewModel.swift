@@ -18,7 +18,6 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentActionsVM: OWCommentActionsViewModeling { get }
-
     var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
@@ -27,7 +26,7 @@ protocol OWCommentViewModelingOutputs {
     var shouldHideCommentContent: Observable<Bool> { get }
     var shouldShowCommentStatus: Observable<Bool> { get }
     var showBlockingLayoutView: Observable<Bool> { get }
-
+    var heightChanged: Observable<Void> { get }
     var comment: OWComment { get }
     var user: SPUser { get }
 }
@@ -44,6 +43,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
 
+    fileprivate let disposedBag = DisposeBag()
     fileprivate let sharedServiceProvider: OWSharedServicesProviding
 
     lazy var commentActionsVM: OWCommentActionsViewModeling = {
@@ -57,6 +57,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentEngagementVM: OWCommentEngagementViewModeling
     var comment: OWComment
     var user: SPUser
+    var activeUserId: String?
 
     fileprivate let _shouldHideCommentContent = BehaviorSubject<Bool>(value: false)
     var shouldHideCommentContent: Observable<Bool> {
@@ -64,7 +65,8 @@ class OWCommentViewModel: OWCommentViewModeling,
             .asObservable()
     }
 
-    fileprivate var currentUser: Observable<SPUser> {
+    fileprivate var _isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
+    fileprivate var _currentUser: Observable<SPUser?> {
         sharedServiceProvider
             .authenticationManager()
             .activeUserAvailability
@@ -76,21 +78,24 @@ class OWCommentViewModel: OWCommentViewModeling,
                     return user
                 }
             }
-            .unwrap()
+    }
+
+    var heightChanged: Observable<Void> {
+        Observable.merge(
+            contentVM.outputs.collapsableLabelViewModel.outputs.height.voidify(),
+            shouldShowCommentStatus.voidify()
+        )
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, currentUser) { [weak self] status, user in
-            guard let self = self,
-                  let currentUserId = user.userId,
-                  let commentUserId = self.comment.userId,
-                  currentUserId == commentUserId
-            else { return false }
+        Observable.combineLatest(commentStatusVM.outputs.status, _isCommentOfActiveUser) { status, isCommentOfActiveUser in
+            guard isCommentOfActiveUser else { return false }
 
             return status != .none
         }
         .startWith(false)
     }
+
     var showBlockingLayoutView: Observable<Bool> {
         // Using Observable.merge because in the future we might have more cases where we show disable layout
         Observable.merge(shouldShowCommentStatus)
@@ -98,8 +103,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     func update(comment: OWComment) {
         self.comment = comment
-
-        dictateCommentContentVisibility()
 
         commentHeaderVM.inputs.update(comment: comment)
         commentLabelsContainerVM.inputs.update(comment: comment)
@@ -110,22 +113,21 @@ class OWCommentViewModel: OWCommentViewModeling,
     func update(user: SPUser) {
         self.user = user
 
-        dictateCommentContentVisibility()
-
         commentHeaderVM.inputs.update(user: user)
     }
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        let status = OWCommentStatusType.commentStatus(from: data.comment.status)
-        commentStatusVM = OWCommentStatusViewModel(status: status)
+        var status = OWCommentStatusType.commentStatus(from: data.comment)
+        if status == .rejected { status = .none } // We display rejected status only for new created comments and not for ones from /read request
+        commentStatusVM = OWCommentStatusViewModel(status: status, commentId: data.comment.id ?? "")
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
         user = data.user
-        dictateCommentContentVisibility()
+        setupObservers()
     }
 
     init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
@@ -134,18 +136,30 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
-        commentStatusVM = OWCommentStatusViewModel(status: .none)
+        commentStatusVM = OWCommentStatusViewModel(status: .none, commentId: "")
         comment = OWComment()
         user = SPUser()
+        setupObservers()
     }
 }
 
 fileprivate extension OWCommentViewModel {
-    func dictateCommentContentVisibility() {
-        let shouldHide = self.user.isMuted || // muted
-            self.comment.deleted || // deleted
-            self.comment.reported // reported
+    func setupObservers() {
+        _currentUser
+            .map { [weak self] user -> Bool in
+                guard let self = self, let user = user else { return false }
+                return user.userId == self.comment.userId
+            }
+            .observe(on: MainScheduler.instance)
+            .bind(to: _isCommentOfActiveUser)
+            .disposed(by: disposedBag)
 
-        self._shouldHideCommentContent.onNext(shouldHide)
+        _isCommentOfActiveUser
+            .bind(to: commentHeaderVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        commentHeaderVM.outputs.shouldShowHiddenCommentMessage
+            .bind(to: _shouldHideCommentContent)
+            .disposed(by: disposedBag)
     }
 }

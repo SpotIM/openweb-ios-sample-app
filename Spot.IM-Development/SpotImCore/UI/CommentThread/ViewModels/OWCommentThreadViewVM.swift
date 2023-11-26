@@ -10,10 +10,13 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWCommentThreadCellOption>
 
 protocol OWCommentThreadViewViewModelingInputs {
+    var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
+    var tableViewHeight: PublishSubject<CGFloat> { get }
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
@@ -33,6 +36,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var updateTableViewInstantly: Observable<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -45,18 +49,38 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
 
     fileprivate struct Metrics {
+        static let defaultNumberOfReplies: Int = 5
         static let numberOfSkeletonComments: Int = 10
+        static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
         static let delayForPerformHighlightAnimation: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
+        static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
+        static let updateTableViewInstantlyDelay: Int = 50 // ms
     }
+
+    var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
+
+    var tableViewHeight = PublishSubject<CGFloat>()
+    fileprivate lazy var tableViewHeightChanged: Observable<CGFloat> = {
+        tableViewHeight
+            .filter { $0 > 0 }
+            .distinctUntilChanged()
+            .asObservable()
+    }()
+
+    fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
     }
+
+    fileprivate lazy var spacingBetweenComments: CGFloat = {
+        return self.commentThreadData.settings.fullConversationSettings.style.spacing.betweenComments / Metrics.spacingBetweenCommentsDivisor
+    }()
 
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
@@ -76,7 +100,23 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     fileprivate var _shouldShowErrorLoadingComments = BehaviorSubject<Bool>(value: false)
+    var shouldShowErrorLoadingComments: Observable<Bool> {
+        return _shouldShowErrorLoadingComments
+            .asObservable()
+    }
+
     fileprivate var _tryAgainAfterError = PublishSubject<OWErrorStateTypes>()
+    var tryAgainAfterError: Observable<OWErrorStateTypes> {
+        return _tryAgainAfterError
+            .asObservable()
+    }
+
+    fileprivate var _updateTableViewInstantly = PublishSubject<Void>()
+    var updateTableViewInstantly: Observable<Void> {
+        return _updateTableViewInstantly
+            .delay(.milliseconds(Metrics.updateTableViewInstantlyDelay), scheduler: commentThreadViewVMScheduler)
+            .asObservable()
+    }
 
     fileprivate let _serverCommentsLoadingState = BehaviorSubject<OWLoadingState>(value: .loading(triggredBy: .initialLoading))
     fileprivate var serverCommentsLoadingState: Observable<OWLoadingState> {
@@ -95,23 +135,26 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     fileprivate lazy var errorCellViewModels: Observable<[OWCommentThreadCellOption]> = {
-        return _shouldShowErrorLoadingComments
+        return shouldShowErrorLoadingComments
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return .empty() }
-                return Observable.just(self.getErrorStateCell(errorStateType: .loadConversationComments))
+                return Observable.just(self.getErrorStateCell(errorStateType: .loadCommentThreadComments))
             }
             .startWith([])
     }()
 
     fileprivate lazy var cellsViewModels: Observable<[OWCommentThreadCellOption]> = {
-        return Observable.combineLatest(commentCellsOptions, errorCellViewModels, serverCommentsLoadingState)
+        return Observable.combineLatest(commentCellsOptions,
+                                        errorCellViewModels,
+                                        serverCommentsLoadingState,
+                                        shouldShowErrorLoadingComments)
             .observe(on: commentThreadViewVMScheduler)
-            .flatMapLatest({ [weak self] commentCellsOptions, errorCellViewModels, loadingState -> Observable<[OWCommentThreadCellOption]> in
+            .flatMapLatest({ [weak self] commentCellsOptions, errorCellViewModels, loadingState, shouldShowError -> Observable<[OWCommentThreadCellOption]> in
                 guard let self = self else { return Observable.never() }
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
-                } else if (!errorCellViewModels.isEmpty) {
+                } else if (shouldShowError) {
                     return Observable.just(errorCellViewModels)
                 } else {
                     return Observable.just(commentCellsOptions)
@@ -145,11 +188,11 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
                             let commentVm = commentCellVm.outputs.commentVM
                             let updatedCommentVm = viewModel.outputs.commentVM
 
-                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment
-                                || updatedCommentVm.outputs.user != commentVm.outputs.user) {
-
-                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                            if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
                                 commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                            }
+                            if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
+                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
                             }
                             return OWCommentThreadCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -238,7 +281,21 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var pullToRefresh = PublishSubject<Void>()
     fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
         return pullToRefresh
-            .map { OWLoadingTriggeredReason.pullToRefresh }
+            .withLatestFrom(shouldShowErrorLoadingComments)
+            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
+                }
+            })
+            .map { _ -> OWLoadingTriggeredReason in
+                OWLoadingTriggeredReason.pullToRefresh
+            }
             .asObservable()
     }()
 
@@ -247,6 +304,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
+            .filter { [weak self] in
+                return self?.dataSourceTransition ?? .reload == .animated
+            }
+            .voidify()
             .asObservable()
     }
 
@@ -273,8 +334,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
           commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
-          viewableMode: OWViewableMode = .independent
-    ) {
+          viewableMode: OWViewableMode = .independent) {
         self.servicesProvider = servicesProvider
         self.commentPresentationDataHelper = commentPresentationDataHelper
         self.viewableMode = viewableMode
@@ -308,33 +368,61 @@ fileprivate extension OWCommentThreadViewViewModel {
             case (_, 0):
                 break
             case (0, _):
-                cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
-                    id: "\(commentPresentationData.id)_expand_only",
-                    data: commentPresentationData,
-                    mode: .expand,
-                    depth: depth
-                )))
+                if self.errorsLoadingReplies[commentPresentationData.id] != nil {
+                    cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_collapse",
+                        data: commentPresentationData,
+                        mode: .collapse,
+                        depth: depth,
+                        spacing: spacingBetweenComments
+                    )))
+                } else {
+                    cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                        id: "\(commentPresentationData.id)_expand_only",
+                        data: commentPresentationData,
+                        mode: .expand,
+                        depth: depth,
+                        spacing: spacingBetweenComments
+                    )))
+                }
             default:
                 cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                     id: "\(commentPresentationData.id)_collapse",
                     data: commentPresentationData,
                     mode: .collapse,
-                    depth: depth
+                    depth: depth,
+                    spacing: spacingBetweenComments
                 )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
 
-                if (repliesToShowCount < commentPresentationData.totalRepliesCount) {
+                if self.errorsLoadingReplies[commentPresentationData.id] == nil,
+                   repliesToShowCount < commentPresentationData.totalRepliesCount {
+                    // This is expand more replies in root depth
                     cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                         id: "\(commentPresentationData.id)_expand",
                         data: commentPresentationData,
                         mode: .expand,
-                        depth: depth
+                        depth: depth,
+                        spacing: spacingBetweenComments
                     )))
                 }
             }
+
+            if self.errorsLoadingReplies[commentPresentationData.id] == .error {
+                let cellOptionsError = self.getErrorStateCell(errorStateType: .loadCommentThreadReplies(commentPresentationData: commentPresentationData), depth: depth)
+                cellOptions.append(contentsOf: cellOptionsError)
+            }
+
+            if self.errorsLoadingReplies[commentPresentationData.id] == .reloading {
+                cellOptions.append(contentsOf: self.getLoadingCell())
+            }
         }
         return cellOptions
+    }
+
+    func getLoadingCell() -> [OWCommentThreadCellOption] {
+        return [OWCommentThreadCellOption.loading(viewModel: OWLoadingCellViewModel())]
     }
 
     func getErrorStateCell(errorStateType: OWErrorStateTypes, commentPresentationData: OWCommentPresentationData? = nil, depth: Int = 0) -> [OWCommentThreadCellOption] {
@@ -413,8 +501,8 @@ fileprivate extension OWCommentThreadViewViewModel {
             user: user,
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
-            section: self.commentThreadData.article.additionalSettings.section
-        ))
+            section: self.commentThreadData.article.additionalSettings.section),
+                                      spacing: spacingBetweenComments)
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
@@ -452,23 +540,55 @@ fileprivate extension OWCommentThreadViewViewModel {
         }
 
         // Try again after error loading initial comments
-        let tryAgainAfterInitialError = _tryAgainAfterError
-            .filter { $0 == .loadConversationComments }
+        let tryAgainAfterInitialError = tryAgainAfterError
+            .filter { $0 == .loadCommentThreadComments }
             .voidify()
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
             })
             .map { return OWLoadingTriggeredReason.tryAgainAfterError }
             .asObservable()
 
-        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable, pullToRefreshObservable, tryAgainAfterInitialError)
-            .do(onNext: { [weak self] loadingTriggeredReason in
+        // Try again after error loading more replies
+        let tryAgainAfterLoadingMoreRepliesError = tryAgainAfterError
+            .filter {
+                if case .loadCommentThreadReplies = $0 { return true }
+                return false
+            }
+            .map { errorState -> OWCommentPresentationData? in
+                switch errorState {
+                case .loadCommentThreadReplies(commentPresentationData: let commentPresentationData):
+                    return commentPresentationData
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
+            .do(onNext: { [weak self] commentPresentationData in
                 guard let self = self else { return }
-                self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+                self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
+                if self.errorsLoadingReplies[commentPresentationData.id] == .error {
+                    self.errorsLoadingReplies[commentPresentationData.id] = .reloading
+                    commentPresentationData.update.onNext()
+                }
             })
+            .asObservable()
+
+        pullToRefreshObservable
+            .voidify()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.errorsLoadingReplies.removeAll()
+            })
+            .disposed(by: disposeBag)
+
+        let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable,
+                                                              pullToRefreshObservable,
+                                                              tryAgainAfterInitialError)
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
@@ -541,11 +661,13 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                     // Update loading state only after the presented comments are updated
                     self._serverCommentsLoadingState.onNext(.notLoading)
+
+                    self._updateTableViewInstantly.onNext()
                 }
             })
             .disposed(by: disposeBag)
 
-        // Re-enabling animations in the pre conversation table view
+        // Re-enabling animations in the comment thread table view
         commentThreadFetchedObservable
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] _ in
@@ -554,19 +676,23 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let loadMoreRepliesReadObservable = _loadMoreReplies
+        let loadMoreRepliesReadObservable = Observable.merge(_loadMoreReplies, tryAgainAfterLoadingMoreRepliesError)
             .flatMap { [weak self] commentPresentationData -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 guard let self = self else { return .empty() }
 
-                let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
+                let hasRepliesError = self.errorsLoadingReplies[commentPresentationData.id] != nil
+                let commentPresentationRepliesCount = hasRepliesError ? 0 : commentPresentationData.repliesPresentation.count
 
-                if countAfterUpdate <= commentPresentationData.repliesIds.count {
+                let countAfterUpdate = min(commentPresentationRepliesCount + Metrics.defaultNumberOfReplies, commentPresentationData.totalRepliesCount)
+                let repliesIdsCount = hasRepliesError ? 0 : commentPresentationData.repliesIds.count
+                if countAfterUpdate <= repliesIdsCount {
                     // no need to fetch more comments
                     return Observable.just((commentPresentationData, nil))
                 }
 
-                let currentRepliesCount = commentPresentationData.repliesIds.count
-                let fetchCount = countAfterUpdate - currentRepliesCount
+                let fetchCount = countAfterUpdate - repliesIdsCount
+
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
 
                 return self.servicesProvider
                     .netwokAPI()
@@ -578,21 +704,34 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
 
         let loadMoreRepliesReadUpdated = loadMoreRepliesReadObservable
-            .map { [weak self] (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?)? in
-                guard let self = self else { return nil }
+            .do(onNext: { [weak self] (commentPresentationData, _) in
+                guard let self = self else { return }
+                self.errorsLoadingReplies.removeValue(forKey: commentPresentationData.id)
+            })
+            .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
+                // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
+                guard let self = self else { return Observable.just((commentPresentationData, event)) }
+                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
+                if case .error = event,
+                   timeToLoadMoreReplies < Metrics.delayBeforeTryAgainAfterError {
+                    return Observable.just((commentPresentationData, event))
+                        .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError - timeToLoadMoreReplies), scheduler: self.commentThreadViewVMScheduler)
+                }
+                return Observable.just((commentPresentationData, event))
+            })
+            .map { (commentPresentationData, event) -> (OWCommentPresentationData, OWConversationReadRM?, Bool)? in
                 guard event != nil else {
                     // We didn't have to fetch new data - the event is nil
-                    return (commentPresentationData, nil)
+                    return (commentPresentationData, nil, false)
                 }
 
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
-                    return (commentPresentationData, conversationRead)
+                    return (commentPresentationData, conversationRead, false)
                 case .error(_):
                     // TODO: handle error - update the UI state for showing error in the View layer
-                    self._shouldShowError.onNext()
-                    return nil
+                    return (commentPresentationData, nil, true)
                 default:
                     return nil
                 }
@@ -600,39 +739,43 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
 
         loadMoreRepliesReadUpdated
-            .subscribe(onNext: { [weak self] (commentPresentationData, response) in
+            .subscribe(onNext: { [weak self] (commentPresentationData, response, shouldShowErrorLoadingReplies) in
                 guard let self = self else { return }
+                if shouldShowErrorLoadingReplies {
+                    self.errorsLoadingReplies[commentPresentationData.id] = .error
+                    commentPresentationData.update.onNext()
+                } else {
+                    let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
 
-                let existingRepliesPresentationData = self.getExistingRepliesPresentationData(for: commentPresentationData)
+                    // add presentation data from response
+                    var presentationDataFromResponse: [OWCommentPresentationData] = []
+                    if let response = response {
+                        self.cacheConversationRead(response: response)
 
-                // add presentation data from response
-                var presentationDataFromResponse: [OWCommentPresentationData] = []
-                if let response = response {
-                    self.cacheConversationRead(response: response)
+                        if let responseComments = response.conversation?.comments {
+                            presentationDataFromResponse = self.getCommentsPresentationData(of: responseComments)
+                        }
 
-                    if let responseComments = response.conversation?.comments {
-                        presentationDataFromResponse = self.getCommentsPresentationData(of: responseComments)
+                        // filter existing comments
+                        presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
+
+                        // filter existing reply ids
+                        let newRepliesIds = (response.conversation?.comments?.map { $0.id }.unwrap())?.filter { !commentPresentationData.repliesIds.contains($0) }
+
+                        // update commentPresentationData according to the response
+                        commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
+                        commentPresentationData.repliesOffset = response.conversation?.offset ?? 0
                     }
 
-                    // filter existing comments
-                    presentationDataFromResponse = presentationDataFromResponse.filter { !commentPresentationData.repliesIds.contains($0.id) }
+                    var repliesPresentation = existingRepliesPresentationData + presentationDataFromResponse
 
-                    // filter existing reply ids
-                    let newRepliesIds = (response.conversation?.comments?.map { $0.id }.unwrap())?.filter { !commentPresentationData.repliesIds.contains($0) }
+                    // take required count of replies
+                    let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
+                    repliesPresentation = Array(repliesPresentation.prefix(countAfterUpdate))
 
-                    // update commentPresentationData according to the response
-                    commentPresentationData.repliesIds.append(contentsOf: newRepliesIds ?? [])
-                    commentPresentationData.repliesOffset = response.conversation?.offset ?? 0
+                    commentPresentationData.setRepliesPresentation(repliesPresentation)
+                    commentPresentationData.update.onNext()
                 }
-
-                var repliesPresentation = existingRepliesPresentationData + presentationDataFromResponse
-
-                // take required count of replies
-                let countAfterUpdate = min(commentPresentationData.repliesPresentation.count + 5, commentPresentationData.totalRepliesCount)
-                repliesPresentation = Array(repliesPresentation.prefix(countAfterUpdate))
-
-                commentPresentationData.setRepliesPresentation(repliesPresentation)
-                commentPresentationData.update.onNext()
             })
             .disposed(by: disposeBag)
 
@@ -642,9 +785,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
-                        return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.height
-                            .voidify()
+                        return commentVM.outputs.heightChanged
                     } else {
                         return nil
                     }
@@ -656,6 +797,27 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
             })
+            .disposed(by: disposeBag)
+
+        // Responding to errorState cell with tableViewHeight change
+        Observable.combineLatest(cellsViewModels, tableViewHeightChanged)
+            .flatMapLatest { (cellsVms, tableViewHeight) -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { cellVM in
+                    if case.conversationErrorState(let errorStateCellViewModeling) = cellVM {
+                        let errorStateVM = errorStateCellViewModeling.outputs.errorStateViewModel
+                        if errorStateVM.outputs.errorStateType == .loadCommentThreadComments {
+                            errorStateVM.inputs.heightChange.onNext(tableViewHeight)
+                            return errorStateVM.outputs.height
+                                .voidify()
+                        }
+                    }
+                    return nil
+                }
+                .unwrap()
+                return Observable.merge(sizeChangeObservable)
+            }
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationErrorState), scheduler: commentThreadViewVMScheduler)
+            .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
         // Responding to error states try again tap
@@ -811,7 +973,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // responding to thread action clicked
         commentThreadActionsCellsVmsObservable
-            .flatMap { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
+            .flatMapLatest { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode)> in
                 let threadActionsClickObservable = commentThreadActionsCellsVms.map { commentThreadActionsCellsVm in
                     return commentThreadActionsCellsVm.outputs.commentActionsVM
                         .outputs.tapOutput
@@ -825,6 +987,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 switch mode {
                 case .collapse:
                     self.sendEvent(for: .hideMoreRepliesClicked(commentId: commentPresentationData.id))
+                    self.errorsLoadingReplies.removeValue(forKey: commentPresentationData.id)
                     commentPresentationData.setRepliesPresentation([])
                     commentPresentationData.update.onNext()
                 case .expand:
@@ -944,7 +1107,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let actions = [OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "OK"), type: OWEmptyMenu.ok)]
                 self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
+                        title: OWLocalizationManager.shared.localizedString(key: "ConnectivityErrorMessage"),
                         message: "",
                         actions: actions,
                         viewableMode: self.viewableMode
@@ -1051,8 +1214,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Delete Comment"),
-                        message: OWLocalizationManager.shared.localizedString(key: "Do you really want to delete this comment?"),
+                        title: OWLocalizationManager.shared.localizedString(key: "DeleteCommentTitle"),
+                        message: OWLocalizationManager.shared.localizedString(key: "DeleteCommentMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
@@ -1128,7 +1291,20 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         let muteUserObservable = muteCommentUser
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .mutingUser)
+                    .voidify()
+            }
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                // 2. Waiting for authentication required for muting user
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .mutingUser)
+            }
+            .filter { $0 }
+            .flatMapLatest { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+                // 3. Show alert
                 guard let self = self else { return .empty() }
                 let actions = [
                     OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Mute"), type: OWCommentUserMuteAlert.mute, style: .destructive),
@@ -1136,7 +1312,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 ]
                 return self.servicesProvider.presenterService()
                     .showAlert(
-                        title: OWLocalizationManager.shared.localizedString(key: "Mute User"),
+                        title: OWLocalizationManager.shared.localizedString(key: "MuteUser"),
                         message: OWLocalizationManager.shared.localizedString(key: "MuteUserMessage"),
                         actions: actions,
                         viewableMode: self.viewableMode
@@ -1302,6 +1478,17 @@ fileprivate extension OWCommentThreadViewViewModel {
             .articleExtraData
             .subscribe(onNext: { [weak self] article in
                 self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+        // This calls layoutIfNeeded to initial error loading comments cell, fixes height not always right
+        willDisplayCell
+            .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
+            .filter {  $0.0.cell.isKind(of: OWErrorStateCell.self) && $0.1 }
+            .map { $0.0 }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { willDisplayCellEvent in
+                willDisplayCellEvent.cell.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
     }

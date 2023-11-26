@@ -9,9 +9,7 @@
 import Foundation
 
 #if BETA
-
 struct OWTestingPlaygroundRequiredData {
     let settings: OWTestingPlaygroundSettingsProtocol
 }
-
 #endif

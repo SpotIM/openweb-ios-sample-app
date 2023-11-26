@@ -118,6 +118,38 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
         return coordinate(to: testingPlaygroundCoordinator, deepLinkOptions: deepLinkOptions)
     }
 #endif
+
+#if AUTOMATION
+    func startFontsFlow(automationData: OWAutomationRequiredData,
+                        presentationalMode: OWPresentationalMode,
+                        callbacks: OWViewActionsCallbacks?,
+                        deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWFontsCoordinatorResult> {
+        invalidateExistingFlows()
+
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+
+        let fontsAutomationCoordinator = OWFontsCoordinator(router: router,
+                                                            automationData: automationData,
+                                                            actionsCallbacks: callbacks)
+
+        return coordinate(to: fontsAutomationCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+
+    func startUserStatusFlow(automationData: OWAutomationRequiredData,
+                             presentationalMode: OWPresentationalMode,
+                             callbacks: OWViewActionsCallbacks?,
+                             deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
+        invalidateExistingFlows()
+
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+
+        let userStatusCoordinator = OWUserStatusCoordinator(router: router,
+                                                            automationData: automationData,
+                                                            actionsCallbacks: callbacks)
+
+        return coordinate(to: userStatusCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+#endif
 }
 
 fileprivate extension OWFlowsSDKCoordinator {

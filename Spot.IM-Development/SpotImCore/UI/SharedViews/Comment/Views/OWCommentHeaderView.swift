@@ -266,9 +266,7 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.shouldShowHiddenCommentMessage
             .subscribe(onNext: { [weak self] isHiddenMessage in
-                guard let self = self,
-                      isHiddenMessage
-                else { return }
+                guard let self = self else { return }
 
                 self.dateLabel.isHidden = isHiddenMessage
                 self.optionButton.isHidden = isHiddenMessage
@@ -342,7 +340,7 @@ fileprivate extension OWCommentHeaderView {
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
         optionButton.accessibilityTraits = .button
-        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Options menu")
+        optionButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "OptionsMenu")
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
         subtitleLabel.accessibilityIdentifier = Metrics.userNameSubtitleLabelIdentifier
     }
