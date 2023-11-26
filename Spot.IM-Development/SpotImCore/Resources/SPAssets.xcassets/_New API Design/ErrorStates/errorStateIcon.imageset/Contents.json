@@ -1,17 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "errorStateIconLight.svg",
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "errorStateIcon.svg",
+      "filename" : "exclamation-triangle.pdf",
       "idiom" : "universal"
     }
   ],

@@ -14,6 +14,7 @@ class OWConversationEmptyStateView: UIView {
         static let titleLabelTopOffset: CGFloat = 10
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 60, left: 6, bottom: 60, right: 6)
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
@@ -31,6 +32,7 @@ class OWConversationEmptyStateView: UIView {
     }()
 
     fileprivate lazy var containerView: UIView = { return UIView() }()
+    fileprivate var heightConstraint: OWConstraint?
 
     fileprivate var viewModel: OWConversationEmptyStateViewModeling!
     fileprivate var disposeBag = DisposeBag()
@@ -67,13 +69,15 @@ fileprivate extension OWConversationEmptyStateView {
         self.addSubview(containerView)
         containerView.OWSnp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.leading.greaterThanOrEqualToSuperview()
-            make.trailing.lessThanOrEqualToSuperview()
+            make.leading.greaterThanOrEqualToSuperview().offset(Metrics.margins.left)
+            make.trailing.lessThanOrEqualToSuperview().offset(Metrics.margins.right)
+            make.top.greaterThanOrEqualToSuperview().offset(Metrics.margins.top)
+            make.bottom.lessThanOrEqualToSuperview().offset(Metrics.margins.bottom)
         }
 
         containerView.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.greaterThanOrEqualToSuperview()
             make.centerX.equalToSuperview()
             make.size.equalTo(Metrics.iconSize)
         }
@@ -83,7 +87,7 @@ fileprivate extension OWConversationEmptyStateView {
             make.top.equalTo(iconImageView.OWSnp.bottom).offset(Metrics.titleLabelTopOffset)
             make.leading.trailing.equalToSuperview()
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
         }
     }
 

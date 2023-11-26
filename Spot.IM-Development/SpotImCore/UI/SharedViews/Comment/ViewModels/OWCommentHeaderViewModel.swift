@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentHeaderViewModelingInputs {
     func update(comment: OWComment)
     func update(user: SPUser)
+    var isCommentOfActiveUser: BehaviorSubject<Bool> { get }
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
@@ -69,14 +70,16 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
 
+    var isCommentOfActiveUser = BehaviorSubject<Bool>(value: false)
+
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
-    ) {
+         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
         self.user = data.user
+
         avatarVM = OWAvatarViewModel(user: data.user, imageURLProvider: imageProvider)
         _model.onNext(data.comment)
         _user.onNext(data.user)
@@ -175,36 +178,21 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
 
-    fileprivate var currentUser: Observable<SPUser> {
-        servicesProvider
-            .authenticationManager()
-            .activeUserAvailability
-            .map { availability in
-                switch availability {
-                case .notAvailable:
-                    return nil
-                case .user(let user):
-                    return user
-                }
-            }
-            .unwrap()
-    }
-
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_unwrappedModel, _unwrappedUser, currentUser) { model, user, currentUser in
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser, isCommentOfActiveUser) { model, user, isCommentOfActiveUser in
             let localizationKey: String
-            let isCurrentUserComment = (currentUser.userId == model.userId) && (currentUser.userId != nil)
             if user.isMuted {
-                localizationKey = "This user is muted."
-            } else if (model.reported && !isCurrentUserComment) {
-                localizationKey = "This message was reported."
-            } else if (model.status == .block || model.status == .reject) && !isCurrentUserComment {
-                localizationKey = "This comment violated our policy."
+                localizationKey = "MutedCommentMessage"
+            } else if (model.reported && !isCommentOfActiveUser) {
+                localizationKey = "ReportedCommentMessage"
+            } else if model.status == .block || model.status == .reject {
+                localizationKey = isCommentOfActiveUser ? "AuthorViolatedPolicyCommentMessage" : "ViolatedPolicyCommentMessage"
             } else if model.deleted {
-                localizationKey = "This message was deleted."
+                localizationKey = "DeletedCommentMessage"
             } else {
                 return ""
             }
+
             return OWLocalizationManager.shared.localizedString(key: localizationKey)
         }
     }
@@ -244,7 +232,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         tapMore
             .flatMapLatest { [weak self] view -> Observable<([OWUserAction: Bool], UIView)> in
                 guard let self = self else { return .empty() }
-                let actions: [OWUserAction] = [.reportingComment, .deletingComment, .editingComment, .mutingUser]
+                let actions: [OWUserAction] = [.deletingComment, .editingComment]
                 let authentication = self.servicesProvider.authenticationManager()
 
                 return authentication.userHasAuthenticationLevel(for: actions)
@@ -254,13 +242,11 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .withLatestFrom(isLoggedInUserComment) { ($0.0, $0.1, $1) }
             .withLatestFrom(_unwrappedUser) { ($0.0, $0.1, $0.2, $1) }
             .map { actionsAuthenticationLevel, view, isLoggedInUserComment, user in
-                let allowReportingComment = actionsAuthenticationLevel[.reportingComment] ?? false
                 let allowDeletingComment = actionsAuthenticationLevel[.deletingComment] ?? false
                 let allowEditingComment = actionsAuthenticationLevel[.editingComment] ?? false
-                let allowMuteUser = actionsAuthenticationLevel[.mutingUser] ?? false
 
                 var optionsActions: [OWRxPresenterAction] = []
-                if (allowReportingComment && !isLoggedInUserComment) {
+                if (!isLoggedInUserComment) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Report"),
                         type: OWCommentOptionsMenu.reportComment)
@@ -278,7 +264,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                         type: OWCommentOptionsMenu.deleteComment)
                     )
                 }
-                if (allowMuteUser && !isLoggedInUserComment && !user.isAdmin) {
+                if (!isLoggedInUserComment && !user.isAdmin) {
                     optionsActions.append(OWRxPresenterAction(
                         title: OWLocalizationManager.shared.localizedString(key: "Mute"),
                         type: OWCommentOptionsMenu.muteUser)

@@ -14,7 +14,7 @@ class OWCommentRatingView: UIView {
 
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 24.0
-        static let stackviewHeight: CGFloat = 24.0
+        static let stackviewHeight: CGFloat = 28.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
         static let rankDownButtonIdentifier = "comment_voting_view_rank_down_button_id"
@@ -243,7 +243,7 @@ fileprivate extension OWCommentRatingView {
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-        rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Up vote button")
-        rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "Down vote button")
+        rankUpButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "UpVoteButton")
+        rankDownButton.accessibilityLabel = OWLocalizationManager.shared.localizedString(key: "DownVoteButton")
     }
 }

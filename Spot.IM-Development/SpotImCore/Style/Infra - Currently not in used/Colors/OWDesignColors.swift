@@ -15,7 +15,7 @@ struct OWDesignColors {
     static let G3: UIColor = UIColor(red: 53/255, green: 185/255, blue: 64/255, alpha: 1)
     static let G4: UIColor = UIColor(red: 219/255, green: 55/255, blue: 55/255, alpha: 1)
     static let G5: UIColor = UIColor(red: 57/255, green: 104/255, blue: 255/255, alpha: 1)
-    static let DMG5: UIColor = UIColor(red: 57/255, green: 104/255, blue: 255/255, alpha: 1)
+    static let DMG5: UIColor = UIColor(red: 166/255, green: 191/255, blue: 255/255, alpha: 1)
     static let G6: UIColor = UIColor(red: 250/255, green: 187/255, blue: 9/255, alpha: 1)
     static let L1: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.05)
     static let L2: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.10)

@@ -94,9 +94,8 @@
 "QuestionsStyleModeTitle" = "Questions Style";
 "ConversationSpacingModeTitle" = "Conversation Spacing";
 "BetweenCommentsSpacingTitle" = "Between comments spacing";
-"BelowHeaderSpacingTitle" = "Below header spacing";
-"BelowCommunityGuidelinesSpacingTitle" = "Below guidelines spacing";
-"BelowCommunityQuestionsGuidelinesSpacingTitle" = "Below questions spacing";
+"CommunityGuidelinesSpacingTitle" = "Guidelines spacing";
+"CommunityQuestionsGuidelinesSpacingTitle" = "Questions spacing";
 "None" = "None";
 "LoggerView" = "Logger View";
 "LocaleStrategy" = "Locale strategy";
@@ -113,6 +112,7 @@
 "Style2" = "Style 2";
 "ArticleHeaderStyle" = "Article header style";
 "ArticleInformationStrategy" = "Article information strategy";
+"OrientationEnforcement" = "Orientation Enforcement";
 "Automation" = "Automation";
 "Fonts" = "Fonts";
 "UserInformation" = "User information";
@@ -128,3 +128,7 @@
 "VideoExample" = "Video example";
 "CommunityGuidelines" = "Community Guidelines";
 "ProfileTitle" = "Profile";
+"ShowLoginPromptTitle" = "Show Login Prompt";
+"EnableAll" = "Enable All";
+"Landscape" = "Landscape";
+"Portrait" = "Portrait";

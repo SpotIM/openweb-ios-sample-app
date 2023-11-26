@@ -37,6 +37,7 @@ class OWNavigationControllerCustomizer: OWNavigationControllerCustomizing {
         activeNavigationController = navigationController
         let currentThemeStyle = servicesProvider.themeStyleService().currentStyle
         setupNavController(style: currentThemeStyle) // Setup navigation controller right away
+        activeNavigationController?.navigationBar.useAsThemeStyleInjector()
     }
 
     func isLargeTitlesEnabled() -> Bool {

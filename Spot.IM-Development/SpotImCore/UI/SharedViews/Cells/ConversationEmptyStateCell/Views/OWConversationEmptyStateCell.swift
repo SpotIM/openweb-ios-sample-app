@@ -45,8 +45,7 @@ fileprivate extension OWConversationEmptyStateCell {
 
         self.addSubview(conversationEmptyStateView)
         conversationEmptyStateView.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.trailing.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
 }

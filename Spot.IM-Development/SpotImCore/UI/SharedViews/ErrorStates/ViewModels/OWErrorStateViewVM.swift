@@ -17,7 +17,6 @@ protocol OWErrorStateViewViewModelingInputs {
 
 protocol OWErrorStateViewViewModelingOutputs {
     var title: String { get }
-    var tryAgainText: NSAttributedString { get }
     var tryAgainTapped: Observable<OWErrorStateTypes> { get }
     var shouldHaveBorder: Bool { get }
     var height: Observable<CGFloat> { get }
@@ -58,10 +57,10 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
     lazy var title: String = {
         let key = {
             switch errorStateType {
-            case .loadConversationComments, .loadMoreConversationComments:
-                return "ErrorStateLoadConversationComments"
-            case .loadConversationReplies:
-                return "ErrorStateLoadConversationReplies"
+            case .loadConversationComments, .loadMoreConversationComments, .loadCommentThreadComments:
+                return "ErrorStateLoadComments"
+            case .loadConversationReplies, .loadCommentThreadReplies:
+                return "ErrorStateLoadReplies"
             case .none:
                 return ""
             }
@@ -69,26 +68,11 @@ class OWErrorStateViewViewModel: OWErrorStateViewViewModeling, OWErrorStateViewV
         return OWLocalizationManager.shared.localizedString(key: key)
     }()
 
-    lazy var tryAgainText: NSAttributedString = {
-        let tryAgainText = OWLocalizationManager.shared.localizedString(key: "TryAgain")
-        var attributedString = NSMutableAttributedString(string: tryAgainText)
-        attributedString.addAttribute(.foregroundColor,
-                                      value: UIColor.brandColor,
-                                         range: NSRange(location: 0, length: attributedString.length))
-        attributedString.addAttribute(.font,
-                                      value: OWFontBook.shared.font(typography: .bodyInteraction, forceOpenWebFont: false),
-                                         range: NSRange(location: 0, length: attributedString.length))
-        attributedString.addAttribute(.underlineStyle,
-                                      value: NSUnderlineStyle.single.rawValue,
-                                      range: NSRange(location: 0, length: attributedString.length))
-        return attributedString
-    }()
-
     lazy var shouldHaveBorder: Bool = {
         switch errorStateType {
-        case .none, .loadConversationComments:
+        case .none, .loadConversationComments, .loadCommentThreadComments:
             return false
-        case .loadMoreConversationComments, .loadConversationReplies:
+        case .loadMoreConversationComments, .loadConversationReplies, .loadCommentThreadReplies:
             return true
         }
     }()
