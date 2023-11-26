@@ -48,10 +48,15 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
 
         let webTabVCPopped = PublishSubject<Void>()
 
-        router.push(webTabVC,
-                    pushStyle: .regular,
-                    animated: true,
-                    popCompletion: webTabVCPopped)
+        if router.isEmpty() {
+            router.start()
+            router.setRoot(webTabVC, animated: false, dismissCompletion: webTabVCPopped)
+        } else {
+            router.push(webTabVC,
+                        pushStyle: .regular,
+                        animated: true,
+                        popCompletion: webTabVCPopped)
+        }
 
         let webVCPoppedObservable = webTabVCPopped
             .map { OWWebTabCoordinatorResult.popped }

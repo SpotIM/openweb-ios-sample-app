@@ -56,7 +56,7 @@ class OWReportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModel
     }
 
     var confirmButtonText: String {
-        return OWLocalizationManager.shared.localizedString(key: "Got it")
+        return OWLocalizationManager.shared.localizedString(key: "GotIt")
     }
 
     var closeReportReasonSubmittedTap = PublishSubject<Void>()

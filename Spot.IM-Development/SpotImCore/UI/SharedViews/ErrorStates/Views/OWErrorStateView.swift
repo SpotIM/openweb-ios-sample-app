@@ -13,11 +13,11 @@ class OWErrorStateView: UIView {
     fileprivate struct Metrics {
         static let borderWidth: CGFloat = 1
         static let borderRadius: CGFloat = 12
-        static let verticalMainPadding: CGFloat = 18
+        static let verticalMainPadding: CGFloat = 12
         static let ctaHorizontalPadding: CGFloat = 4
         static let ctaVerticalPadding: CGFloat = 5
         static let linesPadding: CGFloat = 10
-        static let headerIconSize: CGFloat = 27
+        static let headerIconSize: CGFloat = 36
         static let retryIconSize: CGFloat = 14
 
         static let identifier = "error_state_view_id"
@@ -40,30 +40,18 @@ class OWErrorStateView: UIView {
     fileprivate lazy var headerIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
-            .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: false)!)
-    }()
-
-    fileprivate lazy var retryIcon: UIImageView = {
-       return UIImageView()
-            .contentMode(.scaleAspectFit)
-            .image(UIImage(spNamed: "errorStateRetryIcon", supportDarkMode: false)!)
+            .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: true))
     }()
 
     fileprivate lazy var titleLabel: UILabel = {
        return UILabel()
-            .font(OWFontBook.shared.font(typography: .footnoteText, forceOpenWebFont: false))
+            .font(OWFontBook.shared.font(typography: .footnoteLink, forceOpenWebFont: false))
             .textAlignment(.center)
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var ctaLabel: UILabel = {
-       return UILabel()
-            .enforceSemanticAttribute()
-    }()
-
-    fileprivate lazy var ctaView: UIView = {
-        let tryAgainView = UIView()
-            .backgroundColor(.clear)
+    fileprivate lazy var ctaView: OWErrorRetryCTAView = {
+        let tryAgainView = OWErrorRetryCTAView()
         tryAgainView.addGestureRecognizer(ctaTapGesture)
         return tryAgainView
     }()
@@ -121,20 +109,6 @@ fileprivate extension OWErrorStateView {
             make.top.equalTo(headerIcon.OWSnp.bottom).offset(Metrics.linesPadding)
         }
 
-        ctaView.addSubviews(ctaLabel, retryIcon)
-
-        ctaLabel.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.bottom.top.equalToSuperview().inset(Metrics.ctaVerticalPadding)
-        }
-
-        retryIcon.OWSnp.makeConstraints { make in
-            make.leading.equalTo(ctaLabel.OWSnp.trailing).offset(Metrics.ctaHorizontalPadding)
-            make.size.equalTo(Metrics.retryIconSize)
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
-        }
-
         containerView.addSubview(ctaView)
         ctaView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -150,7 +124,6 @@ fileprivate extension OWErrorStateView {
 
     func setupObservers() {
         self.titleLabel.text(viewModel.outputs.title)
-        self.ctaLabel.attributedText(viewModel.outputs.tryAgainText)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -158,8 +131,7 @@ fileprivate extension OWErrorStateView {
                 guard let self = self else { return }
                 let borderColor: UIColor = self.viewModel.outputs.shouldHaveBorder ? OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle) : .clear
                 self.border(width: Metrics.borderWidth, color: borderColor)
-                self.ctaLabel.attributedText = self.viewModel.outputs.tryAgainText
-                self.ctaLabel.textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle))
+                self.headerIcon.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
                 self.titleLabel.textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
@@ -184,15 +156,21 @@ fileprivate extension OWErrorStateView {
                 self.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteLink)
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         containerView.accessibilityIdentifier = Metrics.containerViewIdentifier
         headerIcon.accessibilityIdentifier = Metrics.headerIconIdentifier
-        retryIcon.accessibilityIdentifier = Metrics.retryIconIdentifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
-        ctaLabel.accessibilityIdentifier = Metrics.ctaLabelIdentifier
         ctaView.accessibilityIdentifier = Metrics.ctaViewIdentifier
     }
 }

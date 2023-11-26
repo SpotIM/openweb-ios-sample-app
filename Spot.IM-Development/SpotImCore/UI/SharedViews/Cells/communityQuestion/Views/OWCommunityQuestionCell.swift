@@ -51,9 +51,10 @@ fileprivate extension OWCommunityQuestionCell {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
-        self.addSubviews(communityQuestionView)
+        self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(Metrics.edgesPadding)
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.edgesPadding)
         }
     }
 

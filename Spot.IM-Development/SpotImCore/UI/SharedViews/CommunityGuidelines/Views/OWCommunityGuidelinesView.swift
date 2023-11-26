@@ -21,30 +21,12 @@ class OWCommunityGuidelinesView: UIView {
         static let sideOffset: CGFloat = 20
 
         static let identifier = "community_guidelines_id"
-        static let communityGuidelinesTextViewIdentifier = "community_guidelines_text_view_id"
+        static let communityGuidelinesLabelIdentifier = "community_guidelines_label_id"
     }
 
-    fileprivate lazy var titleTextView: UITextView = {
-        let textView = UITextView()
-            .backgroundColor(.clear)
-            .delegate(self)
-            .isEditable(false)
-            .isSelectable(true)
-            .userInteractionEnabled(true)
-            .isScrollEnabled(false)
-            .wrapContent(axis: .vertical)
-            .hugContent(axis: .vertical)
-            .font(OWFontBook.shared.font(typography: .bodySpecial))
-            .dataDetectorTypes([.link])
-            .textContainerInset(.zero)
-
-        textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
-                                       NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
-                                       NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodySpecial)]
-
-        textView.textContainer.lineFragmentPadding = 0
-        textView.sizeToFit()
-        return textView
+    fileprivate lazy var titleLabel: UILabel = {
+        return UILabel()
+            .numberOfLines(0)
             .enforceSemanticAttribute()
     }()
 
@@ -92,6 +74,7 @@ class OWCommunityGuidelinesView: UIView {
         self.disposeBag = DisposeBag()
         updateUI()
         setupObservers()
+        self.layoutIfNeeded()
     }
 }
 
@@ -104,12 +87,13 @@ fileprivate extension OWCommunityGuidelinesView {
 
         guidelinesContainer.removeFromSuperview()
         guidelinesIcon.removeFromSuperview()
-        titleTextView.removeFromSuperview()
+        titleLabel.removeFromSuperview()
 
-        if viewModel.outputs.showContainer {
+        if viewModel.outputs.shouldShowContainer {
             self.addSubview(guidelinesContainer)
             guidelinesContainer.OWSnp.makeConstraints { make in
-                make.edges.equalToSuperview()
+                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
+                make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
 
@@ -120,16 +104,17 @@ fileprivate extension OWCommunityGuidelinesView {
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             }
 
-            guidelinesContainer.addSubview(titleTextView)
-            titleTextView.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
+            guidelinesContainer.addSubview(titleLabel)
+            titleLabel.OWSnp.makeConstraints { make in
+                make.top.bottom.equalToSuperview().inset(Metrics.horizontalPadding)
                 make.leading.equalTo(guidelinesIcon.OWSnp.trailing).offset(Metrics.horizontalPadding)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             }
         } else {
-            self.addSubview(titleTextView)
-            titleTextView.OWSnp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            self.addSubview(titleLabel)
+            titleLabel.OWSnp.makeConstraints { make in
+                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
+                make.leading.trailing.equalToSuperview()
                 heightConstraint = make.height.equalTo(0).constraint
             }
         }
@@ -148,15 +133,22 @@ fileprivate extension OWCommunityGuidelinesView {
                 .disposed(by: disposeBag)
         }
 
-        viewModel.outputs.communityGuidelinesHtmlAttributedString
-            .bind(to: titleTextView.rx.attributedText)
-            .disposed(by: disposeBag)
+        let communityGuidelinesClickableStringObservable = viewModel.outputs
+            .communityGuidelinesClickableString
 
-        // disable selecting text - we need it to allow click on links
-        titleTextView.rx.didChangeSelection
-            .subscribe(onNext: { [weak self] in
+        let communityGuidelinesAttributedStringObservable = viewModel.outputs
+            .communityGuidelinesAttributedString
+
+        Observable.combineLatest(communityGuidelinesAttributedStringObservable,
+                                 communityGuidelinesClickableStringObservable)
+            .subscribe(onNext: { [weak self] attributedText, clickableString in
                 guard let self = self else { return }
-                self.titleTextView.selectedTextRange = nil
+                self.titleLabel
+                    .attributedText(attributedText)
+                    .addRangeGesture(targetRange: clickableString) { [weak self] in
+                        guard let self = self else { return }
+                        self.viewModel.inputs.urlClicked.onNext(())
+                    }
             })
             .disposed(by: disposeBag)
 
@@ -165,35 +157,19 @@ fileprivate extension OWCommunityGuidelinesView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.guidelinesContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
-                self.titleTextView.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.updateCustomUI()
-            })
-            .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.appLifeCycle()
-            .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.titleTextView.font = OWFontBook.shared.font(typography: .bodySpecial)
             })
             .disposed(by: disposeBag)
     }
 
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeContainerViewUI.onNext(guidelinesContainer)
-        viewModel.inputs.triggerCustomizeTitleTextViewUI.onNext(titleTextView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
         viewModel.inputs.triggerCustomizeIconImageViewUI.onNext(guidelinesIcon)
     }
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        titleTextView.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier
-    }
-}
-
-extension OWCommunityGuidelinesView: UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        viewModel.inputs.urlClicked.onNext(URL)
-        return false
+        titleLabel.accessibilityIdentifier = Metrics.communityGuidelinesLabelIdentifier
     }
 }

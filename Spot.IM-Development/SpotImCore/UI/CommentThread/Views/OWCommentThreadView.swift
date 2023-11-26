@@ -62,6 +62,8 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var tableViewRefreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
+        refresh.tintColor(OWColorPalette.shared.color(type: .loaderColor,
+                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         refresh.userInteractionEnabled(false)
         return refresh
     }()
@@ -103,6 +105,7 @@ fileprivate extension OWCommentThreadView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -186,6 +189,26 @@ fileprivate extension OWCommentThreadView {
         tableView.rx.contentOffset
             .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.changeThreadOffset)
+            .disposed(by: disposeBag)
+
+        tableView.rx.willDisplayCell
+            .observe(on: MainScheduler.instance)
+            .bind(to: viewModel.inputs.willDisplayCell)
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+            .unwrap()
+            .map { $0.size.height }
+            .bind(to: viewModel.inputs.tableViewHeight)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.updateTableViewInstantly
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+            })
             .disposed(by: disposeBag)
     }
 }

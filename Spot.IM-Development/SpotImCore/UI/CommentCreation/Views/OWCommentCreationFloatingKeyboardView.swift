@@ -100,7 +100,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
                let displayName = user.displayName {
                 name = displayName
             }
-            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "Replying to "))
+            var attributedString = NSMutableAttributedString(string: OWLocalizationManager.shared.localizedString(key: "ReplyingTo"))
 
             let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .bodyContext)]
             let boldUserNameString = NSMutableAttributedString(string: name, attributes: attrs)
@@ -451,12 +451,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     }
                 }
 
-                let bottomPadding: CGFloat
-                if #available(iOS 11.0, *) {
-                    bottomPadding = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.bottom ?? 0
-                } else {
-                    bottomPadding = 0
-                }
+                let bottomPadding = self.window?.safeAreaInsets.bottom ?? 0
 
                 self.mainContainer.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))

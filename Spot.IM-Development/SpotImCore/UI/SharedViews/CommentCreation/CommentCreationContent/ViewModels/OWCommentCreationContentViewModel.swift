@@ -70,10 +70,19 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     fileprivate lazy var _commentTextCharactersLimit: Observable<Int?> = {
         return servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-            .map { config -> Int? in
-                guard config.mobileSdk.shouldShowCommentCounter else { return nil }
-                return config.mobileSdk.commentCounterCharactersLimit
+            .materialize()
+            .map { event -> Int? in
+                switch event {
+                case .next(let config):
+                    guard config.mobileSdk.shouldShowCommentCounter else { return nil }
+                    return config.mobileSdk.commentCounterCharactersLimit
+                case .error:
+                    return nil
+                default:
+                    return nil
+                }
             }
+            .startWith(nil)
     }()
 
     var commentTextOutput: Observable<String> {
@@ -101,7 +110,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var placeholderText: Observable<String> {
         switch commentCreationType {
         case .replyToComment:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "Type your reply…"))
+            return Observable.just(OWLocalizationManager.shared.localizedString(key: "TypeYourReply"))
         default:
             return Observable.just(OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink"))
         }

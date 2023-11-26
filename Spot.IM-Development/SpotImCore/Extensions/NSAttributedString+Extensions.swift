@@ -102,7 +102,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readLess = NSAttributedString(
-            string: SPLocalizationManager.localizedString(key: "Read Less"),
+            string: SPLocalizationManager.localizedString(key: "ReadLess"),
             attributes: attribs)
 
         let mutableSelf = mutableCopy() as? NSMutableAttributedString
@@ -223,14 +223,4 @@ extension NSAttributedString {
         guard let lines = linesNS as? [CTLine] else { return [] }
         return lines
     }
-}
-
-extension NSMutableAttributedString {
-
-    func setAsLink(textToFind: String, linkURL: String) {
-            let foundRange = self.mutableString.range(of: textToFind)
-            if foundRange.location != NSNotFound {
-                self.addAttribute(.link, value: linkURL, range: foundRange)
-            }
-        }
 }

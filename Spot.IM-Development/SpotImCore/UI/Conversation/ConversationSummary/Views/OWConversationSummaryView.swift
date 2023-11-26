@@ -116,22 +116,16 @@ fileprivate extension OWConversationSummaryView {
         // Setup summary
         self.addSubview(summaryView)
         summaryView.OWSnp.makeConstraints { make in
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.leadingOffset)
-                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.trailingOffset)
-            } else {
-                make.leading.equalToSuperview().offset(Metrics.leadingOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.trailingOffset)
-            }
+            make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.leadingOffset)
+            make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.trailingOffset)
             make.top.equalToSuperview().offset(Metrics.margins.top)
-            make.bottom.equalToSuperview().offset(-Metrics.margins.bottom)
         }
 
         // Setup bottom horizontal separator
         self.addSubview(bottomHorizontalSeparator)
         bottomHorizontalSeparator.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(summaryView.OWSnp.bottom).offset(Metrics.margins.bottom)
+            make.bottom.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
     }

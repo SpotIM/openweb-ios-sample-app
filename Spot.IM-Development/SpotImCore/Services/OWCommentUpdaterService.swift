@@ -29,8 +29,8 @@ class OWCommentUpdaterService: OWCommentUpdaterServicing {
     }
 
     func update(_ updateType: OWCommentUpdateType, postId: OWPostId) {
-        self._updatedCommentsWithPostId.onNext((updateType, postId))
         self.cacheUpdatedComments(for: updateType, postId: postId)
+        self._updatedCommentsWithPostId.onNext((updateType, postId))
     }
 
     func getUpdatedComments(for postId: OWPostId) -> RxSwift.Observable<OWCommentUpdateType> {

@@ -18,7 +18,6 @@ enum OWConversationCellOption: CaseIterable, OWUpdaterProtocol {
                 .spacer(viewModel: OWSpacerCellViewModel.stub()),
                 .communityQuestion(viewModel: OWCommunityQuestionCellViewModel.stub()),
                 .communityGuidelines(viewModel: OWCommunityGuidelinesCellViewModel.stub()),
-                // TODO: Decide if we need an OWConversationEmptyState cell/cellVM after final design in all orientations
                 .conversationEmptyState(viewModel: OWConversationEmptyStateCellViewModel.stub()),
                 .conversationErrorState(viewModel: OWErrorStateCellViewModel.stub()),
                 .loading(viewModel: OWLoadingCellViewModel.stub())]
