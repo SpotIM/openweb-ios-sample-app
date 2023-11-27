@@ -19,9 +19,10 @@
 "Post" = "הגב";
 "SignUpToPost" = "הירשם כדי להגיב";
 "ConnectivityErrorMessage" = "אופססס! נראה שאנו חווים בעיה בתקשורת";
+"CloseEditor" = "לסגור את העורך?";
 "Delete" = "מחיקת תגובה";
 "DeleteCommentTitle" = "מחיקת תגובה";
-"DeleteCommentMessage" = "אישור המחיקה ימחק לאלתר את התגובה מהשיחה. האם ברצונך למחוק את ההודעה?";
+"DeleteCommentMessage" = "האם ברצונך למחוק תגובה זו?";
 "Report" = "דיווח תגובה";
 "GotIt" = "תודה, קיבלתי";
 "SortBy" = "סנן לפי";
@@ -33,6 +34,7 @@
 "ReportedCommentMessage" = "התקבל דיווח על הודעה זו.";
 "MutedCommentMessage" = "המשתמש הזה מושתק";
 "ViolatedPolicyCommentMessage" = "תגובה זו הפרה את המדיניות שלנו.";
+"AuthorViolatedPolicyCommentMessage" = "התגובה שלך הפרה את המדיניות שלנו.";
 "ShowMoreComments" = "טען תגובות נוספות";
 "Terms" = "תנאים";
 "Privacy" = "פרטיות";

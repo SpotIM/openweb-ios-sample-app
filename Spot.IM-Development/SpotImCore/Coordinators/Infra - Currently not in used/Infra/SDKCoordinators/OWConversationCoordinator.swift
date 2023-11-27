@@ -261,7 +261,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .urlClickedOutput
 
         // Coordinate to safari tab
-        let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "profile_title")
+        let profilePageTitle = OWLocalizationManager.shared.localizedString(key: "ProfileTitle")
         let coordinateToSafariObservables = Observable.merge(
             communityGuidelinesURLTapped.map { ($0, "") },
             conversationVM.outputs.conversationViewVM.outputs.commentingCTAViewModel.outputs.openProfile.map {
@@ -524,27 +524,22 @@ fileprivate extension OWConversationCoordinator {
             .outputs.communityQuestionViewModel
             .outputs.customizeQuestionContainerViewUI
 
-        let communityQuestionCustomizeTitleLabel = viewModel.outputs.communityQuestionCellViewModel
+        let communityQuestionCustomizeTitle = viewModel.outputs.communityQuestionCellViewModel
             .outputs.communityQuestionViewModel
             .outputs.customizeQuestionTitleLabelUI
-
-        let communityQuestionCustomizeTitleTextView = viewModel.outputs.communityQuestionCellViewModel
-            .outputs.communityQuestionViewModel
-            .outputs.customizeQuestionTitleTextViewUI
 
         let communityQuestionStyle = viewModel.outputs.communityQuestionCellViewModel
             .outputs.communityQuestionViewModel
             .outputs.style
 
         let communityQuestionCustomizationElementObservable = Observable.combineLatest(communityQuestionCustomizeContainer,
-                                                                                    communityQuestionCustomizeTitleLabel,
-                                                                                    communityQuestionCustomizeTitleTextView)
-            .flatMap { container, titleLabel, titleTextView in
+                                                                                    communityQuestionCustomizeTitle)
+            .flatMap { container, title in
                 switch communityQuestionStyle {
                 case .regular:
-                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .regular(textView: titleTextView)))
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .regular(label: title)))
                 case .compact:
-                    return Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: titleLabel)))
+                    return Observable.just(OWCustomizableElement.communityQuestion(element: .compact(containerView: container, label: title)))
                 case .none:
                     return .empty()
                 }
@@ -557,7 +552,7 @@ fileprivate extension OWConversationCoordinator {
 
         let communityGuidelinesCustomizeTitle = viewModel.outputs.communityGuidelinesCellViewModel
             .outputs.communityGuidelinesViewModel
-            .outputs.customizeTitleTextViewUI
+            .outputs.customizeTitleLabelUI
 
         let communityGuidelinesCustomizeIcon = viewModel.outputs.communityGuidelinesCellViewModel
             .outputs.communityGuidelinesViewModel
@@ -573,9 +568,9 @@ fileprivate extension OWConversationCoordinator {
             .flatMap { container, icon, title in
                 switch communityGuidelinesStyle {
                 case .regular:
-                    return Observable.just(OWCustomizableElement.communityQuestion(element: .regular(textView: title)))
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .regular(label: title)))
                 case .compact:
-                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, textView: title)))
+                    return Observable.just(OWCustomizableElement.communityGuidelines(element: .compact(containerView: container, icon: icon, label: title)))
                 case .none:
                     return .empty()
                 }

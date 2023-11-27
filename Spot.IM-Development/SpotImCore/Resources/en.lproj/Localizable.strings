@@ -18,9 +18,10 @@
 "Post" = "Post";
 "SignUpToPost" = "Sign Up to Post";
 "ConnectivityErrorMessage" = "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues.";
+"CloseEditor" = "Close editor?";
 "Delete" = "Delete";
 "DeleteCommentTitle" = "Delete Comment";
-"DeleteCommentMessage" = "Do you really want to delete this comment?";
+"DeleteCommentMessage" = "Are you sure you want to delete this comment?";
 "Report" = "Report";
 "GotIt" = "Got it";
 "SortBy" = "Sort by";
@@ -32,6 +33,7 @@
 "ReportedCommentMessage" = "This message was reported.";
 "MutedCommentMessage" = "This user is muted.";
 "ViolatedPolicyCommentMessage" = "This comment violated our policy.";
+"AuthorViolatedPolicyCommentMessage" = "Your comment violated our policy.";
 "ShowMoreComments" = "SHOW MORE COMMENTS";
 "Terms" = "Terms";
 "Privacy" = "Privacy";
@@ -129,6 +131,29 @@
 "EditingComment" = "Editing comment"; // TODO: add to other languages
 "ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
 "ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
+
+// Automotion only - does not required other languages translations
+"Fonts" = "Fonts";
+"Typography" = "Typography";
+"TitleSmall" = "titleSmall";
+"TitleLarge" = "titleLarge";
+"TitleMedium" = "titleMedium";
+"BodyText" = "bodyText";
+"BodyInteraction" = "bodyInteraction";
+"BodyContext" = "bodyContext";
+"BodySpecial" = "bodySpecial";
+"FootnoteText" = "footnoteText";
+"FootnoteLink" = "footnoteLink";
+"FootnoteContext" = "footnoteContext";
+"FootnoteSpecial" = "footnoteSpecial";
+"FootnoteCaption" = "footnoteCaption";
+"MetaText" = "metaText";
+"InfoCaption" = "infoCaption";
+"UserInformation" = "User information";
+"ActiveSpotId" = "Active spot id";
+"ActivePostId" = "Active post id";
+"UserStatus" = "User status";
+"SDKNotInitializedWarning" = "Warning ‼️ Seems like the SDK isn't initialized";
 
 // Old API
 "Your Username" = "Your Username";
