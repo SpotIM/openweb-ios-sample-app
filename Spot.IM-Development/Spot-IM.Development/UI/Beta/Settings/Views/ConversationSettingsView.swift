@@ -83,20 +83,14 @@ class ConversationSettingsView: UIView {
                                 font: FontBook.paragraph)
     }()
 
-    fileprivate lazy var textFieldBelowHeaderSpacing: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.belowHeaderSpacingTitle,
-                                accessibilityPrefixId: Metrics.textFieldBelowHeaderSpacingIdentifier,
-                                font: FontBook.paragraph)
-    }()
-
-    fileprivate lazy var textFieldBelowCommunityGuidelinesSpacing: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.belowCommunityGuidelinesSpacingTitle,
+    fileprivate lazy var textFieldCommunityGuidelinesSpacing: TextFieldSetting = {
+        return TextFieldSetting(title: viewModel.outputs.communityGuidelinesSpacingTitle,
                                 accessibilityPrefixId: Metrics.textFieldBelowCommunityGuidelinesSpacingIdentifier,
                                 font: FontBook.paragraph)
     }()
 
-    fileprivate lazy var textFieldBelowCommunityQuestionsSpacing: TextFieldSetting = {
-        return TextFieldSetting(title: viewModel.outputs.belowCommunityQuestionsGuidelinesSpacingTitle,
+    fileprivate lazy var textFieldCommunityQuestionsSpacing: TextFieldSetting = {
+        return TextFieldSetting(title: viewModel.outputs.communityQuestionsGuidelinesSpacingTitle,
                                 accessibilityPrefixId: Metrics.textFieldBelowCommunityQuestionsSpacingIdentifier,
                                 font: FontBook.paragraph)
     }()
@@ -139,9 +133,8 @@ fileprivate extension ConversationSettingsView {
         stackView.addArrangedSubview(segmentedCommunityQuestionsStyleMode)
         stackView.addArrangedSubview(segmentedConversationSpacingMode)
         stackView.addArrangedSubview(textFieldBetweenCommentsSpacing)
-        stackView.addArrangedSubview(textFieldBelowHeaderSpacing)
-        stackView.addArrangedSubview(textFieldBelowCommunityGuidelinesSpacing)
-        stackView.addArrangedSubview(textFieldBelowCommunityQuestionsSpacing)
+        stackView.addArrangedSubview(textFieldCommunityGuidelinesSpacing)
+        stackView.addArrangedSubview(textFieldCommunityQuestionsSpacing)
     }
 
     func setupObservers() {
@@ -186,31 +179,22 @@ fileprivate extension ConversationSettingsView {
             .bind(to: viewModel.inputs.betweenCommentsSpacingSelected)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.belowHeaderSpacing
-            .bind(to: textFieldBelowHeaderSpacing.rx.textFieldTextAfterEnded)
+        viewModel.outputs.communityGuidelinesSpacing
+            .bind(to: textFieldCommunityGuidelinesSpacing.rx.textFieldTextAfterEnded)
             .disposed(by: disposeBag)
 
-        textFieldBelowHeaderSpacing.rx.textFieldTextAfterEnded
+        textFieldCommunityGuidelinesSpacing.rx.textFieldTextAfterEnded
             .unwrap()
-            .bind(to: viewModel.inputs.belowHeaderSpacingSelected)
+            .bind(to: viewModel.inputs.communityGuidelinesSpacingSelected)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.belowCommunityGuidelinesSpacing
-            .bind(to: textFieldBelowCommunityGuidelinesSpacing.rx.textFieldTextAfterEnded)
+        viewModel.outputs.communityQuestionsGuidelinesSpacing
+            .bind(to: textFieldCommunityQuestionsSpacing.rx.textFieldTextAfterEnded)
             .disposed(by: disposeBag)
 
-        textFieldBelowCommunityGuidelinesSpacing.rx.textFieldTextAfterEnded
+        textFieldCommunityQuestionsSpacing.rx.textFieldTextAfterEnded
             .unwrap()
-            .bind(to: viewModel.inputs.belowCommunityGuidelinesSpacingSelected)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.belowCommunityQuestionsGuidelinesSpacing
-            .bind(to: textFieldBelowCommunityQuestionsSpacing.rx.textFieldTextAfterEnded)
-            .disposed(by: disposeBag)
-
-        textFieldBelowCommunityQuestionsSpacing.rx.textFieldTextAfterEnded
-            .unwrap()
-            .bind(to: viewModel.inputs.belowCommunityQuestionsGuidelinesSpacingSelected)
+            .bind(to: viewModel.inputs.communityQuestionsGuidelinesSpacingSelected)
             .disposed(by: disposeBag)
 
         viewModel.outputs.showCustomStyleOptions
@@ -222,10 +206,9 @@ fileprivate extension ConversationSettingsView {
         Observable.combineLatest(viewModel.outputs.showCustomStyleOptions, viewModel.outputs.showSpacingOptions) { showCustomStyleOptions, showSpacingOptions in
             return !(showCustomStyleOptions && showSpacingOptions) // Not hide text fields
         }
-        .bind(to: textFieldBelowHeaderSpacing.rx.isHidden,
-                  textFieldBelowCommunityGuidelinesSpacing.rx.isHidden,
-                  textFieldBetweenCommentsSpacing.rx.isHidden,
-                  textFieldBelowCommunityQuestionsSpacing.rx.isHidden)
+        .bind(to: textFieldBetweenCommentsSpacing.rx.isHidden,
+              textFieldCommunityGuidelinesSpacing.rx.isHidden,
+              textFieldCommunityQuestionsSpacing.rx.isHidden)
         .disposed(by: disposeBag)
     }
 }

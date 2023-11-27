@@ -18,7 +18,6 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentActionsVM: OWCommentActionsViewModeling { get }
-
     var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
@@ -28,7 +27,6 @@ protocol OWCommentViewModelingOutputs {
     var shouldShowCommentStatus: Observable<Bool> { get }
     var showBlockingLayoutView: Observable<Bool> { get }
     var heightChanged: Observable<Void> { get }
-
     var comment: OWComment { get }
     var user: SPUser { get }
 }
@@ -106,8 +104,6 @@ class OWCommentViewModel: OWCommentViewModeling,
     func update(comment: OWComment) {
         self.comment = comment
 
-        dictateCommentContentVisibility()
-
         commentHeaderVM.inputs.update(comment: comment)
         commentLabelsContainerVM.inputs.update(comment: comment)
         contentVM.inputs.update(comment: comment)
@@ -117,22 +113,20 @@ class OWCommentViewModel: OWCommentViewModeling,
     func update(user: SPUser) {
         self.user = user
 
-        dictateCommentContentVisibility()
-
         commentHeaderVM.inputs.update(user: user)
     }
 
     init(data: OWCommentRequiredData, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        let status = OWCommentStatusType.commentStatus(from: data.comment.status)
-        commentStatusVM = OWCommentStatusViewModel(status: status)
+        var status = OWCommentStatusType.commentStatus(from: data.comment)
+        if status == .rejected { status = .none } // We display rejected status only for new created comments and not for ones from /read request
+        commentStatusVM = OWCommentStatusViewModel(status: status, commentId: data.comment.id ?? "")
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment, section: data.section)
         contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(comment: data.comment)
         comment = data.comment
         user = data.user
-        dictateCommentContentVisibility()
         setupObservers()
     }
 
@@ -142,20 +136,10 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
         commentEngagementVM = OWCommentEngagementViewModel()
-        commentStatusVM = OWCommentStatusViewModel(status: .none)
+        commentStatusVM = OWCommentStatusViewModel(status: .none, commentId: "")
         comment = OWComment()
         user = SPUser()
         setupObservers()
-    }
-}
-
-fileprivate extension OWCommentViewModel {
-    func dictateCommentContentVisibility() {
-        let shouldHide = self.user.isMuted || // muted
-            self.comment.deleted || // deleted
-            self.comment.reported // reported
-
-        self._shouldHideCommentContent.onNext(shouldHide)
     }
 }
 
@@ -172,6 +156,10 @@ fileprivate extension OWCommentViewModel {
 
         _isCommentOfActiveUser
             .bind(to: commentHeaderVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        commentHeaderVM.outputs.shouldShowHiddenCommentMessage
+            .bind(to: _shouldHideCommentContent)
             .disposed(by: disposedBag)
     }
 }

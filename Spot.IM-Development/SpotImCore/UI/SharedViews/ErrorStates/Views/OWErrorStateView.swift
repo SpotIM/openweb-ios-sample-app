@@ -40,13 +40,7 @@ class OWErrorStateView: UIView {
     fileprivate lazy var headerIcon: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
-            .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: false)!)
-    }()
-
-    fileprivate lazy var retryIcon: UIImageView = {
-       return UIImageView()
-            .contentMode(.scaleAspectFit)
-            .image(UIImage(spNamed: "errorStateRetryIcon", supportDarkMode: false)!)
+            .image(UIImage(spNamed: "errorStateIcon", supportDarkMode: true))
     }()
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -56,14 +50,8 @@ class OWErrorStateView: UIView {
             .enforceSemanticAttribute()
     }()
 
-    fileprivate lazy var ctaLabel: UILabel = {
-       return UILabel()
-            .enforceSemanticAttribute()
-    }()
-
-    fileprivate lazy var ctaView: UIView = {
-        let tryAgainView = UIView()
-            .backgroundColor(.clear)
+    fileprivate lazy var ctaView: OWErrorRetryCTAView = {
+        let tryAgainView = OWErrorRetryCTAView()
         tryAgainView.addGestureRecognizer(ctaTapGesture)
         return tryAgainView
     }()
@@ -121,20 +109,6 @@ fileprivate extension OWErrorStateView {
             make.top.equalTo(headerIcon.OWSnp.bottom).offset(Metrics.linesPadding)
         }
 
-        ctaView.addSubviews(ctaLabel, retryIcon)
-
-        ctaLabel.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.bottom.top.equalToSuperview().inset(Metrics.ctaVerticalPadding)
-        }
-
-        retryIcon.OWSnp.makeConstraints { make in
-            make.leading.equalTo(ctaLabel.OWSnp.trailing).offset(Metrics.ctaHorizontalPadding)
-            make.size.equalTo(Metrics.retryIconSize)
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
-        }
-
         containerView.addSubview(ctaView)
         ctaView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -150,7 +124,6 @@ fileprivate extension OWErrorStateView {
 
     func setupObservers() {
         self.titleLabel.text(viewModel.outputs.title)
-        self.ctaLabel.attributedText(viewModel.outputs.tryAgainText)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -158,7 +131,7 @@ fileprivate extension OWErrorStateView {
                 guard let self = self else { return }
                 let borderColor: UIColor = self.viewModel.outputs.shouldHaveBorder ? OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle) : .clear
                 self.border(width: Metrics.borderWidth, color: borderColor)
-                self.ctaLabel.textColor(OWColorPalette.shared.color(type: .textColor7, themeStyle: currentStyle))
+                self.headerIcon.image = UIImage(spNamed: "errorStateIcon", supportDarkMode: true)
                 self.titleLabel.textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
@@ -189,7 +162,6 @@ fileprivate extension OWErrorStateView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteLink)
-                self.ctaLabel.attributedText = self.viewModel.outputs.tryAgainText
             })
             .disposed(by: disposeBag)
     }
@@ -198,9 +170,7 @@ fileprivate extension OWErrorStateView {
         self.accessibilityIdentifier = Metrics.identifier
         containerView.accessibilityIdentifier = Metrics.containerViewIdentifier
         headerIcon.accessibilityIdentifier = Metrics.headerIconIdentifier
-        retryIcon.accessibilityIdentifier = Metrics.retryIconIdentifier
         titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
-        ctaLabel.accessibilityIdentifier = Metrics.ctaLabelIdentifier
         ctaView.accessibilityIdentifier = Metrics.ctaViewIdentifier
     }
 }

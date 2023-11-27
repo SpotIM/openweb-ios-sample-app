@@ -12,6 +12,7 @@ enum OWFontTypography {
     case titleSmall
     case titleLarge
     case titleMedium
+    case titleMediumSpecial
     case bodyText
     case bodyInteraction
     case bodyContext
@@ -31,6 +32,7 @@ extension OWFontTypography {
         switch self {
         case .titleLarge: return 24
         case .titleMedium: return 20
+        case .titleMediumSpecial: return 20
         case .titleSmall: return 18
         case .bodyText: return 15
         case .bodyInteraction: return 15
@@ -50,6 +52,7 @@ extension OWFontTypography {
         switch self {
         case .titleLarge: return .bold
         case .titleMedium: return .bold
+        case .titleMediumSpecial: return .italic
         case .titleSmall: return .bold
         case .bodyText: return .regular
         case .bodyInteraction: return .semiBold
@@ -69,6 +72,7 @@ extension OWFontTypography {
         switch self {
         case .titleLarge: return .title2
         case .titleMedium: return .title3
+        case .titleMediumSpecial: return .title3
         case .titleSmall: return .headline
         case .bodyText: return .body
         case .bodyInteraction: return .body
@@ -88,6 +92,7 @@ extension OWFontTypography {
         switch self {
         case .titleLarge: return .fixed(26)
         case .titleMedium: return .fixed(24)
+        case .titleMediumSpecial: return .fixed(24)
         case .titleSmall: return .fixed(21)
         case .bodyText: return .fixed(21)
         case .bodyInteraction: return .fixed(21)
@@ -107,6 +112,7 @@ extension OWFontTypography {
         switch self {
         case .titleLarge: return .none
         case .titleMedium: return .none
+        case .titleMediumSpecial: return .none
         case .titleSmall: return .none
         case .bodyText: return .none
         case .bodyInteraction: return .none

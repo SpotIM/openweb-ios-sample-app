@@ -18,7 +18,7 @@ protocol OWAuthenticationManagerProtocol {
     func updateNetworkCredentials(from response: HTTPURLResponse)
 
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
-    func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
+    func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Bool>
 
     func userHasAuthenticationLevel(for actions: [OWUserAction]) -> Observable<[OWUserAction: Bool]>
     func userHasAuthenticationLevel(for action: OWUserAction) -> Observable<Bool>
@@ -35,7 +35,7 @@ protocol OWAuthenticationManagerProtocol {
 }
 
 extension OWAuthenticationManagerProtocol {
-    func waitForAuthentication(for action: OWUserAction) -> Observable<Void> {
+    func waitForAuthentication(for action: OWUserAction) -> Observable<Bool> {
         return self.waitForAuthentication(for: action, waitForBlockingCompletions: true)
     }
 }
@@ -105,11 +105,22 @@ extension OWAuthenticationManager {
 
                 let routeringMode: OWRouteringMode
 
+                var router: OWRoutering? = nil
                 if case let OWRouteringModeInternal.routering(routering) = routeringModeProtocol.activeRouteringMode,
                    let navController = routering.navigationController {
                     routeringMode = .flow(navigationController: navController)
+                    router = routering
                 } else {
                    routeringMode = .none
+                }
+
+                // For Pre-conversation present mode where the VC not started yet
+                if let router = router, router.isEmpty() {
+                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: {
+                        router.start()
+                    })
+                    let vc = OWNavigationPlaceholderVC(viewModel: vm)
+                    router.setRoot(vc, animated: false, dismissCompletion: nil)
                 }
 
                 authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
@@ -152,24 +163,25 @@ extension OWAuthenticationManager {
             }
     }
 
-    func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool = true) -> Observable<Void> {
-        return self.requiredAuthenticationLevel(for: action)
-            .flatMap { [weak self] requiredlevel -> Observable<Void> in
-                guard let self = self else { return .empty() }
-                return self.waitForAuthenticationLevel(aboveOrEqual: requiredlevel)
-                    .take(1)
-                    .voidify()
-            }
-            .flatMap { [weak self] _ -> Observable<Void> in
-                guard let self = self else { return .empty() }
-                if waitForBlockingCompletions {
-                    return self.servicesProvider.blockerServicing().waitForNonBlocker()
-                } else {
-                    return .just(())
-                }
-            }
-    }
+    func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool = true) -> Observable<Bool> {
+        let authenticationForActionObserver: Observable<Bool>
 
+        if waitForBlockingCompletions {
+            authenticationForActionObserver = self.servicesProvider.blockerServicing().waitForNonBlocker()
+                .withLatestFrom(self.userHasAuthenticationLevel(for: action))
+        } else {
+            authenticationForActionObserver = self.requiredAuthenticationLevel(for: action)
+                .flatMap { [weak self] requiredlevel -> Observable<Void> in
+                    guard let self = self else { return .empty() }
+                    return self.waitForAuthenticationLevel(aboveOrEqual: requiredlevel)
+                        .voidify()
+                }
+                .map { true }
+        }
+
+        return authenticationForActionObserver
+            .take(1)
+    }
 }
 
 // Network related methods

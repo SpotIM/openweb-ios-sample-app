@@ -51,7 +51,7 @@ fileprivate extension OWCommunityGuidelinesCell {
 
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(Metrics.edgesPadding)
+            make.top.bottom.equalToSuperview()
             make.leading.trailing.equalTo(safeAreaLayoutGuide).inset(Metrics.edgesPadding)
         }
     }

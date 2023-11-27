@@ -47,4 +47,14 @@ class OWNavigationController: UINavigationController, OWNavigationControllerProt
             _dismissed.onNext()
         }
     }
+
+    override func popViewController(animated: Bool) -> UIViewController? {
+        let vcCount = viewControllers.count
+        let poppedVC = super.popViewController(animated: animated)
+        // Dismiss the navigation controller if it's empty
+        if vcCount == 1 {
+            dismiss(animated: animated, completion: nil)
+        }
+        return poppedVC
+    }
 }

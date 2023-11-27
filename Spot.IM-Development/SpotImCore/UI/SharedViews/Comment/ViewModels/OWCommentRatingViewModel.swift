@@ -12,6 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentRatingViewModelingInputs {
+    var rankChanged: PublishSubject<SPRankChange> { get }
     var tapRankUp: PublishSubject<Void> { get }
     var tapRankDown: PublishSubject<Void> { get }
 }
@@ -24,7 +25,7 @@ protocol OWCommentRatingViewModelingOutputs {
     var rankDownSelected: Observable<Bool> { get }
     var votingUpImages: Observable<VotingImages> { get }
     var votingDownImages: Observable<VotingImages> { get }
-    var rankChanged: Observable<SPRankChange> { get }
+    var rankChangeTriggered: Observable<SPRankChange> { get }
 }
 
 protocol OWCommentRatingViewModeling {
@@ -42,6 +43,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     fileprivate let disposeBag = DisposeBag()
     fileprivate let sharedServiceProvider: OWSharedServicesProviding
 
+    var rankChanged = PublishSubject<SPRankChange>()
     var tapRankUp = PublishSubject<Void>()
     var tapRankDown = PublishSubject<Void>()
 
@@ -60,10 +62,24 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
 
-    fileprivate var _rankChanged = PublishSubject<SPRankChange>()
-    var rankChanged: Observable<SPRankChange> {
-        _rankChanged
-            .asObservable()
+    var rankChangeTriggered: Observable<SPRankChange> {
+        let rankUpTriggeredObservable = tapRankUp
+            .withLatestFrom(_rankedByUser.unwrap())
+            .map { ranked -> SPRankChange in
+                let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
+                let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
+                return SPRankChange(from: from, to: to)
+            }
+
+        let rankDownTriggeredObservable = tapRankDown
+            .withLatestFrom(_rankedByUser.unwrap())
+            .map { ranked -> SPRankChange in
+                let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
+                let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
+                return SPRankChange(from: from, to: to)
+            }
+
+        return Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
     }
 
     fileprivate let commentId: String
@@ -192,46 +208,8 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
 fileprivate extension OWCommentRatingViewModel {
     func setupObservers() {
-        let rankUpTriggeredObservable = tapRankUp.withLatestFrom(_rankedByUser.unwrap())
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in ranked }
-            }
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
-                // 2. Waiting for authentication required for voting
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { _ in ranked }
-            }
-            .map { ranked -> SPRankChange in
-                let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
-                let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
-                return SPRankChange(from: from, to: to)
-            }
-
-        let rankDownTriggeredObservable = tapRankDown.withLatestFrom(_rankedByUser.unwrap())
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
-                // 1. Triggering authentication UI if needed
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in ranked }
-            }
-            .flatMapLatest { [weak self] ranked -> Observable<Int> in
-                // 2. Waiting for authentication required for voting
-                guard let self = self else { return .empty() }
-                return self.sharedServiceProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { _ in ranked }
-            }
-            .map { ranked -> SPRankChange in
-                let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
-                let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
-                return SPRankChange(from: from, to: to)
-            }
-
-        let rankChangedLocallyObservable: Observable<SPRankChange> = Observable.merge(rankUpTriggeredObservable, rankDownTriggeredObservable)
-            .flatMap { [weak self] rankChange -> Observable<SPRankChange> in
+        let rankChangedLocallyObservable: Observable<SPRankChange> = rankChanged
+            .flatMapLatest { [weak self] rankChange -> Observable<SPRankChange> in
                 guard let self = self else { return .empty() }
 
                 return Observable.combineLatest(self._rankUp, self._rankDown)
@@ -245,13 +223,12 @@ fileprivate extension OWCommentRatingViewModel {
 
         // Updating Network/Remote about rank change
         rankChangedLocallyObservable
-            .flatMap { [weak self] rankChange -> Observable<EmptyDecodable> in
+            .flatMapLatest { [weak self] rankChange -> Observable<EmptyDecodable> in
                 guard let self = self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
                 else { return .empty() }
 
-                self._rankChanged.onNext(rankChange)
                 return self.sharedServiceProvider
                     .netwokAPI()
                     .conversation
