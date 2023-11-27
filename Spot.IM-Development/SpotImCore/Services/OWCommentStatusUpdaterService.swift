@@ -104,6 +104,7 @@ fileprivate extension OWCommentStatusUpdaterService {
                 return self.getRawStatus(for: comment)
                     .map { ($0, comment) }
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] (status, comment) in
                 guard let self = self,
                       let commentId = comment.id
