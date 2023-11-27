@@ -54,7 +54,7 @@ protocol OWConversationViewViewModelingOutputs {
     var scrollToCellIndex: Observable<Int> { get }
     var scrollToCellIndexIfNotVisible: Observable<Int> { get }
     var reloadCellIndex: Observable<Int> { get }
-    var highlightCellIndex: Observable<[Int]> { get }
+    var highlightCellsIndexes: Observable<[Int]> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -89,6 +89,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
+        static let delayAfterScrolledToCellAnimated: Int = 500 // ms
+        static let delayAfterInsertToTableView: Int = 400 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let tableViewPaginationCellsOffset: Int = 5
@@ -216,9 +218,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     var scrolledToCellIndex = PublishSubject<Int>()
 
-    fileprivate var _highlightCellIndex = PublishSubject<[Int]>()
-    var highlightCellIndex: Observable<[Int]> {
-        return _highlightCellIndex
+    fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
+    var highlightCellsIndexes: Observable<[Int]> {
+        return _highlightCellsIndexes
             .asObserver()
     }
 
@@ -1810,7 +1812,7 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        _insertNewRealtimeComments
+        let scrolledToCellIndexObsarvable = _insertNewRealtimeComments
             .do(onNext: { [weak self] comments in
                 guard let self = self else { return }
                 let commentsIds = comments.map { $0.id }.unwrap()
@@ -1823,21 +1825,33 @@ fileprivate extension OWConversationViewViewModel {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
             })
-            .delay(.milliseconds(Metrics.delayAfterScrolledToTopAnimated), scheduler: conversationViewVMScheduler)
+            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: conversationViewVMScheduler)
             .withLatestFrom(firstVisibleCommentIndex) { ($0, $1) }
-            .flatMapLatest { [weak self] comments, firstVisibleCommentIndex -> Observable<([OWComment], Int)> in
-                guard let self = self else { return .empty() }
-                self._scrollToCellIndexIfNotVisible.onNext(firstVisibleCommentIndex)
+            .withLatestFrom(commentCellsOptions) { ($0.0, $0.1, $1) }
+            .map { comments, firstVisibleCommentIndex, commentCellsOptions -> [Int] in
+                let indexes = commentCellsOptions.enumerated().compactMap { index, element in
+                    if element.cellClass == OWCommentCell.self { return index + firstVisibleCommentIndex } else { return nil }
+                }
+                return Array(indexes.prefix(comments.count))
+            }
+            .flatMapLatest { [weak self] indexes -> Observable<[Int]> in
+                guard let self = self, let firstIndex = indexes.first else { return .empty() }
+                print("RIVI firstIndex \(firstIndex)")
+                self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
 
                 // waiting for scroll to index
                 return self.scrolledToCellIndex
-                    .map { index in (comments, index) }
+                    .filter { $0 == firstIndex }
+                    .startWith(-1)
+                    .map { _ in return indexes}
             }
-            .subscribe(onNext: { [weak self] comments, firstVisibleCommentIndex in
-                guard let self = self else { return }
-                let newCommentsIndexesArray = Array(firstVisibleCommentIndex ..< firstVisibleCommentIndex + comments.count)
 
-                self._highlightCellIndex.onNext(newCommentsIndexesArray)
+        scrolledToCellIndexObsarvable
+            .delay(.milliseconds(Metrics.delayAfterScrolledToCellAnimated), scheduler: conversationViewVMScheduler)
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self else { return }
+
+                self._highlightCellsIndexes.onNext(indexes)
             })
             .disposed(by: disposeBag)
 
