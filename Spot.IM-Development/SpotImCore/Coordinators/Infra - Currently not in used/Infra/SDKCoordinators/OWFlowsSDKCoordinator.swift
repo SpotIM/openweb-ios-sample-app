@@ -42,7 +42,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
 
                     self.store(coordinator: preConversationCoordinator)
 
-                    let dissmissConversation = preConversationCoordinator.dissmissConversation
+                    let dissmissConversation = preConversationCoordinator.dismissInitialVC
                         .do(onNext: { [weak self] in
                             guard let self = self else { return }
                             self.cleanRouter(presentationalMode: presentationalMode)
