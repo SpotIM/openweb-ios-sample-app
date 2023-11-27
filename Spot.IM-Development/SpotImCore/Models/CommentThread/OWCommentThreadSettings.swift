@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 public struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
-    public let performActionType: OWCommentThreadPerformActionType
+    public var performActionType: OWCommentThreadPerformActionType
 
     public init(performActionType: OWCommentThreadPerformActionType = .none) {
         self.performActionType = performActionType
@@ -18,7 +18,7 @@ public struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
 }
 #else
 struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
-    let performActionType: OWCommentThreadPerformActionType
+    var performActionType: OWCommentThreadPerformActionType
 
     init(performActionType: OWCommentThreadPerformActionType = .none) {
         self.performActionType = performActionType
