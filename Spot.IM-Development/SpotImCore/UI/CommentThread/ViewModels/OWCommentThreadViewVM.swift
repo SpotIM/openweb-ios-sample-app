@@ -1116,7 +1116,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .take(1)
             .subscribe(onNext: { [weak self] index in
-                self?._performHighlightAnimationCellIndex.onNext(index)
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload
+                self._performHighlightAnimationCellIndex.onNext(index)
             })
             .disposed(by: disposeBag)
 
@@ -1510,6 +1512,12 @@ fileprivate extension OWCommentThreadViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { willDisplayCellEvent in
                 willDisplayCellEvent.cell.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
+
+        scrolledToCellIndex
+            .subscribe(onNext: { [weak self] _ in
+                self?.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
     }
