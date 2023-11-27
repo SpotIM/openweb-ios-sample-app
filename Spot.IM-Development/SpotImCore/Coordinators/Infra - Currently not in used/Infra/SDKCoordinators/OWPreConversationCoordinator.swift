@@ -18,9 +18,9 @@ enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
-    fileprivate var _dissmissConversation = PublishSubject<Void>()
-    var dissmissConversation: Observable<Void> {
-        return _dissmissConversation.asObservable()
+    fileprivate var _dismissInitialVC = PublishSubject<Void>()
+    var dismissInitialVC: Observable<Void> {
+        return _dismissInitialVC.asObservable()
     }
 
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
@@ -127,7 +127,7 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return }
                 switch coordinatorResult {
                 case .popped:
-                    self._dissmissConversation.onNext()
+                    self._dismissInitialVC.onNext()
                 default:
                     break
                 }
@@ -165,6 +165,15 @@ fileprivate extension OWPreConversationCoordinator {
                                                                    actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
+            .do(onNext: { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                switch coordinatorResult {
+                case .popped:
+                    self._dismissInitialVC.onNext()
+                default:
+                    break
+                }
+            })
             .subscribe()
             .disposed(by: disposeBag)
 
