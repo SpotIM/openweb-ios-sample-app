@@ -90,7 +90,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
-        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 500
+        static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
@@ -315,10 +315,9 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                                         shouldShowErrorLoadingComments,
                                         errorCellViewModels,
                                         shouldShowConversationEmptyState,
-                                        isLoadingMoreComments,
                                         shouldShowErrorLoadingMoreComments)
         .observe(on: conversationViewVMScheduler)
-        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, isLoadingMoreComments, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
+        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
 
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
@@ -330,16 +329,25 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     let emptyStateCellOption = [OWConversationCellOption.conversationEmptyState(viewModel: self.conversationEmptyStateCellViewModel)]
                     return Observable.just(communityCellsOptions + emptyStateCellOption)
                 } else {
-                    var loadingCell = isLoadingMoreComments ? self.getLoadingCell() : []
                     let errorLoadingMoreCell = shouldShowErrorLoadingMoreComments ? self.getErrorStateCell(errorStateType: .loadMoreConversationComments) : []
+                    var loadingCell = self.conversationHasNext && !shouldShowErrorLoadingMoreComments ? self.getLoadingCell() : []
                     return Observable.just(communityCellsOptions + commentCellsOptions + loadingCell + errorLoadingMoreCell)
                 }
             })
-            .observe(on: MainScheduler.instance)
-            .scan([], accumulator: { [weak self] previousConversationCellsOptions, newConversationCellsOptions in
-                guard let self = self else { return [] }
+            .map { cellOptions in
+                return OWConversationScanData(cellOptions: cellOptions)
+            }
+            .scan(OWConversationScanData.empty, accumulator: { [weak self] previousScanData, newScanData in
+                guard let self = self else { return OWConversationScanData.empty }
+
                 var commentsVmsMapper = [OWCommentId: OWCommentCellViewModeling]()
                 var commentThreadActionVmsMapper = [String: OWCommentThreadActionsCellViewModeling]()
+
+                var commentVMsUpdateComment: [(OWCommentViewModeling, OWCommentViewModeling)] = []
+                var commentVMsUpdateUser: [(OWCommentViewModeling, OWCommentViewModeling)] = []
+
+                var previousConversationCellsOptions = previousScanData.cellOptions
+                var newConversationCellsOptions = newScanData.cellOptions
 
                 previousConversationCellsOptions.forEach { conversationCellOption in
                     switch conversationCellOption {
@@ -364,10 +372,10 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                             let updatedCommentVm = viewModel.outputs.commentVM
 
                             if (updatedCommentVm.outputs.comment != commentVm.outputs.comment) {
-                                commentVm.inputs.update(comment: updatedCommentVm.outputs.comment)
+                                commentVMsUpdateComment.append((commentVm, updatedCommentVm))
                             }
                             if (updatedCommentVm.outputs.user != commentVm.outputs.user) {
-                                commentVm.inputs.update(user: updatedCommentVm.outputs.user)
+                                commentVMsUpdateUser.append((commentVm, updatedCommentVm))
                             }
                             return OWConversationCellOption.comment(viewModel: commentCellVm)
                         } else {
@@ -387,8 +395,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     }
                 }
 
-                return adjustedNewCommentCellOptions
+                return OWConversationScanData(commentVMsUpdateComment: commentVMsUpdateComment,
+                                              commentVMsUpdateUser: commentVMsUpdateUser,
+                                              cellOptions: adjustedNewCommentCellOptions)
             })
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { conversationScanData in
+                for updateCommentTuples in conversationScanData.commentVMsUpdateComment {
+                    updateCommentTuples.0.inputs.update(comment: updateCommentTuples.1.outputs.comment)
+                }
+                for updateUserTuples in conversationScanData.commentVMsUpdateUser {
+                    updateUserTuples.0.inputs.update(comment: updateUserTuples.1.outputs.comment)
+                }
+            })
+            .observe(on: conversationViewVMScheduler)
+            .map { return $0.cellOptions }
             .asObservable()
             .share(replay: 1)
     }()
@@ -1553,21 +1574,42 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Observe on rank click
-        commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWCommentId, SPRankChange)> in
-                let rankClickObservable: [Observable<(OWCommentId, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentId, SPRankChange)> in
-                    let commentRankVm = commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.votingVM
+        let userTryingToChangeRankObservable = commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
+                let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
+                    let commentVm = commentCellVm.outputs.commentVM
+                    let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
 
-                    return commentRankVm.outputs.rankChanged
-                        .map { (commentCellVm.outputs.commentVM.outputs.comment.id ?? "", $0) }
+                    return commentRankVm.outputs.rankChangeTriggered
+                        .map { (commentVm, $0) }
                 }
                 return Observable.merge(rankClickObservable)
             }
-            .subscribe(onNext: { [weak self] commentId, rank in
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
+                    .map { _ in (commentVm, rankChange) }
+            }
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)?> in
+                // 2. Waiting for authentication required for voting
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
+                    .map { $0 ? (commentVm, rankChange) : nil }
+            }
+            .unwrap()
+
+        userTryingToChangeRankObservable
+            .do(onNext: { [weak self] commentVm, rankChange in
                 guard let self = self,
-                      let eventType = rank.analyticsEventType(commentId: commentId)
+                      let commentId = commentVm.outputs.comment.id,
+                      let eventType = rankChange.analyticsEventType(commentId: commentId)
                 else { return }
                 self.sendEvent(for: eventType)
+            })
+            .subscribe(onNext: { commentVm, rankChange in
+                let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
+                commentRankVm.inputs.rankChanged.onNext(rankChange)
             })
             .disposed(by: disposeBag)
 
