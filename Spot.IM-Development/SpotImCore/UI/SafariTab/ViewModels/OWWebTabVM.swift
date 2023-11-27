@@ -11,12 +11,14 @@ import RxSwift
 
 protocol OWWebTabViewModelingInputs {
     var viewDidLoad: PublishSubject<Void> { get }
+    var closeWebTabTapped: PublishSubject<Void> { get }
 }
 
 protocol OWWebTabViewModelingOutputs {
     var webTabViewVM: OWWebTabViewViewModeling { get }
     var screenLoaded: Observable<Void> { get }
     var options: OWWebTabOptions { get }
+    var closeWebTab: Observable<Void> { get }
 }
 
 protocol OWWebTabViewModeling {
@@ -35,6 +37,11 @@ class OWWebTabViewModel: OWWebTabViewModeling, OWWebTabViewModelingInputs, OWWeb
         return OWWebTabViewViewModel(options: options,
                                         viewableMode: self.viewableMode)
     }()
+
+    var closeWebTabTapped = PublishSubject<Void>()
+    var closeWebTab: Observable<Void> {
+        return closeWebTabTapped.asObservable()
+    }
 
     var viewDidLoad = PublishSubject<Void>()
     var screenLoaded: Observable<Void> {
