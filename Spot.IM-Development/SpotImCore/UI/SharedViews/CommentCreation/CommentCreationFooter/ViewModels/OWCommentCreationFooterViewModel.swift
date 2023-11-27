@@ -77,9 +77,21 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
     var performCtaAction: Observable<Void> {
         tapCta
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<Bool> in
+            .map { [weak self] _ -> OWUserAction? in
+                guard let self = self else { return nil }
+                switch self.commentCreationType {
+                case .comment:
+                    return .commenting
+                case .replyToComment:
+                    return .replyingComment
+                case .edit:
+                    return .editingComment
+                }
+            }
+            .unwrap()
+            .flatMap { [weak self] userAction -> Observable<Bool> in
                 guard let self = self else { return .empty() }
-                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
             .do(onNext: { [weak self] loginToPost in
                 guard let self = self,
