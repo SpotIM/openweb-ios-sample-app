@@ -10,10 +10,10 @@ import Foundation
 
 #if NEW_API
 public protocol OWCommentThreadSettingsProtocol {
-
+    var performActionType: OWCommentThreadPerformActionType { get }
 }
 #else
 protocol OWCommentThreadSettingsProtocol {
-
+    var performActionType: OWCommentThreadPerformActionType { get }
 }
 #endif

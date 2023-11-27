@@ -22,7 +22,7 @@ public struct OWCommentThreadSettingsBuilder {
     }
 
     public func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings()
+        return OWCommentThreadSettings(performActionType: performActionType)
     }
 }
 #else
@@ -39,7 +39,7 @@ struct OWCommentThreadSettingsBuilder {
     }
 
     func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings()
+        return OWCommentThreadSettings(performActionType: performActionType)
     }
 }
 #endif
