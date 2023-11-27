@@ -105,11 +105,22 @@ extension OWAuthenticationManager {
 
                 let routeringMode: OWRouteringMode
 
+                var router: OWRoutering? = nil
                 if case let OWRouteringModeInternal.routering(routering) = routeringModeProtocol.activeRouteringMode,
                    let navController = routering.navigationController {
                     routeringMode = .flow(navigationController: navController)
+                    router = routering
                 } else {
                    routeringMode = .none
+                }
+
+                // For Pre-conversation present mode where the VC not started yet
+                if let router = router, router.isEmpty() {
+                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: {
+                        router.start()
+                    })
+                    let vc = OWNavigationPlaceholderVC(viewModel: vm)
+                    router.setRoot(vc, animated: false, dismissCompletion: nil)
                 }
 
                 authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
