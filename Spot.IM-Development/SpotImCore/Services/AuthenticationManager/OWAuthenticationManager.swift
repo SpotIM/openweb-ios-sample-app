@@ -559,6 +559,8 @@ fileprivate extension OWAuthenticationManager {
         switch action {
         case .commenting:
             return levelAccordingToRegistration
+        case .replyingComment:
+            return levelAccordingToRegistration
         case .mutingUser:
             return .loggedIn
         case .votingComment:
