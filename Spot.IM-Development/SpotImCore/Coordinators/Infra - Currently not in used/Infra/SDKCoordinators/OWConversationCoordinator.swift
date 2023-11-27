@@ -293,8 +293,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 let options = OWWebTabOptions(url: url,
                                                  title: title)
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
-                                                               options: options,
-                                                               actionsCallbacks: self.actionsCallbacks)
+                                                            options: options,
+                                                            actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
             .do(onNext: { result in

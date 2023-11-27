@@ -165,6 +165,15 @@ fileprivate extension OWPreConversationCoordinator {
                                                                    actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
             }
+            .do(onNext: { [weak self] coordinatorResult in
+                guard let self = self else { return }
+                switch coordinatorResult {
+                case .popped:
+                    self._dissmissConversation.onNext()
+                default:
+                    break
+                }
+            })
             .subscribe()
             .disposed(by: disposeBag)
 
