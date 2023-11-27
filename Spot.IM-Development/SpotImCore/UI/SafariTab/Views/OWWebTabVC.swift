@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SafariServices
 import RxSwift
+import RxCocoa
 
 class OWWebTabVC: UIViewController {
     fileprivate struct Metrics {
@@ -28,12 +29,9 @@ class OWWebTabVC: UIViewController {
     }
 
     fileprivate lazy var closeButton: UIButton = {
-        let closeButton = UIButton()
+        return UIButton()
             .image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
             .horizontalAlignment(.left)
-
-        closeButton.addTarget(self, action: #selector(self.closeWebTabTapped(_:)), for: .touchUpInside)
-        return closeButton
     }()
 
     init(viewModel: OWWebTabViewModeling) {
@@ -78,6 +76,10 @@ fileprivate extension OWWebTabVC {
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
             })
             .disposed(by: disposeBag)
+
+        closeButton.rx.tap
+            .bind(to: viewModel.inputs.closeWebTabTapped)
+            .disposed(by: disposeBag)
     }
 
     func addingCloseButtonIfNeeded() {
@@ -85,9 +87,5 @@ fileprivate extension OWWebTabVC {
         if self.navigationController?.viewControllers.count == 1 {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
-    }
-
-    @objc func closeWebTabTapped(_ sender: UIBarButtonItem) {
-        viewModel.inputs.closeWebTabTapped.onNext()
     }
 }
