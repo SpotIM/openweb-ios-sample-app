@@ -34,6 +34,7 @@
 "ReportedCommentMessage" = "התקבל דיווח על הודעה זו.";
 "MutedCommentMessage" = "המשתמש הזה מושתק";
 "ViolatedPolicyCommentMessage" = "תגובה זו הפרה את המדיניות שלנו.";
+"AuthorViolatedPolicyCommentMessage" = "התגובה שלך הפרה את המדיניות שלנו.";
 "ShowMoreComments" = "טען תגובות נוספות";
 "Terms" = "תנאים";
 "Privacy" = "פרטיות";
