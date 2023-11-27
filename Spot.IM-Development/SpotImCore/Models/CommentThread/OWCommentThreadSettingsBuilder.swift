@@ -10,9 +10,15 @@ import Foundation
 
 #if NEW_API
 public struct OWCommentThreadSettingsBuilder {
+    public var performActionType: OWCommentThreadPerformActionType
 
-    public init() {
+    public init(performActionType: OWCommentThreadPerformActionType = .none) {
+        self.performActionType = performActionType
+    }
 
+    @discardableResult public mutating func performActionType(_ type: OWCommentThreadPerformActionType) -> OWCommentThreadSettingsBuilder {
+        self.performActionType = type
+        return self
     }
 
     public func build() -> OWCommentThreadSettingsProtocol {
@@ -21,9 +27,15 @@ public struct OWCommentThreadSettingsBuilder {
 }
 #else
 struct OWCommentThreadSettingsBuilder {
+    var performActionType: OWCommentThreadPerformActionType
 
-    init() {
+    init(performActionType: OWCommentThreadPerformActionType = .none) {
+        self.performActionType = performActionType
+    }
 
+    @discardableResult mutating func performActionType(_ type: OWCommentThreadPerformActionType) -> OWCommentThreadSettingsBuilder {
+        self.performActionType = type
+        return self
     }
 
     func build() -> OWCommentThreadSettingsProtocol {
