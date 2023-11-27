@@ -375,7 +375,6 @@ fileprivate extension OWConversationView {
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
-            .delay(.milliseconds(400), scheduler: MainScheduler.instance)
             .bind(to: viewModel.inputs.scrolledToCellIndex)
             .disposed(by: disposeBag)
 
@@ -387,20 +386,17 @@ fileprivate extension OWConversationView {
                 // only if cell not visible scroll to it
                 guard let visibleRows = self.tableView.indexPathsForVisibleRows,
                         !visibleRows.contains(IndexPath(row: index, section: 0)) else {
-                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
                     return
                 }
 
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
-            .delay(.milliseconds(400), scheduler: MainScheduler.instance)
             .bind(to: viewModel.inputs.scrolledToCellIndex)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.highlightCellIndex
+        viewModel.outputs.highlightCellsIndexes
             .observe(on: MainScheduler.instance)
-            .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self else { return }
                 let highlightedCells = Set(indexes.map { IndexPath(row: $0, section: 0) })
