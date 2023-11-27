@@ -1573,7 +1573,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe on rank click
         let userTryingToChangeRankObservable = commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
+            .flatMapLatest { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
                 let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
