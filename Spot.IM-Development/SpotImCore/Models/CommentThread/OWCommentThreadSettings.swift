@@ -10,14 +10,18 @@ import Foundation
 
 #if NEW_API
 public struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
+    public let performActionType: OWCommentThreadPerformActionType
 
-    public init() {
+    public init(performActionType: OWCommentThreadPerformActionType = .none) {
+        self.performActionType = performActionType
     }
 }
 #else
 struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
+    let performActionType: OWCommentThreadPerformActionType
 
-    init() {
+    init(performActionType: OWCommentThreadPerformActionType = .none) {
+        self.performActionType = performActionType
     }
 }
 #endif
