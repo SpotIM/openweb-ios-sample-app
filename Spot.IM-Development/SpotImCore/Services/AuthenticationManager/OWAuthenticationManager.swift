@@ -324,7 +324,7 @@ extension OWAuthenticationManager {
             .withLatestFrom(_userAuthenticationStatus)
             .do(onNext: { [weak self] currentAuthenticationStatus in
                 // Do not update status to .notAutenticated if we are sso recovering
-                if case .ssoRecovering = currentAuthenticationStatus { return }
+                if case .ssoRecovering(_) = currentAuthenticationStatus { return }
                 guard let self = self else { return }
 
                 self.update(userAvailability: .notAvailable)
@@ -332,7 +332,7 @@ extension OWAuthenticationManager {
             })
             .flatMapLatest { [weak self] currentAuthenticationStatus -> Observable<Void> in
                 guard let self = self else { return .empty() }
-                if case .ssoRecovering = currentAuthenticationStatus { return Observable.just(()) }
+                if case .ssoRecovering(_) = currentAuthenticationStatus { return Observable.just(()) }
                 return self.retrieveNetworkNewUser()
                     .take(1)
                     .voidify()
@@ -362,7 +362,7 @@ extension OWAuthenticationManager {
                     .do(onNext: { [weak self] user, currentAuthenticationStatus in
                         guard let self = self else { return }
                         // Do not update user while we are sso recovering
-                        if case .ssoRecovering = currentAuthenticationStatus { return }
+                        if case .ssoRecovering(_) = currentAuthenticationStatus { return }
 
                         self.update(userAvailability: .user(user))
                         self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
@@ -600,6 +600,8 @@ fileprivate extension OWAuthenticationManager {
                 if userId == originalUserId {
                     self._userAuthenticationStatus.onNext(.ssoRecoveredSuccessfully(userId: originalUserId))
                 } else {
+                    let logger = self.servicesProvider.logger()
+                    logger.log(level: .medium, "Successfully get new user after renew SSO, but it is not the same one that can conected before")
                     self._userAuthenticationStatus.onNext(.ssoFailedRecover(userId: originalUserId))
                 }
 
