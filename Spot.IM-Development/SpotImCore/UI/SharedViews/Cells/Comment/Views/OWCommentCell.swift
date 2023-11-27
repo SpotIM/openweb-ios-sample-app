@@ -83,5 +83,16 @@ fileprivate extension OWCommentCell {
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.updateSpacing
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] spacingBetweenComments in
+                guard let self = self else { return }
+
+                self.commentView.OWSnp.updateConstraints { make in
+                    make.top.bottom.equalToSuperview().inset(spacingBetweenComments)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
