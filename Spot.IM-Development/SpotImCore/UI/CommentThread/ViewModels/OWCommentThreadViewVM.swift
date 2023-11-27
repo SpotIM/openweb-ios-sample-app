@@ -279,24 +279,27 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }()
 
     var pullToRefresh = PublishSubject<Void>()
-    fileprivate lazy var pullToRefreshObservable: Observable<OWLoadingTriggeredReason> = {
-        return pullToRefresh
-            .withLatestFrom(shouldShowErrorLoadingComments)
-            .do(onNext: { [weak self] shouldShowErrorLoadingComments in
-                // This is for pull to refresh while error state for initial comments is shown
-                // We want to show skeletons after this pull to refresh
-                if shouldShowErrorLoadingComments {
-                    guard let self = self else { return }
-                    self.dataSourceTransition = .reload
-                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
-                    self._shouldShowErrorLoadingComments.onNext(false)
-                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
-                }
-            })
-            .map { _ -> OWLoadingTriggeredReason in
-                OWLoadingTriggeredReason.pullToRefresh
+
+    fileprivate var _forceRefresh = PublishSubject<Void>()
+    fileprivate lazy var refreshConversationObservable: Observable<OWLoadingTriggeredReason> = {
+        return Observable.merge(
+            pullToRefresh.map { OWLoadingTriggeredReason.pullToRefresh },
+            _forceRefresh.map { OWLoadingTriggeredReason.forceRefresh }
+        )
+        .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
+        .do(onNext: { [weak self] _, shouldShowErrorLoadingComments in
+            // This is for pull to refresh while error state for initial comments is shown
+            // We want to show skeletons after this pull to refresh
+            if shouldShowErrorLoadingComments {
+                guard let self = self else { return }
+                self.dataSourceTransition = .reload
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
+                self._shouldShowErrorLoadingComments.onNext(false)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
             }
-            .asObservable()
+        })
+        .map { $0.0 }
+        .asObservable()
     }()
 
     fileprivate var _loadMoreReplies = PublishSubject<OWCommentPresentationData>()
@@ -578,7 +581,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .asObservable()
 
-        pullToRefreshObservable
+        refreshConversationObservable
             .voidify()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -587,8 +590,25 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         let commentThreadFetchedObservable = Observable.merge(viewInitializedObservable,
-                                                              pullToRefreshObservable,
+                                                              refreshConversationObservable,
                                                               tryAgainAfterInitialError)
+            .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
+            .do(onNext: { [weak self] (loadingTriggeredReason, shouldShowErrorLoadingComments) in
+                // This is for pull to refresh while error state for initial comments is shown
+                // We want to show skeletons after this pull to refresh
+                if shouldShowErrorLoadingComments {
+                    guard let self = self else { return }
+                    self.dataSourceTransition = .reload
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+                    self._shouldShowErrorLoadingComments.onNext(false)
+                    self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
+                }
+            })
+            .do(onNext: { [weak self] (loadingTriggeredReason, _) in
+                guard let self = self else { return }
+                self.errorsLoadingReplies.removeAll()
+                self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+            })
             .flatMapLatest { _ -> Observable<Event<OWConversationReadRM>> in
                 return initialConversationThreadReadObservable
             }
@@ -1310,21 +1330,22 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let muteUserObservable = muteCommentUser
+        let muteUserConfirmationObservable = muteCommentUser
             .asObservable()
-            .flatMapLatest { [weak self] _ -> Observable<Void> in
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .mutingUser)
-                    .voidify()
             }
-            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+            .flatMapLatest { [weak self] neededToAuthenticate -> Observable<(Bool, Bool)> in
                 // 2. Waiting for authentication required for muting user
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .mutingUser)
+                    .map { (neededToAuthenticate, $0) }
             }
-            .filter { $0 }
-            .flatMapLatest { [weak self] _ -> Observable<OWRxPresenterResponseType> in
+            .filter { $0.1 }
+            .map { $0.0 && $0.1 }
+            .flatMapLatest { [weak self] needToRefreshConversation -> Observable<(Bool, OWRxPresenterResponseType)> in
                 // 3. Show alert
                 guard let self = self else { return .empty() }
                 let actions = [
@@ -1338,18 +1359,43 @@ fileprivate extension OWCommentThreadViewViewModel {
                         actions: actions,
                         viewableMode: self.viewableMode
                     )
+                    .map { (needToRefreshConversation, $0) }
             }
-            .map { result -> Bool in
+
+        let muteUserObservable = muteUserConfirmationObservable
+            .map { needToRefreshConversation, result -> (Bool, Bool) in
+                // 4. Handle alert result
                 switch result {
                 case .completion:
-                    return false
+                    return (false, false)
                 case .selected(let action):
                     switch action.type {
                     case OWCommentUserMuteAlert.mute:
-                        return true
+                        return (needToRefreshConversation, true)
                     default:
-                        return false
+                        return (needToRefreshConversation, false)
                     }
+                }
+            }
+            .do(onNext: { [weak self] needToRefreshConversation, _ in
+                // 5. Refresh conversation in case user logged in
+                guard let self = self else { return }
+                if needToRefreshConversation {
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .forceRefresh))
+                    self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
+                }
+            })
+            .flatMapLatest { [weak self] needToRefreshConversation, shouldMute -> Observable<Bool> in
+                // 6. Wait for conversation to refresh in case user logged in
+                guard let self = self else { return .empty() }
+                if needToRefreshConversation {
+                    return self.serverCommentsLoadingState
+                        .filter { $0 == .notLoading }
+                        .take(1)
+                        .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: self.commentThreadViewVMScheduler)
+                        .map { _ in shouldMute }
+                } else {
+                    return Observable.just(shouldMute)
                 }
             }
             .filter { $0 }
@@ -1358,9 +1404,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
             .share()
 
-        self.servicesProvider.commentUpdaterService()
-            .getUpdatedComments(for: postId)
-            .flatMap { updateType -> Observable<OWCommentUpdateType> in
+        self.servicesProvider.conversationUpdaterService()
+            .getConversationUpdates(for: postId)
+            .flatMap { updateType -> Observable<OWConversationUpdateType> in
                 // Making sure comment cells are visible
                 return commentCellsVmsObservable
                     .filter { !$0.isEmpty }
@@ -1368,6 +1414,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .map { _ in updateType }
             }
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
@@ -1378,6 +1425,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                     self._updateLocalComment.onNext((withComment, commentId))
                 case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
+                case .refreshConversation:
+                    self.dataSourceTransition = .reload
+                    self._forceRefresh.onNext()
                 }
             })
             .disposed(by: disposeBag)
@@ -1482,12 +1532,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let userCommentCells = commentCellsVms.filter { $0.outputs.commentVM.outputs.comment.userId == user.id }
                 return (user, userCommentCells.map { $0.outputs.commentVM })
             }
+            .observe(on: MainScheduler.instance)
             .do(onNext: { user, mutedUserCommentCellsVms in
                 mutedUserCommentCellsVms.forEach {
                     $0.inputs.update(user: user)
                 }
             })
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._performTableViewAnimation.onNext()

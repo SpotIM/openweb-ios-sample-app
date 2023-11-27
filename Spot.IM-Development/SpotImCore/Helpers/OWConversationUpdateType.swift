@@ -1,5 +1,5 @@
 //
-//  OWCommentUpdateType.swift
+//  OWConversationUpdateType.swift
 //  SpotImCore
 //
 //  Created by Alon Shprung on 10/08/2023.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-enum OWCommentUpdateType {
+enum OWConversationUpdateType {
+    case refreshConversation
     case insert(comments: [OWComment])
     case update(commentId: OWCommentId, withComment: OWComment)
     case insertReply(comment: OWComment, toParentCommentId: OWCommentId)
