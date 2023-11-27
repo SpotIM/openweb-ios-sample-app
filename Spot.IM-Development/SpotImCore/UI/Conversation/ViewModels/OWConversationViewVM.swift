@@ -60,7 +60,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var openCommentThread: Observable<OWCommentId> { get }
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -223,8 +223,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _openCommentThread = PublishSubject<OWCommentId>()
-    var openCommentThread: Observable<OWCommentId> {
+    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> {
         _openCommentThread
             .asObservable()
     }
@@ -1623,7 +1623,8 @@ fileprivate extension OWConversationViewViewModel {
                 else { return }
                 if userLoggedIn {
                     // TODO - Refresh conversation
-                    self._openCommentThread.onNext(commentId)
+                    self._openCommentThread.onNext((commentId, .changeRank(from: rankChange.from.rawValue,
+                                                                           to: rankChange.to.rawValue)))
                 } else {
                     let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
                     commentRankVm.inputs.rankChanged.onNext(rankChange)

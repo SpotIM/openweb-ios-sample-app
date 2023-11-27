@@ -229,10 +229,18 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
         let openCommentThreadObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentThread
             .observe(on: MainScheduler.instance)
-            .map { [weak self] commentId -> OWCommentThreadRequiredData? in
+            .map { [weak self] commentId, performAction -> OWCommentThreadRequiredData? in
                 guard let self = self else { return nil }
+
+                guard var newAdditionalSettings = self.conversationData.settings as? OWAdditionalSettings,
+                      var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
+                else { return nil }
+
+                newCommentThreadSettings.performActionType = performAction
+                newAdditionalSettings.commentThreadSettings = newCommentThreadSettings
+
                 return OWCommentThreadRequiredData(article: self.conversationData.article,
-                                                   settings: self.conversationData.settings,
+                                                   settings: newAdditionalSettings,
                                                    commentId: commentId,
                                                    presentationalStyle: self.conversationData.presentationalStyle)
             }

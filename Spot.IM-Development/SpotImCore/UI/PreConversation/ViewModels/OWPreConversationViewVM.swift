@@ -50,7 +50,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openProfile: Observable<OWOpenProfileType> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
-    var openCommentThread: Observable<OWCommentId> { get }
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
@@ -263,8 +263,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _openCommentThread = PublishSubject<OWCommentId>()
-    var openCommentThread: Observable<OWCommentId> {
+    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> {
         _openCommentThread
             .asObservable()
     }
@@ -1092,7 +1092,8 @@ fileprivate extension OWPreConversationViewViewModel {
                 else { return }
                 if userLoggedIn {
                     // TODO - Refresh conversation
-                    self._openCommentThread.onNext(commentId)
+                    self._openCommentThread.onNext((commentId, .changeRank(from: rankChange.from.rawValue,
+                                                                           to: rankChange.to.rawValue)))
                 } else {
                     let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
                     commentRankVm.inputs.rankChanged.onNext(rankChange)

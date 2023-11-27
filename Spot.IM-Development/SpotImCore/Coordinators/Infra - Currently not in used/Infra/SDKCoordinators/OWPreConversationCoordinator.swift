@@ -91,10 +91,17 @@ fileprivate extension OWPreConversationCoordinator {
 
         let openCommentThreadObservable = viewModel.outputs.openCommentThread
             .observe(on: MainScheduler.instance)
-            .map { [weak self] commentId -> OWDeepLinkOptions? in
+            .map { [weak self] commentId, performAction -> OWDeepLinkOptions? in
                 guard let self = self else { return nil }
+                guard var newAdditionalSettings = self.preConversationData.settings as? OWAdditionalSettings,
+                      var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
+                else { return nil }
+
+                newCommentThreadSettings.performActionType = performAction
+                newAdditionalSettings.commentThreadSettings = newCommentThreadSettings
+
                 let commentThreadData = OWCommentThreadRequiredData(article: self.preConversationData.article,
-                                                   settings: self.preConversationData.settings,
+                                                   settings: newAdditionalSettings,
                                                    commentId: commentId,
                                                    presentationalStyle: self.preConversationData.presentationalStyle)
                 return OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)

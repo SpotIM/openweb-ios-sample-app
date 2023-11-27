@@ -10,10 +10,10 @@ import Foundation
 
 #if NEW_API
 public struct OWAdditionalSettings: OWAdditionalSettingsProtocol {
-    public let preConversationSettings: OWPreConversationSettingsProtocol
-    public let fullConversationSettings: OWConversationSettingsProtocol
-    public let commentCreationSettings: OWCommentCreationSettingsProtocol
-    public let commentThreadSettings: OWCommentThreadSettingsProtocol
+    public var preConversationSettings: OWPreConversationSettingsProtocol
+    public var fullConversationSettings: OWConversationSettingsProtocol
+    public var commentCreationSettings: OWCommentCreationSettingsProtocol
+    public var commentThreadSettings: OWCommentThreadSettingsProtocol
 
     public init(preConversationSettings: OWPreConversationSettingsProtocol = OWPreConversationSettings(),
                 fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings(),
@@ -28,10 +28,10 @@ public struct OWAdditionalSettings: OWAdditionalSettingsProtocol {
 }
 #else
 struct OWAdditionalSettings: OWAdditionalSettingsProtocol {
-    let preConversationSettings: OWPreConversationSettingsProtocol
-    let fullConversationSettings: OWConversationSettingsProtocol
-    let commentCreationSettings: OWCommentCreationSettingsProtocol
-    let commentThreadSettings: OWCommentThreadSettingsProtocol
+    var preConversationSettings: OWPreConversationSettingsProtocol
+    var fullConversationSettings: OWConversationSettingsProtocol
+    var commentCreationSettings: OWCommentCreationSettingsProtocol
+    var commentThreadSettings: OWCommentThreadSettingsProtocol
 
     init(preConversationSettings: OWPreConversationSettingsProtocol = OWPreConversationSettings(),
          fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings(),
