@@ -12,6 +12,7 @@ import RxSwift
 protocol OWCommentStatusUpdaterServicing {
     func fetchStatusFor(comment: OWComment)
     func spotChanged(newSpotId: OWSpotId)
+    var statusUpdate: Observable<(OWCommentId, OWCommentStatusType)> { get }
 }
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
@@ -34,6 +35,13 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     fileprivate var retries: Int = Metrics.retriesDefault
     fileprivate var timeout: Int = Metrics.timeoutDefault
     fileprivate var interval: Int = Metrics.intervalDefault
+
+    fileprivate let _statusUpdate = PublishSubject<(OWCommentId, OWCommentStatusType)>()
+    lazy var statusUpdate: Observable<(OWCommentId, OWCommentStatusType)> = {
+        _statusUpdate
+            .asObserver()
+            .share(replay: 1)
+    }()
 
     fileprivate let _fetchStatusFor = PublishSubject<OWComment>()
     func fetchStatusFor(comment: OWComment) {
@@ -96,15 +104,16 @@ fileprivate extension OWCommentStatusUpdaterService {
                 return self.getRawStatus(for: comment)
                     .map { ($0, comment) }
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] (status, comment) in
                 guard let self = self,
-                      let commentId = comment.id,
-                      let postId = OWManager.manager.postId
+                      let commentId = comment.id
                 else { return }
                 var newComment = comment
                 newComment.rawStatus = status
-                self.servicesProvider.commentUpdaterService()
-                    .update(.update(commentId: commentId, withComment: newComment), postId: postId)
+                // Update only the status for the given comment
+                let status = OWCommentStatusType.commentStatus(from: newComment)
+                self._statusUpdate.onNext((commentId, status))
             })
             .disposed(by: disposeBag)
     }

@@ -263,7 +263,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 guard let self = self,
                       let postId = self.postId
                 else { return }
-                let commentUpdateType: OWCommentUpdateType?
+                let commentUpdateType: OWConversationUpdateType?
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
                     commentUpdateType = .insert(comments: [comment])
@@ -277,7 +277,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
                 if let updateType = commentUpdateType {
                     self.servicesProvider
-                        .commentUpdaterService()
+                        .conversationUpdaterService()
                         .update(updateType, postId: postId)
                 }
             })
