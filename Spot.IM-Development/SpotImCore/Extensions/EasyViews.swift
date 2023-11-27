@@ -112,6 +112,11 @@ extension UILabel {
         return self
     }
 
+    @discardableResult func baselineAdjustment(_ baselineAdjustment: UIBaselineAdjustment) -> UILabel {
+        self.baselineAdjustment = baselineAdjustment
+        return self
+    }
+
     @discardableResult func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> UILabel {
         self.lineBreakMode = lineBreakMode
         return self
