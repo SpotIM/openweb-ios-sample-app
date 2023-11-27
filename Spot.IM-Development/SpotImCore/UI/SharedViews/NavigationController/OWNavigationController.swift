@@ -57,4 +57,8 @@ class OWNavigationController: UINavigationController, OWNavigationControllerProt
         }
         return poppedVC
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+    }
 }
