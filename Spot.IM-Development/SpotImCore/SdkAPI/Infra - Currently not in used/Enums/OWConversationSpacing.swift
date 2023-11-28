@@ -8,7 +8,6 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWConversationSpacing: Codable {
     public struct Metrics {
         public static let defaultSpaceBetweenComments: CGFloat = 28.0
@@ -22,19 +21,3 @@ public enum OWConversationSpacing: Codable {
     case compact
     case custom(betweenComments: CGFloat, communityGuidelines: CGFloat, communityQuestions: CGFloat)
 }
-#else
-enum OWConversationSpacing: Codable {
-    struct Metrics {
-        static let defaultSpaceBetweenComments: CGFloat = 28.0
-        static let defaultSpaceCommunityGuidelines: CGFloat = 12.0
-        static let defaultSpaceCommunityQuestions: CGFloat = 12.0
-        static let maxSpace: CGFloat = 40.0
-        static let minSpace: CGFloat = 5.0
-    }
-
-    case regular
-    case compact
-    case custom(betweenComments: CGFloat, communityGuidelines: CGFloat, communityQuestions: CGFloat)
-}
-#endif
-

@@ -8,15 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWCommunityQuestionCustomizableElement {
     case regular(label: UILabel)
     case compact(containerView: UIView, label: UILabel)
 }
-#else
-enum OWCommunityQuestionCustomizableElement {
-    case regular(label: UILabel)
-    case compact(containerView: UIView, label: UILabel)
-}
-#endif
-

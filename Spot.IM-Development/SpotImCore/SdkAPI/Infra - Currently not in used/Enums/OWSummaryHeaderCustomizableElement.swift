@@ -8,15 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWSummaryHeaderCustomizableElement {
     case title(label: UILabel)
     case counter(label: UILabel)
 }
-#else
-enum OWSummaryHeaderCustomizableElement {
-    case title(label: UILabel)
-    case counter(label: UILabel)
-}
-#endif
-

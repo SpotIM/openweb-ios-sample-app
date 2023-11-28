@@ -11,8 +11,6 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-#if NEW_API
-
 class BetaNewAPIVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "beta_api_vc_id"
@@ -382,6 +380,7 @@ fileprivate extension BetaNewAPIVC {
             .bind(to: viewModel.inputs.automationTapped)
             .disposed(by: disposeBag)
 
+#if BETA
         viewModel.outputs.openTestingPlayground
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
@@ -390,7 +389,9 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(testingPlaygroundVC, animated: true)
             })
             .disposed(by: disposeBag)
+#endif
 
+#if AUTOMATION
         viewModel.outputs.openAutomation
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
@@ -399,6 +400,7 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(automationVC, animated: true)
             })
             .disposed(by: disposeBag)
+#endif
 
         settingsBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
@@ -510,5 +512,3 @@ fileprivate extension BetaNewAPIVC {
         }
     }
 }
-
-#endif

@@ -123,7 +123,6 @@ class ViewController: UIViewController {
     }
 
     private func setupAppPreset() {
-#if NEW_API
         optionsScrollView.addSubview(betaNewAPIBtn)
         betaNewAPIBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -137,7 +136,6 @@ class ViewController: UIViewController {
             make.top.equalTo(betaNewAPIBtn.snp.bottom).offset(Metrics.verticalMarginInScrollView)
             make.bottom.equalTo(showDemoSpotArticlesBtn.snp.top).offset(-Metrics.verticalMarginInScrollView)
         }
-#endif
 
 #if PUBLIC_DEMO_APP
         showDemoTableViewBtn.isHidden = true
@@ -440,10 +438,8 @@ fileprivate extension ViewController {
         betaNewAPIBtn.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-#if NEW_API
                 let betaAPIVC = BetaNewAPIVC()
                 self.navigationController?.pushViewController(betaAPIVC, animated: true)
-#endif
             })
             .disposed(by: disposeBag)
     }

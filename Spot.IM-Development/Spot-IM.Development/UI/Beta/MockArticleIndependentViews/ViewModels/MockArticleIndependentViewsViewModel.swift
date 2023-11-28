@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 typealias ComponentAndType = (UIView, SDKUIIndependentViewType)
 
 protocol MockArticleIndependentViewsViewModelingInputs {
@@ -455,5 +453,3 @@ fileprivate extension MockArticleIndependentViewsViewModel {
         }
     }
 }
-
-#endif

@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWManipulateTextCompletion = (Result<OWManipulateTextModel, OWError>) -> String
-#else
-typealias OWManipulateTextCompletion = (Result<OWManipulateTextModel, OWError>) -> String
-#endif

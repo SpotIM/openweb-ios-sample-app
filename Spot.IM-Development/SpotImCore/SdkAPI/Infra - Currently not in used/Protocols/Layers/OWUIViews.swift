@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWUIViews {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
@@ -63,52 +62,3 @@ public protocol OWUIViews {
                            completion: @escaping OWViewCompletion)
 #endif
 }
-#else
-protocol OWUIViews {
-    func preConversation(postId: OWPostId,
-                         article: OWArticleProtocol,
-                         additionalSettings: OWAdditionalSettingsProtocol,
-                         callbacks: OWViewActionsCallbacks?,
-                         completion: @escaping OWViewCompletion)
-
-    func conversation(postId: OWPostId,
-                      article: OWArticleProtocol,
-                      additionalSettings: OWAdditionalSettingsProtocol,
-                      callbacks: OWViewActionsCallbacks?,
-                      completion: @escaping OWViewCompletion)
-
-    func commentCreation(postId: OWPostId,
-                         article: OWArticleProtocol,
-                         commentCreationType: OWCommentCreationType,
-                         additionalSettings: OWAdditionalSettingsProtocol,
-                         callbacks: OWViewActionsCallbacks?,
-                         completion: @escaping OWViewCompletion)
-
-    func commentThread(postId: OWPostId,
-                       article: OWArticleProtocol,
-                       commentId: OWCommentId,
-                       additionalSettings: OWAdditionalSettingsProtocol,
-                       callbacks: OWViewActionsCallbacks?,
-                       completion: @escaping OWViewCompletion)
-
-    func reportReason(postId: OWPostId,
-                      commentId: OWCommentId,
-                      parentId: OWCommentId,
-                      additionalSettings: OWAdditionalSettingsProtocol,
-                      callbacks: OWViewActionsCallbacks?,
-                      completion: @escaping OWViewCompletion)
-
-    func clarityDetails(postId: OWPostId,
-                        commentId: OWCommentId,
-                        type: OWClarityDetailsType,
-                        additionalSettings: OWAdditionalSettingsProtocol,
-                        callbacks: OWViewActionsCallbacks?,
-                        completion: @escaping OWViewCompletion)
-
-    func webTab(postId: OWPostId,
-                tabOptions: OWWebTabOptions,
-                additionalSettings: OWAdditionalSettingsProtocol,
-                callbacks: OWViewActionsCallbacks?,
-                completion: @escaping OWViewCompletion)
-}
-#endif

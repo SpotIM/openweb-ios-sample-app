@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWOrientationEnforcement: Codable {
     case enableAll
     case enable(orientations: [OWOrientation])
 }
-#else
-enum OWOrientationEnforcement: Codable {
-    case enableAll
-    case enable(orientations: [OWOrientation])
-}
-#endif

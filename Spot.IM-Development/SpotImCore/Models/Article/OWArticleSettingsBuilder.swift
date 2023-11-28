@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWArticleSettingsBuilder {
     public var section: String
     public var headerStyle: OWArticleHeaderStyle
@@ -43,39 +42,3 @@ public struct OWArticleSettingsBuilder {
                                  readOnlyMode: readOnlyMode)
     }
 }
-#else
-struct OWArticleSettingsBuilder {
-    var section: String
-    var headerStyle: OWArticleHeaderStyle
-    var readOnlyMode: OWReadOnlyMode
-
-    init(section: String,
-         headerStyle: OWArticleHeaderStyle = .regular,
-         readOnlyMode: OWReadOnlyMode = .server) {
-        self.section = section
-        self.headerStyle = headerStyle
-        self.readOnlyMode = readOnlyMode
-    }
-
-    @discardableResult mutating func section(_ section: String) -> OWArticleSettingsBuilder {
-        self.section = section
-        return self
-    }
-
-    @discardableResult mutating func headerStyle(_ headerStyle: OWArticleHeaderStyle) -> OWArticleSettingsBuilder {
-        self.headerStyle = headerStyle
-        return self
-    }
-
-    @discardableResult mutating func readOnlyMode(_ readOnlyMode: OWReadOnlyMode) -> OWArticleSettingsBuilder {
-        self.readOnlyMode = readOnlyMode
-        return self
-    }
-
-    func build() -> OWArticleSettingsProtocol {
-        return OWArticleSettings(section: section,
-                                 headerStyle: headerStyle,
-                                 readOnlyMode: readOnlyMode)
-    }
-}
-#endif

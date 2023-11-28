@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWBIAnalyticEventCallback = (OWBIAnalyticEvent, OWBIAnalyticAdditionalInfoProtocol, String) -> Void
-#else
-typealias OWBIAnalyticEventCallback = (OWBIAnalyticEvent, OWBIAnalyticAdditionalInfoProtocol, String) -> Void
-#endif

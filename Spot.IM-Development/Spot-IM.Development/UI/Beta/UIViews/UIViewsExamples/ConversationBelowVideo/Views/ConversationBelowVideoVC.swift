@@ -14,8 +14,6 @@ import SpotImCore
 import AVFoundation
 import AVKit
 
-#if NEW_API
-
 class ConversationBelowVideoVC: UIViewController {
 
     fileprivate struct Metrics {
@@ -437,5 +435,3 @@ fileprivate extension ConversationBelowVideoVC {
         self.present(alert, animated: true, completion: nil)
     }
 }
-
-#endif

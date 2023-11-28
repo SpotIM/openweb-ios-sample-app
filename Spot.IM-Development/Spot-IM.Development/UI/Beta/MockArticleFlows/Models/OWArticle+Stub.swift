@@ -9,7 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
 extension OWArticle {
     static func stub() -> OWArticle {
         let url = "https://test.com"
@@ -31,4 +30,3 @@ extension OWArticle {
             additionalSettings: settings)
     }
 }
-#endif

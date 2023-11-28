@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWUIFlows {
     func preConversation(postId: OWPostId,
                          article: OWArticleProtocol,
@@ -59,34 +58,3 @@ public protocol OWUIFlows {
                     completion: @escaping OWDefaultCompletion)
 #endif
 }
-#else
-protocol OWUIFlows {
-    func preConversation(postId: OWPostId,
-                         article: OWArticleProtocol,
-                         presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWAdditionalSettingsProtocol,
-                         callbacks: OWViewActionsCallbacks?,
-                         completion: @escaping OWViewCompletion)
-
-    func conversation(postId: OWPostId,
-                      article: OWArticleProtocol,
-                      presentationalMode: OWPresentationalMode,
-                      additionalSettings: OWAdditionalSettingsProtocol,
-                      callbacks: OWViewActionsCallbacks?,
-                      completion: @escaping OWDefaultCompletion)
-
-    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
-                         presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWAdditionalSettingsProtocol,
-                         callbacks: OWViewActionsCallbacks?,
-                         completion: @escaping OWDefaultCompletion)
-
-    func commentThread(postId: OWPostId,
-                       article: OWArticleProtocol,
-                       commentId: OWCommentId,
-                       presentationalMode: OWPresentationalMode,
-                       additionalSettings: OWAdditionalSettingsProtocol,
-                       callbacks: OWViewActionsCallbacks?,
-                       completion: @escaping OWDefaultCompletion)
-}
-#endif

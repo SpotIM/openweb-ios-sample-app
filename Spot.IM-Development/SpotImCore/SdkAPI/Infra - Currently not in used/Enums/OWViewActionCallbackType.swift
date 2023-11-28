@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWViewActionCallbackType: Codable {
     case contentPressed
     case showMoreCommentsPressed
@@ -29,28 +28,6 @@ public enum OWViewActionCallbackType: Codable {
     case closeWebView
     case openLinkInComment(url: URL)
 }
-#else
-enum OWViewActionCallbackType: Codable {
-    case contentPressed
-    case showMoreCommentsPressed
-    case communityGuidelinesPressed(url: URL)
-    case adClosed
-    case adTapped
-    case closeConversationPressed
-    case openPublisherProfile(ssoPublisherId: String, type: OWUserProfileType)
-    case openOWProfile(data: OWOpenProfileData)
-    case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
-    case openCommentCreation(type: OWCommentCreationType)
-    case closeReportReason
-    case openClarityDetails(type: OWClarityDetailsType)
-    case closeClarityDetails
-    case floatingCommentCreationDismissed
-    case error(_ error: OWError)
-    case commentSubmitted
-    case closeWebView
-    case openLinkInComment(url: URL)
-}
-#endif
 
 extension OWViewActionCallbackType: Equatable {
     public static func == (lhs: OWViewActionCallbackType, rhs: OWViewActionCallbackType) -> Bool {

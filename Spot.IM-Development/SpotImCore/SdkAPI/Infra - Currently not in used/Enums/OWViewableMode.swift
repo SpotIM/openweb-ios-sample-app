@@ -8,15 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWViewableMode {
     case partOfFlow
     case independent
 }
-
-#else
-enum OWViewableMode {
-    case partOfFlow
-    case independent
-}
-#endif

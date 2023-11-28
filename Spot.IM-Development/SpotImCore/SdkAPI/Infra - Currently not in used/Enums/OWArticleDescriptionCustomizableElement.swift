@@ -8,17 +8,8 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWArticleDescriptionCustomizableElement {
     case image(imageView: UIImageView)
     case title(label: UILabel)
     case author(label: UILabel)
 }
-#else
-enum OWArticleDescriptionCustomizableElement {
-    case image(imageView: UIImageView)
-    case title(label: UILabel)
-    case author(label: UILabel)
-}
-#endif
-

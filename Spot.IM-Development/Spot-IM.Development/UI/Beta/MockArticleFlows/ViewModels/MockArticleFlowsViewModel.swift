@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol MockArticleFlowsViewModelingInputs {
     func setNavigationController(_ navController: UINavigationController?)
     func setPresentationalVC(_ viewController: UIViewController)
@@ -392,5 +390,3 @@ fileprivate extension MockArticleFlowsViewModel {
         }
     }
 }
-
-#endif

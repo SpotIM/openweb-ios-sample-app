@@ -8,18 +8,9 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWAdditionalSettingsProtocol {
     var preConversationSettings: OWPreConversationSettingsProtocol { get }
     var fullConversationSettings: OWConversationSettingsProtocol { get }
     var commentCreationSettings: OWCommentCreationSettingsProtocol { get }
     var commentThreadSettings: OWCommentThreadSettingsProtocol { get }
 }
-#else
-protocol OWAdditionalSettingsProtocol {
-    var preConversationSettings: OWPreConversationSettingsProtocol { get }
-    var fullConversationSettings: OWConversationSettingsProtocol { get }
-    var commentCreationSettings: OWCommentCreationSettingsProtocol { get }
-    var commentThreadSettings: OWCommentThreadSettingsProtocol { get }
-}
-#endif

@@ -8,8 +8,6 @@
 
 import UIKit
 
-#if NEW_API
-
 class ConversationCounterNewAPICell: UITableViewCell {
     fileprivate struct Metrics {
         static let identifier: String = "conversation_counter_id_"
@@ -116,5 +114,3 @@ fileprivate extension ConversationCounterNewAPICell {
         lblReplies.text = "\(NSLocalizedString("Replies", comment: "")): \(viewModel.outputs.replies)"
     }
 }
-
-#endif

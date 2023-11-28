@@ -8,15 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWArticleHeaderStyle: Codable {
     case none
     case regular
 }
-
-#else
-enum OWArticleHeaderStyle: Codable {
-    case none
-    case regular
-}
-#endif

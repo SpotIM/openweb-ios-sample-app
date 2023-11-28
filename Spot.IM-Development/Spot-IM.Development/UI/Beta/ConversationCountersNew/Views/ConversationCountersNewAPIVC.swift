@@ -11,8 +11,6 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-#if NEW_API
-
 class ConversationCountersNewAPIVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "conversation_counters_new_api_vc_id"
@@ -190,5 +188,3 @@ fileprivate extension ConversationCountersNewAPIVC {
         self.present(alert, animated: true, completion: nil)
     }
 }
-
-#endif

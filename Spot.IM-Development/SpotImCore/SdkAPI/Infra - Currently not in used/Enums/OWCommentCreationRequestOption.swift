@@ -8,13 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWCommentCreationRequestOption {
     case manipulateUserInputText(completion: OWManipulateTextCompletion)
 }
-
-#else
-enum OWCommentCreationRequestOption {
-    case manipulateUserInputText(completion: OWManipulateTextCompletion)
-}
-#endif

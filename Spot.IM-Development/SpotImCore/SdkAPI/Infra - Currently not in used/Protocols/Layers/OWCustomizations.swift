@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWCustomizations {
     var fontFamily: OWFontGroupFamily { get set }
     var sorting: OWSortingCustomizations { get }
@@ -17,13 +16,3 @@ public protocol OWCustomizations {
     var navigationBarEnforcement: OWNavigationBarEnforcement { get set }
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)
 }
-#else
-protocol OWCustomizations {
-    var fontFamily: OWFontGroupFamily { get set }
-    var sorting: OWSortingCustomizations { get }
-    var themeEnforcement: OWThemeStyleEnforcement { get set }
-    var statusBarEnforcement: OWStatusBarEnforcement { get set }
-    var navigationBarEnforcement: OWNavigationBarEnforcement { get set }
-    func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)
-}
-#endif

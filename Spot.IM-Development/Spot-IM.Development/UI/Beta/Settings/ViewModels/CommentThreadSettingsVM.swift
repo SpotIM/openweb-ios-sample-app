@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol CommentThreadSettingsViewModelingInputs {
     var openCommentIdSelected: PublishSubject<String> { get }
 }
@@ -65,5 +63,3 @@ fileprivate extension CommentThreadSettingsVM {
 }
 
 extension CommentThreadSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

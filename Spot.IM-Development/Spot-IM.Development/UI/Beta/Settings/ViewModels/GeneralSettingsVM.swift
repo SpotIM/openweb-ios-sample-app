@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol GeneralSettingsViewModelingInputs {
     var articleHeaderSelectedStyle: BehaviorSubject<OWArticleHeaderStyle> { get }
     var articleInformationSelectedStrategy: BehaviorSubject<OWArticleInformationStrategy> { get }
@@ -631,5 +629,3 @@ fileprivate extension GeneralSettingsVM {
 }
 
 extension GeneralSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

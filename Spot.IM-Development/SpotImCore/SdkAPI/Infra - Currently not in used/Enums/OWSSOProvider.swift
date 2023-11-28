@@ -8,16 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWSSOProvider {
     case gigya
     case piano
     case auth0
 }
-#else
-enum OWSSOProvider {
-    case gigya
-    case piano
-    case auth0
-}
-#endif

@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 class GeneralSettingsView: UIView {
 
     fileprivate struct Metrics {
@@ -440,5 +438,3 @@ fileprivate extension GeneralSettingsView {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWArticleProtocol {
     var articleInformationStrategy: OWArticleInformationStrategy { get }
     var additionalSettings: OWArticleSettingsProtocol { get }
 }
-#else
-protocol OWArticleProtocol {
-    var articleInformationStrategy: OWArticleInformationStrategy { get }
-    var additionalSettings: OWArticleSettingsProtocol { get }
-}
-#endif

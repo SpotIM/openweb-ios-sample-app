@@ -9,7 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
 enum SettingsGroupType {
     case general
     case preConversation
@@ -61,5 +60,3 @@ extension SettingsGroupType {
         }
     }
 }
-
-#endif

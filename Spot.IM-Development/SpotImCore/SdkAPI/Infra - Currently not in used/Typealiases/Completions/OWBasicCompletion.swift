@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWBasicCompletion = () -> Void
-#else
-typealias OWBasicCompletion = () -> Void
-#endif

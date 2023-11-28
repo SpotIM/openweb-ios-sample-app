@@ -9,8 +9,6 @@
 import UIKit
 import RxSwift
 
-#if NEW_API
-
 class IAUSettingsView: UIView {
 
     fileprivate struct Metrics {
@@ -60,5 +58,3 @@ fileprivate extension IAUSettingsView {
     func setupObservers() {
     }
 }
-
-#endif

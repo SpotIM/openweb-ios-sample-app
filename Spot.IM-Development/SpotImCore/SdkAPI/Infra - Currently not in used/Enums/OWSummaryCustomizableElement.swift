@@ -8,14 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWSummaryCustomizableElement {
     case commentsTitle(label: UILabel)
     case sortByTitle(label: UILabel)
 }
-#else
-enum OWSummaryCustomizableElement {
-    case commentsTitle(label: UILabel)
-    case sortByTitle(label: UILabel)
-}
-#endif

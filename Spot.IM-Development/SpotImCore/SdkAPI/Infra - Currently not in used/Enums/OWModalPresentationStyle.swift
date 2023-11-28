@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWModalPresentationStyle {
     case fullScreen
     case pageSheet
 }
-#else
-enum OWModalPresentationStyle {
-    case fullScreen
-    case pageSheet
-}
-#endif

@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWReportReasonSettingsProtocol { }
-#else
-protocol OWReportReasonSettingsProtocol { }
-#endif
