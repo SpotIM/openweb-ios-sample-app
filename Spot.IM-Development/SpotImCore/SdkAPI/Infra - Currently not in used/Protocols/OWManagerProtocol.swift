@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWManagerProtocol {
     var spotId: OWSpotId { get set }
     var ui: OWUI { get }
@@ -17,13 +16,3 @@ public protocol OWManagerProtocol {
     var authentication: OWAuthentication { get }
     var helpers: OWHelpers { get }
 }
-#else
-protocol OWManagerProtocol {
-    var spotId: OWSpotId { get set }
-    var ui: OWUI { get }
-    var analytics: OWAnalytics { get }
-    var monetization: OWMonetization { get }
-    var authentication: OWAuthentication { get }
-    var helpers: OWHelpers { get }
-}
-#endif

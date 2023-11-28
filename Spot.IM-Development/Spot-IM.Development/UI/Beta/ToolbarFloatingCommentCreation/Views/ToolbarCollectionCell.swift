@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-#if NEW_API
-
 class ToolbarCollectionCell: UICollectionViewCell {
     fileprivate struct Metrics {
         static let margin: CGFloat = 5
@@ -82,5 +80,3 @@ fileprivate extension ToolbarCollectionCell {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWAuthentication {
     func sso(_ flowType: OWSSOFlowType)
     func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion)
@@ -16,12 +15,3 @@ public protocol OWAuthentication {
     var renewSSO: OWRenewSSOCallback? { get set }
     var shouldDisplayLoginPrompt: Bool { get set }
 }
-#else
-protocol OWAuthentication {
-    func sso(_ flowType: OWSSOFlowType)
-    func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion)
-    func logout(completion: @escaping OWDefaultCompletion)
-    var renewSSO: OWRenewSSOCallback? { get set }
-    var shouldDisplayLoginPrompt: Bool { get set }
-}
-#endif

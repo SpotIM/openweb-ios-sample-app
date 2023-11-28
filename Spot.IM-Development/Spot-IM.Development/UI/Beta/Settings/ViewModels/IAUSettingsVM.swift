@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol IAUSettingsViewModelingInputs {
 }
 
@@ -48,5 +46,3 @@ fileprivate extension IAUSettingsVM {
 }
 
 extension IAUSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

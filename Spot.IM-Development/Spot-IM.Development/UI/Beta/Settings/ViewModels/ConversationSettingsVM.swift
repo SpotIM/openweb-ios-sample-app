@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol ConversationSettingsViewModelingInputs {
     var styleModeSelectedIndex: BehaviorSubject<Int> { get }
     var communityGuidelinesStyleSelectedIndex: BehaviorSubject<Int> { get }
@@ -317,5 +315,3 @@ fileprivate extension ConversationSettingsVM {
 }
 
 extension ConversationSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

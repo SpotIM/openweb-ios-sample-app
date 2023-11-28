@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol UIViewsExamplesViewModelingInputs {
     var conversationBelowVideoTapped: PublishSubject<Void> { get }
 }
@@ -64,5 +62,3 @@ fileprivate extension UIViewsExamplesViewModel {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

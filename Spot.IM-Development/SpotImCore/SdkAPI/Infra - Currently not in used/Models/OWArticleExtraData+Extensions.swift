@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public extension OWArticleExtraData {
     static let empty: OWArticleExtraData = OWArticleExtraData(
         url: URL(fileURLWithPath: ""),
@@ -16,13 +15,3 @@ public extension OWArticleExtraData {
         subtitle: nil,
         thumbnailUrl: nil)
 }
-
-#else
-extension OWArticleExtraData {
-    static let empty: OWArticleExtraData = OWArticleExtraData(
-        url: URL(fileURLWithPath: ""),
-        title: "",
-        subtitle: nil,
-        thumbnailUrl: nil)
-}
-#endif

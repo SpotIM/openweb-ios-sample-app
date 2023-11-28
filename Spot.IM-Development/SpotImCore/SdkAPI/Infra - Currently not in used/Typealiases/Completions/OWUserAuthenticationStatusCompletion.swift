@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWUserAuthenticationStatusCompletion = (Result<OWUserAuthenticationStatus, OWError>) -> Void
-#else
-typealias OWUserAuthenticationStatusCompletion = (Result<OWUserAuthenticationStatus, OWError>) -> Void
-#endif

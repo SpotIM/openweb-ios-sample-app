@@ -8,16 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWReadOnlyMode {
     case server
     case enable
     case disable
 }
-#else
-enum OWReadOnlyMode {
-    case server
-    case enable
-    case disable
-}
-#endif

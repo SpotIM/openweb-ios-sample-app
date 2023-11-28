@@ -8,12 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public class OpenWeb {
     public static let manager: OWManagerProtocol = OWManager.manager
 }
-#else
-class OpenWeb {
-    static let manager: OWManagerProtocol = OWManager.manager
-}
-#endif

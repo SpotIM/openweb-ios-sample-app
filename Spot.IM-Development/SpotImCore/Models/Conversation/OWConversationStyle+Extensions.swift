@@ -52,7 +52,6 @@ extension OWConversationStyle {
     }
 }
 
-#if NEW_API
 extension OWConversationStyle: Equatable {
     public static func == (lhs: OWConversationStyle, rhs: OWConversationStyle) -> Bool {
         switch (lhs, rhs) {
@@ -70,22 +69,3 @@ extension OWConversationStyle: Equatable {
         }
     }
 }
-#else
-extension OWConversationStyle: Equatable {
-    static func == (lhs: OWConversationStyle, rhs: OWConversationStyle) -> Bool {
-        switch (lhs, rhs) {
-        case (.compact, .compact):
-            return true
-        case (.regular, .regular):
-            return true
-        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, let lhsSpacing),
-              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, let rhsSpacing)):
-            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
-            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle &&
-            lhsSpacing == rhsSpacing
-        default:
-            return false
-        }
-    }
-}
-#endif

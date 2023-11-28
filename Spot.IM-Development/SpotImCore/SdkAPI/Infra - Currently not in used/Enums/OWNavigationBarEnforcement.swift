@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWNavigationBarEnforcement {
     case keepOriginal
     case style(_ style: OWNavigationBarStyle)
@@ -24,20 +23,3 @@ public enum OWNavigationBarEnforcement {
         }
     }
 }
-#else
-enum OWNavigationBarEnforcement {
-    case keepOriginal
-    case style(_ style: OWNavigationBarStyle)
-
-    static func == (lhs: OWNavigationBarEnforcement, rhs: OWNavigationBarEnforcement) -> Bool {
-        switch (lhs, rhs) {
-        case (.keepOriginal, .keepOriginal):
-            return true
-        case (let .style(lhsStyle), let .style(rhsStyle)):
-            return lhsStyle == rhsStyle
-        default:
-            return false
-        }
-    }
-}
-#endif

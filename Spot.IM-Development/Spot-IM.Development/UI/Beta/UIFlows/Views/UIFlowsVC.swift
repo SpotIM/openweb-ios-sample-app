@@ -12,8 +12,6 @@ import RxCocoa
 import SnapKit
 import SpotImCore
 
-#if NEW_API
-
 class UIFlowsVC: UIViewController {
 
     fileprivate struct Metrics {
@@ -243,6 +241,3 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
     }
 }
-
-#endif
-

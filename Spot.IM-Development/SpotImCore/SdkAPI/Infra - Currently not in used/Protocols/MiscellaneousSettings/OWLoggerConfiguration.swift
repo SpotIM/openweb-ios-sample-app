@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWLoggerConfiguration {
     var level: OWLogLevel { get set }
     var methods: [OWLogMethod] { get set }
 }
-#else
-protocol OWLoggerConfiguration {
-    var level: OWLogLevel { get set }
-    var methods: [OWLogMethod] { get set }
-}
-#endif

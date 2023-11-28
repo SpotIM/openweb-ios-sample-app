@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol ClarityDetailsSettingsViewModelingInputs {
 }
 
@@ -46,5 +44,3 @@ fileprivate extension ClarityDetailsSettingsVM {
 }
 
 extension ClarityDetailsSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

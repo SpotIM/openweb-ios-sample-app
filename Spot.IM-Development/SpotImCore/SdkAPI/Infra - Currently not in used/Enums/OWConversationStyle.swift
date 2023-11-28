@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWConversationStyle: Codable {
     public struct Metrics {
         public static let defaultCommunityGuidelinesStyle: OWCommunityGuidelinesStyle = .regular
@@ -24,18 +23,3 @@ public enum OWConversationStyle: Codable {
                 communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle,
                 spacing: OWConversationSpacing = Metrics.defaultSpacing)
 }
-
-#else
-enum OWConversationStyle: Codable {
-    public struct Metrics {
-        public static let defaultCommunityGuidelinesStyle: OWCommunityGuidelinesStyle = .regular
-        public static let defaultCommunityQuestionsStyle: OWCommunityQuestionStyle = .regular
-    }
-
-    case regular
-    case compact
-    case custom(communityGuidelinesStyle: OWCommunityGuidelinesStyle = Metrics.defaultCommunityGuidelinesStyle,
-                communityQuestionsStyle: OWCommunityQuestionStyle = Metrics.defaultCommunityQuestionsStyle,
-                spacing: OWConversationSpacing)
-}
-#endif

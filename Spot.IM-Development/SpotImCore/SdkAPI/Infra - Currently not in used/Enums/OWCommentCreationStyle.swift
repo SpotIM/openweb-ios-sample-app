@@ -8,17 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWCommentCreationStyle: Codable {
     case regular
     case light // Called new header before
     case floatingKeyboard(accessoryViewStrategy: OWAccessoryViewStrategy = .none)
 }
-
-#else
-enum OWCommentCreationStyle: Codable {
-    case regular
-    case light // Called new header before
-    case floatingKeyboard(accessoryViewStrategy: OWAccessoryViewStrategy = .none)
-}
-#endif

@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWThemeStyle: String {
     case light
     case dark
 }
-#else
-enum OWThemeStyle: String {
-    case light
-    case dark
-}
-#endif

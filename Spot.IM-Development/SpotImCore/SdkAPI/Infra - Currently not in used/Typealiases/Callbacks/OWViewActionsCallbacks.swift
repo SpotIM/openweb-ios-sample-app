@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWViewActionsCallbacks = (OWViewActionCallbackType, OWViewSourceType, String) -> Void
-#else
-typealias OWViewActionsCallbacks = (OWViewActionCallbackType, OWViewSourceType, String) -> Void
-#endif

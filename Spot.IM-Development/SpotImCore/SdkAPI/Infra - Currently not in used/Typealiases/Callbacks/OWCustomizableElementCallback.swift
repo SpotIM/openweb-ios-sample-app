@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWCustomizableElementCallback = (OWCustomizableElement, OWViewSourceType, OWThemeStyle, String?) -> Void
-#else
-typealias OWCustomizableElementCallback = (OWCustomizableElement, OWViewSourceType, OWThemeStyle, String?) -> Void
-#endif

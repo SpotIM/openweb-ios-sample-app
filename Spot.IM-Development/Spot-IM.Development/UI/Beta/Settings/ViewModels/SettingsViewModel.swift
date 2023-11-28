@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol SettingsViewModelingInputs {
 
 }
@@ -54,5 +52,3 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
         self.manager = manager
     }
 }
-
-#endif

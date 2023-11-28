@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol CommentCreationSettingsViewModelingInputs {
     var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
     var accessoryViewSelectedIndex: BehaviorSubject<Int> { get }
@@ -148,5 +146,3 @@ fileprivate extension CommentCreationSettingsVM {
 }
 
 extension CommentCreationSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

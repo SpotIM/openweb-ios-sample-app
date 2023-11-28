@@ -8,16 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWArticleSettingsProtocol {
     var section: String { get }
     var headerStyle: OWArticleHeaderStyle { get }
     var readOnlyMode: OWReadOnlyMode { get }
 }
-#else
-protocol OWArticleSettingsProtocol {
-    var section: String { get }
-    var headerStyle: OWArticleHeaderStyle { get }
-    var readOnlyMode: OWReadOnlyMode { get }
-}
-#endif

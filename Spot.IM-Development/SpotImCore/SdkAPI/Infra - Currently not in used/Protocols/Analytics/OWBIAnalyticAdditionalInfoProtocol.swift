@@ -8,12 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWBIAnalyticAdditionalInfoProtocol {
     var customBIData: OWCustomBIData { get }
 }
-#else
-protocol OWBIAnalyticAdditionalInfoProtocol {
-    var customBIData: OWCustomBIData { get }
-}
-#endif

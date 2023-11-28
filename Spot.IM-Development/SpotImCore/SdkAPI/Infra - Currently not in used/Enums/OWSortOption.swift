@@ -8,16 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWSortOption: String {
     case best
     case newest
     case oldest
 }
-#else
-enum OWSortOption: String {
-    case best
-    case newest
-    case oldest
-}
-#endif

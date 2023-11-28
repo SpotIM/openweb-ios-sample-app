@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWThemeStyleEnforcement {
     static func themeStyle(fromIndex index: Int) -> OWThemeStyleEnforcement {
         switch index {
@@ -34,5 +32,3 @@ extension OWThemeStyleEnforcement {
         }
     }
 }
-
-#endif

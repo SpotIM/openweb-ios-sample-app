@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWCustomBIData = [String: Codable]
-#else
-typealias OWCustomBIData = [String: Codable]
-#endif

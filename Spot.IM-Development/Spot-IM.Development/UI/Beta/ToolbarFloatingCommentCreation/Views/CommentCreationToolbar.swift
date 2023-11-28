@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import SnapKit
 
-#if NEW_API
-
 class CommentCreationToolbar: UIView {
 
     struct ToolbarMetrics {
@@ -77,4 +75,3 @@ fileprivate extension CommentCreationToolbar {
             .disposed(by: disposeBag)
     }
 }
-#endif

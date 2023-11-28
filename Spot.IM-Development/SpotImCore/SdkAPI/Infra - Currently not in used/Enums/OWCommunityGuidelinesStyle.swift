@@ -8,17 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWCommunityGuidelinesStyle: Codable {
     case none
     case regular
     case compact
 }
-
-#else
-enum OWCommunityGuidelinesStyle: Codable {
-    case none
-    case regular
-    case compact
-}
-#endif

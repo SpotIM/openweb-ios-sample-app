@@ -9,8 +9,6 @@
 import Foundation
 import RxSwift
 
-#if NEW_API
-
 protocol MiscellaneousViewModelingInputs {
     var conversationCounterTapped: PublishSubject<Void> { get }
 }
@@ -55,6 +53,3 @@ fileprivate extension MiscellaneousViewModel {
 
     func setupObservers() { }
 }
-
-#endif
-

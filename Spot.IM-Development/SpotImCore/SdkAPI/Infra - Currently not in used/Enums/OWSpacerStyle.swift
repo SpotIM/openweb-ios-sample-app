@@ -8,17 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWSpacerStyle {
     case comment
     case community
     case none
 }
-#else
-enum OWSpacerStyle {
-    case comment
-    case community
-    case none
-}
-#endif
-

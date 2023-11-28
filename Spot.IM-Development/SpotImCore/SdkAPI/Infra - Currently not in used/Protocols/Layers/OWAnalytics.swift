@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWAnalytics {
     var customBIData: OWCustomBIData { get set }
     func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback)
 }
-#else
-protocol OWAnalytics {
-    var customBIData: OWCustomBIData { get set }
-    func addBICallback(_ callback: @escaping OWBIAnalyticEventCallback)
-}
-#endif

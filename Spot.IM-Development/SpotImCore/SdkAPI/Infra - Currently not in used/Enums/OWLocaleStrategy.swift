@@ -8,16 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWLocaleStrategy: Codable {
     case useDevice
     case useServerConfig // Will be default "en-US" in case locale can't be generated from server config
     case use(locale: Locale)
 }
-#else
-enum OWLocaleStrategy: Codable {
-    case useDevice
-    case useServerConfig // Will be default "en-US" in case locale can't be generated from server config
-    case use(locale: Locale)
-}
-#endif

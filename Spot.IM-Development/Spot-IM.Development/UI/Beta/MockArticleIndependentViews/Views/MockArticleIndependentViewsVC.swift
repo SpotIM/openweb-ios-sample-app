@@ -11,8 +11,6 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-#if NEW_API
-
 class MockArticleIndependentViewsVC: UIViewController {
     fileprivate struct Metrics {
         static let verticalMargin: CGFloat = 40
@@ -209,4 +207,3 @@ fileprivate extension MockArticleIndependentViewsVC {
         }
     }
 }
-#endif

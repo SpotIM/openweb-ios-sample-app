@@ -8,14 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWHeaderCustomizableElement {
     case title(label: UILabel)
     case close(button: UIButton)
 }
-#else
-public enum OWHeaderCustomizableElement {
-    case title(label: UILabel)
-    case close(button: UIButton)
-}
-#endif

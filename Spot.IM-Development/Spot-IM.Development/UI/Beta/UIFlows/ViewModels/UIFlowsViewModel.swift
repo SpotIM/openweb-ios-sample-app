@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol UIFlowsViewModelingInputs {
     var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
     var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
@@ -106,6 +104,3 @@ fileprivate extension UIFlowsViewModel {
             .disposed(by: disposeBag)
     }
 }
-
-#endif
-

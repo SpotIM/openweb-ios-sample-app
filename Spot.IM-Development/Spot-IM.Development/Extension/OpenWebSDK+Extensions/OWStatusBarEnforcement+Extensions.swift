@@ -9,8 +9,6 @@
 import UIKit
 import SpotImCore
 
-#if NEW_API
-
 extension OWStatusBarEnforcement {
     static func statusBarStyle(fromIndex index: Int) -> OWStatusBarEnforcement {
         switch index {
@@ -50,5 +48,3 @@ extension OWStatusBarEnforcement {
         }
     }
 }
-
-#endif

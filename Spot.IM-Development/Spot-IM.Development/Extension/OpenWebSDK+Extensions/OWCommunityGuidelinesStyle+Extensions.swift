@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWCommunityGuidelinesStyle {
     init(index: Int) {
         switch index {
@@ -41,5 +39,3 @@ extension OWCommunityGuidelinesStyle {
         case compact
     }
 }
-
-#endif

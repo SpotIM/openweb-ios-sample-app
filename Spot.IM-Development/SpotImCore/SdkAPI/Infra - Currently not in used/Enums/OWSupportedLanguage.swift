@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWSupportedLanguage: String, Codable, CaseIterable {
     case hebrew = "he"
     case english = "en"
@@ -17,13 +16,3 @@ public enum OWSupportedLanguage: String, Codable, CaseIterable {
     case portuguese = "pt"
     case french = "fr"
 }
-#else
-enum OWSupportedLanguage: String, Codable, CaseIterable {
-    case hebrew = "he"
-    case english = "en"
-    case arabic = "ar"
-    case spanish = "es"
-    case portuguese = "pt"
-    case french = "fr"
-}
-#endif

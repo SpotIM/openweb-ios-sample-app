@@ -9,7 +9,6 @@
 import RxSwift
 import SpotImCore
 
-#if NEW_API
 protocol ConversationCountersNewAPIViewModelingInputs {
     var userPostIdsInput: BehaviorSubject<String> { get }
     var loadConversationCounter: PublishSubject<Void> { get }
@@ -124,5 +123,3 @@ fileprivate extension ConversationCountersNewAPIViewModel {
             .map { $0.replacingOccurrences(of: " ", with: "") } // Remove extra possible white spaces
     }
 }
-
-#endif

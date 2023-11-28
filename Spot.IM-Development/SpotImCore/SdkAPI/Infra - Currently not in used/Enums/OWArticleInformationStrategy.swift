@@ -8,15 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWArticleInformationStrategy: Codable {
     case server
     case local(data: OWArticleExtraData)
 }
-#else
-enum OWArticleInformationStrategy: Codable {
-    case server
-    case local(data: OWArticleExtraData)
-}
-#endif
-
