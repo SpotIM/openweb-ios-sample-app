@@ -31,6 +31,7 @@ class OWCommentContentView: UIView {
 
     fileprivate lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var editedLabel: UILabel = {
