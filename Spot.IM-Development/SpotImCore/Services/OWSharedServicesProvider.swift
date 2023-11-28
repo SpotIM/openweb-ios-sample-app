@@ -34,7 +34,6 @@ protocol OWSharedServicesProviding: AnyObject {
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
-    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
     func sortDictateService() -> OWSortDictateServicing
@@ -135,10 +134,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _skeletonShimmeringService: OWSkeletonShimmeringServicing = {
         return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
-    }()
-
-    fileprivate lazy var _authorizationRecoveryServiceOldAPI: OWAuthorizationRecoveryServicingOldAPI = {
-        return OWAuthorizationRecoveryServiceOldAPI(servicesProvider: self)
     }()
 
     fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
@@ -279,10 +274,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing {
         return _skeletonShimmeringService
-    }
-
-    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI {
-        return _authorizationRecoveryServiceOldAPI
     }
 
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing {

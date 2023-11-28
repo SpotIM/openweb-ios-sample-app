@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWPreConversationStyle {
     static func preConversationStyle(fromIndex index: Int,
                                      numberOfComments: Int = OWPreConversationStyle.Metrics.defaultRegularNumberOfComments,
@@ -46,5 +44,3 @@ extension OWPreConversationStyle {
         case custom
     }
 }
-
-#endif

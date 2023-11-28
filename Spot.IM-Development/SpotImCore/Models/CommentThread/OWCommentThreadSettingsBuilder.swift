@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWCommentThreadSettingsBuilder {
 
     public init() {
@@ -19,15 +18,3 @@ public struct OWCommentThreadSettingsBuilder {
         return OWCommentThreadSettings()
     }
 }
-#else
-struct OWCommentThreadSettingsBuilder {
-
-    init() {
-
-    }
-
-    func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings()
-    }
-}
-#endif
