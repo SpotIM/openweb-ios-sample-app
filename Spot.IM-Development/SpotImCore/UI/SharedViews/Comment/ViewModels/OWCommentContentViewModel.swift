@@ -152,7 +152,7 @@ fileprivate extension OWCommentContentViewModel {
         } else {
             appWidth = UIScreen.main.bounds.width
         }
-        
+
         let maxWidth = appWidth - leadingOffset // TODO: comment leading+trailing offset ?
 
         // calculate media width according to height ratio
