@@ -25,7 +25,6 @@ extension OWOrientationEnforcement {
             } else {
                 return .all
             }
-
         }
     }
 }
