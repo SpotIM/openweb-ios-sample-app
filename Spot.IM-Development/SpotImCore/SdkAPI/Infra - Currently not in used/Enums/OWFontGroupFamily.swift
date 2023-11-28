@@ -8,15 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWFontGroupFamily: Codable {
     case `default`
     case custom(fontFamily: String)
 }
-
-#else
-enum OWFontGroupFamily: Codable {
-    case `default`
-    case custom(fontFamily: String)
-}
-#endif

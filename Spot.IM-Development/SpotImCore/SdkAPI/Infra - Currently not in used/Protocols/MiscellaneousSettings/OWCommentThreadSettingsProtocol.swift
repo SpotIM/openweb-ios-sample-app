@@ -8,12 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWCommentThreadSettingsProtocol {
 
 }
-#else
-protocol OWCommentThreadSettingsProtocol {
-
-}
-#endif

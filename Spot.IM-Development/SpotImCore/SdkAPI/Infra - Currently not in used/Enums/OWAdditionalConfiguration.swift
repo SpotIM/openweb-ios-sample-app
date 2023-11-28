@@ -8,12 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWAdditionalConfiguration {
     case suppressFinmbFilter
 }
-#else
-enum OWAdditionalConfiguration {
-    case suppressFinmbFilter
-}
-#endif

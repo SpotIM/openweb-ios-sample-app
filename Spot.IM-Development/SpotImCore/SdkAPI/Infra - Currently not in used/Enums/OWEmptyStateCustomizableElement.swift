@@ -8,15 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWEmptyStateCustomizableElement {
     case icon(image: UIImageView)
     case title(label: UILabel)
 }
-#else
-enum OWEmptyStateCustomizableElement {
-    case icon(image: UIImageView)
-    case title(label: UILabel)
-}
-#endif
-

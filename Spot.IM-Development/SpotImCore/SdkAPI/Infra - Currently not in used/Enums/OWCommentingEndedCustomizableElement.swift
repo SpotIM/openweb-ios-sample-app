@@ -8,14 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWCommentingEndedCustomizableElement {
     case icon(image: UIImageView)
     case title(label: UILabel)
 }
-#else
-enum OWCommentingEndedCustomizableElement {
-    case icon(image: UIImageView)
-    case title(label: UILabel)
-}
-#endif

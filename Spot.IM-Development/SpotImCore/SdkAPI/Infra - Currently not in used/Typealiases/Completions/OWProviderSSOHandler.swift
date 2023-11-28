@@ -15,8 +15,4 @@ import Foundation
  Complete the handler as needed when it will be time
  */
 
-#if NEW_API
 public typealias OWProviderSSOHandler = (Result<OWSSOProviderModel, OWError>) -> Void
-#else
-typealias OWProviderSSOHandler = (Result<OWSSOProviderModel, OWError>) -> Void
-#endif

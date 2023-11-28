@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWDefaultCompletion = (Result<Void, OWError>) -> Void
-#else
-typealias OWDefaultCompletion = (Result<Void, OWError>) -> Void
-#endif

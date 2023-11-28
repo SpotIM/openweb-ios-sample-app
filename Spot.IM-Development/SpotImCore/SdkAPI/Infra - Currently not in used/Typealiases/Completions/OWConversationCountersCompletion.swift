@@ -8,8 +8,4 @@
 
 import Foundation
 
-#if NEW_API
 public typealias OWConversationCountersCompletion = (Result<[OWPostId: OWConversationCounter], OWError>) -> Void
-#else
-typealias OWConversationCountersCompletion = (Result<[OWPostId: OWConversationCounter], OWError>) -> Void
-#endif

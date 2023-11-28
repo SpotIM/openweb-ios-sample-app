@@ -9,8 +9,6 @@
 import UIKit
 import RxSwift
 
-#if NEW_API
-
 class CommentThreadSettingsView: UIView {
 
     fileprivate struct Metrics {
@@ -89,5 +87,3 @@ fileprivate extension CommentThreadSettingsView {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

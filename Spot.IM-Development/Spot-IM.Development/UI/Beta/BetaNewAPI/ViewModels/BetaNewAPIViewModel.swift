@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol BetaNewAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<String> { get }
     var enteredPostId: PublishSubject<String> { get }
@@ -289,5 +287,3 @@ fileprivate extension BetaNewAPIViewModel {
         analytics.addBICallback(BIClosure)
     }
 }
-
-#endif

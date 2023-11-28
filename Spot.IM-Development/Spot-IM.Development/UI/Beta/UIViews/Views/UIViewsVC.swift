@@ -11,8 +11,6 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-#if NEW_API
-
 class UIViewsVC: UIViewController {
 
     fileprivate struct Metrics {
@@ -227,6 +225,3 @@ fileprivate extension UIViewsVC {
             .disposed(by: disposeBag)
     }
 }
-
-#endif
-

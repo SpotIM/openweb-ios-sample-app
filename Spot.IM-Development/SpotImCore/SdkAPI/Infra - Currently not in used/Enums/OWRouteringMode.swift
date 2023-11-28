@@ -8,14 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWRouteringMode {
     case none
     case flow(navigationController: UINavigationController)
 }
-#else
-enum OWRouteringMode {
-    case none
-    case flow(navigationController: UINavigationController)
-}
-#endif

@@ -8,13 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWSSOStartModel {
     public let codeA: String
 }
-
-#else
-struct OWSSOStartModel {
-    let codeA: String
-}
-#endif

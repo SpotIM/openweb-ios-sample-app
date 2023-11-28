@@ -9,15 +9,7 @@
 import Foundation
 import UIKit
 
-#if NEW_API
 public enum OWAccessoryViewStrategy {
     case none
     case bottomToolbar(toolbar: UIView)
 }
-
-#else
-enum OWAccessoryViewStrategy {
-    case none
-    case bottomToolbar(toolbar: UIView)
-}
-#endif

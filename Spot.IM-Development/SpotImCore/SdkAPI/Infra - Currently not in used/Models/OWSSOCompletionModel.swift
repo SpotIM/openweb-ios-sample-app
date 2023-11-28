@@ -8,13 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWSSOCompletionModel {
     public let userId: String
 }
-
-#else
-struct OWSSOCompletionModel {
-    let userId: String
-}
-#endif

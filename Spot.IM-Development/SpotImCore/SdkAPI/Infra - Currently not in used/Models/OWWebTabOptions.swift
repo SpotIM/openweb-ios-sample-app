@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWWebTabOptions {
     public let url: URL
     public let title: String
@@ -19,16 +18,3 @@ public struct OWWebTabOptions {
 
     }
 }
-
-#else
-struct OWWebTabOptions {
-    let url: URL
-    let title: String
-
-    init(url: URL, title: String) {
-        self.url = url
-        self.title = title
-
-    }
-}
-#endif

@@ -9,8 +9,6 @@
 import UIKit
 import RxSwift
 
-#if NEW_API
-
 class PreConversationSettingsView: UIView {
 
     fileprivate struct Metrics {
@@ -164,5 +162,3 @@ fileprivate extension PreConversationSettingsView {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

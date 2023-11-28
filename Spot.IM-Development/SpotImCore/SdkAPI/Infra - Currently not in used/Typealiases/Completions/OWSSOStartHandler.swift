@@ -15,8 +15,4 @@ import Foundation
  Complete the handler as needed when it will be time
  */
 
-#if NEW_API
 public typealias OWSSOStartHandler = (Result<OWSSOStartModel, OWError>) -> Void
-#else
-typealias OWSSOStartHandler = (Result<OWSSOStartModel, OWError>) -> Void
-#endif

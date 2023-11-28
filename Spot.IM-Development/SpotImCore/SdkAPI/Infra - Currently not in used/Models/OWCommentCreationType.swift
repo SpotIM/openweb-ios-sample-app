@@ -8,20 +8,11 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWCommentCreationType: Codable {
     case comment
     case edit(commentId: OWCommentId)
     case replyTo(commentId: OWCommentId)
 }
-
-#else
-enum OWCommentCreationType: Codable {
-    case comment
-    case edit(commentId: OWCommentId)
-    case replyTo(commentId: OWCommentId)
-}
-#endif
 
 extension OWCommentCreationType: Equatable {
     public static func == (lhs: OWCommentCreationType, rhs: OWCommentCreationType) -> Bool {

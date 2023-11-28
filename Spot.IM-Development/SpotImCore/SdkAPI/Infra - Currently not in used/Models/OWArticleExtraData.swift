@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWArticleExtraData: Codable, Equatable {
     public let url: URL
     public let title: String
@@ -22,19 +21,3 @@ public struct OWArticleExtraData: Codable, Equatable {
         self.thumbnailUrl = thumbnailUrl
     }
 }
-
-#else
-struct OWArticleExtraData: Codable, Equatable {
-    let url: URL
-    let title: String
-    let subtitle: String?
-    let thumbnailUrl: URL?
-
-    init(url: URL, title: String, subtitle: String?, thumbnailUrl: URL?) {
-        self.url = url
-        self.title = title
-        self.subtitle = subtitle
-        self.thumbnailUrl = thumbnailUrl
-    }
-}
-#endif

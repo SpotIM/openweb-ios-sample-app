@@ -8,15 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWOnlineUsersCustomizableElement {
     case icon(image: UIImageView)
     case counter(label: UILabel)
 }
-#else
-enum OWOnlineUsersCustomizableElement {
-    case icon(image: UIImageView)
-    case counter(label: UILabel)
-}
-#endif
-

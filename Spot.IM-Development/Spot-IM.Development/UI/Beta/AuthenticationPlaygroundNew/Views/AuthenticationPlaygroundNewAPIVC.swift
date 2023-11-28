@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import SnapKit
 
-#if NEW_API
-
 class AuthenticationPlaygroundNewAPIVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "authentication_playground_new_api_vc_id"
@@ -320,5 +318,3 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             .disposed(by: disposeBag)
     }
 }
-
-#endif

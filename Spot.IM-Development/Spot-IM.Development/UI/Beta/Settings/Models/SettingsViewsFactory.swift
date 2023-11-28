@@ -9,7 +9,6 @@
 import UIKit
 import Foundation
 
-#if NEW_API
 class SettingsViewsFactory {
     static func factor(from settingsVM: SettingsGroupVMProtocol) -> UIView? {
         // We can be sure that in every case it is the one we are casting to, so we force unwrap safely
@@ -33,4 +32,3 @@ class SettingsViewsFactory {
         // swiftlint:enable force_cast
     }
 }
-#endif

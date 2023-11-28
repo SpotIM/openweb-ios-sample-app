@@ -8,13 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWSSOProviderModel {
     public let userId: String
 }
-
-#else
-struct OWSSOProviderModel {
-    let userId: String
-}
-#endif

@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWViewSourceType {
     case preConversation
     case conversation
@@ -18,14 +17,3 @@ public enum OWViewSourceType {
     case clarityDetails
     case webView
 }
-#else
-enum OWViewSourceType {
-    case preConversation
-    case conversation
-    case commentCreation
-    case commentThread
-    case reportReason
-    case clarityDetails
-    case webView
-}
-#endif

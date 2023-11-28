@@ -10,8 +10,6 @@ import Foundation
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol PreConversationSettingsViewModelingInputs {
     var customStyleModeSelectedIndex: BehaviorSubject<Int> { get }
     var customStyleModeSelectedNumberOfComments: BehaviorSubject<Int> { get }
@@ -216,5 +214,3 @@ fileprivate extension PreConversationSettingsVM {
 }
 
 extension PreConversationSettingsVM: SettingsGroupVMProtocol { }
-
-#endif

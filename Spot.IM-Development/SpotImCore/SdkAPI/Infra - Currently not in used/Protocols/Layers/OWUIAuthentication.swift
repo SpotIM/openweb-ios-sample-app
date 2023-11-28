@@ -8,12 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public protocol OWUIAuthentication {
     var displayAuthenticationFlow: OWAuthenticationFlowCallback? { get set }
 }
-#else
-protocol OWUIAuthentication {
-    var displayAuthenticationFlow: OWAuthenticationFlowCallback? { get set }
-}
-#endif

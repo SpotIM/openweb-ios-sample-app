@@ -8,8 +8,4 @@
 
 import UIKit
 
-#if NEW_API
 public typealias OWViewCompletion = (Result<UIView, OWError>) -> Void
-#else
-typealias OWViewCompletion = (Result<UIView, OWError>) -> Void
-#endif

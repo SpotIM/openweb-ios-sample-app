@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import SpotImCore
 
-#if NEW_API
-
 protocol ConversationBelowVideoViewModelingInputs {}
 
 protocol ConversationBelowVideoViewModelingOutputs {
@@ -368,5 +366,3 @@ fileprivate extension ConversationBelowVideoViewModel {
         })
     }
 }
-
-#endif

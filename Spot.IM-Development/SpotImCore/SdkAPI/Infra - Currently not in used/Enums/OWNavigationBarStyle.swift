@@ -8,15 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWNavigationBarStyle {
     case regular
     case largeTitles // Default style
 }
-
-#else
-enum OWNavigationBarStyle {
-    case regular
-    case largeTitles
-}
-#endif

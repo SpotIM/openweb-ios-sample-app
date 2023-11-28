@@ -8,7 +8,6 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWStatusBarEnforcement {
     case matchTheme
     case style(_ style: UIStatusBarStyle)
@@ -24,20 +23,3 @@ public enum OWStatusBarEnforcement {
         }
     }
 }
-#else
-enum OWStatusBarEnforcement {
-    case matchTheme
-    case style(_ style: UIStatusBarStyle)
-
-    static func == (lhs: OWStatusBarEnforcement, rhs: OWStatusBarEnforcement) -> Bool {
-        switch (lhs, rhs) {
-        case (.matchTheme, .matchTheme):
-            return true
-        case (let .style(lhsStyle), let .style(rhsStyle)):
-            return lhsStyle == rhsStyle
-        default:
-            return false
-        }
-    }
-}
-#endif

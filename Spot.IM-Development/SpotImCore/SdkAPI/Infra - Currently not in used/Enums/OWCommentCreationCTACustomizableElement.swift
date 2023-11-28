@@ -8,15 +8,7 @@
 
 import UIKit
 
-#if NEW_API
 public enum OWCommentCreationCTACustomizableElement {
     case container(view: UIView)
     case placeholder(label: UILabel)
 }
-#else
-enum OWCommentCreationCTACustomizableElement {
-    case container(view: UIView)
-    case placeholder(label: UILabel)
-}
-#endif
-
