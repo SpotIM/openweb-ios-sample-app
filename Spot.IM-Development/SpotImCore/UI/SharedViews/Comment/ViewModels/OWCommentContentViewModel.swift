@@ -145,7 +145,15 @@ fileprivate extension OWCommentContentViewModel {
 
     func getMediaSize(originalSize: CGSize, leadingOffset: CGFloat) -> CGSize {
         guard originalSize.height > 0 && originalSize.width > 0 else { return .zero }
-        let maxWidth = SPUIWindow.frame.width - leadingOffset // TODO: comment leading+trailing offset ?
+
+        let appWidth: CGFloat
+        if let appWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+            appWidth = appWindow.bounds.width
+        } else {
+            appWidth = UIScreen.main.bounds.width
+        }
+
+        let maxWidth = appWidth - leadingOffset // TODO: comment leading+trailing offset ?
 
         // calculate media width according to height ratio
         var height = Metrics.commentMediaMaxHeight

@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWArticleInformationStrategy {
     static func articleInformationStrategy(fromIndex index: Int) -> OWArticleInformationStrategy {
         switch index {
@@ -37,5 +35,3 @@ extension OWArticleInformationStrategy {
         }
     }
 }
-
-#endif
