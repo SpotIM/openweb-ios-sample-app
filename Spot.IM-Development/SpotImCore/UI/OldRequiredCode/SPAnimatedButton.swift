@@ -119,11 +119,11 @@ internal class SPAnimatedButton: UIButton {
         self.selectedImage = selectedImage
         addTargets()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     fileprivate func createLayers(buttonInset insets: UIEdgeInsets) { // swiftlint:disable:this function_body_length
         self.layer.sublayers = nil
         let imageFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height).inset(by: insets)
