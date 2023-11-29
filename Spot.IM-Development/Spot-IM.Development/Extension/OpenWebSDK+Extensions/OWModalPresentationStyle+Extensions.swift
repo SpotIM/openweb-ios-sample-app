@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWModalPresentationStyle {
     static func presentationStyle(fromIndex index: Int) -> OWModalPresentationStyle {
         switch index {
@@ -32,5 +30,3 @@ extension OWModalPresentationStyle {
         }
     }
 }
-
-#endif

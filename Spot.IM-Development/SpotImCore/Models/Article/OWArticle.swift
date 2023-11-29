@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWArticle: OWArticleProtocol {
     public let articleInformationStrategy: OWArticleInformationStrategy
     public let additionalSettings: OWArticleSettingsProtocol
@@ -19,15 +18,3 @@ public struct OWArticle: OWArticleProtocol {
         self.additionalSettings = additionalSettings
     }
 }
-#else
-struct OWArticle: OWArticleProtocol {
-    let articleInformationStrategy: OWArticleInformationStrategy
-    let additionalSettings: OWArticleSettingsProtocol
-
-    init(articleInformationStrategy: OWArticleInformationStrategy,
-         additionalSettings: OWArticleSettingsProtocol) {
-        self.articleInformationStrategy = articleInformationStrategy
-        self.additionalSettings = additionalSettings
-    }
-}
-#endif

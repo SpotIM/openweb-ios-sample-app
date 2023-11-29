@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWCommentCreationStyle {
     static func commentCreationStyle(fromIndex index: Int,
                                      commonCreatorService: CommonCreatorServicing = CommonCreatorService()) -> OWCommentCreationStyle {
@@ -29,5 +27,3 @@ extension OWCommentCreationStyle {
         return .regular
     }
 }
-
-#endif
