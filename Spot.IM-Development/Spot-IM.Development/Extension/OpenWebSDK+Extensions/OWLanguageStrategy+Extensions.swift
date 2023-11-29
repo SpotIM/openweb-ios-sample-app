@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWLanguageStrategy {
     static func languageStrategy(fromIndex index: Int, language: OWSupportedLanguage) -> OWLanguageStrategy {
         switch index {
@@ -35,5 +33,3 @@ extension OWLanguageStrategy {
         case use
     }
 }
-
-#endif

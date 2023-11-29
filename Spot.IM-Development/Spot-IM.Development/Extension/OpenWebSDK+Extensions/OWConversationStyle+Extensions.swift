@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWConversationStyle {
     // swiftlint:disable function_parameter_count
     static func conversationStyle(fromIndex index: Int,
@@ -18,7 +16,6 @@ extension OWConversationStyle {
                                   communityQuestionsStyleIndex: Int,
                                   spacingIndex: Int,
                                   betweenComments: CGFloat,
-                                  belowHeader: CGFloat,
                                   belowCommunityGuidelines: CGFloat,
                                   belowCommunityQuestions: CGFloat) -> OWConversationStyle {
         // swiftlint:enable function_parameter_count
@@ -30,9 +27,8 @@ extension OWConversationStyle {
                                                                 communityQuestionsStyle: OWCommunityQuestionStyle(index: communityQuestionsStyleIndex),
                                                                 spacing: OWConversationSpacing(index: spacingIndex,
                                                                                                betweenComments: betweenComments,
-                                                                                               belowHeader: belowHeader,
-                                                                                               belowCommunityGuidelines: belowCommunityGuidelines,
-                                                                                               belowCommunityQuestions: belowCommunityQuestions))
+                                                                                               communityGuidelines: belowCommunityGuidelines,
+                                                                                               communityQuestions: belowCommunityQuestions))
         default: return `default`
         }
     }
@@ -45,5 +41,3 @@ extension OWConversationStyle {
         return .regular
     }
 }
-
-#endif

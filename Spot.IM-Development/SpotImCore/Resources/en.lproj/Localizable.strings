@@ -18,9 +18,10 @@
 "Post" = "Post";
 "SignUpToPost" = "Sign Up to Post";
 "ConnectivityErrorMessage" = "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues.";
+"CloseEditor" = "Close editor?";
 "Delete" = "Delete";
 "DeleteCommentTitle" = "Delete Comment";
-"DeleteCommentMessage" = "Do you really want to delete this comment?";
+"DeleteCommentMessage" = "Are you sure you want to delete this comment?";
 "Report" = "Report";
 "GotIt" = "Got it";
 "SortBy" = "Sort by";
@@ -32,6 +33,7 @@
 "ReportedCommentMessage" = "This message was reported.";
 "MutedCommentMessage" = "This user is muted.";
 "ViolatedPolicyCommentMessage" = "This comment violated our policy.";
+"AuthorViolatedPolicyCommentMessage" = "Your comment violated our policy.";
 "ShowMoreComments" = "SHOW MORE COMMENTS";
 "Terms" = "Terms";
 "Privacy" = "Privacy";

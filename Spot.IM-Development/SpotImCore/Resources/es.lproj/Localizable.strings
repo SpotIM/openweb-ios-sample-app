@@ -18,9 +18,10 @@
 "Post" = "Comentar";
 "SignUpToPost" = "Registrarse para comentar";
 "ConnectivityErrorMessage" = "Whoops! Parece que estamos\nexperimentando algunos\nproblemas de conectividad.";
+"CloseEditor" = "¿Cerrar el editor?";
 "Delete" = "Borrar";
 "DeleteCommentTitle" = "Borrar comentario";
-"DeleteCommentMessage" = "¿Está seguro de quere borrar este comentario?";
+"DeleteCommentMessage" = "¿Estás seguro de que quieres borrar este comentario?";
 "Report" = "Reportar";
 "GotIt" = "Comprendido";
 "SortBy" = "Ordenar por";
@@ -56,6 +57,7 @@
 "Edited" = " (Editado)";
 "Recommend" = "Me Gusta";
 "ViolatedPolicyCommentMessage" = "Esta publicación infringe nuestra política";
+"AuthorViolatedPolicyCommentMessage" = "Tu publicación infringe nuestra política";
 "Your comment is waiting for approval due to the site’s policy." = "Tu comentario está a la espera de aprobación debido a la política del sitio.";
 "Mute" = "Silenciar";
 "MuteUser" = "Silenciar usuario";

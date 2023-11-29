@@ -103,7 +103,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                         return string
                     }
                 case .error:
-                    return OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadConversationComments")
+                    return OWLocalizationManager.shared.localizedString(key: "ErrorStateLoadComments")
                 }
             }
             .asObservable()

@@ -15,10 +15,8 @@ class OWCommentThreadActionsView: UIView {
         static let identifier = "comment_thread_actions_view_id_"
         static let actionViewIdentifier = "comment_thread_actions_view_action_view_id_"
         static let actionLabelIdentifier = "comment_thread_actions_view_action_label_id_"
-        static let topOffset: CGFloat = 4.0
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
-        static let cellHeight: CGFloat = 40.0
         static let textToImageSpacing: CGFloat = 6.5
     }
 
@@ -59,7 +57,8 @@ class OWCommentThreadActionsView: UIView {
         view.addSubview(actionLabel)
         actionLabel.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.top.equalToSuperview().offset(Metrics.topOffset)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
 
         view.addSubview(disclosureImageView)
@@ -110,8 +109,8 @@ fileprivate extension OWCommentThreadActionsView {
         self.addSubview(actionView)
         self.actionView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-            make.top.bottom.equalToSuperview()
-            make.height.equalTo(Metrics.cellHeight)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
 
@@ -133,6 +132,17 @@ fileprivate extension OWCommentThreadActionsView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.actionLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
+            .disposed(by: disposeBag)
+
+        // Update bottom spacing
+        viewModel.outputs.updateSpacing
+            .subscribe(onNext: { [weak self] spacingBetweenComments in
+                guard let self = self else { return }
+
+                self.actionView.OWSnp.updateConstraints { make in
+                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                }
             })
             .disposed(by: disposeBag)
 

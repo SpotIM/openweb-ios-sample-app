@@ -6,6 +6,8 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
+// Alon - TODO // Remove this old extension and create a better way to work with images
+
 import UIKit
 
 internal typealias OWImageName = String

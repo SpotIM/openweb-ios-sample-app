@@ -36,12 +36,17 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     var outputs: OWCommentStatusViewModelingOutputs { return self }
 
     fileprivate let _status = BehaviorSubject<OWCommentStatusType>(value: .none)
+    fileprivate let commentId: OWCommentId
 
     fileprivate let sharedServicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
 
-    init (status: OWCommentStatusType, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (status: OWCommentStatusType, commentId: OWCommentId, sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServicesProvider = sharedServicesProvider
+        self.commentId = commentId
         _status.onNext(status)
+
+        setupObservers()
     }
 
     lazy var status: Observable<OWCommentStatusType> = {
@@ -123,8 +128,23 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     }
 
     func updateStatus(for comment: OWComment) {
-        let newStatus = OWCommentStatusType.commentStatus(from: comment.status)
+        let newStatus = OWCommentStatusType.commentStatus(from: comment)
         self._status.onNext(newStatus)
+    }
+}
+
+fileprivate extension OWCommentStatusViewModel {
+    func setupObservers() {
+        sharedServicesProvider.commentStatusUpdaterService()
+            .statusUpdate
+            .filter { [weak self] commentId, _ in
+                guard let self = self else { return false }
+                return commentId == self.commentId
+            }
+            .subscribe(onNext: { [weak self] _, status in
+                self?._status.onNext(status)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -133,8 +153,10 @@ enum OWCommentStatusType {
     case pending
     case none
 
-    static func commentStatus(from status: OWComment.CommentStatus?) -> OWCommentStatusType {
-        guard let status = status else { return .none }
+    static func commentStatus(from comment: OWComment) -> OWCommentStatusType {
+        guard let status = comment.status,
+              comment.published == false
+        else { return .none }
         switch status {
         case .block, .reject:
             return .rejected

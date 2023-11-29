@@ -34,7 +34,6 @@ protocol OWSharedServicesProviding: AnyObject {
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
-    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
     func sortDictateService() -> OWSortDictateServicing
@@ -46,7 +45,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func presenterService() -> OWPresenterServicing
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
     func activeArticleService() -> OWActiveArticleServicing
-    func commentUpdaterService() -> OWCommentUpdaterServicing
+    func conversationUpdaterService() -> OWConversationUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
     func realtimeIndicatorService() -> OWRealtimeIndicatorServicing
@@ -138,10 +137,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
     }()
 
-    fileprivate lazy var _authorizationRecoveryServiceOldAPI: OWAuthorizationRecoveryServicingOldAPI = {
-        return OWAuthorizationRecoveryServiceOldAPI(servicesProvider: self)
-    }()
-
     fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
         return OWAuthorizationRecoveryService(servicesProvider: self)
     }()
@@ -186,8 +181,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWActiveArticleService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
-        return OWCommentUpdaterService(servicesProvider: self)
+    fileprivate lazy var _conversationUpdaterService: OWConversationUpdaterServicing = {
+        return OWConversationUpdaterService(servicesProvider: self)
     }()
 
     fileprivate lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
@@ -286,10 +281,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _skeletonShimmeringService
     }
 
-    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI {
-        return _authorizationRecoveryServiceOldAPI
-    }
-
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing {
         return _authorizationRecoveryService
     }
@@ -334,8 +325,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _activeArticleService
     }
 
-    func commentUpdaterService() -> OWCommentUpdaterServicing {
-        return _commentUpdaterService
+    func conversationUpdaterService() -> OWConversationUpdaterServicing {
+        return _conversationUpdaterService
     }
 
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating {

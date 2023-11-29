@@ -50,7 +50,8 @@ class OWUserBadgeService: OWUserBadgeServicing {
                     } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[OWBadgesKeys.communityModerator.rawValue] {
                         return .badge(text: communityModeratorBadge)
                     }
-                } else if let title = user.authorityTitle {
+                }
+                if let title = user.authorityTitle {
                     return .badge(text: title)
                 }
                 return .empty
