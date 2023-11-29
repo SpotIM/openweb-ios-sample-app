@@ -133,8 +133,8 @@ fileprivate extension OWProfileService {
         if let userId = userId {
             url.appendQueryParam(name: "user_id", value: userId)
         }
-        url = SPWebSDKProvider.urlWithDarkModeParam(url: url)
-
+        let themeService = sharedServicesProvider.themeStyleService()
+        url.appendQueryParam(name: "theme", value: themeService.currentStyle == .dark ? "dark" : "light")
         return url
     }
 

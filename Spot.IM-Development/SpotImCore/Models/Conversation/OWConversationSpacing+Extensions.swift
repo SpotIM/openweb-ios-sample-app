@@ -55,7 +55,6 @@ extension OWConversationSpacing {
     }
 }
 
-#if NEW_API
 extension OWConversationSpacing: Equatable {
     public static func == (lhs: OWConversationSpacing, rhs: OWConversationSpacing) -> Bool {
         switch (lhs, rhs) {
@@ -73,22 +72,3 @@ extension OWConversationSpacing: Equatable {
         }
     }
 }
-#else
-extension OWConversationSpacing: Equatable {
-    static func == (lhs: OWConversationSpacing, rhs: OWConversationSpacing) -> Bool {
-        switch (lhs, rhs) {
-        case (.regular, .regular):
-            return true
-        case (.compact, .compact):
-            return true
-        case (.custom(let lhsBetweenComments, let lhsCommunityGuidelinesSpacing, let lhsCommunityQuestionsSpacing),
-              .custom(let rhsBetweenComments, let rhsCommunityGuidelinesSpacing, let rhsCommunityQuestionsSpacing)):
-            return lhsBetweenComments == rhsBetweenComments &&
-            lhsCommunityGuidelinesSpacing == rhsCommunityGuidelinesSpacing &&
-            lhsCommunityQuestionsSpacing == rhsCommunityQuestionsSpacing
-        default:
-            return false
-        }
-    }
-}
-#endif

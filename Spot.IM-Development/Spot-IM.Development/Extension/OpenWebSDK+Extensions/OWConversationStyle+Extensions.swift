@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWConversationStyle {
     // swiftlint:disable function_parameter_count
     static func conversationStyle(fromIndex index: Int,
@@ -43,5 +41,3 @@ extension OWConversationStyle {
         return .regular
     }
 }
-
-#endif
