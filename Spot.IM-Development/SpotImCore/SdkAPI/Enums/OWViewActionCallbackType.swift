@@ -27,6 +27,7 @@ public enum OWViewActionCallbackType: Codable {
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
+    case openCommentThread(commentId: OWCommentId, performActionType: OWCommentThreadPerformActionType)
 }
 
 extension OWViewActionCallbackType: Equatable {

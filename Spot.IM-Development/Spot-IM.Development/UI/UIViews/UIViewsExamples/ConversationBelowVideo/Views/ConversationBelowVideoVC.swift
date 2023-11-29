@@ -38,16 +38,19 @@ class ConversationBelowVideoVC: UIViewController {
     fileprivate var commentCreation: UIView?
     fileprivate var reportReasons: UIView?
     fileprivate var clarityDetails: UIView?
+    fileprivate var commentThread: UIView?
     fileprivate var webPage: UIView?
 
     fileprivate unowned var conversationTopConstraint: Constraint!
     fileprivate unowned var reportReasonsTopConstraint: Constraint!
     fileprivate unowned var clarityDetailsTopConstraint: Constraint!
+    fileprivate unowned var commentThreadTopConstraint: Constraint!
     fileprivate unowned var webPageTopConstraint: Constraint!
 
     // Designed to play with the height
     fileprivate unowned var reportReasonsHeightConstraint: Constraint!
     fileprivate unowned var clarityDetailsHeightConstraint: Constraint!
+    fileprivate unowned var commentThreadHeightConstraint: Constraint!
     fileprivate unowned var webPageHeightConstraint: Constraint!
 
     fileprivate lazy var videoPlayerItem: AVPlayerItem = {
@@ -193,6 +196,17 @@ fileprivate extension ConversationBelowVideoVC {
                                      assignToComponent: &self.reportReasons,
                                      topConstraint: &self.reportReasonsTopConstraint,
                                      heightConstraint: &self.reportReasonsHeightConstraint,
+                                     putWithAnimationOnComponent: self.conversation)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.commentThreadRetrieved
+            .subscribe(onNext: { [weak self] view in
+                guard let self = self else { return }
+                self.handleRetrieved(component: view,
+                                     assignToComponent: &self.commentThread,
+                                     topConstraint: &self.commentThreadTopConstraint,
+                                     heightConstraint: &self.commentThreadHeightConstraint,
                                      putWithAnimationOnComponent: self.conversation)
             })
             .disposed(by: disposeBag)
