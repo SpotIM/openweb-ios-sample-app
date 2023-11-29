@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWLocaleStrategy {
     static func localeStrategy(fromIndex index: Int) -> OWLocaleStrategy {
         switch index {
@@ -39,5 +37,3 @@ extension OWLocaleStrategy {
         case useServerConfig
     }
 }
-
-#endif
