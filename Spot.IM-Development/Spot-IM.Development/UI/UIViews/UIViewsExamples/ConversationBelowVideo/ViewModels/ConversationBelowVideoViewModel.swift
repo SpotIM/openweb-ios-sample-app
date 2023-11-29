@@ -26,6 +26,7 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var removeReportReasons: Observable<Void> { get }
     var removeCommentCreation: Observable<Void> { get }
     var removeClarityDetails: Observable<Void> { get }
+    var removeCommentThread: Observable<Void> { get }
     var removeWebPage: Observable<Void> { get }
     var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> { get }
 }
@@ -123,6 +124,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
+    fileprivate let _removeCommentThread = PublishSubject<Void>()
+    var removeCommentThread: Observable<Void> {
+        return _removeCommentThread
+            .asObservable()
+    }
+
     fileprivate let _removeWebPage = PublishSubject<Void>()
     var removeWebPage: Observable<Void> {
         return _removeWebPage
@@ -173,6 +180,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
         case (_, .openCommentThread(let commentId, let performActionType)):
             self.retrieveCommentThreadComponent(commentId: commentId,
                                                 performActionType: performActionType)
+        case (.commentThread, .closeCommentThread):
+            self._removeCommentThread.onNext()
         default:
             break
         }
