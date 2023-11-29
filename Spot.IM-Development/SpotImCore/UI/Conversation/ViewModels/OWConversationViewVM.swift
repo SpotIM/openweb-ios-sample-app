@@ -1622,7 +1622,7 @@ fileprivate extension OWConversationViewViewModel {
                       let commentId = commentVm.outputs.comment.id
                 else { return }
                 if userLoggedIn {
-                    // TODO - Refresh conversation
+                    self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
                     self._openCommentThread.onNext((commentId, .changeRank(from: rankChange.from.rawValue,
                                                                            to: rankChange.to.rawValue)))
                 } else {
