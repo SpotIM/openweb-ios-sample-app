@@ -21,7 +21,7 @@ internal extension OWSSOProvider {
     func parameters(token: String) -> OWNetworkParameters {
         switch self {
         case .janrain:
-            return ["provider": "janrain"] // TODO: token
+            return ["provider": "janrain", "janrain_oauth_token": token]
         case .gigya:
             return ["provider": "gigya", "uid": token]
         case .piano:
@@ -29,9 +29,9 @@ internal extension OWSSOProvider {
         case .auth0:
             return ["provider": "auth0", "access_token": token]
         case .foxid:
-            return ["provider": "foxid"] // TODO: token
+            return ["provider": "foxid", "jwt_token": token]
         case .hearst:
-            return ["provider": "hearst"] // TODO: token
+            return ["provider": "hearst", "session_id": token]
         }
     }
 }
