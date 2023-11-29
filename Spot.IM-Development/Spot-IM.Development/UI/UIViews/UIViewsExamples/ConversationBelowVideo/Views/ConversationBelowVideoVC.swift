@@ -257,6 +257,14 @@ fileprivate extension ConversationBelowVideoVC {
             })
             .disposed(by: disposeBag)
 
+        viewModel.outputs.removeCommentThread
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.handleRemoveWithAnimation(component: &self.commentThread,
+                                               componentTopConstraint: self.commentThreadTopConstraint)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.removeWebPage
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
