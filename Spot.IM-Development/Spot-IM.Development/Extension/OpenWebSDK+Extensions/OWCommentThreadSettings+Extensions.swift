@@ -9,10 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWCommentThreadSettings {
     static var defaultCommentId = "sp_eCIlROSD_sdk1_c_2UOBeFUuZan6qSpJZUrAw8CBBF6_r_2UOBkTQqa2RMziIVSWLsaHJ7ifp"
 }
-
-#endif

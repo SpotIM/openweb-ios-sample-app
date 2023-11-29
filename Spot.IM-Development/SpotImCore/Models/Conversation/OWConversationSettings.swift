@@ -8,20 +8,10 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWConversationSettings: OWConversationSettingsProtocol {
     public let style: OWConversationStyle
 
     public init(style: OWConversationStyle = .regular) {
-        self.style = style
+        self.style = style.validate()
     }
 }
-#else
-struct OWConversationSettings: OWConversationSettingsProtocol {
-    let style: OWConversationStyle
-
-    init(style: OWConversationStyle = .regular) {
-        self.style = style
-    }
-}
-#endif

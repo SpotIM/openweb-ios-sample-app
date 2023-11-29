@@ -24,8 +24,7 @@
 "PostIdOrIds" = "PostId(s)";
 "Execute" = "Execute";
 "ConversationCounterMultiplePostIdsDescription" = "You can enter multiple post ids by using a delimiter ', '\nExample: \'postId1, postId2, postId3'";
-"BetaNewAPI" = "Beta - New API";
-"NewAPI" = "New API";
+"TestAPI" = "Test API";
 "SelectPreset" = "Select Preset";
 "SpotId" = "Spot Id";
 "PostId" = "Post Id";
@@ -94,9 +93,8 @@
 "QuestionsStyleModeTitle" = "Questions Style";
 "ConversationSpacingModeTitle" = "Conversation Spacing";
 "BetweenCommentsSpacingTitle" = "Between comments spacing";
-"BelowHeaderSpacingTitle" = "Below header spacing";
-"BelowCommunityGuidelinesSpacingTitle" = "Below guidelines spacing";
-"BelowCommunityQuestionsGuidelinesSpacingTitle" = "Below questions spacing";
+"CommunityGuidelinesSpacingTitle" = "Guidelines spacing";
+"CommunityQuestionsGuidelinesSpacingTitle" = "Questions spacing";
 "None" = "None";
 "LoggerView" = "Logger View";
 "LocaleStrategy" = "Locale strategy";
