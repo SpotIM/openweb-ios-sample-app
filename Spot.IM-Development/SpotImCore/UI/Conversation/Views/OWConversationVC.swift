@@ -102,15 +102,30 @@ fileprivate extension OWConversationVC {
             .outputs.conversationOffset
             .share()
 
+        let conversationContentSizeHeight = viewModel.outputs.conversationViewVM
+            .outputs.tableViewContentSizeHeightChanged
+            .share()
+
+        let conversationHeight = viewModel.outputs.conversationViewVM
+            .outputs.tableViewHeightChanged
+            .share()
+
+        let isContentBigerThanTableView = conversationContentSizeHeight
+            .withLatestFrom(conversationHeight) { ($0, $1) }
+            .map { $0 > $1 }
+            .share()
+
         let shouldShouldChangeToLargeTitleDisplay = conversationOffset
-            .filter { $0.y <= 0 }
+            .withLatestFrom(isContentBigerThanTableView) { ($0, $1) }
+            .filter { $0.y <= 0 && $1 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
             .filter { !$0 }
             .voidify()
             .map { return UINavigationItem.LargeTitleDisplayMode.always }
 
         let shouldShouldChangeToRegularTitleDisplay = conversationOffset
-            .filter { $0.y > 0 }
+            .withLatestFrom(isContentBigerThanTableView) { ($0, $1) }
+            .filter { $0.y > 0 && $1 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
             .filter { $0 }
             .voidify()
