@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWCommunityQuestionStyle {
     init(index: Int) {
         switch index {
@@ -42,4 +40,3 @@ extension OWCommunityQuestionStyle {
     }
 }
 
-#endif

@@ -11,6 +11,7 @@ import Foundation
 enum OWUserAction {
     case mutingUser
     case commenting
+    case replyingComment
     case votingComment
     case reportingComment
     case sharingComment

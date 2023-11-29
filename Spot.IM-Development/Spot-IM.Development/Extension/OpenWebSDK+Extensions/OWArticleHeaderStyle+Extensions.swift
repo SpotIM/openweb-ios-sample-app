@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWArticleHeaderStyle {
     static func articleHeaderStyle(fromIndex index: Int) -> OWArticleHeaderStyle {
         switch index {
@@ -34,5 +32,3 @@ extension OWArticleHeaderStyle {
         }
     }
 }
-
-#endif

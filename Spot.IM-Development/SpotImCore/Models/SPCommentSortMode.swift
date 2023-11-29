@@ -13,42 +13,4 @@ internal enum SPCommentSortMode: String, CaseIterable, Decodable {
     case best
     case newest
     case oldest
-
-    init(from sortByOption: SpotImSortByOption) {
-        switch sortByOption {
-        case .best:
-            self = .best
-        case .newest:
-            self = .newest
-        case .oldest:
-            self = .oldest
-        }
-    }
-
-    var title: String {
-        if let customTitle = getCustomSortByModeTitleIfExists() {
-            return customTitle
-        }
-        var title = ""
-        switch self {
-        case .best:
-            title = "Best"
-        case .newest:
-            title = "Newest"
-        case .oldest:
-            title = "Oldest"
-        }
-        return SPLocalizationManager.localizedString(key: title)
-    }
-
-    private func getCustomSortByModeTitleIfExists() -> String? {
-        switch self {
-        case .best:
-            return SpotIm.customSortByOptionText[.best]
-        case .newest:
-            return SpotIm.customSortByOptionText[.newest]
-        case .oldest:
-            return SpotIm.customSortByOptionText[.oldest]
-        }
-    }
 }
