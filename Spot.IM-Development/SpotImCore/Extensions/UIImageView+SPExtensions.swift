@@ -30,7 +30,7 @@ internal extension UIImage {
     @discardableResult
     static func load(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
         guard let url = url else {
-            completion?(nil, SPNetworkError.custom("No image URL"))
+            completion?(nil, OWError.custom(description: "No image URL"))
             return nil
         }
 

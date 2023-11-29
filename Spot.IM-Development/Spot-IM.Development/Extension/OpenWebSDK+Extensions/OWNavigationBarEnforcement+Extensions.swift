@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWNavigationBarEnforcement {
     static func navigationBarEnforcement(fromIndex index: Int) -> OWNavigationBarEnforcement {
         switch index {
@@ -36,5 +34,3 @@ extension OWNavigationBarEnforcement {
         }
     }
 }
-
-#endif

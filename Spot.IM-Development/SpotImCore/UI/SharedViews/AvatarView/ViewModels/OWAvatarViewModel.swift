@@ -106,9 +106,12 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             user,
             sharedServicesProvider.authenticationManager().activeUserAvailability,
             sharedServicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId),
-            sharedServicesProvider.realtimeService().realtimeData
-        ) { [weak self] user, availability, config, realtimeData in
-            guard config.conversation?.disableOnlineDotIndicator != true else { return false }
+            sharedServicesProvider.realtimeService().realtimeData,
+            shouldBlockAvatar
+        ) { [weak self] user, availability, config, realtimeData, avatarBlocked in
+            guard config.conversation?.disableOnlineDotIndicator != true,
+                  avatarBlocked == false
+            else { return false }
 
             if (user.online == true) {
                 return true
