@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWCommentThreadSettingsBuilder {
     public var performActionType: OWCommentThreadPerformActionType
 
@@ -25,21 +24,3 @@ public struct OWCommentThreadSettingsBuilder {
         return OWCommentThreadSettings(performActionType: performActionType)
     }
 }
-#else
-struct OWCommentThreadSettingsBuilder {
-    var performActionType: OWCommentThreadPerformActionType
-
-    init(performActionType: OWCommentThreadPerformActionType = .none) {
-        self.performActionType = performActionType
-    }
-
-    @discardableResult mutating func performActionType(_ type: OWCommentThreadPerformActionType) -> OWCommentThreadSettingsBuilder {
-        self.performActionType = type
-        return self
-    }
-
-    func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings(performActionType: performActionType)
-    }
-}
-#endif

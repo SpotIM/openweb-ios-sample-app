@@ -10,8 +10,6 @@ import Foundation
 import SpotImCore
 import UIKit
 
-#if NEW_API
-
 extension OWAccessoryViewStrategy {
     init(index: Int) {
         switch index {
@@ -34,5 +32,3 @@ extension OWAccessoryViewStrategy {
         }
     }
 }
-
-#endif

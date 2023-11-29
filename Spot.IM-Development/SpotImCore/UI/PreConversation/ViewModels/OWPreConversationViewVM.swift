@@ -918,7 +918,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             section: self.preConversationData.article.additionalSettings.section),
                                                       spacing: Metrics.defaultBetweenCommentsSpacing)
                     }.unwrap()
-                    var viewModels = self._cellsViewModels
+                    let viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in
                         // making sure we are not adding an existing comment
                         !commentCellsVms.contains(where: { $0.outputs.commentVM.outputs.comment.id == commentVm.commentVM.outputs.comment.id })

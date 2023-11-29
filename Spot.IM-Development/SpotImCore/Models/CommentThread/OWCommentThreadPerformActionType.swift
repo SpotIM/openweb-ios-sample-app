@@ -8,15 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWCommentThreadPerformActionType {
     case none
     case changeRank(from: Int, to: Int)
 }
-
-#else
-enum OWCommentThreadPerformActionType {
-    case none
-    case changeRank(from: Int, to: Int)
-}
-#endif

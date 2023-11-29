@@ -64,7 +64,6 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     }()
 
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var model = BehaviorSubject<RealTimeOnlineViewingUsersModel?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
