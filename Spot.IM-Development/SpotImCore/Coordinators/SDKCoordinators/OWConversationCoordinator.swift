@@ -450,6 +450,9 @@ fileprivate extension OWConversationCoordinator {
         let openUrlInComment = viewModel.outputs.urlClickedOutput
             .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
 
+        let openCommentThread = viewModel.outputs.openCommentThread
+            .map { OWViewActionCallbackType.openCommentThread(commentId: $0, performActionType: $1) }
+
         Observable.merge(
             closeConversationPressed,
             openPublisherProfile,
@@ -457,7 +460,8 @@ fileprivate extension OWConversationCoordinator {
             openCommunityGuidelines,
             openCommentCreation,
             openClarityDetails,
-            openUrlInComment)
+            openUrlInComment,
+            openCommentThread)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }
