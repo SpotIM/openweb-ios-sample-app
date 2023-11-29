@@ -90,10 +90,10 @@ internal final class AdsManager {
     }
 
     func adsProvider() -> AdsProvider {
-        if let googleAdsProvider = SpotIm.googleAdsProvider {
-            googleAdsProvider.setSpotId(spotId: self.spotId)
-            return googleAdsProvider
-        }
+//        if let googleAdsProvider = SpotIm.googleAdsProvider {
+//            googleAdsProvider.setSpotId(spotId: self.spotId)
+//            return googleAdsProvider
+//        }
         return DefaultAdsProvider()
     }
 }

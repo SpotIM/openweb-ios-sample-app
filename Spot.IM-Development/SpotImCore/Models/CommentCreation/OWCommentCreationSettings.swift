@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWCommentCreationSettings: OWCommentCreationSettingsProtocol {
     public let style: OWCommentCreationStyle
 
@@ -16,12 +15,3 @@ public struct OWCommentCreationSettings: OWCommentCreationSettingsProtocol {
         self.style = style
     }
 }
-#else
-struct OWCommentCreationSettings: OWCommentCreationSettingsProtocol {
-    let style: OWCommentCreationStyle
-
-    init(style: OWCommentCreationStyle = .regular) {
-        self.style = style
-    }
-}
-#endif
