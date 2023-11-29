@@ -15,7 +15,6 @@ extension OWLanguageStrategy {
     }
 }
 
-#if NEW_API
 extension OWLanguageStrategy: Equatable {
     public static func == (lhs: OWLanguageStrategy, rhs: OWLanguageStrategy) -> Bool {
         switch (lhs, rhs) {
@@ -30,19 +29,3 @@ extension OWLanguageStrategy: Equatable {
         }
     }
 }
-#else
-extension OWLanguageStrategy: Equatable {
-    static func == (lhs: OWLanguageStrategy, rhs: OWLanguageStrategy) -> Bool {
-        switch (lhs, rhs) {
-        case (.useDevice, .useDevice):
-            return true
-        case (.useServerConfig, .useServerConfig):
-            return true
-        case (.use(language: let lhsLanguage), .use(language: let rhsLanguage)):
-            return lhsLanguage == rhsLanguage
-        default:
-            return false
-        }
-    }
-}
-#endif
