@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum OWCommentThreadPerformActionType {
+public enum OWCommentThreadPerformActionType: Codable {
     case none
     case changeRank(from: Int, to: Int)
 }
