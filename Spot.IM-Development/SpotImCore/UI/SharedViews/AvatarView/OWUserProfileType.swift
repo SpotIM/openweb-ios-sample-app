@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public enum OWUserProfileType: Codable {
     case currentUser
     case otherUser
 }
-#else
-enum OWUserProfileType: Codable {
-    case currentUser
-    case otherUser
-}
-#endif

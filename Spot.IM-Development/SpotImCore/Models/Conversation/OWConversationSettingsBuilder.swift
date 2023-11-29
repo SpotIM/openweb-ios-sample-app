@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWConversationSettingsBuilder {
     public var style: OWConversationStyle
 
@@ -25,22 +24,3 @@ public struct OWConversationSettingsBuilder {
         return OWConversationSettings(style: style)
     }
 }
-#else
-struct OWConversationSettingsBuilder {
-    var style: OWConversationStyle
-
-    init(style: OWConversationStyle = .regular) {
-        self.style = style
-    }
-
-    @discardableResult mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
-        self.style = style
-        return self
-    }
-
-    func build() -> OWConversationSettingsProtocol {
-        return OWConversationSettings(style: style)
-    }
-}
-
-#endif
