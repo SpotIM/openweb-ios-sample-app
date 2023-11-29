@@ -320,15 +320,23 @@ extension OWAuthenticationManager {
                                                                  openwebToken: self._networkCredentials.openwebToken,
                                                                  authorization: nil)
                 self.update(credentials: newCredentials)
+            })
+            .withLatestFrom(_userAuthenticationStatus)
+            .do(onNext: { [weak self] currentAuthenticationStatus in
+                // Do not update status to .notAutenticated if we are sso recovering
+                if case .ssoRecovering(_) = currentAuthenticationStatus { return }
+                guard let self = self else { return }
+
                 self.update(userAvailability: .notAvailable)
                 self._userAuthenticationStatus.onNext(.notAutenticated)
             })
-            .flatMapLatest { [weak self] _ -> Observable<SPUser> in
+            .flatMapLatest { [weak self] currentAuthenticationStatus -> Observable<Void> in
                 guard let self = self else { return .empty() }
+                if case .ssoRecovering(_) = currentAuthenticationStatus { return Observable.just(()) }
                 return self.retrieveNetworkNewUser()
                     .take(1)
+                    .voidify()
             }
-            .voidify()
     }
 
     func startSSO() -> Observable<OWSSOStartModel> {
@@ -350,8 +358,12 @@ extension OWAuthenticationManager {
                 return networkAuthentication
                     .login()
                     .response
-                    .do(onNext: { [weak self] user in
+                    .withLatestFrom(self._userAuthenticationStatus) { ($0, $1) }
+                    .do(onNext: { [weak self] user, currentAuthenticationStatus in
                         guard let self = self else { return }
+                        // Do not update user while we are sso recovering
+                        if case .ssoRecovering(_) = currentAuthenticationStatus { return }
+
                         self.update(userAvailability: .user(user))
                         self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
                     })
@@ -372,17 +384,15 @@ extension OWAuthenticationManager {
     func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel> {
         return userAuthenticationStatus
             .take(1)
-            .flatMap { authenticationStatus -> Observable<Void> in
+            .flatMapLatest { authenticationStatus -> Observable<Void> in
                 // 1. Make sure not already logged in
-                if case .guest(_) = authenticationStatus {
-                    return .just(())
-                } else if authenticationStatus == .notAutenticated {
+                if case .ssoLoggedIn(_) = authenticationStatus {
+                    return .error(OWError.alreadyLoggedIn)
+                } else {
                     return .just(())
                 }
-
-                return .error(OWError.alreadyLoggedIn)
             }
-            .flatMap { [weak self] _ -> Observable<OWSSOCompletionResponse> in
+            .flatMapLatest { [weak self] _ -> Observable<OWSSOCompletionResponse> in
                 guard let self = self else { return .empty() }
                 // 2. Proceed with SSO complete
                 let networkAuthentication = self.servicesProvider.netwokAPI().authentication
@@ -549,6 +559,8 @@ fileprivate extension OWAuthenticationManager {
         switch action {
         case .commenting:
             return levelAccordingToRegistration
+        case .replyingComment:
+            return levelAccordingToRegistration
         case .mutingUser:
             return .loggedIn
         case .votingComment:
@@ -590,6 +602,8 @@ fileprivate extension OWAuthenticationManager {
                 if userId == originalUserId {
                     self._userAuthenticationStatus.onNext(.ssoRecoveredSuccessfully(userId: originalUserId))
                 } else {
+                    let logger = self.servicesProvider.logger()
+                    logger.log(level: .medium, "Successfully get new user after renew SSO, but it is not the same one that can conected before")
                     self._userAuthenticationStatus.onNext(.ssoFailedRecover(userId: originalUserId))
                 }
 
@@ -600,19 +614,17 @@ fileprivate extension OWAuthenticationManager {
 
         let timeoutObservable = Observable.just(())
             .delay(.seconds(Metrics.maxSSORecoveryTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .utility))
-            .flatMap { [weak self] _ -> Observable<OWInternalUserAuthenticationStatus> in
-                guard let self = self else { return .empty() }
-                return self.userAuthenticationStatus
-            }
             .take(1)
-            .do(onNext: { [weak self] status in
+            .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 // Signal recovery failed due to timeout
                 self._userAuthenticationStatus.onNext(.ssoFailedRecover(userId: originalUserId))
-
-                // Back to the previous status
-                self._userAuthenticationStatus.onNext(status)
             })
+            .flatMapLatest { [weak self] _ -> Observable<SPUser> in
+                // Retrieve new guest user
+                guard let self = self else { return .empty() }
+                return self.retrieveNetworkNewUser()
+            }
             .voidify()
 
         // Merge both observables and taking only the first one to return

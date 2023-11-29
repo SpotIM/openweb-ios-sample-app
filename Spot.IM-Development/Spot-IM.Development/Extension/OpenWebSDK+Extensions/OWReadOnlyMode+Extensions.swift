@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWReadOnlyMode {
     static func readOnlyMode(fromIndex index: Int) -> OWReadOnlyMode {
         switch index {
@@ -34,5 +32,3 @@ extension OWReadOnlyMode {
         }
     }
 }
-
-#endif

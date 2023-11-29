@@ -71,9 +71,9 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
 
     var authorityTitle: String? {
         if isAdmin || isSuperAdmin || isModerator || isJournalist {
-            return SPLocalizationManager.localizedString(key: "Staff")
+            return OWLocalizationManager.shared.localizedString(key: "Staff")
         } else if isCommunityModerator {
-            return SPLocalizationManager.localizedString(key: "CommunityModerator")
+            return OWLocalizationManager.shared.localizedString(key: "CommunityModerator")
         } else {
             return nil
         }

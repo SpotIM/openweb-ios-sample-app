@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWBIAnalyticAdditionalInfo: OWBIAnalyticAdditionalInfoProtocol {
     public var customBIData: OWCustomBIData
 
@@ -16,8 +15,3 @@ public struct OWBIAnalyticAdditionalInfo: OWBIAnalyticAdditionalInfoProtocol {
         self.customBIData = customBIData
     }
 }
-#else
-struct OWBIAnalyticAdditionalInfo: OWBIAnalyticAdditionalInfoProtocol {
-    let customBIData: OWCustomBIData
-}
-#endif

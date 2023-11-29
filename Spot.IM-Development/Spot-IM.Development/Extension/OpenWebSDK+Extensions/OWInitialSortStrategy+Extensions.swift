@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWInitialSortStrategy {
     static func initialSort(fromIndex index: Int) -> OWInitialSortStrategy {
         switch index {
@@ -36,5 +34,3 @@ extension OWInitialSortStrategy {
         }
     }
 }
-
-#endif

@@ -112,6 +112,11 @@ extension UILabel {
         return self
     }
 
+    @discardableResult func baselineAdjustment(_ baselineAdjustment: UIBaselineAdjustment) -> UILabel {
+        self.baselineAdjustment = baselineAdjustment
+        return self
+    }
+
     @discardableResult func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> UILabel {
         self.lineBreakMode = lineBreakMode
         return self
@@ -250,6 +255,16 @@ extension UIButton {
     @discardableResult func backgroundColor(_ color: UIColor, state: UIControl.State) -> Self {
         self.setBackgroundColor(color: color, forState: state)
         return self
+    }
+
+    fileprivate func setBackgroundColor(color: UIColor, forState: UIControl.State) {
+        UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
+        UIGraphicsGetCurrentContext()?.setFillColor(color.cgColor)
+        UIGraphicsGetCurrentContext()?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        let colorImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        setBackgroundImage(colorImage, for: forState)
     }
 }
 
