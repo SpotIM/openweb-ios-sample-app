@@ -20,7 +20,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         static let highlightBackgroundColorAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDelay: Double = 1.0
         static let highlightBackgroundColorAlpha: Double = 0.2
-
+        static let scrolledToTopDelay = 300
         static let tableViewRowEstimatedHeight: Double = 130.0
     }
 
@@ -145,25 +145,13 @@ fileprivate extension OWCommentThreadView {
 
         viewModel.outputs.scrollToCellIndex
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] index in
-                let cellIndexPath = IndexPath(row: index, section: 0)
+            .do(onNext: { [weak self] index in
                 guard let self = self else { return }
-
-                CATransaction.begin()
-                self.tableView.beginUpdates()
-                CATransaction.setCompletionBlock {
-                    // Code to be executed upon completion
-                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
-                }
-                if (index > 0) {
-                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
-                } else {
-                    // it looks like set the content offset behave better when scroll to top
-                    self.tableView.setContentOffset(.zero, animated: true)
-                }
-                self.tableView.endUpdates()
-                CATransaction.commit()
+                let cellIndexPath = IndexPath(row: index, section: 0)
+                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
+            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.inputs.scrolledToCellIndex)
             .disposed(by: disposeBag)
 
         // TODO: perform this animation in the cell view layer
