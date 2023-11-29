@@ -8,16 +8,8 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
 
     public init() {
     }
 }
-#else
-struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
-
-    init() {
-    }
-}
-#endif

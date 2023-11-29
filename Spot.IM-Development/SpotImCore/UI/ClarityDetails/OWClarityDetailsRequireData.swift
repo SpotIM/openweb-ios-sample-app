@@ -8,14 +8,7 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWClarityDetailsRequireData: Codable {
     public let commentId: OWCommentId
     public let type: OWClarityDetailsType
 }
-#else
-struct OWClarityDetailsRequireData: Codable {
-    let commentId: OWCommentId
-    let type: OWClarityDetailsType
-}
-#endif
