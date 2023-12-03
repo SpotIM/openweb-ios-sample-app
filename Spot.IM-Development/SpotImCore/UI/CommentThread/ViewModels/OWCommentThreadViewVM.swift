@@ -1633,8 +1633,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                 let commentThreadSettings = self.commentThreadData.settings.commentThreadSettings
                 let performActionType = commentThreadSettings.performActionType
                 switch performActionType {
-                case .none:
-                    return
                 case .changeRank(let from, let to):
                     let selectedCommentVm = selectedCommentCellVm.outputs.commentVM
                     if let fromRank = SPRank(rawValue: from),
@@ -1642,6 +1640,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                         let rankChange = SPRankChange(from: fromRank, to: toRank)
                         self.performRankChange(for: selectedCommentVm, rankChange: rankChange)
                     }
+                default:
+                    break
                 }
             })
             .disposed(by: disposeBag)
