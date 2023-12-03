@@ -50,9 +50,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate var articleUrl: String = ""
 
-    fileprivate var postId: OWPostId {
-        return OWManager.manager.postId ?? ""
-    }
+    fileprivate lazy var postId: OWPostId = OWManager.manager.postId ?? ""
 
     fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
 
