@@ -410,7 +410,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     updateUserTuples.0.inputs.update(comment: updateUserTuples.1.outputs.comment)
                 }
             })
-            .observe(on: conversationViewVMScheduler)
             .map { return $0.cellOptions }
             .asObservable()
             .share(replay: 1)
