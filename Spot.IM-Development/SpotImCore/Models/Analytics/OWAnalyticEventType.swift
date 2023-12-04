@@ -61,6 +61,7 @@ enum OWAnalyticEventType {
     case cameraIconClickedChooseFromGallery
     case cameraIconClickedClose
     case showMoreComments
+    case communityGuidelinesLinkClicked
 }
 
 extension OWAnalyticEventType {
@@ -170,6 +171,8 @@ extension OWAnalyticEventType {
             return "cameraIconClickedClose"
         case .showMoreComments:
             return "showMoreComments"
+        case .communityGuidelinesLinkClicked:
+            return "communityGuidelinesLinkClicked"
         }
     }
 
@@ -215,7 +218,8 @@ extension OWAnalyticEventType {
              .commentRankDownButtonClicked,
              .commentRankUpUndoButtonClicked,
              .commentRankDownUndoButtonClicked,
-             .showMoreComments:
+             .showMoreComments,
+             .communityGuidelinesLinkClicked:
             return .engagement
         case .sortByClicked,
              .sortByClosed,
@@ -258,7 +262,8 @@ extension OWAnalyticEventType {
              .cameraIconClickedTakePhoto,
              .cameraIconClickedChooseFromGallery,
              .cameraIconClickedClose,
-             .showMoreComments:
+             .showMoreComments,
+             .communityGuidelinesLinkClicked:
             return OWAnalyticEventPayload(payloadDictionary: [:])
         case .commentMenuClicked(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
