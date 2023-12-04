@@ -1321,6 +1321,13 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.articleUrl = article.url.absoluteString
             })
             .disposed(by: disposeBag)
+
+        // Send analytics for community guidelines click
+        communityGuidelinesViewModel.outputs.urlClickedOutput
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 

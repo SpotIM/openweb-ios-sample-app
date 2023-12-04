@@ -31,6 +31,8 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
     var inputs: OWClarityDetailsViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewModelingOutputs { return self }
 
+    let presentationalMode: OWPresentationalModeCompact
+
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
@@ -38,11 +40,12 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
 
     fileprivate let type: OWClarityDetailsType
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
-        return OWClarityDetailsViewVM(type: type)
+        return OWClarityDetailsViewVM(type: type, presentationalMode: presentationalMode)
     }()
 
-    init(type: OWClarityDetailsType, viewableMode: OWViewableMode) {
+    init(type: OWClarityDetailsType, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
         self.type = type
+        self.presentationalMode = presentMode
     }
 }
 

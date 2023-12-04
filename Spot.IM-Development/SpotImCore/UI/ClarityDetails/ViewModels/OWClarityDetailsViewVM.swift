@@ -42,10 +42,15 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     fileprivate let type: OWClarityDetailsType
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let presentationalMode: OWPresentationalModeCompact
+    fileprivate var articleUrl: String = ""
 
-    init(type: OWClarityDetailsType, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(type: OWClarityDetailsType,
+         presentationalMode: OWPresentationalModeCompact,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.type = type
         self.servicesProvider = servicesProvider
+        self.presentationalMode = presentationalMode
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -189,6 +194,20 @@ fileprivate extension OWClarityDetailsViewVM {
             self._topParagraphAttributedString.onNext(attString)
         })
         .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+        communityGuidelinesClickObservable
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
     }
 
     // TODO: translations
@@ -215,5 +234,22 @@ fileprivate extension OWClarityDetailsViewVM {
                 attributes: attributes
             )
         }
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: articleUrl,
+                layoutStyle: OWLayoutStyle(from: presentationalMode),
+                component: .clarityDetails)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

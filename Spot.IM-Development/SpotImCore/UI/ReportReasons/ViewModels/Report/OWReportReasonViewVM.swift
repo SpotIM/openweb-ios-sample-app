@@ -132,6 +132,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     fileprivate let presentationalMode: OWPresentationalModeCompact
     fileprivate let commentId: OWCommentId
     fileprivate let parentId: OWCommentId
+    fileprivate var articleUrl: String = ""
 
     var setSubmitInProgress = PublishSubject<Bool>()
     var submitInProgress: Observable<Bool> {
@@ -418,5 +419,36 @@ fileprivate extension OWReportReasonViewViewModel {
             }
             .bind(to: isSubmitEnabledChange)
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+        learnMoreTapped
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: articleUrl,
+                layoutStyle: OWLayoutStyle(from: presentationalMode),
+                component: .reportReason)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }
