@@ -21,6 +21,7 @@ protocol OWCommentingCTAViewModelingOutputs {
     var shouldShowCommentCreationEntry: Observable<Bool> { get }
     var shouldShowCommentingReadOnly: Observable<Bool> { get }
     var openProfile: Observable<OWOpenProfileType> { get }
+    var authenticationTriggered: Observable<Void> { get }
     var commentCreationTapped: Observable<Void> { get }
     var shouldShowView: Observable<Bool> { get }
 }
@@ -100,6 +101,12 @@ class OWCommentingCTAViewModel: OWCommentingCTAViewModeling,
             .asObservable()
     }
 
+    fileprivate let _authenticationTriggered = PublishSubject<Void>()
+    var authenticationTriggered: Observable<Void> {
+        _authenticationTriggered
+            .asObservable()
+    }
+
     fileprivate let _commentCreationTap = PublishSubject<Void>()
     var commentCreationTapped: Observable<Void> {
         _commentCreationTap
@@ -142,6 +149,14 @@ fileprivate extension OWCommentingCTAViewModel {
             .outputs
             .openProfile
             .bind(to: _openProfile)
+            .disposed(by: disposeBag)
+
+        commentCreationEntryViewModel
+            .outputs
+            .avatarViewVM
+            .outputs
+            .authenticationTriggered
+            .bind(to: _authenticationTriggered)
             .disposed(by: disposeBag)
     }
 }
