@@ -20,6 +20,7 @@ protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var shouldShowOnlineIndicator: Observable<Bool> { get }
     var openProfile: Observable<OWOpenProfileType> { get }
+    var authenticationTriggered: Observable<Void> { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -49,6 +50,12 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                 return self.user
                     .take(1)
             }
+    }
+
+    fileprivate var _authenticationTriggered = PublishSubject<Void>()
+    var authenticationTriggered: Observable<Void> {
+        _authenticationTriggered
+            .asObservable()
     }
 
     fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
@@ -142,11 +149,16 @@ fileprivate extension OWAvatarViewModel {
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.profileService().openProfileTapped(user: user)
             }
+            .do(onNext: { [weak self] result in
+                guard let self = self else { return }
+                if case .authenticationTriggered = result {
+                    self._authenticationTriggered.onNext()
+                }
+            })
             .map { result -> OWOpenProfileType? in
-                switch result {
-                case .openProfile(type: let type):
+                if case .openProfile(let type) = result {
                     return type
-                case .authenticationTriggered:
+                } else {
                     return nil
                 }
             }
