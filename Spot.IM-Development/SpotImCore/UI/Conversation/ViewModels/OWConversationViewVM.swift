@@ -1240,6 +1240,26 @@ fileprivate extension OWConversationViewViewModel {
             .bind(to: _performTableViewAnimation)
             .disposed(by: disposeBag)
 
+        // Send event on community guidelines link click
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let linkClickObservables: [Observable<Void>] = cellsVms.map { vm in
+                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
+                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
+                        return guidelinesVM.outputs.urlClickedOutput
+                            .voidify()
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+                return Observable.merge(linkClickObservables)
+            }
+            .subscribe(onNext: { [weak self] in
+                self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
+
         // Responding to comment height change (for updating cell) and tableView height change for errorState cell
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Void> in
