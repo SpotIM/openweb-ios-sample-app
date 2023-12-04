@@ -110,6 +110,8 @@ fileprivate extension OWCommentCreationFooterView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
+                
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
 
         ctaButton.rx.tap
@@ -156,5 +158,9 @@ fileprivate extension OWCommentCreationFooterView {
         self.accessibilityIdentifier = Metrics.identifier
         ctaButton.accessibilityIdentifier = Metrics.ctaButtonIdentifier
         addImageButton.accessibilityIdentifier = Metrics.addImageButtonIdentifier
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeSubmitButtonUI.onNext(ctaButton)
     }
 }

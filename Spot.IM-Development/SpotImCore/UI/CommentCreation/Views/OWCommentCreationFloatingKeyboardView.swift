@@ -343,6 +343,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 self.underFooterView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.headerCloseButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
                 self.toolbar?.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
 
@@ -516,4 +518,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func updateCustomUI() {
+        self.viewModel.inputs.triggerCustomizeSubmitButtonUI.onNext(ctaButton)
+    }
 }
