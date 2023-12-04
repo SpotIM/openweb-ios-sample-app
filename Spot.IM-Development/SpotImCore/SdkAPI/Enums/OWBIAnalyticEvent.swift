@@ -49,4 +49,5 @@ public enum OWBIAnalyticEvent {
     case cameraIconClickedChooseFromGallery
     case cameraIconClickedClose
     case showMoreComments
+    case communityGuidelinesLinkClicked
 }
