@@ -141,8 +141,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .do(onNext: { [weak self] result, commentCreationData in
                 guard let self = self else { return }
                 switch result {
-                case let .commentCreated(comment, userLoggedIn):
-                    guard userLoggedIn else { return }
+                case let .commentCreated(comment, userJustLoggedIn):
+                    guard userJustLoggedIn else { return }
                     if case .replyToComment(_) = commentCreationData.commentCreationType {
                         if let commentId = comment.id {
                             self._openCommentThread.onNext((commentId, .reply))
