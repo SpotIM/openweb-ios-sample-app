@@ -69,16 +69,20 @@ class OWProfileService: OWProfileServicing {
             }
 
         // Create URL for user profie with token
-        let userProfileWithToken: Observable<URL> = shouldOpenUserProfileWithToken
+        let userProfileWithToken: Observable<(URL?, Bool)> = shouldOpenUserProfileWithToken
             .filter { $0 }
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
                 return self.sharedServicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .viewingSelfProfile)
             }
-            .filter { !$0 } // Do not continue if authentication needed
-            .flatMapLatest { [weak self] _ -> Observable<URL?> in
+            .flatMapLatest { [weak self] authenticationTriggered -> Observable<(URL?, Bool)> in
                 guard let self = self else { return .empty() }
+
+                if authenticationTriggered {
+                    return Observable.just((nil, true))
+                }
+
                 return self.sharedServicesProvider.netwokAPI()
                     .profile
                     .createSingleUseToken()
@@ -89,8 +93,8 @@ class OWProfileService: OWProfileServicing {
                         else { return nil }
                         return url
                     }
+                    .map { ($0, false) }
             }
-            .unwrap()
 
         // Create URL for user profile without token
         let userProfileWithoutToken: Observable<URL> = shouldOpenUserProfileWithToken
@@ -104,12 +108,18 @@ class OWProfileService: OWProfileServicing {
             .unwrap()
 
         let userProfileWithTokenObservable = userProfileWithToken
-            .map { url -> OWOpenProfileResult? in
+            .map { url, authenticationTriggered -> OWOpenProfileResult? in
                 guard let userId = user.id else { return nil }
-                let openProfileType: OWOpenProfileType = .OWProfile(data: OWOpenProfileData(url: url,
-                                                                                            userProfileType: .currentUser,
-                                                                                            userId: userId))
-                return .openProfile(type: openProfileType)
+
+                if authenticationTriggered {
+                    return .authenticationTriggered
+                } else {
+                    guard let url = url else { return nil }
+                    let openProfileType: OWOpenProfileType = .OWProfile(data: OWOpenProfileData(url: url,
+                                                                                                userProfileType: .currentUser,
+                                                                                                userId: userId))
+                    return .openProfile(type: openProfileType)
+                }
             }
             .unwrap()
 
