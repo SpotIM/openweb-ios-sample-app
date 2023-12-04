@@ -1220,18 +1220,30 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to guidelines height change (for updating cell)
-        cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Void> in
-                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowView
-                            .filter { $0 == true }
-                            .voidify()
+        // Guidelines cells view models
+        let communityGuidelinesCellsVmsObservable: Observable<[OWCommunityGuidelinesCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommunityGuidelinesCellViewModeling]> in
+                let guidelinesCellsVms: [OWCommunityGuidelinesCellViewModeling] = viewModels.map { vm in
+                    if case .communityGuidelines(let guidelinesCellViewModel) = vm {
+                        return guidelinesCellViewModel
                     } else {
                         return nil
                     }
+                }
+                .unwrap()
+
+                 return Observable.just(guidelinesCellsVms)
+            }
+            .share(replay: 1)
+
+        // Responding to guidelines height change (for updating cell)
+        communityGuidelinesCellsVmsObservable
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
+                    let guidelinesVM = vm.outputs.communityGuidelinesViewModel
+                    return guidelinesVM.outputs.shouldShowView
+                        .filter { $0 == true }
+                        .voidify()
                 }
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
@@ -1241,16 +1253,12 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Send event on community guidelines link click
-        cellsViewModels
+        communityGuidelinesCellsVmsObservable
             .flatMapLatest { cellsVms -> Observable<Void> in
                 let linkClickObservables: [Observable<Void>] = cellsVms.map { vm in
-                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.urlClickedOutput
-                            .voidify()
-                    } else {
-                        return nil
-                    }
+                    let guidelinesVM = vm.outputs.communityGuidelinesViewModel
+                    return guidelinesVM.outputs.urlClickedOutput
+                        .voidify()
                 }
                 .unwrap()
                 return Observable.merge(linkClickObservables)
