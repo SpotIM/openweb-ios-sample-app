@@ -10,7 +10,7 @@ import RxSwift
 import Foundation
 
 protocol OWProfileServicing {
-    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileType>
+    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileResult>
 }
 
 class OWProfileService: OWProfileServicing {
@@ -21,7 +21,7 @@ class OWProfileService: OWProfileServicing {
         self.sharedServicesProvider = sharedServicesProvider
     }
 
-    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileType> {
+    func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileResult> {
         let profileOptionToUse = profileOptionToUse(user: user)
 
         // Check if sdk profile should be opened
@@ -50,10 +50,12 @@ class OWProfileService: OWProfileServicing {
             .asObservable()
 
         // Check if publisher profile should be opened
-        let openPublisherProfile: Observable<OWOpenProfileType> = profileOptionToUse
-            .withLatestFrom(isCurrentUserProfile) { profileOptionToUse, isCurrentUser -> OWOpenProfileType? in
+        let openPublisherProfile: Observable<OWOpenProfileResult> = profileOptionToUse
+            .withLatestFrom(isCurrentUserProfile) { profileOptionToUse, isCurrentUser -> OWOpenProfileResult? in
                 if case .publisherProfile(let ssoPublisherId) = profileOptionToUse {
-                    return OWOpenProfileType.publisherProfile(ssoPublisherId: ssoPublisherId, type: isCurrentUser ? .currentUser : .otherUser)
+                    let openProfileType: OWOpenProfileType = .publisherProfile(ssoPublisherId: ssoPublisherId,
+                                                                               type: isCurrentUser ? .currentUser : .otherUser)
+                    return .openProfile(type: openProfileType)
                 } else {
                     return nil
                 }
@@ -102,16 +104,22 @@ class OWProfileService: OWProfileServicing {
             .unwrap()
 
         let userProfileWithTokenObservable = userProfileWithToken
-            .map { url -> OWOpenProfileType? in
+            .map { url -> OWOpenProfileResult? in
                 guard let userId = user.id else { return nil }
-                return .OWProfile(data: OWOpenProfileData(url: url, userProfileType: .currentUser, userId: userId))
+                let openProfileType: OWOpenProfileType = .OWProfile(data: OWOpenProfileData(url: url,
+                                                                                            userProfileType: .currentUser,
+                                                                                            userId: userId))
+                return .openProfile(type: openProfileType)
             }
             .unwrap()
 
         let userProfileWithoutTokenObservable = userProfileWithoutToken
-            .map { url -> OWOpenProfileType? in
+            .map { url -> OWOpenProfileResult? in
                 guard let userId = user.id else { return nil }
-                return .OWProfile(data: OWOpenProfileData(url: url, userProfileType: .otherUser, userId: userId))
+                let openProfileType: OWOpenProfileType = .OWProfile(data: OWOpenProfileData(url: url,
+                                                                                            userProfileType: .otherUser,
+                                                                                            userId: userId))
+                return .openProfile(type: openProfileType)
             }
             .unwrap()
 
