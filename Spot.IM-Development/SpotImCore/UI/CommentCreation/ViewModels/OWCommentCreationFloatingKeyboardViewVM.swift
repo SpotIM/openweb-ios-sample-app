@@ -75,7 +75,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .unwrap()
             .asObservable()
     }
-    
+
     var commentType: OWCommentCreationTypeInternal {
         return commentCreationData.commentCreationType
     }
