@@ -34,7 +34,7 @@ protocol OWClarityDetailsViewViewModeling {
 }
 
 class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
-                                 OWClarityDetailsViewViewModelingInputs,
+                              OWClarityDetailsViewViewModelingInputs,
                               OWClarityDetailsViewViewModelingOutputs {
     var inputs: OWClarityDetailsViewViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
@@ -45,12 +45,11 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     fileprivate let presentationalMode: OWPresentationalModeCompact
     fileprivate var articleUrl: String = ""
 
-    init(type: OWClarityDetailsType,
-         presentationalMode: OWPresentationalModeCompact,
+    init(requiredData: OWClarityDetailsRequireData,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.type = type
+        self.type = requiredData.type
         self.servicesProvider = servicesProvider
-        self.presentationalMode = presentationalMode
+        self.presentationalMode = requiredData.presentationalStyle
         disposeBag = DisposeBag()
 
         setupObservers()
