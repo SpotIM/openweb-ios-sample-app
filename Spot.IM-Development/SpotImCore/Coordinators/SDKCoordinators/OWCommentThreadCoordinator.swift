@@ -151,10 +151,9 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             }
             .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type, presentationalStyle: self.commentThreadData.presentationalStyle),
                                                                             router: self.router,
-                                                                            actionsCallbacks: self.actionsCallbacks,
-                                                                            presentationalMode: self.commentThreadData.presentationalStyle)
+                                                                            actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
             .do(onNext: { coordinatorResult in
