@@ -17,7 +17,7 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
 
     static func addElementsCustomization() {
         let style = UserDefaultsProvider.shared.get(key: .elementsCustomizationStyleIndex, defaultValue: SettingsElementsCustomizationStyle.defaultIndex)
-        let customizations = OpenWeb.manager.ui.customizations
+        var customizations = OpenWeb.manager.ui.customizations
 
         let customizableElement: OWCustomizableElementCallback = { element, source, themeStyle, _ in
             switch style {
@@ -29,6 +29,13 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
         }
 
         customizations.addElementCallback(customizableElement)
+
+        switch style {
+        case 1:
+            customizations.customizedTheme = OWTheme(backgroundColor1: OWColor(lightThemeColor: .blue, darkThemeColor: .green))
+        default:
+            break
+        }
     }
 }
 

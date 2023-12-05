@@ -71,6 +71,16 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
+    var customizedTheme: OWTheme {
+        get {
+            return _customizedTheme
+        }
+        set(newTheme) {
+            _customizedTheme = newTheme
+            setColorsAccordingToTheme(newTheme)
+        }
+    }
+
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback) {
         guard callbacks.count < Metrics.maxCustomizableElementCallbacksNumber else {
             let logger = sharedServicesProvider.logger()
@@ -102,6 +112,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
     fileprivate var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)
+    fileprivate var _customizedTheme: OWTheme = OWTheme()
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
 }
 
@@ -121,5 +132,16 @@ fileprivate extension OWCustomizationsLayer {
         sharedServicesProvider
             .analyticsService()
             .sendAnalyticEvents(events: [event])
+    }
+
+    func setColorsAccordingToTheme(_ theme: OWTheme) {
+        if let backgroundColor1 = theme.backgroundColor1 {
+            setColor(color: backgroundColor1, type: .backgroundColor1)
+        }
+    }
+
+    func setColor(color: OWColor, type: OWColor.OWType) {
+        OWColorPalette.shared.setColor(color.lightThemeColor, forType: type, forThemeStyle: .light)
+        OWColorPalette.shared.setColor(color.darkThemeColor, forType: type, forThemeStyle: .dark)
     }
 }

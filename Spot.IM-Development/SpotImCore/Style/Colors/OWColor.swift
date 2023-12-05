@@ -8,9 +8,9 @@
 
 import UIKit
 
-struct OWColor {
-    var lightThemeColor: UIColor
-    var darkThemeColor: UIColor
+public struct OWColor {
+    public var lightThemeColor: UIColor
+    public var darkThemeColor: UIColor
 
     enum OWType: CaseIterable {
         case skeletonEncapsulateViewBackgroundColor
@@ -163,7 +163,7 @@ struct OWColor {
         }
     }
 
-    init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
+    public init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
         self.lightThemeColor = lightThemeColor
         self.darkThemeColor = darkThemeColor
     }
