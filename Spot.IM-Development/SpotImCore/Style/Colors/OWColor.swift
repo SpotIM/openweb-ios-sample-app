@@ -13,7 +13,6 @@ public struct OWColor {
     public var darkThemeColor: UIColor
 
     enum OWType: CaseIterable {
-        case skeletonEncapsulateViewBackgroundColor
         case skeletonColor
         case skeletonShimmeringColor
         case foreground2Color
@@ -65,9 +64,6 @@ public struct OWColor {
 
         var `default`: OWColor {
             switch self {
-            case .skeletonEncapsulateViewBackgroundColor:
-                return OWColor(lightThemeColor: .white,
-                               darkThemeColor: UIColor(red: 63.0/255.0, green: 63.0/255.0, blue: 63.0/255.0, alpha: 1.0))
             case .skeletonColor:
                 return OWColor(lightThemeColor: UIColor(red: 210.0/255.0, green: 210.0/255.0, blue: 210.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 93.0/255.0, green: 93.0/255.0, blue: 93.0/255.0, alpha: 1.0))
