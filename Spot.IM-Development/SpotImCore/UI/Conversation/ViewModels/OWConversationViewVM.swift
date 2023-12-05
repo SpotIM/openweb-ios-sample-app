@@ -279,6 +279,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .shouldShowView
     }()
 
+
+
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
@@ -433,6 +435,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .filter { transition in
             return transition == .animated
         }
+        .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
         .voidify()
         .asObservable()
     }
@@ -1220,24 +1223,24 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
         // Responding to guidelines height change (for updating cell)
-        cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Void> in
-                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowView
-                            .filter { $0 == true }
-                            .voidify()
-                    } else {
-                        return nil
-                    }
-                }
-                .unwrap()
-                return Observable.merge(sizeChangeObservable)
-            }
-            .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
-            .bind(to: _performTableViewAnimation)
-            .disposed(by: disposeBag)
+//        cellsViewModels
+//            .flatMapLatest { cellsVms -> Observable<Void> in
+//                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
+//                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
+//                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
+//                        return guidelinesVM.outputs.shouldShowView
+//                            .filter { $0 == true }
+//                            .voidify()
+//                    } else {
+//                        return nil
+//                    }
+//                }
+//                .unwrap()
+//                return Observable.merge(sizeChangeObservable)
+//            }
+//            //.delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
+//            .bind(to: _performTableViewAnimation)
+//            .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell) and tableView height change for errorState cell
         cellsViewModels
