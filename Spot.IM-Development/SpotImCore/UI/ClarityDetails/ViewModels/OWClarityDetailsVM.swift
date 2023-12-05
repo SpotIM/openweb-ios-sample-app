@@ -31,21 +31,19 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
     var inputs: OWClarityDetailsViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewModelingOutputs { return self }
 
-    let presentationalMode: OWPresentationalModeCompact
+    fileprivate let requiredData: OWClarityDetailsRequireData
 
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
     }
 
-    fileprivate let type: OWClarityDetailsType
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
-        return OWClarityDetailsViewVM(type: type, presentationalMode: presentationalMode)
+        return OWClarityDetailsViewVM(requiredData: requiredData)
     }()
 
-    init(type: OWClarityDetailsType, viewableMode: OWViewableMode, presentMode: OWPresentationalModeCompact) {
-        self.type = type
-        self.presentationalMode = presentMode
+    init(requiredData: OWClarityDetailsRequireData, viewableMode: OWViewableMode) {
+        self.requiredData = requiredData
     }
 }
 
