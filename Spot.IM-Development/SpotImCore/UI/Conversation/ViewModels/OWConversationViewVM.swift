@@ -279,8 +279,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .shouldShowView
     }()
 
-
-
     fileprivate lazy var commentCellsOptions: Observable<[OWConversationCellOption]> = {
         return _commentsPresentationData
             .rx_elements()
