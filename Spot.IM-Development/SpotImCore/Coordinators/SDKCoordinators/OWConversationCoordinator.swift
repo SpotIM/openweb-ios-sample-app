@@ -208,7 +208,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
             .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type, presentationalStyle: self.conversationData.presentationalStyle),
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type,
+                                                                                                                      presentationalStyle: self.conversationData.presentationalStyle),
                                                                             router: self.router,
                                                                             actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
