@@ -141,7 +141,7 @@ fileprivate extension OWCustomizationsLayer {
     }
 
     func setColor(color: OWColor, type: OWColor.OWType) {
-        OWColorPalette.shared.setColor(color.lightThemeColor, forType: type, forThemeStyle: .light)
-        OWColorPalette.shared.setColor(color.darkThemeColor, forType: type, forThemeStyle: .dark)
+        OWColorPalette.shared.setColor(color.lightColor, forType: type, forThemeStyle: .light)
+        OWColorPalette.shared.setColor(color.darkColor, forType: type, forThemeStyle: .dark)
     }
 }
