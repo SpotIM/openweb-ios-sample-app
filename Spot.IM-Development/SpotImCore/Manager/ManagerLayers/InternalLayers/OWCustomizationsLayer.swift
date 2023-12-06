@@ -135,10 +135,21 @@ fileprivate extension OWCustomizationsLayer {
     }
 
     func setColorsAccordingToTheme(_ theme: OWTheme) {
-        if let backgroundColor1 = theme.backgroundColor1 {
-            setColor(color: backgroundColor1, type: .backgroundColor1)
-        }
         setColor(color: theme.skeletonColor, type: .skeletonColor)
+        setColor(color: theme.skeletonShimmeringColor, type: .skeletonShimmeringColor)
+        setColor(color: theme.primarySeparatorColor, type: .separatorColor3)
+        setColor(color: theme.secondarySeparatorColor, type: .separatorColor2)
+        setColor(color: theme.tertiarySeparatorColor, type: .separatorColor1)
+        setColor(color: theme.primaryTextColor, type: .textColor4)
+        setColor(color: theme.secondaryTextColor, type: .textColor3)
+        setColor(color: theme.tertiaryTextColor, type: .textColor2)
+        setColor(color: theme.primaryBackgroundColor, type: .backgroundColor2)
+        setColor(color: theme.secondaryBackgroundColor, type: .backgroundColor4)
+        setColor(color: theme.tertiaryBackgroundColor, type: .backgroundColor5)
+        setColor(color: theme.primaryBorderColor, type: .borderColor2)
+        setColor(color: theme.secondaryBorderColor, type: .borderColor1)
+        setColor(color: theme.loaderColor, type: .loaderColor)
+        setColor(color: theme.brandColor, type: .brandColor) // TODO: should override config
     }
 
     func setColor(color: OWColor?, type: OWColor.OWType) {
