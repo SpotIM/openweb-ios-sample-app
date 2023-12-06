@@ -31,8 +31,8 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
         customizations.addElementCallback(customizableElement)
 
         switch style {
-        case 1:
-            customizations.customizedTheme = OWTheme(backgroundColor1: OWColor(lightThemeColor: .blue, darkThemeColor: .green))
+        case 2:
+            customizations.customizedTheme = OWTheme(backgroundColor1: OWColor(lightColor: .blue, darkColor: .green))
         default:
             break
         }
