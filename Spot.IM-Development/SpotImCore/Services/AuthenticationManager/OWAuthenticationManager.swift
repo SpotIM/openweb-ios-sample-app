@@ -554,7 +554,7 @@ fileprivate extension OWAuthenticationManager {
         let allowGuestsToLike = config.initialization?.policyAllowGuestsToLike ?? false
         let forceRegister = config.initialization?.policyForceRegister ?? true
         let levelAccordingToRegistration: OWAuthenticationLevel = forceRegister ? .loggedIn : .guest
-        let requiredRegisterForReport = true // config.moderation?.requiredRegisterForReport ?? false
+        let requiredRegisterForReport = config.moderation?.requiredRegisterForReport ?? false
 
         switch action {
         case .commenting:
