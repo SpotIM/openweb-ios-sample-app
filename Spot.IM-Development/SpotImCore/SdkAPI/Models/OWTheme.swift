@@ -9,9 +9,13 @@
 import Foundation
 
 public struct OWTheme {
-    public let backgroundColor1: OWColor?
+    public let backgroundColor1: OWColor? // TODO: remove!!
+    public let skeletonColor: OWColor?
 
-    public init(backgroundColor1: OWColor? = nil) {
+    public init(backgroundColor1: OWColor? = nil,
+                skeletonColor: OWColor? = nil
+    ) {
         self.backgroundColor1 = backgroundColor1
+        self.skeletonColor = skeletonColor
     }
 }
