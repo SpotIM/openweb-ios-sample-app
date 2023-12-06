@@ -1459,7 +1459,10 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
-            .filter { _ in self.conversationHasNext }
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.conversationHasNext
+            }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
             .map { (willDisplayCellEvent, _) -> Int in
