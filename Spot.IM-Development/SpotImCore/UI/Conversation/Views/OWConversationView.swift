@@ -251,12 +251,14 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
-            .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableViewRefreshControl.endRefreshing()
-            })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationFetchEnded
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.tableViewRefreshControl.endRefreshing()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.loginPromptViewModel
@@ -289,7 +291,6 @@ fileprivate extension OWConversationView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                print("*** performTableViewAnimation animated")
                 UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
                     self.tableView.beginUpdates()
                     self.tableView.endUpdates()
@@ -301,7 +302,6 @@ fileprivate extension OWConversationView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                print("*** updateTableViewInstantly")
                 self.tableView.reloadData()
                 self.tableView.layoutIfNeeded()
             })
@@ -349,7 +349,6 @@ fileprivate extension OWConversationView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                print("*** scrollToTopAnimated")
                 self.tableView.beginUpdates()
                 // it looks like set the content offset behave better when scroll to top
                 self.tableView.setContentOffset(.zero, animated: true)
