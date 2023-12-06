@@ -32,7 +32,22 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
 
         switch style {
         case 2:
-            customizations.customizedTheme = OWTheme()
+            customizations.customizedTheme = OWTheme(
+                skeletonColor: OWColor(lightColor: .blue, darkColor: .red),
+                skeletonShimmeringColor: OWColor(lightColor: .purple, darkColor: .systemPink),
+                primarySeparatorColor: OWColor(lightColor: .green, darkColor: .yellow),
+                secondarySeparatorColor: OWColor(lightColor: .cyan, darkColor: .magenta),
+                tertiarySeparatorColor: OWColor(lightColor: .brown, darkColor: .orange),
+                primaryTextColor: OWColor(lightColor: .red, darkColor: .purple),
+                secondaryTextColor: OWColor(lightColor: .orange, darkColor: .blue),
+                tertiaryTextColor: OWColor(lightColor: .systemPink, darkColor: .green),
+                primaryBackgroundColor: OWColor(lightColor: .blue.withAlphaComponent(0.5), darkColor: .green.withAlphaComponent(0.5)),
+                secondaryBackgroundColor: OWColor(lightColor: .systemPink.withAlphaComponent(0.5), darkColor: .orange.withAlphaComponent(0.5)),
+                tertiaryBackgroundColor: OWColor(lightColor: .brown.withAlphaComponent(0.5), darkColor: .cyan.withAlphaComponent(0.5)),
+                primaryBorderColor: OWColor(lightColor: .red, darkColor: .blue),
+                secondaryBorderColor: OWColor(lightColor: .green, darkColor: .systemPink),
+                loaderColor: OWColor(lightColor: .brown, darkColor: .yellow),
+                brandColor: OWColor(lightColor: .cyan, darkColor: .black))
         default:
             break
         }
