@@ -12,7 +12,7 @@ import RxSwift
 enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
     case loadedToScreen
     case popped
-    case submitedReport(commentId: OWCommentId)
+    case submitedReport(commentId: OWCommentId, userJustLoggedIn: Bool)
 
     var loadedToScreen: Bool {
         switch self {
@@ -86,11 +86,11 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                 guard let self = self else { return false }
                 return self.isUserSubmitted
             }
-            .flatMapLatest { [weak reportReasonViewViewModel] _ -> Observable<OWCommentId> in
+            .flatMapLatest { [weak reportReasonViewViewModel] _ -> Observable<(OWCommentId, Bool)> in
                 guard let vm = reportReasonViewViewModel else { return Observable.empty() }
                 return vm.outputs.reportReasonSubmittedSuccessfully
             }
-            .map { OWReportReasonCoordinatorResult.submitedReport(commentId: $0) }
+            .map { OWReportReasonCoordinatorResult.submitedReport(commentId: $0.0, userJustLoggedIn: $0.1) }
             .asObservable()
 
         let reportReasonLoadedToScreenObservable = reportReasonVM.outputs.loadedToScreen

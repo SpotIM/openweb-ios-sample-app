@@ -191,9 +191,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 case .popped:
                     // Nothing
                     break
-                case .submitedReport(_):
-                    // Nothing - already taken care in report VM in which we update the report service
-                    break
+                case let .submitedReport(commentId, userJustLoggedIn):
+                    guard userJustLoggedIn else { return }
+                    self._openCommentThread.onNext((commentId, .report))
                 default:
                     break
                 }
