@@ -32,7 +32,7 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
 
         switch style {
         case 2:
-            customizations.customizedTheme = OWTheme(backgroundColor1: OWColor(lightColor: .blue, darkColor: .green))
+            customizations.customizedTheme = OWTheme()
         default:
             break
         }
