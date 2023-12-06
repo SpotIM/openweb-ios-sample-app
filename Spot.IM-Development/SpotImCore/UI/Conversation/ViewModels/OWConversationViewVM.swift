@@ -47,6 +47,7 @@ protocol OWConversationViewViewModelingOutputs {
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
     var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
+    var conversationFetchEnded: Observable<Void> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
@@ -95,6 +96,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
+
+    fileprivate var _conversationFetchEnded = PublishSubject<Void>()
+    lazy var conversationFetchEnded: Observable<Void> = {
+        return _conversationFetchEnded
+            .asObservable()
+    }()
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
@@ -311,17 +318,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     // swiftlint:disable line_length
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(communityCellsOptions,
-                                        commentCellsOptions,
-                                        serverCommentsLoadingState,
+        return Observable.combineLatest(commentCellsOptions,
                                         shouldShowErrorLoadingComments,
                                         errorCellViewModels,
                                         shouldShowConversationEmptyState,
                                         shouldShowErrorLoadingMoreComments)
+        .withLatestFrom(serverCommentsLoadingState) { ($0, $1) }
+        .withLatestFrom(communityCellsOptions) { ($0.0, $0.1, $1) }
         .observe(on: conversationViewVMScheduler)
-        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
+        .flatMapLatest({ [weak self] result, loadingState, communityCellsOptions -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-
+                let (commentCellsOptions,
+                     shouldShowError,
+                     errorCellViewModels,
+                     isEmptyState,
+                     shouldShowErrorLoadingMoreComments) = result
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
                 } else if shouldShowError {
@@ -858,6 +869,9 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.just((event, loadingTriggeredReason))
             })
+            .do(onNext: { [weak self] _ in
+                self?._conversationFetchEnded.onNext()
+            })
             .map { [weak self] result -> (OWConversationReadRM, OWLoadingTriggeredReason)? in
                 let event = result.0
                 let loadingTriggeredReason = result.1
@@ -1219,26 +1233,6 @@ fileprivate extension OWConversationViewViewModel {
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
             })
             .disposed(by: disposeBag)
-
-        // Responding to guidelines height change (for updating cell)
-//        cellsViewModels
-//            .flatMapLatest { cellsVms -> Observable<Void> in
-//                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-//                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-//                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-//                        return guidelinesVM.outputs.shouldShowView
-//                            .filter { $0 == true }
-//                            .voidify()
-//                    } else {
-//                        return nil
-//                    }
-//                }
-//                .unwrap()
-//                return Observable.merge(sizeChangeObservable)
-//            }
-//            //.delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
-//            .bind(to: _performTableViewAnimation)
-//            .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell) and tableView height change for errorState cell
         cellsViewModels
