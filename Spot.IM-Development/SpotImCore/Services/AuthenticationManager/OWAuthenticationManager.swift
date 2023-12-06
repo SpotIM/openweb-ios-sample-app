@@ -577,9 +577,17 @@ fileprivate extension OWAuthenticationManager {
                 return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
                     .take(1)
             }
-            .map { [weak self] config -> OWAuthenticationLevel? in
+            .materialize()
+            .map { [weak self] event -> OWAuthenticationLevel? in
                 guard let self = self else { return nil }
-                return self.requiredAuthenticationLevel(for: action, accordingToConfig: config)
+                switch event {
+                case .next(let config):
+                    return self.requiredAuthenticationLevel(for: action, accordingToConfig: config)
+                case .error:
+                    return nil
+                default:
+                    return nil
+                }
             }
             .unwrap()
     }
