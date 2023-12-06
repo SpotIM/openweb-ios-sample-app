@@ -56,6 +56,8 @@ extension OWColor {
         case shadowColor
         /// Light: G2, Dark: D3
         case typingDotsColor
+        /// Light: L2, Dark: D2
+        case loaderColor
 
         var `default`: OWColor {
             switch self {
@@ -136,6 +138,11 @@ extension OWColor {
             case .typingDotsColor:
                 return OWColor(lightColor: OWDesignColors.G2,
                                darkColor: OWDesignColors.D3)
+
+            case .loaderColor:
+                return OWColor(lightColor: OWDesignColors.L2,
+                               darkColor: OWDesignColors.D2)
+
             }
         }
 
