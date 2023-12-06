@@ -102,15 +102,12 @@ fileprivate extension OWCommentLabelsContainerView {
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentLabelsViewModels
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] viewModels in
                 guard let self = self else { return }
                 // clean stackview if needed
                 self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
 
-                if viewModels.count > 0 {
-                    self.labelsHeightConstraint?.update(offset: Metrics.commentLabelViewHeight)
-                }
+                self.labelsHeightConstraint?.update(offset: viewModels.isEmpty ? 0 : Metrics.commentLabelViewHeight)
 
                 let commentLabelsViews: [OWCommentLabelView] = viewModels.map { vm in
                     let commentLabel = OWCommentLabelView()
