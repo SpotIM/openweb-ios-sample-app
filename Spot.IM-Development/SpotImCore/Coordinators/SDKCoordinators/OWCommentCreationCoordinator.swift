@@ -128,6 +128,8 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
+        setupObservers(forViewModel: viewModel.outputs.commentCreationViewVM)
+
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
             .subscribe(onNext: {[weak self] _ in
                 guard let self = self else { return }
@@ -146,6 +148,7 @@ fileprivate extension OWCommentCreationCoordinator {
 
     func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+        setupCustomizationElements(forViewModel: viewModel)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
@@ -168,5 +171,20 @@ fileprivate extension OWCommentCreationCoordinator {
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)
+    }
+
+    func setupCustomizationElements(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+        // Set customized pre conversation summary header
+        let submitCustomizeButton = viewModel.outputs.customizeSubmitButtonUI
+            .map { OWCustomizableElement.commentCreationSubmit(element: .button(button: $0)) }
+
+        let customizationElementsObservables = Observable.merge(submitCustomizeButton)
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
+
     }
 }
