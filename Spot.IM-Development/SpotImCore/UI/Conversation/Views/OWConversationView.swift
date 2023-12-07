@@ -288,6 +288,7 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.performTableViewAnimation
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
