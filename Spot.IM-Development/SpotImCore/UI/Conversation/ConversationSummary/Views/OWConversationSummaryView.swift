@@ -20,7 +20,7 @@ class OWConversationSummaryView: UIView {
         static let separatorWidth: CGFloat = 1
         static let horizontalMarginBetweenOnlineUsersAndSort: CGFloat = 10
 
-        static let margins: UIEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+        static let margins: UIEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
 
         static let identifier = "conversation_header_view_id"
         static let commentsCountLabelIdentifier = "comments_count_label_id"
@@ -141,6 +141,7 @@ fileprivate extension OWConversationSummaryView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.commentsCountLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
                 self.bottomHorizontalSeparator.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle))

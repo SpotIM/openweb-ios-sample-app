@@ -128,6 +128,20 @@ fileprivate extension OWCommentLabelsContainerView {
                 self.titleLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+
+                let isLandscape = currentOrientation == .landscape
+                self.titleLabel.isHidden = isLandscape
+                self.titleZeroHeightConstraint?.isActive = isLandscape
+
+                let titleLabelSpacing = titleLabel.text == nil ? 0 : Metrics.titleLabelSpacing
+                self.labelsTopConstraint?.update(offset: isLandscape ? 0 : titleLabelSpacing)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
