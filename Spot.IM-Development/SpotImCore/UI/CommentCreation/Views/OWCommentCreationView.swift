@@ -88,5 +88,14 @@ fileprivate extension OWCommentCreationView {
                 self.endEditing(true)
             })
             .disposed(by: disposeBag)
+
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
+                guard let self = self else { return }
+                let isLandscape = currentOrientation == .landscape
+                self.backgroundColor = isLandscape ? .clear : OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 }
