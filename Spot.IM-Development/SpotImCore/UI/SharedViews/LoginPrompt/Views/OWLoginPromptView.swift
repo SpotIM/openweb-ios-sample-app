@@ -14,6 +14,8 @@ class OWLoginPromptView: UIView {
         static let identifier = "login_promt_view_id"
 
         static let labelHorizontalPadding: CGFloat = 4
+        static let horizontalPadding: CGFloat = 10
+        static let separatorHeight: CGFloat = 1
     }
 
     fileprivate lazy var icon: UIImageView = {
@@ -42,6 +44,36 @@ class OWLoginPromptView: UIView {
             .image(UIImage(spNamed: "loginPromptArrow", supportDarkMode: false)!)
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var loginPromptView: UIView = {
+        let view = UIView()
+
+        view.addSubview(icon)
+        icon.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+
+        view.addSubview(label)
+        label.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(icon.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
+        }
+
+        view.addSubview(arrow)
+        arrow.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(label.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
+            make.trailing.equalToSuperview()
+        }
+
+        return view
+    }()
+
+    fileprivate lazy var seperatorView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
@@ -80,23 +112,19 @@ fileprivate extension OWLoginPromptView {
         }
         zeroHeighConstraint?.isActive = false
 
-        self.addSubview(icon)
-        icon.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview()
+        self.addSubview(loginPromptView)
+        loginPromptView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.horizontalPadding)
+            make.leading.greaterThanOrEqualToSuperview()
+            make.trailing.lessThanOrEqualToSuperview()
+            make.centerX.equalToSuperview()
         }
 
-        self.addSubview(label)
-        label.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.leading.equalTo(icon.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
-        }
-
-        self.addSubview(arrow)
-        arrow.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalTo(label.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
-            make.trailing.equalToSuperview()
+        self.addSubview(seperatorView)
+        seperatorView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.horizontalPadding)
+            make.height.equalTo(Metrics.separatorHeight)
         }
     }
 
@@ -123,6 +151,15 @@ fileprivate extension OWLoginPromptView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.label.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
     }

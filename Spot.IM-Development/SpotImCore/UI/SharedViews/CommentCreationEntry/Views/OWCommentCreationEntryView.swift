@@ -125,7 +125,8 @@ fileprivate extension OWCommentCreationEntryView {
                 self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.updateCustomUI()
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory

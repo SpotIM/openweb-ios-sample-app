@@ -112,7 +112,7 @@ fileprivate extension OWArticleDescriptionView {
             make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.imageSize)
             make.top.greaterThanOrEqualTo(topSeparatorView.OWSnp.bottom).offset(Metrics.margins.top)
-            make.leading.equalToSuperview().offset(Metrics.margins.left)
+            make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.margins.left)
         }
 
         // Setup bottom separator
@@ -123,11 +123,11 @@ fileprivate extension OWArticleDescriptionView {
             make.height.equalTo(Metrics.separatorHeight)
         }
 
-        // Setup bottom separator
+        // Setup article description container
         self.addSubview(titlesContainer)
         titlesContainer.OWSnp.makeConstraints { make in
             make.leading.equalTo(conversationImageView.OWSnp.trailing).offset(Metrics.paddingBetweenImageAndLabels)
-            make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+            make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.margins.right)
             make.top.equalTo(topSeparatorView.OWSnp.bottom).offset(Metrics.margins.top)
             make.bottom.equalTo(bottomSeparatorView.OWSnp.top).offset(-Metrics.margins.bottom)
         }
@@ -185,6 +185,7 @@ fileprivate extension OWArticleDescriptionView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
 
                 self.topSeparatorView.backgroundColor(OWColorPalette.shared.color(type: .separatorColor3,
                                                                                   themeStyle: currentStyle))
@@ -195,7 +196,8 @@ fileprivate extension OWArticleDescriptionView {
                 self.authorLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                         themeStyle: currentStyle)
                 self.updateCustomUI()
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory
