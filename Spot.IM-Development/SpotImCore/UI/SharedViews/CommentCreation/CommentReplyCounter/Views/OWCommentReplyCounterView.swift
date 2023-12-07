@@ -68,12 +68,17 @@ fileprivate extension OWCommentReplyCounterView {
             .bind(to: self.counterLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showCounter
+        let isLanscapeObsarvable = OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .map { $0 == .landscape }
+
+        Observable.combineLatest(viewModel.outputs.showCounter,
+                                 isLanscapeObsarvable)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] showCounter in
+            .subscribe(onNext: { [weak self] showCounter, isLanscape in
                 guard let self = self else { return }
                 if (showCounter) {
-                    self.viewHeightConstraint?.update(offset: Metrics.counterHeight)
+                    self.viewHeightConstraint?.update(offset: isLanscape ? 0 : Metrics.counterHeight)
                 }
             })
             .disposed(by: disposeBag)

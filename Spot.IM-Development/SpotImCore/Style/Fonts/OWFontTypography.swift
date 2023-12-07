@@ -9,21 +9,34 @@
 import UIKit
 
 enum OWFontTypography {
+    /// T3 (B)
     case titleSmall
+    /// T1 (B)
     case titleLarge
+    /// T2 (B)
     case titleMedium
+    /// T2 (I)
     case titleMediumSpecial
+    /// T4
     case bodyText
+    /// T4 (SB)
     case bodyInteraction
+    /// T4 (B)
     case bodyContext
+    /// T4 (I)
     case bodySpecial
+    /// T5
     case footnoteText
+    /// T5 (SB)
     case footnoteLink
+    /// T5 (B)
     case footnoteContext
+    /// T5 (I)
     case footnoteSpecial
-    case footnoteCaption
+    /// T6
     case metaText
-    case infoCaption
+    /// T7
+    case infoText
 }
 
 extension OWFontTypography {
@@ -42,9 +55,8 @@ extension OWFontTypography {
         case .footnoteLink: return 13
         case .footnoteContext: return 13
         case .footnoteSpecial: return 13
-        case .footnoteCaption: return 13
         case .metaText: return 12
-        case .infoCaption: return 10
+        case .infoText: return 10
         }
     }
 
@@ -62,9 +74,8 @@ extension OWFontTypography {
         case .footnoteLink: return .semiBold
         case .footnoteContext: return .bold
         case .footnoteSpecial: return .italic
-        case .footnoteCaption: return .regular
         case .metaText: return .regular
-        case .infoCaption: return .semiBold
+        case .infoText: return .semiBold
         }
     }
 
@@ -82,9 +93,8 @@ extension OWFontTypography {
         case .footnoteLink: return .footnote
         case .footnoteContext: return .footnote
         case .footnoteSpecial: return .footnote
-        case .footnoteCaption: return .footnote
         case .metaText: return .caption1
-        case .infoCaption: return .caption2
+        case .infoText: return .caption2
         }
     }
 
@@ -102,9 +112,8 @@ extension OWFontTypography {
         case .footnoteLink: return .fixed(17)
         case .footnoteContext: return .fixed(17)
         case .footnoteSpecial: return .fixed(17)
-        case .footnoteCaption: return .fixed(17)
         case .metaText: return .fixed(16)
-        case .infoCaption: return .fixed(15)
+        case .infoText: return .fixed(15)
         }
     }
 
@@ -122,9 +131,8 @@ extension OWFontTypography {
         case .footnoteLink: return .none
         case .footnoteContext: return .none
         case .footnoteSpecial: return .none
-        case .footnoteCaption: return .none
         case .metaText: return .none
-        case .infoCaption: return .none
+        case .infoText: return .none
         }
     }
 }

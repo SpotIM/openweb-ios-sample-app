@@ -720,6 +720,7 @@
 		73B0DE8127A90EC4008EBCE7 /* OWSubscriberBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */; };
 		73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */; };
 		7FE56ED2E542AD13D648F20B /* Pods_Shared_OpenWebCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E649FF6AC92259999AC38A82 /* Pods_Shared_OpenWebCoreTests.framework */; };
+		8D05B44D2B1497C700354380 /* OWOrientationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D05B44C2B1497C700354380 /* OWOrientationService.swift */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
 		8D0DB7152A923D710014AD1B /* OWRealtimeIndicatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7142A923D710014AD1B /* OWRealtimeIndicatorState.swift */; };
 		8D0DB7172A9356A70014AD1B /* OWRealtimeTypingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DB7162A9356A70014AD1B /* OWRealtimeTypingView.swift */; };
@@ -1724,6 +1725,7 @@
 		8AD06A753856558311FC9849 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		8AD138FCDAAA4D54C546AFFB /* Pods-Shared-Spot-IM.Development.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.internal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.internal.xcconfig"; sourceTree = "<group>"; };
 		8B68A2990C05E97CCA3BB018 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_DevelopmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D05B44C2B1497C700354380 /* OWOrientationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOrientationService.swift; sourceTree = "<group>"; };
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D0DB7142A923D710014AD1B /* OWRealtimeIndicatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeIndicatorState.swift; sourceTree = "<group>"; };
 		8D0DB7162A9356A70014AD1B /* OWRealtimeTypingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeTypingView.swift; sourceTree = "<group>"; };
@@ -4473,6 +4475,7 @@
 				240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */,
 				24C83DCA2A9DC01B0024080F /* OWActiveArticleService.swift */,
 				247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */,
+				8D05B44C2B1497C700354380 /* OWOrientationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -6329,6 +6332,7 @@
 				1628A75428EB0D8E0019B5EC /* OWAdCellViewModel.swift in Sources */,
 				161270D929ACD461001F9715 /* OWCommentThreadRequiredData.swift in Sources */,
 				9ED2E58D29EC01AD00B39A00 /* OWReportReasonView.swift in Sources */,
+                8D05B44D2B1497C700354380 /* OWOrientationService.swift in Sources */,
 				16D5A20529D1B73600914AD7 /* OWCommentThreadActionsViewModel.swift in Sources */,
 				3DBFB4F12AE95203001105DA /* OWAutomationRequiredData.swift in Sources */,
 				16D5A1E529C9A73800914AD7 /* OWCommentPresentationData.swift in Sources */,

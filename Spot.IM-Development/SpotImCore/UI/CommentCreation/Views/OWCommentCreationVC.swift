@@ -128,7 +128,7 @@ fileprivate extension OWCommentCreationVC {
 
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
             make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
 
@@ -141,14 +141,14 @@ fileprivate extension OWCommentCreationVC {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
                 let backgroundColor: UIColor = {
                     switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                     case .regular, .light:
-                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                        return OWColorPalette.shared.color(type: currentOrientation == .landscape ? .backgroundColor6 : .backgroundColor2, themeStyle: currentStyle)
                     case .floatingKeyboard:
                         return Metrics.floatingBackgroungColor
                     }
