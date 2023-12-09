@@ -250,12 +250,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var scrollToCellIndex: Observable<Int> {
         _performHighlightAnimationCellIndex
-            .asObserver()
+            .asObservable()
     }
 
     var highlightCellIndex: Observable<Int> {
         return scrolledToCellIndex
-            .asObserver()
+            .asObservable()
     }
 
     fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
