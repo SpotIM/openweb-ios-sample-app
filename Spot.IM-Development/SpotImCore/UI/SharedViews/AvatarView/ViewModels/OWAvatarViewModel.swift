@@ -156,9 +156,10 @@ fileprivate extension OWAvatarViewModel {
                 }
             })
             .map { result -> OWOpenProfileType? in
-                if case .openProfile(let type) = result {
+                switch result {
+                case .openProfile(type: let type):
                     return type
-                } else {
+                default:
                     return nil
                 }
             }
