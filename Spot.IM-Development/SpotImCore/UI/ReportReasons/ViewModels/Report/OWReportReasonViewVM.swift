@@ -31,7 +31,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var shouldShowTitleView: Bool { get }
     var cancelReportReasonTapped: Observable<Void> { get }
     var closeReportReasonTapped: Observable<Void> { get }
-    var submittedReportReasonObservable: Observable<Void> { get }
+    var submittedReportReasonObservable: Observable<(OWCommentId, Bool)> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var titleViewVM: OWTitleViewViewModeling { get }
     var selectedReason: Observable<OWReportReason> { get }
@@ -295,7 +295,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }()
 
     // Observable for the RepertReason network API
-    lazy var submittedReportReasonObservable: Observable<Void> = {
+    lazy var submittedReportReasonObservable: Observable<(OWCommentId, Bool)> = {
         return submitReportReasonTapped
             .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // 1. Triggering authentication UI if needed
@@ -344,14 +344,14 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                     .materialize()
                     .map { ($0, userJustLoggedIn) }
             }
-            .map { [weak self] event, userJustLoggedIn -> EmptyDecodable? in
+            .map { [weak self] event, userJustLoggedIn -> (OWCommentId, Bool)? in
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let submit):
                     let reportService = self.servicesProvider.reportedCommentsService()
                     reportService.updateCommentReportedSuccessfully(commentId: self.commentId, postId: self.postId)
                     self._reportReasonSubmittedSuccessfully.onNext((self.commentId, userJustLoggedIn))
-                    return submit
+                    return (self.commentId, userJustLoggedIn)
                 case .error(_):
                     self.setSubmitInProgress.onNext(false)
                     self.errorSubmitting.onNext()
@@ -362,7 +362,6 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 }
             }
             .unwrap()
-            .voidify()
             .share()
     }()
 
