@@ -2067,7 +2067,6 @@
 				161270D829ACD461001F9715 /* OWCommentThreadRequiredData.swift */,
 				16C42A5529F68D7000725F07 /* OWCommentThreadSettingsBuilder.swift */,
 				16F1D4282A234F9E00D22825 /* OWCommentThreadSettings.swift */,
-				169B39E12B0E427E005350E4 /* OWCommentThreadPerformActionType.swift */,
 			);
 			path = CommentThread;
 			sourceTree = "<group>";
@@ -3859,6 +3858,7 @@
 				240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */,
 				24C83DCC2A9DC08C0024080F /* OWArticleExtraData.swift */,
 				24A24A17291BAC7C00D72755 /* OWWebTabOptions.swift */,
+				169B39E12B0E427E005350E4 /* OWCommentThreadPerformActionType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
