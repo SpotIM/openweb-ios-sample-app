@@ -31,7 +31,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var shouldShowTitleView: Bool { get }
     var cancelReportReasonTapped: Observable<Void> { get }
     var closeReportReasonTapped: Observable<Void> { get }
-    var submittedReportReasonObservable: Observable<Void> { get }
+    var submittedReportReasonObservable: Observable<(OWCommentId, Bool)> { get }
     var textViewVM: OWTextViewViewModeling { get }
     var titleViewVM: OWTitleViewViewModeling { get }
     var selectedReason: Observable<OWReportReason> { get }
@@ -43,7 +43,7 @@ protocol OWReportReasonViewViewModelingOutputs {
     var submitReportReasonTapped: Observable<Void> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var reportReasonsCharectersLimitEnabled: Observable<Bool> { get }
-    var reportReasonSubmittedSuccessfully: Observable<OWCommentId> { get }
+    var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> { get }
     var reportOffset: Observable<CGPoint> { get }
 }
 
@@ -115,8 +115,8 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
             .unwrap()
     }
 
-    fileprivate let _reportReasonSubmittedSuccessfully = BehaviorSubject<OWCommentId?>(value: nil)
-    var reportReasonSubmittedSuccessfully: Observable<OWCommentId> {
+    fileprivate let _reportReasonSubmittedSuccessfully = BehaviorSubject<(OWCommentId, Bool)?>(value: nil)
+    var reportReasonSubmittedSuccessfully: Observable<(OWCommentId, Bool)> {
         return _reportReasonSubmittedSuccessfully
             .unwrap()
             .asObservable()
@@ -295,33 +295,43 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }()
 
     // Observable for the RepertReason network API
-    lazy var submittedReportReasonObservable: Observable<Void> = {
+    lazy var submittedReportReasonObservable: Observable<(OWCommentId, Bool)> = {
         return submitReportReasonTapped
-            .flatMapLatest { [weak self] _ -> Observable<Void> in
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .reportingComment)
-                    .voidify()
             }
-            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+            .flatMapLatest { [weak self] userJustLoggedIn -> Observable<(Bool, Bool)> in
                 // 2. Waiting for authentication required for reporting
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .reportingComment)
+                    .map { ($0, userJustLoggedIn) }
             }
-            .filter { $0 }
-            .flatMapLatest { [weak self] _ -> Observable<OWReportReason> in
+            .do(onNext: { [weak self] _, userJustLoggedIn in
+                guard let self = self else { return }
+                if userJustLoggedIn {
+                    self.servicesProvider.conversationUpdaterService()
+                        .update(.refreshConversation, postId: self.postId)
+                }
+            })
+            .filter { $0.0 }
+            .map { $0.1 }
+            .flatMapLatest { [weak self] userJustLoggedIn -> Observable<(OWReportReason, Bool)> in
                 guard let self = self else { return .empty() }
                 return self.selectedReason.take(1)
+                    .map { ($0, userJustLoggedIn) }
             }
-            .flatMapLatest { [weak self] selectedReason -> Observable<(OWReportReason, String)> in
+            .flatMapLatest { [weak self] selectedReason, userJustLoggedIn -> Observable<(OWReportReason, String, Bool)> in
                 guard let self = self else { return .empty() }
                 return self.textViewVM.outputs.textViewText.take(1)
-                    .map { return (selectedReason, $0) }
+                    .map { return (selectedReason, $0, userJustLoggedIn) }
             }
-            .flatMapLatest { [weak self] result -> Observable<Event<EmptyDecodable>> in
+            .flatMapLatest { [weak self] result -> Observable<(Event<EmptyDecodable>, Bool)> in
                 guard let self = self else { return .empty() }
                 let selectedReason = result.0
                 let userDescription = result.1
+                let userJustLoggedIn = result.2
                 self.setSubmitInProgress.onNext(true)
                 return self.servicesProvider
                     .netwokAPI()
@@ -332,15 +342,16 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                             userDescription: userDescription)
                     .response
                     .materialize()
+                    .map { ($0, userJustLoggedIn) }
             }
-            .map { [weak self] event -> EmptyDecodable? in
+            .map { [weak self] event, userJustLoggedIn -> (OWCommentId, Bool)? in
                 guard let self = self else { return nil }
                 switch event {
                 case .next(let submit):
                     let reportService = self.servicesProvider.reportedCommentsService()
                     reportService.updateCommentReportedSuccessfully(commentId: self.commentId, postId: self.postId)
-                    self._reportReasonSubmittedSuccessfully.onNext(self.commentId)
-                    return submit
+                    self._reportReasonSubmittedSuccessfully.onNext((self.commentId, userJustLoggedIn))
+                    return (self.commentId, userJustLoggedIn)
                 case .error(_):
                     self.setSubmitInProgress.onNext(false)
                     self.errorSubmitting.onNext()
@@ -351,7 +362,6 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
                 }
             }
             .unwrap()
-            .voidify()
             .share()
     }()
 
