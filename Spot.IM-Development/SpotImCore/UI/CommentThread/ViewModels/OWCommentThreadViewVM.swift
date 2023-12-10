@@ -21,9 +21,13 @@ protocol OWCommentThreadViewViewModelingInputs {
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeThreadOffset: PublishSubject<CGPoint> { get }
+    var closeTapped: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
+    var title: String { get }
+    var shouldShowHeaderView: Bool { get }
+    var closeCommentThread: Observable<Void> { get }
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -61,6 +65,21 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let updateTableViewInstantlyDelay: Int = 50 // ms
         static let performActionDelay: Int = 500 // ms
+    }
+
+    var closeTapped = PublishSubject<Void>()
+
+    var shouldShowHeaderView: Bool {
+        return viewableMode == .independent
+    }
+
+    lazy var title: String = {
+        return OWLocalizationManager.shared.localizedString(key: "Replies")
+    }()
+
+    fileprivate var _closeCommentThread = PublishSubject<Void>()
+    var closeCommentThread: Observable<Void> {
+        return _closeCommentThread.asObservable()
     }
 
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
@@ -562,6 +581,12 @@ fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
+
+        closeTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self._closeCommentThread.onNext()
+        })
+        .disposed(by: disposeBag)
 
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
