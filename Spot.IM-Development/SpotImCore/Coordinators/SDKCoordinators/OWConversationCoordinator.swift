@@ -191,9 +191,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 case .popped:
                     // Nothing
                     break
-                case .submitedReport(_):
-                    // Nothing - already taken care in report VM in which we update the report service
-                    break
+                case let .submitedReport(commentId, userJustLoggedIn):
+                    guard userJustLoggedIn else { return }
+                    self._openCommentThread.onNext((commentId, .report))
                 default:
                     break
                 }
@@ -403,6 +403,8 @@ fileprivate extension OWConversationCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
+        let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
+
         let closeConversationPressed = viewModel
             .outputs.conversationTitleHeaderViewModel
             .outputs.closeConversation
@@ -457,7 +459,7 @@ fileprivate extension OWConversationCoordinator {
         let openUrlInComment = viewModel.outputs.urlClickedOutput
             .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
 
-        let openCommentThread = Observable.merge(viewModel.outputs.openCommentThread, _openCommentThread)
+        let openCommentThread = Observable.merge(viewModel.outputs.openCommentThread, actionsCallbacksNotifier.openCommentThread)
             .map { OWViewActionCallbackType.openCommentThread(commentId: $0, performActionType: $1) }
 
         Observable.merge(

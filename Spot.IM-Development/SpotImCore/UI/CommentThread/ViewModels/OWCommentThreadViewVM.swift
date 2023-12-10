@@ -1640,6 +1640,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                         let rankChange = SPRankChange(from: fromRank, to: toRank)
                         self.performRankChange(for: selectedCommentVm, rankChange: rankChange)
                     }
+                case .report:
+                    self.servicesProvider
+                        .reportedCommentsService()
+                        .updateCommentReportedSuccessfully(commentId: self.commentThreadData.commentId,
+                                                           postId: self.postId)
+
                 default:
                     break
                 }
