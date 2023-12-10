@@ -22,6 +22,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var closeButtonTapped: Observable<Void> { get }
     var commentCreationSubmitted: Observable<(OWComment, Bool)> { get }
     var viewableMode: OWViewableMode { get }
+    var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -41,6 +42,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate let disposeBag = DisposeBag()
     let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
+
+    var customizeSubmitButtonUI: Observable<UIButton> {
+        return Observable.merge(commentCreationRegularViewVm.outputs.footerViewModel.outputs.customizeSubmitButtonUI,
+                                commentCreationLightViewVm.outputs.footerViewModel.outputs.customizeSubmitButtonUI,
+                                commentCreationFloatingKeyboardViewVm.outputs.customizeSubmitButtonUI)
+        .asObservable()
+    }
 
     // This is the original commentCreationData since
     // the commentCreationData Can be chaged by sub VMs

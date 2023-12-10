@@ -14,6 +14,7 @@ protocol OWCommentCreationFooterViewModelingInputs {
     var tapAddImage: PublishSubject<Void> { get }
     var ctaEnabled: BehaviorSubject<Bool> { get }
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
+    var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
 }
 
 protocol OWCommentCreationFooterViewModelingOutputs {
@@ -24,6 +25,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var performCtaAction: Observable<Void> { get }
     var addImageTapped: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
+    var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
 
 protocol OWCommentCreationFooterViewModeling {
@@ -44,6 +46,15 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     var tapCta = PublishSubject<Void>()
     var tapAddImage = PublishSubject<Void>()
+
+    fileprivate let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
+    var triggerCustomizeSubmitButtonUI = PublishSubject<UIButton>()
+
+    var customizeSubmitButtonUI: Observable<UIButton> {
+        return _triggerCustomizeSubmitButtonUI
+            .unwrap()
+            .asObservable()
+    }
 
     var addImageTapped: Observable<Void> {
         tapAddImage
@@ -152,5 +163,9 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
 fileprivate extension OWCommentCreationFooterViewModel {
     func setupObservers() {
+        // UI customizations
+        triggerCustomizeSubmitButtonUI
+            .bind(to: _triggerCustomizeSubmitButtonUI)
+            .disposed(by: disposeBag)
     }
 }
