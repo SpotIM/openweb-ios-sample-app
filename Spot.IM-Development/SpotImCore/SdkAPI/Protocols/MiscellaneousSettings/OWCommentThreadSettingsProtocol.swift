@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol OWCommentThreadSettingsProtocol {
-
+    var performActionType: OWCommentThreadPerformActionType { get }
 }
