@@ -69,7 +69,7 @@ fileprivate extension OWConversationTitleHeaderView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.closeButton.setImage(UIImage(spNamed: "closeButton", supportDarkMode: true), for: .normal)
                 self.updateCustomUI()
