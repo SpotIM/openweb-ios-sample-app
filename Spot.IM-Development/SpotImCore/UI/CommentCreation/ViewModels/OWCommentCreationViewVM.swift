@@ -297,6 +297,16 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 self._commentCreationSubmitInProgrss.onNext(false)
             })
             .map { ($0, self._userLoggedIn) }
+            .do(onNext: { [weak self] comment, userJustLoggedIn in
+                guard let self = self,
+                      userJustLoggedIn,
+                      let commentId = comment.id
+                else { return }
+                self.servicesProvider
+                    .actionsCallbacksNotifier()
+                    .openCommentThread(commentId: commentId,
+                                       performAction: .reply)
+            })
             .share()
     }()
 }
