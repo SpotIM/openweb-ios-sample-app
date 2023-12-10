@@ -145,7 +145,6 @@ fileprivate extension OWCommentViewModel {
                 guard let self = self, let user = user else { return false }
                 return user.userId == self.comment.userId
             }
-            .observe(on: MainScheduler.instance)
             .bind(to: _isCommentOfActiveUser)
             .disposed(by: disposedBag)
 
