@@ -82,7 +82,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
-        static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let updateTableViewInstantlyDelay: Int = 50 // ms
@@ -318,17 +317,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     // swiftlint:disable line_length
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(communityCellsOptions,
-                                        commentCellsOptions,
-                                        serverCommentsLoadingState,
+        return Observable.combineLatest(commentCellsOptions,
                                         shouldShowErrorLoadingComments,
                                         errorCellViewModels,
                                         shouldShowConversationEmptyState,
                                         shouldShowErrorLoadingMoreComments)
+        .withLatestFrom(serverCommentsLoadingState) { ($0, $1) }
+        .withLatestFrom(communityCellsOptions) { ($0.0, $0.1, $1) }
         .observe(on: conversationViewVMScheduler)
-        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
+        .flatMapLatest({ [weak self] result, loadingState, communityCellsOptions -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-
+                let (commentCellsOptions,
+                     shouldShowError,
+                     errorCellViewModels,
+                     isEmptyState,
+                     shouldShowErrorLoadingMoreComments) = result
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
                 } else if shouldShowError {
@@ -440,6 +443,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .filter { transition in
             return transition == .animated
         }
+        .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
         .voidify()
         .asObservable()
     }
@@ -1226,26 +1230,6 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to guidelines height change (for updating cell)
-        cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Void> in
-                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowView
-                            .filter { $0 == true }
-                            .voidify()
-                    } else {
-                        return nil
-                    }
-                }
-                .unwrap()
-                return Observable.merge(sizeChangeObservable)
-            }
-            .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
-            .bind(to: _performTableViewAnimation)
-            .disposed(by: disposeBag)
-
         // Responding to comment height change (for updating cell) and tableView height change for errorState cell
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Void> in
@@ -1471,7 +1455,10 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
-            .filter { _ in self.conversationHasNext }
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.conversationHasNext
+            }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
             .map { (willDisplayCellEvent, _) -> Int in
