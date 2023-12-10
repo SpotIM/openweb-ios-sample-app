@@ -11,4 +11,6 @@ import Foundation
 public enum OWCommentThreadPerformActionType: Codable {
     case none
     case changeRank(from: Int, to: Int)
+    case reply
+    case report
 }
