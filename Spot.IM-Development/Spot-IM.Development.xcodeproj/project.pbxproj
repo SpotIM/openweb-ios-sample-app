@@ -78,6 +78,7 @@
 		169D58E227D11925009936F3 /* OWVotesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169D58E127D11924009936F3 /* OWVotesType.swift */; };
 		16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A642601188100A7B3F6 /* URL+QueryParams.swift */; };
 		16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */; };
+		16B2F7AB2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2F7AA2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift */; };
 		16BEFD432A4C1B75007A51D5 /* OWCommentDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */; };
 		16BEFD452A4C3254007A51D5 /* OWCommentDeleteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */; };
 		16BEFD472A4C4638007A51D5 /* OWCommentUserMuteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */; };
@@ -1036,6 +1037,7 @@
 		169D58E127D11924009936F3 /* OWVotesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWVotesType.swift; sourceTree = "<group>"; };
 		16A12A642601188100A7B3F6 /* URL+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+QueryParams.swift"; sourceTree = "<group>"; };
 		16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesTitle.swift; sourceTree = "<group>"; };
+		16B2F7AA2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWActionsCallbacksNotifierService.swift; sourceTree = "<group>"; };
 		16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentDelete.swift; sourceTree = "<group>"; };
 		16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentDeleteAlert.swift; sourceTree = "<group>"; };
 		16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentUserMuteAlert.swift; sourceTree = "<group>"; };
@@ -4476,6 +4478,7 @@
 				240E8FAD2AA6110B00903E51 /* OWCommentStatusUpdaterService.swift */,
 				24C83DCA2A9DC01B0024080F /* OWActiveArticleService.swift */,
 				247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */,
+				16B2F7AA2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -6019,6 +6022,7 @@
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
 				3D50D9142B164FE700FD3232 /* OWCommentVotingModel.swift in Sources */,
 				24A691C329D2BB28005A5DFE /* OWCommentingReadOnlyView.swift in Sources */,
+				16B2F7AB2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift in Sources */,
 				244193132A933A2C0085BB30 /* OWAnalyticEventType+BIExtensions.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
 				3DDA9A772919370200FE3B86 /* OWUIAuthenticationLayer.swift in Sources */,
