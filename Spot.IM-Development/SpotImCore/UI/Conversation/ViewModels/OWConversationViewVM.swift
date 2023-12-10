@@ -47,7 +47,6 @@ protocol OWConversationViewViewModelingOutputs {
     var communityQuestionCellViewModel: OWCommunityQuestionCellViewModeling { get }
     var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
-    var conversationFetchEnded: Observable<Void> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
@@ -95,12 +94,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
         static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
-
-    fileprivate var _conversationFetchEnded = PublishSubject<Void>()
-    lazy var conversationFetchEnded: Observable<Void> = {
-        return _conversationFetchEnded
-            .asObservable()
-    }()
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
@@ -867,9 +860,6 @@ fileprivate extension OWConversationViewViewModel {
                         .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError - timeToLoadInitialComments), scheduler: self.conversationViewVMScheduler)
                 }
                 return Observable.just((event, loadingTriggeredReason))
-            })
-            .do(onNext: { [weak self] _ in
-                self?._conversationFetchEnded.onNext()
             })
             .map { [weak self] result -> (OWConversationReadRM, OWLoadingTriggeredReason)? in
                 let event = result.0
