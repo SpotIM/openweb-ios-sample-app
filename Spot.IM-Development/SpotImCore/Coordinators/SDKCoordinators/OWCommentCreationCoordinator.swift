@@ -11,7 +11,7 @@ import RxSwift
 
 enum OWCommentCreationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
-    case commentCreated(comment: OWComment)
+    case commentCreated(comment: OWComment, userJustLoggedIn: Bool)
     case loadedToScreen
 
     var loadedToScreen: Bool {
@@ -75,7 +75,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     return true
                 }
             }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0.0, userJustLoggedIn: $0.1) }
             .asObservable()
 
         let commentCreatedByFloatingKeyboardStyleObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
@@ -86,7 +86,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     return false
                 }
             }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0.0, userJustLoggedIn: $0.1) }
             .asObservable()
 
         let poppedFromBackButtonObservable = commentCreationPopped
@@ -110,10 +110,10 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                 self?.router.pop(popStyle: .dismiss, animated: false)
             })
 
-                return Observable.merge(resultsWithPopAnimation.take(1),
-                                        commentCreationLoadedToScreenObservable.take(1),
-                                        poppedFromBackButtonObservable.take(1),
-                                        commentCreatedByFloatingKeyboardStyleObservable.take(1))
+        return Observable.merge(resultsWithPopAnimation.take(1),
+                                commentCreationLoadedToScreenObservable.take(1),
+                                poppedFromBackButtonObservable.take(1),
+                                commentCreatedByFloatingKeyboardStyleObservable.take(1))
     }
 
     override func showableComponent() -> Observable<OWShowable> {
