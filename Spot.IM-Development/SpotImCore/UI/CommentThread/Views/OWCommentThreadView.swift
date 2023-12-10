@@ -160,6 +160,7 @@ fileprivate extension OWCommentThreadView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         closeButton.rx.tap
             .bind(to: viewModel.inputs.closeTapped)
@@ -276,4 +277,5 @@ fileprivate extension OWCommentThreadView {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
