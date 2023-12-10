@@ -95,10 +95,11 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     }()
 
     fileprivate lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
-        Observable.combineLatest(_comment, _commentLabelsSection) { [weak self] comment, commentLabelsSection in
-            guard let self = self else { return nil }
-            return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
-        }.unwrap()
+        _comment
+            .withLatestFrom(_commentLabelsSection) { [weak self] comment, commentLabelsSection in
+                guard let self = self else { return nil }
+                return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
+            }.unwrap()
     }()
 
     lazy var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> = {
