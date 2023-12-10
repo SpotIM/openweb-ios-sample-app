@@ -79,6 +79,7 @@
 		16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A642601188100A7B3F6 /* URL+QueryParams.swift */; };
 		16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */; };
 		16B2F7AB2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2F7AA2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift */; };
+		16B2F7AD2B25BCEC00C38264 /* OWOpenProfileResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2F7AC2B25BCEC00C38264 /* OWOpenProfileResult.swift */; };
 		16BEFD432A4C1B75007A51D5 /* OWCommentDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */; };
 		16BEFD452A4C3254007A51D5 /* OWCommentDeleteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */; };
 		16BEFD472A4C4638007A51D5 /* OWCommentUserMuteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */; };
@@ -1038,6 +1039,7 @@
 		16A12A642601188100A7B3F6 /* URL+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+QueryParams.swift"; sourceTree = "<group>"; };
 		16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesTitle.swift; sourceTree = "<group>"; };
 		16B2F7AA2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWActionsCallbacksNotifierService.swift; sourceTree = "<group>"; };
+		16B2F7AC2B25BCEC00C38264 /* OWOpenProfileResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWOpenProfileResult.swift; sourceTree = "<group>"; };
 		16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentDelete.swift; sourceTree = "<group>"; };
 		16BEFD442A4C3254007A51D5 /* OWCommentDeleteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentDeleteAlert.swift; sourceTree = "<group>"; };
 		16BEFD462A4C4638007A51D5 /* OWCommentUserMuteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentUserMuteAlert.swift; sourceTree = "<group>"; };
@@ -5330,6 +5332,7 @@
 		9E4B4E5E2AA604A500F4425F /* ProfileService */ = {
 			isa = PBXGroup;
 			children = (
+				16B2F7AC2B25BCEC00C38264 /* OWOpenProfileResult.swift */,
 				9E4B4E5F2AA604D100F4425F /* OWProfileService.swift */,
 				9E4B4E612AA61DEF00F4425F /* OWOpenProfileData.swift */,
 				24F611DA2AD5757500BAA574 /* OWOpenProfileType.swift */,
@@ -6379,6 +6382,7 @@
 				3D08E09328770AC600E6F1AC /* OWIdentifiableValue.swift in Sources */,
 				249DF29D296C1E7F00F5D69A /* OWUserBadgeService.swift in Sources */,
 				163E02BE2A852C4F00DDB73C /* OWCommentCreatorNetworkHelper.swift in Sources */,
+				16B2F7AD2B25BCEC00C38264 /* OWOpenProfileResult.swift in Sources */,
 				8D7662C92A7A574A008152BE /* OWRealtimeIndicatorService.swift in Sources */,
 				3DA264672951E3B200688FFF /* OWNetworkHTTPHeaders.swift in Sources */,
 				9ED2E58729EC015700B39A00 /* OWReportReasonViewVM.swift in Sources */,
