@@ -50,8 +50,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         view.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.centerX.equalToSuperview()
-            make.leading.greaterThanOrEqualToSuperview().offset(Metrics.horizontalOffset)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
 
         view.addSubview(closeButton)
