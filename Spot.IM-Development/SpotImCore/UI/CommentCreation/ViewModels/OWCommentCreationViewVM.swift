@@ -20,7 +20,7 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
-    var commentCreationSubmitted: Observable<OWComment> { get }
+    var commentCreationSubmitted: Observable<(OWComment, Bool)> { get }
     var viewableMode: OWViewableMode { get }
 }
 
@@ -51,6 +51,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate var articleUrl: String = ""
 
     fileprivate lazy var postId: OWPostId = OWManager.manager.postId ?? ""
+
+    fileprivate var _userLoggedIn: Bool = false
 
     fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
 
@@ -148,7 +150,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         setupObservers()
     }
 
-    lazy var commentCreationSubmitted: Observable<OWComment> = {
+    lazy var commentCreationSubmitted: Observable<(OWComment, Bool)> = {
         let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta,
                                                                 commentCreationLightViewVm.outputs.performCta,
                                                                 commentCreationFloatingKeyboardViewVm.outputs.performCta)
@@ -292,6 +294,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     .fetchStatusFor(comment: comment)
                 self._commentCreationSubmitInProgrss.onNext(false)
             })
+            .map { ($0, self._userLoggedIn) }
+            .do(onNext: { [weak self] comment, userJustLoggedIn in
+                guard let self = self,
+                      userJustLoggedIn,
+                      let commentId = comment.id
+                else { return }
+                self.servicesProvider
+                    .actionsCallbacksNotifier()
+                    .openCommentThread(commentId: commentId,
+                                       performAction: .reply)
+            })
             .share()
     }()
 }
@@ -337,6 +350,7 @@ fileprivate extension OWCommentCreationViewViewModel {
         .filter { $0 }
         .subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
+            self._userLoggedIn = true
             self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
         })
         .disposed(by: disposeBag)
