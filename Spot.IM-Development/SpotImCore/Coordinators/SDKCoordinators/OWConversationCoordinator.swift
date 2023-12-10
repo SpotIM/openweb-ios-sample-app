@@ -39,6 +39,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
 
+    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -129,18 +131,23 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMap { [weak self] commentCreationData -> Observable<(OWCommentCreationCoordinatorResult, OWCommentCreationRequiredData)> in
                 guard let self = self else { return .empty() }
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
                                                                               actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: commentCreationCoordinator)
+                return self.coordinate(to: commentCreationCoordinator).map { ($0, commentCreationData)}
             }
-            .do(onNext: { result in
+            .do(onNext: { [weak self] result, commentCreationData in
+                guard let self = self else { return }
                 switch result {
-                case .commentCreated:
-                    // Nothing - already taken care in comment creation VM in which we update the comment updater service
-                    break
+                case let .commentCreated(comment, userJustLoggedIn):
+                    guard userJustLoggedIn else { return }
+                    if case .replyToComment(_) = commentCreationData.commentCreationType {
+                        if let commentId = comment.id {
+                            self._openCommentThread.onNext((commentId, .reply))
+                        }
+                    }
                 case .loadedToScreen:
                     break
                     // Nothing
@@ -184,9 +191,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 case .popped:
                     // Nothing
                     break
-                case .submitedReport(_):
-                    // Nothing - already taken care in report VM in which we update the report service
-                    break
+                case let .submitedReport(commentId, userJustLoggedIn):
+                    guard userJustLoggedIn else { return }
+                    self._openCommentThread.onNext((commentId, .report))
                 default:
                     break
                 }
@@ -227,7 +234,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
-        let openCommentThreadObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentThread
+        let openCommentThreadObservable = Observable.merge(conversationVM.outputs.conversationViewVM.outputs.openCommentThread, _openCommentThread)
             .observe(on: MainScheduler.instance)
             .map { [weak self] commentId, performAction -> OWCommentThreadRequiredData? in
                 guard let self = self else { return nil }
@@ -396,6 +403,8 @@ fileprivate extension OWConversationCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
+        let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
+
         let closeConversationPressed = viewModel
             .outputs.conversationTitleHeaderViewModel
             .outputs.closeConversation
@@ -450,7 +459,7 @@ fileprivate extension OWConversationCoordinator {
         let openUrlInComment = viewModel.outputs.urlClickedOutput
             .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
 
-        let openCommentThread = viewModel.outputs.openCommentThread
+        let openCommentThread = Observable.merge(viewModel.outputs.openCommentThread, actionsCallbacksNotifier.openCommentThread)
             .map { OWViewActionCallbackType.openCommentThread(commentId: $0, performActionType: $1) }
 
         Observable.merge(
