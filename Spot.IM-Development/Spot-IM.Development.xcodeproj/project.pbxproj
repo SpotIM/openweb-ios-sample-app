@@ -418,7 +418,6 @@
 		3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
 		3D50D9322B1656F800FD3232 /* UserAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9312B1656F800FD3232 /* UserAuthentication.swift */; };
 		3D50D9352B16575A00FD3232 /* AuthenticationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9332B16575A00FD3232 /* AuthenticationStatus.swift */; };
-		3D50D9362B16575A00FD3232 /* JWTSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9342B16575A00FD3232 /* JWTSSOAuthentication.swift */; };
 		3D50D9382B1657F500FD3232 /* AuthenticationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D50D9372B1657F500FD3232 /* AuthenticationError.swift */; };
 		3D5561A9295313FC0097A6D1 /* OWNetworkStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5561A8295313FC0097A6D1 /* OWNetworkStatusCode.swift */; };
 		3D611B7928BFA906003960CE /* TestAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B7828BFA906003960CE /* TestAPIVC.swift */; };
@@ -1392,7 +1391,6 @@
 		3D50D92E2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		3D50D9312B1656F800FD3232 /* UserAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAuthentication.swift; sourceTree = "<group>"; };
 		3D50D9332B16575A00FD3232 /* AuthenticationStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationStatus.swift; sourceTree = "<group>"; };
-		3D50D9342B16575A00FD3232 /* JWTSSOAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JWTSSOAuthentication.swift; sourceTree = "<group>"; };
 		3D50D9372B1657F500FD3232 /* AuthenticationError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationError.swift; sourceTree = "<group>"; };
 		3D5561A8295313FC0097A6D1 /* OWNetworkStatusCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkStatusCode.swift; sourceTree = "<group>"; };
 		3D611B7828BFA906003960CE /* TestAPIVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAPIVC.swift; sourceTree = "<group>"; };
@@ -3299,7 +3297,6 @@
 			children = (
 				3D50D9372B1657F500FD3232 /* AuthenticationError.swift */,
 				3D50D9332B16575A00FD3232 /* AuthenticationStatus.swift */,
-				3D50D9342B16575A00FD3232 /* JWTSSOAuthentication.swift */,
 				3D50D9312B1656F800FD3232 /* UserAuthentication.swift */,
 				3D50D9282B16568200FD3232 /* GenericSSOAuthentication.swift */,
 				243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */,
@@ -6845,7 +6842,6 @@
 				9E7D5B102A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift in Sources */,
 				3DCAE3F629D31042005B9189 /* CommonCreatorService.swift in Sources */,
 				8D99C69A2A233CC700DAB542 /* ElementsCustomizationCreatorService.swift in Sources */,
-				3D50D9362B16575A00FD3232 /* JWTSSOAuthentication.swift in Sources */,
 				9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */,
 				8D7662BE2A6D139A008152BE /* OWConversationSpacingIndexer.swift in Sources */,
 				8D7662C02A6D170E008152BE /* OWFontGroupFamilyIndexer.swift in Sources */,

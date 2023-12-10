@@ -28,7 +28,7 @@ protocol OWAuthenticationManagerProtocol {
     func logout() -> Observable<Void>
     func startSSO() -> Observable<OWSSOStartModel>
     func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel>
-    func ssoProviderAuthenticate(provider: OWSSOProvider, token: String) -> Observable<OWSSOProviderModel>
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> Observable<OWSSOProviderModel>
 
     // Those methods exposed since we are testing multiple SpotIds inside our SampleApp - therefore we must considered the "current" spotId
     func prepare(forSpotId spotId: OWSpotId)
@@ -413,7 +413,7 @@ extension OWAuthenticationManager {
             .unwrap()
     }
 
-    func ssoProviderAuthenticate(provider: OWSSOProvider, token: String) -> Observable<OWSSOProviderModel> {
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> Observable<OWSSOProviderModel> {
         return userAuthenticationStatus
             .take(1)
             .flatMap { authenticationStatus -> Observable<Void> in
@@ -431,15 +431,15 @@ extension OWAuthenticationManager {
                 // 2. Proceed with SSO complete
                 let networkAuthentication = self.servicesProvider.netwokAPI().authentication
                 return networkAuthentication
-                    .ssoProviderAuthenticate(provider: provider, token: token)
+                    .ssoAuthenticate(withProvider: provider, token: token)
                     .response
-                    .do(onNext: { [weak self] ssoProviderResponse  in
-                        guard let self = self else { return }
-                        let user = ssoProviderResponse.user
-                        self.update(userAvailability: .user(user))
-                        self._userAuthenticationStatus.onNext(.ssoLoggedIn(userId: user.userId ?? ""))
-                    })
             }
+            .do(onNext: { [weak self] ssoProviderResponse  in
+                guard let self = self else { return }
+                let user = ssoProviderResponse.user
+                self.update(userAvailability: .user(user))
+                self._userAuthenticationStatus.onNext(.ssoLoggedIn(userId: user.userId ?? ""))
+            })
             .map { response -> OWSSOProviderModel? in
                 return response.toSSOProviderModel()
             }
