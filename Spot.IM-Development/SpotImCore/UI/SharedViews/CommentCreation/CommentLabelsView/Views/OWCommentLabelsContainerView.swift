@@ -138,7 +138,7 @@ fileprivate extension OWCommentLabelsContainerView {
                 self.titleLabel.isHidden = isLandscape
                 self.titleZeroHeightConstraint?.isActive = isLandscape
 
-                let titleLabelSpacing = titleLabel.text == nil ? 0 : Metrics.titleLabelSpacing
+                let titleLabelSpacing = self.titleLabel.text == nil ? 0 : Metrics.titleLabelSpacing
                 self.labelsTopConstraint?.update(offset: isLandscape ? 0 : titleLabelSpacing)
             })
             .disposed(by: disposeBag)
