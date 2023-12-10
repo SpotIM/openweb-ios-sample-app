@@ -69,6 +69,18 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .asObservable()
     }
 
+    fileprivate lazy var _commentText: Observable<String> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+        case .light:
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+        case .floatingKeyboard:
+            // TODO - get floating text
+            return Observable.just("")
+        }
+    }()
+
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
         switch commentCreationData.settings.commentCreationSettings.style {
@@ -350,16 +362,32 @@ fileprivate extension OWCommentCreationViewViewModel {
             return self.servicesProvider.authenticationManager().waitForAuthentication(for: userAction)
         }
         .filter { $0 }
-        .subscribe(onNext: { [weak self] _ in
+        .do(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
-            self._userJustLoggedIn.onNext()
+        })
+        .map { [weak self] _ -> OWCommentId? in
+            guard let self = self else { return nil }
             if case let .replyToComment(originComment) = self.commentCreationData.commentCreationType {
-                if let originCommentId = originComment.id {
-                    self.servicesProvider.actionsCallbacksNotifier()
-                        .openCommentThread(commentId: originCommentId,
-                                           performAction: .reply)
-                }
+                return originComment.id
+            } else {
+                return nil
+            }
+        }
+        .withLatestFrom(_commentText) { ($0, $1) }
+        .do(onNext: { [weak self] replyToCommentId, commentText in
+            guard let self = self else { return }
+            if replyToCommentId != nil {
+                self.cacheComment(text: commentText)
+            }
+        })
+        .subscribe(onNext: { [weak self] replyToCommentId, _ in
+            guard let self = self else { return }
+            self._userJustLoggedIn.onNext()
+            if let replyToCommentId = replyToCommentId {
+                self.servicesProvider.actionsCallbacksNotifier()
+                    .openCommentThread(commentId: replyToCommentId,
+                                       performAction: .reply)
             }
         })
         .disposed(by: disposeBag)

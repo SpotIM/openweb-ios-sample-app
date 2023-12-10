@@ -1670,7 +1670,9 @@ fileprivate extension OWCommentThreadViewViewModel {
                         .reportedCommentsService()
                         .updateCommentReportedSuccessfully(commentId: self.commentThreadData.commentId,
                                                            postId: self.postId)
-
+                case .reply:
+                    self.commentCreationTap.onNext(.replyToComment(
+                        originComment: selectedCommentCellVm.outputs.commentVM.outputs.comment))
                 default:
                     break
                 }
