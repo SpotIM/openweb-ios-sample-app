@@ -135,7 +135,7 @@ fileprivate extension OWAuthenticationLayer {
 
         let authenticationManager = servicesProvider.authenticationManager()
         _ = authenticationManager
-            .ssoProviderAuthenticate(provider: provider, token: token)
+            .ssoAuthenticate(withProvider: provider, token: token)
             .take(1)
             .subscribe(onNext: { ssoProviderModel in
                 completion(.success(ssoProviderModel))

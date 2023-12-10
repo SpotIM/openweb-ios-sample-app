@@ -56,7 +56,7 @@ protocol OWAuthenticationAPI {
     func ssoStart(secret: String) -> OWNetworkResponse<OWSSOStartResponse>
     func ssoComplete(codeB: String) -> OWNetworkResponse<OWSSOCompletionResponse>
     func logout() -> OWNetworkResponse<EmptyDecodable>
-    func ssoProviderAuthenticate(provider: OWSSOProvider, token: String) -> OWNetworkResponse<OWSSOProviderResponse>
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> OWNetworkResponse<OWSSOProviderResponse>
 }
 
 extension OWNetworkAPI: OWAuthenticationAPI {
@@ -87,7 +87,7 @@ extension OWNetworkAPI: OWAuthenticationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func ssoProviderAuthenticate(provider: OWSSOProvider, token: String) -> OWNetworkResponse<OWSSOProviderResponse> {
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> OWNetworkResponse<OWSSOProviderResponse> {
         let endpoint = OWAuthenticationEndpoints.ssoProvider(provider: provider, token: token)
         let requestConfig = request(for: endpoint)
         return performRequest(route: requestConfig)
