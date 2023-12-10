@@ -60,7 +60,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let updateTableViewInstantlyDelay: Int = 50 // ms
-        static let performActionDelay: Int = 250 // ms
+        static let performActionDelay: Int = 500 // ms
     }
 
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
@@ -250,12 +250,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var scrollToCellIndex: Observable<Int> {
         _performHighlightAnimationCellIndex
-            .asObserver()
+            .asObservable()
     }
 
     var highlightCellIndex: Observable<Int> {
         return scrolledToCellIndex
-            .asObserver()
+            .asObservable()
     }
 
     fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
