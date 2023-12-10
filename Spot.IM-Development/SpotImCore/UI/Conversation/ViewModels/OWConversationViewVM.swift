@@ -59,6 +59,8 @@ protocol OWConversationViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
+    var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
+    var tableViewHeightChanged: Observable<CGFloat> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
 }
@@ -100,7 +102,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewVMQueue")
 
     var tableViewHeight = PublishSubject<CGFloat>()
-    fileprivate lazy var tableViewHeightChanged: Observable<CGFloat> = {
+    lazy var tableViewHeightChanged: Observable<CGFloat> = {
         tableViewHeight
             .filter { $0 > 0 }
             .distinctUntilChanged()
@@ -114,7 +116,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     var tableViewContentSizeHeight = PublishSubject<CGFloat>()
-    fileprivate lazy var tableViewContentSizeHeightChanged: Observable<CGFloat> = {
+    lazy var tableViewContentSizeHeightChanged: Observable<CGFloat> = {
         tableViewContentSizeHeight
             .distinctUntilChanged()
             .asObservable()
@@ -415,7 +417,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                     updateUserTuples.0.inputs.update(comment: updateUserTuples.1.outputs.comment)
                 }
             })
-            .observe(on: conversationViewVMScheduler)
             .map { return $0.cellOptions }
             .asObservable()
             .share(replay: 1)
