@@ -131,23 +131,20 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] commentCreationData -> Observable<(OWCommentCreationCoordinatorResult, OWCommentCreationRequiredData)> in
+            .flatMap { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
                                                                               actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: commentCreationCoordinator).map { ($0, commentCreationData)}
+                return self.coordinate(to: commentCreationCoordinator)
             }
-            .do(onNext: { [weak self] result, commentCreationData in
+            .do(onNext: { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case let .commentCreated(comment, userJustLoggedIn):
-                    guard userJustLoggedIn else { return }
-                    if case .replyToComment(_) = commentCreationData.commentCreationType {
-                        if let commentId = comment.id {
-                            self._openCommentThread.onNext((commentId, .reply))
-                        }
-                    }
+                case .commentCreated:
+                    break
+                case let .userLoggedInWhileWritingReplyToComment(commentId):
+                    self._openCommentThread.onNext((commentId, .reply))
                 case .loadedToScreen:
                     break
                     // Nothing
