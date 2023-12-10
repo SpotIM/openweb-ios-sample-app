@@ -251,14 +251,12 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
-            .bind(to: tableView.rx.items(dataSource: conversationDataSource))
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.conversationFetchEnded
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.tableViewRefreshControl.endRefreshing()
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.tableViewRefreshControl.endRefreshing()
             })
+            .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
         viewModel.outputs.loginPromptViewModel
