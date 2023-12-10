@@ -11,7 +11,8 @@ import RxSwift
 
 enum OWCommentCreationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
-    case commentCreated(comment: OWComment, userJustLoggedIn: Bool)
+    case commentCreated(comment: OWComment)
+    case userLoggedInWhileWritingReplyToComment(id: OWCommentId)
     case loadedToScreen
 
     var loadedToScreen: Bool {
@@ -75,7 +76,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     return true
                 }
             }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0.0, userJustLoggedIn: $0.1) }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
 
         let commentCreatedByFloatingKeyboardStyleObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
@@ -86,8 +87,20 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     return false
                 }
             }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0.0, userJustLoggedIn: $0.1) }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
             .asObservable()
+
+        let userLoggedInObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.userJustLoggedIn
+            .map { return self.commentCreationData }
+            .map { commentCreationData -> OWCommentId? in
+                if case .replyToComment(let comment) = commentCreationData.commentCreationType {
+                    return comment.id
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+            .map { OWCommentCreationCoordinatorResult.userLoggedInWhileWritingReplyToComment(id: $0) }
 
         let poppedFromBackButtonObservable = commentCreationPopped
             .map { OWCommentCreationCoordinatorResult.popped }
@@ -104,7 +117,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .map { OWCommentCreationCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable)
+        let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable, userLoggedInObservable)
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 self?.router.pop(popStyle: .dismiss, animated: false)
@@ -154,15 +167,35 @@ fileprivate extension OWCommentCreationCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
-        let floatingDismissed = viewModel.outputs.closeButtonTapped
+        let userLoggedInWhileReplyingToComment = viewModel.outputs.userJustLoggedIn
+            .map { self.commentCreationData }
+            .map { commentCreationData -> OWCommentId? in
+                if case .replyToComment(let comment) = commentCreationData.commentCreationType {
+                    return comment.id
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
             .voidify()
-            .map { OWViewActionCallbackType.floatingCommentCreationDismissed}
+
+        let closeCommentCreationObservable = Observable.merge(viewModel.outputs.closeButtonTapped, userLoggedInWhileReplyingToComment)
+            .voidify()
+            .map { self.commentCreationData.settings.commentCreationSettings.style }
+            .map { style in
+                switch style {
+                case .floatingKeyboard:
+                    return OWViewActionCallbackType.floatingCommentCreationDismissed
+                default:
+                    return OWViewActionCallbackType.closeCommentCreation
+                }
+            }
 
         let commentCreatedObservable = viewModel.outputs.commentCreationSubmitted
             .voidify()
             .map { OWViewActionCallbackType.commentSubmitted }
 
-        Observable.merge(floatingDismissed, commentCreatedObservable)
+        Observable.merge(closeCommentCreationObservable, commentCreatedObservable)
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }

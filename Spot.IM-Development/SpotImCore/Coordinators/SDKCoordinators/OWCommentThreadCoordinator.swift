@@ -91,6 +91,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                     // Nothing
                 case .popped:
                     break
+                case .userLoggedInWhileWritingReplyToComment:
+                    break
                 }
             })
             .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
