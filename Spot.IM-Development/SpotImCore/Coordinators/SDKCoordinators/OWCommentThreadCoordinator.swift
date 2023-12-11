@@ -231,6 +231,11 @@ fileprivate extension OWCommentThreadCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
+        // Close Comment Thread
+        let closeCommentThread = viewModel
+            .outputs.closeCommentThread
+            .map { OWViewActionCallbackType.closeCommentThread }
+
         let openPublisherProfile = viewModel.outputs.openProfile
             .map { openProfileType in
                 switch openProfileType {
@@ -272,7 +277,8 @@ fileprivate extension OWCommentThreadCoordinator {
         let openUrlInComment = viewModel.outputs.urlClickedOutput
             .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
 
-        Observable.merge(openPublisherProfile,
+        Observable.merge(closeCommentThread,
+                         openPublisherProfile,
                          openCommentCreation,
                          openClarityDetails,
                          openReportReason,

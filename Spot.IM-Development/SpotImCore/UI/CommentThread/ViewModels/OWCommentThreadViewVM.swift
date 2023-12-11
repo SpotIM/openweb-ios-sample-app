@@ -21,9 +21,13 @@ protocol OWCommentThreadViewViewModelingInputs {
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeThreadOffset: PublishSubject<CGPoint> { get }
+    var closeTapped: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
+    var title: String { get }
+    var shouldShowHeaderView: Bool { get }
+    var closeCommentThread: Observable<Void> { get }
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -60,6 +64,22 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let updateTableViewInstantlyDelay: Int = 50 // ms
+        static let performActionDelay: Int = 500 // ms
+    }
+
+    var closeTapped = PublishSubject<Void>()
+
+    var shouldShowHeaderView: Bool {
+        return viewableMode == .independent
+    }
+
+    lazy var title: String = {
+        return OWLocalizationManager.shared.localizedString(key: "Replies")
+    }()
+
+    fileprivate var _closeCommentThread = PublishSubject<Void>()
+    var closeCommentThread: Observable<Void> {
+        return _closeCommentThread.asObservable()
     }
 
     var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
@@ -249,12 +269,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var scrollToCellIndex: Observable<Int> {
         _performHighlightAnimationCellIndex
-            .asObserver()
+            .asObservable()
     }
 
     var highlightCellIndex: Observable<Int> {
         return scrolledToCellIndex
-            .asObserver()
+            .asObservable()
     }
 
     fileprivate var _openProfile = PublishSubject<OWOpenProfileType>()
@@ -518,12 +538,55 @@ fileprivate extension OWCommentThreadViewViewModel {
         // cache reported comments in reported comments service
         self.servicesProvider.reportedCommentsService().updateReportedComments(forConversationResponse: response, postId: self.postId)
     }
+
+    func performRankChange(for commentVm: OWCommentViewModeling, rankChange: SPRankChange) {
+        let comment = commentVm.outputs.comment
+        let commentUser = commentVm.outputs.user
+
+        // Do not perform the action if comment is reported or user is muted
+        guard !comment.reported && !commentUser.isMuted else { return }
+
+        let currentRankByUser = comment.rank?.rankedByCurrentUser ?? 0
+        var rankChangeToPerform: SPRankChange? = nil
+
+        switch (currentRankByUser, rankChange.to.rawValue) {
+        case (0, _):
+            // If the comment is not currently ranked by user, perform original rank change
+            rankChangeToPerform = rankChange
+        case (-1, 1):
+            // Change from rank
+            if let newFromRank = SPRank(rawValue: -1),
+               let newToRank = SPRank(rawValue: 1) {
+                rankChangeToPerform = SPRankChange(from: newFromRank, to: newToRank)
+            }
+        case (1, -1):
+            // Change from rank
+            if let newFromRank = SPRank(rawValue: 1),
+               let newToRank = SPRank(rawValue: -1) {
+                rankChangeToPerform = SPRankChange(from: newFromRank, to: newToRank)
+            }
+        default:
+            // Should not perform action otherwise
+            break
+        }
+
+        if let rankChangeToPerform = rankChangeToPerform {
+            let selectedCommentVotingVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
+            selectedCommentVotingVm.inputs.rankChanged.onNext(rankChangeToPerform)
+        }
+    }
 }
 
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
+
+        closeTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self._closeCommentThread.onNext()
+        })
+        .disposed(by: disposeBag)
 
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
@@ -1119,12 +1182,22 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // perform highlight animation for selected comment id
-        cellsViewModels
+        let selectedCommentCellVm = commentCellsVmsObservable
+            .map { [weak self] commentCellsVms -> OWCommentCellViewModeling? in
+                guard let self = self else { return nil }
+                let selectedCommentCellVm: OWCommentCellViewModeling? = commentCellsVms.first { vm in
+                        return vm.outputs.id == self.commentThreadData.commentId
+                }
+                return selectedCommentCellVm
+            }
+            .unwrap()
+            .share()
+
+        let selectedCommentCellVmIndex = cellsViewModels
             .map { [weak self] cellsViewModels -> Int? in
                 guard let self = self else { return nil }
                 let commentIndex: Int? = cellsViewModels.firstIndex { vm in
-                    if case.comment(let commentCellViewModel) = vm {
+                    if case .comment(let commentCellViewModel) = vm {
                         return commentCellViewModel.outputs.id == self.commentThreadData.commentId
                     } else {
                         return false
@@ -1133,6 +1206,10 @@ fileprivate extension OWCommentThreadViewViewModel {
                 return commentIndex
             }
             .unwrap()
+            .share()
+
+        // perform highlight animation for selected comment id
+        selectedCommentCellVmIndex
             .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .take(1)
             .subscribe(onNext: { [weak self] index in
@@ -1570,6 +1647,36 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self?.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
+
+        // Handle perform action
+        highlightCellIndex
+            .delay(.milliseconds(Metrics.performActionDelay), scheduler: commentThreadViewVMScheduler)
+            .withLatestFrom(selectedCommentCellVm)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] selectedCommentCellVm in
+                guard let self = self else { return }
+                let commentThreadSettings = self.commentThreadData.settings.commentThreadSettings
+                let performActionType = commentThreadSettings.performActionType
+                switch performActionType {
+                case .changeRank(let from, let to):
+                    let selectedCommentVm = selectedCommentCellVm.outputs.commentVM
+                    if let fromRank = SPRank(rawValue: from),
+                       let toRank = SPRank(rawValue: to) {
+                        let rankChange = SPRankChange(from: fromRank, to: toRank)
+                        self.performRankChange(for: selectedCommentVm, rankChange: rankChange)
+                    }
+                case .report:
+                    self.servicesProvider
+                        .reportedCommentsService()
+                        .updateCommentReportedSuccessfully(commentId: self.commentThreadData.commentId,
+                                                           postId: self.postId)
+
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+
     }
 
     func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {

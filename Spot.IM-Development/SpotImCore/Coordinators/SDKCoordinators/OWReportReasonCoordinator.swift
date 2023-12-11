@@ -12,7 +12,7 @@ import RxSwift
 enum OWReportReasonCoordinatorResult: OWCoordinatorResultProtocol {
     case loadedToScreen
     case popped
-    case submitedReport(commentId: OWCommentId)
+    case submitedReport(commentId: OWCommentId, userJustLoggedIn: Bool)
 
     var loadedToScreen: Bool {
         switch self {
@@ -33,6 +33,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     fileprivate let reportData: OWReportReasonsRequiredData
     fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .reportReason)
     }()
@@ -46,11 +47,13 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
     init(reportData: OWReportReasonsRequiredData,
          router: OWRoutering? = nil,
          actionsCallbacks: OWViewActionsCallbacks?,
-         presentationalMode: OWPresentationalModeCompact = .none) {
+         presentationalMode: OWPresentationalModeCompact = .none,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.reportData = reportData
         self.router = router
         self.actionsCallbacks = actionsCallbacks
         self.presentationalMode = presentationalMode
+        self.servicesProvider = servicesProvider
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
@@ -86,11 +89,11 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                 guard let self = self else { return false }
                 return self.isUserSubmitted
             }
-            .flatMapLatest { [weak reportReasonViewViewModel] _ -> Observable<OWCommentId> in
+            .flatMapLatest { [weak reportReasonViewViewModel] _ -> Observable<(OWCommentId, Bool)> in
                 guard let vm = reportReasonViewViewModel else { return Observable.empty() }
                 return vm.outputs.reportReasonSubmittedSuccessfully
             }
-            .map { OWReportReasonCoordinatorResult.submitedReport(commentId: $0) }
+            .map { OWReportReasonCoordinatorResult.submitedReport(commentId: $0.0, userJustLoggedIn: $0.1) }
             .asObservable()
 
         let reportReasonLoadedToScreenObservable = reportReasonVM.outputs.loadedToScreen
@@ -196,6 +199,7 @@ fileprivate extension OWReportReasonCoordinator {
 
         // Submit - Open Submitted Screen - Flow
         let closeReportReasonSubmittedTapped = viewModel.outputs.submittedReportReasonObservable
+            .voidify()
             .filter { viewModel.outputs.viewableMode == .partOfFlow }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
@@ -377,10 +381,9 @@ fileprivate extension OWReportReasonCoordinator {
 
         // Submit - Open Submitted Screen - Independent
         let closeSubmittedViewTapped = viewModel.outputs.submittedReportReasonObservable
-            .voidify()
-            .filter { viewModel.outputs.viewableMode == .independent }
+            .filter { _ in viewModel.outputs.viewableMode == .independent }
             .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] _ -> Observable<Void> in
+            .flatMap { [weak self] commentId, userJustLoggedIn -> Observable<(OWCommentId, Bool)> in
                 guard let self = self else { return .empty() }
                 let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
                 let reportReasonSubmittedView = OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewVM)
@@ -394,7 +397,18 @@ fileprivate extension OWReportReasonCoordinator {
                     make.edges.equalToSuperview()
                 }
                 return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
+                    .map { (commentId, userJustLoggedIn) }
             }
+            .do(onNext: { [weak self] commentId, userJustLoggedIn in
+                guard let self = self else { return }
+                if (userJustLoggedIn) {
+                    self.servicesProvider
+                        .actionsCallbacksNotifier()
+                        .openCommentThread(commentId: commentId,
+                                           performAction: .report)
+                }
+            })
+            .voidify()
 
         // Open cancel view - Independent
         let cancelViewObservable = cancelReportReasonTapped

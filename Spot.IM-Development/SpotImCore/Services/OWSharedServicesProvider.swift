@@ -52,6 +52,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
+    func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
 }
 
@@ -212,6 +213,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWNetworkAvailabilityService()
     }()
 
+    fileprivate lazy var _actionsCallbacksNotifier: OWActionsCallbacksNotifierServicing = {
+        return OWActionsCallbacksNotifierService()
+    }()
+
     func profileService() -> OWProfileServicing {
         return _profileService
     }
@@ -350,6 +355,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
         return _pageViewIdHolder
+    }
+
+    func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing {
+        _actionsCallbacksNotifier
     }
 }
 
