@@ -233,7 +233,7 @@ fileprivate extension OWCommentCreationLightView {
             .bind(to: replyToLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
-        // Handle Landscape
+        // Handle orientation change
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in

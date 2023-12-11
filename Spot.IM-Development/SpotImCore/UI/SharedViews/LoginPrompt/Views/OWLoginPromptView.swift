@@ -125,7 +125,7 @@ fileprivate extension OWLoginPromptView {
                 make.centerX.equalToSuperview()
 
             case .left:
-                make.leading.equalToSuperviewSafeArea().offset(Metrics.verticalOffset)
+                make.leading.equalToSuperviewSafeArea()
             }
         }
 

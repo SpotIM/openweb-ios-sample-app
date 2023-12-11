@@ -18,6 +18,7 @@ class OWOrientationService: OWOrientationServicing {
 
     lazy var orientation: Observable<OWOrientation> = {
         return _orientation
+            .unwrap()
             .asObservable()
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
@@ -28,34 +29,20 @@ class OWOrientationService: OWOrientationServicing {
         return _currentOrientation
     }
 
-    fileprivate var _orientation = BehaviorSubject<OWOrientation>(value: .portrait)
+    fileprivate var _orientation = BehaviorSubject<OWOrientation?>(value: nil)
     fileprivate var _currentOrientation: OWOrientation = .portrait
     fileprivate var _enforcement: OWOrientationEnforcement = .enableAll
     fileprivate let disposeBag = DisposeBag()
 
-    init() {
-        startMonitoring()
-    }
+    fileprivate let notificationCenter: NotificationCenter
+    fileprivate let uiDevice: UIDevice
 
-    func startMonitoring() {
-        if let currentOrientation = getOrientation() {
-            _orientation.onNext(currentOrientation)
-        }
+    init(notificationCenter: NotificationCenter = NotificationCenter.default,
+         uiDevice: UIDevice = UIDevice.current) {
+        self.notificationCenter = notificationCenter
+        self.uiDevice = uiDevice
 
-        NotificationCenter.default.rx.notification(UIDevice.orientationDidChangeNotification)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                if let orientation = self.getOrientation() {
-                    self._orientation.onNext(orientation)
-                }
-            })
-            .disposed(by: disposeBag)
-
-        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-    }
-
-    func stopMonitoring() {
-        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        setupObservers()
     }
 }
 
@@ -63,22 +50,35 @@ fileprivate extension OWOrientationService {
 
     func setupObservers() {
         orientation
-            .subscribe(onNext: { [weak self] themeStyle in
-                self?._currentOrientation = themeStyle
+            .subscribe(onNext: { [weak self] currentOrientation in
+                self?._currentOrientation = currentOrientation
             })
             .disposed(by: disposeBag)
+
+        _orientation.onNext(self.dictateSDKOrientation(currentDeviceOrientation: self.uiDevice.orientation))
+
+        notificationCenter.rx.notification(UIDevice.orientationDidChangeNotification)
+            .subscribe(onNext: { [weak self] notifiation in
+                guard let self = self else { return }
+                self._orientation.onNext(self.dictateSDKOrientation(currentDeviceOrientation: self.uiDevice.orientation))
+            })
+            .disposed(by: disposeBag)
+
+        uiDevice.beginGeneratingDeviceOrientationNotifications()
     }
 
-    func getOrientation() -> OWOrientation? {
-        switch OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask {
+    func dictateSDKOrientation(currentDeviceOrientation: UIDeviceOrientation) -> OWOrientation {
+        let enforcedOrientation = OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+
+        switch enforcedOrientation {
         case .all:
-            switch UIDevice.current.orientation {
-                case .portrait:
-                    return .portrait
-                case .landscapeLeft, .landscapeRight, .portraitUpsideDown:
-                    return .landscape
-                default:
-                    return nil // Or handle unknown orientations if needed
+            switch currentDeviceOrientation {
+            case .portrait:
+                return .portrait
+            case .landscapeLeft, .landscapeRight, .portraitUpsideDown:
+                return .landscape
+            default:
+                return currentOrientation
             }
 
         case .portrait:
@@ -88,7 +88,7 @@ fileprivate extension OWOrientationService {
             return .landscape
 
         default:
-            return nil
+            return currentOrientation
         }
     }
 }
