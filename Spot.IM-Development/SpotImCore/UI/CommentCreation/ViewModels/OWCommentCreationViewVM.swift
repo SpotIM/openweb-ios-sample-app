@@ -141,6 +141,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         }
                     }
             }
+            .share()
     }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
