@@ -101,6 +101,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             }
             .unwrap()
             .map { OWCommentCreationCoordinatorResult.userLoggedInWhileWritingReplyToComment(id: $0) }
+            .asObservable()
 
         let poppedFromBackButtonObservable = commentCreationPopped
             .map { OWCommentCreationCoordinatorResult.popped }
@@ -120,7 +121,16 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let resultsWithPopAnimation = Observable.merge(poppedFromCloseButtonObservable, commentCreatedObservable, userLoggedInObservable)
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                self?.router.pop(popStyle: .dismiss, animated: false)
+                guard let self = self else { return }
+                let popStyle: OWScreenPopStyle = {
+                    switch commentCreationViewVM.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        return .dismiss
+                    case .floatingKeyboard:
+                        return .dismissOverFullScreen
+                    }
+                }()
+                self.router.pop(popStyle: popStyle, animated: false)
             })
 
         return Observable.merge(resultsWithPopAnimation.take(1),
@@ -142,21 +152,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
         setupObservers(forViewModel: viewModel.outputs.commentCreationViewVM)
-
-        viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
-            .subscribe(onNext: {[weak self] _ in
-                guard let self = self else { return }
-                let popStyle: OWScreenPopStyle = {
-                    switch viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                    case .regular, .light:
-                        return .dismiss
-                    case .floatingKeyboard:
-                        return .dismissOverFullScreen
-                    }
-                }()
-                self.router.pop(popStyle: popStyle, animated: true)
-            })
-            .disposed(by: disposeBag)
     }
 
     func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {

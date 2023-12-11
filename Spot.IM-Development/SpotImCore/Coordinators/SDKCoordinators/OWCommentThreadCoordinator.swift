@@ -70,7 +70,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
         // Coordinate to comment creation
         let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
-            .flatMap { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMapLatest { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article,
                                                                         settings: self.commentThreadData.settings,
@@ -131,7 +131,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 case .popped:
                     // Nothing
                     break
-                case .submitedReport(_):
+                case .submitedReport:
                     // Nothing - already taken care in report VM in which we update the report service
                     break
                 default:
@@ -201,7 +201,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
         return Observable.merge(commentThreadPoppedObservable,
                                 commentThreadLoadedToScreenObservable,
-                                coordinateCommentCreationObservable, coordinateToSafariObservables,
+                                coordinateCommentCreationObservable,
+                                coordinateToSafariObservables,
                                 coordinateReportReasonObservable,
                                 coordinateClarityDetailsObservable)
     }
