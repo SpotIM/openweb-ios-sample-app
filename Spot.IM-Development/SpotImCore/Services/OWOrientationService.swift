@@ -58,7 +58,7 @@ fileprivate extension OWOrientationService {
         _orientation.onNext(self.dictateSDKOrientation(currentDeviceOrientation: self.uiDevice.orientation))
 
         notificationCenter.rx.notification(UIDevice.orientationDidChangeNotification)
-            .subscribe(onNext: { [weak self] notifiation in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self._orientation.onNext(self.dictateSDKOrientation(currentDeviceOrientation: self.uiDevice.orientation))
             })

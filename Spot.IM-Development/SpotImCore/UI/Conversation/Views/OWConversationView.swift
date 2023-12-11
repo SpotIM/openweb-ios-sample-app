@@ -109,6 +109,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate var loginPromptPortraitConstraints: [OWConstraint] = []
     fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
+    fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
+    fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
+
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -164,16 +167,16 @@ fileprivate extension OWConversationView {
             loginPromptLandscapeConstraints.append(make.trailing.equalToSuperview().multipliedBy(0.5).constraint)
         }
 
-        for constraint in loginPromptLandscapeConstraints {
-            constraint.deactivate()
-        }
-
         self.addSubview(conversationSummaryView)
         conversationSummaryView.OWSnp.makeConstraints { make in
+            let portraitLeading = make.leading.equalToSuperview().constraint
+            let landscapeLeading = make.leading.equalTo(loginPromptView.OWSnp.trailing).constraint
+
+            summaryPortraitLeadingConstraint = portraitLeading
+            summaryLandscapeLeadingConstraint = landscapeLeading
+
             loginPromptPortraitConstraints.append(make.top.equalTo(loginPromptView.OWSnp.bottom).constraint)
-            loginPromptPortraitConstraints.append(make.leading.equalToSuperview().constraint)
             loginPromptLandscapeConstraints.append(make.top.equalTo(loginPromptView.OWSnp.top).constraint)
-            loginPromptLandscapeConstraints.append(make.leading.equalTo(loginPromptView.OWSnp.trailing).constraint)
             make.trailing.equalToSuperview()
         }
 
@@ -362,6 +365,22 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         // Handle orientation change
+
+        OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .withLatestFrom(viewModel.outputs.loginPromptViewModel.outputs.shouldShowView) { ($0, $1) }
+            .subscribe(onNext: { [weak self] currentOrientation, shouldShowLoginPrompt in
+                guard let self = self else { return }
+
+                if currentOrientation == .portrait || !shouldShowLoginPrompt {
+                    summaryPortraitLeadingConstraint?.activate()
+                    summaryLandscapeLeadingConstraint?.deactivate()
+                } else {
+                    summaryPortraitLeadingConstraint?.deactivate()
+                    summaryLandscapeLeadingConstraint?.activate()
+                }
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.orientationService()
             .orientation

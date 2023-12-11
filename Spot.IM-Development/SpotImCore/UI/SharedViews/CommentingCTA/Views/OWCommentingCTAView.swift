@@ -68,8 +68,9 @@ fileprivate extension OWCommentingCTAView {
 
     func setupObservers() {
         viewModel.outputs.style
+            .withLatestFrom(OWSharedServicesProvider.shared.orientationService().orientation) { ($0, $1) }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] style in
+            .subscribe(onNext: { [weak self] style, currentOrientation in
                 guard let self = self else { return }
                 self.subviews.forEach { $0.removeFromSuperview() }
 
@@ -77,7 +78,7 @@ fileprivate extension OWCommentingCTAView {
                 self.currentStyleView = view
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.verticalPortraitMargin)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.verticalPortraitMargin)
                     make.top.bottom.equalToSuperviewSafeArea()
                 }
             })
