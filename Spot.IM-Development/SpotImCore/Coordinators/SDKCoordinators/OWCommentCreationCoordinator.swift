@@ -11,7 +11,7 @@ import RxSwift
 
 enum OWCommentCreationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
-    case commentCreated(comment: OWComment)
+    case commentCreated(comment: OWComment, userJustLoggedIn: Bool)
     case loadedToScreen
 
     var loadedToScreen: Bool {
@@ -75,7 +75,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     return true
                 }
             }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0.0, userJustLoggedIn: $0.1) }
             .asObservable()
 
         let commentCreatedByFloatingKeyboardStyleObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.commentCreationSubmitted
@@ -86,7 +86,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     return false
                 }
             }
-            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0) }
+            .map { OWCommentCreationCoordinatorResult.commentCreated(comment: $0.0, userJustLoggedIn: $0.1) }
             .asObservable()
 
         let poppedFromBackButtonObservable = commentCreationPopped
@@ -110,10 +110,10 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                 self?.router.pop(popStyle: .dismiss, animated: false)
             })
 
-                return Observable.merge(resultsWithPopAnimation.take(1),
-                                        commentCreationLoadedToScreenObservable.take(1),
-                                        poppedFromBackButtonObservable.take(1),
-                                        commentCreatedByFloatingKeyboardStyleObservable.take(1))
+        return Observable.merge(resultsWithPopAnimation.take(1),
+                                commentCreationLoadedToScreenObservable.take(1),
+                                poppedFromBackButtonObservable.take(1),
+                                commentCreatedByFloatingKeyboardStyleObservable.take(1))
     }
 
     override func showableComponent() -> Observable<OWShowable> {
@@ -128,6 +128,8 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
 
 fileprivate extension OWCommentCreationCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentCreationViewModeling) {
+        setupObservers(forViewModel: viewModel.outputs.commentCreationViewVM)
+
         viewModel.outputs.commentCreationViewVM.outputs.closeButtonTapped
             .subscribe(onNext: {[weak self] _ in
                 guard let self = self else { return }
@@ -146,6 +148,7 @@ fileprivate extension OWCommentCreationCoordinator {
 
     func setupObservers(forViewModel viewModel: OWCommentCreationViewViewModeling) {
         // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+        setupCustomizationElements(forViewModel: viewModel)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentCreationViewViewModeling) {
@@ -168,5 +171,20 @@ fileprivate extension OWCommentCreationCoordinator {
                 self.viewActionsService.append(viewAction: viewAction)
             })
             .disposed(by: disposeBag)
+    }
+
+    func setupCustomizationElements(forViewModel viewModel: OWCommentCreationViewViewModeling) {
+        // Set customized pre conversation summary header
+        let submitCustomizeButton = viewModel.outputs.customizeSubmitButtonUI
+            .map { OWCustomizableElement.commentCreationSubmit(element: .button(button: $0)) }
+
+        let customizationElementsObservables = Observable.merge(submitCustomizeButton)
+
+        customizationElementsObservables
+            .subscribe { [weak self] element in
+                self?.customizationsService.trigger(customizableElement: element)
+            }
+            .disposed(by: disposeBag)
+
     }
 }
