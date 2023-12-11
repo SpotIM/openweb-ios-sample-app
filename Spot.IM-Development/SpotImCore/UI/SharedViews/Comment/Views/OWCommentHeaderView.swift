@@ -63,7 +63,7 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var badgeTagLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(typography: .infoCaption))
+            .font(OWFontBook.shared.font(typography: .infoText))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -319,7 +319,7 @@ fileprivate extension OWCommentHeaderView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.userNameLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
-                self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoCaption)
+                self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoText)
                 self.subtitleLabel.font = OWFontBook.shared.font(typography: .metaText)
                 self.seperatorBetweenSubtitleAndDateLabel.font = OWFontBook.shared.font(typography: .metaText)
                 self.dateLabel.font = OWFontBook.shared.font(typography: .metaText)
