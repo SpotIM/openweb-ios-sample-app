@@ -76,8 +76,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         case .light:
             return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
         case .floatingKeyboard:
-            // TODO - get floating text
-            return Observable.just("")
+            return commentCreationFloatingKeyboardViewVm.outputs.textBeforeClosedChanged
         }
     }()
 
@@ -133,6 +132,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                                 self.sendEvent(for: .commentCreationLeavePage)
                                 return Observable.just(())
                             default:
+                                self.clearCachedCommentIfNeeded()
                                 self.commentCreationRegularViewVm.inputs.becomeFirstResponder.onNext()
                                 self.commentCreationLightViewVm.inputs.becomeFirstResponder.onNext()
                                 self.sendEvent(for: .commentCreationContinueWriting)
