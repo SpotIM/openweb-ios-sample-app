@@ -159,6 +159,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self._removeReportReasons.onNext()
         case (.conversation, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
+        case (.commentThread, .openCommentCreation(let commentCreationType)):
+            self.retrieveCommentCreationComponent(type: commentCreationType)
         case (.conversation, .openClarityDetails(let clarityDetailsType)):
             self.retrieveClarityDetailsComponent(commentId: "", type: clarityDetailsType)
         case (.clarityDetails, .closeClarityDetails):
