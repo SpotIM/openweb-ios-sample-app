@@ -21,14 +21,10 @@ class OWDummyThemeStyleUpdaterView: UIView, OWThemeStyleUpdaterProtocol {
     init() {
         super.init(frame: .zero)
         self.backgroundColor = .clear
-        if #available(iOS 12.0, *) {
-            updateThemeStyleService(userInterfaceStyle: traitCollection.userInterfaceStyle)
-        }
+        updateThemeStyleService(userInterfaceStyle: traitCollection.userInterfaceStyle)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        if #available(iOS 12.0, *) {
-            updateThemeStyleService(userInterfaceStyle: traitCollection.userInterfaceStyle)
-        }
+        updateThemeStyleService(userInterfaceStyle: traitCollection.userInterfaceStyle)
     }
 }
