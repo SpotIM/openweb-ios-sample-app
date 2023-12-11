@@ -58,13 +58,15 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
-        static let delayForPerformHighlightAnimation: Int = 500 // ms
+        static let delayForPerformHighlightAnimation: Int = 800 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let updateTableViewInstantlyDelay: Int = 50 // ms
         static let performActionDelay: Int = 500 // ms
+        static let debouncePerformTableViewAnimation: Int = 50 // ms
+        static let delayAfterScrollBeforeHighlightAnimation = 300 // ms
     }
 
     var closeTapped = PublishSubject<Void>()
@@ -274,6 +276,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var highlightCellIndex: Observable<Int> {
         return scrolledToCellIndex
+            .delay(.milliseconds(Metrics.delayAfterScrollBeforeHighlightAnimation), scheduler: commentThreadViewVMScheduler)
             .asObservable()
     }
 
@@ -328,8 +331,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var performTableViewAnimation: Observable<Void> {
         return _performTableViewAnimation
             .filter { [weak self] in
-                return self?.dataSourceTransition ?? .reload == .animated
+                guard let self = self else { return false }
+                return self.dataSourceTransition == .animated
             }
+            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
             .voidify()
             .asObservable()
     }
@@ -752,7 +757,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Re-enabling animations in the comment thread table view
         commentThreadFetchedObservable
-            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.dataSourceTransition = .animated
@@ -1210,7 +1215,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // perform highlight animation for selected comment id
         selectedCommentCellVmIndex
-            .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: commentThreadViewVMScheduler)
             .take(1)
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
@@ -1644,7 +1649,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         scrolledToCellIndex
             .subscribe(onNext: { [weak self] _ in
-                self?.dataSourceTransition = .animated
+                guard let self = self else { return }
+                self.dataSourceTransition = .animated
             })
             .disposed(by: disposeBag)
 
