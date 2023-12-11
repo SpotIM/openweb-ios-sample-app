@@ -212,7 +212,7 @@ fileprivate extension OWCommentCreationRegularView {
             })
             .disposed(by: disposeBag)
 
-        // Handle Landscape
+        // Handle orientation change
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
