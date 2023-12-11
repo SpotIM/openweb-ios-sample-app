@@ -29,9 +29,8 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
         static let footnoteLinkIdentifier = "footnote_link_id"
         static let footnoteContextIdentifier = "footnote_context_id"
         static let footnoteSpecialIdentifier = "footnote_special_id"
-        static let footnoteCaptionIdentifier = "footnote_caption_id"
         static let metaTextIdentifier = "meta_text_id"
-        static let infoCaptionIdentifier = "info_caption_id"
+        static let infoTextIdentifier = "info_caption_id"
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -65,9 +64,8 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
                                                                         OWWeakEncapsulation(value: footnoteLink): Metrics.footnoteLinkIdentifier,
                                                                         OWWeakEncapsulation(value: footnoteContext): Metrics.footnoteContextIdentifier,
                                                                         OWWeakEncapsulation(value: footnoteSpecial): Metrics.footnoteSpecialIdentifier,
-                                                                        OWWeakEncapsulation(value: footnoteCaption): Metrics.footnoteCaptionIdentifier,
                                                                         OWWeakEncapsulation(value: metaText): Metrics.metaTextIdentifier,
-                                                                        OWWeakEncapsulation(value: infoCaption): Metrics.infoCaptionIdentifier]
+                                                                        OWWeakEncapsulation(value: infoCaption): Metrics.infoTextIdentifier]
         return mapper
     }()
 
@@ -83,9 +81,8 @@ class OWFontsAutomationView: UIView, OWThemeStyleInjectorProtocol {
                                                                         OWWeakEncapsulation(value: footnoteLink): .footnoteLink,
                                                                         OWWeakEncapsulation(value: footnoteContext): .footnoteContext,
                                                                         OWWeakEncapsulation(value: footnoteSpecial): .footnoteSpecial,
-                                                                        OWWeakEncapsulation(value: footnoteCaption): .footnoteCaption,
                                                                         OWWeakEncapsulation(value: metaText): .metaText,
-                                                                        OWWeakEncapsulation(value: infoCaption): .infoCaption]
+                                                                        OWWeakEncapsulation(value: infoCaption): .infoText]
         return mapper
     }()
 

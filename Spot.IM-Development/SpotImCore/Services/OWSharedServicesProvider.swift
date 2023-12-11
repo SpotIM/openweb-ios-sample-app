@@ -20,6 +20,7 @@ protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func profileService() -> OWProfileServicing
     func themeStyleService() -> OWThemeStyleServicing
+    func orientationService() -> OWOrientationServicing
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
@@ -71,6 +72,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
+    }()
+
+    fileprivate lazy var _orientationService: OWOrientationService = {
+        return OWOrientationService()
     }()
 
     fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
@@ -223,6 +228,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
+    }
+
+    func orientationService() -> OWOrientationServicing {
+        return _orientationService
     }
 
     func statusBarStyleService() -> OWStatusBarStyleServicing {
