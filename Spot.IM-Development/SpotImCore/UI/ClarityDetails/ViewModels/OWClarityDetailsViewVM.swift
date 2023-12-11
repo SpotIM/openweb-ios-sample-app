@@ -42,14 +42,14 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     fileprivate let type: OWClarityDetailsType
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let presentationalMode: OWPresentationalModeCompact
+    fileprivate let requiredData: OWClarityDetailsRequireData
     fileprivate var articleUrl: String = ""
 
     init(requiredData: OWClarityDetailsRequireData,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.type = requiredData.type
         self.servicesProvider = servicesProvider
-        self.presentationalMode = requiredData.presentationalStyle
+        self.requiredData = requiredData
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -241,7 +241,7 @@ fileprivate extension OWClarityDetailsViewVM {
             .analyticsEvent(
                 for: eventType,
                 articleUrl: articleUrl,
-                layoutStyle: OWLayoutStyle(from: presentationalMode),
+                layoutStyle: OWLayoutStyle(from: requiredData.presentationalStyle),
                 component: .clarityDetails)
     }
 
