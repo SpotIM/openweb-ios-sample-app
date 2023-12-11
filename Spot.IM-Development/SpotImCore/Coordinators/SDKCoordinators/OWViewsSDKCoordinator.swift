@@ -118,7 +118,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 }
     }
 
-    func clarityDetailsView(type: OWClarityDetailsType,
+    func clarityDetailsView(clarityDetailsData: OWClarityDetailsRequireData,
                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -128,7 +128,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
-                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type, actionsCallbacks: callbacks)
+                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: clarityDetailsData, actionsCallbacks: callbacks)
 
                     self.store(coordinator: clarityDetailsCoordinator)
                     return clarityDetailsCoordinator.showableComponent()
