@@ -248,7 +248,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var loginPromptViewModel: OWLoginPromptViewModeling = {
-        return OWLoginPromptViewModel()
+        let alignmentStyle: OWLoginPromptAlignmentStyle
+        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle {
+            alignmentStyle = .left
+        } else {
+            alignmentStyle = .center
+        }
+        return OWLoginPromptViewModel(style: alignmentStyle)
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -564,11 +570,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
-          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
-          conversationData: OWConversationRequiredData,
-          viewableMode: OWViewableMode) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
+         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
+         conversationData: OWConversationRequiredData,
+         viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.commentPresentationDataHelper = commentPresentationDataHelper
         self.imageProvider = imageProvider

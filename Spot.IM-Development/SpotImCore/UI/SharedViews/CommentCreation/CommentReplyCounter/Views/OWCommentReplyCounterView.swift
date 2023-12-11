@@ -61,6 +61,7 @@ fileprivate extension OWCommentReplyCounterView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
@@ -68,12 +69,17 @@ fileprivate extension OWCommentReplyCounterView {
             .bind(to: self.counterLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showCounter
+        let isLanscapeObsarvable = OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .map { $0 == .landscape }
+
+        Observable.combineLatest(viewModel.outputs.showCounter,
+                                 isLanscapeObsarvable)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] showCounter in
+            .subscribe(onNext: { [weak self] showCounter, isLanscape in
                 guard let self = self else { return }
                 if (showCounter) {
-                    self.viewHeightConstraint?.update(offset: Metrics.counterHeight)
+                    self.viewHeightConstraint?.update(offset: isLanscape ? 0 : Metrics.counterHeight)
                 }
             })
             .disposed(by: disposeBag)
