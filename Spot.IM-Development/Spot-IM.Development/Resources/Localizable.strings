@@ -9,7 +9,7 @@
 
 "AuthenticationPlaygroundTitle" = "Authentication Playground";
 "GenericSSO" = "Generic SSO";
-"JWTSSO" = "JWT SSO";
+"ThirdPartySSO" = "Third-party SSO";
 "Login" = "Login";
 "Logout" = "Logout";
 "Authenticate" = "Authenticate";

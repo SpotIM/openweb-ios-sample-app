@@ -13,10 +13,10 @@ import SpotImCore
 
 protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var selectedGenericSSOOptionIndex: PublishSubject<Int> { get }
-    var selectedJWTSSOOptionIndex: PublishSubject<Int> { get }
+    var selectedThirdPartySSOOptionIndex: PublishSubject<Int> { get }
     var logoutPressed: PublishSubject<Void> { get }
     var genericSSOAuthenticatePressed: PublishSubject<Void> { get }
-    var JWTSSOAuthenticatePressed: PublishSubject<Void> { get }
+    var thirdPartySSOAuthenticatePressed: PublishSubject<Void> { get }
     var initializeSDKToggled: PublishSubject<Bool> { get }
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
     var dismissing: PublishSubject<Void> { get }
@@ -25,9 +25,9 @@ protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
 protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var title: String { get }
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> { get }
-    var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
+    var thirdPartySSOOptions: Observable<[ThirdPartySSOAuthentication]> { get }
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
-    var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
+    var thirdPartySSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var logoutAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var dismissVC: PublishSubject<Void> { get }
     var dismissed: Observable<Void> { get }
@@ -51,8 +51,8 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
     fileprivate let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedGenericSSOOptionIndex = PublishSubject<Int>()
 
-    fileprivate let _selectedJWTSSOOptionIndex = BehaviorSubject(value: 0)
-    var selectedJWTSSOOptionIndex = PublishSubject<Int>()
+    fileprivate let _selectedThirdPartySSOOptionIndex = BehaviorSubject(value: 0)
+    var selectedThirdPartySSOOptionIndex = PublishSubject<Int>()
 
     fileprivate let shouldInitializeSDK = BehaviorSubject(value: false)
     var initializeSDKToggled = PublishSubject<Bool>()
@@ -65,7 +65,7 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
     var dismissVC = PublishSubject<Void>()
 
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
-    var JWTSSOAuthenticatePressed = PublishSubject<Void>()
+    var thirdPartySSOAuthenticatePressed = PublishSubject<Void>()
 
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
@@ -87,8 +87,8 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
             .asObservable()
     }
 
-    lazy var JWTSSSOAuthenticationModels: [JWTSSOAuthentication] = {
-        var models = JWTSSOAuthentication.mockModels
+    lazy var thirdPartySSOAuthenticationModels: [ThirdPartySSOAuthentication] = {
+        var models = ThirdPartySSOAuthentication.mockModels
 
         if let spotId = spotIdToFilterBy {
             models = models.filter { $0.spotId == spotId }
@@ -97,9 +97,9 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
         return models
     }()
 
-    fileprivate lazy var _JWTSSOOptions = BehaviorSubject(value: JWTSSSOAuthenticationModels)
-    var JWTSSOOptions: Observable<[JWTSSOAuthentication]> {
-        return _JWTSSOOptions
+    fileprivate lazy var _thirdPartySSOOptions = BehaviorSubject(value: thirdPartySSOAuthenticationModels)
+    var thirdPartySSOOptions: Observable<[ThirdPartySSOAuthentication]> {
+        return _thirdPartySSOOptions
             .asObservable()
     }
 
@@ -109,9 +109,9 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
             .asObservable()
     }
 
-    fileprivate let _JWTSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
-    var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> {
-        return _JWTSSOAuthenticationStatus
+    fileprivate let _thirdPartySSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
+    var thirdPartySSOAuthenticationStatus: Observable<AuthenticationStatus> {
+        return _thirdPartySSOAuthenticationStatus
             .asObservable()
     }
 
@@ -148,19 +148,19 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .bind(to: _selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
 
-        // Different JWT SSO selected
-        selectedJWTSSOOptionIndex
+        // Different Third-party SSO selected
+        selectedThirdPartySSOOptionIndex
             .do(onNext: { [weak self] _ in
-                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
             })
-            .bind(to: _selectedJWTSSOOptionIndex)
+            .bind(to: _selectedThirdPartySSOOptionIndex)
             .disposed(by: disposeBag)
 
         // Bind SDK initialization toggle
         initializeSDKToggled
             .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
-                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
             })
             .bind(to: shouldInitializeSDK)
             .disposed(by: disposeBag)
@@ -169,7 +169,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
         automaticallyDismissToggled
             .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
-                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
             })
             .bind(to: shouldAutomaticallyDismiss)
             .disposed(by: disposeBag)
@@ -177,7 +177,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
         // Logout
         logoutPressed
             .do(onNext: { [weak self] _ in
-                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.inProgress)
             })
@@ -220,7 +220,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .unwrap()
             .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
-                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.initial)
             })
             .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
@@ -301,50 +301,50 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .disposed(by: disposeBag)
 
         // TODO change to new API
-        // JWT SSO authentication started
-        JWTSSOAuthenticatePressed
+        // Third-party SSO authentication started
+        thirdPartySSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
-                // 1. Retrieving selected JWT SSO
+                // 1. Retrieving selected Third-party SSO
                 guard let self = self else { return .empty() }
-                return self._selectedJWTSSOOptionIndex
+                return self._selectedThirdPartySSOOptionIndex
                     .take(1)
             }
-            .withLatestFrom(JWTSSOOptions) { index, options -> JWTSSOAuthentication? in
+            .withLatestFrom(thirdPartySSOOptions) { index, options -> ThirdPartySSOAuthentication? in
                 guard !options.isEmpty else {
-                    DLog("There isn't any JWT SSO preset")
+                    DLog("There isn't any Third-party SSO preset")
                     return nil
                 }
                 return options[index]
             }
             .unwrap()
             .do(onNext: { [weak self] _ in
-                self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.inProgress)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
                 self?._logoutAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(shouldInitializeSDK) { JWTSSO, shouldInitializeSDK -> JWTSSOAuthentication in
+            .withLatestFrom(shouldInitializeSDK) { thirdPartySSO, shouldInitializeSDK -> ThirdPartySSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if (shouldInitializeSDK) {
                     var manager = OpenWeb.manager
-                    manager.spotId = JWTSSO.spotId
+                    manager.spotId = thirdPartySSO.spotId
                 }
-                return JWTSSO
+                return thirdPartySSO
             }
-            .flatMapLatest { [weak self] JWTSSO -> Observable<Void> in
-                // 4. Perform SSO with JWT secret
+            .flatMapLatest { [weak self] thirdPartySSO -> Observable<String> in
+                // 4. Perform SSO with token
                 guard let self = self else { return Observable.empty() }
-                return self.sso(jwtSecret: JWTSSO.JWTSecret)
+                return self.sso(provider: thirdPartySSO.provider, token: thirdPartySSO.token)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {
-                            self?._JWTSSOAuthenticationStatus.onNext(.failed)
+                            self?._thirdPartySSOAuthenticationStatus.onNext(.failed)
                         }
                     })
                     .unwrap()
             }
             .do(onNext: { [weak self] _ in
-                self?._JWTSSOAuthenticationStatus.onNext(.successful)
+                self?._thirdPartySSOAuthenticationStatus.onNext(.successful)
             })
             .withLatestFrom(shouldAutomaticallyDismiss)
             .filter { $0 == true }
@@ -394,9 +394,22 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
         }
     }
 
-    // TODO add new API
-    func sso(jwtSecret: String) -> Observable<Void?> {
-        return .empty()
+    func sso(provider: OWSSOProvider, token: String) -> Observable<String?> {
+        return Observable.create { observer in
+            let authentication = OpenWeb.manager.authentication
+            authentication.sso(.usingProvider(provider: provider, token: token, completion: { result in
+                switch result {
+                case .success(let ssoProviderModel):
+                    observer.onNext(ssoProviderModel.userId)
+                    observer.onCompleted()
+                case .failure(let error):
+                    DLog("Failed in 'sso(provider: , token: )' with error: \(error)")
+                    observer.onError(error)
+                }
+            }))
+
+            return Disposables.create()
+        }
     }
 
     func login(user: UserAuthentication) -> Observable<String?> {
