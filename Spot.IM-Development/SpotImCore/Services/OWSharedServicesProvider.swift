@@ -210,7 +210,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _networkAvailabilityService: OWNetworkAvailabilityServicing = {
-        return OWNetworkAvailabilityService()
+        return OWNetworkAvailabilityService.shared
     }()
 
     fileprivate lazy var _actionsCallbacksNotifier: OWActionsCallbacksNotifierServicing = {
