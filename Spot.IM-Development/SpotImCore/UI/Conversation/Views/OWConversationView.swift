@@ -22,6 +22,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let throttleObserveTableViewDuration = 500
         static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
+        static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
+        static let verticalLandscapeMargin: CGFloat = 66.0
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -359,16 +361,18 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
+        // Handle orientation change
+
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
                 guard let self = self else { return }
 
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? 66 : 0)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : 0)
                 }
 
-                UIView.animate(withDuration: 0.3) {
+                UIView.animate(withDuration: Metrics.loginPromptOrientationChangeAnimationDuration) {
                     if currentOrientation == .portrait {
                         self.loginPromptLandscapeConstraints.forEach { $0.deactivate() }
                         self.loginPromptPortraitConstraints.forEach { $0.activate() }

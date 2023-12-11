@@ -47,6 +47,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
+        static let verticalLandscapeMargin: CGFloat = 66.0
     }
 
     fileprivate var keyboardWasHidden = true
@@ -276,7 +277,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
 
         userAvatarView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(currentOrientation == .landscape ? 66.0 : Metrics.userAvatarLeadingPadding)
+            make.leading.equalToSuperview().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.userAvatarLeadingPadding)
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
             make.size.equalTo(Metrics.userAvatarSize)
         }
