@@ -151,13 +151,10 @@ fileprivate extension OWLoginPromptView {
         }
 
         if let widthConstraint = zeroWidthConstraint {
-            Observable.combineLatest(viewModel.outputs.shouldShowView,
-                                     OWSharedServicesProvider.shared.orientationService().orientation)
-            .map { shouldShow, orientation in
-                return !shouldShow && orientation == .landscape
-            }
-        .bind(to: widthConstraint.rx.isActive)
-            .disposed(by: disposeBag)
+            viewModel.outputs.shouldShowView
+                .map { !$0 }
+                .bind(to: widthConstraint.rx.isActive)
+                .disposed(by: disposeBag)
         }
 
         tapGesture.rx.event
@@ -175,10 +172,11 @@ fileprivate extension OWLoginPromptView {
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] currentStyle in
+            .withLatestFrom(OWSharedServicesProvider.shared.orientationService().orientation) { ($0, $1) }
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
+                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
     }
