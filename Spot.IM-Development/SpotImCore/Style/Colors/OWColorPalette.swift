@@ -55,7 +55,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         guard var encapsulateColor = colors[type],
               !blockedForOverride.contains(type)
         else { return }
-        
+
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)
         colors[type] = encapsulateColor // We are working with structs here, so we need to re set the encapsulated color for this key
         if (type.shouldUpdateRxObservable) {
