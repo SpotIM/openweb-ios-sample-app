@@ -170,7 +170,7 @@ extension OWColor {
         case .light:
             return lightColor
         case .dark:
-            return lightColor
+            return darkColor
         }
     }
 
@@ -188,6 +188,6 @@ extension OWColor {
     }
 
     fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
-        lightColor = color
+        darkColor = color
     }
 }
