@@ -125,6 +125,7 @@ fileprivate extension OWCommentCreationFooterView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor4, themeStyle: currentStyle)
+                self.ctaButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
 
                 self.updateCustomUI()
             }).disposed(by: disposeBag)

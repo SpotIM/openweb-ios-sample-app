@@ -215,6 +215,7 @@ fileprivate extension OWTextView {
                 self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.textView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.textView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
