@@ -10,8 +10,6 @@ import Foundation
 import UIKit
 import SpotImCore
 
-#if NEW_API
-
 protocol CommonCreatorServicing {
     // Create the following things according to the persistence
     func additionalSettings() -> OWAdditionalSettingsProtocol
@@ -128,5 +126,3 @@ class CommonCreatorService: CommonCreatorServicing {
         return presetForSpot?.section
     }
 }
-
-#endif

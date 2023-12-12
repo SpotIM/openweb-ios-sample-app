@@ -9,9 +9,16 @@
 import Foundation
 import UIKit
 import SafariServices
+import RxSwift
+import RxCocoa
 
 class OWWebTabVC: UIViewController {
+    fileprivate struct Metrics {
+        static let closeButtonImageName: String = "closeButton"
+    }
+
     private let viewModel: OWWebTabViewModeling
+    let disposeBag = DisposeBag()
 
     fileprivate lazy var safariTabView: OWWebTabView = {
         return OWWebTabView(viewModel: self.viewModel.outputs.webTabViewVM)
@@ -20,6 +27,12 @@ class OWWebTabVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    fileprivate lazy var closeButton: UIButton = {
+        return UIButton()
+            .image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
+            .horizontalAlignment(.left)
+    }()
 
     init(viewModel: OWWebTabViewModeling) {
         self.viewModel = viewModel
@@ -34,6 +47,7 @@ class OWWebTabVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupUI()
+        setupObservers()
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -49,6 +63,29 @@ fileprivate extension OWWebTabVC {
         safariTabView.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea()
             make.leading.trailing.bottom.equalToSuperview()
+        }
+
+        addingCloseButtonIfNeeded()
+    }
+
+    func setupObservers() {
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
+            })
+            .disposed(by: disposeBag)
+
+        closeButton.rx.tap
+            .bind(to: viewModel.inputs.closeWebTabTapped)
+            .disposed(by: disposeBag)
+    }
+
+    func addingCloseButtonIfNeeded() {
+        // Only on present mode when this is the only VC
+        if self.navigationController?.viewControllers.count == 1 {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
         }
     }
 }

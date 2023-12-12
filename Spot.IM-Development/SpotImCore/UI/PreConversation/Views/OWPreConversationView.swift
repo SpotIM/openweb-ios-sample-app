@@ -46,11 +46,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptVM)
     }()
 
-    fileprivate lazy var loginPromptBottomDivider: UIView = {
-        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
-    }()
-
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
     }()
@@ -206,20 +201,12 @@ fileprivate extension OWPreConversationView {
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
             make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.loginPromptTopPadding)
-            make.leading.equalToSuperview().inset(Metrics.horizontalOffset)
-            make.trailing.lessThanOrEqualToSuperview().inset(Metrics.horizontalOffset)
-        }
-
-        self.addSubview(loginPromptBottomDivider)
-        loginPromptBottomDivider.OWSnp.makeConstraints { make in
-            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.loginPromptDividerTopPadding)
-            make.height.equalTo(Metrics.separatorHeight)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
-            make.top.equalTo(loginPromptBottomDivider.OWSnp.bottom)
+            make.top.equalTo(loginPromptView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
         }
 
@@ -239,7 +226,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview()
             commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
@@ -309,7 +296,6 @@ fileprivate extension OWPreConversationView {
                 self.tableBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
-                self.loginPromptBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -325,26 +311,6 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         guard !viewModel.outputs.shouldShowComapactView else { return }
-
-        let shouldShowLoginPrompt = viewModel
-            .outputs.loginPromptVM
-            .outputs.shouldShowView
-
-        shouldShowLoginPrompt
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                self.loginPromptView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.preConversationSummary.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptTopPadding : 0)
-                }
-
-                self.loginPromptBottomDivider.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.loginPromptView.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptDividerTopPadding : 0)
-                    make.height.equalTo(shouldShow ? Metrics.separatorHeight : 0)
-                }
-                self.loginPromptBottomDivider.isHidden(!shouldShow)
-            })
-            .disposed(by: disposeBag)
 
         let shouldShowQuestion = viewModel
             .outputs.communityQuestionViewModel

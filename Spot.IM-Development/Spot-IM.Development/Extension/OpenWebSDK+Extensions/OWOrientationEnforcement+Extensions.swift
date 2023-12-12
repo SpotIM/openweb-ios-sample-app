@@ -9,7 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
 extension OWOrientationEnforcement {
     static func orientationEnforcement(fromIndex index: Int) -> OWOrientationEnforcement {
         switch index {
@@ -49,4 +48,3 @@ extension OWOrientationEnforcement {
         }
     }
 }
-#endif

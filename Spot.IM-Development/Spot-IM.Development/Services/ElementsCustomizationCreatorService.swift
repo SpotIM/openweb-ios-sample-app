@@ -9,7 +9,6 @@
 import UIKit
 import SpotImCore
 
-#if NEW_API
 protocol ElementsCustomizationCreatorServicing {
     static func addElementsCustomization()
 }
@@ -281,10 +280,18 @@ fileprivate extension ElementsCustomizationCreatorService {
                 break
             }
 
+        case .commentCreationSubmit(let element):
+            switch element {
+            case .button(let button):
+                button.backgroundColor = .red
+                button.tintColor = .green
+            default:
+                break
+            }
+
         default:
             break
         }
     }
     // swiftlint:enable function_body_length
 }
-#endif

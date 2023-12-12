@@ -8,26 +8,19 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWCommentThreadSettingsBuilder {
+    public var performActionType: OWCommentThreadPerformActionType
 
-    public init() {
+    public init(performActionType: OWCommentThreadPerformActionType = .none) {
+        self.performActionType = performActionType
+    }
 
+    @discardableResult public mutating func performActionType(_ type: OWCommentThreadPerformActionType) -> OWCommentThreadSettingsBuilder {
+        self.performActionType = type
+        return self
     }
 
     public func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings()
+        return OWCommentThreadSettings(performActionType: performActionType)
     }
 }
-#else
-struct OWCommentThreadSettingsBuilder {
-
-    init() {
-
-    }
-
-    func build() -> OWCommentThreadSettingsProtocol {
-        return OWCommentThreadSettings()
-    }
-}
-#endif

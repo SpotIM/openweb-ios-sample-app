@@ -8,7 +8,6 @@
 
 import Foundation
 
-#if NEW_API
 public struct OWConversationSettings: OWConversationSettingsProtocol {
     public let style: OWConversationStyle
 
@@ -16,12 +15,3 @@ public struct OWConversationSettings: OWConversationSettingsProtocol {
         self.style = style.validate()
     }
 }
-#else
-struct OWConversationSettings: OWConversationSettingsProtocol {
-    let style: OWConversationStyle
-
-    init(style: OWConversationStyle = .regular) {
-        self.style = style.validate()
-    }
-}
-#endif

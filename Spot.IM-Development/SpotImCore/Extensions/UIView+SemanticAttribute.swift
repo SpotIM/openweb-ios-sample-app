@@ -14,13 +14,6 @@ extension UIView {
 
         return self
     }
-
-    @discardableResult func enforceSemanticAttributeOldAPI() -> Self {
-        self.semanticContentAttribute = SPLocalizationManager.currentLanguage?.customSemanticAttribute
-        ?? self.semanticContentAttribute
-
-        return self
-    }
 }
 
 extension UILabel {

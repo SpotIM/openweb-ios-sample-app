@@ -9,12 +9,8 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension SettingsElementsCustomizationStyle {
     static var defaultIndex: Int {
         return 0
     }
 }
-
-#endif

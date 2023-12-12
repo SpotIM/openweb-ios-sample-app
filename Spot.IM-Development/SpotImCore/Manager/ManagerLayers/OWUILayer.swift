@@ -587,7 +587,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.clarityDetailsView(type: type, callbacks: callbacks)
+        _ = viewsSdkCoordinator.clarityDetailsView(clarityDetailsData: OWClarityDetailsRequireData(type: type, presentationalStyle: .none), callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
