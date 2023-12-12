@@ -233,7 +233,7 @@ fileprivate extension OWReportReasonView {
                     .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
                                                                  themeStyle: currentStyle))
                 self.cancelButton
-                    .setBackgroundColor(color: OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), forState: .normal)
+                    .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
                 self.cancelButton
                     .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.tableHeaderView

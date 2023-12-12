@@ -20,6 +20,7 @@ protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func profileService() -> OWProfileServicing
     func themeStyleService() -> OWThemeStyleServicing
+    func orientationService() -> OWOrientationServicing
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
@@ -34,7 +35,6 @@ protocol OWSharedServicesProviding: AnyObject {
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
-    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
     func sortDictateService() -> OWSortDictateServicing
@@ -46,13 +46,14 @@ protocol OWSharedServicesProviding: AnyObject {
     func presenterService() -> OWPresenterServicing
     func commentCreationRequestsService() -> OWCommentCreationRequestsServicing
     func activeArticleService() -> OWActiveArticleServicing
-    func commentUpdaterService() -> OWCommentUpdaterServicing
+    func conversationUpdaterService() -> OWConversationUpdaterServicing
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating
     func navigationControllerCustomizer() -> OWNavigationControllerCustomizing
     func realtimeIndicatorService() -> OWRealtimeIndicatorServicing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
+    func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
 }
 
@@ -71,6 +72,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
+    }()
+
+    fileprivate lazy var _orientationService: OWOrientationService = {
+        return OWOrientationService()
     }()
 
     fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
@@ -137,10 +142,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
     }()
 
-    fileprivate lazy var _authorizationRecoveryServiceOldAPI: OWAuthorizationRecoveryServicingOldAPI = {
-        return OWAuthorizationRecoveryServiceOldAPI(servicesProvider: self)
-    }()
-
     fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
         return OWAuthorizationRecoveryService(servicesProvider: self)
     }()
@@ -185,8 +186,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWActiveArticleService(servicesProvider: self)
     }()
 
-    fileprivate lazy var _commentUpdaterService: OWCommentUpdaterServicing = {
-        return OWCommentUpdaterService(servicesProvider: self)
+    fileprivate lazy var _conversationUpdaterService: OWConversationUpdaterServicing = {
+        return OWConversationUpdaterService(servicesProvider: self)
     }()
 
     fileprivate lazy var _localCommentDataPopulator: OWLocalCommentDataPopulating = {
@@ -214,7 +215,11 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _networkAvailabilityService: OWNetworkAvailabilityServicing = {
-        return OWNetworkAvailabilityService()
+        return OWNetworkAvailabilityService.shared
+    }()
+
+    fileprivate lazy var _actionsCallbacksNotifier: OWActionsCallbacksNotifierServicing = {
+        return OWActionsCallbacksNotifierService()
     }()
 
     func profileService() -> OWProfileServicing {
@@ -223,6 +228,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
+    }
+
+    func orientationService() -> OWOrientationServicing {
+        return _orientationService
     }
 
     func statusBarStyleService() -> OWStatusBarStyleServicing {
@@ -281,10 +290,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _skeletonShimmeringService
     }
 
-    func authorizationRecoveryServiceOldAPI() -> OWAuthorizationRecoveryServicingOldAPI {
-        return _authorizationRecoveryServiceOldAPI
-    }
-
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing {
         return _authorizationRecoveryService
     }
@@ -329,8 +334,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _activeArticleService
     }
 
-    func commentUpdaterService() -> OWCommentUpdaterServicing {
-        return _commentUpdaterService
+    func conversationUpdaterService() -> OWConversationUpdaterServicing {
+        return _conversationUpdaterService
     }
 
     func localCommentDataPopulator() -> OWLocalCommentDataPopulating {
@@ -359,6 +364,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
         return _pageViewIdHolder
+    }
+
+    func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing {
+        _actionsCallbacksNotifier
     }
 }
 

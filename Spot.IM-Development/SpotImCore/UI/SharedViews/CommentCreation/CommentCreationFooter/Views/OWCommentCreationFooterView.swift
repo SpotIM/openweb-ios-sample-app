@@ -35,7 +35,7 @@ class OWCommentCreationFooterView: UIView {
 
     fileprivate lazy var seperatorView: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor4, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var ctaButton: OWLoaderButton = {
@@ -64,6 +64,10 @@ class OWCommentCreationFooterView: UIView {
             ))
     }()
 
+    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+        return OWCommentLabelsContainerView()
+    }()
+
     init(with viewModel: OWCommentCreationFooterViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -75,6 +79,10 @@ class OWCommentCreationFooterView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func configureCommentLabels(viewModel: OWCommentLabelsContainerViewModeling) {
+        self.commentLabelsContainerView.configure(viewModel: viewModel)
     }
 }
 
@@ -92,15 +100,22 @@ fileprivate extension OWCommentCreationFooterView {
         ctaButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
             make.height.equalTo(Metrics.ctaButtonHight)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.trailing.equalToSuperviewSafeArea().offset(-Metrics.horizontalOffset)
         }
 
         addSubview(addImageButton)
         addImageButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.leading.equalToSuperviewSafeArea().offset(Metrics.horizontalOffset)
             make.height.equalTo(Metrics.addImageButtonHeight)
             make.width.equalTo(Metrics.addImageButtonWidth)
+        }
+
+        self.addSubview(commentLabelsContainerView)
+        commentLabelsContainerView.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(addImageButton.OWSnp.trailing).offset(10.0)
+            make.trailing.lessThanOrEqualTo(ctaButton.OWSnp.leading).offset(10.0)
         }
     }
 
@@ -109,7 +124,9 @@ fileprivate extension OWCommentCreationFooterView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
+                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor4, themeStyle: currentStyle)
+
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
 
         ctaButton.rx.tap
@@ -150,11 +167,24 @@ fileprivate extension OWCommentCreationFooterView {
             })
             .disposed(by: disposeBag)
 
+        OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+
+                let isLandscape = currentOrientation == .landscape
+                self.commentLabelsContainerView.isHidden = !isLandscape
+            })
+            .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         ctaButton.accessibilityIdentifier = Metrics.ctaButtonIdentifier
         addImageButton.accessibilityIdentifier = Metrics.addImageButtonIdentifier
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeSubmitButtonUI.onNext(ctaButton)
     }
 }

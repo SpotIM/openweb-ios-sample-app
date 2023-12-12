@@ -14,6 +14,7 @@ class OWErrorStateView: UIView {
         static let borderWidth: CGFloat = 1
         static let borderRadius: CGFloat = 12
         static let verticalMainPadding: CGFloat = 12
+        static let horizontalMainPadding: CGFloat = 12
         static let ctaHorizontalPadding: CGFloat = 4
         static let ctaVerticalPadding: CGFloat = 5
         static let linesPadding: CGFloat = 10
@@ -46,8 +47,10 @@ class OWErrorStateView: UIView {
     fileprivate lazy var titleLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(typography: .footnoteLink, forceOpenWebFont: false))
-            .textAlignment(.center)
+            .numberOfLines(0)
             .enforceSemanticAttribute()
+            .textAlignment(.center)
+            .baselineAdjustment(.alignCenters)
     }()
 
     fileprivate lazy var ctaView: OWErrorRetryCTAView = {
@@ -107,6 +110,7 @@ fileprivate extension OWErrorStateView {
         titleLabel.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(headerIcon.OWSnp.bottom).offset(Metrics.linesPadding)
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMainPadding)
         }
 
         containerView.addSubview(ctaView)

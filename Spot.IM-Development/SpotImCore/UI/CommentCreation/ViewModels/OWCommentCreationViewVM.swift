@@ -21,7 +21,9 @@ protocol OWCommentCreationViewViewModelingOutputs {
     var commentCreationStyle: OWCommentCreationStyle { get }
     var closeButtonTapped: Observable<Void> { get }
     var commentCreationSubmitted: Observable<OWComment> { get }
+    var userJustLoggedIn: Observable<Void> { get }
     var viewableMode: OWViewableMode { get }
+    var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -42,6 +44,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     let viewableMode: OWViewableMode
     fileprivate let servicesProvider: OWSharedServicesProviding
 
+    var customizeSubmitButtonUI: Observable<UIButton> {
+        return Observable.merge(commentCreationRegularViewVm.outputs.footerViewModel.outputs.customizeSubmitButtonUI,
+                                commentCreationLightViewVm.outputs.footerViewModel.outputs.customizeSubmitButtonUI,
+                                commentCreationFloatingKeyboardViewVm.outputs.customizeSubmitButtonUI)
+        .asObservable()
+    }
+
     // This is the original commentCreationData since
     // the commentCreationData Can be chaged by sub VMs
     fileprivate var originCommentCreationData: OWCommentCreationRequiredData
@@ -50,9 +59,26 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate var articleUrl: String = ""
 
-    fileprivate lazy var postId = OWManager.manager.postId
+    fileprivate lazy var postId: OWPostId = OWManager.manager.postId ?? ""
 
     fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
+
+    fileprivate let _userJustLoggedIn = PublishSubject<Void>()
+    var userJustLoggedIn: Observable<Void> {
+        return _userJustLoggedIn
+            .asObservable()
+    }
+
+    fileprivate lazy var _commentText: Observable<String> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+        case .light:
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+        case .floatingKeyboard:
+            return commentCreationFloatingKeyboardViewVm.outputs.textBeforeClosedChanged
+        }
+    }()
 
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
@@ -106,6 +132,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                                 self.sendEvent(for: .commentCreationLeavePage)
                                 return Observable.just(())
                             default:
+                                self.clearCachedCommentIfNeeded()
                                 self.commentCreationRegularViewVm.inputs.becomeFirstResponder.onNext()
                                 self.commentCreationLightViewVm.inputs.becomeFirstResponder.onNext()
                                 self.sendEvent(for: .commentCreationContinueWriting)
@@ -114,6 +141,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         }
                     }
             }
+            .share()
     }()
 
     lazy var commentCreationRegularViewVm: OWCommentCreationRegularViewViewModeling = {
@@ -165,14 +193,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             })
             .map { [weak self] commentCreationData -> (OWCommentCreationCtaData, OWNetworkParameters)? in
                 // 1 - get create comment request params
-                guard let self = self,
-                      let postId = self.postId
-                else { return nil }
+                guard let self = self else { return nil }
                 return (commentCreationData, self.commentCreatorNetworkHelper.getParametersForCreateCommentRequest(
                     from: commentCreationData,
                     section: self.commentCreationData.article.additionalSettings.section,
                     commentCreationType: self.commentCreationData.commentCreationType,
-                    postId: postId
+                    postId: self.postId
                 ))
             }
             .unwrap()
@@ -218,18 +244,16 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         let prepareLocalCommentObservable = commentCreationNetworkObservable
             .do(onNext: { [weak self] _ in
                 // 4 - clear cached comment if exists
-                guard let self = self,
-                      let postId = self.postId
-                else { return }
+                guard let self = self else { return }
                 let commentCacheService = self.servicesProvider.commentsInMemoryCacheService()
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
-                    commentCacheService.remove(forKey: .comment(postId: postId))
+                    commentCacheService.remove(forKey: .comment(postId: self.postId))
                 case .replyToComment(originComment: let originComment):
                     guard let originCommentId = originComment.id else { return }
-                    commentCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
+                    commentCacheService.remove(forKey: .reply(postId: self.postId, commentId: originCommentId))
                 case .edit:
-                    commentCacheService.remove(forKey: .edit(postId: postId))
+                    commentCacheService.remove(forKey: .edit(postId: self.postId))
                 }
             })
             .withLatestFrom(self.servicesProvider.authenticationManager().activeUserAvailability) { ($0.0, $0.1, $1) }
@@ -260,10 +284,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         return prepareLocalCommentObservable
             .do(onNext: { [weak self] comment in
                 // 6 - comment created
-                guard let self = self,
-                      let postId = self.postId
-                else { return }
-                let commentUpdateType: OWCommentUpdateType?
+                guard let self = self else { return }
+                let commentUpdateType: OWConversationUpdateType?
                 switch self.commentCreationData.commentCreationType {
                 case .comment:
                     commentUpdateType = .insert(comments: [comment])
@@ -277,8 +299,8 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     commentUpdateType = .insertReply(comment: comment, toParentCommentId: commentId)                }
                 if let updateType = commentUpdateType {
                     self.servicesProvider
-                        .commentUpdaterService()
-                        .update(updateType, postId: postId)
+                        .conversationUpdaterService()
+                        .update(updateType, postId: self.postId)
                 }
             })
             .flatMap({ [weak self] comment -> Observable<OWComment> in
@@ -321,8 +343,53 @@ fileprivate extension OWCommentCreationViewViewModel {
             commentCreationLightViewVm.outputs.footerViewModel.outputs.loginToPostClick,
             commentCreationFloatingKeyboardViewVm.outputs.loginToPostClick
         )
-        .subscribe(onNext: { [weak self] in
+        .do(onNext: { [weak self] in
             self?.sendEvent(for: .signUpToPostClicked)
+        })
+        .map { [weak self] _ -> OWUserAction? in
+            guard let self = self else { return nil }
+            switch self.commentType {
+            case .comment:
+                return .commenting
+            case .replyToComment:
+                return .replyingComment
+            case .edit:
+                return .editingComment
+            }
+        }
+        .unwrap()
+        .flatMapLatest { [weak self] userAction -> Observable<Bool> in
+            guard let self = self else { return .empty() }
+            return self.servicesProvider.authenticationManager().waitForAuthentication(for: userAction)
+        }
+        .filter { $0 }
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
+        })
+        .map { [weak self] _ -> OWCommentId? in
+            guard let self = self else { return nil }
+            if case let .replyToComment(originComment) = self.commentCreationData.commentCreationType {
+                return originComment.id
+            } else {
+                return nil
+            }
+        }
+        .withLatestFrom(_commentText) { ($0, $1) }
+        .do(onNext: { [weak self] replyToCommentId, commentText in
+            guard let self = self else { return }
+            if replyToCommentId != nil {
+                self.cacheComment(text: commentText)
+            }
+        })
+        .subscribe(onNext: { [weak self] replyToCommentId, _ in
+            guard let self = self else { return }
+            self._userJustLoggedIn.onNext()
+            if let replyToCommentId = replyToCommentId {
+                self.servicesProvider.actionsCallbacksNotifier()
+                    .openCommentThread(commentId: replyToCommentId,
+                                       performAction: .reply)
+            }
         })
         .disposed(by: disposeBag)
 
@@ -438,30 +505,28 @@ fileprivate extension OWCommentCreationViewViewModel {
     }
 
     func cacheComment(text commentText: String) {
-        guard let postId = self.postId else { return }
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
 
         switch commentCreationData.commentCreationType {
         case .comment:
-            commentsCacheService[.comment(postId: postId)] = commentText
-            commentsCacheService.remove(forKey: .edit(postId: postId))
+            commentsCacheService[.comment(postId: self.postId)] = commentText
+            commentsCacheService.remove(forKey: .edit(postId: self.postId))
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
-            commentsCacheService[.reply(postId: postId, commentId: originCommentId)] = commentText
+            commentsCacheService[.reply(postId: self.postId, commentId: originCommentId)] = commentText
         case .edit:
-            commentsCacheService[.edit(postId: postId)] = commentText
+            commentsCacheService[.edit(postId: self.postId)] = commentText
         }
     }
 
     func clearCachedCommentIfNeeded() {
-        guard let postId = self.postId else { return }
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentCreationData.commentCreationType {
         case .comment:
-            commentsCacheService.remove(forKey: .comment(postId: postId))
+            commentsCacheService.remove(forKey: .comment(postId: self.postId))
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id else { return }
-            commentsCacheService.remove(forKey: .reply(postId: postId, commentId: originCommentId))
+            commentsCacheService.remove(forKey: .reply(postId: self.postId, commentId: originCommentId))
         case .edit:
             break
         }

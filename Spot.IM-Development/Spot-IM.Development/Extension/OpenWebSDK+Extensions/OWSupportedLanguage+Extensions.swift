@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWSupportedLanguage {
     static var defaultLanguage: OWSupportedLanguage {
         .english
@@ -63,5 +61,3 @@ extension OWSupportedLanguage {
         case french
     }
 }
-
-#endif

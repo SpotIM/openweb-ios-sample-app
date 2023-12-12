@@ -108,7 +108,8 @@ fileprivate extension OWSpotConfigurationService {
 
     func setAdditionalStuff(forConfig config: SPSpotConfiguration) {
         // Brand color
-        if let color = UIColor.color(with: config.initialization?.brandColor) {
+        if let brandColorHex = config.initialization?.brandColor,
+           let color = UIColor.color(from: brandColorHex) {
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .dark)
         }
