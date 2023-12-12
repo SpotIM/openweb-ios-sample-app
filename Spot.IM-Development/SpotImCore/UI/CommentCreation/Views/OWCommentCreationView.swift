@@ -81,6 +81,14 @@ fileprivate extension OWCommentCreationView {
     }
 
     func setupObservers() {
+        tapGesture.rx.event
+            .voidify()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -94,14 +102,6 @@ fileprivate extension OWCommentCreationView {
                     }
                 }()
                 self.backgroundColor = backgroundColor
-            })
-            .disposed(by: disposeBag)
-
-        tapGesture.rx.event
-            .voidify()
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.endEditing(true)
             })
             .disposed(by: disposeBag)
     }

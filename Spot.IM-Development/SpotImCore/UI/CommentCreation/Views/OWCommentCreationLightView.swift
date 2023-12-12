@@ -15,19 +15,21 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "comment_creation_light_view_id"
 
         static let horizontalOffset: CGFloat = 16.0
+        static let contentViewVerticalLandscapeOffset: CGFloat = 66.0
         static let replyToVerticalSpacing: CGFloat = 15.0
-        static let topContainerHeight: CGFloat = 54.0
+        static let topContainerPortraitHeight: CGFloat = 54.0
+        static let topContainerLandscapeHeight: CGFloat = 44.0
+        static let footerPortraitHeight: CGFloat = 72.0
+        static let footerLandscapeHeight: CGFloat = 66.0
         static let replyToFontSize: CGFloat = 15.0
         static let closeButtonSize: CGFloat = 40.0
         static let closeButtonTrailingOffset: CGFloat = 5.0
-        static let footerHeight: CGFloat = 72.0
         static let commentLabelsSpacing: CGFloat = 15.0
         static let closeButtomImageName: String = "closeCrossIconNew"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(typography: .titleSmall))
             .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: .light))
             .numberOfLines(1)
     }()
@@ -50,7 +52,7 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         topContainerView.addSubview(closeButton)
         closeButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(topContainerView.OWSnp.centerY)
-            make.trailing.equalToSuperview().offset(-Metrics.closeButtonTrailingOffset)
+            make.trailing.equalToSuperviewSafeArea().offset(-Metrics.closeButtonTrailingOffset)
             make.size.equalTo(Metrics.closeButtonSize)
         }
 
@@ -99,6 +101,9 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         return OWCommentCreationFooterView(with: self.viewModel.outputs.footerViewModel)
     }()
 
+    fileprivate var replyToLabelHeightConstraint: OWConstraint? = nil
+    fileprivate var replySnippetHeightConstraint: OWConstraint? = nil
+    fileprivate var commentLabelsContainerHeightConstraint: OWConstraint? = nil
     fileprivate let viewModel: OWCommentCreationLightViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -110,7 +115,9 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         self.viewModel = viewModel
         super.init(frame: .zero)
 
-        commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
+        let commentLabelsContainerVM = viewModel.outputs.commentLabelsContainerVM
+        commentLabelsContainerView.configure(viewModel: commentLabelsContainerVM)
+        footerView.configureCommentLabels(viewModel: commentLabelsContainerVM)
 
         setupViews()
         setupObservers()
@@ -130,7 +137,7 @@ fileprivate extension OWCommentCreationLightView {
         self.addSubview(topContainerView)
         topContainerView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(Metrics.topContainerHeight)
+            make.height.equalTo(Metrics.topContainerPortraitHeight)
         }
 
         if viewModel.outputs.shouldShowReplySnippet {
@@ -138,19 +145,21 @@ fileprivate extension OWCommentCreationLightView {
             replyToLabel.OWSnp.makeConstraints { make in
                 make.top.equalTo(topContainerView.OWSnp.bottom).offset(Metrics.replyToVerticalSpacing)
                 make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+                replyToLabelHeightConstraint = make.height.equalTo(0).constraint
             }
 
             self.addSubview(replySnippetView)
             replySnippetView.OWSnp.makeConstraints { make in
                 make.top.equalTo(replyToLabel.OWSnp.bottom).offset(Metrics.replyToVerticalSpacing)
                 make.leading.trailing.equalToSuperview()
+                replySnippetHeightConstraint = make.height.equalTo(0).constraint
             }
         }
 
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(Metrics.footerHeight)
+            make.height.equalTo(Metrics.footerPortraitHeight)
         }
 
         self.addSubview(commentLabelsContainerView)
@@ -158,6 +167,7 @@ fileprivate extension OWCommentCreationLightView {
             make.bottom.equalTo(footerView.OWSnp.top).offset(-Metrics.commentLabelsSpacing)
             make.leading.equalToSuperview().offset(Metrics.commentLabelsSpacing)
             make.trailing.lessThanOrEqualToSuperview()
+            commentLabelsContainerHeightConstraint = make.height.equalTo(0).constraint
         }
 
         self.addSubview(commentReplyCounterView)
@@ -168,7 +178,7 @@ fileprivate extension OWCommentCreationLightView {
 
         self.addSubview(contentView)
         contentView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperviewSafeArea().inset(0)
             make.top.equalTo(viewModel.outputs.shouldShowReplySnippet ? replySnippetView.OWSnp.bottom : topContainerView.OWSnp.bottom)
             make.bottom.equalTo(commentReplyCounterView.OWSnp.top)
         }
@@ -179,7 +189,9 @@ fileprivate extension OWCommentCreationLightView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-
+                self.topContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.contentView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtomImageName, supportDarkMode: true), state: .normal)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
@@ -200,12 +212,71 @@ fileprivate extension OWCommentCreationLightView {
             .bind(to: viewModel.inputs.closeButtonTap)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.titleText
-            .bind(to: titleLabel.rx.text)
+        Observable.combineLatest(viewModel.outputs.titleText,
+                                 viewModel.outputs.replyToAttributedString.startWith(NSAttributedString()),
+                                 OWSharedServicesProvider.shared.orientationService().orientation) { titleText, replyToAttributedString, currentOrientation -> NSAttributedString in
+
+            switch self.viewModel.outputs.commentType {
+            case .replyToComment:
+                if currentOrientation == .landscape {
+                    return replyToAttributedString
+                }
+            default:
+                break
+            }
+            return titleText
+        }
+            .bind(to: titleLabel.rx.attributedText)
             .disposed(by: disposeBag)
 
         viewModel.outputs.replyToAttributedString
             .bind(to: replyToLabel.rx.attributedText)
+            .disposed(by: disposeBag)
+
+        // Handle orientation change
+        OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+                let isLandscape = currentOrientation == .landscape
+
+                // Header
+                self.topContainerView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(isLandscape ? Metrics.topContainerLandscapeHeight : Metrics.topContainerPortraitHeight)
+                }
+
+                // Reply snippet
+                if viewModel.outputs.shouldShowReplySnippet {
+                    self.replyToLabelHeightConstraint?.isActive = isLandscape
+                    self.replyToLabel.isHidden = isLandscape
+                    self.replyToLabel.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.topContainerView.OWSnp.bottom).offset(isLandscape ? 0 : Metrics.replyToVerticalSpacing)
+                    }
+
+                    self.replySnippetHeightConstraint?.isActive = isLandscape
+                    self.replySnippetView.isHidden = isLandscape
+                    replySnippetView.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.replyToLabel.OWSnp.bottom).offset(isLandscape ? 0 : Metrics.replyToVerticalSpacing)
+                    }
+                }
+
+                // Content
+                self.contentView.OWSnp.updateConstraints { make in
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.contentViewVerticalLandscapeOffset : 0)
+                }
+
+                // Footer
+                self.footerView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(isLandscape ? Metrics.footerLandscapeHeight : Metrics.footerPortraitHeight)
+                }
+
+                // Labels
+                self.commentLabelsContainerView.OWSnp.updateConstraints { make in
+                    make.bottom.equalTo(self.footerView.OWSnp.top).inset(isLandscape ? 0 : -Metrics.commentLabelsSpacing)
+                }
+                self.commentLabelsContainerView.isHidden = isLandscape
+                self.commentLabelsContainerHeightConstraint?.isActive = isLandscape
+            })
             .disposed(by: disposeBag)
     }
 }

@@ -62,6 +62,7 @@ protocol OWConversationViewViewModelingOutputs {
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
     var tableViewHeightChanged: Observable<CGFloat> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -81,7 +82,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
-        static let delayForPerformGuidelinesViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let updateTableViewInstantlyDelay: Int = 50 // ms
@@ -224,6 +224,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> {
+        _openCommentThread
+            .asObservable()
+    }
+
     fileprivate var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
@@ -242,7 +248,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }()
 
     lazy var loginPromptViewModel: OWLoginPromptViewModeling = {
-        return OWLoginPromptViewModel()
+        let alignmentStyle: OWLoginPromptAlignmentStyle
+        if case OWPresentationalModeCompact.present(_) = conversationData.presentationalStyle {
+            alignmentStyle = .left
+        } else {
+            alignmentStyle = .center
+        }
+        return OWLoginPromptViewModel(style: alignmentStyle)
     }()
 
     lazy var conversationSummaryViewModel: OWConversationSummaryViewModeling = {
@@ -311,17 +323,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     // swiftlint:disable line_length
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(communityCellsOptions,
-                                        commentCellsOptions,
-                                        serverCommentsLoadingState,
+        return Observable.combineLatest(commentCellsOptions,
                                         shouldShowErrorLoadingComments,
                                         errorCellViewModels,
                                         shouldShowConversationEmptyState,
                                         shouldShowErrorLoadingMoreComments)
+        .withLatestFrom(serverCommentsLoadingState) { ($0, $1) }
+        .withLatestFrom(communityCellsOptions) { ($0.0, $0.1, $1) }
         .observe(on: conversationViewVMScheduler)
-        .flatMapLatest({ [weak self] communityCellsOptions, commentCellsOptions, loadingState, shouldShowError, errorCellViewModels, isEmptyState, shouldShowErrorLoadingMoreComments -> Observable<[OWConversationCellOption]> in
+        .flatMapLatest({ [weak self] result, loadingState, communityCellsOptions -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-
+                let (commentCellsOptions,
+                     shouldShowError,
+                     errorCellViewModels,
+                     isEmptyState,
+                     shouldShowErrorLoadingMoreComments) = result
                 if case .loading(let loadingReason) = loadingState, loadingReason != .pullToRefresh {
                     return Observable.just(self.getSkeletonCells())
                 } else if shouldShowError {
@@ -433,6 +449,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .filter { transition in
             return transition == .animated
         }
+        .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
         .voidify()
         .asObservable()
     }
@@ -553,11 +570,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-          commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
-          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
-          conversationData: OWConversationRequiredData,
-          viewableMode: OWViewableMode) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol = OWCommentsPresentationDataHelper(),
+         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
+         conversationData: OWConversationRequiredData,
+         viewableMode: OWViewableMode) {
         self.servicesProvider = servicesProvider
         self.commentPresentationDataHelper = commentPresentationDataHelper
         self.imageProvider = imageProvider
@@ -1219,24 +1236,36 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Responding to guidelines height change (for updating cell)
-        cellsViewModels
-            .flatMapLatest { cellsVms -> Observable<Void> in
-                let sizeChangeObservable: [Observable<Void>] = cellsVms.map { vm in
-                    if case.communityGuidelines(let guidelinesCellViewModel) = vm {
-                        let guidelinesVM = guidelinesCellViewModel.outputs.communityGuidelinesViewModel
-                        return guidelinesVM.outputs.shouldShowView
-                            .filter { $0 == true }
-                            .voidify()
+        // Guidelines cells view models
+        let communityGuidelinesCellsVmsObservable: Observable<[OWCommunityGuidelinesCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommunityGuidelinesCellViewModeling]> in
+                let guidelinesCellsVms: [OWCommunityGuidelinesCellViewModeling] = viewModels.map { vm in
+                    if case .communityGuidelines(let guidelinesCellViewModel) = vm {
+                        return guidelinesCellViewModel
                     } else {
                         return nil
                     }
                 }
                 .unwrap()
-                return Observable.merge(sizeChangeObservable)
+
+                 return Observable.just(guidelinesCellsVms)
             }
-            .delay(.milliseconds(Metrics.delayForPerformGuidelinesViewAnimation), scheduler: conversationViewVMScheduler)
-            .bind(to: _performTableViewAnimation)
+            .share(replay: 1)
+
+        // Send event on community guidelines link click
+        communityGuidelinesCellsVmsObservable
+            .flatMapLatest { cellsVms -> Observable<Void> in
+                let linkClickObservables: [Observable<Void>] = cellsVms.map { vm in
+                    let guidelinesVM = vm.outputs.communityGuidelinesViewModel
+                    return guidelinesVM.outputs.urlClickedOutput
+                        .voidify()
+                }
+                .unwrap()
+                return Observable.merge(linkClickObservables)
+            }
+            .subscribe(onNext: { [weak self] in
+                self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
             .disposed(by: disposeBag)
 
         // Responding to comment height change (for updating cell) and tableView height change for errorState cell
@@ -1464,7 +1493,10 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe tableview will display cell to load more comments
         willDisplayCell
-            .filter { _ in self.conversationHasNext }
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.conversationHasNext
+            }
             .withLatestFrom(shouldShowErrorLoadingMoreComments) { ($0, $1) }
             .filter { !$1 }
             .map { (willDisplayCellEvent, _) -> Int in
@@ -1576,6 +1608,7 @@ fileprivate extension OWConversationViewViewModel {
 
         // Observe on rank click
         let userTryingToChangeRankObservable = commentCellsVmsObservable
+            // 1. Observe comments rank clicked
             .flatMapLatest { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
                 let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
                     let commentVm = commentCellVm.outputs.commentVM
@@ -1586,31 +1619,42 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(rankClickObservable)
             }
-            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)> in
-                // 1. Triggering authentication UI if needed
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange, Bool)> in
+                // 2. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in (commentVm, rankChange) }
+                    .map { (commentVm, rankChange, $0) }
             }
-            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)?> in
-                // 2. Waiting for authentication required for voting
+            .flatMapLatest { [weak self] commentVm, rankChange, neededToAuthenticate -> Observable<(OWCommentViewModeling, SPRankChange, Bool)?> in
+                // 3. Waiting for authentication required for voting
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { $0 ? (commentVm, rankChange) : nil }
+                    .map { $0 ? (commentVm, rankChange, neededToAuthenticate) : nil }
             }
             .unwrap()
 
         userTryingToChangeRankObservable
-            .do(onNext: { [weak self] commentVm, rankChange in
+            .do(onNext: { [weak self] commentVm, rankChange, _ in
+                // 4. Send rank changed analytics event
                 guard let self = self,
                       let commentId = commentVm.outputs.comment.id,
                       let eventType = rankChange.analyticsEventType(commentId: commentId)
                 else { return }
                 self.sendEvent(for: eventType)
             })
-            .subscribe(onNext: { commentVm, rankChange in
-                let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
-                commentRankVm.inputs.rankChanged.onNext(rankChange)
+            .subscribe(onNext: { [weak self] commentVm, rankChange, userLoggedIn in
+                // 5. Handle rank change
+                guard let self = self,
+                      let commentId = commentVm.outputs.comment.id
+                else { return }
+                if userLoggedIn {
+                    self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
+                    self._openCommentThread.onNext((commentId, .changeRank(from: rankChange.from.rawValue,
+                                                                           to: rankChange.to.rawValue)))
+                } else {
+                    let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
+                    commentRankVm.inputs.rankChanged.onNext(rankChange)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1725,6 +1769,21 @@ fileprivate extension OWConversationViewViewModel {
             .openProfile
             .subscribe(onNext: { [weak self] _ in
                 self?.sendEvent(for: .myProfileClicked(source: .commentCTA))
+            })
+            .disposed(by: disposeBag)
+
+        commentingCTAViewModel
+            .outputs
+            .authenticationTriggered
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .viewingSelfProfile)
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.conversationUpdaterService()
+                    .update(.refreshConversation, postId: self.postId)
             })
             .disposed(by: disposeBag)
 

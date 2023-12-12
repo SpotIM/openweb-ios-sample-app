@@ -70,7 +70,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
         // Coordinate to comment creation
         let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
-            .flatMap { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMapLatest { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article,
                                                                         settings: self.commentThreadData.settings,
@@ -90,6 +90,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                     break
                     // Nothing
                 case .popped:
+                    break
+                case .userLoggedInWhileWritingReplyToComment:
                     break
                 }
             })
@@ -129,7 +131,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 case .popped:
                     // Nothing
                     break
-                case .submitedReport(_):
+                case .submitedReport:
                     // Nothing - already taken care in report VM in which we update the report service
                     break
                 default:
@@ -151,10 +153,10 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             }
             .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type,
+                                                                                                                      presentationalStyle: self.commentThreadData.presentationalStyle),
                                                                             router: self.router,
-                                                                            actionsCallbacks: self.actionsCallbacks,
-                                                                            presentationalMode: self.commentThreadData.presentationalStyle)
+                                                                            actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
             .do(onNext: { coordinatorResult in
@@ -199,7 +201,8 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 
         return Observable.merge(commentThreadPoppedObservable,
                                 commentThreadLoadedToScreenObservable,
-                                coordinateCommentCreationObservable, coordinateToSafariObservables,
+                                coordinateCommentCreationObservable,
+                                coordinateToSafariObservables,
                                 coordinateReportReasonObservable,
                                 coordinateClarityDetailsObservable)
     }
@@ -230,6 +233,11 @@ fileprivate extension OWCommentThreadCoordinator {
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
+
+        // Close Comment Thread
+        let closeCommentThread = viewModel
+            .outputs.closeCommentThread
+            .map { OWViewActionCallbackType.closeCommentThread }
 
         let openPublisherProfile = viewModel.outputs.openProfile
             .map { openProfileType in
@@ -272,7 +280,8 @@ fileprivate extension OWCommentThreadCoordinator {
         let openUrlInComment = viewModel.outputs.urlClickedOutput
             .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
 
-        Observable.merge(openPublisherProfile,
+        Observable.merge(closeCommentThread,
+                         openPublisherProfile,
                          openCommentCreation,
                          openClarityDetails,
                          openReportReason,

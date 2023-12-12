@@ -302,6 +302,15 @@ fileprivate extension ElementsCustomizationCreatorService {
                 break
             }
 
+        case .commentCreationSubmit(let element):
+            switch element {
+            case .button(let button):
+                button.backgroundColor = .red
+                button.tintColor = .green
+            default:
+                break
+            }
+
         default:
             break
         }

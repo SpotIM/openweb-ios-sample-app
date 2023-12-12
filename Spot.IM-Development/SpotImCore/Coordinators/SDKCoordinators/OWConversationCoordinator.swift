@@ -39,6 +39,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         return OWCustomizationsService(viewSourceType: .conversation)
     }()
 
+    fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -136,11 +138,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                                                                               actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: commentCreationCoordinator)
             }
-            .do(onNext: { result in
+            .do(onNext: { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .commentCreated:
-                    // Nothing - already taken care in comment creation VM in which we update the comment updater service
                     break
+                case let .userLoggedInWhileWritingReplyToComment(commentId):
+                    self._openCommentThread.onNext((commentId, .reply))
                 case .loadedToScreen:
                     break
                     // Nothing
@@ -184,9 +188,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 case .popped:
                     // Nothing
                     break
-                case .submitedReport(_):
-                    // Nothing - already taken care in report VM in which we update the report service
-                    break
+                case let .submitedReport(commentId, userJustLoggedIn):
+                    guard userJustLoggedIn else { return }
+                    self._openCommentThread.onNext((commentId, .report))
                 default:
                     break
                 }
@@ -208,10 +212,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
             .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(type: type,
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type,
+                                                                                                                      presentationalStyle: self.conversationData.presentationalStyle),
                                                                             router: self.router,
-                                                                            actionsCallbacks: self.actionsCallbacks,
-                                                                            presentationalMode: self.conversationData.presentationalStyle)
+                                                                            actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
             .do(onNext: { coordinatorResult in
@@ -227,8 +231,28 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        let openCommentThreadObservable = Observable.merge(conversationVM.outputs.conversationViewVM.outputs.openCommentThread, _openCommentThread)
+            .observe(on: MainScheduler.instance)
+            .map { [weak self] commentId, performAction -> OWCommentThreadRequiredData? in
+                guard let self = self else { return nil }
+
+                guard var newAdditionalSettings = self.conversationData.settings as? OWAdditionalSettings,
+                      var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
+                else { return nil }
+
+                newCommentThreadSettings.performActionType = performAction
+                newAdditionalSettings.commentThreadSettings = newCommentThreadSettings
+
+                return OWCommentThreadRequiredData(article: self.conversationData.article,
+                                                   settings: newAdditionalSettings,
+                                                   commentId: commentId,
+                                                   presentationalStyle: self.conversationData.presentationalStyle)
+            }
+            .unwrap()
+
         // Coordinate to comment thread
-        let coordinateCommentThreadObservable = deepLinkToCommentThread.unwrap().asObservable()
+        let coordinateCommentThreadObservable = Observable.merge(deepLinkToCommentThread.unwrap().asObservable(),
+                                                                 openCommentThreadObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
@@ -236,8 +260,8 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .flatMap { [weak self] commentThreadData -> Observable<OWCommentThreadCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentThreadCoordinator = OWCommentThreadCoordinator(router: self.router,
-                                                                              commentThreadData: commentThreadData,
-                                                                              actionsCallbacks: self.actionsCallbacks)
+                                                                          commentThreadData: commentThreadData,
+                                                                          actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: commentThreadCoordinator)
             }
             .do(onNext: { result in
@@ -376,6 +400,8 @@ fileprivate extension OWConversationCoordinator {
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewViewModeling) {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
+        let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
+
         let closeConversationPressed = viewModel
             .outputs.conversationTitleHeaderViewModel
             .outputs.closeConversation
@@ -430,6 +456,9 @@ fileprivate extension OWConversationCoordinator {
         let openUrlInComment = viewModel.outputs.urlClickedOutput
             .map { OWViewActionCallbackType.openLinkInComment(url: $0) }
 
+        let openCommentThread = Observable.merge(viewModel.outputs.openCommentThread, actionsCallbacksNotifier.openCommentThread)
+            .map { OWViewActionCallbackType.openCommentThread(commentId: $0, performActionType: $1) }
+
         Observable.merge(
             closeConversationPressed,
             openPublisherProfile,
@@ -437,7 +466,8 @@ fileprivate extension OWConversationCoordinator {
             openCommunityGuidelines,
             openCommentCreation,
             openClarityDetails,
-            openUrlInComment)
+            openUrlInComment,
+            openCommentThread)
             .subscribe { [weak self] viewActionType in
                 self?.viewActionsService.append(viewAction: viewActionType)
             }

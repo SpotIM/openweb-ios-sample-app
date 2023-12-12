@@ -15,7 +15,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         static let identifier = "authentication_playground_new_api_vc_id"
         static let switchInitializeSDKIdentifier = "initialize_sdk"
         static let pickerGenericSSOIdentifier = "generic_sso"
-        static let pickerJWTSSOIdentifier = "jwt_sso"
+        static let pickerThirdPartySSOIdentifier = "third_party_sso"
         static let switchAutomaticallyDismissIdentifier = "automatically_dismiss"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
@@ -52,9 +52,9 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerGenericSSOIdentifier)
     }()
 
-    fileprivate lazy var pickerJWTSSO: PickerSetting = {
-        let title = NSLocalizedString("JWTSSO", comment: "") + ":"
-        return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerJWTSSOIdentifier)
+    fileprivate lazy var pickerThirdPartySSO: PickerSetting = {
+        let title = NSLocalizedString("ThirdPartySSO", comment: "") + ":"
+        return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerThirdPartySSOIdentifier)
     }()
 
     fileprivate lazy var switchAutomaticallyDismiss: SwitchSetting = {
@@ -63,15 +63,15 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
     }()
 
     fileprivate lazy var lblGenericSSOStatus: UILabel = statusLabel
-    fileprivate lazy var lblJWTSSOStatus: UILabel = statusLabel
+    fileprivate lazy var lblThirdPartySSOStatus: UILabel = statusLabel
     fileprivate lazy var lblLogoutStatus: UILabel = statusLabel
 
     fileprivate lazy var btnGenericSSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
-    fileprivate lazy var btnJWTSSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
+    fileprivate lazy var btnThirdPartySSOAuthenticate: UIButton = blueRoundedButton(key: "Authenticate")
     fileprivate lazy var btnLogout: UIButton = blueRoundedButton(key: "Logout")
 
     fileprivate lazy var lblGenericSSOStatusSymbol: UILabel = statusSymbol
-    fileprivate lazy var lblJWTSSOStatusSymbol: UILabel = statusSymbol
+    fileprivate lazy var lblThirdPartySSOStatusSymbol: UILabel = statusSymbol
     fileprivate lazy var lblLogoutStatusSymbol: UILabel = statusSymbol
 
     fileprivate func blueRoundedButton(key: String) -> UIButton {
@@ -197,37 +197,37 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             make.leading.equalTo(lblGenericSSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
         }
 
-        // JWT SSO section
-        scrollView.addSubview(pickerJWTSSO)
-        pickerJWTSSO.snp.makeConstraints { make in
+        // Third-party SSO section
+        scrollView.addSubview(pickerThirdPartySSO)
+        pickerThirdPartySSO.snp.makeConstraints { make in
             make.top.equalTo(lblGenericSSOStatus.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
 
-        scrollView.addSubview(lblJWTSSOStatus)
-        lblJWTSSOStatus.snp.makeConstraints { make in
-            make.top.equalTo(pickerJWTSSO.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(pickerJWTSSO).offset(Metrics.horizontalMargin)
+        scrollView.addSubview(lblThirdPartySSOStatus)
+        lblThirdPartySSOStatus.snp.makeConstraints { make in
+            make.top.equalTo(pickerThirdPartySSO.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(pickerThirdPartySSO).offset(Metrics.horizontalMargin)
         }
 
-        scrollView.addSubview(lblJWTSSOStatusSymbol)
-        lblJWTSSOStatusSymbol.snp.makeConstraints { make in
-            make.centerY.equalTo(lblJWTSSOStatus)
-            make.leading.equalTo(lblJWTSSOStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+        scrollView.addSubview(lblThirdPartySSOStatusSymbol)
+        lblThirdPartySSOStatusSymbol.snp.makeConstraints { make in
+            make.centerY.equalTo(lblThirdPartySSOStatus)
+            make.leading.equalTo(lblThirdPartySSOStatus.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
         }
 
-        scrollView.addSubview(btnJWTSSOAuthenticate)
-        btnJWTSSOAuthenticate.snp.makeConstraints { make in
-            make.centerY.equalTo(lblJWTSSOStatusSymbol)
-            make.leading.equalTo(lblJWTSSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
+        scrollView.addSubview(btnThirdPartySSOAuthenticate)
+        btnThirdPartySSOAuthenticate.snp.makeConstraints { make in
+            make.centerY.equalTo(lblThirdPartySSOStatusSymbol)
+            make.leading.equalTo(lblThirdPartySSOStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
         }
 
         // Logout
         scrollView.addSubview(lblLogoutStatus)
         lblLogoutStatus.snp.makeConstraints { make in
-            make.top.equalTo(btnJWTSSOAuthenticate.snp.bottom).offset(Metrics.verticalBigMargin)
-            make.leading.equalTo(lblJWTSSOStatus)
+            make.top.equalTo(btnThirdPartySSOAuthenticate.snp.bottom).offset(Metrics.verticalBigMargin)
+            make.leading.equalTo(lblThirdPartySSOStatus)
         }
 
         scrollView.addSubview(lblLogoutStatusSymbol)
@@ -253,10 +253,10 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             .bind(to: viewModel.inputs.selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
 
-        pickerJWTSSO.rx.selectedPickerIndex
+        pickerThirdPartySSO.rx.selectedPickerIndex
             .map { $0.row }
             .distinctUntilChanged()
-            .bind(to: viewModel.inputs.selectedJWTSSOOptionIndex)
+            .bind(to: viewModel.inputs.selectedThirdPartySSOOptionIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.genericSSOOptions
@@ -264,9 +264,9 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             .bind(to: pickerGenericSSO.rx.setPickerTitles)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.JWTSSOOptions
+        viewModel.outputs.thirdPartySSOOptions
             .map { return $0.map { $0.displayName } }
-            .bind(to: pickerJWTSSO.rx.setPickerTitles)
+            .bind(to: pickerThirdPartySSO.rx.setPickerTitles)
             .disposed(by: disposeBag)
 
         viewModel.outputs.genericSSOAuthenticationStatus
@@ -274,9 +274,9 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             .bind(to: lblGenericSSOStatusSymbol.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.JWTSSOAuthenticationStatus
+        viewModel.outputs.thirdPartySSOAuthenticationStatus
             .map { $0.symbol }
-            .bind(to: lblJWTSSOStatusSymbol.rx.text)
+            .bind(to: lblThirdPartySSOStatusSymbol.rx.text)
             .disposed(by: disposeBag)
 
         viewModel.outputs.logoutAuthenticationStatus
@@ -288,8 +288,8 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             .bind(to: viewModel.inputs.genericSSOAuthenticatePressed)
             .disposed(by: disposeBag)
 
-        btnJWTSSOAuthenticate.rx.tap
-            .bind(to: viewModel.inputs.JWTSSOAuthenticatePressed)
+        btnThirdPartySSOAuthenticate.rx.tap
+            .bind(to: viewModel.inputs.thirdPartySSOAuthenticatePressed)
             .disposed(by: disposeBag)
 
         btnLogout.rx.tap
