@@ -100,6 +100,7 @@ fileprivate extension OWReportReasonSubmittedView {
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
+                self.confirmButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
