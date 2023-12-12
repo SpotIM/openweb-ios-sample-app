@@ -12,6 +12,7 @@ import RxSwift
 protocol OWColorPaletteProtocol {
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor
     var colorDriver: Observable<[OWColor.OWType: OWColor]> { get }
+    func initiateColors()
 }
 
 protocol OWColorPaletteConfigurable {
@@ -34,10 +35,16 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     static let shared: OWColorPaletteProtocol & OWColorPaletteConfigurable = OWColorPalette()
 
     private init() {
+        initiateColors()
+    }
+
+    func initiateColors() {
         // Initialize default colors
+        colors.removeAll()
         for type in OWColor.OWType.allCases {
             colors[type] = type.default
         }
+        blockedForOverride.removeAll()
         let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
         colorsMapper.onNext(colorsRx)
     }

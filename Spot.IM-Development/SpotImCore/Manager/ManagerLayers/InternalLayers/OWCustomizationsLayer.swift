@@ -10,7 +10,7 @@ import Foundation
 
 protocol OWCustomizationsInternalProtocol {
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType)
-    func clearCallbacks()
+    func clearCustomizations()
 }
 
 class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol {
@@ -103,8 +103,9 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
-    func clearCallbacks() {
+    func clearCustomizations() {
         callbacks.removeAll()
+        customizedTheme = OWTheme()
     }
 
     fileprivate var _fontFamily: OWFontGroupFamily = .default
