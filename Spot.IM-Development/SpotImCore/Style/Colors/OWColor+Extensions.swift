@@ -19,6 +19,8 @@ extension OWColor {
         case separatorColor2
         /// Light: L1, Dark: D1
         case separatorColor3
+        /// Light: L2, Dark: D1
+        case separatorColor4
         /// Light: L6, Dark: G1
         case textColor1
         /// Light: L5, Dark: D3
@@ -41,6 +43,7 @@ extension OWColor {
         case backgroundColor4
         /// Light: L1ALT, Dark: D1ALT
         case backgroundColor5 // Used only in pre conversation compact style
+        case backgroundColor6 // Used only in landscape screens
         /// Light: L1, Dark: D1
         case borderColor1
         /// Light: L2, Dark: D1
@@ -79,6 +82,9 @@ extension OWColor {
             case .separatorColor3:
                 return OWColor(lightColor: OWDesignColors.L1,
                                darkColor: OWDesignColors.D1)
+            case .separatorColor4:
+                return OWColor(lightColor: OWDesignColors.L2,
+                               darkColor: OWDesignColors.D1)
             case .textColor1:
                 return OWColor(lightColor: OWDesignColors.L6,
                                darkColor: OWDesignColors.G1)
@@ -112,6 +118,9 @@ extension OWColor {
             case .backgroundColor5:
                 return OWColor(lightColor: OWDesignColors.L1ALT,
                                darkColor: OWDesignColors.D1ALT)
+            case .backgroundColor6:
+                return OWColor(lightColor: UIColor(red: 247.0/255, green: 247.0/255, blue: 248.0/255, alpha: 1.0),
+                               darkColor: UIColor(red: 19.0/255, green: 19.0/255, blue: 19.0/255, alpha: 1.0))
             case .borderColor1:
                 return OWColor(lightColor: OWDesignColors.L1,
                                darkColor: OWDesignColors.D1)
