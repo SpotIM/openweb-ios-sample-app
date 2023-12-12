@@ -149,7 +149,10 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
-        setColor(color: theme.brandColor, type: .brandColor) // TODO: should override config
+        if let brandColor = theme.brandColor {
+            setColor(color: theme.brandColor, type: .brandColor)
+            OWColorPalette.shared.blockForOverride(color: .brandColor)
+        }
     }
 
     func setColor(color: OWColor?, type: OWColor.OWType) {
