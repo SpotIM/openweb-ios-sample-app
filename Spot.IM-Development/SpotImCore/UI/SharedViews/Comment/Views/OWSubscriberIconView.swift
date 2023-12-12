@@ -80,5 +80,14 @@ fileprivate extension OWSubscriberIconView {
             .map { $0.withRenderingMode(.alwaysTemplate) }
             .bind(to: imgViewIcon.rx.image)
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] style in
+                guard let self = self else { return }
+
+                self.imgViewIcon.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: style)
+            })
+            .disposed(by: disposeBag)
     }
 }

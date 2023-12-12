@@ -220,6 +220,7 @@ fileprivate extension OWClarityDetailsView {
                 self.closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
                 self.detailsTitleLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.bottomParagraphLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.gotItButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 

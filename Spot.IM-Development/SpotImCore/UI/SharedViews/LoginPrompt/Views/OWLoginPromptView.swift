@@ -177,6 +177,9 @@ fileprivate extension OWLoginPromptView {
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
+                self.icon.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.arrow.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.label.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
     }
