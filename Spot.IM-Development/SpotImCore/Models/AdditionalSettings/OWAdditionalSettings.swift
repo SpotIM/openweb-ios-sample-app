@@ -9,10 +9,10 @@
 import Foundation
 
 public struct OWAdditionalSettings: OWAdditionalSettingsProtocol {
-    public let preConversationSettings: OWPreConversationSettingsProtocol
-    public let fullConversationSettings: OWConversationSettingsProtocol
-    public let commentCreationSettings: OWCommentCreationSettingsProtocol
-    public let commentThreadSettings: OWCommentThreadSettingsProtocol
+    public var preConversationSettings: OWPreConversationSettingsProtocol
+    public var fullConversationSettings: OWConversationSettingsProtocol
+    public var commentCreationSettings: OWCommentCreationSettingsProtocol
+    public var commentThreadSettings: OWCommentThreadSettingsProtocol
 
     public init(preConversationSettings: OWPreConversationSettingsProtocol = OWPreConversationSettings(),
                 fullConversationSettings: OWConversationSettingsProtocol = OWConversationSettings(),

@@ -18,7 +18,7 @@ protocol OWCommentCreationLightViewViewModelingInputs {
 protocol OWCommentCreationLightViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var shouldShowReplySnippet: Bool { get }
-    var titleText: Observable<String> { get }
+    var titleText: Observable<NSAttributedString> { get }
     var replyToAttributedString: Observable<NSAttributedString> { get }
 
     var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling { get }
@@ -79,13 +79,20 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
             .asObservable()
     }
 
-    var titleText: Observable<String> {
+    var titleText: Observable<NSAttributedString> {
+        let title: String
         switch commentCreationData.commentCreationType {
         case .edit:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "EditComment"))
+            title = OWLocalizationManager.shared.localizedString(key: "EditComment")
         default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "AddComment"))
+            title = OWLocalizationManager.shared.localizedString(key: "AddComment")
         }
+
+        let attributedString = NSMutableAttributedString(string: title)
+        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .titleSmall)]
+        attributedString.addAttributes(attrs, range: NSRange(location: 0, length: attributedString.length))
+
+        return Observable.just(attributedString)
     }
 
     var replyToAttributedString: Observable<NSAttributedString> {

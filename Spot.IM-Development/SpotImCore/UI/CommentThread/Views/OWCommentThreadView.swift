@@ -15,13 +15,14 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         static let horizontalOffset: CGFloat = 16.0
         static let tableViewAnimationDuration: Double = 0.25
         static let identifier = "comment_thread_view_id"
-
+        static let closeButtonIconName = "closeButton"
         static let highlightScrollAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDelay: Double = 1.0
         static let highlightBackgroundColorAlpha: Double = 0.2
-        static let scrolledToTopDelay = 300
         static let tableViewRowEstimatedHeight: Double = 130.0
+        static let closeButtonTopBottomPadding: CGFloat = 7.0
+        static let separatorHeight: CGFloat = 1.0
     }
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
@@ -40,6 +41,51 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
         dataSource.animationConfiguration = animationConfiguration
         return dataSource
+    }()
+
+    fileprivate lazy var headerView: UIView = {
+        let view = UIView()
+
+        view.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+        }
+
+        view.addSubview(closeButton)
+        closeButton.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(Metrics.closeButtonTopBottomPadding)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.greaterThanOrEqualTo(titleLabel).offset(Metrics.horizontalOffset)
+        }
+
+        view.addSubview(separatorView)
+        separatorView.OWSnp.makeConstraints { make in
+            make.bottom.trailing.leading.equalToSuperview()
+            make.height.equalTo(Metrics.separatorHeight)
+        }
+
+        return view
+            .enforceSemanticAttribute()
+    }()
+
+    fileprivate lazy var closeButton: UIButton = {
+        return UIButton()
+            .image(UIImage(spNamed: Metrics.closeButtonIconName, supportDarkMode: true), state: .normal)
+    }()
+
+    fileprivate lazy var titleLabel: UILabel = {
+        return UILabel()
+            .enforceSemanticAttribute()
+            .font(OWFontBook.shared.font(typography: .titleSmall))
+            .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .text(viewModel.outputs.title)
+    }()
+
+    fileprivate lazy var separatorView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var tableView: UITableView = {
@@ -93,19 +139,49 @@ fileprivate extension OWCommentThreadView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
+        let shouldShowHeaderView = viewModel.outputs.shouldShowHeaderView
+        if shouldShowHeaderView {
+            self.addSubview(headerView)
+            headerView.OWSnp.makeConstraints { make in
+                make.top.leading.trailing.equalToSuperview()
+            }
+        }
+
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            if shouldShowHeaderView {
+                make.top.equalTo(separatorView.OWSnp.bottom)
+            } else {
+                make.top.equalToSuperview()
+            }
+            make.bottom.leading.trailing.equalToSuperview()
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        closeButton.rx.tap
+            .bind(to: viewModel.inputs.closeTapped)
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.headerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.closeButton.setImage(UIImage(spNamed: Metrics.closeButtonIconName, supportDarkMode: true), for: .normal)
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
             })
             .disposed(by: disposeBag)
 
@@ -150,7 +226,6 @@ fileprivate extension OWCommentThreadView {
                 let cellIndexPath = IndexPath(row: index, section: 0)
                 self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
             })
-            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
             .bind(to: viewModel.inputs.scrolledToCellIndex)
             .disposed(by: disposeBag)
 
@@ -199,4 +274,5 @@ fileprivate extension OWCommentThreadView {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }

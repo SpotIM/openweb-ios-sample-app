@@ -47,6 +47,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerHeight: CGFloat = 40
         static let headerIconSize: CGFloat = 16
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
+        static let verticalLandscapeMargin: CGFloat = 66.0
     }
 
     fileprivate var keyboardWasHidden = true
@@ -113,8 +114,10 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         headerView.addSubview(headerTitleLabel)
         headerView.addSubview(headerCloseButton)
 
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+
         headerIconView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(Metrics.headerIconLeadingPadding)
+            make.leading.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.headerIconLeadingPadding)
             make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.headerIconSize)
         }
@@ -126,7 +129,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         }
 
         headerCloseButton.OWSnp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(Metrics.headerTrailingPadding)
+            make.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.headerTrailingPadding)
             make.centerY.equalToSuperview()
         }
         return headerView
@@ -273,8 +276,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         footerView.addSubview(textViewObject)
         footerView.addSubview(userAvatarView)
 
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+
         userAvatarView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(Metrics.userAvatarLeadingPadding)
+            make.leading.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.userAvatarLeadingPadding)
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
             make.size.equalTo(Metrics.userAvatarSize)
         }
@@ -282,7 +287,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         footerView.addSubview(ctaButton)
         ctaButton.OWSnp.makeConstraints { make in
             make.leading.equalTo(textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.trailing.equalToSuperview().inset(-Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
+            make.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : -Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
             make.size.equalTo(Metrics.ctaButtonSize)
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
         }
@@ -343,6 +348,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 self.underFooterView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.headerCloseButton.image(UIImage(spNamed: Metrics.closeCrossIcon, supportDarkMode: true), state: .normal)
                 self.toolbar?.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
 
@@ -411,6 +418,31 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .bind(to: ctaButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
+        // Handle orientation change
+        OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                guard let self = self else { return }
+                let isLandscape = currentOrientation == .landscape
+
+                self.headerIconView.OWSnp.makeConstraints { make in
+                    make.leading.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.headerIconLeadingPadding)
+                }
+
+                self.headerCloseButton.OWSnp.makeConstraints { make in
+                    make.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.headerTrailingPadding)
+                }
+
+                self.userAvatarView.OWSnp.updateConstraints { make in
+                    make.leading.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.verticalLandscapeMargin : Metrics.userAvatarLeadingPadding)
+                }
+
+                self.ctaButton.OWSnp.makeConstraints { make in
+                    make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.verticalLandscapeMargin : -Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
+                }
+            })
+            .disposed(by: disposeBag)
+
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
@@ -428,7 +460,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.ctaButton.alpha(1)
                     self.ctaButton.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.ctaButtonHorizontalPadding)
-                        make.trailing.equalToSuperview().inset(Metrics.textViewHorizontalPadding)
+                        make.trailing.equalToSuperviewSafeArea().inset(Metrics.textViewHorizontalPadding)
                     }
                     if case .comment = self.viewModel.outputs.commentType {} else {
                         self.headerView.OWSnp.updateConstraints { make in
@@ -487,7 +519,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.ctaButton.alpha(0)
                     self.ctaButton.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-                        make.trailing.equalToSuperview().inset(-Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
+                        make.trailing.equalToSuperviewSafeArea().inset(-Metrics.ctaButtonSize + Metrics.textViewHorizontalPadding)
                     }
                     if case .comment = self.viewModel.outputs.commentType {} else {
                         self.headerView.OWSnp.updateConstraints { make in
@@ -516,4 +548,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func updateCustomUI() {
+        self.viewModel.inputs.triggerCustomizeSubmitButtonUI.onNext(ctaButton)
+    }
 }
