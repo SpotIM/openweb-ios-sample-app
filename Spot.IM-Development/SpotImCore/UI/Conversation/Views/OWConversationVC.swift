@@ -85,11 +85,11 @@ fileprivate extension OWConversationVC {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
-                self.view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.view.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .backgroundColor6 : .backgroundColor2, themeStyle: currentStyle)
                 self.closeButton.image(UIImage(spNamed: Metrics.closeButtonImageName, supportDarkMode: true), state: .normal)
                 self.updateCustomUI()
             })
@@ -102,15 +102,28 @@ fileprivate extension OWConversationVC {
             .outputs.conversationOffset
             .share()
 
+        let conversationContentSizeHeight = viewModel.outputs.conversationViewVM
+            .outputs.tableViewContentSizeHeightChanged
+
+        let conversationHeight = viewModel.outputs.conversationViewVM
+            .outputs.tableViewHeightChanged
+
+        let isContentBiggerThanTableView = conversationContentSizeHeight
+            .withLatestFrom(conversationHeight) { ($0, $1) }
+            .map { $0 > $1 }
+            .share()
+
         let shouldShouldChangeToLargeTitleDisplay = conversationOffset
-            .filter { $0.y <= 0 }
+            .withLatestFrom(isContentBiggerThanTableView) { ($0, $1) }
+            .filter { $0.y <= 0 && $1 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
             .filter { !$0 }
             .voidify()
             .map { return UINavigationItem.LargeTitleDisplayMode.always }
 
         let shouldShouldChangeToRegularTitleDisplay = conversationOffset
-            .filter { $0.y > 0 }
+            .withLatestFrom(isContentBiggerThanTableView) { ($0, $1) }
+            .filter { $0.y > 0 && $1 }
             .withLatestFrom(viewModel.outputs.isLargeTitleDisplay)
             .filter { $0 }
             .voidify()

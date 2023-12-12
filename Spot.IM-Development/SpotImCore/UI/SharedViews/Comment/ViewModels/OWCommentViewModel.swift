@@ -17,7 +17,6 @@ protocol OWCommentViewModelingInputs {
 }
 
 protocol OWCommentViewModelingOutputs {
-    var commentActionsVM: OWCommentActionsViewModeling { get }
     var commentStatusVM: OWCommentStatusViewModeling { get }
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
@@ -45,10 +44,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 
     fileprivate let disposedBag = DisposeBag()
     fileprivate let sharedServiceProvider: OWSharedServicesProviding
-
-    lazy var commentActionsVM: OWCommentActionsViewModeling = {
-        return OWCommentActionsViewModel()
-    }()
 
     var commentStatusVM: OWCommentStatusViewModeling
     var commentHeaderVM: OWCommentHeaderViewModeling
@@ -150,7 +145,6 @@ fileprivate extension OWCommentViewModel {
                 guard let self = self, let user = user else { return false }
                 return user.userId == self.comment.userId
             }
-            .observe(on: MainScheduler.instance)
             .bind(to: _isCommentOfActiveUser)
             .disposed(by: disposedBag)
 

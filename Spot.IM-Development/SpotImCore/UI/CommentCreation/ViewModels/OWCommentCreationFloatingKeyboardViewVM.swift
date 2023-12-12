@@ -17,6 +17,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var resetTypeToNewCommentChange: PublishSubject<Void> { get }
     var initialTextUsed: PublishSubject<Void> { get }
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
+    var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -36,6 +37,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var resetTypeToNewCommentChanged: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
+    var customizeSubmitButtonUI: Observable<UIButton> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -64,6 +66,15 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     let servicesProvider: OWSharedServicesProviding
     fileprivate var commentCreationData: OWCommentCreationRequiredData
+
+    fileprivate let _triggerCustomizeSubmitButtonUI = BehaviorSubject<UIButton?>(value: nil)
+    var triggerCustomizeSubmitButtonUI = PublishSubject<UIButton>()
+
+    var customizeSubmitButtonUI: Observable<UIButton> {
+        return _triggerCustomizeSubmitButtonUI
+            .unwrap()
+            .asObservable()
+    }
 
     var commentType: OWCommentCreationTypeInternal {
         return commentCreationData.commentCreationType
@@ -125,9 +136,21 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var performCta: Observable<OWCommentCreationCtaData> {
         ctaTap
             .asObservable()
-            .flatMap { [weak self] _ -> Observable<Bool> in
+            .map { [weak self] _ -> OWUserAction? in
+                guard let self = self else { return nil }
+                switch self.commentType {
+                case .comment:
+                    return .commenting
+                case .replyToComment:
+                    return .replyingComment
+                case .edit:
+                    return .editingComment
+                }
+            }
+            .unwrap()
+            .flatMap { [weak self] userAction -> Observable<Bool> in
                 guard let self = self else { return .empty() }
-                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .commenting)
+                return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
             .do(onNext: { [weak self] loginToPost in
                 guard let self = self,
@@ -300,6 +323,11 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                 guard let self = self else { return }
                 self.initialText = ""
             })
+            .disposed(by: disposeBag)
+
+        // UI customizations
+        triggerCustomizeSubmitButtonUI
+            .bind(to: _triggerCustomizeSubmitButtonUI)
             .disposed(by: disposeBag)
     }
 }

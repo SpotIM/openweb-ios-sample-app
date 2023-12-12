@@ -117,7 +117,6 @@ extension OWPreConversationStyle {
     }
 }
 
-#if NEW_API
 extension OWPreConversationStyle: Equatable {
     public static func == (lhs: OWPreConversationStyle, rhs: OWPreConversationStyle) -> Bool {
         switch (lhs, rhs) {
@@ -139,26 +138,3 @@ extension OWPreConversationStyle: Equatable {
         }
     }
 }
-#else
-extension OWPreConversationStyle: Equatable {
-    static func == (lhs: OWPreConversationStyle, rhs: OWPreConversationStyle) -> Bool {
-        switch (lhs, rhs) {
-        case (.compact, .compact):
-            return true
-        case (.ctaButtonOnly, .ctaButtonOnly):
-            return true
-        case (.ctaWithSummary, .ctaWithSummary):
-            return true
-        case (.regular, .regular):
-            return true
-        case (.custom(let lhsNumberOfComments, let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle),
-              .custom(let rhsNumberOfComments, let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle)):
-            return lhsNumberOfComments == rhsNumberOfComments &&
-            lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
-            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle
-        default:
-            return false
-        }
-    }
-}
-#endif

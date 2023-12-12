@@ -25,6 +25,7 @@ class OWCommentCreationEntryView: UIView {
         static let labelInsetHorizontal: CGFloat = 15
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
+        static let verticalLandscapeMargin: CGFloat = 66.0
     }
 
     fileprivate lazy var userAvatarView: OWAvatarView = {
@@ -125,7 +126,8 @@ fileprivate extension OWCommentCreationEntryView {
                 self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor4, themeStyle: currentStyle)
                 self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.updateCustomUI()
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.appLifeCycle()
             .didChangeContentSizeCategory

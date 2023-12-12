@@ -159,7 +159,7 @@ fileprivate extension OWAdditionalInfoView {
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 self.titleView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.footerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.cancelButton.setBackgroundColor(color: OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), forState: .normal)
+                self.cancelButton.backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle), state: .normal)
                 self.cancelButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)

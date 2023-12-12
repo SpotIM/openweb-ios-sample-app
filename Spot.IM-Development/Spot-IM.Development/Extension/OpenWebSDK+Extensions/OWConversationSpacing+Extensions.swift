@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWConversationSpacing {
     init(index: Int, betweenComments: CGFloat, communityGuidelines: CGFloat, communityQuestions: CGFloat) {
         switch index {
@@ -45,5 +43,3 @@ extension OWConversationSpacing {
         case custom
     }
 }
-
-#endif

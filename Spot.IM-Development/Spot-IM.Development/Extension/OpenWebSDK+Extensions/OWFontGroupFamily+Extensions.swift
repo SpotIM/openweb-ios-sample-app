@@ -9,8 +9,6 @@
 import Foundation
 import SpotImCore
 
-#if NEW_API
-
 extension OWFontGroupFamily {
     static func fontGroupFamily(fromIndex index: Int, name: String = "") -> OWFontGroupFamily {
         switch index {
@@ -26,5 +24,3 @@ extension OWFontGroupFamily {
         case custom
     }
 }
-
-#endif
