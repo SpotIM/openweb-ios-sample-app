@@ -64,7 +64,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     fileprivate var _currentUser: Observable<SPUser?> {
         sharedServiceProvider
             .authenticationManager()
-            .activeUserAvailability
+            .activeUserAvailabilityMainThread
             .map { availability in
                 switch availability {
                 case .notAvailable:
