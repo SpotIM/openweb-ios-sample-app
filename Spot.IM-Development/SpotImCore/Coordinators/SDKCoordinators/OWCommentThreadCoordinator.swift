@@ -30,6 +30,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     fileprivate let router: OWRoutering!
     fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var viewableMode: OWViewableMode!
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .commentThread)
@@ -38,10 +39,14 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
         return OWCustomizationsService(viewSourceType: .commentThread)
     }()
 
-    init(router: OWRoutering! = nil, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering! = nil,
+         commentThreadData: OWCommentThreadRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.router = router
         self.commentThreadData = commentThreadData
         self.actionsCallbacks = actionsCallbacks
+        self.servicesProvider = servicesProvider
     }
 
     // swiftlint:disable function_body_length
@@ -221,6 +226,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
 fileprivate extension OWCommentThreadCoordinator {
     func setupObservers(forViewModel viewModel: OWCommentThreadViewModeling) {
         // Setting up general observers which affect app flow however not entirely inside the SDK
+        setupObservers(forViewModel: viewModel.outputs.commentThreadViewVM)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewModeling) {
@@ -228,7 +234,17 @@ fileprivate extension OWCommentThreadCoordinator {
     }
 
     func setupObservers(forViewModel viewModel: OWCommentThreadViewViewModeling) {
-        // TODO: Setting up general observers which affect app flow however not entirely inside the SDK
+        let actionsCallbacksNotifier = self.servicesProvider.actionsCallbacksNotifier()
+
+        actionsCallbacksNotifier.openCommentThread
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return self.viewableMode == .partOfFlow
+            }
+            .subscribe(onNext: { [weak self] commentId, performActionType in
+                viewModel.inputs.performAction.onNext((commentId, performActionType))
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommentThreadViewViewModeling) {
