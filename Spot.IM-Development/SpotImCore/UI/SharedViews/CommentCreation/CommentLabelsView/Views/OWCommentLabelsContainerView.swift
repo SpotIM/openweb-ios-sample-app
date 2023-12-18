@@ -94,26 +94,30 @@ fileprivate extension OWCommentLabelsContainerView {
 
         viewModel.outputs.commentLabelsTitle
             .subscribe(onNext: { [weak self] title in
-                guard let self = self else { return }
-                self.titleLabel.text = title
-                self.titleZeroHeightConstraint?.isActive = title == nil
-                self.labelsTopConstraint?.update(offset: title == nil ? 0 : Metrics.titleLabelSpacing)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.titleLabel.text = title
+                    self.titleZeroHeightConstraint?.isActive = title == nil
+                    self.labelsTopConstraint?.update(offset: title == nil ? 0 : Metrics.titleLabelSpacing)
+                }
             }).disposed(by: disposeBag)
 
         viewModel.outputs.commentLabelsViewModels
             .subscribe(onNext: { [weak self] viewModels in
-                guard let self = self else { return }
-                // clean stackview if needed
-                self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
-
-                self.labelsHeightConstraint?.update(offset: viewModels.isEmpty ? 0 : Metrics.commentLabelViewHeight)
-
-                let commentLabelsViews: [OWCommentLabelView] = viewModels.map { vm in
-                    let commentLabel = OWCommentLabelView()
-                    commentLabel.configure(viewModel: vm)
-                    return commentLabel
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    // clean stackview if needed
+                    self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
+                    
+                    self.labelsHeightConstraint?.update(offset: viewModels.isEmpty ? 0 : Metrics.commentLabelViewHeight)
+                    
+                    let commentLabelsViews: [OWCommentLabelView] = viewModels.map { vm in
+                        let commentLabel = OWCommentLabelView()
+                        commentLabel.configure(viewModel: vm)
+                        return commentLabel
+                    }
+                    commentLabelsViews.forEach { self.labelsContainerStackView.addArrangedSubview($0) }
                 }
-                commentLabelsViews.forEach { self.labelsContainerStackView.addArrangedSubview($0) }
             })
             .disposed(by: disposeBag)
 
