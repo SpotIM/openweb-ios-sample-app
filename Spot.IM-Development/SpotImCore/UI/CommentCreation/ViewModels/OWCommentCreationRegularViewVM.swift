@@ -70,7 +70,8 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     }()
 
     lazy var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling = {
-        return OWCommentLabelsContainerViewModel(section: commentCreationData.article.additionalSettings.section)
+        return OWCommentLabelsContainerViewModel(commentCreationType: commentCreationData.commentCreationType,
+                                                 section: commentCreationData.article.additionalSettings.section)
     }()
 
     lazy var commentCreationContentVM: OWCommentCreationContentViewModeling = {
