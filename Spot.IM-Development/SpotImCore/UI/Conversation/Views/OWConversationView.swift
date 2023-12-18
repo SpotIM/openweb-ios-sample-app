@@ -24,7 +24,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
         static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
         static let horizontalLandscapeMargin: CGFloat = 66.0
-        static let horizontalOffset: CGFloat = 16.0
+        static let horizontalPortraitMargin: CGFloat = 16.0
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -50,6 +50,13 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var commentingCTAContainerView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
@@ -163,7 +170,7 @@ fileprivate extension OWConversationView {
             } else {
                 make.top.equalToSuperview()
             }
-            make.leading.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.equalToSuperview().inset(Metrics.horizontalPortraitMargin)
             loginPromptPortraitConstraints.append(make.trailing.equalToSuperview().constraint)
             loginPromptLandscapeConstraints.append(make.trailing.equalToSuperview().multipliedBy(0.5).constraint)
         }
@@ -188,17 +195,25 @@ fileprivate extension OWConversationView {
             make.leading.trailing.equalToSuperviewSafeArea()
         }
 
-        self.addSubview(commentingCTAView)
-        commentingCTAView.OWSnp.makeConstraints { make in
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+
+        self.addSubview(commentingCTAContainerView)
+        commentingCTAContainerView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().offset(0)
+        }
+
+        commentingCTAContainerView.addSubview(commentingCTAView)
+        commentingCTAView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
+            make.top.bottom.equalToSuperview()
         }
 
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
             make.top.equalTo(tableView.OWSnp.bottom)
-            make.bottom.equalTo(commentingCTAView.OWSnp.top)
+            make.bottom.equalTo(commentingCTAContainerView.OWSnp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
@@ -218,7 +233,7 @@ fileprivate extension OWConversationView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
                 guard let self = self else { return }
-                self.commentingCTAView.OWSnp.updateConstraints { make in
+                self.commentingCTAContainerView.OWSnp.updateConstraints { make in
                     if shouldShowErrorLoadingComments {
                         let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
                         make.bottom.equalToSuperview().offset(self.commentingCTAView.frame.size.height + bottomPadding)
@@ -261,12 +276,17 @@ fileprivate extension OWConversationView {
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
+                let isLandscape = currentOrientation == .landscape
+
+                self.backgroundColor = isLandscape ? .clear : OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
+                self.commentingCTAContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -387,9 +407,10 @@ fileprivate extension OWConversationView {
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
                 guard let self = self else { return }
+                let isLandscape = currentOrientation == .landscape
 
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : 0)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.horizontalLandscapeMargin : 0)
                 }
 
                 UIView.animate(withDuration: Metrics.loginPromptOrientationChangeAnimationDuration) {
@@ -403,8 +424,15 @@ fileprivate extension OWConversationView {
                     self.layoutIfNeeded()
                 }
 
+                self.commentingCTAView.OWSnp.updateConstraints { make in
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: isLandscape))
+                }
             })
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func horizontalMargin(isLandscape: Bool) -> CGFloat {
+        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
+    }
 }

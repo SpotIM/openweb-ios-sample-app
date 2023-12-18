@@ -22,6 +22,7 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
+    var viewableMode: OWViewableMode { get }
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var loginPromptVM: OWLoginPromptViewModeling { get }
@@ -82,10 +83,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate let preConversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "preConversationViewVMScheduler")
 
+    let viewableMode: OWViewableMode
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
-    fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()

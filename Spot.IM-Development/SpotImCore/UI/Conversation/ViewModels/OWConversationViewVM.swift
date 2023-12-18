@@ -28,6 +28,8 @@ protocol OWConversationViewViewModelingInputs {
 }
 
 protocol OWConversationViewViewModelingOutputs {
+    var viewableMode: OWViewableMode { get }
+
     var shouldShowTitleHeader: Bool { get }
     var shouldShowArticleDescription: Bool { get }
     var shouldShowErrorLoadingComments: Observable<Bool> { get }
@@ -565,12 +567,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
     var dataSourceTransition: OWViewTransition = .reload
     fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
+    
+    let viewableMode: OWViewableMode
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let imageProvider: OWImageProviding
     fileprivate let conversationData: OWConversationRequiredData
-    fileprivate let viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
