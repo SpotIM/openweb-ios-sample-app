@@ -47,8 +47,8 @@ class OWOrientationService: OWOrientationServicing {
     fileprivate let orientationEnforcement: OWOrientationEnforcement
 
     init(notificationCenter: NotificationCenter = NotificationCenter.default,
-         uiDevice: UIDevice = UIDevice.current, 
-         orientationEnforcement :OWOrientationEnforcement = OWManager.manager.helpers.orientationEnforcement) {
+         uiDevice: UIDevice = UIDevice.current,
+         orientationEnforcement: OWOrientationEnforcement = OWManager.manager.helpers.orientationEnforcement) {
         self.notificationCenter = notificationCenter
         self.uiDevice = uiDevice
         self.orientationEnforcement = orientationEnforcement
