@@ -19,6 +19,8 @@ protocol OWCommentLabelsContainerViewModelingOutputs {
     var commentLabelsTitle: Observable<String?> { get }
     var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> { get }
     var selectedLabelIds: Observable<[String]> { get }
+    var isValidSelection: Observable<Bool> { get }
+    var isInitialSelectionChanged: Observable<Bool> { get }
 }
 
 protocol OWCommentLabelsContainerViewModeling {
@@ -44,6 +46,28 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         _selectedLabelIds
             .map { Array($0) }
             .asObservable()
+    }
+
+    var isInitialSelectionChanged: Observable<Bool> {
+        _selectedLabelIds
+            .map { [weak self] selectedLabelIds in
+                guard let self = self else { return false }
+
+                if case .edit(let comment) = self.commentCreationType {
+                    if let commentLabels = comment.additionalData?.labels,
+                       let labelIds = commentLabels.ids,
+                       Set(labelIds) != selectedLabelIds {
+                        return true
+                    }
+                }
+
+                return false
+            }
+    }
+
+    var isValidSelection: Observable<Bool> {
+        // TODO - take minimum selection count into consideration
+        Observable.just(true)
     }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
