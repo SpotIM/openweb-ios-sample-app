@@ -51,7 +51,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
     fileprivate let commentCreationType: OWCommentCreationTypeInternal?
 
-    init(comment: OWComment? = nil, commentCreationType: OWCommentCreationTypeInternal? = nil, section: String, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(comment: OWComment? = nil,
+         commentCreationType: OWCommentCreationTypeInternal? = nil,
+         section: String,
+         servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         self.section = section
         self.commentCreationType = commentCreationType
