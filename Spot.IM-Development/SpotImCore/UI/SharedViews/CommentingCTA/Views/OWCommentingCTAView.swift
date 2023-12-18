@@ -11,8 +11,8 @@ import RxSwift
 
 class OWCommentingCTAView: UIView {
     struct Metrics {
-        static let verticalPortraitMargin: CGFloat = 20.0
-        static let verticalLandscapeMargin: CGFloat = 66.0
+        static let horizontalPortraitMargin: CGFloat = 20.0
+        static let horizontalLandscapeMargin: CGFloat = 66.0
     }
 
     fileprivate lazy var skelatonView: OWCommentingCTASkeletonView = {
@@ -60,7 +60,7 @@ fileprivate extension OWCommentingCTAView {
 
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.verticalPortraitMargin)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
             make.top.bottom.equalToSuperviewSafeArea()
             self.heightConstraint = make.height.equalTo(0).constraint
         }
@@ -78,7 +78,7 @@ fileprivate extension OWCommentingCTAView {
                 self.currentStyleView = view
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.verticalPortraitMargin)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
                     make.top.bottom.equalToSuperviewSafeArea()
                 }
             })
@@ -105,7 +105,7 @@ fileprivate extension OWCommentingCTAView {
                 guard let self = self else { return }
 
                 self.currentStyleView?.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : Metrics.verticalPortraitMargin)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
                 }
             })
             .disposed(by: disposeBag)
@@ -120,6 +120,10 @@ fileprivate extension OWCommentingCTAView {
         default:
             return UIView()
         }
+    }
+
+    func horizontalMargin(isLandscape: Bool) -> CGFloat {
+        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
     }
 }
 
