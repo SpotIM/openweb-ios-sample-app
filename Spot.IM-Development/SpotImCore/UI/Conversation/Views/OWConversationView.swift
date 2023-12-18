@@ -366,9 +366,9 @@ fileprivate extension OWConversationView {
 
         // Handle orientation change
 
-        OWSharedServicesProvider.shared.orientationService()
-            .orientation
-            .withLatestFrom(viewModel.outputs.loginPromptViewModel.outputs.shouldShowView) { ($0, $1) }
+        Observable.combineLatest(OWSharedServicesProvider.shared.orientationService().orientation,
+                                 viewModel.outputs.loginPromptViewModel.outputs.shouldShowView)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] currentOrientation, shouldShowLoginPrompt in
                 guard let self = self else { return }
 
