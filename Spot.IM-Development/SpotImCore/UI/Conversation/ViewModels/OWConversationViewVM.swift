@@ -420,13 +420,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
                                               commentVMsUpdateUser: commentVMsUpdateUser,
                                               cellOptions: adjustedNewCommentCellOptions)
             })
-            .observe(on: MainScheduler.instance)
             .do(onNext: { conversationScanData in
-                for updateCommentTuples in conversationScanData.commentVMsUpdateComment {
-                    updateCommentTuples.0.inputs.update(comment: updateCommentTuples.1.outputs.comment)
-                }
-                for updateUserTuples in conversationScanData.commentVMsUpdateUser {
-                    updateUserTuples.0.inputs.update(comment: updateUserTuples.1.outputs.comment)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    for updateCommentTuples in conversationScanData.commentVMsUpdateComment {
+                        updateCommentTuples.0.inputs.update(comment: updateCommentTuples.1.outputs.comment)
+                    }
+                    for updateUserTuples in conversationScanData.commentVMsUpdateUser {
+                        updateUserTuples.0.inputs.update(comment: updateUserTuples.1.outputs.comment)
+                    }
                 }
             })
             .map { return $0.cellOptions }
@@ -862,6 +863,9 @@ fileprivate extension OWConversationViewViewModel {
         let conversationFetchedObservable = Observable.merge(viewInitializedObservable,
                                                              refreshConversationObservable,
                                                              tryAgainAfterInitialError)
+            .do(onNext: { [weak self] loadingTriggeredReason in
+                self?._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+            })
             .flatMapLatest { loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 return conversationReadObservable
                     .map { ($0, loadingTriggeredReason) }
@@ -885,7 +889,7 @@ fileprivate extension OWConversationViewViewModel {
                 switch event {
                 case .next(let conversationRead):
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
-                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
+                    // self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
                     self._shouldShowErrorLoadingComments.onNext(false)
                     self._shouldShowErrorLoadingMoreComments.onNext(false)
                     return (conversationRead, result.1)
@@ -943,10 +947,11 @@ fileprivate extension OWConversationViewViewModel {
 
         // Realtime Indicator
         conversationFetchedObservable
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.servicesProvider.realtimeIndicatorService().update(state: .enable)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.servicesProvider.realtimeIndicatorService().update(state: .enable)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1488,9 +1493,10 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(shouldShowErrorLoadingComments) { ($0, $1) }
             .filter {  $0.0.cell.isKind(of: OWErrorStateCell.self) && $0.1 }
             .map { $0.0 }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { willDisplayCellEvent in
-                willDisplayCellEvent.cell.layoutIfNeeded()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    willDisplayCellEvent.cell.layoutIfNeeded()
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1672,10 +1678,11 @@ fileprivate extension OWConversationViewViewModel {
                     .take(1)
             }
             .delay(.milliseconds(Metrics.delayForPerformTableViewAnimationAfterContentSizeChanged), scheduler: conversationViewVMScheduler)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self._performTableViewAnimation.onNext()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self._performTableViewAnimation.onNext()
+                }
             })
             .disposed(by: disposeBag)
 
@@ -2194,10 +2201,11 @@ fileprivate extension OWConversationViewViewModel {
             .disposed(by: disposeBag)
 
             refreshConversationObservable
-                .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
-                    self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                    OWScheduler.runOnMainThreadIfNeeded {
+                        guard let self = self else { return }
+                        self.servicesProvider.lastCommentTypeInMemoryCacheService().remove(forKey: self.postId)
+                    }
                 })
                 .disposed(by: disposeBag)
 

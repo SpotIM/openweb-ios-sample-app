@@ -262,7 +262,12 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
-            .bind(to: hiddenCommentReasonLabel.rx.text)
+            .subscribe(onNext: { [weak self] text in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.hiddenCommentReasonLabel.text = text
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowHiddenCommentMessage

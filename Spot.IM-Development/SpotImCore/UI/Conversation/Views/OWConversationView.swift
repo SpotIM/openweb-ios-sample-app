@@ -27,6 +27,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let horizontalOffset: CGFloat = 16.0
     }
 
+    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewQueue")
+
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
             .enforceSemanticAttribute()
@@ -242,14 +244,22 @@ fileprivate extension OWConversationView {
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.y }
-            .bind(to: viewModel.inputs.tableViewContentOffsetY)
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.tableViewContentOffsetY.onNext(value)
+                }
+            })
             .disposed(by: disposeBag)
 
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.height }
-            .bind(to: viewModel.inputs.tableViewContentSizeHeight)
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.tableViewContentSizeHeight.onNext(value)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
@@ -271,27 +281,28 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.performTableViewAnimation
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
-                    self.tableView.beginUpdates()
-                    self.tableView.endUpdates()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                    }
                 }
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateTableViewInstantly
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableView.reloadData()
-                self.tableView.layoutIfNeeded()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.reloadData()
+                    self.tableView.layoutIfNeeded()
+                }
             })
             .disposed(by: disposeBag)
 
         tableView.rx.willDisplayCell
-            .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.willDisplayCell)
             .disposed(by: disposeBag)
 
@@ -302,40 +313,46 @@ fileprivate extension OWConversationView {
                     .asObservable()
                     .take(1)
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.viewModel.inputs.pullToRefresh.onNext()
-                self.tableView.setContentOffset(.zero, animated: true)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.viewModel.inputs.pullToRefresh.onNext()
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToTopAnimated
         // filter only when animated = false
             .filter { !$0 }
-            .observe(on: MainScheduler.instance)
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
+                }
             })
             .disposed(by: disposeBag)
 
         tableView.rx.contentOffset
-            .observe(on: MainScheduler.instance)
-            .bind(to: viewModel.inputs.changeConversationOffset)
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.changeConversationOffset.onNext(value)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToTopAnimated
         // filter only when animated = true
             .filter { $0 }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableView.beginUpdates()
-                // it looks like set the content offset behave better when scroll to top
-                self.tableView.setContentOffset(.zero, animated: true)
-                self.tableView.endUpdates()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.beginUpdates()
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                    self.tableView.endUpdates()
+                }
             })
             .disposed(by: disposeBag)
 
@@ -343,25 +360,30 @@ fileprivate extension OWConversationView {
         // filter only when animated = true
             .filter { $0 }
             .voidify()
-            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
-            .bind(to: viewModel.inputs.scrolledToTop)
+            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: conversationViewScheduler)
+            .subscribe(onNext: { [weak self] in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.scrolledToTop.onNext()
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToCellIndex
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                let cellIndexPath = IndexPath(row: index, section: 0)
-                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.reloadCellIndex
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -369,16 +391,17 @@ fileprivate extension OWConversationView {
 
         Observable.combineLatest(OWSharedServicesProvider.shared.orientationService().orientation,
                                  viewModel.outputs.loginPromptViewModel.outputs.shouldShowView)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] currentOrientation, shouldShowLoginPrompt in
-                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
 
-                if currentOrientation == .portrait || !shouldShowLoginPrompt {
-                    summaryPortraitLeadingConstraint?.activate()
-                    summaryLandscapeLeadingConstraint?.deactivate()
-                } else {
-                    summaryPortraitLeadingConstraint?.deactivate()
-                    summaryLandscapeLeadingConstraint?.activate()
+                    if currentOrientation == .portrait || !shouldShowLoginPrompt {
+                        self.summaryPortraitLeadingConstraint?.activate()
+                        self.summaryLandscapeLeadingConstraint?.deactivate()
+                    } else {
+                        self.summaryPortraitLeadingConstraint?.deactivate()
+                        self.summaryLandscapeLeadingConstraint?.activate()
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -386,13 +409,13 @@ fileprivate extension OWConversationView {
         OWSharedServicesProvider.shared.orientationService()
             .orientation
             .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
 
-                self.tableView.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : 0)
-                }
+                    self.tableView.OWSnp.updateConstraints { make in
+                        make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : 0)
+                    }
 
-                UIView.animate(withDuration: Metrics.loginPromptOrientationChangeAnimationDuration) {
                     if currentOrientation == .portrait {
                         self.loginPromptLandscapeConstraints.forEach { $0.deactivate() }
                         self.loginPromptPortraitConstraints.forEach { $0.activate() }
@@ -400,9 +423,11 @@ fileprivate extension OWConversationView {
                         self.loginPromptPortraitConstraints.forEach { $0.deactivate() }
                         self.loginPromptLandscapeConstraints.forEach { $0.activate() }
                     }
-                    self.layoutIfNeeded()
-                }
 
+                    UIView.animate(withDuration: Metrics.loginPromptOrientationChangeAnimationDuration) {
+                        self.layoutIfNeeded()
+                    }
+                }
             })
             .disposed(by: disposeBag)
     }

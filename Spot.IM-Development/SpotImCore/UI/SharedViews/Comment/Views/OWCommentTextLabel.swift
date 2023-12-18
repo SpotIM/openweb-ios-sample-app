@@ -50,7 +50,9 @@ fileprivate extension OWCommentTextLabel {
         viewModel.outputs.attributedString
             .subscribe(onNext: { [weak self] attString in
                 guard let self = self else { return }
-                self.attributedText = attString
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.attributedText = attString
+                }
             })
             .disposed(by: disposeBag)
 

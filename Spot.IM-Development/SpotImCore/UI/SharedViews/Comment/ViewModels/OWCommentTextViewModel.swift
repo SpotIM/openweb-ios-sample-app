@@ -108,6 +108,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .filter { $0 == .expanded }
             .voidify()
     }()
+
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_linesAndFullAttributedString, _textState, _themeStyleObservable)
             .map { [weak self] linesAndAttributedString, currentState, style -> (NSMutableAttributedString, OWThemeStyle)? in
@@ -123,6 +124,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 self?.locateURLsInText(text: &res, style: style)
                 return res
             }
+            .distinctUntilChanged()
             .asObservable()
     }()
 
