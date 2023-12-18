@@ -567,7 +567,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
     var dataSourceTransition: OWViewTransition = .reload
     fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
-    
+
     let viewableMode: OWViewableMode
 
     fileprivate let servicesProvider: OWSharedServicesProviding
