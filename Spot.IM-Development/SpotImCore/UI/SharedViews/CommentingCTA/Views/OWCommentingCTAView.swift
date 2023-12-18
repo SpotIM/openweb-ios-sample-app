@@ -105,7 +105,7 @@ fileprivate extension OWCommentingCTAView {
                 guard let self = self else { return }
 
                 self.currentStyleView?.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation))
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
                 }
             })
             .disposed(by: disposeBag)
