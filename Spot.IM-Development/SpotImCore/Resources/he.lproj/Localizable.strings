@@ -8,6 +8,7 @@
 "Newest" = "מהסוף להתחלה";
 "Oldest" = "מההתחלה לסוף";
 "CommunityModerator" = "מנהל/ת קהילה";
+"SeeMore" = " הצג עוד ";
 "Staff" = "צוות";
 "ReadLess" = " קראו פחות ";
 "OK" = "OK";
@@ -141,7 +142,6 @@
 "The text you entered might be deleted if not published." = ".במידה ולא יפורסם, הטקסט שכתבת עלול להימחק";
 "It seems we are experiencing technical issues. Please try again" = "נסה שוב עוד כמה דקות.";
 "The Internet connection appears to be offline." = "נראה שאנו חווים בעיה בתקשורת.";
-"Read More" = " קראו עוד ";
 "Log Out" = "התנתקות";
 "Log In" = "התחברות";
 "Are you sure you want to log out?" = "?האם ברצונך להתנתק מהשיחה";
