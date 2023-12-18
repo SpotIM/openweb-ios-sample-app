@@ -90,6 +90,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
+        static let debounceForCellsViewModels: Int = 50 // ms
         static let tableViewPaginationCellsOffset: Int = 5
         static let collapsableTextLineLimit: Int = 4
         static let scrollUpThresholdForCancelScrollToLastCell: CGFloat = 800
@@ -323,17 +324,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     // swiftlint:disable line_length
     fileprivate lazy var cellsViewModels: Observable<[OWConversationCellOption]> = {
-        return Observable.combineLatest(commentCellsOptions,
+        return Observable.combineLatest(serverCommentsLoadingState,
+                                        commentCellsOptions,
                                         shouldShowErrorLoadingComments,
                                         errorCellViewModels,
                                         shouldShowConversationEmptyState,
                                         shouldShowErrorLoadingMoreComments)
-        .withLatestFrom(serverCommentsLoadingState) { ($0, $1) }
-        .withLatestFrom(communityCellsOptions) { ($0.0, $0.1, $1) }
+        .debounce(.milliseconds(Metrics.debounceForCellsViewModels), scheduler: conversationViewVMScheduler) // debounce to prevent multiple scaning
+        .withLatestFrom(communityCellsOptions) { ($0, $1) }
         .observe(on: conversationViewVMScheduler)
-        .flatMapLatest({ [weak self] result, loadingState, communityCellsOptions -> Observable<[OWConversationCellOption]> in
+        .flatMapLatest({ [weak self] result, communityCellsOptions -> Observable<[OWConversationCellOption]> in
                 guard let self = self else { return Observable.never() }
-                let (commentCellsOptions,
+                let (loadingState,
+                     commentCellsOptions,
                      shouldShowError,
                      errorCellViewModels,
                      isEmptyState,
