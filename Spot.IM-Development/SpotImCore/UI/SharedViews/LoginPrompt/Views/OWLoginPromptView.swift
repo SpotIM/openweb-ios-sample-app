@@ -85,7 +85,7 @@ class OWLoginPromptView: UIView {
         return tap
     }()
 
-    fileprivate var zeroHeighConstraint: OWConstraint? = nil
+    fileprivate var zeroHeightConstraint: OWConstraint? = nil
     fileprivate var zeroWidthConstraint: OWConstraint? = nil
 
     fileprivate var viewModel: OWLoginPromptViewModeling
@@ -110,7 +110,7 @@ fileprivate extension OWLoginPromptView {
         self.enforceSemanticAttribute()
 
         self.OWSnp.makeConstraints { make in
-            zeroHeighConstraint = make.height.equalTo(0).constraint
+            zeroHeightConstraint = make.height.equalTo(0).constraint
             zeroWidthConstraint = make.width.equalTo(0).constraint
         }
 
@@ -143,7 +143,7 @@ fileprivate extension OWLoginPromptView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let heighConstraint = zeroHeighConstraint {
+        if let heighConstraint = zeroHeightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
                 .bind(to: heighConstraint.rx.isActive)
