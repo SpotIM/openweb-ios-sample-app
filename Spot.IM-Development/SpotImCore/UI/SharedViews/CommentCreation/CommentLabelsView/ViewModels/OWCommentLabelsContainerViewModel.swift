@@ -49,12 +49,18 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(comment: OWComment? = nil, section: String, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    fileprivate let commentCreationType: OWCommentCreationTypeInternal?
+
+    init(comment: OWComment? = nil, commentCreationType: OWCommentCreationTypeInternal? = nil, section: String, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         self.section = section
+        self.commentCreationType = commentCreationType
         if let comment = comment {
             _comment.onNext(comment)
         }
+
+        self.setupInitialSelectedLabelsIfNeeded()
+
         self.setupObservers()
     }
 
@@ -69,6 +75,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     init(servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         self.section = ""
+        self.commentCreationType = nil
     }
 
     fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration> = {
@@ -207,5 +214,15 @@ fileprivate extension OWCommentLabelsContainerViewModel {
         }
 
         return selectedCommentLabelsConfiguration
+    }
+
+    func setupInitialSelectedLabelsIfNeeded() {
+        guard let commentCreationType = self.commentCreationType else { return }
+        if case .edit(let comment) = commentCreationType {
+            if let commentLabels = comment.additionalData?.labels,
+               let labelIds = commentLabels.ids, labelIds.count > 0 {
+                _selectedLabelIds.onNext(Set(labelIds))
+            }
+        }
     }
 }
