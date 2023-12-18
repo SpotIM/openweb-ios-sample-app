@@ -59,7 +59,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
-        static let delayForPerformHighlightAnimation: Int = 800 // ms
+        static let delayForPerformHighlightAnimation: Int = 1000 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
@@ -327,7 +327,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             // We want to show skeletons after this pull to refresh
             if shouldShowErrorLoadingComments {
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
@@ -341,12 +341,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
-        return _performTableViewAnimation
-            .filter { [weak self] in
-                guard let self = self else { return false }
-                return self.dataSourceTransition == .animated
-            }
-            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
+        return Observable.combineLatest(_performTableViewAnimation, _dataSourceTransition) { $1 }
+            .filter { $0 == .animated }
+            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .voidify()
             .asObservable()
     }
@@ -370,6 +367,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     var dataSourceTransition: OWViewTransition = .reload
+    fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
 
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -616,7 +614,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload // Block animations in the table view
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
             })
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
@@ -634,7 +632,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .voidify()
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
@@ -684,7 +682,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 // We want to show skeletons after this pull to refresh
                 if shouldShowErrorLoadingComments {
                     guard let self = self else { return }
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
                     self._shouldShowErrorLoadingComments.onNext(false)
                     self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
@@ -778,7 +776,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
@@ -899,7 +897,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
             })
@@ -1237,7 +1235,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._performHighlightAnimationCellIndex.onNext(index)
             })
             .disposed(by: disposeBag)
@@ -1528,7 +1526,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 case .refreshConversation:
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._forceRefresh.onNext()
                 }
             })
@@ -1666,9 +1664,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         scrolledToCellIndex
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
@@ -1708,6 +1707,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return }
                 self._performActionType = performActionType
                 self._selectedCommentId.onNext(commentId)
+            })
+            .disposed(by: disposeBag)
+
+        _dataSourceTransition
+            .subscribe(onNext: { [weak self] transition in
+                self?.dataSourceTransition = transition
             })
             .disposed(by: disposeBag)
     }
