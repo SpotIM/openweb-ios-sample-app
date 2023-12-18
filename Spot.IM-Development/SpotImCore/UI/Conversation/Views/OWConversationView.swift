@@ -23,7 +23,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
         static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
-        static let verticalLandscapeMargin: CGFloat = 66.0
+        static let horizontalLandscapeMargin: CGFloat = 66.0
+        static let horizontalOffset: CGFloat = 16.0
     }
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
@@ -162,7 +163,7 @@ fileprivate extension OWConversationView {
             } else {
                 make.top.equalToSuperview()
             }
-            make.leading.equalToSuperview()
+            make.leading.equalToSuperview().inset(Metrics.horizontalOffset)
             loginPromptPortraitConstraints.append(make.trailing.equalToSuperview().constraint)
             loginPromptLandscapeConstraints.append(make.trailing.equalToSuperview().multipliedBy(0.5).constraint)
         }
@@ -388,7 +389,7 @@ fileprivate extension OWConversationView {
                 guard let self = self else { return }
 
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.verticalLandscapeMargin : 0)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : 0)
                 }
 
                 UIView.animate(withDuration: Metrics.loginPromptOrientationChangeAnimationDuration) {
