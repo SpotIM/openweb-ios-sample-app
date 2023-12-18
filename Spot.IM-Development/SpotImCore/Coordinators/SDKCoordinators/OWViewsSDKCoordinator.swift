@@ -29,7 +29,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.generateNewPageViewId()
+                self.prepareForIndependentViewMode()
             })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -51,7 +51,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.generateNewPageViewId()
+                self.prepareForIndependentViewMode()
             })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -200,6 +200,13 @@ fileprivate extension OWViewsSDKCoordinator {
             }
 
             return base
+    }
+
+    func prepareForIndependentViewMode() {
+        let orientationService = servicesProvider.orientationService()
+        orientationService.set(viewableMode: .independent)
+
+        generateNewPageViewId()
     }
 
     func generateNewPageViewId() {
