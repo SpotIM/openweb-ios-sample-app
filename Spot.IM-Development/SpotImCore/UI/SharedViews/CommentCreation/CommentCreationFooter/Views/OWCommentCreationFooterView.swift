@@ -104,13 +104,13 @@ fileprivate extension OWCommentCreationFooterView {
         ctaButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
             make.height.equalTo(Metrics.ctaButtonHight)
-            make.trailing.equalToSuperviewSafeArea().offset(isLandscape ? -Metrics.horizontalLandscapeMargin : -Metrics.horizontalPortraitMargin)
+            make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
         }
 
         addSubview(addImageButton)
         addImageButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
-            make.leading.equalToSuperviewSafeArea().offset(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+            make.leading.equalToSuperviewSafeArea().offset(self.horizontalMargin(isLandscape: isLandscape))
             make.height.equalTo(Metrics.addImageButtonHeight)
             make.width.equalTo(Metrics.addImageButtonWidth)
         }
@@ -180,11 +180,11 @@ fileprivate extension OWCommentCreationFooterView {
                 self.commentLabelsContainerView.isHidden = !isLandscape
 
                 self.ctaButton.OWSnp.updateConstraints { make in
-                    make.trailing.equalToSuperviewSafeArea().offset(isLandscape ? -Metrics.horizontalLandscapeMargin : -Metrics.horizontalPortraitMargin)
+                    make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
                 }
 
                 self.addImageButton.OWSnp.updateConstraints { make in
-                    make.leading.equalToSuperviewSafeArea().offset(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+                    make.leading.equalToSuperviewSafeArea().offset(self.horizontalMargin(isLandscape: isLandscape))
                 }
             })
             .disposed(by: disposeBag)
@@ -198,5 +198,9 @@ fileprivate extension OWCommentCreationFooterView {
 
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeSubmitButtonUI.onNext(ctaButton)
+    }
+
+    func horizontalMargin(isLandscape: Bool) -> CGFloat {
+        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
     }
 }

@@ -60,7 +60,7 @@ fileprivate extension OWCommentingCTAView {
 
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
             make.top.bottom.equalToSuperviewSafeArea()
             self.heightConstraint = make.height.equalTo(0).constraint
         }
@@ -78,7 +78,7 @@ fileprivate extension OWCommentingCTAView {
                 self.currentStyleView = view
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
                     make.top.bottom.equalToSuperviewSafeArea()
                 }
             })
@@ -105,7 +105,7 @@ fileprivate extension OWCommentingCTAView {
                 guard let self = self else { return }
 
                 self.currentStyleView?.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(currentOrientation == .landscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation))
                 }
             })
             .disposed(by: disposeBag)
@@ -120,6 +120,10 @@ fileprivate extension OWCommentingCTAView {
         default:
             return UIView()
         }
+    }
+
+    func horizontalMargin(isLandscape: Bool) -> CGFloat {
+        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
     }
 }
 
