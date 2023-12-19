@@ -294,16 +294,6 @@ fileprivate extension OWConversationView {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateTableViewInstantly
-            .subscribe(onNext: { [weak self] _ in
-                OWScheduler.runOnMainThreadIfNeeded {
-                    guard let self = self else { return }
-                    self.tableView.reloadData()
-                    self.tableView.layoutIfNeeded()
-                }
-            })
-            .disposed(by: disposeBag)
-
         tableView.rx.willDisplayCell
             .bind(to: viewModel.inputs.willDisplayCell)
             .disposed(by: disposeBag)
