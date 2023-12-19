@@ -88,7 +88,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
-        static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
+        static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let debounceForCellsViewModels: Int = 50 // ms
         static let tableViewPaginationCellsOffset: Int = 5
