@@ -24,7 +24,6 @@ enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
-
     // Router is being used only for `Flows` mode. Intentionally defined as force unwrap for easy access.
     // Trying to use that in `Standalone Views` mode will cause a crash immediately.
     fileprivate let router: OWRoutering!
@@ -183,14 +182,14 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                                                                         presentationalMode: self.conversationData.presentationalStyle)
                 return self.coordinate(to: reportReasonCoordinator)
             }
-            .do(onNext: { coordinatorResult in
+            .do(onNext: { [weak self] coordinatorResult in
                 switch coordinatorResult {
                 case .popped:
                     // Nothing
                     break
                 case let .submitedReport(commentId, userJustLoggedIn):
                     guard userJustLoggedIn else { return }
-                    self._openCommentThread.onNext((commentId, .report))
+                    self?._openCommentThread.onNext((commentId, .report))
                 default:
                     break
                 }
