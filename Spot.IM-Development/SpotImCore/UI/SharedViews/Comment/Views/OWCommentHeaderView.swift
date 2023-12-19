@@ -216,6 +216,7 @@ fileprivate extension OWCommentHeaderView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         userNameTapGesture.rx.event
             .voidify()
@@ -272,25 +273,29 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.shouldShowHiddenCommentMessage
             .subscribe(onNext: { [weak self] isHiddenMessage in
-                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
 
-                self.dateLabel.isHidden = isHiddenMessage
-                self.optionButton.isHidden = isHiddenMessage
-                self.subscriberBadgeView.isHidden = isHiddenMessage
-                self.userNameLabel.isHidden = isHiddenMessage
-                self.badgeTagContainer.isHidden = isHiddenMessage
-                self.subtitleLabel.isHidden = isHiddenMessage
-                self.seperatorBetweenSubtitleAndDateLabel.isHidden = isHiddenMessage
+                    self.dateLabel.isHidden = isHiddenMessage
+                    self.optionButton.isHidden = isHiddenMessage
+                    self.subscriberBadgeView.isHidden = isHiddenMessage
+                    self.userNameLabel.isHidden = isHiddenMessage
+                    self.badgeTagContainer.isHidden = isHiddenMessage
+                    self.subtitleLabel.isHidden = isHiddenMessage
+                    self.seperatorBetweenSubtitleAndDateLabel.isHidden = isHiddenMessage
 
-                self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
+                    self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
+                }
             }).disposed(by: disposeBag)
 
         viewModel.outputs.subscriberBadgeVM
             .outputs.isSubscriber
             .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.subscriberBadgeView.OWSnp.updateConstraints { make in
-                    make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.subscriberBadgeView.OWSnp.updateConstraints { make in
+                        make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -332,6 +337,7 @@ fileprivate extension OWCommentHeaderView {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
 
 // MARK: Accessibility
