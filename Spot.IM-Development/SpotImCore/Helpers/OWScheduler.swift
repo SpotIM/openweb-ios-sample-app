@@ -9,12 +9,12 @@
 import Foundation
 
 class OWScheduler {
-    static func runOnMainThreadIfNeeded(completion: () -> Void) {
+    static func runOnMainThreadIfNeeded(block: @escaping () -> Void) {
         if Thread.isMainThread {
-            completion()
+            block()
         } else {
-            DispatchQueue.main.sync {
-                completion()
+            DispatchQueue.main.async {
+                block()
             }
         }
     }
