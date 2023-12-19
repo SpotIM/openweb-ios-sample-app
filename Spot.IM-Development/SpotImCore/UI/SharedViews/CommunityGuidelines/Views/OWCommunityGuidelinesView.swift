@@ -74,7 +74,6 @@ class OWCommunityGuidelinesView: UIView {
         self.disposeBag = DisposeBag()
         updateUI()
         setupObservers()
-        self.layoutIfNeeded()
     }
 }
 
@@ -150,13 +149,15 @@ fileprivate extension OWCommunityGuidelinesView {
         Observable.combineLatest(communityGuidelinesAttributedStringObservable,
                                  communityGuidelinesClickableStringObservable)
             .subscribe(onNext: { [weak self] attributedText, clickableString in
-                guard let self = self else { return }
-                self.titleLabel
-                    .attributedText(attributedText)
-                    .addRangeGesture(targetRange: clickableString) { [weak self] in
-                        guard let self = self else { return }
-                        self.viewModel.inputs.urlClicked.onNext(())
-                    }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.titleLabel
+                        .attributedText(attributedText)
+                        .addRangeGesture(targetRange: clickableString) { [weak self] in
+                            guard let self = self else { return }
+                            self.viewModel.inputs.urlClicked.onNext(())
+                        }
+                }
             })
             .disposed(by: disposeBag)
 
