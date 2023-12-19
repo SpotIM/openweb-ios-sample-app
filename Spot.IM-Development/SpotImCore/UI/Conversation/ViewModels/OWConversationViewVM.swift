@@ -48,7 +48,6 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationEmptyStateCellViewModel: OWConversationEmptyStateCellViewModeling { get }
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> { get }
     var performTableViewAnimation: Observable<Void> { get }
-    var updateTableViewInstantly: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
     var reloadCellIndex: Observable<Int> { get }
@@ -84,7 +83,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayBeforeScrollingToLastCell: Int = 100 // ms
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let debouncePerformTableViewAnimation: Int = 50 // ms
-        static let updateTableViewInstantlyDelay: Int = 50 // ms
         static let delayForPerformTableViewAnimationErrorState: Int = 500 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
@@ -456,13 +454,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
         .voidify()
         .asObservable()
-    }
-
-    fileprivate var _updateTableViewInstantly = PublishSubject<Void>()
-    var updateTableViewInstantly: Observable<Void> {
-        return _updateTableViewInstantly
-            .delay(.milliseconds(Metrics.updateTableViewInstantlyDelay), scheduler: conversationViewVMScheduler)
-            .asObservable()
     }
 
     var shouldShowConversationEmptyState: Observable<Bool> {
@@ -939,8 +930,6 @@ fileprivate extension OWConversationViewViewModel {
 
                 // Update loading state only after the presented comments are updated
                 self._serverCommentsLoadingState.onNext(.notLoading)
-
-                self._updateTableViewInstantly.onNext()
             })
             .disposed(by: disposeBag)
 
