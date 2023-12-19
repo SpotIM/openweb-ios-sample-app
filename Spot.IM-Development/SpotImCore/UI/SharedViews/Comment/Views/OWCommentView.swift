@@ -142,12 +142,14 @@ fileprivate extension OWCommentView {
 
         viewModel.outputs.shouldShowCommentStatus
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                self.commentHeaderView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.commentHeaderView.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
+                    }
+                    self.commentStatusView.isHidden = !shouldShow
+                    self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
                 }
-                self.commentStatusView.isHidden = !shouldShow
-                self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
             })
             .disposed(by: disposedBag)
 
