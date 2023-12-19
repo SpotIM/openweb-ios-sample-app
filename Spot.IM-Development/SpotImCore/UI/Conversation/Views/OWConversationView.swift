@@ -99,7 +99,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
-            cell.configure(with: item.viewModel)
+            OWScheduler.runOnMainThreadIfNeeded {
+                cell.configure(with: item.viewModel)
+            }
 
             return cell
         })
