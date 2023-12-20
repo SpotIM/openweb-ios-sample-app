@@ -19,6 +19,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationCTATap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var viewInitialized: PublishSubject<Void> { get }
+    var tableViewWidth: PublishSubject<CGFloat> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -54,6 +55,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var tableViewWidthChanged: Observable<CGFloat> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -104,6 +106,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         _serverCommentsLoadingState
             .asObservable()
     }
+
+    var tableViewWidth = PublishSubject<CGFloat>()
+    lazy var tableViewWidthChanged: Observable<CGFloat> = {
+        tableViewWidth
+            .filter { $0 > 0 }
+            .distinctUntilChanged()
+            .asObservable()
+    }()
 
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
         return cellsViewModels
@@ -1360,6 +1370,15 @@ fileprivate extension OWPreConversationViewViewModel {
         communityGuidelinesViewModel.outputs.urlClickedOutput
             .subscribe(onNext: { [weak self] _ in
                 self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
+
+        tableViewWidthChanged
+            .subscribe(onNext: { [weak self] width in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .conversationSizeService()
+                    .setConversationTableWidth(width: width)
             })
             .disposed(by: disposeBag)
     }

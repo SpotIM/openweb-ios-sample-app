@@ -13,9 +13,6 @@ import RxSwift
 class OWCommentCell: UITableViewCell {
     struct ExternalMetrics {
         static let maxDepth: Int = 4
-    }
-
-    fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
     }
@@ -45,7 +42,7 @@ class OWCommentCell: UITableViewCell {
 
         let depth = min(self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0, ExternalMetrics.maxDepth)
         commentView.OWSnp.updateConstraints { make in
-            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
+            make.leading.equalToSuperview().offset(CGFloat(depth) * ExternalMetrics.depthOffset + ExternalMetrics.horizontalOffset)
         }
 
         self.setupObservers()
@@ -71,7 +68,7 @@ fileprivate extension OWCommentCell {
 
         commentView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(ExternalMetrics.horizontalOffset)
         }
     }
 

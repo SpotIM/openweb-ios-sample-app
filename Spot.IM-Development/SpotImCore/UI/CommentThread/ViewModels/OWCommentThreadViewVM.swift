@@ -22,6 +22,7 @@ protocol OWCommentThreadViewViewModelingInputs {
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeThreadOffset: PublishSubject<CGPoint> { get }
     var closeTapped: PublishSubject<Void> { get }
+    var tableViewWidth: PublishSubject<CGFloat> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -41,6 +42,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var updateTableViewInstantly: Observable<Void> { get }
+    var tableViewWidthChanged: Observable<CGFloat> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -68,6 +70,14 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let delayAfterScrollBeforeHighlightAnimation = 300 // ms
     }
+
+    var tableViewWidth = PublishSubject<CGFloat>()
+    lazy var tableViewWidthChanged: Observable<CGFloat> = {
+        tableViewWidth
+            .filter { $0 > 0 }
+            .distinctUntilChanged()
+            .asObservable()
+    }()
 
     var closeTapped = PublishSubject<Void>()
 
@@ -1687,6 +1697,15 @@ fileprivate extension OWCommentThreadViewViewModel {
         _dataSourceTransition
             .subscribe(onNext: { [weak self] transition in
                 self?.dataSourceTransition = transition
+            })
+            .disposed(by: disposeBag)
+
+        tableViewWidthChanged
+            .subscribe(onNext: { [weak self] width in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .conversationSizeService()
+                    .setConversationTableWidth(width: width)
             })
             .disposed(by: disposeBag)
     }
