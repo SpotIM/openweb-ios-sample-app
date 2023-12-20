@@ -31,9 +31,9 @@ class OWOrientationService: OWOrientationServicing {
         return _currentOrientation
     }
 
-    lazy var interfaceOrientationMask: UIInterfaceOrientationMask = {
-        return orientationEnforcement.interfaceOrientationMask
-    }()
+    var interfaceOrientationMask: UIInterfaceOrientationMask {
+        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+    }
 
     fileprivate var _viewableMode: OWViewableMode = .partOfFlow
 
@@ -44,14 +44,11 @@ class OWOrientationService: OWOrientationServicing {
 
     fileprivate let notificationCenter: NotificationCenter
     fileprivate let uiDevice: UIDevice
-    fileprivate let orientationEnforcement: OWOrientationEnforcement
 
     init(notificationCenter: NotificationCenter = NotificationCenter.default,
-         uiDevice: UIDevice = UIDevice.current,
-         orientationEnforcement: OWOrientationEnforcement = OWManager.manager.helpers.orientationEnforcement) {
+         uiDevice: UIDevice = UIDevice.current) {
         self.notificationCenter = notificationCenter
         self.uiDevice = uiDevice
-        self.orientationEnforcement = orientationEnforcement
 
         setupObservers()
     }
