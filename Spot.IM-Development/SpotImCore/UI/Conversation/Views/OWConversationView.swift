@@ -170,7 +170,7 @@ fileprivate extension OWConversationView {
             } else {
                 make.top.equalToSuperview()
             }
-            make.leading.equalToSuperview().inset(Metrics.horizontalPortraitMargin)
+            make.leading.equalToSuperview()
             loginPromptPortraitConstraints.append(make.trailing.equalToSuperview().constraint)
             loginPromptLandscapeConstraints.append(make.trailing.equalToSuperview().multipliedBy(0.5).constraint)
         }
