@@ -82,7 +82,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate let preConversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "preConversationViewVMScheduler")
 
-
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
