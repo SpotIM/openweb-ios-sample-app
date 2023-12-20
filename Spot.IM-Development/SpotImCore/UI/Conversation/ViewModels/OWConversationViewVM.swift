@@ -566,7 +566,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var dataSourceTransition: OWViewTransition = .reload
     fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
 
-
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let imageProvider: OWImageProviding
