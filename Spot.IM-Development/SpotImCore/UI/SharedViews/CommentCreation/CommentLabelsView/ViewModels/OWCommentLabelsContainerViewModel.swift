@@ -66,8 +66,15 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     }
 
     var isValidSelection: Observable<Bool> {
-        Observable.combineLatest(_commentLabelsSection, selectedLabelIds) { ($0, $1)}
-            .map { ($0.minSelected, $1.count )}
+        Observable.combineLatest(_commentLabelsSection, selectedLabelIds) { ($0, $1) }
+            .map { sectionConfig, selectedLabelIds in
+                if let sectionConfig = sectionConfig {
+                    return (sectionConfig.minSelected, selectedLabelIds.count)
+                } else {
+                    return (0, selectedLabelIds.count)
+                }
+
+            }
             .map { $0 <= $1 }
     }
 
@@ -106,7 +113,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
         self.commentCreationType = nil
     }
 
-    fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration> = {
+    fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration?> = {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> CommentLabelsSectionsConfig? in
@@ -116,9 +123,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
                 return sharedConfig.commentLabels
             }
-            .unwrap()
             .map { [weak self] commentLabelsSectionsConfig in
-                guard let self = self else { return nil }
+                guard let self = self,
+                      let commentLabelsSectionsConfig = commentLabelsSectionsConfig
+                else { return nil }
                 if let sectionConfig = commentLabelsSectionsConfig[self.section] {
                     return sectionConfig
                 } else if let defaultSection = commentLabelsSectionsConfig["default"] {
@@ -126,13 +134,14 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 }
                 return nil
             }
-            .unwrap()
     }()
 
     fileprivate lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
         _comment
             .withLatestFrom(_commentLabelsSection) { [weak self] comment, commentLabelsSection in
-                guard let self = self else { return nil }
+                guard let self = self,
+                      let commentLabelsSection = commentLabelsSection
+                else { return nil }
                 return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
             }.unwrap()
     }()
@@ -151,7 +160,9 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
     fileprivate var _commentLabelsTitle: Observable<String?> {
         Observable.combineLatest(_comment, _commentLabelsSection) { comment, commentLabelsSection in
-            guard comment == nil else { return nil }
+            guard comment == nil,
+                  let commentLabelsSection = commentLabelsSection
+            else { return nil }
             return commentLabelsSection.guidelineText
         }
     }
@@ -179,7 +190,9 @@ fileprivate extension OWCommentLabelsContainerViewModel {
             .withLatestFrom(_commentLabelsSection) { ($0.0, $0.1, $1) }
             .withLatestFrom(_selectedLabelIds) { ($0.0, $0.1, $0.2, $1) }
             .subscribe(onNext: { [weak self] (state, settings, sectionSettings, selectedLabelIds) in
-                guard let self = self else { return }
+                guard let self = self,
+                      let sectionSettings = sectionSettings
+                else { return }
                 switch state {
                 case .notSelected:
                     var selectedLabelIdsCopy = selectedLabelIds
