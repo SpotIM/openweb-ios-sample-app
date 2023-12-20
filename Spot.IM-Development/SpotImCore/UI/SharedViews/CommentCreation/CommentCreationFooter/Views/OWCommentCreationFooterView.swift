@@ -23,7 +23,8 @@ class OWCommentCreationFooterView: UIView {
         static let ctaButtonEnabledAlpha: CGFloat = 1
         static let ctaButtonDisabledAlpha: CGFloat = 0.5
 
-        static let horizontalOffset: CGFloat = 16.0
+        static let horizontalPortraitMargin: CGFloat = 16.0
+        static let horizontalLandscapeMargin: CGFloat = 66.0
 
         static let addImageButtonHeight: CGFloat = 16.0 + (6.0 * 2)
         static let addImageButtonWidth: CGFloat = 18.0 + (6.0 * 2)
@@ -96,17 +97,20 @@ fileprivate extension OWCommentCreationFooterView {
             make.leading.trailing.top.equalToSuperview()
         }
 
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+        let isLandscape = currentOrientation == .landscape
+
         addSubview(ctaButton)
         ctaButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
             make.height.equalTo(Metrics.ctaButtonHight)
-            make.trailing.equalToSuperviewSafeArea().offset(-Metrics.horizontalOffset)
+            make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
         }
 
         addSubview(addImageButton)
         addImageButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
-            make.leading.equalToSuperviewSafeArea().offset(Metrics.horizontalOffset)
+            make.leading.equalToSuperviewSafeArea().offset(self.horizontalMargin(isLandscape: isLandscape))
             make.height.equalTo(Metrics.addImageButtonHeight)
             make.width.equalTo(Metrics.addImageButtonWidth)
         }
@@ -174,6 +178,14 @@ fileprivate extension OWCommentCreationFooterView {
 
                 let isLandscape = currentOrientation == .landscape
                 self.commentLabelsContainerView.isHidden = !isLandscape
+
+                self.ctaButton.OWSnp.updateConstraints { make in
+                    make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
+                }
+
+                self.addImageButton.OWSnp.updateConstraints { make in
+                    make.leading.equalToSuperviewSafeArea().offset(self.horizontalMargin(isLandscape: isLandscape))
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -186,5 +198,9 @@ fileprivate extension OWCommentCreationFooterView {
 
     func updateCustomUI() {
         viewModel.inputs.triggerCustomizeSubmitButtonUI.onNext(ctaButton)
+    }
+
+    func horizontalMargin(isLandscape: Bool) -> CGFloat {
+        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
     }
 }

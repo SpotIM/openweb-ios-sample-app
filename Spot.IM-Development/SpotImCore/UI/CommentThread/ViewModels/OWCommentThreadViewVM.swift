@@ -22,6 +22,7 @@ protocol OWCommentThreadViewViewModelingInputs {
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeThreadOffset: PublishSubject<CGPoint> { get }
     var closeTapped: PublishSubject<Void> { get }
+    var performAction: PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -114,6 +115,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
+    fileprivate var _selectedCommentId = BehaviorSubject<OWCommentId?>(value: nil)
+    fileprivate lazy var selectedCommentId: Observable<OWCommentId> = {
+        _selectedCommentId
+            .unwrap()
+            .asObservable()
+    }()
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
@@ -122,6 +130,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let commentThreadViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentThreadViewVMScheduler")
+
+    var performAction = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+
+    fileprivate var _performActionType: OWCommentThreadPerformActionType
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -374,6 +386,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         self.viewableMode = viewableMode
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
+        self._selectedCommentId.onNext(commentThreadData.commentId)
+
+        let commentThreadSettings = commentThreadData.settings.commentThreadSettings
+        let performActionType = commentThreadSettings.performActionType
+        self._performActionType = performActionType
+
         self.setupObservers()
     }
 }
@@ -1193,23 +1211,23 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let selectedCommentCellVm = commentCellsVmsObservable
-            .map { [weak self] commentCellsVms -> OWCommentCellViewModeling? in
+        let selectedCommentCellVm = Observable.combineLatest(commentCellsVmsObservable, selectedCommentId)
+            .map { [weak self] commentCellsVms, commentId -> OWCommentCellViewModeling? in
                 guard let self = self else { return nil }
                 let selectedCommentCellVm: OWCommentCellViewModeling? = commentCellsVms.first { vm in
-                        return vm.outputs.id == self.commentThreadData.commentId
+                        return vm.outputs.id == commentId
                 }
                 return selectedCommentCellVm
             }
             .unwrap()
             .share()
 
-        let selectedCommentCellVmIndex = cellsViewModels
-            .map { [weak self] cellsViewModels -> Int? in
+        let selectedCommentCellVmIndex = Observable.combineLatest(cellsViewModels, selectedCommentId)
+            .map { [weak self] cellsViewModels, commentId -> Int? in
                 guard let self = self else { return nil }
                 let commentIndex: Int? = cellsViewModels.firstIndex { vm in
                     if case .comment(let commentCellViewModel) = vm {
-                        return commentCellViewModel.outputs.id == self.commentThreadData.commentId
+                        return commentCellViewModel.outputs.id == commentId
                     } else {
                         return false
                     }
@@ -1221,8 +1239,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // perform highlight animation for selected comment id
         selectedCommentCellVmIndex
+            .distinctUntilChanged()
             .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: commentThreadViewVMScheduler)
-            .take(1)
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload)
@@ -1668,9 +1686,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] selectedCommentCellVm in
                 guard let self = self else { return }
-                let commentThreadSettings = self.commentThreadData.settings.commentThreadSettings
-                let performActionType = commentThreadSettings.performActionType
-                switch performActionType {
+                switch self._performActionType {
                 case .changeRank(let from, let to):
                     let selectedCommentVm = selectedCommentCellVm.outputs.commentVM
                     if let fromRank = SPRank(rawValue: from),
@@ -1689,6 +1705,16 @@ fileprivate extension OWCommentThreadViewViewModel {
                 default:
                     break
                 }
+                self._performActionType = .none
+            })
+            .disposed(by: disposeBag)
+
+        performAction
+            .delay(.milliseconds(Metrics.performActionDelay), scheduler: commentThreadViewVMScheduler)
+            .subscribe(onNext: { [weak self] commentId, performActionType in
+                guard let self = self else { return }
+                self._performActionType = performActionType
+                self._selectedCommentId.onNext(commentId)
             })
             .disposed(by: disposeBag)
 
