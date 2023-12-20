@@ -818,6 +818,7 @@
 		8DE52F5129EBEBAC00D3985C /* OWSpacerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F5029EBEBAC00D3985C /* OWSpacerViewModel.swift */; };
 		8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE52F5229EBEBB800D3985C /* OWSpacerView.swift */; };
 		8DFA37842AA869EB00430031 /* OWConversationSpacing+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA37832AA869EB00430031 /* OWConversationSpacing+Extensions.swift */; };
+		9E019E7B2B334B5B00A947CB /* OWConversationSizeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E019E7A2B334B5B00A947CB /* OWConversationSizeService.swift */; };
 		9E0C60502A780246001B8D5D /* OWScreenPopStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604A2A780245001B8D5D /* OWScreenPopStyle.swift */; };
 		9E0C60512A780246001B8D5D /* OWNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604B2A780245001B8D5D /* OWNavigationController.swift */; };
 		9E0C60522A780246001B8D5D /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C604C2A780245001B8D5D /* OWModalPresentationStyle+Extensions.swift */; };
@@ -1836,6 +1837,7 @@
 		96882182115150292A31277E /* Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-OpenWebCoreTests/Pods-Shared-OpenWebCoreTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; sourceTree = "<group>"; };
 		9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
+		9E019E7A2B334B5B00A947CB /* OWConversationSizeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSizeService.swift; sourceTree = "<group>"; };
 		9E0C604A2A780245001B8D5D /* OWScreenPopStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWScreenPopStyle.swift; sourceTree = "<group>"; };
 		9E0C604B2A780245001B8D5D /* OWNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWNavigationController.swift; sourceTree = "<group>"; };
 		9E0C604C2A780245001B8D5D /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
@@ -4504,6 +4506,7 @@
 				247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */,
 				16B2F7AA2B20D01100C38264 /* OWActionsCallbacksNotifierService.swift */,
 				8D05B44C2B1497C700354380 /* OWOrientationService.swift */,
+				9E019E7A2B334B5B00A947CB /* OWConversationSizeService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -6620,6 +6623,7 @@
 				24B087CF288EB51F00CAA0EB /* OWFailureReportEndpoints.swift in Sources */,
 				3DA2647E2951E3B200688FFF /* DispatchQueue+Network.swift in Sources */,
 				24C3423829067133004189EA /* OWPreConversationSummaryView.swift in Sources */,
+				9E019E7B2B334B5B00A947CB /* OWConversationSizeService.swift in Sources */,
 				3D08E0A32877164C00E6F1AC /* OWRxTableViewSectionedReloadDataSource.swift in Sources */,
 				3DDA9A8A291A5E6100FE3B86 /* OWThemeStyleEnforcement.swift in Sources */,
 				163E02C02A852FB300DDB73C /* OWCommentsPresentationDataHelper.swift in Sources */,

@@ -35,13 +35,6 @@ class OWCommentTextLabel: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard let viewModel = viewModel else { return }
-
-        viewModel.inputs.width.onNext(self.bounds.width)
-    }
 }
 
 fileprivate extension OWCommentTextLabel {
