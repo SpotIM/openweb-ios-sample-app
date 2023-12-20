@@ -201,7 +201,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
             make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.loginPromptTopPadding)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview()
         }
 
         self.addSubview(communityQuestionView)
@@ -226,7 +226,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
