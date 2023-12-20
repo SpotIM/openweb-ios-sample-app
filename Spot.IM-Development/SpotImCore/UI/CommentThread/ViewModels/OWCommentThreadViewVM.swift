@@ -16,7 +16,7 @@ typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWComm
 
 protocol OWCommentThreadViewViewModelingInputs {
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
-    var tableViewHeight: PublishSubject<CGFloat> { get }
+    var tableViewSize: PublishSubject<CGSize> { get }
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
@@ -42,6 +42,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var updateTableViewInstantly: Observable<Void> { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -69,6 +70,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let delayAfterScrollBeforeHighlightAnimation = 300 // ms
     }
+
+    var tableViewSize = PublishSubject<CGSize>()
+    lazy var tableViewSizeChanged: Observable<CGSize> = {
+        tableViewSize
+            .distinctUntilChanged()
+            .asObservable()
+    }()
 
     var closeTapped = PublishSubject<Void>()
 
@@ -121,7 +129,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate let commentThreadViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "commentThreadViewVMScheduler")
+    fileprivate let commentThreadViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentThreadViewVMScheduler")
 
     var performAction = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
@@ -1713,6 +1721,15 @@ fileprivate extension OWCommentThreadViewViewModel {
         _dataSourceTransition
             .subscribe(onNext: { [weak self] transition in
                 self?.dataSourceTransition = transition
+            })
+            .disposed(by: disposeBag)
+
+        tableViewSizeChanged
+            .subscribe(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .conversationSizeService()
+                    .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
     }
