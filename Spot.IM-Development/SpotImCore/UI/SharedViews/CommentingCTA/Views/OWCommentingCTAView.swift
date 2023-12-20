@@ -71,7 +71,7 @@ fileprivate extension OWCommentingCTAView {
                 self.currentStyleView = view
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea()
+                    make.leading.trailing.equalToSuperview()
                     make.top.bottom.equalToSuperviewSafeArea()
                 }
             })
