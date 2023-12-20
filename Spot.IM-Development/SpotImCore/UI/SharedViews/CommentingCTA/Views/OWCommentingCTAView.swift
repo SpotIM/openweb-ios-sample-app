@@ -10,10 +10,6 @@ import UIKit
 import RxSwift
 
 class OWCommentingCTAView: UIView {
-    struct Metrics {
-        static let horizontalPortraitMargin: CGFloat = 20.0
-        static let horizontalLandscapeMargin: CGFloat = 66.0
-    }
 
     fileprivate lazy var skelatonView: OWCommentingCTASkeletonView = {
         return OWCommentingCTASkeletonView()
@@ -56,11 +52,9 @@ fileprivate extension OWCommentingCTAView {
     func setupViews() {
         self.enforceSemanticAttribute()
 
-        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
-
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
+            make.leading.trailing.equalToSuperview()
             make.top.bottom.equalToSuperviewSafeArea()
             self.heightConstraint = make.height.equalTo(0).constraint
         }
@@ -68,9 +62,8 @@ fileprivate extension OWCommentingCTAView {
 
     func setupObservers() {
         viewModel.outputs.style
-            .withLatestFrom(OWSharedServicesProvider.shared.orientationService().orientation) { ($0, $1) }
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] style, currentOrientation in
+            .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self.subviews.forEach { $0.removeFromSuperview() }
 
@@ -78,7 +71,7 @@ fileprivate extension OWCommentingCTAView {
                 self.currentStyleView = view
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
+                    make.leading.trailing.equalToSuperview()
                     make.top.bottom.equalToSuperviewSafeArea()
                 }
             })
@@ -98,17 +91,6 @@ fileprivate extension OWCommentingCTAView {
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.orientationService()
-            .orientation
-            .subscribe(onNext: { [weak self] currentOrientation in
-                guard let self = self else { return }
-
-                self.currentStyleView?.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
-                }
-            })
-            .disposed(by: disposeBag)
     }
 
     func view(forStyle style: OWCommentingCTAStyle) -> UIView {
@@ -120,10 +102,6 @@ fileprivate extension OWCommentingCTAView {
         default:
             return UIView()
         }
-    }
-
-    func horizontalMargin(isLandscape: Bool) -> CGFloat {
-        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
     }
 }
 
