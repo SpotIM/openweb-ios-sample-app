@@ -510,6 +510,12 @@ fileprivate extension OWPreConversationView {
                 self.btnCTAConversation.titleLabel?.font = OWFontBook.shared.font(typography: .bodyContext)
             })
             .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+            .unwrap()
+            .map { $0.size }
+            .bind(to: viewModel.inputs.tableViewSize)
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 }
