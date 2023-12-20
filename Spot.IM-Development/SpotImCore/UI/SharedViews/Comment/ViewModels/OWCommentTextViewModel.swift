@@ -93,8 +93,9 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
     var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
-        self.serviceProvider.conversationSizeService().conversationTableWidth
+        self.serviceProvider.conversationSizeService().conversationTableSize
             .distinctUntilChanged()
+            .map { $0.width }
             .withLatestFrom(comment) { ($0, $1) }
             .map { [weak self] width, comment -> CGFloat? in
                 guard let self = self else { return nil }

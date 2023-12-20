@@ -19,7 +19,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationCTATap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var viewInitialized: PublishSubject<Void> { get }
-    var tableViewWidth: PublishSubject<CGFloat> { get }
+    var tableViewSize: PublishSubject<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -55,7 +55,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var tableViewWidthChanged: Observable<CGFloat> { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -107,10 +107,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    var tableViewWidth = PublishSubject<CGFloat>()
-    lazy var tableViewWidthChanged: Observable<CGFloat> = {
-        tableViewWidth
-            .filter { $0 > 0 }
+    var tableViewSize = PublishSubject<CGSize>()
+    lazy var tableViewSizeChanged: Observable<CGSize> = {
+        tableViewSize
             .distinctUntilChanged()
             .asObservable()
     }()
@@ -1373,12 +1372,12 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        tableViewWidthChanged
-            .subscribe(onNext: { [weak self] width in
+        tableViewSizeChanged
+            .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.servicesProvider
                     .conversationSizeService()
-                    .setConversationTableWidth(width: width)
+                    .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
     }

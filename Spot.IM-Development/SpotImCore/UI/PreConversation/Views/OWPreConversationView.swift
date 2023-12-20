@@ -513,8 +513,8 @@ fileprivate extension OWPreConversationView {
 
         tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
             .unwrap()
-            .map { $0.size.width }
-            .bind(to: viewModel.inputs.tableViewWidth)
+            .map { $0.size }
+            .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
