@@ -27,7 +27,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let horizontalOffset: CGFloat = 16.0
     }
 
-    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewQueue")
+    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
@@ -219,19 +219,20 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
-                guard let self = self else { return }
-                self.commentingCTAView.OWSnp.updateConstraints { make in
-                    if shouldShowErrorLoadingComments {
-                        let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
-                        make.bottom.equalToSuperview().offset(self.commentingCTAView.frame.size.height + bottomPadding)
-                    } else {
-                        make.bottom.equalToSuperview().offset(0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.commentingCTAView.OWSnp.updateConstraints { make in
+                        if shouldShowErrorLoadingComments {
+                            let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
+                            make.bottom.equalToSuperview().offset(self.commentingCTAView.frame.size.height + bottomPadding)
+                        } else {
+                            make.bottom.equalToSuperview().offset(0)
+                        }
                     }
-                }
-                UIView.animate(withDuration: Metrics.ctaViewSlideAnimationDuration) {
-                    self.layoutIfNeeded()
+                    UIView.animate(withDuration: Metrics.ctaViewSlideAnimationDuration) {
+                        self.layoutIfNeeded()
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -265,10 +266,11 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.conversationDataSourceSections
-            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableViewRefreshControl.endRefreshing()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableViewRefreshControl.endRefreshing()
+                }
             })
             .bind(to: tableView.rx.items(dataSource: conversationDataSource))
             .disposed(by: disposeBag)
