@@ -97,7 +97,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var errorsLoadingReplies: [OWCommentId: OWRepliesErrorState] = [:]
 
-    fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "conversationViewVMQueue")
+    fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewVMQueue")
 
     var tableViewHeight = PublishSubject<CGFloat>()
     lazy var tableViewHeightChanged: Observable<CGFloat> = {
@@ -989,8 +989,10 @@ fileprivate extension OWConversationViewViewModel {
         conversationFetchedObservable
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self._dataSourceTransition.onNext(.animated)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self._dataSourceTransition.onNext(.animated)
+                }
             })
             .disposed(by: disposeBag)
 
