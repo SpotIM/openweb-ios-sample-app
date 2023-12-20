@@ -14,8 +14,8 @@ class OWLoginPromptView: UIView {
         static let identifier = "login_promt_view_id"
 
         static let labelHorizontalPadding: CGFloat = 4
-        static let horizontalOffset: CGFloat = 10
-        static let verticalOffset: CGFloat = 16
+        static let horizontalOffset: CGFloat = 16
+        static let verticalOffset: CGFloat = 10
         static let separatorHeight: CGFloat = 1
     }
 
@@ -116,7 +116,7 @@ fileprivate extension OWLoginPromptView {
 
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
             make.trailing.lessThanOrEqualToSuperview()
 
             switch viewModel.outputs.style {
@@ -124,16 +124,23 @@ fileprivate extension OWLoginPromptView {
                 make.leading.greaterThanOrEqualToSuperview()
                 make.centerX.equalToSuperview()
 
-            case .left:
-                make.leading.equalToSuperviewSafeArea().inset(Metrics.verticalOffset)
+            case .left, .leftWithoutSeperator:
+                make.leading.equalToSuperviewSafeArea().inset(Metrics.horizontalOffset)
             }
         }
 
         self.addSubview(seperatorView)
         seperatorView.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview().inset(Metrics.verticalOffset)
-            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.horizontalOffset)
+            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.verticalOffset)
+            switch viewModel.outputs.style {
+            case .left:
+                make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalOffset)
+
+            case .leftWithoutSeperator, .center:
+                make.leading.trailing.equalToSuperviewSafeArea()
+            }
             make.height.equalTo(Metrics.separatorHeight)
+            make.bottom.equalToSuperview()
         }
     }
 
