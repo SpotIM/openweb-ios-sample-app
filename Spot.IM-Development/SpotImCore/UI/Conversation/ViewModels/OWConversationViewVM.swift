@@ -23,6 +23,7 @@ protocol OWConversationViewViewModelingInputs {
     var scrolledToTop: PublishSubject<Void> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewHeight: PublishSubject<CGFloat> { get }
+    var tableViewWidth: PublishSubject<CGFloat> { get }
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
 }
@@ -60,6 +61,7 @@ protocol OWConversationViewViewModelingOutputs {
     var conversationOffset: Observable<CGPoint> { get }
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
     var tableViewHeightChanged: Observable<CGFloat> { get }
+    var tableViewWidthChanged: Observable<CGFloat> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
 }
@@ -102,6 +104,14 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var tableViewHeight = PublishSubject<CGFloat>()
     lazy var tableViewHeightChanged: Observable<CGFloat> = {
         tableViewHeight
+            .filter { $0 > 0 }
+            .distinctUntilChanged()
+            .asObservable()
+    }()
+
+    var tableViewWidth = PublishSubject<CGFloat>()
+    lazy var tableViewWidthChanged: Observable<CGFloat> = {
+        tableViewWidth
             .filter { $0 > 0 }
             .distinctUntilChanged()
             .asObservable()
@@ -2236,6 +2246,15 @@ fileprivate extension OWConversationViewViewModel {
         _dataSourceTransition
             .subscribe(onNext: { [weak self] transition in
                 self?.dataSourceTransition = transition
+            })
+            .disposed(by: disposeBag)
+
+        tableViewWidthChanged
+            .subscribe(onNext: { [weak self] width in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .conversationSizeService()
+                    .setConversationTableWidth(width: width)
             })
             .disposed(by: disposeBag)
     }

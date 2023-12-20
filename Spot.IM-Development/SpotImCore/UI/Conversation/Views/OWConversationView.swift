@@ -239,8 +239,12 @@ fileprivate extension OWConversationView {
 
         tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
             .unwrap()
-            .map { $0.size.height }
-            .bind(to: viewModel.inputs.tableViewHeight)
+            .map { $0.size }
+            .subscribe(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.viewModel.inputs.tableViewHeight.onNext(size.height)
+                self.viewModel.inputs.tableViewWidth.onNext(size.width)
+            })
             .disposed(by: disposeBag)
 
         tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
