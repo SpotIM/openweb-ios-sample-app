@@ -66,8 +66,9 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     }
 
     var isValidSelection: Observable<Bool> {
-        // TODO - take minimum selection count into consideration
-        Observable.just(true)
+        Observable.combineLatest(_commentLabelsSection, selectedLabelIds) { ($0, $1)}
+            .map { ($0.minSelected, $1.count )}
+            .map { $0 <= $1 }
     }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
