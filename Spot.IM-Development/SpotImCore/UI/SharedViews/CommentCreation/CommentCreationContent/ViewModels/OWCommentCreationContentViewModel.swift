@@ -26,6 +26,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
+    var isInitialContentEdited: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -128,22 +129,31 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .asObservable()
     }
 
+    var isInitialContentEdited: Observable<Bool> {
+        Observable.combineLatest(
+            commentContent,
+            _imageContent
+        )
+        .map { [weak self] commentContent, imageContent -> Bool in
+            guard let self = self else { return false }
+
+            if case .edit(comment: let comment) = self.commentCreationType {
+                if comment.text?.text != commentContent.text ||
+                    comment.image?.imageId != imageContent?.imageId {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
     var isValidatedContent: Observable<Bool> {
         return Observable.combineLatest(
             commentContent,
-            _imageContent,
             imagePreviewVM.outputs.isUploadingImageObservable
         )
-        .map { [weak self] commentContent, imageContent, isUploadingImage -> Bool in
+        .map { [weak self] commentContent, isUploadingImage -> Bool in
             guard let self = self else { return false }
-
-            // In edit mode - invalidate in case the original text and image are used
-            if case .edit(comment: let comment) = self.commentCreationType {
-                if comment.text?.text == commentContent.text &&
-                    comment.image?.imageId == imageContent?.imageId {
-                    return false
-                }
-            }
 
             // Validate / invalidate according to content and uploading image state
             return commentContent.hasContent() && !isUploadingImage
