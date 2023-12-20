@@ -125,13 +125,13 @@ fileprivate extension OWLoginPromptView {
                 make.centerX.equalToSuperview()
 
             case .left:
-                make.leading.equalToSuperviewSafeArea()
+                make.leading.equalToSuperviewSafeArea().inset(Metrics.verticalOffset)
             }
         }
 
         self.addSubview(seperatorView)
         seperatorView.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview().inset(Metrics.verticalOffset)
             make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.horizontalOffset)
             make.height.equalTo(Metrics.separatorHeight)
         }
