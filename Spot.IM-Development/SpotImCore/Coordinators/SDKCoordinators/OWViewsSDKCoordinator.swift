@@ -30,6 +30,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.prepareForIndependentViewMode()
+                self.generateNewPageViewId()
             })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -52,6 +53,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.prepareForIndependentViewMode()
+                self.generateNewPageViewId()
             })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
@@ -72,6 +74,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                self.prepareForIndependentViewMode()
+            })
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWCommentCreationCoordinatorResult>.self)
             })
             .flatMap { [ weak self] _ -> Observable<OWShowable> in
@@ -88,6 +94,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
     ) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.prepareForIndependentViewMode()
+            })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWCommentThreadCoordinatorResult>.self)
@@ -107,6 +117,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                self.prepareForIndependentViewMode()
+            })
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWReportReasonCoordinatorResult>.self)
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
@@ -122,6 +136,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.prepareForIndependentViewMode()
+            })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWClarityDetailsCoordinatorResult>.self)
@@ -140,6 +158,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
+                self.prepareForIndependentViewMode()
+            })
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWWebTabCoordinatorResult>.self)
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
@@ -156,6 +178,10 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                                callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.prepareForIndependentViewMode()
+            })
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.free(allCoordinatorsFromType: OWBaseCoordinator<OWTestingPlaygroundCoordinatorResult>.self)
@@ -205,8 +231,6 @@ fileprivate extension OWViewsSDKCoordinator {
     func prepareForIndependentViewMode() {
         let orientationService = servicesProvider.orientationService()
         orientationService.set(viewableMode: .independent)
-
-        generateNewPageViewId()
     }
 
     func generateNewPageViewId() {
