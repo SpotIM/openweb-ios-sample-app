@@ -15,7 +15,7 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "comment_creation_light_view_id"
 
         static let horizontalOffset: CGFloat = 16.0
-        static let contentViewVerticalLandscapeOffset: CGFloat = 66.0
+        static let contentViewHorizontalLandscapeOffset: CGFloat = 66.0
         static let replyToVerticalSpacing: CGFloat = 15.0
         static let topContainerPortraitHeight: CGFloat = 54.0
         static let topContainerLandscapeHeight: CGFloat = 44.0
@@ -262,7 +262,7 @@ fileprivate extension OWCommentCreationLightView {
 
                 // Content
                 self.contentView.OWSnp.updateConstraints { make in
-                    make.leading.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.contentViewVerticalLandscapeOffset : 0)
+                    make.leading.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.contentViewHorizontalLandscapeOffset : 0)
                 }
 
                 // Footer
