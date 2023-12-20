@@ -134,6 +134,7 @@ fileprivate extension OWLoginPromptView {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.horizontalOffset)
             make.height.equalTo(Metrics.separatorHeight)
+            make.bottom.equalToSuperview()
         }
     }
 
