@@ -181,9 +181,12 @@ fileprivate extension OWCommunityGuidelinesViewModel {
 
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,
-            contentSizeChanged) { style, _ in
+            servicesProvider.appLifeCycle().isActive,
+            contentSizeChanged) { style, isActive, _ -> OWThemeStyle? in
+                guard isActive else { return nil } // Avoid computation on background for `AttributedString`
                 return style
             }
+            .unwrap()
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self._updateCommunityGuidelinesAttributedString.onNext(style)
