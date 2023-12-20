@@ -16,13 +16,12 @@ typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWComm
 
 protocol OWCommentThreadViewViewModelingInputs {
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
-    var tableViewHeight: PublishSubject<CGFloat> { get }
+    var tableViewSize: PublishSubject<CGSize> { get }
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeThreadOffset: PublishSubject<CGPoint> { get }
     var closeTapped: PublishSubject<Void> { get }
-    var tableViewWidth: PublishSubject<CGFloat> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -42,7 +41,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var updateTableViewInstantly: Observable<Void> { get }
-    var tableViewWidthChanged: Observable<CGFloat> { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -71,10 +70,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let delayAfterScrollBeforeHighlightAnimation = 300 // ms
     }
 
-    var tableViewWidth = PublishSubject<CGFloat>()
-    lazy var tableViewWidthChanged: Observable<CGFloat> = {
-        tableViewWidth
-            .filter { $0 > 0 }
+    var tableViewSize = PublishSubject<CGSize>()
+    lazy var tableViewSizeChanged: Observable<CGSize> = {
+        tableViewSize
             .distinctUntilChanged()
             .asObservable()
     }()
@@ -1700,12 +1698,12 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        tableViewWidthChanged
-            .subscribe(onNext: { [weak self] width in
+        tableViewSizeChanged
+            .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.servicesProvider
                     .conversationSizeService()
-                    .setConversationTableWidth(width: width)
+                    .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
     }

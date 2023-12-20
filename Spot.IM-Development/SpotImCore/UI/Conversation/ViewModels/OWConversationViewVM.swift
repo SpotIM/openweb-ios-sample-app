@@ -22,8 +22,7 @@ protocol OWConversationViewViewModelingInputs {
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToTop: PublishSubject<Void> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
-    var tableViewHeight: PublishSubject<CGFloat> { get }
-    var tableViewWidth: PublishSubject<CGFloat> { get }
+    var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
 }
@@ -60,10 +59,10 @@ protocol OWConversationViewViewModelingOutputs {
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
-    var tableViewHeightChanged: Observable<CGFloat> { get }
-    var tableViewWidthChanged: Observable<CGFloat> { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
+    var tableViewHeightChanged: Observable<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModeling {
@@ -101,18 +100,17 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate let conversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewVMQueue")
 
-    var tableViewHeight = PublishSubject<CGFloat>()
     lazy var tableViewHeightChanged: Observable<CGFloat> = {
-        tableViewHeight
+        tableViewSize
+            .map { $0.height }
             .filter { $0 > 0 }
             .distinctUntilChanged()
             .asObservable()
     }()
 
-    var tableViewWidth = PublishSubject<CGFloat>()
-    lazy var tableViewWidthChanged: Observable<CGFloat> = {
-        tableViewWidth
-            .filter { $0 > 0 }
+    var tableViewSize = PublishSubject<CGSize>()
+    lazy var tableViewSizeChanged: Observable<CGSize> = {
+        tableViewSize
             .distinctUntilChanged()
             .asObservable()
     }()
@@ -2249,12 +2247,12 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        tableViewWidthChanged
-            .subscribe(onNext: { [weak self] width in
+        tableViewSizeChanged
+            .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.servicesProvider
                     .conversationSizeService()
-                    .setConversationTableWidth(width: width)
+                    .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
     }

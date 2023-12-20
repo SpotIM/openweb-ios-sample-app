@@ -10,18 +10,18 @@ import Foundation
 import RxSwift
 
 protocol OWConversationSizeServicing {
-    var conversationTableWidth: Observable<CGFloat> { get }
-    func setConversationTableWidth(width: CGFloat)
+    var conversationTableSize: Observable<CGSize> { get }
+    func setConversationTableSize(_ size: CGSize)
 }
 
 class OWConversationSizeService: OWConversationSizeServicing {
-    fileprivate var _conversationTableWidth = BehaviorSubject<CGFloat>(value: 0)
-    var conversationTableWidth: Observable<CGFloat> {
-        return _conversationTableWidth
+    fileprivate var _conversationTableSize = BehaviorSubject<CGSize>(value: .zero)
+    var conversationTableSize: Observable<CGSize> {
+        return _conversationTableSize
             .asObservable()
     }
 
-    func setConversationTableWidth(width: CGFloat) {
-        _conversationTableWidth.onNext(width)
+    func setConversationTableSize(_ size: CGSize) {
+        _conversationTableSize.onNext(size)
     }
 }
