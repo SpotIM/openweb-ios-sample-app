@@ -134,10 +134,10 @@ fileprivate extension OWLoginPromptView {
             make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.verticalOffset)
             switch viewModel.outputs.style {
             case .left:
-                make.leading.trailing.equalToSuperviewSafeArea().inset(Metrics.horizontalOffset)
+                make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
 
             case .leftWithoutSeperator, .center:
-                make.leading.trailing.equalToSuperviewSafeArea()
+                make.leading.trailing.equalToSuperview()
             }
             make.height.equalTo(Metrics.separatorHeight)
             make.bottom.equalToSuperview()
@@ -177,9 +177,8 @@ fileprivate extension OWLoginPromptView {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .withLatestFrom(OWSharedServicesProvider.shared.orientationService().orientation) { ($0, $1) }
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
