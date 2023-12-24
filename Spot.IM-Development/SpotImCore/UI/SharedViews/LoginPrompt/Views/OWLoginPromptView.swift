@@ -177,7 +177,7 @@ fileprivate extension OWLoginPromptView {
             })
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, 
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
                                  OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
