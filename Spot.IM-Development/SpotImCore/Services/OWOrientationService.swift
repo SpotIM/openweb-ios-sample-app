@@ -89,7 +89,7 @@ fileprivate extension OWOrientationService {
         switch enforcedOrientation {
         case .all:
             switch currentDeviceOrientation {
-            case .portrait, .faceUp, .faceDown:
+            case .portrait:
                 return .portrait
             case .landscapeLeft, .landscapeRight, .portraitUpsideDown:
                 return .landscape
