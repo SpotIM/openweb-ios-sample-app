@@ -445,7 +445,7 @@ extension OWUILayer {
             }
         }
 
-        // We need to use encrypted postId after it set to manager
+        // We need to use encoded postId after it set to manager
         guard let postId = OWManager.manager.postId else { return }
 
         let internalCommentCreationType: OWCommentCreationTypeInternal
