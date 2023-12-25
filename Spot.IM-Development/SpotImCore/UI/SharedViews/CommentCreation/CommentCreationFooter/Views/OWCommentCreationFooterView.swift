@@ -69,6 +69,8 @@ class OWCommentCreationFooterView: UIView {
         return OWCommentLabelsContainerView()
     }()
 
+    fileprivate var commentLabelsZeroWidthConstraint: OWConstraint? = nil
+
     init(with viewModel: OWCommentCreationFooterViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -120,6 +122,7 @@ fileprivate extension OWCommentCreationFooterView {
             make.centerY.equalToSuperview()
             make.leading.equalTo(addImageButton.OWSnp.trailing).offset(10.0)
             make.trailing.lessThanOrEqualTo(ctaButton.OWSnp.leading).offset(10.0)
+            commentLabelsZeroWidthConstraint = make.width.equalTo(0).constraint
         }
     }
 
@@ -178,6 +181,7 @@ fileprivate extension OWCommentCreationFooterView {
 
                 let isLandscape = currentOrientation == .landscape
                 self.commentLabelsContainerView.isHidden = !isLandscape
+                self.commentLabelsZeroWidthConstraint?.isActive = !isLandscape
 
                 self.ctaButton.OWSnp.updateConstraints { make in
                     make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
