@@ -83,6 +83,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
                     return nil
                 }
             }
+            .unwrap()
             .startWith(nil)
     }()
 
