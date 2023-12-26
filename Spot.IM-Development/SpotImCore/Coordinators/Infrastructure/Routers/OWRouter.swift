@@ -225,7 +225,9 @@ fileprivate extension OWRouter {
                 guard let self = self,
                       let navController = navigationController as? UINavigationController else { return }
                 let childs = navController.children.reversed()
-                childs.forEach { self.runCompletion(for: $0) }
+                childs.forEach { [weak self] in
+                    self?.runCompletion(for: $0)
+                }
                 navigationController.clear()
             })
             .disposed(by: navDisposedBag)
