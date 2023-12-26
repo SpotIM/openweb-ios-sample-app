@@ -65,6 +65,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         sharedServiceProvider
             .authenticationManager()
             .activeUserAvailability
+            .observe(on: MainScheduler.instance)
             .map { availability in
                 switch availability {
                 case .notAvailable:

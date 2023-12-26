@@ -121,23 +121,24 @@ fileprivate extension OWSkeletonShimmeringService {
             .voidify()
         // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
             .delay(.milliseconds(10), scheduler: scheduler)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                // Apply animation on each skeleton view
-                self.weakViews.forEach { weakView in
-                    guard let skeletonShimmeringView = weakView.value(),
-                          let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    // Apply animation on each skeleton view
+                    self.weakViews.forEach { weakView in
+                        guard let skeletonShimmeringView = weakView.value(),
+                              let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
 
-                    let animation = CABasicAnimation(keyPath: Metrics.animationKey)
-                    animation.duration = CFTimeInterval(self.config.duration / 1000) // Convert to seconds
-                    let viewWidth = skeletonShimmeringView.frame.width
-                    animation.fromValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : -viewWidth
-                    animation.toValue = self.config.shimmeringDirection == .leftToRight ? -viewWidth : viewWidth
-                    animation.repeatCount = .zero
-                    animation.autoreverses = false
-                    animation.fillMode = CAMediaTimingFillMode.forwards
-                    shimmeringLayer.add(animation, forKey: OWAssociatedSkeletonShimmering.shimmeringLayerAnimationIdentifier)
+                        let animation = CABasicAnimation(keyPath: Metrics.animationKey)
+                        animation.duration = CFTimeInterval(self.config.duration / 1000) // Convert to seconds
+                        let viewWidth = skeletonShimmeringView.frame.width
+                        animation.fromValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : -viewWidth
+                        animation.toValue = self.config.shimmeringDirection == .leftToRight ? -viewWidth : viewWidth
+                        animation.repeatCount = .zero
+                        animation.autoreverses = false
+                        animation.fillMode = CAMediaTimingFillMode.forwards
+                        shimmeringLayer.add(animation, forKey: OWAssociatedSkeletonShimmering.shimmeringLayerAnimationIdentifier)
+                    }
                 }
             })
             .disposed(by: serviceDisposeBag)

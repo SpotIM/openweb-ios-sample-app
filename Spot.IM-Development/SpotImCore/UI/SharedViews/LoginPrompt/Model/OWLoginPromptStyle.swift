@@ -11,4 +11,5 @@ import Foundation
 enum OWLoginPromptAlignmentStyle {
     case left
     case center
+    case leftWithoutSeperator
 }

@@ -89,14 +89,14 @@ fileprivate extension OWCommentCreationView {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
                 let backgroundColor: UIColor = {
                     switch self.viewModel.outputs.commentCreationStyle {
                     case .regular, .light:
-                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                        return currentOrientation == .landscape ? .clear : OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                     case .floatingKeyboard:
                         return .clear
                     }

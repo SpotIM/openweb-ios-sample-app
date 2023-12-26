@@ -168,13 +168,15 @@ fileprivate extension OWTextView {
             if viewModel.outputs.isAutoExpandable {
                 textView.rx.text
                     .subscribe(onNext: { [weak self] _ in
-                        guard let self = self else { return }
-                        UIView.animate(withDuration: Metrics.expandAnimationDuration) {
-                            self.textView.OWSnp.updateConstraints { make in
-                                make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
-                                                                            maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                        OWScheduler.runOnMainThreadIfNeeded {
+                            guard let self = self else { return }
+                            UIView.animate(withDuration: Metrics.expandAnimationDuration) {
+                                self.textView.OWSnp.updateConstraints { make in
+                                    make.height.equalTo(self.textView.newHeight(withBaseHeight: Metrics.baseTextViewHeight,
+                                                                                maxLines: Metrics.maxNumberOfLines)).priority(Metrics.heightConstraintPriority)
+                                }
+                                self.layoutIfNeeded()
                             }
-                            self.layoutIfNeeded()
                         }
                     })
                     .disposed(by: disposeBag)

@@ -19,6 +19,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationCTATap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var viewInitialized: PublishSubject<Void> { get }
+    var tableViewSize: PublishSubject<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -54,6 +55,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -80,7 +82,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
 
-    fileprivate let preConversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "preConversationViewVMScheduler")
+    fileprivate let preConversationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "preConversationViewVMScheduler")
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
@@ -104,6 +106,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         _serverCommentsLoadingState
             .asObservable()
     }
+
+    var tableViewSize = PublishSubject<CGSize>()
+    lazy var tableViewSizeChanged: Observable<CGSize> = {
+        tableViewSize
+            .distinctUntilChanged()
+            .asObservable()
+    }()
 
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
         return cellsViewModels
@@ -1360,6 +1369,15 @@ fileprivate extension OWPreConversationViewViewModel {
         communityGuidelinesViewModel.outputs.urlClickedOutput
             .subscribe(onNext: { [weak self] _ in
                 self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
+
+        tableViewSizeChanged
+            .subscribe(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .conversationSizeService()
+                    .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
     }

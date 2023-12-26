@@ -16,12 +16,13 @@ typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWComm
 
 protocol OWCommentThreadViewViewModelingInputs {
     var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
-    var tableViewHeight: PublishSubject<CGFloat> { get }
+    var tableViewSize: PublishSubject<CGSize> { get }
     var viewInitialized: PublishSubject<Void> { get }
     var pullToRefresh: PublishSubject<Void> { get }
     var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeThreadOffset: PublishSubject<CGPoint> { get }
     var closeTapped: PublishSubject<Void> { get }
+    var performAction: PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -41,6 +42,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
     var updateTableViewInstantly: Observable<Void> { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -58,7 +60,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let spacingBetweenCommentsDivisor: CGFloat = 2
         static let delayForPerformTableViewAnimation: Int = 10 // ms
         static let commentCellCollapsableTextLineLimit: Int = 4
-        static let delayForPerformHighlightAnimation: Int = 800 // ms
+        static let delayForPerformHighlightAnimation: Int = 1000 // ms
         static let delayAfterRecievingUpdatedComments: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 500 // ms
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
@@ -68,6 +70,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let delayAfterScrollBeforeHighlightAnimation = 300 // ms
     }
+
+    var tableViewSize = PublishSubject<CGSize>()
+    lazy var tableViewSizeChanged: Observable<CGSize> = {
+        tableViewSize
+            .distinctUntilChanged()
+            .asObservable()
+    }()
 
     var closeTapped = PublishSubject<Void>()
 
@@ -106,6 +115,13 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
+    fileprivate var _selectedCommentId = BehaviorSubject<OWCommentId?>(value: nil)
+    fileprivate lazy var selectedCommentId: Observable<OWCommentId> = {
+        _selectedCommentId
+            .unwrap()
+            .asObservable()
+    }()
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentPresentationDataHelper: OWCommentsPresentationDataHelperProtocol
     fileprivate let viewableMode: OWViewableMode
@@ -113,7 +129,11 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var articleUrl: String = ""
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate let commentThreadViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInitiated, internalSerialQueueName: "commentThreadViewVMScheduler")
+    fileprivate let commentThreadViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentThreadViewVMScheduler")
+
+    var performAction = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
+
+    fileprivate var _performActionType: OWCommentThreadPerformActionType
 
     fileprivate lazy var _isReadOnly = BehaviorSubject<Bool>(value: commentThreadData.article.additionalSettings.readOnlyMode == .enable)
     fileprivate lazy var isReadOnly: Observable<Bool> = {
@@ -315,7 +335,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             // We want to show skeletons after this pull to refresh
             if shouldShowErrorLoadingComments {
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
@@ -329,12 +349,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate var _performTableViewAnimation = PublishSubject<Void>()
     var performTableViewAnimation: Observable<Void> {
-        return _performTableViewAnimation
-            .filter { [weak self] in
-                guard let self = self else { return false }
-                return self.dataSourceTransition == .animated
-            }
-            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: MainScheduler.instance)
+        return Observable.combineLatest(_performTableViewAnimation, _dataSourceTransition) { $1 }
+            .filter { $0 == .animated }
+            .debounce(.milliseconds(Metrics.debouncePerformTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .voidify()
             .asObservable()
     }
@@ -358,6 +375,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     var dataSourceTransition: OWViewTransition = .reload
+    fileprivate var _dataSourceTransition: BehaviorSubject<OWViewTransition> = BehaviorSubject(value: .reload)
 
     init (commentThreadData: OWCommentThreadRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -368,6 +386,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         self.viewableMode = viewableMode
         self.commentThreadData = commentThreadData
         self._commentThreadData.onNext(commentThreadData)
+        self._selectedCommentId.onNext(commentThreadData.commentId)
+
+        let commentThreadSettings = commentThreadData.settings.commentThreadSettings
+        let performActionType = commentThreadSettings.performActionType
+        self._performActionType = performActionType
+
         self.setupObservers()
     }
 }
@@ -598,7 +622,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
             .do(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload // Block animations in the table view
+                self._dataSourceTransition.onNext(.reload) // Block animations in the table view
             })
             .flatMap { [weak self] data -> Observable<Event<OWConversationReadRM>> in
                 guard let self = self else { return .empty() }
@@ -616,7 +640,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .voidify()
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._serverCommentsLoadingState.onNext(.loading(triggredBy: .tryAgainAfterError))
                 self._shouldShowErrorLoadingComments.onNext(false)
                 self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
@@ -666,7 +690,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 // We want to show skeletons after this pull to refresh
                 if shouldShowErrorLoadingComments {
                     guard let self = self else { return }
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._serverCommentsLoadingState.onNext(.loading(triggredBy: loadingTriggeredReason))
                     self._shouldShowErrorLoadingComments.onNext(false)
                     self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentThreadLoadingInitialComments)
@@ -760,7 +784,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
@@ -881,7 +905,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
-            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: MainScheduler.asyncInstance)
+            .delay(.milliseconds(Metrics.delayForPerformTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 self?._performTableViewAnimation.onNext()
             })
@@ -1187,23 +1211,23 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        let selectedCommentCellVm = commentCellsVmsObservable
-            .map { [weak self] commentCellsVms -> OWCommentCellViewModeling? in
+        let selectedCommentCellVm = Observable.combineLatest(commentCellsVmsObservable, selectedCommentId)
+            .map { [weak self] commentCellsVms, commentId -> OWCommentCellViewModeling? in
                 guard let self = self else { return nil }
                 let selectedCommentCellVm: OWCommentCellViewModeling? = commentCellsVms.first { vm in
-                        return vm.outputs.id == self.commentThreadData.commentId
+                        return vm.outputs.id == commentId
                 }
                 return selectedCommentCellVm
             }
             .unwrap()
             .share()
 
-        let selectedCommentCellVmIndex = cellsViewModels
-            .map { [weak self] cellsViewModels -> Int? in
+        let selectedCommentCellVmIndex = Observable.combineLatest(cellsViewModels, selectedCommentId)
+            .map { [weak self] cellsViewModels, commentId -> Int? in
                 guard let self = self else { return nil }
                 let commentIndex: Int? = cellsViewModels.firstIndex { vm in
                     if case .comment(let commentCellViewModel) = vm {
-                        return commentCellViewModel.outputs.id == self.commentThreadData.commentId
+                        return commentCellViewModel.outputs.id == commentId
                     } else {
                         return false
                     }
@@ -1215,11 +1239,11 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // perform highlight animation for selected comment id
         selectedCommentCellVmIndex
+            .distinctUntilChanged()
             .delay(.milliseconds(Metrics.delayForPerformHighlightAnimation), scheduler: commentThreadViewVMScheduler)
-            .take(1)
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
-                self.dataSourceTransition = .reload
+                self._dataSourceTransition.onNext(.reload)
                 self._performHighlightAnimationCellIndex.onNext(index)
             })
             .disposed(by: disposeBag)
@@ -1510,7 +1534,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 case let .insertReply(comment, toCommentId):
                     self._replyToLocalComment.onNext((comment, toCommentId))
                 case .refreshConversation:
-                    self.dataSourceTransition = .reload
+                    self._dataSourceTransition.onNext(.reload)
                     self._forceRefresh.onNext()
                 }
             })
@@ -1648,9 +1672,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         scrolledToCellIndex
+            .delay(.milliseconds(Metrics.delayBeforeReEnablingTableViewAnimation), scheduler: commentThreadViewVMScheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dataSourceTransition = .animated
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
@@ -1661,9 +1686,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] selectedCommentCellVm in
                 guard let self = self else { return }
-                let commentThreadSettings = self.commentThreadData.settings.commentThreadSettings
-                let performActionType = commentThreadSettings.performActionType
-                switch performActionType {
+                switch self._performActionType {
                 case .changeRank(let from, let to):
                     let selectedCommentVm = selectedCommentCellVm.outputs.commentVM
                     if let fromRank = SPRank(rawValue: from),
@@ -1682,9 +1705,33 @@ fileprivate extension OWCommentThreadViewViewModel {
                 default:
                     break
                 }
+                self._performActionType = .none
             })
             .disposed(by: disposeBag)
 
+        performAction
+            .delay(.milliseconds(Metrics.performActionDelay), scheduler: commentThreadViewVMScheduler)
+            .subscribe(onNext: { [weak self] commentId, performActionType in
+                guard let self = self else { return }
+                self._performActionType = performActionType
+                self._selectedCommentId.onNext(commentId)
+            })
+            .disposed(by: disposeBag)
+
+        _dataSourceTransition
+            .subscribe(onNext: { [weak self] transition in
+                self?.dataSourceTransition = transition
+            })
+            .disposed(by: disposeBag)
+
+        tableViewSizeChanged
+            .subscribe(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.servicesProvider
+                    .conversationSizeService()
+                    .setConversationTableSize(size)
+            })
+            .disposed(by: disposeBag)
     }
 
     func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
