@@ -125,6 +125,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let coordinateCommentCreationObservable = Observable.merge(
             openCommentCreationObservable,
             deepLinkToCommentCreation.unwrap().asObservable())
+        
             .filter { [weak self] _ in
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
