@@ -364,7 +364,9 @@ class OWNetworkAuthenticationInterceptor<AuthenticatorType>: OWNetworkRequestInt
 
         // Dispatch to queue to hop out of the mutable state lock
         queue.async {
-            adaptOperations.forEach { self.adapt($0.urlRequest, for: $0.session, completion: $0.completion) }
+            adaptOperations.forEach { [weak self] in
+                self?.adapt($0.urlRequest, for: $0.session, completion: $0.completion)
+            }
             requestsToRetry.forEach { $0(.retry) }
         }
     }
