@@ -91,7 +91,11 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .asObservable()
 
         let userLoggedInObservable = commentCreationVM.outputs.commentCreationViewVM.outputs.userJustLoggedIn
-            .map { return self.commentCreationData }
+            .map { [weak self] _ -> OWCommentCreationRequiredData? in
+                guard let self = self else { return nil }
+                return self.commentCreationData
+            }
+            .unwrap()
             .map { commentCreationData -> OWCommentId? in
                 if case .replyToComment(let comment) = commentCreationData.commentCreationType {
                     return comment.id
@@ -130,7 +134,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                         return .dismissOverFullScreen
                     }
                 }()
-                self.router.pop(popStyle: popStyle, animated: false)
+                self.router.pop(popStyle: popStyle, animated: true)
             })
 
         return Observable.merge(resultsWithPopAnimation.take(1),
