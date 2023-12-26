@@ -57,7 +57,7 @@ class OWConversationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+        return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
 }
 
@@ -136,10 +136,12 @@ fileprivate extension OWConversationVC {
 
                 let isLargeTitleGoingToBeDisplay = displayMode == .always
                 self.viewModel.inputs.changeIsLargeTitleDisplay.onNext(isLargeTitleGoingToBeDisplay)
-                self.navigationItem.largeTitleDisplayMode = displayMode
-                UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
-                    self.navigationController?.navigationBar.layoutIfNeeded()
-                })
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.navigationItem.largeTitleDisplayMode = displayMode
+                    UIView.animate(withDuration: OWNavigationControllerCustomizer.Metrics.animationTimeForLargeTitle, animations: {
+                        self.navigationController?.navigationBar.layoutIfNeeded()
+                    })
+                }
             })
             .disposed(by: disposeBag)
     }

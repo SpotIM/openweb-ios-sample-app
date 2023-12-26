@@ -19,6 +19,8 @@ protocol OWCommentLabelsContainerViewModelingOutputs {
     var commentLabelsTitle: Observable<String?> { get }
     var commentLabelsViewModels: Observable<[OWCommentLabelViewModeling]> { get }
     var selectedLabelIds: Observable<[String]> { get }
+    var isValidSelection: Observable<Bool> { get }
+    var isInitialSelectionChanged: Observable<Bool> { get }
 }
 
 protocol OWCommentLabelsContainerViewModeling {
@@ -46,15 +48,54 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
             .asObservable()
     }
 
+    var isInitialSelectionChanged: Observable<Bool> {
+        _selectedLabelIds
+            .map { [weak self] selectedLabelIds in
+                guard let self = self else { return false }
+
+                if case .edit(let comment) = self.commentCreationType {
+                    if let commentLabels = comment.additionalData?.labels,
+                       let labelIds = commentLabels.ids,
+                       Set(labelIds) != selectedLabelIds {
+                        return true
+                    }
+                }
+
+                return false
+            }
+    }
+
+    var isValidSelection: Observable<Bool> {
+        Observable.combineLatest(_commentLabelsSection, selectedLabelIds) { ($0, $1) }
+            .map { sectionConfig, selectedLabelIds in
+                if let sectionConfig = sectionConfig {
+                    return (sectionConfig.minSelected, selectedLabelIds.count)
+                } else {
+                    return (0, selectedLabelIds.count)
+                }
+
+            }
+            .map { $0 <= $1 }
+    }
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
 
-    init(comment: OWComment? = nil, section: String, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    fileprivate let commentCreationType: OWCommentCreationTypeInternal?
+
+    init(comment: OWComment? = nil,
+         commentCreationType: OWCommentCreationTypeInternal? = nil,
+         section: String,
+         servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         self.section = section
+        self.commentCreationType = commentCreationType
         if let comment = comment {
             _comment.onNext(comment)
         }
+
+        self.setupInitialSelectedLabelsIfNeeded()
+
         self.setupObservers()
     }
 
@@ -69,9 +110,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     init(servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
         self.section = ""
+        self.commentCreationType = nil
     }
 
-    fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration> = {
+    fileprivate lazy var _commentLabelsSection: Observable<SPCommentLabelsSectionConfiguration?> = {
         self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> CommentLabelsSectionsConfig? in
@@ -81,9 +123,10 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
                 return sharedConfig.commentLabels
             }
-            .unwrap()
             .map { [weak self] commentLabelsSectionsConfig in
-                guard let self = self else { return nil }
+                guard let self = self,
+                      let commentLabelsSectionsConfig = commentLabelsSectionsConfig
+                else { return nil }
                 if let sectionConfig = commentLabelsSectionsConfig[self.section] {
                     return sectionConfig
                 } else if let defaultSection = commentLabelsSectionsConfig["default"] {
@@ -91,13 +134,14 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 }
                 return nil
             }
-            .unwrap()
     }()
 
     fileprivate lazy var _commentLabelsSettings: Observable<[OWCommentLabelSettings]> = {
         _comment
             .withLatestFrom(_commentLabelsSection) { [weak self] comment, commentLabelsSection in
-                guard let self = self else { return nil }
+                guard let self = self,
+                      let commentLabelsSection = commentLabelsSection
+                else { return nil }
                 return self.getCommentLabels(comment: comment, commentLabelsSection: commentLabelsSection)
             }.unwrap()
     }()
@@ -116,7 +160,9 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
     fileprivate var _commentLabelsTitle: Observable<String?> {
         Observable.combineLatest(_comment, _commentLabelsSection) { comment, commentLabelsSection in
-            guard comment == nil else { return nil }
+            guard comment == nil,
+                  let commentLabelsSection = commentLabelsSection
+            else { return nil }
             return commentLabelsSection.guidelineText
         }
     }
@@ -144,7 +190,9 @@ fileprivate extension OWCommentLabelsContainerViewModel {
             .withLatestFrom(_commentLabelsSection) { ($0.0, $0.1, $1) }
             .withLatestFrom(_selectedLabelIds) { ($0.0, $0.1, $0.2, $1) }
             .subscribe(onNext: { [weak self] (state, settings, sectionSettings, selectedLabelIds) in
-                guard let self = self else { return }
+                guard let self = self,
+                      let sectionSettings = sectionSettings
+                else { return }
                 switch state {
                 case .notSelected:
                     var selectedLabelIdsCopy = selectedLabelIds
@@ -207,5 +255,15 @@ fileprivate extension OWCommentLabelsContainerViewModel {
         }
 
         return selectedCommentLabelsConfiguration
+    }
+
+    func setupInitialSelectedLabelsIfNeeded() {
+        guard let commentCreationType = self.commentCreationType else { return }
+        if case .edit(let comment) = commentCreationType {
+            if let commentLabels = comment.additionalData?.labels,
+               let labelIds = commentLabels.ids, labelIds.count > 0 {
+                _selectedLabelIds.onNext(Set(labelIds))
+            }
+        }
     }
 }

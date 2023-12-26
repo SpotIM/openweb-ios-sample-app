@@ -307,11 +307,11 @@ fileprivate extension TestAPIVC {
     func setupObservers() {
         title = viewModel.outputs.title
 
-        viewModel.outputs.spotId
+        viewModel.outputs.selectedSpotId
             .bind(to: txtFieldSpotId.rx.textFieldText)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.postId
+        viewModel.outputs.selectedPostId
             .bind(to: txtFieldPostId.rx.textFieldText)
             .disposed(by: disposeBag)
 

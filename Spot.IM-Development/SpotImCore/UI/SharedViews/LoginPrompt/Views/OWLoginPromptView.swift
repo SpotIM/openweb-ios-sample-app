@@ -14,8 +14,8 @@ class OWLoginPromptView: UIView {
         static let identifier = "login_promt_view_id"
 
         static let labelHorizontalPadding: CGFloat = 4
-        static let horizontalOffset: CGFloat = 10
-        static let verticalOffset: CGFloat = 16
+        static let horizontalOffset: CGFloat = 16
+        static let verticalOffset: CGFloat = 10
         static let separatorHeight: CGFloat = 1
     }
 
@@ -85,7 +85,7 @@ class OWLoginPromptView: UIView {
         return tap
     }()
 
-    fileprivate var zeroHeighConstraint: OWConstraint? = nil
+    fileprivate var zeroHeightConstraint: OWConstraint? = nil
     fileprivate var zeroWidthConstraint: OWConstraint? = nil
 
     fileprivate var viewModel: OWLoginPromptViewModeling
@@ -110,13 +110,13 @@ fileprivate extension OWLoginPromptView {
         self.enforceSemanticAttribute()
 
         self.OWSnp.makeConstraints { make in
-            zeroHeighConstraint = make.height.equalTo(0).constraint
+            zeroHeightConstraint = make.height.equalTo(0).constraint
             zeroWidthConstraint = make.width.equalTo(0).constraint
         }
 
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
             make.trailing.lessThanOrEqualToSuperview()
 
             switch viewModel.outputs.style {
@@ -124,16 +124,23 @@ fileprivate extension OWLoginPromptView {
                 make.leading.greaterThanOrEqualToSuperview()
                 make.centerX.equalToSuperview()
 
-            case .left:
-                make.leading.equalToSuperviewSafeArea()
+            case .left, .leftWithoutSeperator:
+                make.leading.equalToSuperviewSafeArea().inset(Metrics.horizontalOffset)
             }
         }
 
         self.addSubview(seperatorView)
         seperatorView.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.horizontalOffset)
+            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.verticalOffset)
+            switch viewModel.outputs.style {
+            case .left:
+                make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+
+            case .leftWithoutSeperator, .center:
+                make.leading.trailing.equalToSuperview()
+            }
             make.height.equalTo(Metrics.separatorHeight)
+            make.bottom.equalToSuperview()
         }
     }
 
@@ -143,7 +150,7 @@ fileprivate extension OWLoginPromptView {
             .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let heighConstraint = zeroHeighConstraint {
+        if let heighConstraint = zeroHeightConstraint {
             viewModel.outputs.shouldShowView
                 .map { !$0 }
                 .bind(to: heighConstraint.rx.isActive)
@@ -170,9 +177,8 @@ fileprivate extension OWLoginPromptView {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .withLatestFrom(OWSharedServicesProvider.shared.orientationService().orientation) { ($0, $1) }
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
             .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)

@@ -128,7 +128,9 @@ fileprivate extension OWAvatarView {
             OWSharedServicesProvider.shared.themeStyleService().style
         )
             .subscribe(onNext: { [weak self] avatarImageType, style in
-                self?.updateAvatar(avatarImageType: avatarImageType, style: style)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.updateAvatar(avatarImageType: avatarImageType, style: style)
+                }
             })
             .disposed(by: disposeBag)
 
