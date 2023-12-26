@@ -9,6 +9,7 @@
 "Oldest" = "Mais Antigo";
 "Staff" = "Funcionários";
 "CommunityModerator" = "Moderador(a) da Comunidade";
+"SeeMore" = " Ver mais ";
 "ReadLess" = " Ler Menos ";
 "OK" = "OK";
 "Yes" = "Si";
@@ -175,7 +176,6 @@
 "Admin" = "Admin";
 "Moderator" = "Moderator";
 "Journalist" = "Jornalista";
-"Read More" = " Ler Mais ";
 "Close editor?" = "Close editor?";
 "This message was rejected." = "Esta mensagem foi rejeitada.";
 "Be the first to comment on this article." = "Seja a primeira pessoa a comentar este artigo.";

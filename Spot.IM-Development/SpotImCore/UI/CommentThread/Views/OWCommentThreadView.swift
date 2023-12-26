@@ -261,8 +261,8 @@ fileprivate extension OWCommentThreadView {
 
         tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
             .unwrap()
-            .map { $0.size.height }
-            .bind(to: viewModel.inputs.tableViewHeight)
+            .map { $0.size }
+            .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateTableViewInstantly

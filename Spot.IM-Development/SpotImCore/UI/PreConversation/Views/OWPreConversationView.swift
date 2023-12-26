@@ -201,7 +201,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
             make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.loginPromptTopPadding)
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview()
         }
 
         self.addSubview(communityQuestionView)
@@ -226,7 +226,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             commentingCTAHeightConstraint = make.height.equalTo(0).constraint
         }
 
@@ -509,6 +509,12 @@ fileprivate extension OWPreConversationView {
                 guard let self = self else { return }
                 self.btnCTAConversation.titleLabel?.font = OWFontBook.shared.font(typography: .bodyContext)
             })
+            .disposed(by: disposeBag)
+
+        tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
+            .unwrap()
+            .map { $0.size }
+            .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
