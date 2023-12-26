@@ -1027,7 +1027,9 @@ class OWNetworkSession {
         case let .request(convertible):
             performSetupOperations(for: request, convertible: convertible)
         case let .resumeData(resumeData):
-            rootQueue.async { self.didReceiveResumeData(resumeData, for: request) }
+            rootQueue.async {  [weak self] in
+                self?.didReceiveResumeData(resumeData, for: request)
+            }
         }
     }
 
@@ -1052,7 +1054,9 @@ class OWNetworkSession {
 
         guard let adapter = adapter(for: request) else {
             guard shouldCreateTask() else { return }
-            rootQueue.async { self.didCreateURLRequest(initialRequest, for: request) }
+            rootQueue.async {  [weak self] in
+                self?.didCreateURLRequest(initialRequest, for: request)
+            }
             return
         }
 
@@ -1067,7 +1071,9 @@ class OWNetworkSession {
 
                 guard shouldCreateTask() else { return }
 
-                self.rootQueue.async { self.didCreateURLRequest(adaptedRequest, for: request) }
+                self.rootQueue.async {  [weak self] in
+                    self?.didCreateURLRequest(adaptedRequest, for: request)
+                }
             } catch {
                 self.rootQueue.async { request.didFailToAdaptURLRequest(initialRequest, withError: .requestAdaptationFailed(error: error)) }
             }

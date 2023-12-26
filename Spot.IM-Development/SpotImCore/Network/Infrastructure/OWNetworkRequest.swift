@@ -501,7 +501,9 @@ class OWNetworkRequest {
 
         $mutableState.isFinishing = true
 
-        if let error = error { self.error = error }
+        if let error = error {
+            self.error = error
+        }
 
         // Start response handlers
         processNextResponseSerializer()
@@ -523,11 +525,18 @@ class OWNetworkRequest {
             }
 
             if mutableState.responseSerializerProcessingFinished {
-                underlyingQueue.async { self.processNextResponseSerializer() }
+                underlyingQueue.async { [weak self] in
+                    self?.processNextResponseSerializer()
+                }
             }
 
             if mutableState.state.canTransitionTo(.resumed) {
-                underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
+                underlyingQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    if self.delegate?.startImmediately == true {
+                        self.resume()
+                    }
+                }
             }
         }
     }
@@ -617,7 +626,10 @@ class OWNetworkRequest {
         uploadProgress.totalUnitCount = totalBytesExpectedToSend
         uploadProgress.completedUnitCount = totalBytesSent
 
-        uploadProgressHandler?.queue.async { self.uploadProgressHandler?.handler(self.uploadProgress) }
+        uploadProgressHandler?.queue.async { [weak self] in
+            guard let self = self else { return }
+            self.uploadProgressHandler?.handler(self.uploadProgress)
+        }
     }
 
     /// Perform a closure on the current `state` while locked.
@@ -656,17 +668,23 @@ class OWNetworkRequest {
 
             mutableState.state = .cancelled
 
-            underlyingQueue.async { self.didCancel() }
+            underlyingQueue.async { [weak self] in
+                self?.didCancel()
+            }
 
             guard let task = mutableState.tasks.last, task.state != .completed else {
-                underlyingQueue.async { self.finish() }
+                underlyingQueue.async { [weak self] in
+                    self?.finish()
+                }
                 return
             }
 
             // Resume to ensure metrics are gathered.
             task.resume()
             task.cancel()
-            underlyingQueue.async { self.didCancelTask(task) }
+            underlyingQueue.async {  [weak self] in
+                self?.didCancelTask(task)
+            }
         }
 
         return self
@@ -682,12 +700,16 @@ class OWNetworkRequest {
 
             mutableState.state = .suspended
 
-            underlyingQueue.async { self.didSuspend() }
+            underlyingQueue.async {  [weak self] in
+                self?.didSuspend()
+            }
 
             guard let task = mutableState.tasks.last, task.state != .completed else { return }
 
             task.suspend()
-            underlyingQueue.async { self.didSuspendTask(task) }
+            underlyingQueue.async {  [weak self] in
+                self?.didSuspendTask(task)
+            }
         }
 
         return self
@@ -703,12 +725,16 @@ class OWNetworkRequest {
 
             mutableState.state = .resumed
 
-            underlyingQueue.async { self.didResume() }
+            underlyingQueue.async {  [weak self] in
+                self?.didResume()
+            }
 
             guard let task = mutableState.tasks.last, task.state != .completed else { return }
 
             task.resume()
-            underlyingQueue.async { self.didResumeTask(task) }
+            underlyingQueue.async {  [weak self] in
+                self?.didResumeTask(task)
+            }
         }
 
         return self
@@ -1137,7 +1163,10 @@ class OWNetworkDataRequest: OWNetworkRequest {
         downloadProgress.totalUnitCount = totalBytesExpected
         downloadProgress.completedUnitCount = totalBytesReceived
 
-        downloadProgressHandler?.queue.async { self.downloadProgressHandler?.handler(self.downloadProgress) }
+        downloadProgressHandler?.queue.async { [weak self] in
+            guard let self = self else { return }
+            self.downloadProgressHandler?.handler(self.downloadProgress)
+        }
     }
 
     /// Validates the request, using the specified closure.
@@ -1154,7 +1183,9 @@ class OWNetworkDataRequest: OWNetworkRequest {
 
             let result = validation(self.request, response, self.data)
 
-            if case let .failure(error) = result { self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error))) }
+            if case let .failure(error) = result {
+                self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error)))
+            }
 
             self.eventMonitor?.request(self,
                                        didValidateRequest: self.request,
@@ -1612,7 +1643,10 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
         downloadProgress.totalUnitCount = totalBytesExpectedToWrite
         downloadProgress.completedUnitCount += bytesWritten
 
-        downloadProgressHandler?.queue.async { self.downloadProgressHandler?.handler(self.downloadProgress) }
+        downloadProgressHandler?.queue.async { [weak self] in
+            guard let self = self else { return }
+            self.downloadProgressHandler?.handler(self.downloadProgress)
+        }
     }
 
     override func task(for request: URLRequest, using session: URLSession) -> URLSessionTask {
@@ -1681,10 +1715,14 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
 
             mutableState.state = .cancelled
 
-            underlyingQueue.async { self.didCancel() }
+            underlyingQueue.async {  [weak self] in
+                self?.didCancel()
+            }
 
             guard let task = mutableState.tasks.last as? URLSessionDownloadTask, task.state != .completed else {
-                underlyingQueue.async { self.finish() }
+                underlyingQueue.async {  [weak self] in
+                    self?.finish()
+                }
                 return
             }
 
@@ -1693,14 +1731,18 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
                 task.resume()
                 task.cancel { resumeData in
                     self.$mutableDownloadState.resumeData = resumeData
-                    self.underlyingQueue.async { self.didCancelTask(task) }
+                    self.underlyingQueue.async {  [weak self] in
+                        self?.didCancelTask(task)
+                    }
                     completionHandler(resumeData)
                 }
             } else {
                 // Resume to ensure metrics are gathered.
                 task.resume()
                 task.cancel()
-                self.underlyingQueue.async { self.didCancelTask(task) }
+                self.underlyingQueue.async {  [weak self] in
+                    self?.didCancelTask(task)
+                }
             }
         }
 
