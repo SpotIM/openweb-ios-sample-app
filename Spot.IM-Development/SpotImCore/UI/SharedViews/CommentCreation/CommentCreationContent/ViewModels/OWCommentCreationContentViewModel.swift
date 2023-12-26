@@ -83,6 +83,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
                     return nil
                 }
             }
+            .unwrap() // Required to prevent subscription ending after "complete" event
             .startWith(nil)
     }()
 
