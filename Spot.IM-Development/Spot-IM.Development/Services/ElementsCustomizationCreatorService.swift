@@ -17,7 +17,7 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
 
     static func addElementsCustomization() {
         let style = UserDefaultsProvider.shared.get(key: .elementsCustomizationStyleIndex, defaultValue: SettingsElementsCustomizationStyle.defaultIndex)
-        var customizations = OpenWeb.manager.ui.customizations
+        let customizations = OpenWeb.manager.ui.customizations
 
         let customizableElement: OWCustomizableElementCallback = { element, source, themeStyle, _ in
             switch style {
@@ -29,28 +29,6 @@ class ElementsCustomizationCreatorService: ElementsCustomizationCreatorServicing
         }
 
         customizations.addElementCallback(customizableElement)
-
-        switch style {
-        case 2:
-            customizations.customizedTheme = OWTheme(
-                skeletonColor: OWColor(lightColor: .blue, darkColor: .red),
-                skeletonShimmeringColor: OWColor(lightColor: .purple, darkColor: .systemPink),
-                primarySeparatorColor: OWColor(lightColor: .green, darkColor: .yellow),
-                secondarySeparatorColor: OWColor(lightColor: .cyan, darkColor: .magenta),
-                tertiarySeparatorColor: OWColor(lightColor: .brown, darkColor: .orange),
-                primaryTextColor: OWColor(lightColor: .black, darkColor: .white),
-                secondaryTextColor: OWColor(lightColor: .red, darkColor: .blue),
-                tertiaryTextColor: OWColor(lightColor: .gray, darkColor: .systemTeal),
-                primaryBackgroundColor: OWColor(lightColor: .systemPink, darkColor: .purple),
-                secondaryBackgroundColor: OWColor(lightColor: .yellow, darkColor: .green),
-                tertiaryBackgroundColor: OWColor(lightColor: .magenta, darkColor: .cyan),
-                primaryBorderColor: OWColor(lightColor: .orange, darkColor: .brown),
-                secondaryBorderColor: OWColor(lightColor: .white, darkColor: .black),
-                loaderColor: OWColor(lightColor: .brown, darkColor: .yellow),
-                brandColor: OWColor(lightColor: .cyan, darkColor: .black))
-        default:
-            break
-        }
     }
 }
 

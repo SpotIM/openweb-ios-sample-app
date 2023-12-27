@@ -15,6 +15,7 @@ protocol GeneralSettingsViewModelingInputs {
     var articleInformationSelectedStrategy: BehaviorSubject<OWArticleInformationStrategy> { get }
     var orientationSelectedEnforcement: BehaviorSubject<OWOrientationEnforcement> { get }
     var elementsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
+    var colorsCustomizationStyleSelectedIndex: PublishSubject<Int> { get }
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
     var statusBarStyleSelectedIndex: PublishSubject<Int> { get }
@@ -50,6 +51,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var fontGroupTypeSettings: [String] { get }
     var initialSortSettings: [String] { get }
     var elementsCustomizationStyleIndex: Observable<Int> { get }
+    var colorsCustomizationStyleIndex: Observable<Int> { get }
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
     var statusBarStyleIndex: Observable<Int> { get }
@@ -77,6 +79,9 @@ protocol GeneralSettingsViewModelingOutputs {
 
     var elementsCustomizationStyleTitle: String { get }
     var elementsCustomizationStyleSettings: [String] { get }
+
+    var colorsCustomizationStyleTitle: String { get }
+    var colorsCustomizationStyleSettings: [String] { get }
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> { get }
     var articleHeaderStyleTitle: String { get }
@@ -107,6 +112,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var articleInformationSelectedStrategy = BehaviorSubject<OWArticleInformationStrategy>(value: .default)
     var orientationSelectedEnforcement = BehaviorSubject<OWOrientationEnforcement>(value: .default)
     var elementsCustomizationStyleSelectedIndex = PublishSubject<Int>()
+    var colorsCustomizationStyleSelectedIndex = PublishSubject<Int>()
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
     var statusBarStyleSelectedIndex = PublishSubject<Int>()
@@ -149,6 +155,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
 
     var elementsCustomizationStyleIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .elementsCustomizationStyleIndex, defaultValue: SettingsElementsCustomizationStyle.defaultIndex)
+    }
+
+    var colorsCustomizationStyleIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .colorCustomizationStyleIndex, defaultValue: SettingsColorCustomizationStyle.defaultIndex)
     }
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> {
@@ -326,6 +336,10 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("ElementsCustomizationStyle", comment: "")
     }()
 
+    lazy var colorsCustomizationStyleTitle: String = {
+        return NSLocalizedString("ColorsCustomizationStyle", comment: "")
+    }()
+
     lazy var readOnlyTitle: String = {
         return NSLocalizedString("ReadOnlyMode", comment: "")
     }()
@@ -390,6 +404,14 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         let _style2 = NSLocalizedString("Style2", comment: "")
 
         return [_none, _style1, _style2]
+    }()
+
+    lazy var colorsCustomizationStyleSettings: [String] = {
+        let _none = NSLocalizedString("None", comment: "")
+        let _style1 = NSLocalizedString("Style1", comment: "")
+        let _custom = NSLocalizedString("Custom", comment: "")
+
+        return [_none, _style1, _custom]
     }()
 
     lazy var themeModeSettings: [String] = {
@@ -521,6 +543,12 @@ fileprivate extension GeneralSettingsVM {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.elementsCustomizationStyleIndex))
+            .disposed(by: disposeBag)
+
+        colorsCustomizationStyleSelectedIndex
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.colorCustomizationStyleIndex))
             .disposed(by: disposeBag)
 
         readOnlyModeSelectedIndex

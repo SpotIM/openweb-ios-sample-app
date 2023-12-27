@@ -18,6 +18,7 @@ class GeneralSettingsView: UIView {
         static let segmentedArticleHeaderStyleIdentifier = "article_header_style"
         static let segmentedArticleInformationStrategiIdentifier = "article_information_strategy"
         static let segmentedElementsCustomizationStyleIdentifier = "elements_customization_style"
+        static let segmentedColorsCustomizationStyleIdentifier = "colors_customization_style"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedStatusBarStyleIdentifier = "status_bar_style"
         static let segmentedNavigationBarStyleIdentifier = "navigation_bar_style"
@@ -73,6 +74,15 @@ class GeneralSettingsView: UIView {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedElementsCustomizationStyleIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedColorsCustomizationStyle: SegmentedControlSetting = {
+        let title = viewModel.outputs.colorsCustomizationStyleTitle
+        let items = viewModel.outputs.colorsCustomizationStyleSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedColorsCustomizationStyleIdentifier,
                                        items: items)
     }()
 
@@ -240,6 +250,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(textFieldArticleURL)
         stackView.addArrangedSubview(textFieldArticleSection)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
+        stackView.addArrangedSubview(segmentedColorsCustomizationStyle)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
         stackView.addArrangedSubview(segmentedStatusBarStyle)
@@ -274,6 +285,10 @@ fileprivate extension GeneralSettingsView {
 
         viewModel.outputs.elementsCustomizationStyleIndex
             .bind(to: segmentedElementsCustomizationStyle.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.colorsCustomizationStyleIndex
+            .bind(to: segmentedColorsCustomizationStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.readOnlyModeIndex
@@ -333,6 +348,10 @@ fileprivate extension GeneralSettingsView {
 
         segmentedElementsCustomizationStyle.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.elementsCustomizationStyleSelectedIndex)
+            .disposed(by: disposeBag)
+
+        segmentedColorsCustomizationStyle.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.colorsCustomizationStyleSelectedIndex)
             .disposed(by: disposeBag)
 
         segmentedReadOnlyMode.rx.selectedSegmentIndex
