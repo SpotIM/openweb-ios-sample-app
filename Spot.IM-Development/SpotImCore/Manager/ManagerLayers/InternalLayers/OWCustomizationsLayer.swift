@@ -10,7 +10,8 @@ import Foundation
 
 protocol OWCustomizationsInternalProtocol {
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType)
-    func clearCustomizations()
+    func clearCallbacks()
+    func clearColorsCustomizations()
 }
 
 class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol {
@@ -77,7 +78,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newTheme) {
             _customizedTheme = newTheme
-            setColorsAccordingToTheme(newTheme)
+            setColors(forTheme: newTheme)
         }
     }
 
@@ -103,8 +104,11 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
-    func clearCustomizations() {
+    func clearCallbacks() {
         callbacks.removeAll()
+    }
+
+    func clearColorsCustomizations() {
         customizedTheme = OWTheme()
     }
 
@@ -135,7 +139,7 @@ fileprivate extension OWCustomizationsLayer {
             .sendAnalyticEvents(events: [event])
     }
 
-    func setColorsAccordingToTheme(_ theme: OWTheme) {
+    func setColors(forTheme theme: OWTheme) {
         setColor(color: theme.skeletonColor, type: .skeletonColor)
         setColor(color: theme.skeletonShimmeringColor, type: .skeletonShimmeringColor)
         setColor(color: theme.primarySeparatorColor, type: .separatorColor3)
@@ -150,8 +154,9 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
+        // Preventing brand from changing later on from the server
         if let brandColor = theme.brandColor {
-            setColor(color: theme.brandColor, type: .brandColor)
+            setColor(color: brandColor, type: .brandColor)
             OWColorPalette.shared.blockForOverride(color: .brandColor)
         }
     }
