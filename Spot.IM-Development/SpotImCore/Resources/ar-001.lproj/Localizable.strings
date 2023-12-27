@@ -9,6 +9,7 @@
 "Oldest" = "الأقدم";
 "Staff" = "العاملين";
 "CommunityModerator" = "منسّق مجتمعي";
+"SeeMore" = " عرض المزيد ";
 "ReadLess" = " عرض اقل ";
 "OK" = "OK";
 "Yes" = "نعم";
@@ -138,7 +139,6 @@
 "It seems we are experiencing technical issues. Please try again" = "عفوًا! يبدو أن لدينا مشكلة فنية. يُرجى إعادة المحاولة.";
 "Empty response" = "Empty response";
 "The Internet connection appears to be offline." = "عفوًا! يبدو أن لدينا مشكلة في الاتصال. حاول مجددا";
-"Read More" = " عرض المزيد ";
 "Log Out" = "تسجيل الخروج";
 "Log In" = "تسجيل الدخول";
 "Are you sure you want to log out?" = "هل انت متاكد من تسجيل الخروج؟";

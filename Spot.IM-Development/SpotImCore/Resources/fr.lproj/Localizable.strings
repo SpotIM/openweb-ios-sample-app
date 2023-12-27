@@ -9,6 +9,7 @@
 "Oldest" = "Plus anciens";
 "Staff" = "Equipe";
 "CommunityModerator" = "Modérateur de la Communauté";
+"SeeMore" = " Voir plus ";
 "ReadLess" = " Lire moins ";
 "OK" = "OK";
 "Yes" = "Oui";
@@ -138,7 +139,6 @@
 "It seems we are experiencing technical issues. Please try again" = "Il semblerait que nous rencontrions des problèmes techniques. Veuillez essayer a nouveau";
 "Empty response" = "Champs vide";
 "The Internet connection appears to be offline." = "Il semblerait que nous rencontrions des problèmes de connexion.";
-"Read More" = " Lire plus ";
 "Log Out" = "Se déconnecter";
 "Log In" = "Se connecter";
 "Are you sure you want to log out?" = "Etes-vous sûr de vouloir vous déconnecter ?";

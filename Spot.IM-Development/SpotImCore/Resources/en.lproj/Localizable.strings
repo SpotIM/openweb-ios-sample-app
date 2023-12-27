@@ -8,7 +8,7 @@
 "Newest" = "Newest";
 "Oldest" = "Oldest";
 "CommunityModerator" = "Community Moderator";
-"ReadMore" = " Read More ";
+"SeeMore" = " See more ";
 "OK" = "OK";
 "Yes" = "Yes";
 "No" = "No";
@@ -167,7 +167,6 @@
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "It seems like your comment has violated our policy. We recommend you try again with different phrasing.";
 "The Internet connection appears to be offline." = "Looks like we’re experiencing some connectivity issues.";
 "Staff" = "Staff";
-"Read More" = " Read More ";
 "Log Out" = "Log Out";
 "Log In" = "Log In";
 "Are you sure you want to log out?" = "Are you sure you want to log out?";

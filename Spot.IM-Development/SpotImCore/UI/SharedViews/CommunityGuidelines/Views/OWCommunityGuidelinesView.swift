@@ -74,7 +74,6 @@ class OWCommunityGuidelinesView: UIView {
         self.disposeBag = DisposeBag()
         updateUI()
         setupObservers()
-        self.layoutIfNeeded()
     }
 }
 
@@ -91,10 +90,11 @@ fileprivate extension OWCommunityGuidelinesView {
 
         if viewModel.outputs.shouldShowContainer {
             self.addSubview(guidelinesContainer)
-            guidelinesContainer.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
+            guidelinesContainer.OWSnp.makeConstraints { [weak self] make in
+                guard let self = self else { return }
+                make.top.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing)
                 make.leading.trailing.equalToSuperview()
-                heightConstraint = make.height.equalTo(0).constraint
+                self.heightConstraint = make.height.equalTo(0).constraint
             }
 
             guidelinesContainer.addSubview(guidelinesIcon)
@@ -112,10 +112,11 @@ fileprivate extension OWCommunityGuidelinesView {
             }
         } else {
             self.addSubview(titleLabel)
-            titleLabel.OWSnp.makeConstraints { make in
-                make.top.bottom.equalToSuperview().inset(viewModel.outputs.spacing)
+            titleLabel.OWSnp.makeConstraints { [weak self] make in
+                guard let self = self else { return }
+                make.top.bottom.equalToSuperview().inset(self.viewModel.outputs.spacing)
                 make.leading.trailing.equalToSuperview()
-                heightConstraint = make.height.equalTo(0).constraint
+                self.heightConstraint = make.height.equalTo(0).constraint
             }
         }
     }
@@ -123,15 +124,21 @@ fileprivate extension OWCommunityGuidelinesView {
     func setupObservers() {
         viewModel.outputs.shouldShowView
             .map { !$0 }
-            .bind(to: self.rx.isHidden)
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.isHidden = value
+                }
+            })
             .disposed(by: disposeBag)
 
-        if let heightConstraint = heightConstraint {
-            viewModel.outputs.shouldShowView
-                .map { !$0 }
-                .bind(to: heightConstraint.rx.isActive)
-                .disposed(by: disposeBag)
-        }
+        viewModel.outputs.shouldShowView
+            .map { !$0 }
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.heightConstraint?.isActive = value
+                }
+            })
+            .disposed(by: disposeBag)
 
         let communityGuidelinesClickableStringObservable = viewModel.outputs
             .communityGuidelinesClickableString
@@ -142,13 +149,15 @@ fileprivate extension OWCommunityGuidelinesView {
         Observable.combineLatest(communityGuidelinesAttributedStringObservable,
                                  communityGuidelinesClickableStringObservable)
             .subscribe(onNext: { [weak self] attributedText, clickableString in
-                guard let self = self else { return }
-                self.titleLabel
-                    .attributedText(attributedText)
-                    .addRangeGesture(targetRange: clickableString) { [weak self] in
-                        guard let self = self else { return }
-                        self.viewModel.inputs.urlClicked.onNext(())
-                    }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.titleLabel
+                        .attributedText(attributedText)
+                        .addRangeGesture(targetRange: clickableString) { [weak self] in
+                            guard let self = self else { return }
+                            self.viewModel.inputs.urlClicked.onNext(())
+                        }
+                }
             })
             .disposed(by: disposeBag)
 

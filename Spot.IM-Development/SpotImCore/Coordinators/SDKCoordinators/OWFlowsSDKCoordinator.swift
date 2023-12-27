@@ -162,7 +162,8 @@ fileprivate extension OWFlowsSDKCoordinator {
         let navCustomizerService = servicesProvider.navigationControllerCustomizer()
 
         // Initializes the orientation for first time
-        _ = servicesProvider.orientationService()
+        let orientationService = servicesProvider.orientationService()
+        orientationService.set(viewableMode: .partOfFlow)
 
         switch presentationalMode {
         case .present(let viewController, let style):
