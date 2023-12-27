@@ -117,14 +117,26 @@ extension OWAuthenticationManager {
 
                 // For Pre-conversation present mode where the VC not started yet
                 if let router = router, router.isEmpty() {
-                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: {
+                    let authDismiss = PublishSubject<Void>()
+                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: { publisherAuthVC in
                         router.start()
+                        // Since the placeholder vc is being removed once the bulisher vc is on router, we need to set the completion to the correct vc
+                        router.setCompletion(for: publisherAuthVC, dismissCompletion: authDismiss)
                     })
                     let vc = OWNavigationPlaceholderVC(viewModel: vm)
                     router.setRoot(vc, animated: false, dismissCompletion: nil)
-                }
+                    // Once publisher auth is really dissmissed (from our router) complete blocking
+                    _ = authDismiss
+                        .take(1)
+                        .asObservable()
+                        .subscribe(onNext: {
+                            blockerAction.completion()
+                        })
 
-                authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
+                    authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: {})
+                } else {
+                    authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
+                }
             })
     }
 

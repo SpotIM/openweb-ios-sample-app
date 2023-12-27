@@ -22,6 +22,8 @@ protocol OWRoutering {
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
+
+    func setCompletion(for vc: UIViewController, dismissCompletion: PublishSubject<Void>)
 }
 
 extension OWRoutering {
@@ -75,6 +77,10 @@ class OWRouter: NSObject, OWRoutering {
         if let sdkNavigationController = self.navigationController as? OWNavigationControllerProtocol {
             setupSDKNavigationObserver(navigationController: sdkNavigationController)
         }
+    }
+
+    func setCompletion(for vc: UIViewController, dismissCompletion: PublishSubject<Void>) {
+        completions[vc] = dismissCompletion
     }
 
     func start() {
