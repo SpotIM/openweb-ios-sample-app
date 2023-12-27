@@ -34,6 +34,7 @@ class GeneralSettingsView: UIView {
         static let loginPromptSwitchIdentifier = "login_prompt"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
+        static let btnPadding: CGFloat = 12
     }
 
     fileprivate lazy var stackView: UIStackView = {
@@ -84,6 +85,12 @@ class GeneralSettingsView: UIView {
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedColorsCustomizationStyleIdentifier,
                                        items: items)
+    }()
+
+    fileprivate lazy var openCustomColorsBtn: UIButton = {
+        return "Custom Colors"
+            .blueRoundedButton
+            .withPadding(Metrics.btnPadding)
     }()
 
     fileprivate lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
@@ -251,6 +258,7 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(textFieldArticleSection)
         stackView.addArrangedSubview(segmentedElementsCustomizationStyle)
         stackView.addArrangedSubview(segmentedColorsCustomizationStyle)
+        stackView.addArrangedSubview(openCustomColorsBtn)
         stackView.addArrangedSubview(segmentedReadOnlyMode)
         stackView.addArrangedSubview(segmentedThemeMode)
         stackView.addArrangedSubview(segmentedStatusBarStyle)
@@ -454,6 +462,11 @@ fileprivate extension GeneralSettingsView {
         viewModel.outputs.shouldShowArticleURL
             .map { !$0 }
             .bind(to: textFieldArticleURL.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowColorSettingButton
+            .map { !$0 }
+            .bind(to: openCustomColorsBtn.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

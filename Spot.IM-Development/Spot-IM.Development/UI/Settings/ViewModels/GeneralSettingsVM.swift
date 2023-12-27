@@ -66,6 +66,7 @@ protocol GeneralSettingsViewModelingOutputs {
     var articleSection: Observable<String> { get }
     var shouldShowArticleURL: Observable<Bool> { get }
     var shouldShowSetLanguage: Observable<Bool> { get }
+    var shouldShowColorSettingButton: Observable<Bool> { get }
     var supportedLanguageItems: [String] { get }
     var supportedLanguageTitle: String { get }
     var languageStrategyTitle: String { get }
@@ -311,6 +312,12 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                     return false
                 }
             }
+            .asObservable()
+    }
+
+    var shouldShowColorSettingButton: Observable<Bool> {
+        return colorsCustomizationStyleSelectedIndex
+            .map { $0 == 2 } // Custom
             .asObservable()
     }
 
