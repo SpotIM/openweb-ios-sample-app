@@ -49,7 +49,7 @@ class OWUsersService: OWUsersServicing {
             guard let id = $0.id else { return nil }
             return (id, $0)
         }.unwrap()
-        let userIdsToUser: OWUsersMapper = Dictionary(uniqueKeysWithValues: userIdToUserTupples)
+        let userIdsToUser: OWUsersMapper = userIdToUserTupples.reduce(into: [:]) { $0[$1.0] = $1.1 }
 
         // merge and replacing current users
         _users.merge(userIdsToUser, uniquingKeysWith: {(_, new) in new })
