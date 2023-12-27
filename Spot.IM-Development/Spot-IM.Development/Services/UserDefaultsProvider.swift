@@ -92,6 +92,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case articleHeaderStyle = "articleHeaderStyle"
         case articleInformationStrategy = "articleInformationStrategy"
         case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
+        case colorCustomizationStyleIndex = "colorCustomizationStyleIndex"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case statusBarStyleIndex = "statusBarStyleIndex"
@@ -186,6 +187,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key wich stores general setting's orientation enforcement"
         case .elementsCustomizationStyleIndex:
             return "Key which stores general setting's elements customization style index"
+        case .colorCustomizationStyleIndex:
+            return "Key which stores general setting's color customization style index"
         case .selectedSpotId:
             return "Key which stores the current spot id"
         case .selectedPostId:
