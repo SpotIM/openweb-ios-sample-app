@@ -42,7 +42,7 @@ class OWReportReasonSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtoc
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+        return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
 }
 

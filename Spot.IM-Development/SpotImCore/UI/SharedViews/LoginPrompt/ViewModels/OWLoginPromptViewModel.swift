@@ -68,6 +68,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
             }
         }
         .startWith(false)
+        .distinctUntilChanged()
         .share(replay: 1)
     }
 

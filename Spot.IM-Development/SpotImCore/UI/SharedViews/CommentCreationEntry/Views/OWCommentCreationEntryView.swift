@@ -25,7 +25,6 @@ class OWCommentCreationEntryView: UIView {
         static let labelInsetHorizontal: CGFloat = 15
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
-        static let verticalLandscapeMargin: CGFloat = 66.0
     }
 
     fileprivate lazy var userAvatarView: OWAvatarView = {

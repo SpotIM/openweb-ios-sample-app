@@ -67,11 +67,12 @@ fileprivate extension OWSubscriberIconView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.isSubscriber
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.imgViewIcon.OWSnp.updateConstraints { make in
-                    make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.imgViewIcon.OWSnp.updateConstraints { make in
+                        make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
+                    }
                 }
             })
             .disposed(by: disposeBag)

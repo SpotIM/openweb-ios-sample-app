@@ -8,6 +8,7 @@
 "Newest" = "Más reciente";
 "Oldest" = "Más antiguo";
 "CommunityModerator" = "Moderador de la comunidad";
+"SeeMore" = " Ver más ";
 "ReadLess" = " Lea menos ";
 "OK" = "OK";
 "Yes" = "Sí";
@@ -138,7 +139,6 @@
 "Empty response" = "Empty response";
 "The Internet connection appears to be offline." = "Parece que estamos experimentando algunos problemas de conectividad.";
 "Staff" = "Personal";
-"Read More" = " Lea más ";
 "Log Out" = "Cerrar sesión";
 "Log In" = "Iniciar sesión";
 "Are you sure you want to log out?" = "¿Están seguros de querer cerrar sesión?";

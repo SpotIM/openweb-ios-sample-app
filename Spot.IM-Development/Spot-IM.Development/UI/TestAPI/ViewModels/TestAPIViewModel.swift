@@ -11,8 +11,8 @@ import RxSwift
 import SpotImCore
 
 protocol TestAPIViewModelingInputs {
-    var enteredSpotId: PublishSubject<String> { get }
-    var enteredPostId: PublishSubject<String> { get }
+    var enteredSpotId: PublishSubject<OWSpotId> { get }
+    var enteredPostId: PublishSubject<OWPostId> { get }
     var uiFlowsTapped: PublishSubject<Void> { get }
     var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
@@ -39,6 +39,8 @@ protocol TestAPIViewModelingOutputs {
     var openAutomation: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
     var openAuthentication: Observable<Void> { get }
+    var selectedSpotId: Observable<OWSpotId> { get }
+    var selectedPostId: Observable<OWPostId> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -59,8 +61,8 @@ class TestAPIViewModel: TestAPIViewModeling,
 
     fileprivate let disposeBag = DisposeBag()
 
-    let enteredSpotId = PublishSubject<String>()
-    let enteredPostId = PublishSubject<String>()
+    let enteredSpotId = PublishSubject<OWSpotId>()
+    let enteredPostId = PublishSubject<OWPostId>()
     let uiFlowsTapped = PublishSubject<Void>()
     let uiViewsTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
@@ -70,6 +72,14 @@ class TestAPIViewModel: TestAPIViewModeling,
     let settingsTapped = PublishSubject<Void>()
     let authenticationTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
+
+    var selectedSpotId: Observable<OWSpotId> {
+        return userDefaultsProvider.values(key: .selectedSpotId, defaultValue: Metrics.preFilledSpotId)
+    }
+
+    var selectedPostId: Observable<OWPostId> {
+        return userDefaultsProvider.values(key: .selectedPostId, defaultValue: Metrics.preFilledPostId)
+    }
 
     fileprivate let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
     var shouldShowSelectPreset: Observable<Bool> {
@@ -140,7 +150,10 @@ class TestAPIViewModel: TestAPIViewModeling,
             .asObservable()
     }
 
-    init() {
+    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
+        self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
     }
 }
@@ -155,6 +168,18 @@ fileprivate extension TestAPIViewModel {
         enteredPostId
             .distinctUntilChanged()
             .bind(to: _postId)
+            .disposed(by: disposeBag)
+
+        _spotId
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWSpotId>.selectedSpotId))
+            .disposed(by: disposeBag)
+
+        _postId
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWPostId>.selectedPostId))
             .disposed(by: disposeBag)
 
         let conversationDataModelObservable =
