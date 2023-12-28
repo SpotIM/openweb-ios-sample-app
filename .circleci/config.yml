@@ -31,7 +31,7 @@ references:
         echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $CORE_VERSION
 
-  define: &xcode_latest_official_version "15.0.1"
+  define: &xcode_latest_official_version "15.1.0"
 
 commands:
   swiftlint:
@@ -689,13 +689,6 @@ workflows:
                 - /^release/tag15.0/.*/
           xcode: "15.0"
 
-      - release_tag:
-          filters:
-            branches:
-              only:
-                - /^release/tag15.1/.*/
-          xcode: "15.1"
-
       - release_sdk_job:
           filters:
             branches:
@@ -718,14 +711,6 @@ workflows:
               only:
                 - /^release/beta_tag15.0/.*/
           xcode: "15.0"
-          buildConfig: "ReleaseBeta"
-
-      - release_tag:
-          filters:
-            branches:
-              only:
-                - /^release/beta_tag15.1/.*/
-          xcode: "15.1"
           buildConfig: "ReleaseBeta"
 
       - release_app_job:
