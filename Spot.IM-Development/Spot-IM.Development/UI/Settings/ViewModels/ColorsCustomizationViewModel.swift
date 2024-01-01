@@ -14,6 +14,7 @@ protocol ColorsCustomizationViewModelingInputs { }
 
 protocol ColorsCustomizationViewModelingOutputs {
     var title: String { get }
+    var colorItems: [ThemeColorItem] { get }
 }
 
 protocol ColorsCustomizationViewModeling {
@@ -28,4 +29,15 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
     lazy var title: String = {
         return NSLocalizedString("CustomColors", comment: "")
     }()
+
+    lazy var colorItems: [ThemeColorItem] = {
+        return [
+            ThemeColorItem(title: "Skeleton", selectedColor: PublishSubject())
+        ]
+    }()
+}
+
+struct ThemeColorItem {
+    let title: String
+    let selectedColor: PublishSubject<UIColor?>
 }
