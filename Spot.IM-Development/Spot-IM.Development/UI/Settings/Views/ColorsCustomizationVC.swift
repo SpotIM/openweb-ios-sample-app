@@ -37,7 +37,7 @@ class ColorsCustomizationVC: UIViewController {
     fileprivate lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.alignment = .leading
+        stackView.alignment = .fill
         stackView.spacing = Metrics.stackViewSpacing
         return stackView
     }()
