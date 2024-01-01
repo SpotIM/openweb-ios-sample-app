@@ -127,7 +127,7 @@ fileprivate extension ColorSelectionItemView {
         self.addSubview(lightLabel)
         lightLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(title.snp.trailing).offset(Metrics.generalSpacing)
+            make.leading.greaterThanOrEqualTo(title.snp.trailing).offset(Metrics.generalSpacing)
         }
 
         self.addSubview(lightColorRectangleView)
