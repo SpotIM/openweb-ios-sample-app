@@ -32,7 +32,22 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 
     lazy var colorItems: [ThemeColorItem] = {
         return [
-            ThemeColorItem(title: "Skeleton", selectedColor: PublishSubject())
+            ThemeColorItem(title: "Skeleton", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Skeleton Shimmering", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Primary Separator", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Secondary Separator", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Tertiary Separator", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Primary Text", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Secondary Text", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Tertiary Text", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Primary Background", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Secindary Background", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Tertiary Background", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Primary Border", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Secondary Border", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Tertiary Border", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Loader", selectedColor: PublishSubject()),
+            ThemeColorItem(title: "Brand Color", selectedColor: PublishSubject())
         ]
     }()
 }
