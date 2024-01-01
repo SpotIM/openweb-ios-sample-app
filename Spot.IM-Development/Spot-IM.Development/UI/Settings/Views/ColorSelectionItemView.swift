@@ -13,21 +13,35 @@ import RxCocoa
 
 @available(iOS 14.0, *)
 class ColorSelectionItemView: UIView {
+    fileprivate struct Metrics {
+        static let identifier = "colors_customization_vc_id"
+        static let colorViewBorderSize: CGFloat = 1
+        static let colorViewCornerRadius: CGFloat = 4
+    }
 
     fileprivate let item: ThemeColorItem
     fileprivate let showPicker: (UIColorPickerViewController) -> Void
     fileprivate let disposeBag: DisposeBag
 
     fileprivate lazy var title: UILabel = {
-        return UILabel()
+        let label = UILabel()
+        label.font = FontBook.paragraph
+        return label
+    }()
+
+    fileprivate lazy var enableCheckbox: UISwitch = {
+        let switchView =  UISwitch()
+        switchView.isOn = true
+        switchView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        return switchView
     }()
 
     fileprivate lazy var colorRectangleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.borderWidth = 1.0
+        view.layer.borderWidth = Metrics.colorViewBorderSize
         view.layer.borderColor = UIColor.black.cgColor
-        view.corner(radius: 4)
+        view.corner(radius: Metrics.colorViewCornerRadius)
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(tapGesture)
         return view
@@ -39,13 +53,6 @@ class ColorSelectionItemView: UIView {
         self.isUserInteractionEnabled = true
 
         return tap
-    }()
-
-    fileprivate lazy var enableCheckbox: UISwitch = {
-        let switchView =  UISwitch()
-        switchView.isOn = true
-        switchView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-        return switchView
     }()
 
     fileprivate let picker = UIColorPickerViewController()
@@ -68,23 +75,22 @@ class ColorSelectionItemView: UIView {
 @available(iOS 14.0, *)
 fileprivate extension ColorSelectionItemView {
     func setupViews() {
+        self.addSubview(enableCheckbox)
+        enableCheckbox.snp.makeConstraints { make in
+            make.leading.centerY.equalToSuperview()
+        }
+
         self.addSubview(title)
         title.snp.makeConstraints { make in
-            make.top.bottom.leading.equalToSuperview()
+            make.leading.equalTo(enableCheckbox.snp.trailing).offset(14)
+            make.top.bottom.equalToSuperview()
         }
 
         self.addSubview(colorRectangleView)
         colorRectangleView.snp.makeConstraints { make in
-            make.leading.equalTo(title.snp.trailing).offset(12)
+            make.leading.equalTo(title.snp.trailing).offset(14)
             make.size.equalTo(16)
-            make.centerY.equalToSuperview()
-        }
-
-        self.addSubview(enableCheckbox)
-        enableCheckbox.snp.makeConstraints { make in
-            make.leading.equalTo(colorRectangleView.snp.trailing).offset(12)
-            make.trailing.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.centerY.trailing.equalToSuperview()
         }
     }
 
