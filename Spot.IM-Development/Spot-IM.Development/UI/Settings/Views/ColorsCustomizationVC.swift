@@ -15,6 +15,7 @@ class ColorsCustomizationVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "colors_customization_vc_id"
         static let horizontalOffset: CGFloat = 40
+        static let verticalOffset: CGFloat = 24
         static let stackViewSpacing: CGFloat = 20
     }
 
@@ -23,6 +24,14 @@ class ColorsCustomizationVC: UIViewController {
 
     fileprivate lazy var scrollView: UIScrollView = {
         return UIScrollView()
+    }()
+
+    fileprivate lazy var explainLabel: UILabel = {
+        let label = UILabel()
+        label.font = FontBook.paragraphBold
+        label.text = "Both light and dark colors should be set in order to override OWTheme"
+        label.numberOfLines = 0
+        return label
     }()
 
     fileprivate lazy var stackView: UIStackView = {
@@ -69,12 +78,21 @@ fileprivate extension ColorsCustomizationVC {
 
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
+        scrollView.addSubview(explainLabel)
+        explainLabel.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.horizontalOffset)
+            make.leading.equalTo(scrollView).inset(Metrics.verticalOffset)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.verticalOffset)
+        }
+
         scrollView.addSubview(stackView)
         stackView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalOffset)
+            make.top.equalTo(explainLabel.snp.bottom).offset(Metrics.horizontalOffset)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalOffset)
             make.leading.trailing.equalTo(scrollView)
         }
 
