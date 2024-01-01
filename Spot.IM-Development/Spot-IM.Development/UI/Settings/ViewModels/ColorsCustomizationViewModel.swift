@@ -32,27 +32,32 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 
     lazy var colorItems: [ThemeColorItem] = {
         return [
-            ThemeColorItem(title: "Skeleton", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Skeleton Shimmering", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Primary Separator", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Secondary Separator", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Tertiary Separator", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Primary Text", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Secondary Text", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Tertiary Text", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Primary Background", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Secindary Background", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Tertiary Background", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Primary Border", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Secondary Border", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Tertiary Border", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Loader", selectedColor: PublishSubject()),
-            ThemeColorItem(title: "Brand Color", selectedColor: PublishSubject())
+            ThemeColorItem(title: "Skeleton", selectedColor: BehaviorSubject(value: colorTheme.skeletonColor)),
+            ThemeColorItem(title: "Skeleton Shimmering", selectedColor: BehaviorSubject(value: colorTheme.skeletonShimmeringColor)),
+            ThemeColorItem(title: "Primary Separator", selectedColor: BehaviorSubject(value: colorTheme.primarySeparatorColor)),
+            ThemeColorItem(title: "Secondary Separator", selectedColor: BehaviorSubject(value: colorTheme.secondarySeparatorColor)),
+            ThemeColorItem(title: "Tertiary Separator", selectedColor: BehaviorSubject(value: colorTheme.tertiaryTextColor)),
+            ThemeColorItem(title: "Primary Text", selectedColor: BehaviorSubject(value: colorTheme.primaryTextColor)),
+            ThemeColorItem(title: "Secondary Text", selectedColor: BehaviorSubject(value: colorTheme.secondaryTextColor)),
+            ThemeColorItem(title: "Tertiary Text", selectedColor: BehaviorSubject(value: colorTheme.tertiaryTextColor)),
+            ThemeColorItem(title: "Primary Background", selectedColor: BehaviorSubject(value: colorTheme.primaryBackgroundColor)),
+            ThemeColorItem(title: "Secindary Background", selectedColor: BehaviorSubject(value: colorTheme.secondaryBackgroundColor)),
+            ThemeColorItem(title: "Tertiary Background", selectedColor: BehaviorSubject(value: colorTheme.tertiaryBackgroundColor)),
+            ThemeColorItem(title: "Primary Border", selectedColor: BehaviorSubject(value: colorTheme.primaryBorderColor)),
+            ThemeColorItem(title: "Secondary Border", selectedColor: BehaviorSubject(value: colorTheme.secondaryBorderColor)),
+            ThemeColorItem(title: "Loader", selectedColor: BehaviorSubject(value: colorTheme.loaderColor)),
+            ThemeColorItem(title: "Brand Color", selectedColor: BehaviorSubject(value: colorTheme.brandColor))
         ]
     }()
+
+    fileprivate var colorTheme: OWTheme
+
+    init() {
+        self.colorTheme = OpenWeb.manager.ui.customizations.customizedTheme
+    }
 }
 
 struct ThemeColorItem {
     let title: String
-    let selectedColor: PublishSubject<UIColor?>
+    let selectedColor: BehaviorSubject<OWColor?>
 }

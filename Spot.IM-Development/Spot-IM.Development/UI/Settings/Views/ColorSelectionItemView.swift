@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
+import SpotImCore
 
 @available(iOS 14.0, *)
 class ColorSelectionItemView: UIView {
@@ -17,6 +18,9 @@ class ColorSelectionItemView: UIView {
         static let identifier = "colors_customization_vc_id"
         static let colorViewBorderSize: CGFloat = 1
         static let colorViewCornerRadius: CGFloat = 4
+        static let generalSpacing: CGFloat = 14
+        static let colorLabelSpacing: CGFloat = 8
+        static let colorRectangleSize: CGFloat = 16
     }
 
     fileprivate let item: ThemeColorItem
@@ -36,18 +40,43 @@ class ColorSelectionItemView: UIView {
         return switchView
     }()
 
-    fileprivate lazy var colorRectangleView: UIView = {
+    fileprivate lazy var lightLabel: UILabel = {
+        let label = UILabel()
+        label.font = FontBook.helper
+        label.text = "light"
+        return label
+    }()
+
+    fileprivate lazy var lightColorRectangleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderWidth = Metrics.colorViewBorderSize
         view.layer.borderColor = UIColor.black.cgColor
         view.corner(radius: Metrics.colorViewCornerRadius)
         view.isUserInteractionEnabled = true
-        view.addGestureRecognizer(tapGesture)
+        view.addGestureRecognizer(lightTapGesture)
         return view
     }()
 
-    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+    fileprivate lazy var darkLabel: UILabel = {
+        let label = UILabel()
+        label.font = FontBook.helper
+        label.text = "dark"
+        return label
+    }()
+
+    fileprivate lazy var darkColorRectangleView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderWidth = Metrics.colorViewBorderSize
+        view.layer.borderColor = UIColor.black.cgColor
+        view.corner(radius: Metrics.colorViewCornerRadius)
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(darkTapGesture)
+        return view
+    }()
+
+    fileprivate lazy var lightTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
@@ -55,7 +84,16 @@ class ColorSelectionItemView: UIView {
         return tap
     }()
 
-    fileprivate let picker = UIColorPickerViewController()
+    fileprivate lazy var darkTapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+
+        return tap
+    }()
+
+    fileprivate let lightPicker = UIColorPickerViewController()
+    fileprivate let darkPicker = UIColorPickerViewController()
 
     init(item: ThemeColorItem, showPicker: @escaping (UIColorPickerViewController) -> Void) {
         self.item = item
@@ -82,14 +120,33 @@ fileprivate extension ColorSelectionItemView {
 
         self.addSubview(title)
         title.snp.makeConstraints { make in
-            make.leading.equalTo(enableCheckbox.snp.trailing).offset(14)
+            make.leading.equalTo(enableCheckbox.snp.trailing).offset(Metrics.generalSpacing)
             make.top.bottom.equalToSuperview()
         }
 
-        self.addSubview(colorRectangleView)
-        colorRectangleView.snp.makeConstraints { make in
-            make.leading.equalTo(title.snp.trailing).offset(14)
-            make.size.equalTo(16)
+        self.addSubview(lightLabel)
+        lightLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(title.snp.trailing).offset(Metrics.generalSpacing)
+        }
+
+        self.addSubview(lightColorRectangleView)
+        lightColorRectangleView.snp.makeConstraints { make in
+            make.leading.equalTo(lightLabel.snp.trailing).offset(Metrics.colorLabelSpacing)
+            make.size.equalTo(Metrics.colorRectangleSize)
+            make.centerY.equalToSuperview()
+        }
+
+        self.addSubview(darkLabel)
+        darkLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(lightColorRectangleView.snp.trailing).offset(Metrics.generalSpacing)
+        }
+
+        self.addSubview(darkColorRectangleView)
+        darkColorRectangleView.snp.makeConstraints { make in
+            make.leading.equalTo(darkLabel.snp.trailing).offset(Metrics.colorLabelSpacing)
+            make.size.equalTo(Metrics.colorRectangleSize)
             make.centerY.trailing.equalToSuperview()
         }
     }
@@ -97,16 +154,55 @@ fileprivate extension ColorSelectionItemView {
     func setupObservers() {
         title.text = item.title
 
-        tapGesture.rx.event
+        lightTapGesture.rx.event
             .voidify()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.showPicker(self.picker)
+                self.showPicker(self.lightPicker)
             })
             .disposed(by: disposeBag)
 
-        picker.rx.didSelectColor
-            .bind(to: colorRectangleView.rx.backgroundColor)
+        darkTapGesture.rx.event
+            .voidify()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.showPicker(self.darkPicker)
+            })
+            .disposed(by: disposeBag)
+
+        item.selectedColor
+            .take(1)
+            .debug("NOGAH: selectedColor")
+            .subscribe(onNext: { [weak self] color in
+                guard let color = color else { return }
+                self?.lightPicker.selectedColor = color.lightColor
+                self?.darkPicker.selectedColor = color.darkColor
+            })
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(
+            lightPicker.rx.didSelectColor,
+            darkPicker.rx.didSelectColor
+        )
+        .map { light, dark in
+            guard let light = light,
+                  let dark = dark else { return nil }
+            return OWColor(lightColor: light, darkColor: dark)
+        }
+        .unwrap()
+        .bind(to: self.item.selectedColor)
+        .disposed(by: disposeBag)
+
+        item.selectedColor
+            .unwrap()
+            .map { $0.lightColor }
+            .bind(to: lightColorRectangleView.rx.backgroundColor)
+            .disposed(by: disposeBag)
+
+        item.selectedColor
+            .unwrap()
+            .map { $0.darkColor }
+            .bind(to: darkColorRectangleView.rx.backgroundColor)
             .disposed(by: disposeBag)
     }
 }
