@@ -468,5 +468,9 @@ fileprivate extension GeneralSettingsView {
             .map { !$0 }
             .bind(to: openCustomColorsBtn.rx.isHidden)
             .disposed(by: disposeBag)
+
+        openCustomColorsBtn.rx.tap
+            .bind(to: viewModel.inputs.openColorsCustomizationClicked)
+            .disposed(by: disposeBag)
     }
 }
