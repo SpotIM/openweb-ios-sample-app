@@ -193,15 +193,11 @@ fileprivate extension ColorSelectionItemView {
         .bind(to: self.item.selectedColor)
         .disposed(by: disposeBag)
 
-        item.selectedColor
-            .unwrap()
-            .map { $0.lightColor }
+        lightPicker.rx.didSelectColor
             .bind(to: lightColorRectangleView.rx.backgroundColor)
             .disposed(by: disposeBag)
 
-        item.selectedColor
-            .unwrap()
-            .map { $0.darkColor }
+        darkPicker.rx.didSelectColor
             .bind(to: darkColorRectangleView.rx.backgroundColor)
             .disposed(by: disposeBag)
     }
