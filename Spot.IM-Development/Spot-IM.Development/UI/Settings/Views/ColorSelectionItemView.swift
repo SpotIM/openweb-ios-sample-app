@@ -23,14 +23,12 @@ class ColorSelectionItemView: UIView {
         static let colorRectangleSize: CGFloat = 16
     }
 
-    fileprivate let item: ThemeColorItem
-    fileprivate let showPicker: (UIColorPickerViewController) -> Void
     fileprivate let disposeBag: DisposeBag
 
     fileprivate lazy var title: UILabel = {
-        let label = UILabel()
-        label.font = FontBook.paragraph
-        return label
+        return viewModel.outputs.title
+            .label
+            .font(FontBook.paragraph)
     }()
 
     fileprivate lazy var enableCheckbox: UISwitch = {
@@ -95,9 +93,9 @@ class ColorSelectionItemView: UIView {
     fileprivate let lightPicker = UIColorPickerViewController()
     fileprivate let darkPicker = UIColorPickerViewController()
 
-    init(item: ThemeColorItem, showPicker: @escaping (UIColorPickerViewController) -> Void) {
-        self.item = item
-        self.showPicker = showPicker
+    fileprivate let viewModel: ColorSelectionItemViewModeling
+    init(viewModel: ColorSelectionItemViewModeling) {
+        self.viewModel = viewModel
         self.disposeBag = DisposeBag()
         super.init(frame: .zero)
 
@@ -152,27 +150,22 @@ fileprivate extension ColorSelectionItemView {
     }
 
     func setupObservers() {
-        title.text = item.title
-
         lightTapGesture.rx.event
             .voidify()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.showPicker(self.lightPicker)
-            })
+            .map { [weak self] in self?.lightPicker}
+            .unwrap()
+            .bind(to: viewModel.inputs.displayPicker)
             .disposed(by: disposeBag)
 
         darkTapGesture.rx.event
             .voidify()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.showPicker(self.darkPicker)
-            })
+            .map { [weak self] in self?.darkPicker}
+            .unwrap()
+            .bind(to: viewModel.inputs.displayPicker)
             .disposed(by: disposeBag)
 
-        item.selectedColor
+        viewModel.outputs.color
             .take(1)
-            .debug("NOGAH: selectedColor")
             .subscribe(onNext: { [weak self] color in
                 guard let color = color else { return }
                 self?.lightPicker.selectedColor = color.lightColor
@@ -190,7 +183,7 @@ fileprivate extension ColorSelectionItemView {
             return OWColor(lightColor: light, darkColor: dark)
         }
         .unwrap()
-        .bind(to: self.item.selectedColor)
+        .bind(to: viewModel.inputs.colorChanged)
         .disposed(by: disposeBag)
 
         lightPicker.rx.didSelectColor
@@ -199,6 +192,12 @@ fileprivate extension ColorSelectionItemView {
 
         darkPicker.rx.didSelectColor
             .bind(to: darkColorRectangleView.rx.backgroundColor)
+            .disposed(by: disposeBag)
+
+        enableCheckbox.rx.isOn
+            .filter { !$0 }
+            .map { _ in nil }
+            .bind(to: viewModel.inputs.colorChanged)
             .disposed(by: disposeBag)
     }
 }
