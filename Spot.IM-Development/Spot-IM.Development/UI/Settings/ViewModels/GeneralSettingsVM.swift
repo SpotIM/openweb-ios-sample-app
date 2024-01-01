@@ -30,6 +30,7 @@ protocol GeneralSettingsViewModelingInputs {
     var languageSelectedName: BehaviorSubject<String> { get }
     var localeStrategySelectedIndex: BehaviorSubject<Int> { get }
     var showLoginPromptSelected: BehaviorSubject<Bool> { get }
+    var openColorsCustomizationClicked: PublishSubject<Void> { get }
 }
 
 protocol GeneralSettingsViewModelingOutputs {
@@ -83,6 +84,7 @@ protocol GeneralSettingsViewModelingOutputs {
 
     var colorsCustomizationStyleTitle: String { get }
     var colorsCustomizationStyleSettings: [String] { get }
+    var openColorsCustomizationScreen: Observable<Void> { get }
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> { get }
     var articleHeaderStyleTitle: String { get }
@@ -318,6 +320,11 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var shouldShowColorSettingButton: Observable<Bool> {
         return colorsCustomizationStyleSelectedIndex
             .map { $0 == 2 } // Custom
+            .asObservable()
+    }
+    var openColorsCustomizationClicked = PublishSubject<Void>()
+    var openColorsCustomizationScreen: Observable<Void> {
+        return openColorsCustomizationClicked
             .asObservable()
     }
 
