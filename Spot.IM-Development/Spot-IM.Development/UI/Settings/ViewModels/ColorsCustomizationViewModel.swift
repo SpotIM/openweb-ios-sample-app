@@ -12,16 +12,20 @@ import SpotImCore
 
 protocol ColorsCustomizationViewModelingInputs { }
 
+@available(iOS 14.0, *)
 protocol ColorsCustomizationViewModelingOutputs {
     var title: String { get }
-    var colorItems: [ThemeColorItem] { get }
+    var colorItemsVM: [ColorSelectionItemViewModeling] { get }
+    var openPicker: Observable<UIColorPickerViewController> { get }
 }
 
+@available(iOS 14.0, *)
 protocol ColorsCustomizationViewModeling {
     var inputs: ColorsCustomizationViewModelingInputs { get }
     var outputs: ColorsCustomizationViewModelingOutputs { get }
 }
 
+@available(iOS 14.0, *)
 class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCustomizationViewModelingInputs, ColorsCustomizationViewModelingOutputs {
     var inputs: ColorsCustomizationViewModelingInputs { return self }
     var outputs: ColorsCustomizationViewModelingOutputs { return self }
@@ -32,32 +36,55 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 
     lazy var colorItems: [ThemeColorItem] = {
         return [
-            ThemeColorItem(title: "Skeleton", selectedColor: BehaviorSubject(value: colorTheme.skeletonColor)),
-            ThemeColorItem(title: "Skeleton Shimmering", selectedColor: BehaviorSubject(value: colorTheme.skeletonShimmeringColor)),
-            ThemeColorItem(title: "Primary Separator", selectedColor: BehaviorSubject(value: colorTheme.primarySeparatorColor)),
-            ThemeColorItem(title: "Secondary Separator", selectedColor: BehaviorSubject(value: colorTheme.secondarySeparatorColor)),
-            ThemeColorItem(title: "Tertiary Separator", selectedColor: BehaviorSubject(value: colorTheme.tertiaryTextColor)),
-            ThemeColorItem(title: "Primary Text", selectedColor: BehaviorSubject(value: colorTheme.primaryTextColor)),
-            ThemeColorItem(title: "Secondary Text", selectedColor: BehaviorSubject(value: colorTheme.secondaryTextColor)),
-            ThemeColorItem(title: "Tertiary Text", selectedColor: BehaviorSubject(value: colorTheme.tertiaryTextColor)),
-            ThemeColorItem(title: "Primary Background", selectedColor: BehaviorSubject(value: colorTheme.primaryBackgroundColor)),
-            ThemeColorItem(title: "Secindary Background", selectedColor: BehaviorSubject(value: colorTheme.secondaryBackgroundColor)),
-            ThemeColorItem(title: "Tertiary Background", selectedColor: BehaviorSubject(value: colorTheme.tertiaryBackgroundColor)),
-            ThemeColorItem(title: "Primary Border", selectedColor: BehaviorSubject(value: colorTheme.primaryBorderColor)),
-            ThemeColorItem(title: "Secondary Border", selectedColor: BehaviorSubject(value: colorTheme.secondaryBorderColor)),
-            ThemeColorItem(title: "Loader", selectedColor: BehaviorSubject(value: colorTheme.loaderColor)),
-            ThemeColorItem(title: "Brand Color", selectedColor: BehaviorSubject(value: colorTheme.brandColor))
+            ThemeColorItem(title: "Skeleton", initialColor: colorTheme.skeletonColor),
+            ThemeColorItem(title: "Skeleton Shimmering", initialColor: colorTheme.skeletonShimmeringColor),
+            ThemeColorItem(title: "Primary Separator", initialColor: colorTheme.primarySeparatorColor),
+            ThemeColorItem(title: "Secondary Separator", initialColor: colorTheme.secondarySeparatorColor),
+            ThemeColorItem(title: "Tertiary Separator", initialColor: colorTheme.tertiaryTextColor),
+            ThemeColorItem(title: "Primary Text", initialColor: colorTheme.primaryTextColor),
+            ThemeColorItem(title: "Secondary Text", initialColor: colorTheme.secondaryTextColor),
+            ThemeColorItem(title: "Tertiary Text", initialColor: colorTheme.tertiaryTextColor),
+            ThemeColorItem(title: "Primary Background", initialColor: colorTheme.primaryBackgroundColor),
+            ThemeColorItem(title: "Secindary Background", initialColor: colorTheme.secondaryBackgroundColor),
+            ThemeColorItem(title: "Tertiary Background", initialColor: colorTheme.tertiaryBackgroundColor),
+            ThemeColorItem(title: "Primary Border", initialColor: colorTheme.primaryBorderColor),
+            ThemeColorItem(title: "Secondary Border", initialColor: colorTheme.secondaryBorderColor),
+            ThemeColorItem(title: "Loader", initialColor: colorTheme.loaderColor),
+            ThemeColorItem(title: "Brand Color", initialColor: colorTheme.brandColor)
         ]
+    }()
+
+    lazy var colorItemsVM: [ColorSelectionItemViewModeling] = {
+        return colorItems.map { item in
+            return ColorSelectionItemViewModel(item: item)
+        }
+    }()
+
+    lazy var openPicker: Observable<UIColorPickerViewController> = {
+        return Observable.merge(
+            colorItemsVM
+                .map { vm in
+                    vm.outputs.displayPickerObservable
+                }
+        )
     }()
 
     fileprivate var colorTheme: OWTheme
 
     init() {
         self.colorTheme = OpenWeb.manager.ui.customizations.customizedTheme
+
+        setupObservers()
+    }
+}
+
+@available(iOS 14.0, *)
+fileprivate extension ColorsCustomizationViewModel {
+    func setupObservers() {
     }
 }
 
 struct ThemeColorItem {
     let title: String
-    let selectedColor: BehaviorSubject<OWColor?>
+    let initialColor: OWColor?
 }

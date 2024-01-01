@@ -96,13 +96,18 @@ fileprivate extension ColorsCustomizationVC {
             make.leading.trailing.equalTo(scrollView)
         }
 
-        viewModel.outputs.colorItems.forEach { item in
-            let view = ColorSelectionItemView(item: item, showPicker: showPicker(picker:))
+        viewModel.outputs.colorItemsVM.forEach { vm in
+            let view = ColorSelectionItemView(viewModel: vm)
             stackView.addArrangedSubview(view)
         }
     }
 
     func setupObservers() {
+        viewModel.outputs.openPicker
+            .subscribe(onNext: { [weak self] picker in
+                self?.showPicker(picker: picker)
+            })
+            .disposed(by: disposeBag)
     }
 
     func showPicker(picker: UIColorPickerViewController) {
