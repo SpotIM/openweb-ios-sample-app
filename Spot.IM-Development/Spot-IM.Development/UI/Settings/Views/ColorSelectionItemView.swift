@@ -9,10 +9,11 @@
 import Foundation
 import UIKit
 import RxSwift
+import RxCocoa
 
 @available(iOS 14.0, *)
 class ColorSelectionItemView: UIView {
-    
+
     fileprivate let item: ThemeColorItem
     fileprivate let showPicker: (UIColorPickerViewController) -> Void
     fileprivate let disposeBag: DisposeBag
@@ -26,6 +27,7 @@ class ColorSelectionItemView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.black.cgColor
+        view.corner(radius: 4)
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(tapGesture)
         return view
@@ -39,6 +41,13 @@ class ColorSelectionItemView: UIView {
         return tap
     }()
 
+    fileprivate lazy var enableCheckbox: UISwitch = {
+        let switchView =  UISwitch()
+        switchView.isOn = true
+        switchView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        return switchView
+    }()
+
     fileprivate let picker = UIColorPickerViewController()
 
     init(item: ThemeColorItem, showPicker: @escaping (UIColorPickerViewController) -> Void) {
@@ -50,7 +59,7 @@ class ColorSelectionItemView: UIView {
         setupViews()
         setupObservers()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -68,7 +77,14 @@ fileprivate extension ColorSelectionItemView {
         colorRectangleView.snp.makeConstraints { make in
             make.leading.equalTo(title.snp.trailing).offset(12)
             make.size.equalTo(16)
+            make.centerY.equalToSuperview()
+        }
+
+        self.addSubview(enableCheckbox)
+        enableCheckbox.snp.makeConstraints { make in
+            make.leading.equalTo(colorRectangleView.snp.trailing).offset(12)
             make.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
         }
     }
 
@@ -82,5 +98,24 @@ fileprivate extension ColorSelectionItemView {
                 self.showPicker(self.picker)
             })
             .disposed(by: disposeBag)
+
+        picker.rx.didSelectColor
+            .bind(to: colorRectangleView.rx.backgroundColor)
+            .disposed(by: disposeBag)
+    }
+}
+
+@available(iOS 14.0, *)
+fileprivate extension Reactive where Base: UIColorPickerViewController {
+    var didSelectColor: Observable<UIColor?> {
+        return Observable.create { observer in
+            let token = self.base.observe(\.selectedColor) { _, _ in
+                observer.onNext(self.base.selectedColor)
+            }
+
+            return Disposables.create {
+                token.invalidate()
+            }
+        }
     }
 }
