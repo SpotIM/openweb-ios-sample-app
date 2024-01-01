@@ -14,26 +14,22 @@ import RxSwift
 class ColorsCustomizationVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "colors_customization_vc_id"
-        static let verticalOffset: CGFloat = 40
-        static let verticalBetweenSettingViewsOffset: CGFloat = 80
-        static let btnPadding: CGFloat = 12
+        static let horizontalOffset: CGFloat = 40
+        static let stackViewSpacing: CGFloat = 20
     }
 
     fileprivate let viewModel: ColorsCustomizationViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    let picker = UIColorPickerViewController()
-
-    fileprivate lazy var openCustomCoprnolorsBtn: UIButton = {
-        return "open"
-            .blueRoundedButton
-            .withPadding(Metrics.btnPadding)
+    fileprivate lazy var scrollView: UIScrollView = {
+        return UIScrollView()
     }()
 
     fileprivate lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .leading
+        stackView.spacing = Metrics.stackViewSpacing
         return stackView
     }()
 
@@ -53,7 +49,7 @@ class ColorsCustomizationVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupObservers()
     }
 }
@@ -71,11 +67,17 @@ fileprivate extension ColorsCustomizationVC {
 
         title = viewModel.outputs.title
 
-        view.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         
+        scrollView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalTo(scrollView)
+        }
+
         viewModel.outputs.colorItems.forEach { item in
             let view = ColorSelectionItemView(item: item, showPicker: showPicker(picker:))
             stackView.addArrangedSubview(view)
