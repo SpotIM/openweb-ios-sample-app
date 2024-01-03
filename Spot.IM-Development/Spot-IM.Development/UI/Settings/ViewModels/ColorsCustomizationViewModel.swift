@@ -37,21 +37,21 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
     // TODO: initial colors?
     lazy var colorItems: [ThemeColorItem] = {
         return [
-            ThemeColorItem(title: "Skeleton", initialColor: colorTheme.skeletonColor),
-            ThemeColorItem(title: "Skeleton Shimmering", initialColor: colorTheme.skeletonShimmeringColor),
-            ThemeColorItem(title: "Primary Separator", initialColor: colorTheme.primarySeparatorColor),
-            ThemeColorItem(title: "Secondary Separator", initialColor: colorTheme.secondarySeparatorColor),
-            ThemeColorItem(title: "Tertiary Separator", initialColor: colorTheme.tertiaryTextColor),
-            ThemeColorItem(title: "Primary Text", initialColor: colorTheme.primaryTextColor),
-            ThemeColorItem(title: "Secondary Text", initialColor: colorTheme.secondaryTextColor),
-            ThemeColorItem(title: "Tertiary Text", initialColor: colorTheme.tertiaryTextColor),
-            ThemeColorItem(title: "Primary Background", initialColor: colorTheme.primaryBackgroundColor),
-            ThemeColorItem(title: "Secindary Background", initialColor: colorTheme.secondaryBackgroundColor),
-            ThemeColorItem(title: "Tertiary Background", initialColor: colorTheme.tertiaryBackgroundColor),
-            ThemeColorItem(title: "Primary Border", initialColor: colorTheme.primaryBorderColor),
-            ThemeColorItem(title: "Secondary Border", initialColor: colorTheme.secondaryBorderColor),
-            ThemeColorItem(title: "Loader", initialColor: colorTheme.loaderColor),
-            ThemeColorItem(title: "Brand Color", initialColor: colorTheme.brandColor)
+            ThemeColorItem(title: "Skeleton", initialColor: initialColorTheme.skeletonColor),
+            ThemeColorItem(title: "Skeleton Shimmering", initialColor: initialColorTheme.skeletonShimmeringColor),
+            ThemeColorItem(title: "Primary Separator", initialColor: initialColorTheme.primarySeparatorColor),
+            ThemeColorItem(title: "Secondary Separator", initialColor: initialColorTheme.secondarySeparatorColor),
+            ThemeColorItem(title: "Tertiary Separator", initialColor: initialColorTheme.tertiaryTextColor),
+            ThemeColorItem(title: "Primary Text", initialColor: initialColorTheme.primaryTextColor),
+            ThemeColorItem(title: "Secondary Text", initialColor: initialColorTheme.secondaryTextColor),
+            ThemeColorItem(title: "Tertiary Text", initialColor: initialColorTheme.tertiaryTextColor),
+            ThemeColorItem(title: "Primary Background", initialColor: initialColorTheme.primaryBackgroundColor),
+            ThemeColorItem(title: "Secindary Background", initialColor: initialColorTheme.secondaryBackgroundColor),
+            ThemeColorItem(title: "Tertiary Background", initialColor: initialColorTheme.tertiaryBackgroundColor),
+            ThemeColorItem(title: "Primary Border", initialColor: initialColorTheme.primaryBorderColor),
+            ThemeColorItem(title: "Secondary Border", initialColor: initialColorTheme.secondaryBorderColor),
+            ThemeColorItem(title: "Loader", initialColor: initialColorTheme.loaderColor),
+            ThemeColorItem(title: "Brand Color", initialColor: initialColorTheme.brandColor)
         ]
     }()
 
@@ -76,12 +76,13 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         )
     }()
 
+    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate let disposeBag = DisposeBag()
-    fileprivate var colorTheme: OWTheme
+    fileprivate var initialColorTheme: OWTheme
 
-    init() {
-        self.colorTheme = OpenWeb.manager.ui.customizations.customizedTheme
-
+    init(userDefaultsProvider: UserDefaultsProviderProtocol) {
+        self.userDefaultsProvider = userDefaultsProvider
+        self.initialColorTheme = userDefaultsProvider.get(key: .colorCustomizationCustomTheme, defaultValue: OWTheme())
         setupObservers()
     }
 }
@@ -98,6 +99,12 @@ fileprivate extension ColorsCustomizationViewModel {
         }
         .bind(to: _selectedTheme)
         .disposed(by: disposeBag)
+
+        selectedTheme
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+                .setValues(key: UserDefaultsProvider.UDKey<OWTheme>.colorCustomizationCustomTheme))
+            .disposed(by: disposeBag)
     }
 
     func getTheme(from colors: [OWColor?]) -> OWTheme {
