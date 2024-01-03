@@ -92,7 +92,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayAfterScrolledToCellAnimated: Int = 500 // ms
-        static let delayAfterInsertToTableView: Int = 200 // ms
+        static let delayAfterInsertToTableView: Int = 300 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let debounceForCellsViewModels: Int = 50 // ms
         static let tableViewPaginationCellsOffset: Int = 5
@@ -226,7 +226,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var scrolledToCellIndex = PublishSubject<Int>()
-    var _scrolledToCellIndex = BehaviorSubject<Int?>(value: nil)
+//    var _scrolledToCellIndex = BehaviorSubject<Int?>(value: nil)
 
     fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
     var highlightCellsIndexes: Observable<[Int]> {
@@ -1913,23 +1913,8 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        scrolledToCellIndex
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-
-                self._scrolledToCellIndex.onNext(index)
-            })
-            .disposed(by: disposeBag)
-
-        let _scrolledToCellIndexObservable = self._scrolledToCellIndex
-            .debug("RIVI _scrolledToCellIndex")
-            .unwrap()
-            .asObservable()
-
-        _scrolledToCellIndexObservable.subscribe().disposed(by: disposeBag)
-
         // Observable for handling insertion of new realtime comments
-        let scrolledToCellIndexObsarvable = _insertNewRealtimeComments
+        let newRealtimeCommentsObsarvable = _insertNewRealtimeComments
             .do(onNext: { [weak self] comments in
                 guard let self = self else { return }
 
@@ -1953,30 +1938,27 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Array(indexes.prefix(comments.count))
             }
-            .do(onNext: { [weak self] indexes in
+            .share()
+
+        newRealtimeCommentsObsarvable
+            .subscribe(onNext: { [weak self] indexes in
                 guard let self = self, let firstIndex = indexes.first else { return }
-                self._dataSourceTransition.onNext(.reload)
+//                self._dataSourceTransition.onNext(.reload)
                 self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
             })
-            .debug("RIVI scrolledToCellIndexObsarvable 1")
-            .flatMapLatest { [weak self] indexes -> Observable<[Int]> in
-                guard let self = self, let firstIndex = indexes.first else { return .empty() }
+            .disposed(by: disposeBag)
 
-                // waiting for scroll to index
-                return _scrolledToCellIndexObservable
-                    .filter { $0 == firstIndex }
-                    .debug("RIVI scrolledToCellIndex")
-                    .map { _ in return indexes}
-            }
-
-        scrolledToCellIndexObsarvable
+        scrolledToCellIndex
+            .withLatestFrom(self.firstVisibleCommentIndex) { ($0, $1) }
+            .filter { $0 == $1 }
+            .voidify()
+            .withLatestFrom(newRealtimeCommentsObsarvable)
             .delay(.milliseconds(Metrics.delayAfterScrolledToCellAnimated), scheduler: MainScheduler.instance)
-            .debug("RIVI scrolledToCellIndexObsarvable 2")
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self else { return }
 
                 self._highlightCellsIndexes.onNext(indexes)
-                self._dataSourceTransition.onNext(.animated)
+//                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 

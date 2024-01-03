@@ -397,35 +397,23 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToCellIndexIfNotVisible
-            .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] index in
+            .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    // only if cell not visible scroll to it
+                    guard let visibleRows = self.tableView.indexPathsForVisibleRows,
+                            !visibleRows.contains(IndexPath(row: index, section: 0)) else {
+                        return
+                    }
 
-                // only if cell not visible scroll to it
-                guard let visibleRows = self.tableView.indexPathsForVisibleRows,
-                        !visibleRows.contains(IndexPath(row: index, section: 0)) else {
-                    return
-                }
-
-                let cellIndexPath = IndexPath(row: index, section: 0)
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
-                }) { (finished) in
-                    if finished {
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+                    UIView.animate(withDuration: 0.5, animations: {
+                        self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                    }) { _ in
                         self.viewModel.inputs.scrolledToCellIndex.onNext(index)
                     }
                 }
-//                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
-//                let rect = tableView.rectForRow(at: cellIndexPath)
-//                tableView.scrollRectToVisible(rect, animated: true)
-                print("RIVI scrollToCellIndexIfNotVisible index:\(index)")
             })
-            .debug("RIVI scrollToCellIndexIfNotVisible")
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-
-            })
-//            .bind(to: viewModel.inputs.scrolledToCellIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.highlightCellsIndexes
