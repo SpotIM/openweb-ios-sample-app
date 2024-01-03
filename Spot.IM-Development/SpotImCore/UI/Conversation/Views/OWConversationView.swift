@@ -408,9 +408,24 @@ fileprivate extension OWConversationView {
                 }
 
                 let cellIndexPath = IndexPath(row: index, section: 0)
-                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }) { (finished) in
+                    if finished {
+                        self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                    }
+                }
+//                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+//                let rect = tableView.rectForRow(at: cellIndexPath)
+//                tableView.scrollRectToVisible(rect, animated: true)
+                print("RIVI scrollToCellIndexIfNotVisible index:\(index)")
             })
-            .bind(to: viewModel.inputs.scrolledToCellIndex)
+            .debug("RIVI scrollToCellIndexIfNotVisible")
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self else { return }
+
+            })
+//            .bind(to: viewModel.inputs.scrolledToCellIndex)
             .disposed(by: disposeBag)
 
         viewModel.outputs.highlightCellsIndexes
