@@ -95,7 +95,12 @@ fileprivate extension SettingsVC {
             if #available(iOS 14.0, *) {
                 generalSettingsVM.outputs.openColorsCustomizationScreen
                     .subscribe(onNext: { [weak self] in
-                        self?.navigationController?.pushViewController(ColorsCustomizationVC(viewModel: ColorsCustomizationViewModel()), animated: true)
+                        guard let self = self else { return }
+                        self.navigationController?.pushViewController(
+                            ColorsCustomizationVC(
+                                viewModel: ColorsCustomizationViewModel(
+                                    userDefaultsProvider: self.viewModel.outputs.userDefaultsProvider)
+                            ), animated: true)
                     })
                     .disposed(by: disposeBag)
             } else {
