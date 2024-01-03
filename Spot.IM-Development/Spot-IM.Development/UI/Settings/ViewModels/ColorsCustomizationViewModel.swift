@@ -34,7 +34,6 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         return NSLocalizedString("CustomColors", comment: "")
     }()
 
-    // TODO: initial colors?
     lazy var colorItems: [ThemeColorItem] = {
         return [
             ThemeColorItem(title: "Skeleton", initialColor: initialColorTheme.skeletonColor),

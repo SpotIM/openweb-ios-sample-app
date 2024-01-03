@@ -92,20 +92,12 @@ fileprivate extension SettingsVC {
         }
 
         if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
-            if #available(iOS 14.0, *) {
-                generalSettingsVM.outputs.openColorsCustomizationScreen
-                    .subscribe(onNext: { [weak self] in
-                        guard let self = self else { return }
-                        self.navigationController?.pushViewController(
-                            ColorsCustomizationVC(
-                                viewModel: ColorsCustomizationViewModel(
-                                    userDefaultsProvider: self.viewModel.outputs.userDefaultsProvider)
-                            ), animated: true)
-                    })
-                    .disposed(by: disposeBag)
-            } else {
-                // Fallback on earlier versions
-            }
+            generalSettingsVM.outputs.openColorsCustomizationScreen
+                .subscribe(onNext: { [weak self] vc in
+                    guard let self = self else { return }
+                    self.navigationController?.pushViewController(vc, animated: true)
+                })
+                .disposed(by: disposeBag)
         }
 
         // keyboard will show
