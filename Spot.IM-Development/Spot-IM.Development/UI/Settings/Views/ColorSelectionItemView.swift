@@ -170,6 +170,8 @@ fileprivate extension ColorSelectionItemView {
                 guard let color = color else { return }
                 self?.lightPicker.selectedColor = color.lightColor
                 self?.darkPicker.selectedColor = color.darkColor
+                self?.lightColorRectangleView.backgroundColor = color.lightColor
+                self?.darkColorRectangleView.backgroundColor = color.darkColor
             })
             .disposed(by: disposeBag)
 

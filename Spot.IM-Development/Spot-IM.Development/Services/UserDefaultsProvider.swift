@@ -93,6 +93,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case articleInformationStrategy = "articleInformationStrategy"
         case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
         case colorCustomizationStyleIndex = "colorCustomizationStyleIndex"
+        case colorCustomizationCustomTheme = "colorCustomizationCustomTheme"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case statusBarStyleIndex = "statusBarStyleIndex"
@@ -189,6 +190,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores general setting's elements customization style index"
         case .colorCustomizationStyleIndex:
             return "Key which stores general setting's color customization style index"
+        case .colorCustomizationCustomTheme:
+            return "Key which stores general setting's OWTheme color for custom colors override"
         case .selectedSpotId:
             return "Key which stores the current spot id"
         case .selectedPostId:

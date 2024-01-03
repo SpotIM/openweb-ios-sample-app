@@ -38,8 +38,10 @@ class ColorCustomizationService: ColorCustomizationServicing {
                 secondaryBorderColor: OWColor(lightColor: .white, darkColor: .black),
                 loaderColor: OWColor(lightColor: .brown, darkColor: .yellow),
                 brandColor: OWColor(lightColor: .cyan, darkColor: .black))
-        case 2:
-            break // TODO: open new screen on "custom" option
+        case 2: // Custom theme
+            // get saved theme from user defaults
+            let theme = UserDefaultsProvider.shared.get(key: .colorCustomizationCustomTheme, defaultValue: OWTheme())
+            customizations.customizedTheme = theme
         default:
             break
         }
