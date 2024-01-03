@@ -54,8 +54,8 @@ fileprivate extension OWClarityDetailsVC {
 
         view.addSubview(clarityDetailsView)
         clarityDetailsView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperviewSafeArea()
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalToSuperview()
         }
     }
 
