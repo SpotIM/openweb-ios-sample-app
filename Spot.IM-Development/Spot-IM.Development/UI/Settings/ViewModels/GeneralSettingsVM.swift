@@ -84,7 +84,7 @@ protocol GeneralSettingsViewModelingOutputs {
 
     var colorsCustomizationStyleTitle: String { get }
     var colorsCustomizationStyleSettings: [String] { get }
-    var openColorsCustomizationScreen: Observable<Void> { get }
+    var openColorsCustomizationScreen: Observable<UIViewController> { get }
 
     var articleHeaderStyle: Observable<OWArticleHeaderStyle> { get }
     var articleHeaderStyleTitle: String { get }
@@ -323,8 +323,17 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
             .asObservable()
     }
     var openColorsCustomizationClicked = PublishSubject<Void>()
-    var openColorsCustomizationScreen: Observable<Void> {
+    var openColorsCustomizationScreen: Observable<UIViewController> {
         return openColorsCustomizationClicked
+            .map { [weak self] _ -> UIViewController? in
+                if #available(iOS 14.0, *) {
+                    guard let self = self else { return nil }
+                    return ColorsCustomizationVC(viewModel: ColorsCustomizationViewModel(userDefaultsProvider: self.userDefaultsProvider))
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
             .asObservable()
     }
 

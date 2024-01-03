@@ -17,7 +17,6 @@ protocol SettingsViewModelingInputs {
 protocol SettingsViewModelingOutputs {
     var title: String { get }
     var settingsVMs: [SettingsGroupVMProtocol] { get }
-    var userDefaultsProvider: UserDefaultsProviderProtocol { get }
 }
 
 protocol SettingsViewModeling {
@@ -29,7 +28,7 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var inputs: SettingsViewModelingInputs { return self }
     var outputs: SettingsViewModelingOutputs { return self }
     fileprivate var settingViewTypes: [SettingsGroupType]
-    var userDefaultsProvider: UserDefaultsProviderProtocol
+    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
 
     lazy var settingsVMs: [SettingsGroupVMProtocol] = {

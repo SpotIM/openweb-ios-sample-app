@@ -15,7 +15,6 @@ import SpotImCore
 @available(iOS 14.0, *)
 class ColorSelectionItemView: UIView {
     fileprivate struct Metrics {
-        static let identifier = "colors_customization_vc_id"
         static let colorViewBorderSize: CGFloat = 1
         static let colorViewCornerRadius: CGFloat = 4
         static let generalSpacing: CGFloat = 14

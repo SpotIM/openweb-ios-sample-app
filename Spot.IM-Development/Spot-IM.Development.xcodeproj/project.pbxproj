@@ -138,6 +138,7 @@
 		241F71F92B42ADA5007619AC /* ColorSelectionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71F82B42ADA5007619AC /* ColorSelectionItemView.swift */; };
 		241F71FB2B42FAA0007619AC /* ColorSelectionItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71FA2B42FAA0007619AC /* ColorSelectionItemViewModel.swift */; };
 		241F71FF2B454F42007619AC /* OWTheme+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */; };
+		241F72012B458D34007619AC /* OWColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F72002B458D34007619AC /* OWColor+Extensions.swift */; };
 		242316552B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */; };
 		242316582B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */; };
 		243010D52B173E7A00150823 /* ThirdPartySSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */; };
@@ -1117,6 +1118,7 @@
 		241F71F82B42ADA5007619AC /* ColorSelectionItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionItemView.swift; sourceTree = "<group>"; };
 		241F71FA2B42FAA0007619AC /* ColorSelectionItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionItemViewModel.swift; sourceTree = "<group>"; };
 		241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWTheme+Extensions.swift"; sourceTree = "<group>"; };
+		241F72002B458D34007619AC /* OWColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWColor+Extensions.swift"; sourceTree = "<group>"; };
 		242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderVC.swift; sourceTree = "<group>"; };
 		242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderViewModel.swift; sourceTree = "<group>"; };
 		243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdPartySSOAuthentication.swift; sourceTree = "<group>"; };
@@ -2056,6 +2058,7 @@
 				9EEBF66D2A431E3900315EB0 /* UIView+Extensions.swift */,
 				3D301BE92A8E89DC0012B526 /* UIViewController+LargeTitles.swift */,
 				241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */,
+				241F72002B458D34007619AC /* OWColor+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -6943,6 +6946,7 @@
 				9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */,
 				3DE476E12ABC214F00093D09 /* ConversationBelowVideoVC.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
+				241F72012B458D34007619AC /* OWColor+Extensions.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
 				9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */,
 				1642C3DF2A2790BD00559AA9 /* OWCommentThreadSettings+Extensions.swift in Sources */,
