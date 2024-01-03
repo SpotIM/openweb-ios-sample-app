@@ -13,7 +13,6 @@ import RxSwift
 @available(iOS 14.0, *)
 class ColorsCustomizationVC: UIViewController {
     fileprivate struct Metrics {
-        static let identifier = "colors_customization_vc_id"
         static let horizontalOffset: CGFloat = 40
         static let verticalOffset: CGFloat = 24
         static let stackViewSpacing: CGFloat = 20
@@ -61,11 +60,6 @@ class ColorsCustomizationVC: UIViewController {
 
         setupObservers()
     }
-}
-
-@available(iOS 14.0, *)
-extension ColorsCustomizationVC: UIColorPickerViewControllerDelegate {
-
 }
 
 @available(iOS 14.0, *)
