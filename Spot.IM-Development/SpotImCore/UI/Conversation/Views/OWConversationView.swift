@@ -421,7 +421,7 @@ fileprivate extension OWConversationView {
                 print("RIVI scrollToCellIndexIfNotVisible index:\(index)")
             })
             .debug("RIVI scrollToCellIndexIfNotVisible")
-            .subscribe(onNext: { [weak self] indexes in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
 
             })
