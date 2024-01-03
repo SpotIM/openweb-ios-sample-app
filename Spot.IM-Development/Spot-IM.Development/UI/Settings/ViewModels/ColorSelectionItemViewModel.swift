@@ -12,6 +12,7 @@ import SpotImCore
 @available(iOS 14.0, *)
 protocol ColorSelectionItemViewModelingInputs {
     var colorChanged: PublishSubject<OWColor?> { get }
+    var isEnabled: BehaviorSubject<Bool> { get }
     var displayPicker: PublishSubject<UIColorPickerViewController> { get }
 }
 
@@ -51,8 +52,15 @@ class ColorSelectionItemViewModel: ColorSelectionItemViewModeling, ColorSelectio
 
     var colorChanged = PublishSubject<OWColor?>()
     lazy var color: Observable<OWColor?> = {
-        colorChanged
-            .asObservable()
-            .startWith(item.initialColor)
+        Observable.combineLatest(
+            colorChanged.asObservable(),
+            isEnabled.asObservable()
+        ) { color, enabled in
+            guard enabled else { return nil }
+            return color
+        }
+        .startWith(item.initialColor)
     }()
+
+    var isEnabled = BehaviorSubject(value: true)
 }

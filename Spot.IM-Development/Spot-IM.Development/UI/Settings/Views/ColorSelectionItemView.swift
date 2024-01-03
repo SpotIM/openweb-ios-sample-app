@@ -195,9 +195,7 @@ fileprivate extension ColorSelectionItemView {
             .disposed(by: disposeBag)
 
         enableCheckbox.rx.isOn
-            .filter { !$0 }
-            .map { _ in nil }
-            .bind(to: viewModel.inputs.colorChanged)
+            .bind(to: viewModel.inputs.isEnabled)
             .disposed(by: disposeBag)
     }
 }

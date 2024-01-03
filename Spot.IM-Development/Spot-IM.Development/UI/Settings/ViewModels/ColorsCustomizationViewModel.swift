@@ -34,6 +34,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         return NSLocalizedString("CustomColors", comment: "")
     }()
 
+    // TODO: initial colors?
     lazy var colorItems: [ThemeColorItem] = {
         return [
             ThemeColorItem(title: "Skeleton", initialColor: colorTheme.skeletonColor),
@@ -54,6 +55,12 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         ]
     }()
 
+    fileprivate let _selectedTheme = PublishSubject<OWTheme>()
+    var selectedTheme: Observable<OWTheme> {
+        return _selectedTheme
+            .asObservable()
+    }
+
     lazy var colorItemsVM: [ColorSelectionItemViewModeling] = {
         return colorItems.map { item in
             return ColorSelectionItemViewModel(item: item)
@@ -69,6 +76,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         )
     }()
 
+    fileprivate let disposeBag = DisposeBag()
     fileprivate var colorTheme: OWTheme
 
     init() {
@@ -81,6 +89,34 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 @available(iOS 14.0, *)
 fileprivate extension ColorsCustomizationViewModel {
     func setupObservers() {
+        let colors = colorItemsVM
+            .map { $0.outputs.color }
+
+        Observable.combineLatest(colors) { [weak self] colorsValues -> OWTheme in
+            guard let self = self else { return OWTheme() }
+            return self.getTheme(from: colorsValues)
+        }
+        .bind(to: _selectedTheme)
+        .disposed(by: disposeBag)
+    }
+
+    func getTheme(from colors: [OWColor?]) -> OWTheme {
+        return OWTheme(
+            skeletonColor: colors[0],
+            skeletonShimmeringColor: colors[1],
+            primarySeparatorColor: colors[2],
+            secondarySeparatorColor: colors[3],
+            tertiarySeparatorColor: colors[4],
+            primaryTextColor: colors[5],
+            secondaryTextColor: colors[6],
+            tertiaryTextColor: colors[7],
+            primaryBackgroundColor: colors[8],
+            secondaryBackgroundColor: colors[9],
+            tertiaryBackgroundColor: colors[10],
+            primaryBorderColor: colors[11],
+            secondaryBorderColor: colors[12],
+            loaderColor: colors[13],
+            brandColor: colors[14])
     }
 }
 
