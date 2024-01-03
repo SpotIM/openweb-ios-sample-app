@@ -11,7 +11,7 @@ import SpotImCore
 
 @available(iOS 14.0, *)
 protocol ColorSelectionItemViewModelingInputs {
-    var colorChanged: PublishSubject<OWColor?> { get }
+    var colorChanged: BehaviorSubject<OWColor?> { get }
     var isEnabled: BehaviorSubject<Bool> { get }
     var displayPicker: PublishSubject<UIColorPickerViewController> { get }
 }
@@ -35,9 +35,11 @@ class ColorSelectionItemViewModel: ColorSelectionItemViewModeling, ColorSelectio
     var outputs: ColorSelectionItemViewModelingOutputs { return self }
 
     fileprivate var item: ThemeColorItem
+    fileprivate let disposeBag = DisposeBag()
 
     init(item: ThemeColorItem) {
         self.item = item
+        self.colorChanged = BehaviorSubject(value: item.initialColor)
     }
 
     var displayPicker = PublishSubject<UIColorPickerViewController>()
@@ -50,7 +52,8 @@ class ColorSelectionItemViewModel: ColorSelectionItemViewModeling, ColorSelectio
         item.title
     }
 
-    var colorChanged = PublishSubject<OWColor?>()
+    var colorChanged: BehaviorSubject<OWColor?>
+
     lazy var color: Observable<OWColor?> = {
         Observable.combineLatest(
             colorChanged.asObservable(),
