@@ -92,7 +92,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
         static let delayAfterScrolledToCellAnimated: Int = 500 // ms
-        static let delayAfterInsertToTableView: Int = 400 // ms
+        static let delayAfterInsertToTableView: Int = 200 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let debounceForCellsViewModels: Int = 50 // ms
         static let tableViewPaginationCellsOffset: Int = 5
@@ -226,11 +226,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var scrolledToCellIndex = PublishSubject<Int>()
+    var _scrolledToCellIndex = BehaviorSubject<Int?>(value: nil)
 
     fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
     var highlightCellsIndexes: Observable<[Int]> {
         return _highlightCellsIndexes
-            .asObserver()
+            .asObservable()
     }
 
     fileprivate var _reloadCellIndex = PublishSubject<Int>()
@@ -1912,12 +1913,30 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        scrolledToCellIndex
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+
+                self._scrolledToCellIndex.onNext(index)
+            })
+            .disposed(by: disposeBag)
+
+        let _scrolledToCellIndexObservable = self._scrolledToCellIndex
+            .debug("RIVI _scrolledToCellIndex")
+            .unwrap()
+            .asObservable()
+
+        _scrolledToCellIndexObservable.subscribe().disposed(by: disposeBag)
+
+        // Observable for handling insertion of new realtime comments
         let scrolledToCellIndexObsarvable = _insertNewRealtimeComments
             .do(onNext: { [weak self] comments in
                 guard let self = self else { return }
+
+                // Processing new comments
                 let commentsIds = comments.map { $0.id }.unwrap()
                     .filter {
-                        // making sure we are not adding an existing comment
+                        // Exclude existing comments
                         self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
                     }
                 let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
@@ -1925,7 +1944,7 @@ fileprivate extension OWConversationViewViewModel {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
             })
-            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: conversationViewVMScheduler)
+            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: MainScheduler.instance)
             .withLatestFrom(firstVisibleCommentIndex) { ($0, $1) }
             .withLatestFrom(commentCellsOptions) { ($0.0, $0.1, $1) }
             .map { comments, firstVisibleCommentIndex, commentCellsOptions -> [Int] in
@@ -1934,24 +1953,30 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Array(indexes.prefix(comments.count))
             }
+            .do(onNext: { [weak self] indexes in
+                guard let self = self, let firstIndex = indexes.first else { return }
+                self._dataSourceTransition.onNext(.reload)
+                self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
+            })
+            .debug("RIVI scrolledToCellIndexObsarvable 1")
             .flatMapLatest { [weak self] indexes -> Observable<[Int]> in
                 guard let self = self, let firstIndex = indexes.first else { return .empty() }
-                print("RIVI firstIndex \(firstIndex)")
-                self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
 
                 // waiting for scroll to index
-                return self.scrolledToCellIndex
+                return _scrolledToCellIndexObservable
                     .filter { $0 == firstIndex }
-                    .startWith(-1)
+                    .debug("RIVI scrolledToCellIndex")
                     .map { _ in return indexes}
             }
 
         scrolledToCellIndexObsarvable
-            .delay(.milliseconds(Metrics.delayAfterScrolledToCellAnimated), scheduler: conversationViewVMScheduler)
+            .delay(.milliseconds(Metrics.delayAfterScrolledToCellAnimated), scheduler: MainScheduler.instance)
+            .debug("RIVI scrolledToCellIndexObsarvable 2")
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self else { return }
 
                 self._highlightCellsIndexes.onNext(indexes)
+                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
