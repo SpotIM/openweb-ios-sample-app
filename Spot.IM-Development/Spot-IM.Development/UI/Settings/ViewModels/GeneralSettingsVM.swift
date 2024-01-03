@@ -318,7 +318,7 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     }
 
     var shouldShowColorSettingButton: Observable<Bool> {
-        return colorsCustomizationStyleSelectedIndex
+        return userDefaultsProvider.values(key: .colorCustomizationStyleIndex, defaultValue: 0)
             .map { $0 == 2 } // Custom
             .asObservable()
     }
