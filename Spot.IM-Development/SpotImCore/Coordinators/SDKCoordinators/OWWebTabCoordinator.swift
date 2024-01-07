@@ -58,7 +58,12 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
                         popCompletion: webTabVCPopped)
         }
 
-        let partOfFlowPresentedWebClosedObservable = webTabVM.outputs.closeWebTab
+        let partOfFlowPresentedWebClosedObservable = webTabVM.outputs
+            .closeWebTab
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.router?.pop(popStyle: .dismiss, animated: false)
+            })
 
         let webVCPoppedObservable = Observable.merge(webTabVCPopped, partOfFlowPresentedWebClosedObservable)
             .map { OWWebTabCoordinatorResult.popped }
