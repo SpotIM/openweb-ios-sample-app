@@ -6,6 +6,8 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable self_capture_in_blocks
+
 import Foundation
 
 /// `Session` creates and manages OWNetwork's `Request` types during their lifetimes. It also provides common
@@ -1027,9 +1029,7 @@ class OWNetworkSession {
         case let .request(convertible):
             performSetupOperations(for: request, convertible: convertible)
         case let .resumeData(resumeData):
-            rootQueue.async {  [weak self] in
-                self?.didReceiveResumeData(resumeData, for: request)
-            }
+            rootQueue.async { self.didReceiveResumeData(resumeData, for: request) }
         }
     }
 
@@ -1054,9 +1054,7 @@ class OWNetworkSession {
 
         guard let adapter = adapter(for: request) else {
             guard shouldCreateTask() else { return }
-            rootQueue.async {  [weak self] in
-                self?.didCreateURLRequest(initialRequest, for: request)
-            }
+            rootQueue.async { self.didCreateURLRequest(initialRequest, for: request) }
             return
         }
 
@@ -1071,9 +1069,7 @@ class OWNetworkSession {
 
                 guard shouldCreateTask() else { return }
 
-                self.rootQueue.async {  [weak self] in
-                    self?.didCreateURLRequest(adaptedRequest, for: request)
-                }
+                self.rootQueue.async { self.didCreateURLRequest(adaptedRequest, for: request) }
             } catch {
                 self.rootQueue.async { request.didFailToAdaptURLRequest(initialRequest, withError: .requestAdaptationFailed(error: error)) }
             }
