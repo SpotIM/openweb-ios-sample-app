@@ -9,14 +9,21 @@
 import Foundation
 import RxSwift
 
-protocol OWWebTabViewViewModelingInputs { }
+protocol OWWebTabViewViewModelingInputs {
+    var canGoBack: PublishSubject<Bool> { get }
+    var backWebTabTapped: PublishSubject<Void> { get }
+    var setTitle: PublishSubject<String?> { get }
+}
 
 protocol OWWebTabViewViewModelingOutputs {
     var closeTapped: Observable<Void> { get }
+    var backTapped: Observable<Void> { get }
     var viewableMode: OWViewableMode { get }
     var options: OWWebTabOptions { get }
     var titleViewVM: OWTitleViewViewModeling { get }
     var shouldShowTitleView: Bool { get }
+    var shouldShowCloseButton: Observable<Bool> { get }
+    var shouldShowBackButton: Observable<Bool> { get }
 }
 
 protocol OWWebTabViewViewModeling {
@@ -24,17 +31,38 @@ protocol OWWebTabViewViewModeling {
     var outputs: OWWebTabViewViewModelingOutputs { get }
 }
 
-class OWWebTabViewViewModel: OWWebTabViewViewModeling, OWWebTabViewViewModelingInputs, OWWebTabViewViewModelingOutputs {
+class OWWebTabViewViewModel: OWWebTabViewViewModeling,
+                             OWWebTabViewViewModelingInputs,
+                             OWWebTabViewViewModelingOutputs {
     var inputs: OWWebTabViewViewModelingInputs { return self }
     var outputs: OWWebTabViewViewModelingOutputs { return self }
 
     let options: OWWebTabOptions
     let viewableMode: OWViewableMode
 
+    let canGoBack = PublishSubject<Bool>()
+    let setTitle = PublishSubject<String?>()
+
+    let backWebTabTapped = PublishSubject<Void>()
+    var backTapped: Observable<Void> {
+        backWebTabTapped
+            .asObservable()
+    }
+
     var closeTapped: Observable<Void> {
         titleViewVM
             .outputs
             .closeTapped
+            .asObservable()
+    }
+
+    var shouldShowCloseButton: Observable<Bool> {
+        canGoBack
+            .asObservable()
+    }
+
+    var shouldShowBackButton: Observable<Bool> {
+        canGoBack
             .asObservable()
     }
 
