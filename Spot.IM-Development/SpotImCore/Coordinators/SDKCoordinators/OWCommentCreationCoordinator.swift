@@ -167,7 +167,10 @@ fileprivate extension OWCommentCreationCoordinator {
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let userLoggedInWhileReplyingToComment = viewModel.outputs.userJustLoggedIn
-            .map { self.commentCreationData }
+            .map { [weak self] in
+                self?.commentCreationData
+            }
+            .unwrap()
             .map { commentCreationData -> OWCommentId? in
                 if case .replyToComment(let comment) = commentCreationData.commentCreationType {
                     return comment.id
@@ -180,7 +183,10 @@ fileprivate extension OWCommentCreationCoordinator {
 
         let closeCommentCreationObservable = Observable.merge(viewModel.outputs.closeButtonTapped, userLoggedInWhileReplyingToComment)
             .voidify()
-            .map { self.commentCreationData.settings.commentCreationSettings.style }
+            .map { [weak self] in
+                self?.commentCreationData.settings.commentCreationSettings.style
+            }
+            .unwrap()
             .map { style in
                 switch style {
                 case .floatingKeyboard:
