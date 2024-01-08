@@ -95,7 +95,7 @@ extension OWWebTabViewViewModel {
 
         titleViewVM.outputs
             .backTapped
-            .subscribe(onNext: { [weak self] canGoBack in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.backWebTabTapped.onNext()
             })
