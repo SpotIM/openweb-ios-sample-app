@@ -44,6 +44,9 @@ class ColorSelectionItemView: UIView {
         return label
     }()
 
+    fileprivate lazy var lightNoColorRedLine: CAShapeLayer = {
+        return diagonalRedLine()
+    }()
     fileprivate lazy var lightColorRectangleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +65,9 @@ class ColorSelectionItemView: UIView {
         return label
     }()
 
+    fileprivate lazy var darkNoColorRedLine: CAShapeLayer = {
+        return diagonalRedLine()
+    }()
     fileprivate lazy var darkColorRectangleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -168,11 +174,16 @@ fileprivate extension ColorSelectionItemView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.lightColorObservable
-            .map { $0 != nil }
-            .map { isColorSet in
-                return isColorSet ? UIColor.black.cgColor : UIColor.red.cgColor
-            }
-            .bind(to: lightColorRectangleView.layer.rx.borderColor)
+            .map { $0 !== nil }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isColorSet in
+                guard let self = self else { return }
+                if isColorSet {
+                    self.lightNoColorRedLine.removeFromSuperlayer()
+                } else {
+                    self.lightColorRectangleView.layer.addSublayer(self.lightNoColorRedLine)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.lightColorObservable
@@ -180,11 +191,16 @@ fileprivate extension ColorSelectionItemView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.darkColorObservable
-            .map { $0 != nil }
-            .map { isColorSet in
-                return isColorSet ? UIColor.black.cgColor : UIColor.red.cgColor
-            }
-            .bind(to: darkColorRectangleView.layer.rx.borderColor)
+            .map { $0 !== nil }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isColorSet in
+                guard let self = self else { return }
+                if isColorSet {
+                    self.darkNoColorRedLine.removeFromSuperlayer()
+                } else {
+                    self.darkColorRectangleView.layer.addSublayer(self.darkNoColorRedLine)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.darkColorObservable
@@ -194,5 +210,18 @@ fileprivate extension ColorSelectionItemView {
         enableCheckbox.rx.isOn
             .bind(to: viewModel.inputs.isEnabled)
             .disposed(by: disposeBag)
+    }
+
+    func diagonalRedLine() -> CAShapeLayer {
+        let linePath = UIBezierPath()
+        linePath.move(to: CGPoint(x: 0, y: Metrics.colorRectangleSize))
+        linePath.addLine(to: CGPoint(x: Metrics.colorRectangleSize, y: 0))
+        linePath.close()
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = linePath.cgPath
+        shapeLayer.lineWidth = 1.0
+        shapeLayer.strokeColor = UIColor.red.cgColor
+        return shapeLayer
     }
 }
