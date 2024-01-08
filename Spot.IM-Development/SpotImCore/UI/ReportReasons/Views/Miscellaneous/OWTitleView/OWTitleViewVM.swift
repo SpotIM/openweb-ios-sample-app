@@ -11,10 +11,14 @@ import RxSwift
 
 protocol OWTitleViewViewModelingInputs {
     var closeTap: PublishSubject<Void> { get }
+    var backTap: PublishSubject<Void> { get }
+    var canGoBack: PublishSubject<Bool> { get }
 }
 
 protocol OWTitleViewViewModelingOutputs {
     var closeTapped: Observable<Void> { get }
+    var backTapped: Observable<Void> { get }
+    var shouldShowBackButton: Observable<Bool> { get }
 }
 
 protocol OWTitleViewViewModeling {
@@ -29,6 +33,18 @@ class OWTitleViewViewModel: OWTitleViewViewModeling, OWTitleViewViewModelingOutp
     var closeTap = PublishSubject<Void>()
     var closeTapped: Observable<Void> {
         return closeTap
+            .asObservable()
+    }
+
+    var backTap = PublishSubject<Void>()
+    var backTapped: Observable<Void> {
+        return backTap
+            .asObservable()
+    }
+
+    let canGoBack = PublishSubject<Bool>()
+    var shouldShowBackButton: Observable<Bool> {
+        canGoBack
             .asObservable()
     }
 }
