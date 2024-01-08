@@ -98,7 +98,7 @@ class OWCommentHeaderView: UIView {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
         return UIButton()
             .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8))
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
     }()
 
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
