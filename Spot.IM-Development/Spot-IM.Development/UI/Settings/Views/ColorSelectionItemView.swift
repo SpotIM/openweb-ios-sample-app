@@ -89,9 +89,6 @@ class ColorSelectionItemView: UIView {
         return tap
     }()
 
-    fileprivate let lightPicker = UIColorPickerViewController()
-    fileprivate let darkPicker = UIColorPickerViewController()
-
     fileprivate let viewModel: ColorSelectionItemViewModeling
     init(viewModel: ColorSelectionItemViewModeling) {
         self.viewModel = viewModel
@@ -151,15 +148,13 @@ fileprivate extension ColorSelectionItemView {
     func setupObservers() {
         lightTapGesture.rx.event
             .voidify()
-            .map { [weak self] in self?.lightPicker}
-            .unwrap()
+            .map { .light }
             .bind(to: viewModel.inputs.displayPicker)
             .disposed(by: disposeBag)
 
         darkTapGesture.rx.event
             .voidify()
-            .map { [weak self] in self?.darkPicker}
-            .unwrap()
+            .map { .dark }
             .bind(to: viewModel.inputs.displayPicker)
             .disposed(by: disposeBag)
 
@@ -167,51 +162,21 @@ fileprivate extension ColorSelectionItemView {
             .take(1)
             .subscribe(onNext: { [weak self] color in
                 guard let color = color else { return }
-                self?.lightPicker.selectedColor = color.lightColor
-                self?.darkPicker.selectedColor = color.darkColor
                 self?.lightColorRectangleView.backgroundColor = color.lightColor
                 self?.darkColorRectangleView.backgroundColor = color.darkColor
             })
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(
-            lightPicker.rx.didSelectColor,
-            darkPicker.rx.didSelectColor
-        )
-        .map { light, dark in
-            guard let light = light,
-                  let dark = dark else { return nil }
-            return OWColor(lightColor: light, darkColor: dark)
-        }
-        .unwrap()
-        .bind(to: viewModel.inputs.colorChanged)
-        .disposed(by: disposeBag)
-
-        lightPicker.rx.didSelectColor
+        viewModel.outputs.lightColorObservable
             .bind(to: lightColorRectangleView.rx.backgroundColor)
             .disposed(by: disposeBag)
 
-        darkPicker.rx.didSelectColor
+        viewModel.outputs.darkColorObservable
             .bind(to: darkColorRectangleView.rx.backgroundColor)
             .disposed(by: disposeBag)
 
         enableCheckbox.rx.isOn
             .bind(to: viewModel.inputs.isEnabled)
             .disposed(by: disposeBag)
-    }
-}
-
-@available(iOS 14.0, *)
-fileprivate extension Reactive where Base: UIColorPickerViewController {
-    var didSelectColor: Observable<UIColor?> {
-        return Observable.create { observer in
-            let token = self.base.observe(\.selectedColor) { _, _ in
-                observer.onNext(self.base.selectedColor)
-            }
-
-            return Disposables.create {
-                token.invalidate()
-            }
-        }
     }
 }
