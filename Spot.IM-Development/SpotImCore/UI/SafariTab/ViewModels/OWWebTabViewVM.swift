@@ -74,8 +74,31 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
         return OWTitleViewViewModel()
     }()
 
+    fileprivate let disposeBag = DisposeBag()
+
     init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
         self.options = options
         self.viewableMode = viewableMode
+
+        setupObservers()
+    }
+}
+
+extension OWWebTabViewViewModel {
+    func setupObservers() {
+        canGoBack
+            .subscribe(onNext: { [weak self] canGoBack in
+                guard let self = self else { return }
+                self.titleViewVM.inputs.canGoBack.onNext(canGoBack)
+            })
+            .disposed(by: disposeBag)
+
+        titleViewVM.outputs
+            .backTapped
+            .subscribe(onNext: { [weak self] canGoBack in
+                guard let self = self else { return }
+                self.backWebTabTapped.onNext()
+            })
+            .disposed(by: disposeBag)
     }
 }
