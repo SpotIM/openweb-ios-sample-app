@@ -6,6 +6,8 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable self_capture_in_blocks
+
 import Foundation
 
 /// `Session` creates and manages OWNetwork's `Request` types during their lifetimes. It also provides common
