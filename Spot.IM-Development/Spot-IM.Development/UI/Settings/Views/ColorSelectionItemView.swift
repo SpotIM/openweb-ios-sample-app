@@ -168,7 +168,23 @@ fileprivate extension ColorSelectionItemView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.lightColorObservable
+            .map { $0 != nil }
+            .map { isColorSet in
+                return isColorSet ? UIColor.black.cgColor : UIColor.red.cgColor
+            }
+            .bind(to: lightColorRectangleView.layer.rx.borderColor)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.lightColorObservable
             .bind(to: lightColorRectangleView.rx.backgroundColor)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.darkColorObservable
+            .map { $0 != nil }
+            .map { isColorSet in
+                return isColorSet ? UIColor.black.cgColor : UIColor.red.cgColor
+            }
+            .bind(to: darkColorRectangleView.layer.rx.borderColor)
             .disposed(by: disposeBag)
 
         viewModel.outputs.darkColorObservable
