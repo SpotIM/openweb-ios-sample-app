@@ -11,16 +11,19 @@ import SpotImCore
 
 @available(iOS 14.0, *)
 protocol ColorSelectionItemViewModelingInputs {
-    var colorChanged: BehaviorSubject<OWColor?> { get }
     var isEnabled: BehaviorSubject<Bool> { get }
-    var displayPicker: PublishSubject<UIColorPickerViewController> { get }
+    var displayPicker: PublishSubject<ColorType> { get }
+    var lightColor: BehaviorSubject<UIColor?> { get }
+    var darkColor: BehaviorSubject<UIColor?> { get }
 }
 
 @available(iOS 14.0, *)
 protocol ColorSelectionItemViewModelingOutputs {
     var title: String { get }
-    var displayPickerObservable: Observable<UIColorPickerViewController> { get }
+    var displayPickerObservable: Observable<ColorType> { get }
     var color: Observable<OWColor?> { get }
+    var lightColorObservable: Observable<UIColor?> { get }
+    var darkColorObservable: Observable<UIColor?> { get }
 }
 
 @available(iOS 14.0, *)
@@ -39,11 +42,12 @@ class ColorSelectionItemViewModel: ColorSelectionItemViewModeling, ColorSelectio
 
     init(item: ThemeColorItem) {
         self.item = item
-        self.colorChanged = BehaviorSubject(value: item.initialColor)
+        self.lightColor = BehaviorSubject(value: item.initialColor?.lightColor)
+        self.darkColor = BehaviorSubject(value: item.initialColor?.darkColor)
     }
 
-    var displayPicker = PublishSubject<UIColorPickerViewController>()
-    lazy var displayPickerObservable: Observable<UIColorPickerViewController> = {
+    var displayPicker = PublishSubject<ColorType>()
+    lazy var displayPickerObservable: Observable<ColorType> = {
         displayPicker
             .asObservable()
     }()
@@ -52,18 +56,37 @@ class ColorSelectionItemViewModel: ColorSelectionItemViewModeling, ColorSelectio
         item.title
     }
 
-    var colorChanged: BehaviorSubject<OWColor?>
+    var lightColor: BehaviorSubject<UIColor?>
+    lazy var lightColorObservable: Observable<UIColor?> = {
+        lightColor
+            .asObservable()
+    }()
+    var darkColor: BehaviorSubject<UIColor?>
+    lazy var darkColorObservable: Observable<UIColor?> = {
+        darkColor
+            .asObservable()
+    }()
 
     lazy var color: Observable<OWColor?> = {
         Observable.combineLatest(
-            colorChanged.asObservable(),
+            lightColorObservable,
+            darkColorObservable,
             isEnabled.asObservable()
-        ) { color, enabled in
-            guard enabled else { return nil }
-            return color
+        ) { light, dark, enabled in
+            guard enabled,
+                  let lightColor = light,
+                  let darkColor = dark
+            else { return nil }
+
+            return OWColor(lightColor: lightColor, darkColor: darkColor)
         }
         .startWith(item.initialColor)
     }()
 
     var isEnabled = BehaviorSubject(value: true)
+}
+
+enum ColorType {
+    case light
+    case dark
 }

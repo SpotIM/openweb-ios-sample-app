@@ -16,7 +16,6 @@ protocol ColorsCustomizationViewModelingInputs { }
 protocol ColorsCustomizationViewModelingOutputs {
     var title: String { get }
     var colorItemsVM: [ColorSelectionItemViewModeling] { get }
-    var openPicker: Observable<UIColorPickerViewController> { get }
 }
 
 @available(iOS 14.0, *)
@@ -40,7 +39,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Skeleton Shimmering", initialColor: initialColorTheme.skeletonShimmeringColor),
             ThemeColorItem(title: "Primary Separator", initialColor: initialColorTheme.primarySeparatorColor),
             ThemeColorItem(title: "Secondary Separator", initialColor: initialColorTheme.secondarySeparatorColor),
-            ThemeColorItem(title: "Tertiary Separator", initialColor: initialColorTheme.tertiaryTextColor),
+            ThemeColorItem(title: "Tertiary Separator", initialColor: initialColorTheme.tertiarySeparatorColor),
             ThemeColorItem(title: "Primary Text", initialColor: initialColorTheme.primaryTextColor),
             ThemeColorItem(title: "Secondary Text", initialColor: initialColorTheme.secondaryTextColor),
             ThemeColorItem(title: "Tertiary Text", initialColor: initialColorTheme.tertiaryTextColor),
@@ -64,15 +63,6 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
         return colorItems.map { item in
             return ColorSelectionItemViewModel(item: item)
         }
-    }()
-
-    lazy var openPicker: Observable<UIColorPickerViewController> = {
-        return Observable.merge(
-            colorItemsVM
-                .map { vm in
-                    vm.outputs.displayPickerObservable
-                }
-        )
     }()
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
