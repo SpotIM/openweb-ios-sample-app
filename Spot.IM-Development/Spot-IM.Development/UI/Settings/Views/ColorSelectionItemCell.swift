@@ -117,7 +117,7 @@ class ColorSelectionItemCell: UITableViewCell {
 fileprivate extension ColorSelectionItemCell {
     func setupViews() {
         self.contentView.isUserInteractionEnabled = false
-        
+
         self.addSubview(enableCheckbox)
         enableCheckbox.snp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
