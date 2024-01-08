@@ -1,5 +1,5 @@
 //
-//  ColorSelectionItemViewModel.swift
+//  ColorSelectionItemCellViewModel.swift
 //  Spot-IM.Development
 //
 //  Created by  Nogah Melamed on 01/01/2024.
@@ -10,7 +10,7 @@ import RxSwift
 import SpotImCore
 
 @available(iOS 14.0, *)
-protocol ColorSelectionItemViewModelingInputs {
+protocol ColorSelectionItemCellViewModelingInputs {
     var isEnabled: BehaviorSubject<Bool> { get }
     var displayPicker: PublishSubject<ColorType> { get }
     var lightColor: BehaviorSubject<UIColor?> { get }
@@ -18,7 +18,7 @@ protocol ColorSelectionItemViewModelingInputs {
 }
 
 @available(iOS 14.0, *)
-protocol ColorSelectionItemViewModelingOutputs {
+protocol ColorSelectionItemCellViewModelingOutputs {
     var title: String { get }
     var displayPickerObservable: Observable<ColorType> { get }
     var color: Observable<OWColor?> { get }
@@ -27,15 +27,15 @@ protocol ColorSelectionItemViewModelingOutputs {
 }
 
 @available(iOS 14.0, *)
-protocol ColorSelectionItemViewModeling {
-    var inputs: ColorSelectionItemViewModelingInputs { get }
-    var outputs: ColorSelectionItemViewModelingOutputs { get }
+protocol ColorSelectionItemCellViewModeling {
+    var inputs: ColorSelectionItemCellViewModelingInputs { get }
+    var outputs: ColorSelectionItemCellViewModelingOutputs { get }
 }
 
 @available(iOS 14.0, *)
-class ColorSelectionItemViewModel: ColorSelectionItemViewModeling, ColorSelectionItemViewModelingInputs, ColorSelectionItemViewModelingOutputs {
-    var inputs: ColorSelectionItemViewModelingInputs { return self }
-    var outputs: ColorSelectionItemViewModelingOutputs { return self }
+class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, ColorSelectionItemCellViewModelingInputs, ColorSelectionItemCellViewModelingOutputs {
+    var inputs: ColorSelectionItemCellViewModelingInputs { return self }
+    var outputs: ColorSelectionItemCellViewModelingOutputs { return self }
 
     fileprivate var item: ThemeColorItem
     fileprivate let disposeBag = DisposeBag()
