@@ -41,6 +41,8 @@ class ColorsCustomizationVC: UIViewController {
         return stackView
     }()
 
+    fileprivate let picker = UIColorPickerViewController()
+
     init(viewModel: ColorsCustomizationViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -97,14 +99,52 @@ fileprivate extension ColorsCustomizationVC {
     }
 
     func setupObservers() {
-        viewModel.outputs.openPicker
-            .subscribe(onNext: { [weak self] picker in
-                self?.showPicker(picker: picker)
+        let openPickerObservers = viewModel.outputs.colorItemsVM
+            .map { vm in
+                return vm.outputs.displayPickerObservable
+                    .map { ($0, vm) }
+            }
+
+        Observable.merge(openPickerObservers)
+            .map { colorType, vm -> BehaviorSubject<UIColor?> in
+                switch colorType {
+                case .light:
+                    return vm.inputs.lightColor
+                case .dark:
+                    return vm.inputs.darkColor
+                }
+            }
+            .do(onNext: { [weak self] _ in
+                self?.showPicker()
+            })
+            .flatMapLatest { [weak self] updateColor -> Observable<(UIColor?, BehaviorSubject<UIColor?>)?> in
+                guard let self = self else { return .empty() }
+                return self.picker.rx.didSelectColor
+                    .map { ($0, updateColor) }
+            }
+            .unwrap()
+            .subscribe(onNext: { selectedColor, updateColor in
+                updateColor.onNext(selectedColor)
             })
             .disposed(by: disposeBag)
     }
 
-    func showPicker(picker: UIColorPickerViewController) {
-        self.present(picker, animated: true)
+    func showPicker() {
+        self.present(self.picker, animated: true)
+    }
+}
+
+@available(iOS 14.0, *)
+fileprivate extension Reactive where Base: UIColorPickerViewController {
+    var didSelectColor: Observable<UIColor?> {
+        return Observable.create { observer in
+            let token = self.base.observe(\.selectedColor) { _, _ in
+                observer.onNext(self.base.selectedColor)
+            }
+
+            return Disposables.create {
+                token.invalidate()
+            }
+        }
     }
 }
