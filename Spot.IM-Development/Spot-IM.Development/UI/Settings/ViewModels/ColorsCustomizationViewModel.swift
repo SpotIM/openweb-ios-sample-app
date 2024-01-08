@@ -15,7 +15,7 @@ protocol ColorsCustomizationViewModelingInputs { }
 @available(iOS 14.0, *)
 protocol ColorsCustomizationViewModelingOutputs {
     var title: String { get }
-    var colorItemsVM: [ColorSelectionItemViewModeling] { get }
+    var cellsViewModels: Observable<[ColorSelectionItemCellViewModeling]> { get }
 }
 
 @available(iOS 14.0, *)
@@ -59,10 +59,10 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             .asObservable()
     }
 
-    lazy var colorItemsVM: [ColorSelectionItemViewModeling] = {
-        return colorItems.map { item in
-            return ColorSelectionItemViewModel(item: item)
-        }
+    lazy var cellsViewModels: Observable<[ColorSelectionItemCellViewModeling]> = {
+        return Observable.just(colorItems.map { item in
+            return ColorSelectionItemCellViewModel(item: item)
+        })
     }()
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
@@ -79,15 +79,21 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
 @available(iOS 14.0, *)
 fileprivate extension ColorsCustomizationViewModel {
     func setupObservers() {
-        let colors = colorItemsVM
-            .map { $0.outputs.color }
-
-        Observable.combineLatest(colors) { [weak self] colorsValues -> OWTheme in
-            guard let self = self else { return OWTheme() }
-            return self.getTheme(from: colorsValues)
-        }
-        .bind(to: _selectedTheme)
-        .disposed(by: disposeBag)
+        cellsViewModels
+            .map { cellsVms -> [Observable<OWColor?>] in
+                return cellsVms.map { vm in
+                    return vm.outputs.color
+                }
+            }
+            .map { colors in
+                return Observable.combineLatest(colors) { [weak self] colorsValues -> OWTheme in
+                    guard let self = self else { return OWTheme() }
+                    return self.getTheme(from: colorsValues)
+                }
+            }
+            .flatMapLatest { $0 }
+            .bind(to: _selectedTheme)
+            .disposed(by: disposeBag)
 
         selectedTheme
             .skip(1)

@@ -15,7 +15,7 @@ class ColorsCustomizationVC: UIViewController {
     fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 40
         static let verticalOffset: CGFloat = 24
-        static let stackViewSpacing: CGFloat = 20
+        static let rowHeight: CGFloat = 50
     }
 
     fileprivate let viewModel: ColorsCustomizationViewModeling
@@ -33,12 +33,13 @@ class ColorsCustomizationVC: UIViewController {
         return label
     }()
 
-    fileprivate lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.spacing = Metrics.stackViewSpacing
-        return stackView
+    fileprivate lazy var tableView: UITableView = {
+        let tblView = UITableView()
+            .separatorStyle(.none)
+        tblView.allowsSelection = false
+        tblView.rowHeight = Metrics.rowHeight
+        tblView.register(cellClass: ColorSelectionItemCell.self)
+        return tblView
     }()
 
     fileprivate let picker = UIColorPickerViewController()
@@ -85,27 +86,25 @@ fileprivate extension ColorsCustomizationVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.verticalOffset)
         }
 
-        scrollView.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
+        scrollView.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
             make.top.equalTo(explainLabel.snp.bottom).offset(Metrics.horizontalOffset)
-            make.bottom.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalOffset)
-            make.leading.trailing.equalTo(scrollView)
-        }
-
-        viewModel.outputs.colorItemsVM.forEach { vm in
-            let view = ColorSelectionItemView(viewModel: vm)
-            stackView.addArrangedSubview(view)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
     }
 
     func setupObservers() {
-        let openPickerObservers = viewModel.outputs.colorItemsVM
-            .map { vm in
-                return vm.outputs.displayPickerObservable
-                    .map { ($0, vm) }
+        let openPickerObservers = viewModel.outputs.cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<(ColorType, ColorSelectionItemCellViewModeling)> in
+                let openPickerObservable: [Observable<(ColorType, ColorSelectionItemCellViewModeling)>] = cellsVms.map { vm in
+                    return vm.outputs.displayPickerObservable
+                        .map { ($0, vm) }
+                }
+                return Observable.merge(openPickerObservable)
             }
 
-        Observable.merge(openPickerObservers)
+        openPickerObservers
             .map { colorType, vm -> BehaviorSubject<UIColor?> in
                 switch colorType {
                 case .light:
@@ -126,6 +125,13 @@ fileprivate extension ColorsCustomizationVC {
             .subscribe(onNext: { selectedColor, updateColor in
                 updateColor.onNext(selectedColor)
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.cellsViewModels
+            .bind(to: tableView.rx.items(cellIdentifier: ColorSelectionItemCell.identifierName,
+                                         cellType: ColorSelectionItemCell.self)) { _, viewModel, cell in
+                cell.configure(with: viewModel)
+            }
             .disposed(by: disposeBag)
     }
 

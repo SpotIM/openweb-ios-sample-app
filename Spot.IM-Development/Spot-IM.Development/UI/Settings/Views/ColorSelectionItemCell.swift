@@ -1,5 +1,5 @@
 //
-//  ColorSelectionItemView.swift
+//  ColorSelectionItemCell.swift
 //  Spot-IM.Development
 //
 //  Created by  Nogah Melamed on 01/01/2024.
@@ -13,7 +13,7 @@ import RxCocoa
 import SpotImCore
 
 @available(iOS 14.0, *)
-class ColorSelectionItemView: UIView {
+class ColorSelectionItemCell: UITableViewCell {
     fileprivate struct Metrics {
         static let colorViewBorderSize: CGFloat = 1
         static let colorViewCornerRadius: CGFloat = 4
@@ -22,11 +22,8 @@ class ColorSelectionItemView: UIView {
         static let colorRectangleSize: CGFloat = 16
     }
 
-    fileprivate let disposeBag: DisposeBag
-
     fileprivate lazy var title: UILabel = {
-        return viewModel.outputs.title
-            .label
+        return UILabel()
             .font(FontBook.paragraph)
     }()
 
@@ -95,13 +92,19 @@ class ColorSelectionItemView: UIView {
         return tap
     }()
 
-    fileprivate let viewModel: ColorSelectionItemViewModeling
-    init(viewModel: ColorSelectionItemViewModeling) {
+    fileprivate var viewModel: ColorSelectionItemCellViewModeling!
+    fileprivate var disposeBag: DisposeBag
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        self.disposeBag = DisposeBag()
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    }
+
+    func configure(with viewModel: ColorSelectionItemCellViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
-        super.init(frame: .zero)
 
-        setupViews()
         setupObservers()
     }
 
@@ -111,8 +114,10 @@ class ColorSelectionItemView: UIView {
 }
 
 @available(iOS 14.0, *)
-fileprivate extension ColorSelectionItemView {
+fileprivate extension ColorSelectionItemCell {
     func setupViews() {
+        self.contentView.isUserInteractionEnabled = false
+        
         self.addSubview(enableCheckbox)
         enableCheckbox.snp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
@@ -147,11 +152,14 @@ fileprivate extension ColorSelectionItemView {
         darkColorRectangleView.snp.makeConstraints { make in
             make.leading.equalTo(darkLabel.snp.trailing).offset(Metrics.colorLabelSpacing)
             make.size.equalTo(Metrics.colorRectangleSize)
-            make.centerY.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(Metrics.generalSpacing)
         }
     }
 
     func setupObservers() {
+        title.text = viewModel.outputs.title
+
         lightTapGesture.rx.event
             .voidify()
             .map { .light }
