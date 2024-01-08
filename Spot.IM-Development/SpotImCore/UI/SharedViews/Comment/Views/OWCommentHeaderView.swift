@@ -16,10 +16,11 @@ class OWCommentHeaderView: UIView {
         static let avatarSideSize: CGFloat = 36.0
         static let avatarImageViewTrailingOffset: CGFloat = 8.0
         static let subscriberVerticalPadding: CGFloat = 7
-        static let optionButtonSize: CGFloat = 20
+        static let optionButtonSize: CGFloat = 30
         static let badgeHorizontalInset: CGFloat = 4
         static let commentReasonLabelFontSize: CGFloat = 17
         static let commentReasonLabelLineSpacing: CGFloat = 3.5
+        static let optionsImageRight: CGFloat = -22
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -98,7 +99,7 @@ class OWCommentHeaderView: UIView {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
         return UIButton()
             .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Metrics.optionsImageRight))
     }()
 
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
