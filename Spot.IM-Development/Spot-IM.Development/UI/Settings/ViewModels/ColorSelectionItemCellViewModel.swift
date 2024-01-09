@@ -85,8 +85,3 @@ class ColorSelectionItemCellViewModel: ColorSelectionItemCellViewModeling, Color
 
     var isEnabled = BehaviorSubject(value: true)
 }
-
-enum ColorType {
-    case light
-    case dark
-}
