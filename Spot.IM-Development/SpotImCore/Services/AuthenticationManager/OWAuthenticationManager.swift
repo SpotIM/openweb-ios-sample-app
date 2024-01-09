@@ -120,12 +120,12 @@ extension OWAuthenticationManager {
                     let authDismiss = PublishSubject<Void>()
                     let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: { publisherAuthVC in
                         router.start()
-                        // Since the placeholder vc is being removed once the bulisher vc is on router, we need to set the completion to the correct vc
+                        // Since the placeholder VC is being removed once the publisher VC is on router, we need to set the completion to the correct VC
                         router.setCompletion(for: publisherAuthVC, dismissCompletion: authDismiss)
                     })
                     let vc = OWNavigationPlaceholderVC(viewModel: vm)
                     router.setRoot(vc, animated: false, dismissCompletion: nil)
-                    // Once publisher auth is really dissmissed (from our router) complete blocking
+                    // Once publisher auth VC is really dismissed (from our router), complete blocking
                     _ = authDismiss
                         .take(1)
                         .asObservable()
