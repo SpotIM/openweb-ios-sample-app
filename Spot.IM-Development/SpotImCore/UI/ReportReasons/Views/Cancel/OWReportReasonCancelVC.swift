@@ -36,6 +36,10 @@ class OWReportReasonCancelVC: UIViewController, OWStatusBarStyleUpdaterProtocol 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
 }
 
 fileprivate extension OWReportReasonCancelVC {
