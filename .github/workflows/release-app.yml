@@ -5,8 +5,22 @@ on:
   workflow_dispatch:
     inputs:
       version_number:
-        description: App Version Number
+        description: Version Number
         required: true
+
+      build_number:
+        description: Build Number
+        required: true
+        default: '0'
+
+      scheme:
+         description: Scheme
+         type: choice
+         required: true
+         options:
+           - "app"
+           - "beta_app"
+           - "public_app"
 
 jobs:
   release-app:
@@ -28,3 +42,8 @@ jobs:
             echo "ERROR: Unable to validate version: '$VERSION'"
             exit 1
           fi
+
+      - name: Push Branch
+      - run: |
+          git push --set-upstream origin "test/${{ inputs.scheme }}/${{ env.VERSION }}"
+          
