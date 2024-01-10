@@ -208,19 +208,7 @@ fileprivate extension OWReportReasonCoordinator {
                 let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
                 let reportReasonSubmittedVC = OWReportReasonSubmittedVC(reportReasonSubmittedViewViewModel: reportReasonSubmittedViewVM)
 
-                var pushStyle: OWScreenPushStyle
-                switch self.presentationalMode {
-                case .present(let style):
-                    switch style {
-                    case .fullScreen:
-                        pushStyle = .presentOverFullScreen
-                    case .pageSheet:
-                        pushStyle = .present
-                    }
-                default:
-                    pushStyle = .presentOverFullScreen
-                }
-                router.push(reportReasonSubmittedVC, pushStyle: pushStyle, animated: true, popCompletion: nil)
+                router.push(reportReasonSubmittedVC, pushStyle: .present, animated: true, popCompletion: nil)
                 return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
             }
             .do(onNext: { [weak self] in
@@ -322,20 +310,7 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let self = self else { return }
                 guard let router = self.router else { return }
 
-                var popStyle: OWScreenPopStyle
-                switch self.presentationalMode {
-                case .present(let style):
-                    switch style {
-                    case .fullScreen:
-                        popStyle = .dismissOverFullScreen
-                    case .pageSheet:
-                        popStyle = .dismiss
-                    }
-                default:
-                    popStyle = .dismissOverFullScreen
-                }
-
-                router.pop(popStyle: popStyle, animated: true)
+                router.pop(popStyle: .dismiss, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -354,20 +329,7 @@ fileprivate extension OWReportReasonCoordinator {
                 // For dismissing OWReportReasonSubmittedVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
                     let hasMoreThanOneViewController = router.numberOfActiveViewControllers > 1
-                    
-                    var popStyle: OWScreenPopStyle
-                    switch self.presentationalMode {
-                    case .present(let style):
-                        switch style {
-                        case .fullScreen:
-                            popStyle = .dismissOverFullScreen
-                        case .pageSheet:
-                            popStyle = .dismiss
-                        }
-                    default:
-                        popStyle = .dismissOverFullScreen
-                    }
-                    router.pop(popStyle: popStyle, animated: hasMoreThanOneViewController)
+                    router.pop(popStyle: .dismiss, animated: hasMoreThanOneViewController)
                 }
                 return .just(router)
             }
@@ -402,19 +364,7 @@ fileprivate extension OWReportReasonCoordinator {
                 let ReportReasonCancelVM = OWReportReasonCancelViewModel(reportReasonCancelViewViewModel: reportReasonViewModel)
                 let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewModel: ReportReasonCancelVM)
 
-                var pushStyle: OWScreenPushStyle
-                switch self.presentationalMode {
-                case .present(let style):
-                    switch style {
-                    case .fullScreen:
-                        pushStyle = .presentOverFullScreen
-                    case .pageSheet:
-                        pushStyle = .present
-                    }
-                default:
-                    pushStyle = .presentOverFullScreen
-                }
-                router.push(reportReasonCancelVC, pushStyle: pushStyle, animated: true, popCompletion: nil)
+                router.push(reportReasonCancelVC, pushStyle: .present, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
 
