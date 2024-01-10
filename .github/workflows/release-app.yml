@@ -46,7 +46,7 @@ jobs:
 
       - name: Put branch in env
         run: |
-          BRANCH="test/${{ inputs.scheme }}/${{ env.VERSION }}"
+          BRANCH="release/${{ inputs.scheme }}/${{ env.VERSION }}"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
       - name: Delete branch if already exists
