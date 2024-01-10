@@ -50,7 +50,7 @@ jobs:
           
       - name: Push Branch
         run: |
-          if git ls-remote --exit-code --heads "$env.BRANCH"
+          if git ls-remote --exit-code --heads "${{ env.BRANCH }}"
           then
               echo "REMOTE BRANCH EXISTS"
               git push origin --delete "${{ env.BRANCH }}"
