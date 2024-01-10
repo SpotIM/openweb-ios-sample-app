@@ -226,7 +226,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     var scrolledToCellIndex = PublishSubject<Int>()
-//    var _scrolledToCellIndex = BehaviorSubject<Int?>(value: nil)
 
     fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
     var highlightCellsIndexes: Observable<[Int]> {
