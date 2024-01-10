@@ -45,5 +45,7 @@ jobs:
 
       - name: Push Branch
         run: |
-          git push --set-upstream origin "test/${{ inputs.scheme }}/${{ env.VERSION }}"
+          BRANCH="test/${{ inputs.scheme }}/${{ env.VERSION }}"
+          git checkout -b "${{ env.BRANCH }}"
+          git push --set-upstream origin "${{ env.BRANCH }}"
           
