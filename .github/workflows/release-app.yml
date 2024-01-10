@@ -44,6 +44,6 @@ jobs:
           fi
 
       - name: Push Branch
-      - run: |
+        run: |
           git push --set-upstream origin "test/${{ inputs.scheme }}/${{ env.VERSION }}"
           
