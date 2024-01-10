@@ -207,13 +207,20 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let router = self.router else { return .empty() }
                 let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
                 let reportReasonSubmittedVC = OWReportReasonSubmittedVC(reportReasonSubmittedViewViewModel: reportReasonSubmittedViewVM)
+
+                var pushStyle: OWScreenPushStyle
                 switch self.presentationalMode {
                 case .present(let style):
-                    reportReasonSubmittedVC.modalPresentationStyle = style.toOSModalPresentationStyle
+                    switch style {
+                    case .fullScreen:
+                        pushStyle = .presentOverFullScreen
+                    case .pageSheet:
+                        pushStyle = .present
+                    }
                 default:
-                    reportReasonSubmittedVC.modalPresentationStyle = .fullScreen
+                    pushStyle = .presentOverFullScreen
                 }
-                router.present(reportReasonSubmittedVC, animated: true, dismissCompletion: nil)
+                router.push(reportReasonSubmittedVC, pushStyle: pushStyle, animated: true, popCompletion: nil)
                 return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
             }
             .do(onNext: { [weak self] in
@@ -314,7 +321,21 @@ fileprivate extension OWReportReasonCoordinator {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                router.navigationController?.visibleViewController?.dismiss(animated: true)
+
+                var popStyle: OWScreenPopStyle
+                switch self.presentationalMode {
+                case .present(let style):
+                    switch style {
+                    case .fullScreen:
+                        popStyle = .dismissOverFullScreen
+                    case .pageSheet:
+                        popStyle = .dismiss
+                    }
+                default:
+                    popStyle = .dismissOverFullScreen
+                }
+
+                router.pop(popStyle: popStyle, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -333,7 +354,20 @@ fileprivate extension OWReportReasonCoordinator {
                 // For dismissing OWReportReasonSubmittedVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
                     let hasMoreThanOneViewController = router.numberOfActiveViewControllers > 1
-                    visableViewController?.dismiss(animated: hasMoreThanOneViewController)
+                    
+                    var popStyle: OWScreenPopStyle
+                    switch self.presentationalMode {
+                    case .present(let style):
+                        switch style {
+                        case .fullScreen:
+                            popStyle = .dismissOverFullScreen
+                        case .pageSheet:
+                            popStyle = .dismiss
+                        }
+                    default:
+                        popStyle = .dismissOverFullScreen
+                    }
+                    router.pop(popStyle: popStyle, animated: hasMoreThanOneViewController)
                 }
                 return .just(router)
             }
@@ -367,15 +401,20 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let router = self.router else { return }
                 let ReportReasonCancelVM = OWReportReasonCancelViewModel(reportReasonCancelViewViewModel: reportReasonViewModel)
                 let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewModel: ReportReasonCancelVM)
+
+                var pushStyle: OWScreenPushStyle
                 switch self.presentationalMode {
-                case .present(style: .fullScreen):
-                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
-                case .present(style: .pageSheet):
-                    reportReasonCancelVC.modalPresentationStyle = .pageSheet
+                case .present(let style):
+                    switch style {
+                    case .fullScreen:
+                        pushStyle = .presentOverFullScreen
+                    case .pageSheet:
+                        pushStyle = .present
+                    }
                 default:
-                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
+                    pushStyle = .presentOverFullScreen
                 }
-                router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+                router.push(reportReasonCancelVC, pushStyle: pushStyle, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
 
