@@ -81,7 +81,10 @@ fileprivate extension OWAnalyticsService {
             }
             .withLatestFrom(self.blockedEvents) { [weak self] items, blockedEvents -> [OWAnalyticEvent] in
                 guard let self = self else { return [] }
-                return items.filter { self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)  }
+                return items.filter { [weak self] in
+                    guard let self = self else { return false }
+                    return self.shouldSendEvent(event: $0, blockedEvents: blockedEvents)
+                }
             }
             .map { [weak self] event in
                 guard let self = self else { return [] }
