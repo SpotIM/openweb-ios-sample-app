@@ -43,9 +43,13 @@ jobs:
             exit 1
           fi
 
-      - name: Push Branch
+      - name: Put Branch in env
         run: |
           BRANCH="test/${{ inputs.scheme }}/${{ env.VERSION }}"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          
+      - name: Push Branch
+        run: |
           git checkout -b "${{ env.BRANCH }}"
           git push --set-upstream origin "${{ env.BRANCH }}"
           
