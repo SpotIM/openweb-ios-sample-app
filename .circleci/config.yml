@@ -720,6 +720,14 @@ workflows:
           xcode: "15.0"
           buildConfig: "ReleaseBeta"
 
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag15.1/.*/
+          xcode: "15.1"
+          buildConfig: "ReleaseBeta"
+
       - release_app_job:
           context: mobile-automation
           filters:
@@ -780,6 +788,11 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.3.1"
+
+      - release_tag:
+          requires:
+            - "release_sdk_job"
+          xcode: "15.1.0"
 
   upload_app_to_s3_workflow:
     jobs:
