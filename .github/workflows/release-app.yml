@@ -8,10 +8,11 @@ on:
         description: Version Number
         required: true
 
-      build_number:
-        description: Build Number
-        required: true
-        default: '0'
+      # TODO - Support build number
+      # build_number:
+      #   description: Build Number
+      #   required: true
+      #   default: '0'
 
       scheme:
          description: Scheme
@@ -43,20 +44,23 @@ jobs:
             exit 1
           fi
 
-      - name: Put Branch in env
+      - name: Put branch in env
         run: |
           BRANCH="test/${{ inputs.scheme }}/${{ env.VERSION }}"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
-          
-      - name: Push Branch
+
+      - name: Delete branch if already exists
         run: |
           if git ls-remote --exit-code --heads origin "${{ env.BRANCH }}"
           then
-              echo "REMOTE BRANCH EXISTS"
-              git push origin --delete "${{ env.BRANCH }}"
+            echo "INFO: remote branch esists - deleting it"
+            git push origin --delete "${{ env.BRANCH }}"
           else
-            echo "REMOTE BRANCH NOT FOUND"
+            echo "INFO: remote branch not found"
           fi
+          
+      - name: Push Branch
+        run: |
           git checkout -b "${{ env.BRANCH }}"
           git push --set-upstream origin "${{ env.BRANCH }}"
           
