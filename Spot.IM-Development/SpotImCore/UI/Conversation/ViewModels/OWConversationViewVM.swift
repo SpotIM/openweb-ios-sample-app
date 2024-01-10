@@ -989,6 +989,7 @@ fileprivate extension OWConversationViewViewModel {
             .realtimeIndicationViewModel.outputs
             .tapped
             .withLatestFrom(self.servicesProvider.realtimeIndicatorService().newComments)
+            .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] newComments in
                 guard let self = self else { return }
                 self.servicesProvider
@@ -1943,7 +1944,6 @@ fileprivate extension OWConversationViewViewModel {
         newRealtimeCommentsObsarvable
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self, let firstIndex = indexes.first else { return }
-//                self._dataSourceTransition.onNext(.reload)
                 self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
             })
             .disposed(by: disposeBag)
@@ -1953,12 +1953,9 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 == $1 }
             .voidify()
             .withLatestFrom(newRealtimeCommentsObsarvable)
-            .delay(.milliseconds(Metrics.delayAfterScrolledToCellAnimated), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self else { return }
-
                 self._highlightCellsIndexes.onNext(indexes)
-//                self._dataSourceTransition.onNext(.animated)
             })
             .disposed(by: disposeBag)
 
