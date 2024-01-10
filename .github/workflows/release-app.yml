@@ -50,6 +50,7 @@ jobs:
           
       - name: Push Branch
         run: |
+          git push origin --delete "${{ env.BRANCH }}"
           git checkout -b "${{ env.BRANCH }}"
           git push --set-upstream origin "${{ env.BRANCH }}"
           
