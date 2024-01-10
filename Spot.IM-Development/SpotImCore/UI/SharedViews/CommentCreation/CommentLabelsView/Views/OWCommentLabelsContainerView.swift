@@ -116,7 +116,10 @@ fileprivate extension OWCommentLabelsContainerView {
                         commentLabel.configure(viewModel: vm)
                         return commentLabel
                     }
-                    commentLabelsViews.forEach { self.labelsContainerStackView.addArrangedSubview($0) }
+                    commentLabelsViews.forEach { [weak self] in
+                        guard let self = self else { return }
+                        self.labelsContainerStackView.addArrangedSubview($0)
+                    }
                 }
             })
             .disposed(by: disposeBag)
