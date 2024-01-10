@@ -1,0 +1,30 @@
+name: Release Sample App
+run-name: Release Sample App
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_number:
+        description: App Version Number
+        required: true
+
+jobs:
+  release-app:
+    name: ${{github.actor}} release sample app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Validate version
+        run: |
+          VERSION="${{ inputs.version_number }}"
+          rx='^([0-9]+\.){2}(\*|[0-9]+)(-.*)?$'
+          if [[ $VERSION =~ $rx ]]; then
+            echo "INFO: Version - $VERSION"
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+          else
+            echo "ERROR: Unable to validate version: '$VERSION'"
+            exit 1
+          fi
