@@ -20,7 +20,7 @@ class OWCommentHeaderView: UIView {
         static let badgeHorizontalInset: CGFloat = 4
         static let commentReasonLabelFontSize: CGFloat = 17
         static let commentReasonLabelLineSpacing: CGFloat = 3.5
-        static let optionsImageLeft: CGFloat = 22
+        static let optionsImageInset: CGFloat = 22
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -97,9 +97,11 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
+        let leftInset: CGFloat =  OWLocalizationManager.shared.textAlignment == .left ? 0 : -Metrics.optionsImageInset
+        let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -Metrics.optionsImageInset
         return UIButton()
             .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -Metrics.optionsImageLeft))
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset))
     }()
 
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
