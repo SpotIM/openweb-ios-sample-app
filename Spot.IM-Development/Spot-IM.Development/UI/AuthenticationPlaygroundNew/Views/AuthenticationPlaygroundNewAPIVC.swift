@@ -94,6 +94,12 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
             .font(FontBook.paragraph)
     }
 
+    fileprivate lazy var closeButton: UIButton = {
+        var closeButton = UIButton()
+        closeButton.setImage(UIImage(named: "closeButton"), for: .normal)
+        return closeButton
+    }()
+
     init(viewModel: AuthenticationPlaygroundNewAPIViewModeling = AuthenticationPlaygroundNewAPIViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -242,6 +248,11 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
+        
+        // If auth VC is the only one on the navigation - add close button
+        if navigationController?.viewControllers.count == 1 {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+        }
     }
 
     func setupObservers() {
@@ -302,6 +313,10 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
 
         switchAutomaticallyDismiss.rx.isOn
             .bind(to: viewModel.inputs.automaticallyDismissToggled)
+            .disposed(by: disposeBag)
+
+        closeButton.rx.tap
+            .bind(to: viewModel.inputs.closeClick)
             .disposed(by: disposeBag)
 
         viewModel.outputs.dismissVC
