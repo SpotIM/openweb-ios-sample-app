@@ -16,6 +16,7 @@ protocol OWLoginPromptViewModelingInputs {
 protocol OWLoginPromptViewModelingOutputs {
     var shouldShowView: Observable<Bool> { get }
     var style: OWLoginPromptAlignmentStyle { get }
+    var authenticationTriggered: Observable<Void> { get }
 }
 
 protocol OWLoginPromptViewModeling {
@@ -76,6 +77,9 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     fileprivate var _openLogin: Observable<Void> {
         loginPromptTap
             .asObservable()
+    }
+    var authenticationTriggered: Observable<Void> {
+        _openLogin
     }
 }
 
