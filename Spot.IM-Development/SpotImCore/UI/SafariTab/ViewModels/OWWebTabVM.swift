@@ -18,7 +18,6 @@ protocol OWWebTabViewModelingOutputs {
     var webTabViewVM: OWWebTabViewViewModeling { get }
     var screenLoaded: Observable<Void> { get }
     var closeWebTab: Observable<Void> { get }
-    var shouldShowCloseButton: Observable<Bool> { get }
 }
 
 protocol OWWebTabViewModeling {
@@ -47,12 +46,6 @@ class OWWebTabViewModel: OWWebTabViewModeling, OWWebTabViewModelingInputs, OWWeb
     var viewDidLoad = PublishSubject<Void>()
     var screenLoaded: Observable<Void> {
         viewDidLoad.asObservable()
-    }
-
-    var shouldShowCloseButton: Observable<Bool> {
-        webTabViewVM.outputs
-            .shouldShowCloseButton
-            .asObservable()
     }
 
     fileprivate let disposeBag = DisposeBag()
