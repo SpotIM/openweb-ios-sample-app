@@ -85,8 +85,7 @@ class OWCommentThreadActionsView: UIView {
     }()
 
     fileprivate lazy var disclosureImageView: UIImageView = {
-        let image = UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: false)!
-        return UIImageView(image: image.withRenderingMode(.alwaysTemplate))
+        return UIImageView()
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -132,6 +131,15 @@ fileprivate extension OWCommentThreadActionsView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.actionLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.disclosureImage
+            .subscribe(onNext: { [weak self] image in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.disclosureImageView.image = image.withRenderingMode(.alwaysTemplate)
+                }
             })
             .disposed(by: disposeBag)
 
