@@ -26,7 +26,9 @@ class OWCommentsService: OWCommentsServicing {
     fileprivate var _mapPostIdToComments = [OWPostId: OWCommentsMapper]()
 
     func get(commentId id: String, postId: String) -> OWComment? {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         guard let comments = _mapPostIdToComments[postId],
               let comment = comments[id]
@@ -36,14 +38,18 @@ class OWCommentsService: OWCommentsServicing {
     }
 
     func set(comments: [OWComment], postId: OWPostId) {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         // Using `internalSet` function to avoid deadlock
         internalSet(comments: comments, postId: postId)
     }
 
     func cleanCache() {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         _mapPostIdToComments.removeAll()
     }

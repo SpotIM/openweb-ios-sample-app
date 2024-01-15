@@ -134,12 +134,22 @@
 		241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */; };
 		241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */; };
 		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
+		241F71F72B429CD6007619AC /* ColorsCustomizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71F62B429CD6007619AC /* ColorsCustomizationViewModel.swift */; };
+		241F71F92B42ADA5007619AC /* ColorSelectionItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71F82B42ADA5007619AC /* ColorSelectionItemCell.swift */; };
+		241F71FB2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71FA2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift */; };
+		241F71FF2B454F42007619AC /* OWTheme+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */; };
+		241F72012B458D34007619AC /* OWColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F72002B458D34007619AC /* OWColor+Extensions.swift */; };
 		242316552B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */; };
 		242316582B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */; };
 		243010D52B173E7A00150823 /* ThirdPartySSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */; };
 		243053F729EEA1DF00A4CB5A /* OWPresenterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243053F629EEA1DF00A4CB5A /* OWPresenterService.swift */; };
 		2436B9402B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */; };
 		2436B9432B1E204600EEDB4C /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */; };
+		2436B9472B1F117200EEDB4C /* OWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9462B1F117200EEDB4C /* OWTheme.swift */; };
+		2436B9492B2055A800EEDB4C /* OWColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9482B2055A800EEDB4C /* OWColor.swift */; };
+		243ED2A92B3C65210036E71D /* ColorCustomizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243ED2A82B3C65210036E71D /* ColorCustomizationService.swift */; };
+		243ED2AB2B3C65970036E71D /* SettingsColorCustomizationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243ED2AA2B3C65970036E71D /* SettingsColorCustomizationStyle.swift */; };
+		243ED2AD2B4155D90036E71D /* ColorsCustomizationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243ED2AC2B4155D90036E71D /* ColorsCustomizationVC.swift */; };
 		244193132A933A2C0085BB30 /* OWAnalyticEventType+BIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244193122A933A2C0085BB30 /* OWAnalyticEventType+BIExtensions.swift */; };
 		244193162A9358790085BB30 /* OWClarityDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244193152A9358790085BB30 /* OWClarityDetailsView.swift */; };
 		244193192A9358920085BB30 /* OWClarityDetailsViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244193182A9358920085BB30 /* OWClarityDetailsViewVM.swift */; };
@@ -210,6 +220,7 @@
 		24C9BD5A29DD547800D74034 /* OWCommentCreationEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C9BD5929DD547800D74034 /* OWCommentCreationEntryViewModel.swift */; };
 		24C9BD5C29DD549C00D74034 /* OWCommentCreationEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C9BD5B29DD549C00D74034 /* OWCommentCreationEntryView.swift */; };
 		24CC974529ACA60B00608A15 /* OWTextState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CC974429ACA60B00608A15 /* OWTextState.swift */; };
+		24D0CAF82B4D76A300C750C1 /* ColorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D0CAF72B4D76A300C750C1 /* ColorType.swift */; };
 		24D37E7829B8B2800056450D /* OWPreConversationCompactContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D37E7729B8B27F0056450D /* OWPreConversationCompactContentView.swift */; };
 		24D37E7A29B8B2A80056450D /* OWPreConversationCompactContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D37E7929B8B2A80056450D /* OWPreConversationCompactContentViewModel.swift */; };
 		24D589792A8B89CF00F611F0 /* OWCustomBIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D589782A8B89CF00F611F0 /* OWCustomBIData.swift */; };
@@ -612,7 +623,7 @@
 		3DDA9A602907D5C100FE3B86 /* OWConfigurableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A5F2907D5C100FE3B86 /* OWConfigurableCell.swift */; };
 		3DDA9A63290808F600FE3B86 /* OWSkeletonShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A62290808F600FE3B86 /* OWSkeletonShimmeringView.swift */; };
 		3DDA9A652913E7E800FE3B86 /* OWColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */; };
-		3DDA9A6A2913EA2600FE3B86 /* OWColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A692913EA2600FE3B86 /* OWColor.swift */; };
+		3DDA9A6A2913EA2600FE3B86 /* OWColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A692913EA2600FE3B86 /* OWColor+Extensions.swift */; };
 		3DDA9A6C2919160900FE3B86 /* OWMonetization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A6B2919160900FE3B86 /* OWMonetization.swift */; };
 		3DDA9A6E2919164300FE3B86 /* OWMonetizationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A6D2919164300FE3B86 /* OWMonetizationLayer.swift */; };
 		3DDA9A712919169400FE3B86 /* OWGoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A702919169400FE3B86 /* OWGoogleAdsProvider.swift */; };
@@ -1105,12 +1116,22 @@
 		241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementView.swift; sourceTree = "<group>"; };
 		241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementViewModel.swift; sourceTree = "<group>"; };
 		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
+		241F71F62B429CD6007619AC /* ColorsCustomizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCustomizationViewModel.swift; sourceTree = "<group>"; };
+		241F71F82B42ADA5007619AC /* ColorSelectionItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionItemCell.swift; sourceTree = "<group>"; };
+		241F71FA2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionItemCellViewModel.swift; sourceTree = "<group>"; };
+		241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWTheme+Extensions.swift"; sourceTree = "<group>"; };
+		241F72002B458D34007619AC /* OWColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWColor+Extensions.swift"; sourceTree = "<group>"; };
 		242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderVC.swift; sourceTree = "<group>"; };
 		242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderViewModel.swift; sourceTree = "<group>"; };
 		243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdPartySSOAuthentication.swift; sourceTree = "<group>"; };
 		243053F629EEA1DF00A4CB5A /* OWPresenterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPresenterService.swift; sourceTree = "<group>"; };
 		2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSubmitCustomizableElement.swift; sourceTree = "<group>"; };
 		2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
+		2436B9462B1F117200EEDB4C /* OWTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTheme.swift; sourceTree = "<group>"; };
+		2436B9482B2055A800EEDB4C /* OWColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWColor.swift; sourceTree = "<group>"; };
+		243ED2A82B3C65210036E71D /* ColorCustomizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCustomizationService.swift; sourceTree = "<group>"; };
+		243ED2AA2B3C65970036E71D /* SettingsColorCustomizationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsColorCustomizationStyle.swift; sourceTree = "<group>"; };
+		243ED2AC2B4155D90036E71D /* ColorsCustomizationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCustomizationVC.swift; sourceTree = "<group>"; };
 		244193122A933A2C0085BB30 /* OWAnalyticEventType+BIExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWAnalyticEventType+BIExtensions.swift"; sourceTree = "<group>"; };
 		244193152A9358790085BB30 /* OWClarityDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsView.swift; sourceTree = "<group>"; };
 		244193182A9358920085BB30 /* OWClarityDetailsViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsViewVM.swift; sourceTree = "<group>"; };
@@ -1181,6 +1202,7 @@
 		24C9BD5929DD547800D74034 /* OWCommentCreationEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationEntryViewModel.swift; sourceTree = "<group>"; };
 		24C9BD5B29DD549C00D74034 /* OWCommentCreationEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationEntryView.swift; sourceTree = "<group>"; };
 		24CC974429ACA60B00608A15 /* OWTextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextState.swift; sourceTree = "<group>"; };
+		24D0CAF72B4D76A300C750C1 /* ColorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorType.swift; sourceTree = "<group>"; };
 		24D37E7729B8B27F0056450D /* OWPreConversationCompactContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationCompactContentView.swift; sourceTree = "<group>"; };
 		24D37E7929B8B2A80056450D /* OWPreConversationCompactContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationCompactContentViewModel.swift; sourceTree = "<group>"; };
 		24D589782A8B89CF00F611F0 /* OWCustomBIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomBIData.swift; sourceTree = "<group>"; };
@@ -1596,7 +1618,7 @@
 		3DDA9A5F2907D5C100FE3B86 /* OWConfigurableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConfigurableCell.swift; sourceTree = "<group>"; };
 		3DDA9A62290808F600FE3B86 /* OWSkeletonShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSkeletonShimmeringView.swift; sourceTree = "<group>"; };
 		3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWColorPalette.swift; sourceTree = "<group>"; };
-		3DDA9A692913EA2600FE3B86 /* OWColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWColor.swift; sourceTree = "<group>"; };
+		3DDA9A692913EA2600FE3B86 /* OWColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWColor+Extensions.swift"; sourceTree = "<group>"; };
 		3DDA9A6B2919160900FE3B86 /* OWMonetization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMonetization.swift; sourceTree = "<group>"; };
 		3DDA9A6D2919164300FE3B86 /* OWMonetizationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMonetizationLayer.swift; sourceTree = "<group>"; };
 		3DDA9A702919169400FE3B86 /* OWGoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWGoogleAdsProvider.swift; sourceTree = "<group>"; };
@@ -2039,6 +2061,8 @@
 				9E7D5B0F2A0B9ED400F1707C /* SettingsElementsCustomizationStyle+Extension.swift */,
 				9EEBF66D2A431E3900315EB0 /* UIView+Extensions.swift */,
 				3D301BE92A8E89DC0012B526 /* UIViewController+LargeTitles.swift */,
+				241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */,
+				241F72002B458D34007619AC /* OWColor+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3214,6 +3238,7 @@
 				9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */,
 				3DCAE3F529D31042005B9189 /* CommonCreatorService.swift */,
 				8D99C6992A233CC700DAB542 /* ElementsCustomizationCreatorService.swift */,
+				243ED2A82B3C65210036E71D /* ColorCustomizationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3887,6 +3912,8 @@
 				240E8FAA2AA5B44100903E51 /* OWArticleExtraData+Extensions.swift */,
 				24C83DCC2A9DC08C0024080F /* OWArticleExtraData.swift */,
 				24A24A17291BAC7C00D72755 /* OWWebTabOptions.swift */,
+				2436B9462B1F117200EEDB4C /* OWTheme.swift */,
+				2436B9482B2055A800EEDB4C /* OWColor.swift */,
 				169B39E12B0E427E005350E4 /* OWCommentThreadPerformActionType.swift */,
 			);
 			path = Models;
@@ -4120,7 +4147,7 @@
 			isa = PBXGroup;
 			children = (
 				3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */,
-				3DDA9A692913EA2600FE3B86 /* OWColor.swift */,
+				3DDA9A692913EA2600FE3B86 /* OWColor+Extensions.swift */,
 				24EF864B29CB296C00327394 /* OWDesignColors.swift */,
 			);
 			path = Colors;
@@ -5166,6 +5193,8 @@
 				9E7D5B0D2A0A777900F1707C /* CommentThreadSettingsVM.swift */,
 				9EBE5C2529AE080B001150DA /* IAUSettingsVM.swift */,
 				24C614482AC405D00037BA53 /* ClarityDetailsSettingsVM.swift */,
+				241F71F62B429CD6007619AC /* ColorsCustomizationViewModel.swift */,
+				241F71FA2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5180,6 +5209,8 @@
 				9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */,
 				9E7D5B0B2A0A775800F1707C /* CommentThreadSettingsView.swift */,
 				9EBE5C2729AE082C001150DA /* IAUSettingsView.swift */,
+				243ED2AC2B4155D90036E71D /* ColorsCustomizationVC.swift */,
+				241F71F82B42ADA5007619AC /* ColorSelectionItemCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5623,6 +5654,8 @@
 				9EA0F83829AB7AA8008FD7A6 /* SettingsGroupType.swift */,
 				9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */,
 				9E7D5B112A0B9EFA00F1707C /* SettingsElementsCustomizationStyle.swift */,
+				243ED2AA2B3C65970036E71D /* SettingsColorCustomizationStyle.swift */,
+				24D0CAF72B4D76A300C750C1 /* ColorType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -6106,6 +6139,7 @@
 				8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */,
 				24EF864C29CB296C00327394 /* OWDesignColors.swift in Sources */,
 				3D20A39927B0243D003F8513 /* Debugging.swift in Sources */,
+				2436B9472B1F117200EEDB4C /* OWTheme.swift in Sources */,
 				3D08E0702875BD4F00E6F1AC /* OWUIViews.swift in Sources */,
 				24E66A292A6563C200D5F4E9 /* OWAnalyticEventGroup.swift in Sources */,
 				4454189523685154001D0ED0 /* SPConfigurationSDKStatus.swift in Sources */,
@@ -6325,6 +6359,7 @@
 				3D08E0A728771B9D00E6F1AC /* OWViewTransition.swift in Sources */,
 				3DA57BAD298940620016BF2A /* OWCommunityQuestionStyle.swift in Sources */,
 				3D20A36127B00A3D003F8513 /* OWConstraintLayoutSupportDSL.swift in Sources */,
+				2436B9492B2055A800EEDB4C /* OWColor.swift in Sources */,
 				3D20A37327B01674003F8513 /* OWConstraintItem.swift in Sources */,
 				3DDA9A86291A5A5400FE3B86 /* OWSortOption.swift in Sources */,
 				3D894A73286C5222001A939C /* OWRealtimeEndpoints.swift in Sources */,
@@ -6427,7 +6462,7 @@
 				8D7662C92A7A574A008152BE /* OWRealtimeIndicatorService.swift in Sources */,
 				3DA264672951E3B200688FFF /* OWNetworkHTTPHeaders.swift in Sources */,
 				9ED2E58729EC015700B39A00 /* OWReportReasonViewVM.swift in Sources */,
-				3DDA9A6A2913EA2600FE3B86 /* OWColor.swift in Sources */,
+				3DDA9A6A2913EA2600FE3B86 /* OWColor+Extensions.swift in Sources */,
 				16C42A5629F68D7000725F07 /* OWCommentThreadSettingsBuilder.swift in Sources */,
 				8D358D4729C8597800E229A3 /* OWViewableMode.swift in Sources */,
 				3DFA6BA7292170510047E313 /* OWSSOFlowType.swift in Sources */,
@@ -6828,7 +6863,10 @@
 				9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */,
 				240D6E8C2AB9721D00EB70FA /* ConversationCountersNewAPIViewModel.swift in Sources */,
 				3D301BEA2A8E89DC0012B526 /* UIViewController+LargeTitles.swift in Sources */,
+				24D0CAF82B4D76A300C750C1 /* ColorType.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
+				243ED2A92B3C65210036E71D /* ColorCustomizationService.swift in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
 				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
 				3D1D24912A4AF60600692E2A /* ToolbarCollectionCell.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
@@ -6842,6 +6880,7 @@
 				8D7662C22A6D1824008152BE /* OWConversationStyleIndexer.swift in Sources */,
 				9EC33FD229CC68AC00F04B18 /* OWConversationSpacing+Extensions.swift in Sources */,
 				9EC33FD129CC68AC00F04B18 /* OWCommunityQuestionsStyle+Extensions.swift in Sources */,
+				241F71FB2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift in Sources */,
 				3DB3D19B282AFEB4008654CF /* ColorPalette.swift in Sources */,
 				3DB1D5A32A785C880012388E /* OWStatusBarEnforcement+Extensions.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleFlowsVC.swift in Sources */,
@@ -6867,9 +6906,11 @@
 				3D50D92F2B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
 				9EB427422A8CF93C0023F2C2 /* OWAccessoryViewStrategy+Extensions.swift in Sources */,
+				243ED2AD2B4155D90036E71D /* ColorsCustomizationVC.swift in Sources */,
 				8DBC167A2A406C290010759E /* OWArticleHeaderStyle+Extensions.swift in Sources */,
 				3DA8DBF629F151D900783BA5 /* TestingPlaygroundViewModel.swift in Sources */,
 				3D611B8828C4D94F003960CE /* SDKUIFlowActionType.swift in Sources */,
+				241F71FF2B454F42007619AC /* OWTheme+Extensions.swift in Sources */,
 				8DCBE866293DEFC600C8677C /* MiscellaneousVC.swift in Sources */,
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
 				8DCBE86A2940B14B00C8677C /* SDKConversationDataModel.swift in Sources */,
@@ -6880,6 +6921,7 @@
 				9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
 				3D50D9302B1656BC00FD3232 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
+				241F71F92B42ADA5007619AC /* ColorSelectionItemCell.swift in Sources */,
 				243010D52B173E7A00150823 /* ThirdPartySSOAuthentication.swift in Sources */,
 				8D7662C52A6FC5EF008152BE /* OWLanguageStrategyIndexer.swift in Sources */,
 				3D1D248B2A4AF3C400692E2A /* CommentCreationToolbarViewModel.swift in Sources */,
@@ -6913,6 +6955,7 @@
 				9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */,
 				3DE476E12ABC214F00093D09 /* ConversationBelowVideoVC.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
+				241F72012B458D34007619AC /* OWColor+Extensions.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
 				9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */,
 				1642C3DF2A2790BD00559AA9 /* OWCommentThreadSettings+Extensions.swift in Sources */,
@@ -6928,10 +6971,12 @@
 				9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */,
 				3DB3D194282A82D8008654CF /* RxSwift+Helpers.swift in Sources */,
 				240D6E902AB9958200EB70FA /* ConversationCounterNewAPICellViewModel.swift in Sources */,
+				243ED2AB2B3C65970036E71D /* SettingsColorCustomizationStyle.swift in Sources */,
 				9E53759229784D3E00C85983 /* ColorModel.swift in Sources */,
 				3DB3D196282AFBCB008654CF /* EasyViews.swift in Sources */,
 				9E7F283C29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift in Sources */,
 				8DD33B292A2D97AE001E0A2E /* OWPreConversationStyleIndexer.swift in Sources */,
+				241F71F72B429CD6007619AC /* ColorsCustomizationViewModel.swift in Sources */,
 				8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoUserAuthentication.swift in Sources */,
 				3D50D9352B16575A00FD3232 /* AuthenticationStatus.swift in Sources */,
