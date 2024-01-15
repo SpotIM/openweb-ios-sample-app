@@ -74,7 +74,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         static let delayBeforeTryAgainAfterError: Int = 2000 // ms
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
 
-        static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments
+        static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments / 2
         static let defaultCommunityGuidelinesSpacing = OWConversationSpacing.regular.communityGuidelines
         static let defaultCommunityQuestionSpacing = OWConversationSpacing.regular.communityQuestions
     }
@@ -624,6 +624,25 @@ fileprivate extension OWPreConversationViewViewModel {
                         section: self.preConversationData.article.additionalSettings.section),
                                                     spacing: Metrics.defaultBetweenCommentsSpacing)
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+
+                    if let replies = commentWithUpdatedStatus.totalRepliesCount,
+                       replies > 0 {
+                        let presentationData = OWCommentPresentationData(
+                            id: commentWithUpdatedStatus.id ?? "",
+                            repliesIds: commentWithUpdatedStatus.replies?.map { $0.id }.unwrap() ?? [],
+                            totalRepliesCount: commentWithUpdatedStatus.repliesCount ?? 0,
+                            repliesOffset: commentWithUpdatedStatus.offset ?? 0,
+                            repliesPresentation: [])
+
+                        viewModels.append(OWPreConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
+                            id: "\(commentWithUpdatedStatus.id)_expand",
+                            data: presentationData,
+                            mode: .expand,
+                            depth: 0,
+                            spacing: Metrics.defaultBetweenCommentsSpacing
+                        )))
+                    }
+
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel(style: .comment)))
                     }
