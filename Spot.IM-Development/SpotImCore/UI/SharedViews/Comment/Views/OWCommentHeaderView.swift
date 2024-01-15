@@ -46,6 +46,7 @@ class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteContext))
             .clipsToBounds(true)
+            .wrapContent()
         userNameLabel.addGestureRecognizer(userNameTapGesture)
         return userNameLabel
     }()
@@ -149,7 +150,6 @@ fileprivate extension OWCommentHeaderView {
         self.enforceSemanticAttribute()
 
         addSubview(userNameLabel)
-        userNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         userNameLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
         }
