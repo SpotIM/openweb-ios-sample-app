@@ -96,7 +96,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType) {
         let themeStyle = sharedServicesProvider.themeStyleService().currentStyle
-        let postId = OWManager.manager.postId
+        let postId = OWManager.manager.postId?.decoded
 
         callbacks.forEach { optionalCallback in
             guard let actualCallback = optionalCallback.value() else { return }
