@@ -13,6 +13,7 @@ enum OWCommentThreadActionType {
     case collapseThread
     case viewMoreReplies(count: Int)
     case viewMoreRepliesRange(from: Int, to: Int)
+    case openCommentThread(count: Int)
 }
 
 protocol OWCommentThreadActionsViewModelingInputs {
@@ -28,6 +29,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var updateSpacing: Observable<CGFloat> { get }
     var commentId: String { get }
     var isLoadingChanged: Observable<Bool> { get }
+    var disclosureImage: Observable<UIImage> { get }
 }
 
 protocol OWCommentThreadActionsViewModeling {
@@ -63,6 +65,19 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
             .unwrap()
             .take(1)
             .asObservable()
+    }
+
+    var disclosureImage: Observable<UIImage> {
+        return updatedType
+            .map { type -> UIImage? in
+                switch type {
+                case .openCommentThread:
+                    return UIImage(spNamed: "openThreadIcon", supportDarkMode: false)
+                default:
+                    return UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: false)
+                }
+            }
+            .unwrap()
     }
 
     let commentId: String
@@ -117,6 +132,14 @@ fileprivate extension OWCommentThreadActionsViewModel {
                     let repliesString = OWLocalizationManager.shared.localizedString(key: "ViewPartOfRepliesFormat")
                     self._actionLabelText.onNext(String(format: repliesString, from, to))
                     self._disclosureTransform.onNext(CGAffineTransform(rotationAngle: .pi))
+                    self._updateSpacing.onNext(self.spacing)
+
+                case .openCommentThread(let count):
+                    let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
+                    let singleReplyString = OWLocalizationManager.shared.localizedString(key: "ViewSingleReplyFormat")
+
+                    let repliesString = count > 1 ? multipleRepliesString : singleReplyString
+                    self._actionLabelText.onNext(String(format: repliesString, count))
                     self._updateSpacing.onNext(self.spacing)
                 }
             })
