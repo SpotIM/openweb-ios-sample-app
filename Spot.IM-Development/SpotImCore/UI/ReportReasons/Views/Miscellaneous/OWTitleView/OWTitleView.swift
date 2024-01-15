@@ -109,28 +109,35 @@ fileprivate extension OWTitleView {
             .disposed(by: disposeBag)
 
         viewModel.outputs
+            .title
+            .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
             .shouldShowBackButton
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                if shouldShow {
-                    self.addSubview(backButton)
-                    backButton.OWSnp.makeConstraints { make in
-                        make.leading.equalToSuperview().inset(Metrics.horizontalPadding)
-                        make.centerY.equalToSuperview()
-                        make.size.equalTo(Metrics.backButtonSize)
-                    }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    if shouldShow {
+                        self.addSubview(self.backButton)
+                        self.backButton.OWSnp.makeConstraints { make in
+                            make.leading.equalToSuperview().inset(Metrics.horizontalPadding)
+                            make.centerY.equalToSuperview()
+                            make.size.equalTo(Metrics.backButtonSize)
+                        }
 
-                    self.addSubview(titleLabel)
-                    titleLabel.OWSnp.remakeConstraints { make in
-                        make.leading.equalTo(self.backButton.OWSnp.trailing).offset(Metrics.titleLeadingPadding)
-                        make.centerY.equalToSuperview()
-                    }
-                } else {
-                    self.backButton.removeFromSuperview()
-                    self.titleLabel.OWSnp.remakeConstraints { make in
-                        make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
-                        make.centerY.equalToSuperview()
+                        self.addSubview(self.titleLabel)
+                        self.titleLabel.OWSnp.remakeConstraints { make in
+                            make.leading.equalTo(self.backButton.OWSnp.trailing).offset(Metrics.titleLeadingPadding)
+                            make.centerY.equalToSuperview()
+                        }
+                    } else {
+                        self.backButton.removeFromSuperview()
+                        self.titleLabel.OWSnp.remakeConstraints { make in
+                            make.leading.equalToSuperview().offset(Metrics.horizontalPadding)
+                            make.centerY.equalToSuperview()
+                        }
                     }
                 }
             })
