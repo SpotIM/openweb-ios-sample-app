@@ -45,7 +45,8 @@ extension OWHelpersLayer {
             .response
             .take(1)
             .subscribe(onNext: { res in
-                let counts: [String: OWConversationCounter] = Dictionary(uniqueKeysWithValues: res.counts.map { key, value in (key.decoded, value)
+                let counts: [String: OWConversationCounter] = Dictionary(uniqueKeysWithValues: res.counts.map { key, value in
+                    (key.decoded, value)
                 })
                 completion(.success(counts))
             },
