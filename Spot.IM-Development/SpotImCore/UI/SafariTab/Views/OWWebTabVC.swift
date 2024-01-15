@@ -64,7 +64,6 @@ class OWWebTabVC: UIViewController {
 
 fileprivate extension OWWebTabVC {
     func setupUI() {
-        self.title = viewModel.outputs.options.title
         self.navigationItem.largeTitleDisplayMode = .never
         self.view.addSubview(safariTabView)
         safariTabView.OWSnp.makeConstraints { make in
@@ -72,8 +71,7 @@ fileprivate extension OWWebTabVC {
             make.leading.trailing.bottom.equalToSuperview()
         }
 
-        // Only on present mode when this is the only VC
-        addCloseButtonIfNeeded(self.navigationController?.viewControllers.count == 1)
+        addCloseButtonIfNeeded()
     }
 
     func setupObservers() {
@@ -99,10 +97,11 @@ fileprivate extension OWWebTabVC {
             .disposed(by: disposeBag)
 
         backButton.rx.tap
-            .bind(to: viewModel.inputs.backWebTabTapped)
+            .bind(to: viewModel.outputs.webTabViewVM.inputs.backWebTabTapped)
             .disposed(by: disposeBag)
 
         viewModel.outputs
+            .webTabViewVM.outputs
             .shouldShowBackButton
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
@@ -110,7 +109,9 @@ fileprivate extension OWWebTabVC {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.title
+        viewModel.outputs
+            .webTabViewVM.outputs
+            .title
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
                 self.title = title
@@ -118,8 +119,13 @@ fileprivate extension OWWebTabVC {
             .disposed(by: disposeBag)
     }
 
-    func addCloseButtonIfNeeded(_ shouldShow: Bool) {
-        navigationItem.rightBarButtonItem = shouldShow ? UIBarButtonItem(customView: closeButton) : nil
+    func addCloseButtonIfNeeded(_ shouldShow: Bool? = nil) {
+        // Only on present mode when this is the only VC
+        let isRootViewController = (self.navigationController?.viewControllers.count == 1)
+
+        let _shouldShow = isRootViewController || (shouldShow ?? false)
+
+        navigationItem.rightBarButtonItem = _shouldShow ? UIBarButtonItem(customView: closeButton) : nil
     }
 
     func addBackButtonIfNeeded(_ shouldShow: Bool) {

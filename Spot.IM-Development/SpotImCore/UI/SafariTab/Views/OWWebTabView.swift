@@ -44,7 +44,8 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var titleView: OWTitleView = {
         let titleView = OWTitleView(title: viewModel.outputs.options.title,
-                                    prefixIdentifier: Metrics.titleHeaderIdentifier, viewModel: viewModel.outputs.titleViewVM)
+                                    prefixIdentifier: Metrics.titleHeaderIdentifier, 
+                                    viewModel: viewModel.outputs.titleViewVM)
         return titleView
     }()
 
@@ -106,21 +107,16 @@ fileprivate extension OWWebTabView {
         let request = URLRequest(url: viewModel.outputs.options.url)
         webView.load(request)
 
-        webView.rx.observe(Bool.self, "canGoBack")
-          .subscribe(onNext: { [weak self] canGoBack in
-              guard let self = self else { return }
-              if let canGoBack = canGoBack {
-                  self.viewModel.inputs.canGoBack.onNext(canGoBack)
-              }
-          })
-          .disposed(by: disposeBag)
+        webView.rx.canGoBack
+            .bind(to: viewModel.inputs.canGoBack)
+            .disposed(by: disposeBag)
 
         // Observe the title property
-        webView.rx.observe(String.self, "title")
+        webView.rx.title
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
                 // Set the title of the view controller to the webview's title
-                let webTitle = self.webView.canGoBack ? title : OWLocalizationManager.shared.localizedString(key: "ProfileTitle")
+                let webTitle = self.webView.canGoBack ? title : self.viewModel.outputs.options.title
                 self.viewModel.inputs.setTitle.onNext(webTitle)
             })
             .disposed(by: disposeBag)
@@ -136,12 +132,19 @@ fileprivate extension OWWebTabView {
 }
 
 extension OWWebTabView: WKUIDelegate {
+
+    // Implementation of a WKUIDelegate method to control the creation of new web views.
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        // Check if the navigation action is targeting the main frame of the web view.
         if let targetFrame = navigationAction.targetFrame, targetFrame.isMainFrame {
+            // If the target of the navigation is the main frame, do not create a new web view.
             return nil
         }
 
+        // If the navigation action is not targeting the main frame, load the URL request in the current web view.
         webView.load(navigationAction.request)
+
+        // Return nil because a new web view is not created in this scenario.
         return nil
     }
 }

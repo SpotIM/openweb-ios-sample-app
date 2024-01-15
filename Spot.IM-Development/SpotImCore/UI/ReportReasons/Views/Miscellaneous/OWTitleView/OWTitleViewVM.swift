@@ -13,12 +13,14 @@ protocol OWTitleViewViewModelingInputs {
     var closeTap: PublishSubject<Void> { get }
     var backTap: PublishSubject<Void> { get }
     var canGoBack: PublishSubject<Bool> { get }
+    var setTitle: PublishSubject<String?> { get }
 }
 
 protocol OWTitleViewViewModelingOutputs {
     var closeTapped: Observable<Void> { get }
     var backTapped: Observable<Void> { get }
     var shouldShowBackButton: Observable<Bool> { get }
+    var title: Observable<String?> { get }
 }
 
 protocol OWTitleViewViewModeling {
@@ -29,6 +31,12 @@ protocol OWTitleViewViewModeling {
 class OWTitleViewViewModel: OWTitleViewViewModeling, OWTitleViewViewModelingOutputs, OWTitleViewViewModelingInputs {
     var inputs: OWTitleViewViewModelingInputs { return self }
     var outputs: OWTitleViewViewModelingOutputs { return self }
+
+    let setTitle = PublishSubject<String?>()
+    var title: Observable<String?> {
+        setTitle
+            .asObservable()
+    }
 
     var closeTap = PublishSubject<Void>()
     var closeTapped: Observable<Void> {

@@ -24,6 +24,7 @@ protocol OWWebTabViewViewModelingOutputs {
     var shouldShowTitleView: Bool { get }
     var shouldShowCloseButton: Observable<Bool> { get }
     var shouldShowBackButton: Observable<Bool> { get }
+    var title: Observable<String?> { get }
 }
 
 protocol OWWebTabViewViewModeling {
@@ -40,9 +41,6 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
     let options: OWWebTabOptions
     let viewableMode: OWViewableMode
 
-    let canGoBack = PublishSubject<Bool>()
-    let setTitle = PublishSubject<String?>()
-
     let backWebTabTapped = PublishSubject<Void>()
     var backTapped: Observable<Void> {
         backWebTabTapped
@@ -56,6 +54,7 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
             .asObservable()
     }
 
+    let canGoBack = PublishSubject<Bool>()
     var shouldShowCloseButton: Observable<Bool> {
         canGoBack
             .asObservable()
@@ -63,6 +62,12 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
 
     var shouldShowBackButton: Observable<Bool> {
         canGoBack
+            .asObservable()
+    }
+
+    let setTitle = PublishSubject<String?>()
+    var title: Observable<String?> {
+        setTitle
             .asObservable()
     }
 
@@ -80,6 +85,8 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
         self.options = options
         self.viewableMode = viewableMode
 
+        self.setTitle.onNext(options.title)
+
         setupObservers()
     }
 }
@@ -87,18 +94,16 @@ class OWWebTabViewViewModel: OWWebTabViewViewModeling,
 extension OWWebTabViewViewModel {
     func setupObservers() {
         canGoBack
-            .subscribe(onNext: { [weak self] canGoBack in
-                guard let self = self else { return }
-                self.titleViewVM.inputs.canGoBack.onNext(canGoBack)
-            })
+            .bind(to: titleViewVM.inputs.canGoBack)
             .disposed(by: disposeBag)
 
         titleViewVM.outputs
             .backTapped
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.backWebTabTapped.onNext()
-            })
+            .bind(to: backWebTabTapped)
+            .disposed(by: disposeBag)
+
+        setTitle
+            .bind(to: titleViewVM.inputs.setTitle)
             .disposed(by: disposeBag)
     }
 }
