@@ -1434,7 +1434,6 @@ fileprivate extension OWPreConversationViewViewModel {
                 case .openCommentThread:
                     self._openCommentThread.onNext((commentPresentationData.id, .none))
                     isLoading.onNext(false)
-                    break
                 default:
                     // not relevant
                     break
