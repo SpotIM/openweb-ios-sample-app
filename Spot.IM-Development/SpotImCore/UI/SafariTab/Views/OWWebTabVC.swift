@@ -121,11 +121,11 @@ fileprivate extension OWWebTabVC {
             .disposed(by: disposeBag)
     }
 
-    func addCloseButtonIfNeeded(_ shouldShow: Bool? = nil) {
+    func addCloseButtonIfNeeded(_ shouldShow: Bool = false) {
         // Only on present mode when this is the only VC
         let isRootViewController = (self.navigationController?.viewControllers.count == 1)
 
-        let _shouldShow = isRootViewController || (shouldShow ?? false)
+        let _shouldShow = isRootViewController || shouldShow
 
         navigationItem.rightBarButtonItem = _shouldShow ? UIBarButtonItem(customView: closeButton) : nil
     }
