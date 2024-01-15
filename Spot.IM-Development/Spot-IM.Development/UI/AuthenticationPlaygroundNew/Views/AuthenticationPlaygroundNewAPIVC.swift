@@ -248,7 +248,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
             make.leading.equalTo(lblLogoutStatusSymbol.snp.trailing).offset(2*Metrics.horizontalSmallMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
-        
+
         // If auth VC is the only one on the navigation - add close button
         if navigationController?.viewControllers.count == 1 {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
