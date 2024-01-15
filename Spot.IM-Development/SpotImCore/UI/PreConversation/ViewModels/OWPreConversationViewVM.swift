@@ -637,7 +637,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         viewModels.append(OWPreConversationCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
                             id: "\(commentWithUpdatedStatus.id)_expand",
                             data: presentationData,
-                            mode: .expand,
+                            mode: .openCommentThread,
                             depth: 0,
                             spacing: Metrics.defaultBetweenCommentsSpacing
                         )))
