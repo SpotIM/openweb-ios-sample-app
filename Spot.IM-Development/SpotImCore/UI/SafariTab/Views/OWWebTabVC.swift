@@ -89,6 +89,8 @@ fileprivate extension OWWebTabVC {
             .disposed(by: disposeBag)
 
         viewModel.outputs
+            .webTabViewVM
+            .outputs
             .shouldShowCloseButton
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
