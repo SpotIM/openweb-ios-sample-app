@@ -1399,6 +1399,48 @@ fileprivate extension OWPreConversationViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
+
+        // Observable of the comment action cell VMs
+        let commentThreadActionsCellsVmsObservable: Observable<[OWCommentThreadActionsCellViewModeling]> = cellsViewModels
+            .flatMapLatest { viewModels -> Observable<[OWCommentThreadActionsCellViewModeling]> in
+                let commentThreadActionsCellsVms: [OWCommentThreadActionsCellViewModeling] = viewModels.map { vm in
+                    if case.commentThreadActions(let commentThreadActionsCellViewModel) = vm {
+                        return commentThreadActionsCellViewModel
+                    } else {
+                        return nil
+                    }
+                }
+                    .unwrap()
+
+                return Observable.just(commentThreadActionsCellsVms)
+            }
+            .share()
+
+        commentThreadActionsCellsVmsObservable
+            .flatMapLatest { commentThreadActionsCellsVms -> Observable<(OWCommentPresentationData, OWCommentThreadActionsCellMode, BehaviorSubject<Bool>)> in
+                let threadActionsClickObservable = commentThreadActionsCellsVms.map { commentThreadActionsCellsVm in
+                    return commentThreadActionsCellsVm.outputs.commentActionsVM
+                        .outputs.tapOutput
+                        .map { (commentThreadActionsCellsVm.outputs.commentPresentationData,
+                                commentThreadActionsCellsVm.outputs.mode,
+                                commentThreadActionsCellsVm.outputs.commentActionsVM.inputs.isLoading) }
+                }
+
+                return Observable.merge(threadActionsClickObservable)
+            }
+            .subscribe(onNext: { [weak self] commentPresentationData, mode, isLoading in
+                guard let self = self else { return }
+                switch mode {
+                case .openCommentThread:
+                    self._openCommentThread.onNext((commentPresentationData.id, .none))
+                    isLoading.onNext(false)
+                    break
+                default:
+                    // not relevant
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
