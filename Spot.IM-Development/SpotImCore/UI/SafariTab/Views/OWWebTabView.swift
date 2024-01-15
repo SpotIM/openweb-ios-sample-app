@@ -44,7 +44,7 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate lazy var titleView: OWTitleView = {
         let titleView = OWTitleView(title: viewModel.outputs.options.title,
-                                    prefixIdentifier: Metrics.titleHeaderIdentifier, 
+                                    prefixIdentifier: Metrics.titleHeaderIdentifier,
                                     viewModel: viewModel.outputs.titleViewVM)
         return titleView
     }()
