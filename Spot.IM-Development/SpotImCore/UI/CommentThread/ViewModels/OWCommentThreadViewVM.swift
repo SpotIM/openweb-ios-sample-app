@@ -1105,7 +1105,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 case .expand:
                     self.sendEvent(for: .loadMoreRepliesClicked(commentId: commentPresentationData.id))
                     self._loadMoreReplies.onNext(commentPresentationData)
-                case .openCommentThread: 
+                case .openCommentThread:
                     // not relevant (only for pre-conversation)
                     break
                 }
