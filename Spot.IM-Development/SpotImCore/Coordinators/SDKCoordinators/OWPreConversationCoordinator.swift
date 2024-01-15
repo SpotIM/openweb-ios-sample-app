@@ -138,8 +138,8 @@ fileprivate extension OWPreConversationCoordinator {
                                                                   settings: self.preConversationData.settings,
                                                                   presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
-                                                                           conversationData: conversationData,
-                                                                           actionsCallbacks: self.actionsCallbacks)
+                                                                        conversationData: conversationData,
+                                                                        actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
             }
             .do(onNext: { [weak self] coordinatorResult in
