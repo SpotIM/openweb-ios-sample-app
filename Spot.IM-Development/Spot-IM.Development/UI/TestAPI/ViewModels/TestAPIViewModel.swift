@@ -299,6 +299,8 @@ fileprivate extension TestAPIViewModel {
         authentication.shouldDisplayLoginPrompt = UserDefaultsProvider.shared.get(key: .showLoginPrompt, defaultValue: false)
 
         ElementsCustomizationCreatorService.addElementsCustomization()
+        ColorCustomizationService.setColorCustomization()
+
         setupBICallaback()
     }
 
