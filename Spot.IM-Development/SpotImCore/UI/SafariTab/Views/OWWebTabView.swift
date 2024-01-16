@@ -18,6 +18,18 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         static let titleHeaderIdentifier = "web_tab_title_header"
     }
 
+    fileprivate lazy var loader: UIActivityIndicatorView = {
+        let style: UIActivityIndicatorView.Style
+        if #available(iOS 13.0, *) {
+            style = .large
+        } else {
+            style = .whiteLarge
+        }
+        let loader = UIActivityIndicatorView(style: style)
+        loader.hidesWhenStopped = true
+        return loader
+    }()
+
     fileprivate lazy var webView: WKWebView = {
         let preferences = WKPreferences()
 
@@ -31,6 +43,7 @@ class OWWebTabView: UIView, OWThemeStyleInjectorProtocol {
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.isOpaque = false
 
         // uncomment if you want to inspect the webview with safari on iOS > 16.4
         // if #available(iOS 16.4, *) {
@@ -79,6 +92,11 @@ fileprivate extension OWWebTabView {
             }
         }
 
+        self.addSubview(loader)
+        loader.OWSnp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+
         self.addSubview(webView)
         webView.OWSnp.makeConstraints { make in
             if viewModel.outputs.shouldShowTitleView {
@@ -100,6 +118,7 @@ fileprivate extension OWWebTabView {
             .disposed(by: disposeBag)
 
         // Load the url
+        loader.startAnimating()
         let request = URLRequest(url: viewModel.outputs.options.url)
         webView.load(request)
     }
