@@ -102,14 +102,14 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     }
 
     var tableViewHeaderAttributedText: Observable<NSAttributedString> {
-        shouldShowLearnMore
-            .map { [weak self] shouldShowLearnMore in
+        Observable.combineLatest(shouldShowLearnMore, OWSharedServicesProvider.shared.themeStyleService().style)
+            .map { [weak self] shouldShowLearnMore, style in
                 guard let self = self else { return nil }
                 return OWLocalizationManager.shared.localizedString(key: "ReportReasonHelpUsTitle")
                     .replacingOccurrences(of: self.tableViewHeaderTapText, with: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
                     .attributedString
                     .font(OWFontBook.shared.font(typography: .bodyText))
-                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light),
+                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
                                   forText: shouldShowLearnMore ? self.tableViewHeaderTapText : "")
             }
             .unwrap()

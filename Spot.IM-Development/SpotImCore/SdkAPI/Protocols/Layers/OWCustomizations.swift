@@ -14,5 +14,6 @@ public protocol OWCustomizations {
     var themeEnforcement: OWThemeStyleEnforcement { get set }
     var statusBarEnforcement: OWStatusBarEnforcement { get set }
     var navigationBarEnforcement: OWNavigationBarEnforcement { get set }
+    var customizedTheme: OWTheme { get set }
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)
 }
