@@ -12,6 +12,6 @@ struct SPConfigurationModeration: Decodable {
     let requiredRegisterForReport: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case requiredRegisterForReport = "block_report_by_registered"
+        case requiredRegisterForReport = "blockReportByRegistered"
     }
 }
