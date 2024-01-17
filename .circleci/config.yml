@@ -186,6 +186,8 @@ jobs:
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
             ls -l
+            git config --global user.name "ios-dev"
+            git config --global user.email "ios-dev@openweb.com"
             git branch validate/cocoapods/sdk/$CORE_VERSION
             git checkout validate/cocoapods/sdk/$CORE_VERSION
             git status
