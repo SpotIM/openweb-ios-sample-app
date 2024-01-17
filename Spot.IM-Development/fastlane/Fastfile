@@ -55,7 +55,7 @@ platform :ios do
         skip_package_ipa: true,
         scheme: scheme,
         workspace: "Spot-IM.Development.xcworkspace",
-        destination: "platform=iOS Simulator,name=iPhone 14,OS:16.4",
+        destination: "generic/platform=iOS Simulator",
         build_path: "simulator_build"
     )
   end
@@ -69,7 +69,7 @@ platform :ios do
     xcodebuild(
       scheme: "Package SpotImCoreSDK",
       configuration: options[:configuration],
-      destination: "platform=iOS Simulator,name=iPhone 14,OS:16.4",
+      destination: "generic/platform=iOS",
       clean: true,
       build: true
     )
@@ -101,7 +101,7 @@ platform :ios do
           scheme: scheme,
           workspace: "Spot-IM.Development.xcworkspace",
           export_method: "app-store",
-          destination: "platform=iOS Simulator,name=iPhone 14,OS:16.4",
+          destination: "generic/platform=iOS",
           export_options: {
               signingStyle: "manual",
               provisioningProfiles: {
@@ -117,7 +117,7 @@ platform :ios do
         scheme: scheme,
         workspace: "Spot-IM.Development.xcworkspace",
         export_method: "development",
-        destination: "platform=iOS Simulator,name=iPhone 14,OS:16.4",
+        destination: "generic/platform=iOS",
         export_options: {
             signingStyle: "manual",
             provisioningProfiles: {
