@@ -21,6 +21,7 @@ class OWCommentHeaderView: UIView {
         static let commentReasonLabelFontSize: CGFloat = 17
         static let commentReasonLabelLineSpacing: CGFloat = 3.5
         static let optionsImageInset: CGFloat = 22
+        static let badgeTagContainerMinWidth: CGFloat = 25
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -47,6 +48,7 @@ class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteContext))
             .clipsToBounds(true)
+            .wrapContent()
         userNameLabel.addGestureRecognizer(userNameTapGesture)
         return userNameLabel
     }()
@@ -152,7 +154,6 @@ fileprivate extension OWCommentHeaderView {
         self.enforceSemanticAttribute()
 
         addSubview(userNameLabel)
-        userNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         userNameLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
         }
@@ -236,6 +237,11 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.badgeTitle
             .map { $0.isEmpty }
+            .bind(to: badgeTagContainer.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        badgeTagContainer.rx.bounds
+            .map { $0.width < Metrics.badgeTagContainerMinWidth }
             .bind(to: badgeTagContainer.rx.isHidden)
             .disposed(by: disposeBag)
 
