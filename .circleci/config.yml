@@ -128,6 +128,8 @@ jobs:
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             ls -l
+            git config --global user.name "ios-dev"
+            git config --global user.email "ios-dev@openweb.com"
             git branch validate/spm/sdk/$CORE_VERSION
             git checkout validate/spm/sdk/$CORE_VERSION
             git status
