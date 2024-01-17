@@ -149,6 +149,7 @@ jobs:
           name: Build app
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle update fastlane
             bundle exec fastlane build
 
       - run:
@@ -213,6 +214,7 @@ jobs:
           name: Build app
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            bundle update fastlane
             bundle exec fastlane build
 
       - run:
