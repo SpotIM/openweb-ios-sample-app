@@ -167,7 +167,7 @@ fileprivate extension OWCommentHeaderView {
         addSubview(subscriberBadgeView)
         subscriberBadgeView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
+            make.leading.equalTo(userNameLabel.OWSnp.trailing)
         }
 
         addSubview(optionButton)
