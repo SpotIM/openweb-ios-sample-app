@@ -861,11 +861,11 @@ workflows:
             branches:
               only:
                 - /^validate/cocoapods/sdk/.*/
-          xcode: *xcode_latest_official_version
+          xcode: "14.3.1"
 
       - validate_spm_job:
           filters:
             branches:
               only:
                 - /^validate/spm/sdk/.*/
-          xcode: *xcode_latest_official_version
+          xcode: "14.3.1"
