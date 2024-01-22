@@ -31,8 +31,6 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
     var inputs: OWClarityDetailsViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewModelingOutputs { return self }
 
-    fileprivate let requiredData: OWClarityDetailsRequireData
-
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
