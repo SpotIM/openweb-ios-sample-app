@@ -554,7 +554,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.commentCellCollapsableTextLineLimit,
             section: self.commentThreadData.article.additionalSettings.section),
-                                      spacing: spacingBetweenComments)
+                                      spacing: OWVerticalSpacing(spacingBetweenComments))
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
