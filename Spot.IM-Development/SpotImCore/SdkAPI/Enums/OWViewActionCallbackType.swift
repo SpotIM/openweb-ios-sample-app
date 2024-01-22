@@ -22,12 +22,15 @@ public enum OWViewActionCallbackType: Codable {
     case closeReportReason
     case openClarityDetails(data: OWClarityDetailsRequireData)
     case closeClarityDetails
+    case closeCommentCreation
     case floatingCommentCreationDismissed
     case error(_ error: OWError)
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
     case openCommenterAppeal(commentId: OWCommentId)
+    case openCommentThread(commentId: OWCommentId, performActionType: OWCommentThreadPerformActionType)
+    case closeCommentThread
 }
 
 extension OWViewActionCallbackType: Equatable {

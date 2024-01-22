@@ -22,8 +22,12 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let throttleObserveTableViewDuration = 500
         static let scrolledToTopDelay = 300
         static let realtimeIndicationAnimationViewHeight: CGFloat = 150
-        static let loginPromptVerticalPadding: CGFloat = 12
+        static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
+        static let horizontalLandscapeMargin: CGFloat = 66.0
+        static let horizontalPortraitMargin: CGFloat = 16.0
     }
+
+    fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
@@ -39,11 +43,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
-    fileprivate lazy var loginPromptBottomDivider: UIView = {
-        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor3, themeStyle: .light))
-    }()
-
     fileprivate lazy var conversationSummaryView: OWConversationSummaryView = {
         return OWConversationSummaryView(viewModel: self.viewModel.outputs.conversationSummaryViewModel)
             .enforceSemanticAttribute()
@@ -53,6 +52,13 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         return UIView()
             .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
+
+    fileprivate lazy var commentingCTAContainerView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .enforceSemanticAttribute()
     }()
 
     fileprivate lazy var commentingCTAView: OWCommentingCTAView = {
@@ -100,7 +106,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
             guard let self = self else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
-            cell.configure(with: item.viewModel)
+            OWScheduler.runOnMainThreadIfNeeded {
+                cell.configure(with: item.viewModel)
+            }
 
             return cell
         })
@@ -111,7 +119,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         return dataSource
     }()
 
-    fileprivate var loginPromptTopConstraint: OWConstraint? = nil
+    fileprivate var loginPromptPortraitConstraints: [OWConstraint] = []
+    fileprivate var loginPromptLandscapeConstraints: [OWConstraint] = []
+    fileprivate var summaryPortraitLeadingConstraint: OWConstraint? = nil
+    fileprivate var summaryLandscapeLeadingConstraint: OWConstraint? = nil
 
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -157,46 +168,56 @@ fileprivate extension OWConversationView {
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
             if shouldShowArticleDescription {
-                loginPromptTopConstraint = make.top.equalTo(articleDescriptionView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
+                make.top.equalTo(articleDescriptionView.OWSnp.bottom)
             } else if shouldShowTitleHeader {
-                loginPromptTopConstraint = make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding).constraint
+                make.top.equalTo(conversationTitleHeaderView.OWSnp.bottom)
             } else {
-                loginPromptTopConstraint = make.top.equalToSuperview().offset(Metrics.loginPromptVerticalPadding).constraint
+                make.top.equalToSuperview()
             }
-            make.centerX.equalToSuperview()
-        }
-
-        self.addSubview(loginPromptBottomDivider)
-        loginPromptBottomDivider.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(loginPromptView.OWSnp.bottom).offset(Metrics.loginPromptVerticalPadding)
-            make.height.equalTo(Metrics.separatorHeight)
+            make.leading.equalToSuperview()
+            loginPromptPortraitConstraints.append(make.trailing.equalToSuperview().constraint)
+            loginPromptLandscapeConstraints.append(make.trailing.equalToSuperview().multipliedBy(0.5).constraint)
         }
 
         self.addSubview(conversationSummaryView)
         conversationSummaryView.OWSnp.makeConstraints { make in
-            make.top.equalTo(loginPromptBottomDivider.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+            let portraitLeading = make.leading.equalToSuperview().constraint
+            let landscapeLeading = make.leading.equalTo(loginPromptView.OWSnp.trailing).constraint
+
+            summaryPortraitLeadingConstraint = portraitLeading
+            summaryLandscapeLeadingConstraint = landscapeLeading
+
+            loginPromptPortraitConstraints.append(make.top.equalTo(loginPromptView.OWSnp.bottom).constraint)
+            loginPromptLandscapeConstraints.append(make.top.equalTo(loginPromptView.OWSnp.top).constraint)
+            make.trailing.equalToSuperview()
         }
 
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperviewSafeArea()
         }
 
-        self.addSubview(commentingCTAView)
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+
+        self.addSubview(commentingCTAContainerView)
+        commentingCTAContainerView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(0)
+        }
+
+        commentingCTAContainerView.addSubview(commentingCTAView)
         commentingCTAView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(20)
-            make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
+            make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: currentOrientation == .landscape))
+            make.top.bottom.equalToSuperview()
         }
 
         // Setup bottom commentingCTA horizontal separator
         self.addSubview(commentingCTATopHorizontalSeparator)
         commentingCTATopHorizontalSeparator.OWSnp.makeConstraints { make in
             make.top.equalTo(tableView.OWSnp.bottom)
-            make.bottom.equalTo(commentingCTAView.OWSnp.top)
+            make.bottom.equalTo(commentingCTAContainerView.OWSnp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
@@ -213,100 +234,89 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
-                guard let self = self else { return }
-                self.commentingCTAView.OWSnp.updateConstraints { make in
-                    if shouldShowErrorLoadingComments {
-                        let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
-                        make.bottom.equalTo(self.safeAreaLayoutGuide).offset(self.commentingCTAView.frame.size.height + bottomPadding)
-                    } else {
-                        make.bottom.equalTo(self.safeAreaLayoutGuide).offset(0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.commentingCTAContainerView.OWSnp.updateConstraints { make in
+                        if shouldShowErrorLoadingComments {
+                            let bottomPadding: CGFloat = self.window?.safeAreaInsets.bottom ?? 0
+                            make.bottom.equalToSuperview().offset(self.commentingCTAView.frame.size.height + bottomPadding)
+                        } else {
+                            make.bottom.equalToSuperview().offset(0)
+                        }
                     }
-                }
-                UIView.animate(withDuration: Metrics.ctaViewSlideAnimationDuration) {
-                    self.layoutIfNeeded()
+                    UIView.animate(withDuration: Metrics.ctaViewSlideAnimationDuration) {
+                        self.layoutIfNeeded()
+                    }
                 }
             })
             .disposed(by: disposeBag)
 
         tableView.rx.observe(CGRect.self, #keyPath(UITableView.bounds))
             .unwrap()
-            .map { $0.size.height }
-            .bind(to: viewModel.inputs.tableViewHeight)
+            .map { $0.size }
+            .bind(to: viewModel.inputs.tableViewSize)
             .disposed(by: disposeBag)
 
         tableView.rx.observe(CGPoint.self, #keyPath(UITableView.contentOffset))
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.y }
-            .bind(to: viewModel.inputs.tableViewContentOffsetY)
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.tableViewContentOffsetY.onNext(value)
+                }
+            })
             .disposed(by: disposeBag)
 
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .throttle(.milliseconds(Metrics.throttleObserveTableViewDuration), scheduler: MainScheduler.instance)
             .unwrap()
             .map { $0.height }
-            .bind(to: viewModel.inputs.tableViewContentSizeHeight)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.conversationDataSourceSections
-            .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableViewRefreshControl.endRefreshing()
-            })
-            .bind(to: tableView.rx.items(dataSource: conversationDataSource))
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.loginPromptViewModel
-                .outputs.shouldShowView
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] shouldShow in
-                    guard let self = self,
-                          let topConstraint = self.loginPromptTopConstraint else { return }
-                    topConstraint.update(offset: shouldShow ? Metrics.loginPromptVerticalPadding : 0)
-                    self.loginPromptBottomDivider.OWSnp.updateConstraints { make in
-                        make.top.equalTo(self.loginPromptView.OWSnp.bottom).offset(shouldShow ? Metrics.loginPromptVerticalPadding : 0)
-                        make.height.equalTo(shouldShow ? Metrics.separatorHeight : 0)
-                    }
-                })
-                .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-
-                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
-                self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
-                self.loginPromptBottomDivider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor3, themeStyle: currentStyle)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.performTableViewAnimation
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
-                    self.tableView.beginUpdates()
-                    self.tableView.endUpdates()
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.tableViewContentSizeHeight.onNext(value)
                 }
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.updateTableViewInstantly
+        viewModel.outputs.conversationDataSourceSections
+            .do(onNext: { [weak self] _ in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableViewRefreshControl.endRefreshing()
+                }
+            })
+            .bind(to: tableView.rx.items(dataSource: conversationDataSource))
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
-                self.tableView.reloadData()
-                self.tableView.layoutIfNeeded()
+                let isLandscape = currentOrientation == .landscape
+
+                self.backgroundColor = isLandscape ? .clear : OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
+                self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
+                self.commentingCTAContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.performTableViewAnimation
+            .subscribe(onNext: { [weak self] _ in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                        self.tableView.beginUpdates()
+                        self.tableView.endUpdates()
+                    }
+                }
             })
             .disposed(by: disposeBag)
 
         tableView.rx.willDisplayCell
-            .observe(on: MainScheduler.instance)
             .bind(to: viewModel.inputs.willDisplayCell)
             .disposed(by: disposeBag)
 
@@ -317,40 +327,46 @@ fileprivate extension OWConversationView {
                     .asObservable()
                     .take(1)
             }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.viewModel.inputs.pullToRefresh.onNext()
-                self.tableView.setContentOffset(.zero, animated: true)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.viewModel.inputs.pullToRefresh.onNext()
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToTopAnimated
         // filter only when animated = false
             .filter { !$0 }
-            .observe(on: MainScheduler.instance)
             .throttle(Metrics.scrollToTopThrottleDelay, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .none, animated: false)
+                }
             })
             .disposed(by: disposeBag)
 
         tableView.rx.contentOffset
-            .observe(on: MainScheduler.instance)
-            .bind(to: viewModel.inputs.changeConversationOffset)
+            .subscribe(onNext: { [weak self] value in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.changeConversationOffset.onNext(value)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToTopAnimated
         // filter only when animated = true
             .filter { $0 }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.tableView.beginUpdates()
-                // it looks like set the content offset behave better when scroll to top
-                self.tableView.setContentOffset(.zero, animated: true)
-                self.tableView.endUpdates()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.beginUpdates()
+                    // it looks like set the content offset behave better when scroll to top
+                    self.tableView.setContentOffset(.zero, animated: true)
+                    self.tableView.endUpdates()
+                }
             })
             .disposed(by: disposeBag)
 
@@ -358,27 +374,84 @@ fileprivate extension OWConversationView {
         // filter only when animated = true
             .filter { $0 }
             .voidify()
-            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: MainScheduler.instance)
-            .observe(on: MainScheduler.instance)
-            .bind(to: viewModel.inputs.scrolledToTop)
+            .delay(.milliseconds(Metrics.scrolledToTopDelay), scheduler: conversationViewScheduler)
+            .subscribe(onNext: { [weak self] in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.viewModel.inputs.scrolledToTop.onNext()
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToCellIndex
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                let cellIndexPath = IndexPath(row: index, section: 0)
-                self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.reloadCellIndex
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // Handle orientation change
+
+        Observable.combineLatest(OWSharedServicesProvider.shared.orientationService().orientation,
+                                 viewModel.outputs.loginPromptViewModel.outputs.shouldShowView)
+            .subscribe(onNext: { [weak self] currentOrientation, shouldShowLoginPrompt in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+
+                    if currentOrientation == .portrait || !shouldShowLoginPrompt {
+                        self.summaryPortraitLeadingConstraint?.activate()
+                        self.summaryLandscapeLeadingConstraint?.deactivate()
+                    } else {
+                        self.summaryPortraitLeadingConstraint?.deactivate()
+                        self.summaryLandscapeLeadingConstraint?.activate()
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.orientationService()
+            .orientation
+            .subscribe(onNext: { [weak self] currentOrientation in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    let isLandscape = currentOrientation == .landscape
+
+                    self.tableView.OWSnp.updateConstraints { make in
+                        make.leading.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.horizontalLandscapeMargin : 0)
+                    }
+
+                    UIView.animate(withDuration: Metrics.loginPromptOrientationChangeAnimationDuration) {
+                        if currentOrientation == .portrait {
+                            self.loginPromptLandscapeConstraints.forEach { $0.deactivate() }
+                            self.loginPromptPortraitConstraints.forEach { $0.activate() }
+                        } else {
+                            self.loginPromptPortraitConstraints.forEach { $0.deactivate() }
+                            self.loginPromptLandscapeConstraints.forEach { $0.activate() }
+                        }
+                        self.layoutIfNeeded()
+                    }
+
+                    self.commentingCTAView.OWSnp.updateConstraints { make in
+                        make.leading.trailing.equalToSuperviewSafeArea().inset(self.horizontalMargin(isLandscape: isLandscape))
+                    }
+                }
             })
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
+
+    func horizontalMargin(isLandscape: Bool) -> CGFloat {
+        return isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.horizontalPortraitMargin
+    }
 }

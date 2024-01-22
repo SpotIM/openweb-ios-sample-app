@@ -138,16 +138,21 @@ fileprivate extension OWCommentThreadActionsView {
         // Update bottom spacing
         viewModel.outputs.updateSpacing
             .subscribe(onNext: { [weak self] spacingBetweenComments in
-                guard let self = self else { return }
-
-                self.actionView.OWSnp.updateConstraints { make in
-                    make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.actionView.OWSnp.updateConstraints { make in
+                        make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                    }
                 }
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.actionLabelText
-            .bind(to: actionLabel.rx.text)
+            .subscribe(onNext: { [weak self] text in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.actionLabel.text = text
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.disclosureTransform
@@ -160,16 +165,17 @@ fileprivate extension OWCommentThreadActionsView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.isLoadingChanged
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isLoading in
-                guard let self = self else { return }
-                self.disclosureImageView.isHidden = isLoading
-                self.activityIndicator.isHidden = !isLoading
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.disclosureImageView.isHidden = isLoading
+                    self.activityIndicator.isHidden = !isLoading
 
-                if isLoading {
-                    self.activityIndicator.startAnimating()
-                } else {
-                    self.activityIndicator.stopAnimating()
+                    if isLoading {
+                        self.activityIndicator.startAnimating()
+                    } else {
+                        self.activityIndicator.stopAnimating()
+                    }
                 }
             })
             .disposed(by: disposeBag)

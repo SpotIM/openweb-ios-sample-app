@@ -91,6 +91,15 @@ fileprivate extension SettingsVC {
             }
         }
 
+        if let generalSettingsVM = viewModel.outputs.settingsVMs.first(where: { $0 is GeneralSettingsViewModeling }) as? GeneralSettingsViewModeling {
+            generalSettingsVM.outputs.openColorsCustomizationScreen
+                .subscribe(onNext: { [weak self] vc in
+                    guard let self = self else { return }
+                    self.navigationController?.pushViewController(vc, animated: true)
+                })
+                .disposed(by: disposeBag)
+        }
+
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)

@@ -141,6 +141,7 @@ fileprivate extension OWConversationSummaryView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.commentsCountLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 self.verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle))
                 self.bottomHorizontalSeparator.backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle))

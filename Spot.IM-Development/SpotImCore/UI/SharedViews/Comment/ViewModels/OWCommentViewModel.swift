@@ -65,6 +65,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         sharedServiceProvider
             .authenticationManager()
             .activeUserAvailability
+            .observe(on: MainScheduler.instance)
             .map { availability in
                 switch availability {
                 case .notAvailable:
@@ -145,7 +146,6 @@ fileprivate extension OWCommentViewModel {
                 guard let self = self, let user = user else { return false }
                 return user.userId == self.comment.userId
             }
-            .observe(on: MainScheduler.instance)
             .bind(to: _isCommentOfActiveUser)
             .disposed(by: disposedBag)
 

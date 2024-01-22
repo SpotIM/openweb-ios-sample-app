@@ -81,27 +81,27 @@ fileprivate extension OWCommentCreationView {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-                let backgroundColor: UIColor = {
-                    switch self.viewModel.outputs.commentCreationStyle {
-                    case .regular, .light:
-                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
-                    case .floatingKeyboard:
-                        return .clear
-                    }
-                }()
-                self.backgroundColor = backgroundColor
-            })
-            .disposed(by: disposeBag)
-
         tapGesture.rx.event
             .voidify()
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
+                guard let self = self else { return }
+                let backgroundColor: UIColor = {
+                    switch self.viewModel.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        return currentOrientation == .landscape ? .clear : OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                    case .floatingKeyboard:
+                        return .clear
+                    }
+                }()
+                self.backgroundColor = backgroundColor
             })
             .disposed(by: disposeBag)
     }

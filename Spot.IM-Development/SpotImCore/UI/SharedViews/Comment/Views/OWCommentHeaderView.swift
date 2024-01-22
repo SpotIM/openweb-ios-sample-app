@@ -16,10 +16,12 @@ class OWCommentHeaderView: UIView {
         static let avatarSideSize: CGFloat = 36.0
         static let avatarImageViewTrailingOffset: CGFloat = 8.0
         static let subscriberVerticalPadding: CGFloat = 7
-        static let optionButtonSize: CGFloat = 20
+        static let optionButtonSize: CGFloat = 30
         static let badgeHorizontalInset: CGFloat = 4
         static let commentReasonLabelFontSize: CGFloat = 17
         static let commentReasonLabelLineSpacing: CGFloat = 3.5
+        static let optionsImageInset: CGFloat = 22
+        static let badgeTagContainerMinWidth: CGFloat = 25
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -46,6 +48,7 @@ class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteContext))
             .clipsToBounds(true)
+            .wrapContent()
         userNameLabel.addGestureRecognizer(userNameTapGesture)
         return userNameLabel
     }()
@@ -63,7 +66,7 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var badgeTagLabel: UILabel = {
         return UILabel()
-            .font(OWFontBook.shared.font(typography: .infoCaption))
+            .font(OWFontBook.shared.font(typography: .infoText))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -96,9 +99,11 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "optionsIcon", supportDarkMode: true)
+        let leftInset: CGFloat =  OWLocalizationManager.shared.textAlignment == .left ? 0 : -Metrics.optionsImageInset
+        let rightInset: CGFloat = OWLocalizationManager.shared.textAlignment == .right ? 0 : -Metrics.optionsImageInset
         return UIButton()
             .image(image, state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8))
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset))
     }()
 
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
@@ -140,6 +145,7 @@ class OWCommentHeaderView: UIView {
 
         self.badgeTagContainer.isHidden = true
         self.hiddenCommentReasonLabel.isHidden = true
+        self.avatarImageView.prepareForReuse()
     }
 }
 
@@ -148,7 +154,6 @@ fileprivate extension OWCommentHeaderView {
         self.enforceSemanticAttribute()
 
         addSubview(userNameLabel)
-        userNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         userNameLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
         }
@@ -163,7 +168,7 @@ fileprivate extension OWCommentHeaderView {
         addSubview(subscriberBadgeView)
         subscriberBadgeView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
+            make.leading.equalTo(userNameLabel.OWSnp.trailing)
         }
 
         addSubview(optionButton)
@@ -215,6 +220,7 @@ fileprivate extension OWCommentHeaderView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         userNameTapGesture.rx.event
             .voidify()
@@ -231,6 +237,11 @@ fileprivate extension OWCommentHeaderView {
 
         viewModel.outputs.badgeTitle
             .map { $0.isEmpty }
+            .bind(to: badgeTagContainer.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        badgeTagContainer.rx.bounds
+            .map { $0.width < Metrics.badgeTagContainerMinWidth }
             .bind(to: badgeTagContainer.rx.isHidden)
             .disposed(by: disposeBag)
 
@@ -261,30 +272,39 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.hiddenCommentReasonText
-            .bind(to: hiddenCommentReasonLabel.rx.text)
+            .subscribe(onNext: { [weak self] text in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.hiddenCommentReasonLabel.text = text
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowHiddenCommentMessage
             .subscribe(onNext: { [weak self] isHiddenMessage in
-                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
 
-                self.dateLabel.isHidden = isHiddenMessage
-                self.optionButton.isHidden = isHiddenMessage
-                self.subscriberBadgeView.isHidden = isHiddenMessage
-                self.userNameLabel.isHidden = isHiddenMessage
-                self.badgeTagContainer.isHidden = isHiddenMessage
-                self.subtitleLabel.isHidden = isHiddenMessage
-                self.seperatorBetweenSubtitleAndDateLabel.isHidden = isHiddenMessage
+                    self.dateLabel.isHidden = isHiddenMessage
+                    self.optionButton.isHidden = isHiddenMessage
+                    self.subscriberBadgeView.isHidden = isHiddenMessage
+                    self.userNameLabel.isHidden = isHiddenMessage
+                    self.badgeTagContainer.isHidden = isHiddenMessage
+                    self.subtitleLabel.isHidden = isHiddenMessage
+                    self.seperatorBetweenSubtitleAndDateLabel.isHidden = isHiddenMessage
 
-                self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
+                    self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
+                }
             }).disposed(by: disposeBag)
 
         viewModel.outputs.subscriberBadgeVM
             .outputs.isSubscriber
             .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.subscriberBadgeView.OWSnp.updateConstraints { make in
-                    make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.subscriberBadgeView.OWSnp.updateConstraints { make in
+                        make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -318,7 +338,7 @@ fileprivate extension OWCommentHeaderView {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.userNameLabel.font = OWFontBook.shared.font(typography: .footnoteContext)
-                self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoCaption)
+                self.badgeTagLabel.font = OWFontBook.shared.font(typography: .infoText)
                 self.subtitleLabel.font = OWFontBook.shared.font(typography: .metaText)
                 self.seperatorBetweenSubtitleAndDateLabel.font = OWFontBook.shared.font(typography: .metaText)
                 self.dateLabel.font = OWFontBook.shared.font(typography: .metaText)
@@ -326,6 +346,7 @@ fileprivate extension OWCommentHeaderView {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
 
 // MARK: Accessibility

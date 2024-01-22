@@ -44,6 +44,8 @@ class OWLoadingCell: UITableViewCell {
 fileprivate extension OWLoadingCell {
     func setupViews() {
         self.contentView.addSubview(indicator)
+        self.contentView.backgroundColor = .clear
+        self.backgroundColor = .clear
         indicator.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.bottom.equalToSuperview().inset(Metrics.indicatorVerticalPadding)
