@@ -15,6 +15,8 @@ class OWClarityDetailsVC: UIViewController {
         return OWClarityDetailsView(viewModel: viewModel.outputs.clarityDetailsViewViewModel)
     }()
 
+    fileprivate weak var dismissNavigationController: UINavigationController?
+
     fileprivate let viewModel: OWClarityDetailsViewModeling
     let disposeBag: DisposeBag = DisposeBag()
 
@@ -40,7 +42,19 @@ class OWClarityDetailsVC: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        // If modalPresentationStyle is pageSheet and animated by pulling down the VC
+        // we want to bring back the navigation bar after the VC is dismissed
+        // Fixes navigation bar showing over title bar.
+        if modalPresentationStyle == .pageSheet && animated {
+            dismissNavigationController = navigationController
+        } else {
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        dismissNavigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
