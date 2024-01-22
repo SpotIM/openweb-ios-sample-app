@@ -619,7 +619,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .collapse,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                     )))
                 } else {
                     // This is expand in a reply or more in depth replies
@@ -628,7 +628,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                     )))
                 }
             default:
@@ -637,7 +637,7 @@ fileprivate extension OWConversationViewViewModel {
                     data: commentPresentationData,
                     mode: .collapse,
                     depth: depth,
-                    spacing: spacingBetweenComments
+                    spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                 )))
 
                 cellOptions.append(contentsOf: getCommentCells(for: commentPresentationData.repliesPresentation))
@@ -650,7 +650,7 @@ fileprivate extension OWConversationViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                     )))
                 }
             }

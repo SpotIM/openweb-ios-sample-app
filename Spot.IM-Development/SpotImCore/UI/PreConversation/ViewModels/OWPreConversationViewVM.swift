@@ -642,7 +642,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             data: presentationData,
                             mode: .openCommentThread,
                             depth: 0,
-                            spacing: Metrics.threadActionCellSpacing
+                            spacing: OWVerticalSpacing(bottom: Metrics.threadActionCellSpacing)
                         )))
                     }
 

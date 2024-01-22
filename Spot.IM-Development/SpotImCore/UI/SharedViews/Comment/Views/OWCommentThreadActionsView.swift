@@ -145,11 +145,12 @@ fileprivate extension OWCommentThreadActionsView {
 
         // Update bottom spacing
         viewModel.outputs.updateSpacing
-            .subscribe(onNext: { [weak self] spacingBetweenComments in
+            .subscribe(onNext: { [weak self] spacing in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     self.actionView.OWSnp.updateConstraints { make in
-                        make.bottom.equalToSuperview().offset(-spacingBetweenComments)
+                        make.top.equalToSuperview().inset(spacing.top)
+                        make.bottom.equalToSuperview().inset(spacing.bottom)
                     }
                 }
             })
