@@ -1830,6 +1830,21 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        loginPromptViewModel
+            .outputs
+            .authenticationTriggered
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .loginPrompt)
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.conversationUpdaterService()
+                    .update(.refreshConversation, postId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
         // Subscribe to URL click in comment text
         commentCellsVmsObservable
             .flatMapLatest { commentCellsVms -> Observable<URL> in
