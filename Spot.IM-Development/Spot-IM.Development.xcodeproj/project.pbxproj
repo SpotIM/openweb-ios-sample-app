@@ -135,19 +135,18 @@
 		241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */; };
 		241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */; };
 		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
-		242316532B0116D40002BCD2 /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */; };
-		242316602B04E9400002BCD2 /* OWCancelScreenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2423165F2B04E9400002BCD2 /* OWCancelScreenType.swift */; };
 		241F71F72B429CD6007619AC /* ColorsCustomizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71F62B429CD6007619AC /* ColorsCustomizationViewModel.swift */; };
 		241F71F92B42ADA5007619AC /* ColorSelectionItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71F82B42ADA5007619AC /* ColorSelectionItemCell.swift */; };
 		241F71FB2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71FA2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift */; };
 		241F71FF2B454F42007619AC /* OWTheme+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */; };
 		241F72012B458D34007619AC /* OWColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F72002B458D34007619AC /* OWColor+Extensions.swift */; };
+		242316532B0116D40002BCD2 /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */; };
 		242316552B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */; };
 		242316582B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */; };
+		242316602B04E9400002BCD2 /* OWCancelScreenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2423165F2B04E9400002BCD2 /* OWCancelScreenType.swift */; };
 		243010D52B173E7A00150823 /* ThirdPartySSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */; };
 		243053F729EEA1DF00A4CB5A /* OWPresenterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243053F629EEA1DF00A4CB5A /* OWPresenterService.swift */; };
 		2436B9402B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */; };
-		2436B9432B1E204600EEDB4C /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */; };
 		2436B9472B1F117200EEDB4C /* OWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9462B1F117200EEDB4C /* OWTheme.swift */; };
 		2436B9492B2055A800EEDB4C /* OWColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9482B2055A800EEDB4C /* OWColor.swift */; };
 		243ED2A92B3C65210036E71D /* ColorCustomizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243ED2A82B3C65210036E71D /* ColorCustomizationService.swift */; };
@@ -1133,19 +1132,18 @@
 		241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementView.swift; sourceTree = "<group>"; };
 		241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementViewModel.swift; sourceTree = "<group>"; };
 		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
-		242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
-		2423165F2B04E9400002BCD2 /* OWCancelScreenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCancelScreenType.swift; sourceTree = "<group>"; };
 		241F71F62B429CD6007619AC /* ColorsCustomizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCustomizationViewModel.swift; sourceTree = "<group>"; };
 		241F71F82B42ADA5007619AC /* ColorSelectionItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionItemCell.swift; sourceTree = "<group>"; };
 		241F71FA2B42FAA0007619AC /* ColorSelectionItemCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionItemCellViewModel.swift; sourceTree = "<group>"; };
 		241F71FE2B454F42007619AC /* OWTheme+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWTheme+Extensions.swift"; sourceTree = "<group>"; };
 		241F72002B458D34007619AC /* OWColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWColor+Extensions.swift"; sourceTree = "<group>"; };
+		242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
 		242316542B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderVC.swift; sourceTree = "<group>"; };
 		242316572B038DEC0002BCD2 /* OWNavigationPlaceholderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationPlaceholderViewModel.swift; sourceTree = "<group>"; };
+		2423165F2B04E9400002BCD2 /* OWCancelScreenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCancelScreenType.swift; sourceTree = "<group>"; };
 		243010D42B173E7A00150823 /* ThirdPartySSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdPartySSOAuthentication.swift; sourceTree = "<group>"; };
 		243053F629EEA1DF00A4CB5A /* OWPresenterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPresenterService.swift; sourceTree = "<group>"; };
 		2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSubmitCustomizableElement.swift; sourceTree = "<group>"; };
-		2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
 		2436B9462B1F117200EEDB4C /* OWTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTheme.swift; sourceTree = "<group>"; };
 		2436B9482B2055A800EEDB4C /* OWColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWColor.swift; sourceTree = "<group>"; };
 		243ED2A82B3C65210036E71D /* ColorCustomizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCustomizationService.swift; sourceTree = "<group>"; };
@@ -2643,7 +2641,6 @@
 				2441931A2A9358990085BB30 /* ViewModels */,
 				244193172A9358810085BB30 /* Views */,
 				2409CE4A2A94FA99007701FA /* OWClarityDetailsType.swift */,
-				242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */,
 			);
 			path = ClarityDetails;
 			sourceTree = "<group>";
@@ -4540,7 +4537,6 @@
 		4454185423685154001D0ED0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				2436B9412B1E203200EEDB4C /* ClarityDetails */,
 				3D5058AE2AB1D595006CECFA /* SharedModels */,
 				8DC708E92A8387B7004B3C9E /* RealTime */,
 				24E66A212A6555CD00D5F4E9 /* Analytics */,
@@ -4575,6 +4571,7 @@
 				240E8FAF2AA76A3600903E51 /* OWCommentStatusResponse.swift */,
 				240D6E842AB882E400EB70FA /* OWConversationCountersResponse.swift */,
 				246CA2FC2B0E45CD003E7586 /* OWAppealRequiredData.swift */,
+				242316522B0116D40002BCD2 /* OWClarityDetailsRequireData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5449,7 +5446,7 @@
 		9E0C60622A89410F001B8D5D /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */,
+				162B835A2A769FFC002290EE /* OWCommentCreationCtaData.swift */
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
