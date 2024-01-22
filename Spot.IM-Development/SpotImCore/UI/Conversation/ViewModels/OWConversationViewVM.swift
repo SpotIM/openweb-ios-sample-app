@@ -584,7 +584,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var _firstVisibleCommentIndex = PublishSubject<Int>()
     fileprivate var firstVisibleCommentIndex: Observable<Int> {
-        return Observable.combineLatest(shouldShowCommunityQuestion, shouldShowCommunityGuidelines)
+        return Observable.combineLatest(shouldShowCommunityQuestion.startWith(false),
+                                        shouldShowCommunityGuidelines.startWith(false))
             .flatMapLatest({ showCommunityQuestion, showCommunityGuidlines -> Observable<Int> in
                 var index = 0
                 if showCommunityQuestion { index += 1 }
@@ -1929,7 +1930,10 @@ fileprivate extension OWConversationViewViewModel {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
             })
-            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: MainScheduler.instance)
+            .share()
+
+        let updatedRealtimeCommentsObsarvable = newRealtimeCommentsObsarvable
+            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: conversationViewVMScheduler)
             .withLatestFrom(firstVisibleCommentIndex) { ($0, $1) }
             .withLatestFrom(commentCellsOptions) { ($0.0, $0.1, $1) }
             .map { comments, firstVisibleCommentIndex, commentCellsOptions -> [Int] in
@@ -1940,7 +1944,7 @@ fileprivate extension OWConversationViewViewModel {
             }
             .share()
 
-        newRealtimeCommentsObsarvable
+        updatedRealtimeCommentsObsarvable
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self, let firstIndex = indexes.first else { return }
                 self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
@@ -1951,7 +1955,7 @@ fileprivate extension OWConversationViewViewModel {
             .withLatestFrom(self.firstVisibleCommentIndex) { ($0, $1) }
             .filter { $0 == $1 }
             .voidify()
-            .withLatestFrom(newRealtimeCommentsObsarvable)
+            .withLatestFrom(updatedRealtimeCommentsObsarvable)
             .subscribe(onNext: { [weak self] indexes in
                 guard let self = self else { return }
                 self._highlightCellsIndexes.onNext(indexes)
