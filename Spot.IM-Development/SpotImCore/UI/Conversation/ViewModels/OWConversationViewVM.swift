@@ -582,7 +582,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var _firstVisibleCommentIndex = PublishSubject<Int>()
     fileprivate var firstVisibleCommentIndex: Observable<Int> {
         return Observable.combineLatest(shouldShowCommunityQuestion.startWith(false),
                                         shouldShowCommunityGuidelines.startWith(false))

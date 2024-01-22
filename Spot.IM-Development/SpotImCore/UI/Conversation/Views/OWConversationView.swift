@@ -410,6 +410,7 @@ fileprivate extension OWConversationView {
                         return
                     }
 
+                    // Temporarily disable table interactions to ensure smooth scrolling to the first comment.
                     self.tableView.isUserInteractionEnabled = false
                     self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
                 }
