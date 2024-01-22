@@ -17,7 +17,7 @@ protocol OWCommentCellViewModelingOutputs {
     var commentVM: OWCommentViewModeling { get }
     var id: String { get }
     var viewAccessibilityIdentifier: String { get }
-    var updateSpacing: Observable<(CGFloat, CGFloat)> { get }
+    var updateSpacing: Observable<OWVerticalSpacing> { get }
 }
 
 protocol OWCommentCellViewModeling: OWCellViewModel {
@@ -39,8 +39,8 @@ class OWCommentCellViewModel: OWCommentCellViewModeling,
         return Metrics.viewAccessibilityIdentifier + id
     }()
 
-    fileprivate let _updateSpacing = BehaviorSubject<(CGFloat, CGFloat)?>(value: nil)
-    var updateSpacing: Observable<(CGFloat, CGFloat)> {
+    fileprivate let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
+    var updateSpacing: Observable<OWVerticalSpacing> {
         _updateSpacing
             .unwrap()
             .take(1)
@@ -52,14 +52,12 @@ class OWCommentCellViewModel: OWCommentCellViewModeling,
     var id: String = ""
 
     init(data: OWCommentRequiredData,
-         spacing: CGFloat,
-         bottomSpacing: CGFloat? = nil) {
+         spacing: OWVerticalSpacing) {
         self.id = data.comment.id ?? ""
 
         self.commentVM = OWCommentViewModel(data: data)
 
-        let bottomSpacing = bottomSpacing ?? spacing
-        _updateSpacing.onNext((spacing, bottomSpacing))
+        _updateSpacing.onNext(spacing)
     }
 
     init() {

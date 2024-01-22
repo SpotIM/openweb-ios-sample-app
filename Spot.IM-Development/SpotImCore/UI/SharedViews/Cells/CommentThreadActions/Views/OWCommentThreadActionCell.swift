@@ -58,6 +58,7 @@ fileprivate extension OWCommentThreadActionCell {
         self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2,
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         self.contentView.addSubviews(commentThreadActionsView)
+        self.selectionStyle = .none
 
         commentThreadActionsView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
