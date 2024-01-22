@@ -21,4 +21,5 @@ public enum OWCustomizableElement {
     case emptyState(element: OWEmptyStateCustomizableElement)
     case emptyStateCommentingEnded(element: OWEmptyStateCommentingEndedCustomizableElement)
     case commentingEnded(element: OWCommentingEndedCustomizableElement)
+    case commentCreationSubmit(element: OWCommentCreationSubmitCustomizableElement)
 }

@@ -114,3 +114,12 @@ custom_rules:
           - identifier
           - keyword
         severity: error
+    self_capture_in_blocks: # rule identifier
+        name: "Self Capture In Blocks" # rule name. optional.
+        message: "Self captured in block" # violation message. optional.
+        included: ".*.swift"
+        regex: '(\{ self\.)' # matching pattern
+        match_kinds:
+          - identifier
+          - keyword
+        severity: error

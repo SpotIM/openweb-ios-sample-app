@@ -13,11 +13,12 @@ enum OWAuthenticationEndpoints: OWEndpoints {
     case ssoStart(secret: String)
     case ssoComplete(codeB: String)
     case logout
+    case ssoProvider(provider: OWSSOProvider, token: String)
 
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
-        case .login, .ssoStart, .ssoComplete, .logout:
+        case .login, .ssoStart, .ssoComplete, .logout, .ssoProvider:
             return .post
         }
     }
@@ -29,6 +30,7 @@ enum OWAuthenticationEndpoints: OWEndpoints {
         case .ssoStart:     return "/user/sso/start"
         case .ssoComplete:  return "/user/sso/complete"
         case .logout:       return "/user/logout"
+        case .ssoProvider:  return "/user/sso/provider"
         }
     }
 
@@ -43,6 +45,8 @@ enum OWAuthenticationEndpoints: OWEndpoints {
             return ["code_b": codeB]
         case .logout:
             return nil
+        case let .ssoProvider(provider, token):
+            return provider.parameters(token: token)
         }
     }
 }
@@ -52,6 +56,7 @@ protocol OWAuthenticationAPI {
     func ssoStart(secret: String) -> OWNetworkResponse<OWSSOStartResponse>
     func ssoComplete(codeB: String) -> OWNetworkResponse<OWSSOCompletionResponse>
     func logout() -> OWNetworkResponse<EmptyDecodable>
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> OWNetworkResponse<OWSSOProviderResponse>
 }
 
 extension OWNetworkAPI: OWAuthenticationAPI {
@@ -80,5 +85,11 @@ extension OWNetworkAPI: OWAuthenticationAPI {
         let endpoint = OWAuthenticationEndpoints.logout
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
+    }
+
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> OWNetworkResponse<OWSSOProviderResponse> {
+        let endpoint = OWAuthenticationEndpoints.ssoProvider(provider: provider, token: token)
+        let requestConfig = request(for: endpoint)
+        return performRequest(route: requestConfig)
     }
 }

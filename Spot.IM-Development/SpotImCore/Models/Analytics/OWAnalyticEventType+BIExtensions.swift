@@ -92,6 +92,8 @@ extension OWAnalyticEventType {
             return.cameraIconClickedClose
         case .showMoreComments:
             return.showMoreComments
+        case .communityGuidelinesLinkClicked:
+            return .communityGuidelinesLinkClicked
         default:
             return nil
         }

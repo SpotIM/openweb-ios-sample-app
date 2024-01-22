@@ -29,6 +29,12 @@ extension Reactive where Base: UIAlertController {
 
             // Create UIAlertController
             let alertVC = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
+            if let popoverController = alertVC.popoverPresentationController {
+                // set the source of alert (crash on iPad) with no arrows
+                popoverController.sourceView = viewController.view
+                popoverController.sourceRect = CGRect(x: viewController.view.bounds.midX, y: viewController.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
             // Add the actions to the alertVC
             alertActions.forEach { alertVC.addAction($0) }
 

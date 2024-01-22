@@ -28,6 +28,7 @@ protocol OWAuthenticationManagerProtocol {
     func logout() -> Observable<Void>
     func startSSO() -> Observable<OWSSOStartModel>
     func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel>
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> Observable<OWSSOProviderModel>
 
     // Those methods exposed since we are testing multiple SpotIds inside our SampleApp - therefore we must considered the "current" spotId
     func prepare(forSpotId spotId: OWSpotId)
@@ -116,14 +117,26 @@ extension OWAuthenticationManager {
 
                 // For Pre-conversation present mode where the VC not started yet
                 if let router = router, router.isEmpty() {
-                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: {
+                    let authDismiss = PublishSubject<Void>()
+                    let vm = OWNavigationPlaceholderViewModel(onFirstActualVC: { publisherAuthVC in
                         router.start()
+                        // Since the placeholder VC is being removed once the publisher VC is on router, we need to set the completion to the correct VC
+                        router.setCompletion(for: publisherAuthVC, dismissCompletion: authDismiss)
                     })
                     let vc = OWNavigationPlaceholderVC(viewModel: vm)
                     router.setRoot(vc, animated: false, dismissCompletion: nil)
-                }
+                    // Once publisher auth VC is really dismissed (from our router), complete blocking
+                    _ = authDismiss
+                        .take(1)
+                        .asObservable()
+                        .subscribe(onNext: {
+                            blockerAction.completion()
+                        })
 
-                authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
+                    authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: {})
+                } else {
+                    authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
+                }
             })
     }
 
@@ -411,6 +424,39 @@ extension OWAuthenticationManager {
             }
             .unwrap()
     }
+
+    func ssoAuthenticate(withProvider provider: OWSSOProvider, token: String) -> Observable<OWSSOProviderModel> {
+        return userAuthenticationStatus
+            .take(1)
+            .flatMap { authenticationStatus -> Observable<Void> in
+                // 1. Make sure not already logged in
+                if case .guest(_) = authenticationStatus {
+                    return .just(())
+                } else if authenticationStatus == .notAutenticated {
+                    return .just(())
+                }
+
+                return .error(OWError.alreadyLoggedIn)
+            }
+            .flatMap { [weak self] _ -> Observable<OWSSOProviderResponse> in
+                guard let self = self else { return .empty() }
+                // 2. Proceed with SSO complete
+                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                return networkAuthentication
+                    .ssoAuthenticate(withProvider: provider, token: token)
+                    .response
+            }
+            .do(onNext: { [weak self] ssoProviderResponse  in
+                guard let self = self else { return }
+                let user = ssoProviderResponse.user
+                self.update(userAvailability: .user(user))
+                self._userAuthenticationStatus.onNext(.ssoLoggedIn(userId: user.userId ?? ""))
+            })
+            .map { response -> OWSSOProviderModel? in
+                return response.toSSOProviderModel()
+            }
+            .unwrap()
+    }
 }
 
 // Persistence related methods
@@ -543,9 +589,17 @@ fileprivate extension OWAuthenticationManager {
                 return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
                     .take(1)
             }
-            .map { [weak self] config -> OWAuthenticationLevel? in
+            .materialize()
+            .map { [weak self] event -> OWAuthenticationLevel? in
                 guard let self = self else { return nil }
-                return self.requiredAuthenticationLevel(for: action, accordingToConfig: config)
+                switch event {
+                case .next(let config):
+                    return self.requiredAuthenticationLevel(for: action, accordingToConfig: config)
+                case .error:
+                    return nil
+                default:
+                    return nil
+                }
             }
             .unwrap()
     }

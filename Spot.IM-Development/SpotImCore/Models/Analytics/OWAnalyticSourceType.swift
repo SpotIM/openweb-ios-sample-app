@@ -14,6 +14,7 @@ enum OWAnalyticSourceType {
     case commentCreation
     case commentThread
     case reportReason
+    case clarityDetails
     case none
 
     var analyticsComponentName: String {
@@ -28,6 +29,8 @@ enum OWAnalyticSourceType {
             return "comment_thread"
         case .reportReason:
             return "report_reason"
+        case .clarityDetails:
+            return "clarity_details"
         case .none:
             return "none"
         }
