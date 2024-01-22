@@ -11,5 +11,5 @@ import Foundation
 public enum OWSSOFlowType {
     case start(completion: OWSSOStartHandler)
     case complete(codeB: String, completion: OWSSOCompletionHandler)
-    case usingProvider(privder: OWSSOProvider, token: String, completion: OWProviderSSOHandler)
+    case usingProvider(provider: OWSSOProvider, token: String, completion: OWProviderSSOHandler)
 }

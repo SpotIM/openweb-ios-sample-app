@@ -15,6 +15,8 @@ protocol OWLoginPromptViewModelingInputs {
 
 protocol OWLoginPromptViewModelingOutputs {
     var shouldShowView: Observable<Bool> { get }
+    var style: OWLoginPromptAlignmentStyle { get }
+    var authenticationTriggered: Observable<Void> { get }
 }
 
 protocol OWLoginPromptViewModeling {
@@ -29,14 +31,18 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     var inputs: OWLoginPromptViewModelingInputs { return self }
     var outputs: OWLoginPromptViewModelingOutputs { return self }
 
+    let style: OWLoginPromptAlignmentStyle
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag: DisposeBag
 
     fileprivate let isFeatureEnabled: Bool
 
-    init(isFeatureEnabled: Bool = true, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(isFeatureEnabled: Bool = true,
+         style: OWLoginPromptAlignmentStyle,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.isFeatureEnabled = isFeatureEnabled
+        self.style = style
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -63,6 +69,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
             }
         }
         .startWith(false)
+        .distinctUntilChanged()
         .share(replay: 1)
     }
 
@@ -70,6 +77,9 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     fileprivate var _openLogin: Observable<Void> {
         loginPromptTap
             .asObservable()
+    }
+    var authenticationTriggered: Observable<Void> {
+        _openLogin
     }
 }
 

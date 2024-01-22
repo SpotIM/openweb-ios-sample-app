@@ -45,7 +45,6 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         self.data = data
         self.router = router
         self.actionsCallbacks = actionsCallbacks
-        self.presentationalMode = presentationalMode
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
@@ -159,6 +158,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
 
     override func showableComponent() -> Observable<OWShowable> {
         let clarityDetailsViewVM: OWClarityDetailsViewViewModeling = OWClarityDetailsViewVM(data: data)
+
         setupViewActionsCallbacks(forViewModel: clarityDetailsViewVM)
 
         let clarityDetailsView = OWClarityDetailsView(viewModel: clarityDetailsViewVM)

@@ -60,6 +60,15 @@ fileprivate extension OWMenuSelectionEncapsulationView {
                 self.menuVM.inputs.menuDismissed.onNext()
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.orientationService().orientation
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dismissMenu()
+                self.menuVM.inputs.menuDismissed.onNext()
+            })
+            .disposed(by: disposeBag)
     }
 
     func dismissMenu() {

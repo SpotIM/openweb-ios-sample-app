@@ -36,7 +36,7 @@ protocol OWClarityDetailsViewViewModeling {
 }
 
 class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
-                                 OWClarityDetailsViewViewModelingInputs,
+                              OWClarityDetailsViewViewModelingInputs,
                               OWClarityDetailsViewViewModelingOutputs {
     var inputs: OWClarityDetailsViewViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
@@ -45,11 +45,14 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     fileprivate let commentId: OWCommentId
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let requiredData: OWClarityDetailsRequireData
+    fileprivate var articleUrl: String = ""
 
     init(data: OWClarityDetailsRequireData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.type = data.type
         self.commentId = data.commentId
         self.servicesProvider = servicesProvider
+        self.requiredData = data
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -214,6 +217,20 @@ fileprivate extension OWClarityDetailsViewVM {
             self._topParagraphAttributedString.onNext(attString)
         })
         .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+        communityGuidelinesClickObservable
+            .subscribe(onNext: { [weak self] _ in
+                self?.sendEvent(for: .communityGuidelinesLinkClicked)
+            })
+            .disposed(by: disposeBag)
     }
 
     // TODO: translations
@@ -240,5 +257,22 @@ fileprivate extension OWClarityDetailsViewVM {
                 attributes: attributes
             )
         }
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: articleUrl,
+                layoutStyle: OWLayoutStyle(from: requiredData.presentationalStyle),
+                component: .clarityDetails)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }

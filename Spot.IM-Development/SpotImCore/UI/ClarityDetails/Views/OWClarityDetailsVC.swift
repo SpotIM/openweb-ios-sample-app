@@ -44,7 +44,7 @@ class OWClarityDetailsVC: UIViewController {
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+        return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
 }
 
@@ -54,8 +54,8 @@ fileprivate extension OWClarityDetailsVC {
 
         view.addSubview(clarityDetailsView)
         clarityDetailsView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperviewSafeArea()
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalToSuperview()
         }
     }
 

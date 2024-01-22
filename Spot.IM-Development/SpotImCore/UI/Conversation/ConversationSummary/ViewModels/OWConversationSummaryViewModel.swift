@@ -60,7 +60,10 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
                 return realtimeData.data?.totalCommentsCount(forPostId: postId)
             }
             .unwrap()
-            .map { self.getCommentsText(for: $0) }
+            .map { [weak self] value in
+                guard let self = self else { return "" }
+                return self.getCommentsText(for: value)
+            }
             .asObservable()
     }()
 
