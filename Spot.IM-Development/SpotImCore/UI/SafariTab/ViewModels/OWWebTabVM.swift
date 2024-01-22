@@ -17,7 +17,6 @@ protocol OWWebTabViewModelingInputs {
 protocol OWWebTabViewModelingOutputs {
     var webTabViewVM: OWWebTabViewViewModeling { get }
     var screenLoaded: Observable<Void> { get }
-    var options: OWWebTabOptions { get }
     var closeWebTab: Observable<Void> { get }
 }
 
@@ -30,23 +29,26 @@ class OWWebTabViewModel: OWWebTabViewModeling, OWWebTabViewModelingInputs, OWWeb
     var inputs: OWWebTabViewModelingInputs { return self }
     var outputs: OWWebTabViewModelingOutputs { return self }
 
-    let options: OWWebTabOptions
+    fileprivate let options: OWWebTabOptions
     fileprivate let viewableMode: OWViewableMode
 
     lazy var webTabViewVM: OWWebTabViewViewModeling = {
         return OWWebTabViewViewModel(options: options,
-                                        viewableMode: self.viewableMode)
+                                     viewableMode: viewableMode)
     }()
 
     var closeWebTabTapped = PublishSubject<Void>()
     var closeWebTab: Observable<Void> {
-        return closeWebTabTapped.asObservable()
+        closeWebTabTapped
+            .asObservable()
     }
 
     var viewDidLoad = PublishSubject<Void>()
     var screenLoaded: Observable<Void> {
         viewDidLoad.asObservable()
     }
+
+    fileprivate let disposeBag = DisposeBag()
 
     init(options: OWWebTabOptions, viewableMode: OWViewableMode) {
         self.options = options
