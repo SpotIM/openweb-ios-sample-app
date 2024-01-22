@@ -161,6 +161,7 @@
 		2473A2752A49B7530086B339 /* OWVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2473A2742A49B7520086B339 /* OWVersion.swift */; };
 		2473A2772A49BFA30086B339 /* OWMenuConstraintOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2473A2762A49BFA20086B339 /* OWMenuConstraintOption.swift */; };
 		247C01812805A4D3006A3962 /* OWImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C01802805A4D3006A3962 /* OWImageType.swift */; };
+		247E1DFA2B581C0600D50BA7 /* OWVerticalSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E1DF92B581C0600D50BA7 /* OWVerticalSpacing.swift */; };
 		247EE9812AEFF4D70000D640 /* OWNetworkAvailabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */; };
 		2484039A2ADD23A000EAD59A /* OWOrientationEnforcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248403992ADD23A000EAD59A /* OWOrientationEnforcement.swift */; };
 		2484039C2ADD23E100EAD59A /* OWOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2484039B2ADD23E100EAD59A /* OWOrientation.swift */; };
@@ -1142,6 +1143,7 @@
 		2473A2742A49B7520086B339 /* OWVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWVersion.swift; sourceTree = "<group>"; };
 		2473A2762A49BFA20086B339 /* OWMenuConstraintOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMenuConstraintOption.swift; sourceTree = "<group>"; };
 		247C01802805A4D3006A3962 /* OWImageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImageType.swift; sourceTree = "<group>"; };
+		247E1DF92B581C0600D50BA7 /* OWVerticalSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWVerticalSpacing.swift; sourceTree = "<group>"; };
 		247EE9802AEFF4D70000D640 /* OWNetworkAvailabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAvailabilityService.swift; sourceTree = "<group>"; };
 		248403992ADD23A000EAD59A /* OWOrientationEnforcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOrientationEnforcement.swift; sourceTree = "<group>"; };
 		2484039B2ADD23E100EAD59A /* OWOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOrientation.swift; sourceTree = "<group>"; };
@@ -4418,6 +4420,7 @@
 				16BEFD422A4C1B75007A51D5 /* OWCommentDelete.swift */,
 				240E8FAF2AA76A3600903E51 /* OWCommentStatusResponse.swift */,
 				240D6E842AB882E400EB70FA /* OWConversationCountersResponse.swift */,
+				247E1DF92B581C0600D50BA7 /* OWVerticalSpacing.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -6493,6 +6496,7 @@
 				8DE52F4529D9957600D3985C /* OWCommunityQuestionView.swift in Sources */,
 				3DB3B97D29F7DB3100C50192 /* OWTestingRedFirstLevelViewModel.swift in Sources */,
 				2409CE452A94B7A1007701FA /* OWClarityDetailsVC.swift in Sources */,
+				247E1DFA2B581C0600D50BA7 /* OWVerticalSpacing.swift in Sources */,
 				3D20A38327B01D90003F8513 /* OWConstraintMakerRelatable.swift in Sources */,
 				9ED2E58329EC009F00B39A00 /* OWReportReason.swift in Sources */,
 				8D7662D02A7A58E5008152BE /* OWRealtimeIndicationView.swift in Sources */,

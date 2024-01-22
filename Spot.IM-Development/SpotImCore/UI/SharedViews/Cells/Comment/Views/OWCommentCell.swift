@@ -82,13 +82,13 @@ fileprivate extension OWCommentCell {
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateSpacing
-            .subscribe(onNext: { [weak self] topSpacing, bottomSpacing in
+            .subscribe(onNext: { [weak self] spacing in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
 
                     self.commentView.OWSnp.updateConstraints { make in
-                        make.top.equalToSuperview().inset(topSpacing)
-                        make.bottom.equalToSuperview().inset(bottomSpacing)
+                        make.top.equalToSuperview().inset(spacing.top)
+                        make.bottom.equalToSuperview().inset(spacing.bottom)
                     }
                 }
             })

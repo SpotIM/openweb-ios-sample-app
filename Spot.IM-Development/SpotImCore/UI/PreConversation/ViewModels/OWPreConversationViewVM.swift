@@ -76,7 +76,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
         static let defaultBetweenCommentsSpacing = OWConversationSpacing.regular.betweenComments
         static let threadActionCellSpacing: CGFloat = 22
-        static let commentBottomSpacingWithThred: CGFloat = 16
+        static let commentBottomSpacingWithThred: CGFloat = 10
         static let defaultCommunityGuidelinesSpacing = OWConversationSpacing.regular.communityGuidelines
         static let defaultCommunityQuestionSpacing = OWConversationSpacing.regular.communityQuestions
     }
@@ -625,8 +625,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         replyToUser: nil,
                         collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                         section: self.preConversationData.article.additionalSettings.section),
-                                                    spacing: Metrics.defaultBetweenCommentsSpacing,
-                                                    bottomSpacing: hasReplies ? Metrics.commentBottomSpacingWithThred : Metrics.defaultBetweenCommentsSpacing)
+                                                    spacing: OWVerticalSpacing(top: Metrics.defaultBetweenCommentsSpacing,
+                                                                               bottom: hasReplies ? Metrics.commentBottomSpacingWithThred : Metrics.defaultBetweenCommentsSpacing))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
 
                     if hasReplies {
@@ -962,7 +962,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             replyToUser: nil,
                             collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit,
                             section: self.preConversationData.article.additionalSettings.section),
-                                                      spacing: Metrics.defaultBetweenCommentsSpacing)
+                                                      spacing: OWVerticalSpacing(Metrics.defaultBetweenCommentsSpacing))
                     }.unwrap()
                     let viewModels = self._cellsViewModels
                     let filteredCommentsVms = commentsVms.filter { commentVm in

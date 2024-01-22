@@ -794,7 +794,7 @@ fileprivate extension OWConversationViewViewModel {
             replyToUser: replyToUser,
             collapsableTextLineLimit: Metrics.collapsableTextLineLimit,
             section: self.conversationData.article.additionalSettings.section),
-                                      spacing: self.spacingBetweenComments)
+                                      spacing: OWVerticalSpacing(self.spacingBetweenComments))
     }
 
     func cacheConversationRead(response: OWConversationReadRM) {
