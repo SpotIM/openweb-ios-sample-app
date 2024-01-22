@@ -426,7 +426,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         data: commentPresentationData,
                         mode: .collapse,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                     )))
                 } else {
                     cellOptions.append(OWCommentThreadCellOption.commentThreadActions(viewModel: OWCommentThreadActionsCellViewModel(
@@ -434,7 +434,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                     )))
                 }
             default:
@@ -443,7 +443,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     data: commentPresentationData,
                     mode: .collapse,
                     depth: depth,
-                    spacing: spacingBetweenComments
+                    spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                 )))
 
                 cellOptions.append(contentsOf: getCells(for: commentPresentationData.repliesPresentation))
@@ -456,7 +456,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                         data: commentPresentationData,
                         mode: .expand,
                         depth: depth,
-                        spacing: spacingBetweenComments
+                        spacing: OWVerticalSpacing(bottom: spacingBetweenComments)
                     )))
                 }
             }
