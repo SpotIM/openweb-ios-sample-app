@@ -26,7 +26,7 @@ protocol OWCommentThreadActionsViewModelingOutputs {
     var tapOutput: Observable<Void> { get }
     var actionLabelText: Observable<String> { get }
     var disclosureTransform: Observable<CGAffineTransform> { get }
-    var updateSpacing: Observable<CGFloat> { get }
+    var updateSpacing: Observable<OWVerticalSpacing> { get }
     var commentId: String { get }
     var isLoadingChanged: Observable<Bool> { get }
     var disclosureImage: Observable<UIImage> { get }
@@ -59,8 +59,8 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
             .asObservable()
     }()
 
-    fileprivate let _updateSpacing = BehaviorSubject<CGFloat?>(value: nil)
-    var updateSpacing: Observable<CGFloat> {
+    fileprivate let _updateSpacing = BehaviorSubject<OWVerticalSpacing?>(value: nil)
+    var updateSpacing: Observable<OWVerticalSpacing> {
         _updateSpacing
             .unwrap()
             .take(1)
@@ -81,11 +81,11 @@ class OWCommentThreadActionsViewModel: OWCommentThreadActionsViewModeling, OWCom
     }
 
     let commentId: String
-    fileprivate let spacing: CGFloat
+    fileprivate let spacing: OWVerticalSpacing
 
     init(with type: OWCommentThreadActionType,
          commentId: String,
-         spacing: CGFloat) {
+         spacing: OWVerticalSpacing) {
         self.commentId = commentId
         self.spacing = spacing
         self.setupObservers()
@@ -117,7 +117,7 @@ fileprivate extension OWCommentThreadActionsViewModel {
                 case .collapseThread:
                     self._actionLabelText.onNext(OWLocalizationManager.shared.localizedString(key: "CollapseThread"))
                     self._disclosureTransform.onNext(.identity)
-                    self._updateSpacing.onNext(0)
+                    self._updateSpacing.onNext(OWVerticalSpacing(0))
 
                 case .viewMoreReplies(count: let count):
                     let multipleRepliesString = OWLocalizationManager.shared.localizedString(key: "ViewMultipleRepliesFormat")
