@@ -150,6 +150,7 @@ jobs:
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             bundle update fastlane
+            xcrun simctl shutdown all
             bundle exec fastlane build
 
       - run:
