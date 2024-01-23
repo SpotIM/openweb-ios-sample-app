@@ -6,7 +6,7 @@ version: 2.1
 references:
   # Docker image configurations
   ios_config_xcode: &ios_config_xcode
-    resource_class: macos.m1.xlarge.gen1
+    resource_class: macos.m1.large.gen1
     parameters:
       xcode:
         type: string
@@ -147,6 +147,7 @@ jobs:
 
       - run:
           name: Build app
+          no_output_timeout: 30m
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             bundle update fastlane
