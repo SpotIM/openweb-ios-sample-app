@@ -151,7 +151,6 @@ jobs:
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             bundle update fastlane
             xcrun simctl shutdown all
-            xcrun instruments -w 'generic/platform=iOS' || sleep 15
             bundle exec fastlane build
 
       - run:
