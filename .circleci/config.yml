@@ -6,7 +6,7 @@ version: 2.1
 references:
   # Docker image configurations
   ios_config_xcode: &ios_config_xcode
-    resource_class: macos.m1.2xlarge+.gen1
+    resource_class: macos.m1.2xlarge.gen1
     parameters:
       xcode:
         type: string
