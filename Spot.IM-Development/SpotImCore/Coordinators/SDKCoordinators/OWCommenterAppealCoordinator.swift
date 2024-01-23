@@ -102,6 +102,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 }
 
 fileprivate extension OWCommenterAppealCoordinator {
+    // swiftlint:disable function_body_length
     func setupObservers(for viewModel: OWCommenterAppealViewViewModeling) {
         // ReportReaon OWTextViewVM - General
         let textViewVM = viewModel.outputs.textViewVM
@@ -197,7 +198,7 @@ fileprivate extension OWCommenterAppealCoordinator {
                 guard let router = self.router else { return }
                 let cancelVM = OWCancelViewModel(cancelViewViewModel: vm)
                 let cancelVC = OWCancelVC(cancelViewModel: cancelVM)
-                
+
                 router.push(cancelVC, pushStyle: .present, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
@@ -267,8 +268,8 @@ fileprivate extension OWCommenterAppealCoordinator {
             })
             .bind(to: self.popAppealWithAnimation)
             .disposed(by: disposeBag)
-
     }
+    // swiftlint:enable function_body_length
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
 //        guard viewModel.outputs.viewableMode == .independent else { return } // TODO: 
