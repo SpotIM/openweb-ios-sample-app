@@ -197,15 +197,8 @@ fileprivate extension OWCommenterAppealCoordinator {
                 guard let router = self.router else { return }
                 let cancelVM = OWCancelViewModel(cancelViewViewModel: vm)
                 let cancelVC = OWCancelVC(cancelViewModel: cancelVM)
-                switch self.presentationalMode {
-                case .present(style: .fullScreen):
-                    cancelVC.modalPresentationStyle = .fullScreen
-                case .present(style: .pageSheet):
-                    cancelVC.modalPresentationStyle = .pageSheet
-                default:
-                    cancelVC.modalPresentationStyle = .fullScreen
-                }
-                router.present(cancelVC, animated: true, dismissCompletion: nil)
+                
+                router.push(cancelVC, pushStyle: .present, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
 
@@ -220,7 +213,8 @@ fileprivate extension OWCommenterAppealCoordinator {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                router.navigationController?.visibleViewController?.dismiss(animated: true)
+
+                router.pop(popStyle: .dismiss, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -231,13 +225,49 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
-                let visableViewController = self.router?.navigationController?.visibleViewController
 
                 // dismiss cancel appeal VC
-                visableViewController?.dismiss(animated: false)
+                self.router?.pop(popStyle: .dismiss, animated: false)
             })
             .bind(to: self.popAppealWithAnimation)
             .disposed(by: disposeBag)
+
+        // Open submitted observable - Flow
+        let closeSubmitted = Observable.merge(viewModel.outputs.appealSubmittedSuccessfully)
+//            .filter { _ in
+//                viewModel.outputs.viewableMode == .partOfFlow
+//            }
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                guard let router = self.router else { return .empty() }
+                let submittedViewVM = OWSubmittedViewViewModel(type: .commenterAppeal)
+                let submittedVC = OWSubmittedVC(submittedViewViewModel: submittedViewVM)
+
+                router.push(submittedVC, pushStyle: .present, animated: true, popCompletion: nil)
+                return submittedViewVM.outputs.closeSubmittedTapped
+            }
+
+        // Close submitted
+        closeSubmitted
+            .do(onNext: { [weak self] in
+                guard let self = self,
+                      let router = router else { return }
+
+                // dismiss submitted appeal VC
+                router.pop(popStyle: .dismiss, animated: false)
+
+                let visableViewController = router.navigationController?.visibleViewController
+                let isAppealVC = visableViewController?.isKind(of: OWCommenterAppealVC.self) ?? false
+
+                // For dismissing details screen
+                if !isAppealVC {
+                    router.pop(popStyle: .dismiss, animated: false)
+                }
+            })
+            .bind(to: self.popAppealWithAnimation)
+            .disposed(by: disposeBag)
+
     }
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {

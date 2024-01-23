@@ -37,8 +37,12 @@ class OWCancelVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
         return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 }
 
