@@ -31,7 +31,7 @@ references:
         echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $CORE_VERSION
 
-  define: &xcode_latest_official_version "15.1.0"
+  define: &xcode_latest_official_version "15.2.0"
 
 commands:
   swiftlint:
@@ -150,6 +150,7 @@ jobs:
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             bundle update fastlane
+            xcrun simctl shutdown all
             bundle exec fastlane build
 
       - run:
