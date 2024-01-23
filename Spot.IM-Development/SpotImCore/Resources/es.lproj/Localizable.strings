@@ -113,6 +113,8 @@
 "LearnMore" = "Obtener más información";
 "RejectedCommentStatusMessage" = "Su comentario ha sido rechazado.";
 "PendingCommentStatusMessage" = "Espere: su comentario está a la espera de aprobación.";
+"AppealedCommentStatusMessage" = "Ha presentado una apelación. Un moderador revisará su comentario.";
+"AppealRejectedCommentStatusMessage" = "Se rechazó su apelación.";
 "ClarityPendingReasonsTitle" = "Su comentario puede que haya sido enviado para una revisión por una de las siguientes razones:";
 "AwaitingReview" = "Esperando revisión";
 "RejectReasonEnsureCivil" = "Todas nuestras decisiones están pensadas para garantizar un discurso civil, abierto e integrador dentro de la comunidad.";
@@ -136,6 +138,9 @@
 "CommentFollowsGuidelinesAppealTitle" = "Considero que mi comentario cumple las normas de la comunidad";
 "MisunderstandingAppealTitle" = "Me parece que no ha entendido la intención o el contexto de mi comentario";
 "OtherAppealTitle" = "Otros";
+"AppealLabelError" = "La información sobre el recurso no está disponible en este momento. Comprueba tu conexión a internet o inténtalo de nuevo más tarde.";
+"AppealLabelNotAvailable" = "El comentario que has denunciado ya no está disponible.";
+"AppealSubmittedSubtitle" = "Hemos recibido su apelación y nuestro equipo de moderadores revisará su comentario lo antes posible. Le informaremos de la decisión.";
 
 // Old API
 "Your Username" = "Tu seudónimo...";

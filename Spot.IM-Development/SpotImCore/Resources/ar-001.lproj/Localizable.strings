@@ -114,6 +114,8 @@
 "LearnMore" = "اعرف المزيد";
 "RejectedCommentStatusMessage" = "تم رفض تعليقك.";
 "PendingCommentStatusMessage" = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
+"AppealedCommentStatusMessage" = "لقد قدمت استئنافاً, وسيتم مراجعة استئنافك من قبل الوسيط.";
+"AppealRejectedCommentStatusMessage" = "تم رفض استئنافك ";
 "ClarityPendingReasonsTitle" = "ربما اُرسل تعليقك للمراجعة لأحد الأسباب التالية:";
 "AwaitingReview" = "في انتظار المراجعة";
 "RejectReasonEnsureCivil" = "إن جميع قراراتنا مُصممة لضمان خطاب مدني مفتوح وشامل داخل المجتمع.";
@@ -137,6 +139,9 @@
 "CommentFollowsGuidelinesAppealTitle" = "أعتقد أن تعليقي يتبع إرشادات المنتدى";
 "MisunderstandingAppealTitle" = "أعتقد أنك أسأت فهم نية أو سياق تعليقي";
 "OtherAppealTitle" = "غير ذلك";
+"AppealLabelError" = "معلومات طلب الالتماس غير متوفرة حاليًا. يُرجى التحقق من اتصالك بالإنترنت أو المحاولة مرة أخرى لاحقًا.";
+"AppealLabelNotAvailable" = "لم يعد التعليق الذي أبلغت عنه متوفراً.";
+"AppealSubmittedSubtitle" = "لقد تلقينا استئنافك وسيراجع فريق الإشراف لدينا تعليقك في أقرب وقت ممكن. وسنعلمك بالقرار.";
 
 // Old API
 "Your Username" = "اسمك المستعار...";

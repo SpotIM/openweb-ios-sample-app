@@ -140,7 +140,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 return nil
             case .error:
                 return NSAttributedString(
-                    string: "The appeal information is currently unavailable. Please check your internet connection or try again later.", // TODO: translations
+                    string: OWLocalizationManager.shared.localizedString(key: "AppealLabelError"),
                     attributes: [
                         .foregroundColor: OWColorPalette.shared.color(type: .errorColor, themeStyle: style),
                         .font: OWFontBook.shared.font(typography: .bodySpecial)
@@ -148,7 +148,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 )
             case .unavailable:
                 return NSAttributedString(
-                    string: "The comment you reported is no longer available.", // TODO: translations
+                    string: OWLocalizationManager.shared.localizedString(key: "AppealLabelNotAvailable"),
                     attributes: attributes
                 )
             }

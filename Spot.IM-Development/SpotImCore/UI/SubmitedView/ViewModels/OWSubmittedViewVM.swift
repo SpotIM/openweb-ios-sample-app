@@ -56,7 +56,7 @@ class OWSubmittedViewViewModel: OWSubmittedViewViewModelingInputs, OWSubmittedVi
         case .reportReason:
             return OWLocalizationManager.shared.localizedString(key: "ReportReasonSubmittedSubtitle")
         case .commenterAppeal:
-            return "We've received your appeal and our moderation team will review your comment as soon as possible. We will notify you about the decision." // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "AppealSubmittedSubtitle")
         }
     }
 
