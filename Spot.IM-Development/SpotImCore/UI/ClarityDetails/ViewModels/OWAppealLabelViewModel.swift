@@ -202,8 +202,9 @@ fileprivate extension OWAppealLabelViewModel {
                 onNext: { [weak self] response in
                     if response.canAppeal {
                         self?._viewType.onNext(.default)
+                    } else {
+                        // TODO: do not show label - create none type
                     }
-                    // TODO: do not show label - create none type
             },
                 onError: { [weak self] _ in
                     self?._viewType.onNext(.error)

@@ -26,6 +26,7 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var submitButtonText: Observable<String> { get }
     var submitInProgress: Observable<Bool> { get }
     var isSubmitEnabled: Observable<Bool> { get }
+    var appealSubmittedSuccessfully: Observable<Void> { get } // TODO: what info is needed?
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -147,6 +148,13 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     }
 
     var submitAppealTap = PublishSubject<Void>()
+
+    fileprivate let _appealSubmittedSuccessfully = BehaviorSubject<Void?>(value: nil)
+    var appealSubmittedSuccessfully: Observable<Void> {
+        return _appealSubmittedSuccessfully
+            .unwrap()
+            .asObservable()
+    }
 }
 
 fileprivate extension OWCommenterAppealViewVM {
@@ -203,7 +211,7 @@ fileprivate extension OWCommenterAppealViewVM {
                 self?._submitInProgress.onNext(false)
 
                 switch event {
-                case .next:
+                case .next, .completed:
                     return true
                 case .error:
                     return false
@@ -213,7 +221,9 @@ fileprivate extension OWCommenterAppealViewVM {
             }
             .subscribe(onNext: { [weak self] success in
                 self?.isError.onNext(!success)
-                // TODO: handle success - new screen in coordinator.
+                if success {
+                    self?._appealSubmittedSuccessfully.onNext(())
+                }
             })
             .disposed(by: disposeBag)
     }
