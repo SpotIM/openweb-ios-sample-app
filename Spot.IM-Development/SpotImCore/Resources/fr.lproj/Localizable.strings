@@ -114,6 +114,8 @@
 "LearnMore" = "En savoir plus";
 "RejectedCommentStatusMessage" = "Votre commentaire a été rejeté.";
 "PendingCommentStatusMessage" = "Merci de patienter, votre commentaire est en attente d'approbation.";
+"AppealedCommentStatusMessage" = "Vous avez interjeté un appel, votre commentaire sera examiné par un modérateur.";
+"AppealRejectedCommentStatusMessage" = "Votre appel a été rejeté.";
 "ClarityPendingReasonsTitle" = "L'examen de votre commentaire a pu être demandé pour l'une des raisons suivantes :";
 "AwaitingReview" = "En attente d'évaluation";
 "RejectReasonEnsureCivil" = "Toutes nos décisions sont motivées par le souci de garantir un échange civil, ouvert et inclusif au sein de la communauté.";
@@ -137,6 +139,9 @@
 "CommentFollowsGuidelinesAppealTitle" = "Je pense que mon commentaire est en accord avec les recommandations de la communauté";
 "MisunderstandingAppealTitle" = "Je pense que vous avez mal compris l'intention ou le contexte entourant mon commentaire";
 "OtherAppealTitle" = "Autre";
+"AppealLabelError" = "Les informations relatives au recours ne sont pas disponibles pour le moment. Veuillez vérifier votre connexion Internet ou réessayer plus tard.";
+"AppealLabelNotAvailable" = "Le commentaire que vous avez signalé n'est plus disponible.";
+"AppealSubmittedSubtitle" = "Nous avons reçu votre demande d'appel et notre équipe de modérateurs étudiera votre commentaire dès que possible. Nous vous informerons de leur décision.";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";

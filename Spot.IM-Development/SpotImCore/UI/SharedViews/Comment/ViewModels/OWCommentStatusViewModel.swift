@@ -88,8 +88,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 switch(status) {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
                 case .pending: messageString = OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage")
-                case .appealed: messageString = "You have filed an appeal, your comment will be reviewed by a moderator." // TODO: translations
-                case .appealRejected: messageString = "Your appeal was rejected." // TODO: translation
+                case .appealed: messageString = OWLocalizationManager.shared.localizedString(key: "AppealedCommentStatusMessage")
+                case .appealRejected: messageString = OWLocalizationManager.shared.localizedString(key: "AppealRejectedCommentStatusMessage")
                 case .none: return nil
                 }
 

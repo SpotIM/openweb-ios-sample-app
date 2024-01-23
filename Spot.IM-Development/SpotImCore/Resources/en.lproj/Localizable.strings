@@ -112,6 +112,8 @@
 "LearnMore" = "Learn more";
 "RejectedCommentStatusMessage" = "Your comment was rejected.";
 "PendingCommentStatusMessage" = "Hold on, your comment is waiting for approval.";
+"AppealedCommentStatusMessage" = "You have filed an appeal, your comment will be reviewed by a moderator.";
+"AppealRejectedCommentStatusMessage" = "Your appeal was rejected.";
 "ClarityPendingReasonsTitle" = "Your comment may have been sent for review for one of the following reasons:";
 "AwaitingReview" = "Awaiting review";
 "RejectReasonEnsureCivil" = "All of our decisions are designed to ensure civil, open and inclusive discourse within the community.";
@@ -138,6 +140,9 @@
 "CommentFollowsGuidelinesAppealTitle" = "I believe my comment follows the community guidelines";
 "MisunderstandingAppealTitle" = "I believe you misunderstood the intent or context of my comment";
 "OtherAppealTitle" = "Other";
+"AppealLabelError" = "The appeal information is currently unavailable. Please check your internet connection or try again later.";
+"AppealLabelNotAvailable" = "The comment you reported is no longer available.";
+"AppealSubmittedSubtitle" = "We've received your appeal and our moderation team will review your comment as soon as possible. We will notify you about the decision.";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
