@@ -153,9 +153,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             commentContent,
             imagePreviewVM.outputs.isUploadingImageObservable
         )
-        .map { [weak self] commentContent, isUploadingImage -> Bool in
-            guard let self = self else { return false }
-
+        .map { commentContent, isUploadingImage -> Bool in
             // Validate / invalidate according to content and uploading image state
             return commentContent.hasContent() && !isUploadingImage
         }
@@ -264,6 +262,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.uploadImageDisposeBag = DisposeBag()
                 self.setupImageObserver()
                 self._imageContent.onNext(nil)
+                self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
             })
             .disposed(by: disposeBag)
     }
