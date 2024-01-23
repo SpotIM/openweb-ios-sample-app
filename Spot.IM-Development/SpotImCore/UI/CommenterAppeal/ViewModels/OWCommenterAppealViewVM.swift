@@ -220,9 +220,12 @@ fileprivate extension OWCommenterAppealViewVM {
                 }
             }
             .subscribe(onNext: { [weak self] success in
-                self?.isError.onNext(!success)
+                guard let self = self else { return }
+
+                self.isError.onNext(!success)
                 if success {
-                    self?._appealSubmittedSuccessfully.onNext(())
+                    self._appealSubmittedSuccessfully.onNext(())
+                    self.servicesProvider.commentStatusUpdaterService().update(status: .appealed, for: self.commentId)
                 }
             })
             .disposed(by: disposeBag)
