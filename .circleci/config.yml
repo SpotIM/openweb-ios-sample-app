@@ -151,7 +151,6 @@ jobs:
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             bundle update fastlane
-            xcrun simctl shutdown all
             bundle exec fastlane build
 
       - run:
@@ -206,6 +205,7 @@ jobs:
 
       - run:
           name: Bundle Install
+          no_output_timeout: 30m
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
             bundle config set --local path 'vendor/bundle'
