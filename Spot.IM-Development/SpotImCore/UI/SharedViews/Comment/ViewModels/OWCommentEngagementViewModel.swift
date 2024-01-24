@@ -81,8 +81,6 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }
 
-    fileprivate var _repliesCount = BehaviorSubject<Int>(value: 0)
-
     init(comment: OWComment, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         self.commentId = comment.id ?? ""
@@ -96,7 +94,6 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     }
 
     func update(for comment: OWComment) {
-        _repliesCount.onNext(comment.repliesCount ?? 0)
         let rank = comment.rank ?? OWComment.Rank()
         let votingModel = OWCommentVotingModel(
             rankUpCount: rank.ranksUp ?? 0,
