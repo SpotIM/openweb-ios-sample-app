@@ -27,6 +27,7 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var submitInProgress: Observable<Bool> { get }
     var isSubmitEnabled: Observable<Bool> { get }
     var appealSubmittedSuccessfully: Observable<Void> { get } // TODO: what info is needed?
+    var viewableMode: OWViewableMode { get }
 }
 
 protocol OWCommenterAppealViewViewModeling {
@@ -49,10 +50,14 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     fileprivate let commentId: OWCommentId
 
     let textViewVM: OWTextViewViewModeling
+    let viewableMode: OWViewableMode
 
-    init(commentId: OWCommentId, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(commentId: OWCommentId,
+         viewableMode: OWViewableMode,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentId = commentId
+        self.viewableMode = viewableMode
         disposeBag = DisposeBag()
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: "",
