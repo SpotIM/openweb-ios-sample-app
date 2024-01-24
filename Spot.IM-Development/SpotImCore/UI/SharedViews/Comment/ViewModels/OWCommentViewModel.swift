@@ -104,6 +104,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM.inputs.update(comment: comment)
         contentVM.inputs.update(comment: comment)
         commentStatusVM.inputs.updateStatus(for: comment)
+        commentEngagementVM.inputs.update(for: comment)
     }
 
     func update(user: SPUser) {
