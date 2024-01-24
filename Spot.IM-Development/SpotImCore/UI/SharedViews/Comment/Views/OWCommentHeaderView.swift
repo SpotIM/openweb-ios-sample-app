@@ -235,15 +235,15 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: badgeTagLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.badgeTitle
-            .map { $0.isEmpty }
-            .bind(to: badgeTagContainer.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        badgeTagContainer.rx.bounds
-            .map { $0.width < Metrics.badgeTagContainerMinWidth }
-            .bind(to: badgeTagContainer.rx.isHidden)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            viewModel.outputs.badgeTitle,
+            viewModel.outputs.shouldShowHiddenCommentMessage,
+            badgeTagContainer.rx.bounds)
+        .map { title, isHiddenComment, bounds in
+            return title.isEmpty || isHiddenComment || bounds.width < Metrics.badgeTagContainerMinWidth
+        }
+        .bind(to: badgeTagContainer.rx.isHidden)
+        .disposed(by: disposeBag)
 
         viewModel.outputs.subtitleText
             .bind(to: subtitleLabel.rx.text)
@@ -289,7 +289,6 @@ fileprivate extension OWCommentHeaderView {
                     self.optionButton.isHidden = isHiddenMessage
                     self.subscriberBadgeView.isHidden = isHiddenMessage
                     self.userNameLabel.isHidden = isHiddenMessage
-                    self.badgeTagContainer.isHidden = isHiddenMessage
                     self.subtitleLabel.isHidden = isHiddenMessage
                     self.seperatorBetweenSubtitleAndDateLabel.isHidden = isHiddenMessage
 
