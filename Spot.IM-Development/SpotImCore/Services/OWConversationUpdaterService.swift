@@ -46,7 +46,7 @@ fileprivate extension OWConversationUpdaterService {
         switch updateType {
         case .refreshConversation:
             commentsToCache = []
-        case .insert(let comments):
+        case .insert(let comments), .insertRealtime(let comments):
             commentsToCache = comments
         case .update(_, let withComment):
             commentsToCache = [withComment]
