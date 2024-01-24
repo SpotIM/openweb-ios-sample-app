@@ -25,6 +25,10 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
         static let horizontalLandscapeMargin: CGFloat = 66.0
         static let horizontalPortraitMargin: CGFloat = 16.0
+        static let highlightScrollAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDelay: Double = 1.0
+        static let highlightBackgroundColorAlpha: Double = 0.2
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
@@ -383,11 +387,78 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToCellIndex
-            .subscribe(onNext: { [weak self] index in
+            .do(onNext: { [weak self] index in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     let cellIndexPath = IndexPath(row: index, section: 0)
                     self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }
+            })
+            .bind(to: viewModel.inputs.scrolledToCellIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndexIfNotVisible
+            .do(onNext: { [weak self] index in
+                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+
+                    // only if cell not visible scroll to it
+                    guard let visibleRows = self.tableView.indexPathsForVisibleRows,
+                            !visibleRows.contains(cellIndexPath) else {
+                        self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                        return
+                    }
+
+                    // Temporarily disable table interactions to ensure smooth scrolling to the first comment.
+                    self.tableView.isUserInteractionEnabled = false
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }
+            })
+            .observe(on: MainScheduler.instance)
+            .flatMapLatest { [weak self] index -> Observable<Int> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndScrollingAnimation
+                    .asObservable()
+                    .take(1)
+                    .map { _ in return index }
+            }
+            .subscribe(onNext: { [weak self] index in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.isUserInteractionEnabled = true
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.highlightCellsIndexes
+            .subscribe(onNext: { [weak self] indexes in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self,
+                          let indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows else { return }
+
+                    // Create a filtered and mapped array of non-nil cells
+                    let cellsToHighlight = indexPathsForVisibleRows
+                        .filter { indexes.contains($0.row) }
+                        .compactMap { [weak self] in self?.tableView.cellForRow(at: $0) }
+
+                    // Animate visible cells that need highlighting
+                    for cell in cellsToHighlight {
+                        let prevBackgroundColor = cell.backgroundColor
+
+                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
+                            cell.backgroundColor = OWColorPalette.shared.color(
+                                type: .brandColor,
+                                themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
+                            ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
+                        }) { _ in
+                            UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
+                                cell.backgroundColor = prevBackgroundColor
+                            }
+                        }
+
+                    }
                 }
             })
             .disposed(by: disposeBag)
