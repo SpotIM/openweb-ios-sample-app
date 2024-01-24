@@ -39,6 +39,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     let popAppealWithAnimation = PublishSubject<Void>()
 
     fileprivate let data: OWAppealRequiredData
+    fileprivate var commenterAppealView: UIView? = nil
 
     init(router: OWRoutering? = nil,
          appealData: OWAppealRequiredData,
@@ -52,7 +53,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
         guard let router = router else { return .empty() }
-        let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(commentId: data.commentId)
+        let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(commentId: data.commentId, viewableMode: .partOfFlow)
         let commenterAppealVC = OWCommenterAppealVC(viewModel: commenterAppealVM)
 
         setupObservers(for: commenterAppealVM.outputs.commenterAppealViewViewModel)
@@ -93,10 +94,15 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commenterAppealViewVM: OWCommenterAppealViewViewModeling = OWCommenterAppealViewVM(commentId: data.commentId)
+        let commenterAppealViewVM: OWCommenterAppealViewViewModeling = OWCommenterAppealViewVM(
+            commentId: data.commentId,
+            viewableMode: .independent
+        )
         setupViewActionsCallbacks(forViewModel: commenterAppealViewVM)
+        setupObservers(for: commenterAppealViewVM)
 
         let commenterAppealView = OWCommenterAppealView(viewModel: commenterAppealViewVM)
+        self.commenterAppealView = commenterAppealView
         return .just(commenterAppealView)
     }
 }
@@ -118,15 +124,10 @@ fileprivate extension OWCommenterAppealCoordinator {
                     .map { (placeholderText, $0) }
                     .take(1)
             })
-//            .flatMap({ placeholderText, textViewText -> Observable<(String, String, Bool)> in
-//                return viewModel.outputs.reportReasonsCharectersLimitEnabled
-//                    .map { (placeholderText, textViewText, $0) }
-//                    .take(1)
-//            })
             .delay(.milliseconds(Metrics.delayTapForOpenAdditionalInfo), scheduler: MainScheduler.asyncInstance)
             .observe(on: MainScheduler.instance)
             .map { placeholderText, textViewText -> OWAdditionalInfoViewViewModel in
-                return OWAdditionalInfoViewViewModel(viewableMode: .partOfFlow, // TODO: viewModel.outputs.viewableMode,
+                return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                      placeholderText: placeholderText,
                                                      textViewText: textViewText,
                                                      textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
@@ -139,14 +140,28 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Open Additional information - Flow
         additionalInformationObservable
-//            .filter { _ in
-//                viewModel.outputs.viewableMode == .partOfFlow
-//            }
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
             .subscribe(onNext: { [weak self] additionalInfoViewVM in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
                 let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
                 router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        // Open Additional information - Independent
+        additionalInformationObservable
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .subscribe(onNext: { [weak self] additionalInfoViewVM in
+                guard let self = self else { return }
+                let additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.displayViewWithAnimation(view: additionalInfoView)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -157,7 +172,7 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
 
         // Additional information empty text close - General
-        let additionalInfoCloseReportReasonTapped = additionalInformationObservable
+        let additionalInfoCloseAppealTapped = additionalInformationObservable
             .flatMap { additionalInfoViewVM -> Observable<Void> in
                 return additionalInfoViewVM.outputs.closeReportReasonTapped
             }
@@ -182,7 +197,8 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Open cancel observable - General
         let cancelAppeal = Observable.merge(viewModel.outputs.cancelAppeal,
-                                            cancelAdditionalInfoTapped)
+                                            cancelAdditionalInfoTapped,
+                                            additionalInfoCloseAppealTapped)
             .map { _ -> OWCancelViewViewModel in
                 return OWCancelViewViewModel(type: .commenterAppeal)
             }
@@ -190,9 +206,9 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Open cancel view - Flow
         cancelAppeal
-//            .filter { _ in
-//                viewModel.outputs.viewableMode == .partOfFlow
-//            }
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
             .subscribe(onNext: { [weak self] vm in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
@@ -205,9 +221,9 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Close cancel screen - Flow
         cancelAppeal
-//            .filter { _ in
-//                viewModel.outputs.viewableMode == .partOfFlow
-//            }
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
             .flatMap { cancelViewVM -> Observable<Void> in
                 return cancelViewVM.outputs.closeTapped
             }
@@ -268,6 +284,27 @@ fileprivate extension OWCommenterAppealCoordinator {
             })
             .bind(to: self.popAppealWithAnimation)
             .disposed(by: disposeBag)
+
+        // Close Appeal
+        let closeAppealCallbackObservable = cancelAppeal
+            .debug("NOGAH: closeAppealCallbackObservable")
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .voidify()
+            .map { OWViewActionCallbackType.closeReportReason }
+
+        // Setup view actions callbacks - Independent mode only
+        Observable.merge(closeAppealCallbackObservable)
+            .debug("NOGAH: closeAppealCallbackObservable merge")
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .subscribe(onNext: { [weak self] viewAction in
+                guard let self = self else { return }
+                self.viewActionsService.append(viewAction: viewAction)
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
 
@@ -285,5 +322,17 @@ fileprivate extension OWCommenterAppealCoordinator {
             self?.viewActionsService.append(viewAction: viewActionType)
         })
         .disposed(by: disposeBag)
+    }
+
+    // Use to display screens in independed mode
+    func displayViewWithAnimation(view: UIView) {
+        view.alpha = 0
+        self.commenterAppealView?.addSubview(view)
+        UIView.animate(withDuration: Metrics.fadeDuration) {
+            view.alpha = 1
+        }
+        view.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 }
