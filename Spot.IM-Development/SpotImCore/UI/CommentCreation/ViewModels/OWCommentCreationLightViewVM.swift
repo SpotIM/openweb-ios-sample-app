@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentCreationLightViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
+    var commentCreationError: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationLightViewViewModelingOutputs {
@@ -47,6 +48,8 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
+    var commentCreationError = PublishSubject<Void>()
+    
     fileprivate lazy var postId = OWManager.manager.postId
 
     var commentType: OWCommentCreationTypeInternal
