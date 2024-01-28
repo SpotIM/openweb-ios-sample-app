@@ -49,7 +49,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     var commentCreationError = PublishSubject<Void>()
-    
+
     fileprivate lazy var postId = OWManager.manager.postId
 
     var commentType: OWCommentCreationTypeInternal
