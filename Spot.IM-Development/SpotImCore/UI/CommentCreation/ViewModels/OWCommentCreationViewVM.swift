@@ -62,6 +62,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate lazy var postId: OWPostId = OWManager.manager.postId ?? ""
 
     fileprivate let _commentCreationSubmitInProgrss = BehaviorSubject<Bool>(value: false)
+    fileprivate let _commentCreationError = PublishSubject<Void>()
 
     fileprivate let _userJustLoggedIn = PublishSubject<Void>()
     var userJustLoggedIn: Observable<Void> {
@@ -234,6 +235,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 case .error(_):
                     // TODO - Handle error
                     self._commentCreationSubmitInProgrss.onNext(false)
+                    self._commentCreationError.onNext()
                     return nil
                 default:
                     return nil
@@ -494,13 +496,25 @@ fileprivate extension OWCommentCreationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        self._commentCreationSubmitInProgrss
+        _commentCreationSubmitInProgrss
             .subscribe(onNext: { [weak self] isInProgress in
                 guard let self = self else { return }
                 self.commentCreationRegularViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
                 self.commentCreationLightViewVm.outputs.footerViewModel.inputs.submitCommentInProgress.onNext(isInProgress)
                 self.commentCreationFloatingKeyboardViewVm.inputs.submitCommentInProgress.onNext(isInProgress)
             })
+            .disposed(by: disposeBag)
+
+        _commentCreationError
+            .bind(to: commentCreationRegularViewVm.inputs.commentCreationError)
+            .disposed(by: disposeBag)
+
+        _commentCreationError
+            .bind(to: commentCreationLightViewVm.inputs.commentCreationError)
+            .disposed(by: disposeBag)
+
+        _commentCreationError
+            .bind(to: commentCreationFloatingKeyboardViewVm.inputs.commentCreationError)
             .disposed(by: disposeBag)
     }
 

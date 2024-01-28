@@ -18,6 +18,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var initialTextUsed: PublishSubject<Void> { get }
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
+    var commentCreationError: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -58,6 +59,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
     var outputs: OWCommentCreationFloatingKeyboardViewViewModelingOutputs { return self }
+
+    var commentCreationError = PublishSubject<Void>()
 
     var viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
