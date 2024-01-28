@@ -17,7 +17,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let ctaViewSlideAnimationDuration: Double = 0.25
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
-        static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
         static let throttleObserveTableViewDuration = 500
         static let scrolledToTopDelay = 300
@@ -89,7 +88,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         }
 
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
 
         return tableView
     }()
