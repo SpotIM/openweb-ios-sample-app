@@ -105,6 +105,11 @@ class OWCommentViewModel: OWCommentViewModeling,
         contentVM.inputs.update(comment: comment)
         commentStatusVM.inputs.updateStatus(for: comment)
         commentEngagementVM.inputs.update(for: comment)
+
+        if let userId = comment.userId,
+           let user = self.sharedServiceProvider.usersService().get(userId: userId) {
+            self.update(user: user)
+        }
     }
 
     func update(user: SPUser) {
