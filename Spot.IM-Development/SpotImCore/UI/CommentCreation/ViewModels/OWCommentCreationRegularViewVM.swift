@@ -12,6 +12,7 @@ import RxSwift
 protocol OWCommentCreationRegularViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
+    var commentCreationError: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
@@ -40,6 +41,8 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    var commentCreationError = PublishSubject<Void>()
 
     fileprivate lazy var postId = OWManager.manager.postId
 
