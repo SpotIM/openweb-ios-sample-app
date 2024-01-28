@@ -15,6 +15,7 @@ protocol OWCommentRatingViewModelingInputs {
     var rankChanged: PublishSubject<SPRankChange> { get }
     var tapRankUp: PublishSubject<Void> { get }
     var tapRankDown: PublishSubject<Void> { get }
+    func update(for votingModel: OWCommentVotingModel)
 }
 
 protocol OWCommentRatingViewModelingOutputs {
@@ -96,6 +97,12 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
         _rankedByUser.onNext(model.rankedByUserValue)
         self.commentId = commentId
         setupObservers()
+    }
+
+    func update(for votingModel: OWCommentVotingModel) {
+        _rankUp.onNext(votingModel.rankUpCount)
+        _rankDown.onNext(votingModel.rankDownCount)
+        _rankedByUser.onNext(votingModel.rankedByUserValue)
     }
 
     var rankUpText: Observable<String> {

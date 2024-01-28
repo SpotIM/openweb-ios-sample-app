@@ -15,6 +15,7 @@ protocol OWCommentEngagementViewModelingInputs {
     var replyClicked: PublishSubject<Void> { get }
     var shareClicked: PublishSubject<Void> { get }
     var isReadOnly: BehaviorSubject<Bool> { get }
+    func update(for comment: OWComment)
 }
 
 protocol OWCommentEngagementViewModelingOutputs {
@@ -80,19 +81,26 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }
 
-    fileprivate var _repliesCount = BehaviorSubject<Int>(value: 0)
-
     init(comment: OWComment, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
-        _repliesCount.onNext(comment.repliesCount ?? 0)
-        let rank = comment.rank ?? OWComment.Rank()
         self.commentId = comment.id ?? ""
         self.parentCommentId = comment.parentId
+        let rank = comment.rank ?? OWComment.Rank()
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(
             rankUpCount: rank.ranksUp ?? 0,
             rankDownCount: rank.ranksDown ?? 0,
             rankedByUserValue: rank.rankedByCurrentUser ?? 0
         ), commentId: commentId)
+    }
+
+    func update(for comment: OWComment) {
+        let rank = comment.rank ?? OWComment.Rank()
+        let votingModel = OWCommentVotingModel(
+            rankUpCount: rank.ranksUp ?? 0,
+            rankDownCount: rank.ranksDown ?? 0,
+            rankedByUserValue: rank.rankedByCurrentUser ?? 0
+        )
+        votingVM.inputs.update(for: votingModel)
     }
 
     init(sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
