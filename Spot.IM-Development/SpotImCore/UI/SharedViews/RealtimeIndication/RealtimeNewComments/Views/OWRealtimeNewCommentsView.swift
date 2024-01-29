@@ -86,6 +86,14 @@ fileprivate extension OWRealtimeNewCommentsView {
                 self.titleLabel.font = Metrics.font
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = Metrics.font
+            })
+            .disposed(by: disposeBag)
     }
 }
 
