@@ -327,6 +327,19 @@ fileprivate extension ConversationBelowVideoVC {
                 }
             })
             .disposed(by: disposeBag)
+
+        // Chaning clarity details height according to the keyboard
+        keyboardHeight
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self, self.clarityDetails != nil,
+                let clarityDetailsHeightConstraint = self.clarityDetailsHeightConstraint else { return }
+                let adjustedHeight = height == 0 ? 0 : height - self.view.safeAreaInsets.bottom
+                clarityDetailsHeightConstraint.update(offset: -adjustedHeight)
+                UIView.animate(withDuration: Metrics.keyboardAnimationDuration) {
+                    self.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     func setupVideo() {
