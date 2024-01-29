@@ -107,7 +107,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                         popCompletion: conversationPopped)
         }
 
-        // CTA tapped from conversation screen
+        // CTA, Reply or Edit tapped from conversation screen
         let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCommentCreationRequiredData? in
