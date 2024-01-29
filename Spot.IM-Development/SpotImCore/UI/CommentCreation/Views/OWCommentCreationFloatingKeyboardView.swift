@@ -287,11 +287,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         }
 
         footerView.addSubview(ctaButton)
-        let landscapeTrailing = Metrics.horizontalLandscapeMargin
-        let portraitTrailing = Metrics.textViewHorizontalPadding
         ctaButton.OWSnp.makeConstraints { make in
             make.leading.equalTo(textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-            make.trailing.equalToSuperviewSafeArea().inset(-Metrics.ctaButtonSize + (isLandscape ? landscapeTrailing : portraitTrailing))
+            make.trailing.equalToSuperviewSafeArea().inset(-Metrics.ctaButtonSize + (isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.textViewHorizontalPadding))
             make.size.equalTo(Metrics.ctaButtonSize)
             make.bottom.equalTo(textViewObject.OWSnp.bottom)
         }
@@ -442,10 +440,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                         make.leading.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.userAvatarLeadingPadding)
                     }
 
-                    let landscapeTrailing = Metrics.horizontalLandscapeMargin
-                    let portraitTrailing = Metrics.textViewHorizontalPadding
                     self.ctaButton.OWSnp.updateConstraints { make in
-                        make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? landscapeTrailing : portraitTrailing)
+                        make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.textViewHorizontalPadding)
                     }
                 }
             })
@@ -500,10 +496,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 self.mainContainer.OWSnp.updateConstraints { make in
                     make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
                 }
-                let landscapeTrailing = Metrics.horizontalLandscapeMargin
-                let portraitTrailing = Metrics.textViewHorizontalPadding
                 self.ctaButton.OWSnp.updateConstraints { make in
-                    make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? landscapeTrailing : portraitTrailing)
+                    make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.textViewHorizontalPadding)
                 }
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
@@ -532,8 +526,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
                 let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
                 let isLandscape = currentOrientation == .landscape
-                let landscapeTrailing = Metrics.horizontalLandscapeMargin
-                let portraitTrailing = Metrics.textViewHorizontalPadding
 
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
@@ -542,7 +534,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                     self.ctaButton.alpha(0)
                     self.ctaButton.OWSnp.updateConstraints { make in
                         make.leading.equalTo(self.textViewObject.OWSnp.trailing).offset(Metrics.textViewHorizontalPadding)
-                        make.trailing.equalToSuperviewSafeArea().inset(-Metrics.ctaButtonSize + (isLandscape ? landscapeTrailing : portraitTrailing))
+                        make.trailing.equalToSuperviewSafeArea().inset(-Metrics.ctaButtonSize + (isLandscape ? Metrics.horizontalLandscapeMargin : Metrics.textViewHorizontalPadding))
                     }
                     if case .comment = self.viewModel.outputs.commentType {} else {
                         self.headerView.OWSnp.updateConstraints { make in
