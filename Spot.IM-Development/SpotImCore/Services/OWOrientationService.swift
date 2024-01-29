@@ -81,7 +81,7 @@ fileprivate extension OWOrientationService {
     }
 
     func dictateSDKOrientation(currentDevice: UIDevice) -> OWOrientation {
-        // At the momment in independent/iPad we desided to support only in portrait
+        // At the moment in independent/iPad we decided to support only in portrait
         guard self._viewableMode != .independent,
               currentDevice.userInterfaceIdiom != .pad else { return .portrait }
 
