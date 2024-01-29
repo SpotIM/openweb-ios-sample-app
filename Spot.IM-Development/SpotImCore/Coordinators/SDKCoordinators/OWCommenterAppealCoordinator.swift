@@ -110,7 +110,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 fileprivate extension OWCommenterAppealCoordinator {
     // swiftlint:disable function_body_length
     func setupObservers(for viewModel: OWCommenterAppealViewViewModeling) {
-        // ReportReaon OWTextViewVM - General
+        // Appeal OWTextViewVM - General
         let textViewVM = viewModel.outputs.textViewVM
 
         // Additional information observable - General
@@ -131,7 +131,7 @@ fileprivate extension OWCommenterAppealCoordinator {
                                                      placeholderText: placeholderText,
                                                      textViewText: textViewText,
                                                      textViewMaxCharecters: viewModel.outputs.textViewVM.outputs.textViewMaxCharecters,
-                                                     charectersLimitEnabled: true, // TODO: ?
+                                                     charectersLimitEnabled: true,
                                                      isTextRequired: viewModel.outputs.selectedReason.map { $0.requiredAdditionalInfo },
                                                      submitInProgress: viewModel.outputs.submitInProgress,
                                                      submitText: viewModel.outputs.submitButtonText)
@@ -177,6 +177,8 @@ fileprivate extension OWCommenterAppealCoordinator {
                 return additionalInfoViewVM.outputs.closeReportReasonTapped
             }
 
+        // TODO: close when additionalInfoCloseAppealTapped (both flow & independed)
+
         // Additional information text changed - General
         additionalInformationObservable
             .flatMap { additionalInformationViewVM -> Observable<String> in
@@ -197,8 +199,7 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Open cancel observable - General
         let cancelAppeal = Observable.merge(viewModel.outputs.cancelAppeal,
-                                            cancelAdditionalInfoTapped,
-                                            additionalInfoCloseAppealTapped)
+                                            cancelAdditionalInfoTapped)
             .map { _ -> OWCancelViewViewModel in
                 return OWCancelViewViewModel(type: .commenterAppeal)
             }
@@ -216,6 +217,20 @@ fileprivate extension OWCommenterAppealCoordinator {
                 let cancelVC = OWCancelVC(cancelViewModel: cancelVM)
 
                 router.push(cancelVC, pushStyle: .present, animated: true, popCompletion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        // Open cancel view - Independent
+        cancelAppeal
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .subscribe(onNext: { [weak self] vm in
+                guard let self = self else { return }
+                let cancelView = OWCancelView(viewModel: vm)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.displayViewWithAnimation(view: cancelView)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -237,6 +252,9 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Cancel Appeal - Flow
         cancelAppeal
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
             .flatMap { cancelViewVM -> Observable<Void> in
                 return cancelViewVM.outputs.cancelTapped
             }
@@ -249,11 +267,21 @@ fileprivate extension OWCommenterAppealCoordinator {
             .bind(to: self.popAppealWithAnimation)
             .disposed(by: disposeBag)
 
+        // Cancel Appeal - independent
+        let closeAppealCallbackObservable = cancelAppeal
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .flatMap { cancelViewVM -> Observable<Void> in
+                cancelViewVM.outputs.cancelTapped
+            }
+            .map { OWViewActionCallbackType.closeClarityDetails }
+
         // Open submitted observable - Flow
         let closeSubmitted = Observable.merge(viewModel.outputs.appealSubmittedSuccessfully)
-//            .filter { _ in
-//                viewModel.outputs.viewableMode == .partOfFlow
-//            }
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
@@ -264,6 +292,8 @@ fileprivate extension OWCommenterAppealCoordinator {
                 router.push(submittedVC, pushStyle: .present, animated: true, popCompletion: nil)
                 return submittedViewVM.outputs.closeSubmittedTapped
             }
+
+        // TODO: open submitted - independent
 
         // Close submitted
         closeSubmitted
@@ -285,18 +315,8 @@ fileprivate extension OWCommenterAppealCoordinator {
             .bind(to: self.popAppealWithAnimation)
             .disposed(by: disposeBag)
 
-        // Close Appeal
-        let closeAppealCallbackObservable = cancelAppeal
-            .debug("NOGAH: closeAppealCallbackObservable")
-            .filter { _ in
-                viewModel.outputs.viewableMode == .independent
-            }
-            .voidify()
-            .map { OWViewActionCallbackType.closeReportReason }
-
         // Setup view actions callbacks - Independent mode only
         Observable.merge(closeAppealCallbackObservable)
-            .debug("NOGAH: closeAppealCallbackObservable merge")
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
@@ -309,7 +329,8 @@ fileprivate extension OWCommenterAppealCoordinator {
     // swiftlint:enable function_body_length
 
     func setupViewActionsCallbacks(forViewModel viewModel: OWCommenterAppealViewViewModeling) {
-//        guard viewModel.outputs.viewableMode == .independent else { return } // TODO: 
+        guard viewModel.outputs.viewableMode == .independent else { return }
+
         guard actionsCallbacks != nil else { return } // Make sure actions callbacks are available/provided
 
         let closeButtonClick = viewModel.outputs.closeButtonPopped
