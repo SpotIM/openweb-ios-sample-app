@@ -121,7 +121,11 @@ class OWRouter: NSObject, OWRoutering {
             navigationController?.pushViewController(module.toPresentable(), animated: false)
         case .presentOverFullScreen:
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
-            navigationController?.pushViewController(module.toPresentable(), animated: animated)
+            if let viewController = navigationController?.viewControllers.last {
+                viewController.addChild(module.toPresentable())
+                viewController.view.addSubview(module.toPresentable().view)
+                module.toPresentable().didMove(toParent: viewController)
+            }
         }
     }
 
@@ -134,7 +138,14 @@ class OWRouter: NSObject, OWRoutering {
 
     func pop(popStyle: OWScreenPopStyle, animated: Bool) {
         switch popStyle {
-        case .regular, .dismissOverFullScreen:
+        case .dismissOverFullScreen:
+            if let viewController = navigationController?.viewControllers.last?.children.first {
+                viewController.willMove(toParent: nil)
+                viewController.removeFromParent()
+                viewController.view.removeFromSuperview()
+                runCompletion(for: viewController)
+            }
+        case .regular:
             if let controller = navigationController?.popViewController(animated: animated) {
                 runCompletion(for: controller)
             }
