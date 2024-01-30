@@ -91,13 +91,5 @@ fileprivate extension OWRealtimeTypingView {
                 self.typingLabel.font = font
             })
             .disposed(by: disposeBag)
-
-        OWSharedServicesProvider.shared.appLifeCycle()
-            .didChangeContentSizeCategory
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self.typingLabel.font = Metrics.font
-            })
-            .disposed(by: disposeBag)
     }
 }
