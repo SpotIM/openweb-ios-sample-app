@@ -252,7 +252,10 @@ fileprivate extension OWPreConversationCoordinator {
             .disposed(by: disposeBag)
     }
 
+    // swiftlint:disable function_body_length
     func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
+        // swiftlint:enable function_body_length
+
         // Set customized pre conversation summary header
         let summaryHeaderCustomizeTitle = viewModel.outputs.preConversationSummaryVM
             .outputs.customizeTitleLabelUI
