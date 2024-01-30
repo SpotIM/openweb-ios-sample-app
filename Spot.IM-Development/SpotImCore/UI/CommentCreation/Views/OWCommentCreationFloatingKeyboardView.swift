@@ -424,26 +424,25 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         // Handle orientation change
         OWSharedServicesProvider.shared.orientationService()
             .orientation
+            .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 guard let self = self else { return }
                 let isLandscape = currentOrientation == .landscape
 
-                if !self.keyboardWasHidden {
-                    self.headerIconView.OWSnp.updateConstraints { make in
-                        make.leading.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.leadingLandscapeMargin : Metrics.headerIconLeadingPadding)
-                    }
+                self.headerIconView.OWSnp.updateConstraints { make in
+                    make.leading.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.leadingLandscapeMargin : Metrics.headerIconLeadingPadding)
+                }
 
-                    self.headerCloseButton.OWSnp.updateConstraints { make in
-                        make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.trailingLandscapeMargin : Metrics.headerTrailingPadding)
-                    }
+                self.headerCloseButton.OWSnp.updateConstraints { make in
+                    make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.trailingLandscapeMargin : Metrics.headerTrailingPadding)
+                }
 
-                    self.userAvatarView.OWSnp.updateConstraints { make in
-                        make.leading.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.leadingLandscapeMargin : Metrics.userAvatarLeadingPadding)
-                    }
+                self.userAvatarView.OWSnp.updateConstraints { make in
+                    make.leading.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.leadingLandscapeMargin : Metrics.userAvatarLeadingPadding)
+                }
 
-                    self.ctaButton.OWSnp.updateConstraints { make in
-                        make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.trailingLandscapeMargin : Metrics.ctaButtonHorizontalPadding)
-                    }
+                self.ctaButton.OWSnp.updateConstraints { make in
+                    make.trailing.equalToSuperviewSafeArea().inset(isLandscape ? Metrics.trailingLandscapeMargin : Metrics.ctaButtonHorizontalPadding)
                 }
             })
             .disposed(by: disposeBag)
