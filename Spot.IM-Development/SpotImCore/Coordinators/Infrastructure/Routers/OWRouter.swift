@@ -56,6 +56,9 @@ extension OWRoutering {
 class OWRouter: NSObject, OWRoutering {
     fileprivate struct Metrics {
         static let transitionDuration = 0.5
+        static let animationDelay = 0.5
+        static let removeChildAnimationDuration = 0.3
+        static let addChildAnimationDuration = 0.5
     }
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
@@ -121,10 +124,19 @@ class OWRouter: NSObject, OWRoutering {
             navigationController?.pushViewController(module.toPresentable(), animated: false)
         case .presentOverFullScreen:
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
+            navigationController?.pushViewController(module.toPresentable(), animated: animated)
+        case .addAsChild:
             if let viewController = navigationController?.viewControllers.last {
                 viewController.addChild(module.toPresentable())
                 viewController.view.addSubview(module.toPresentable().view)
                 module.toPresentable().didMove(toParent: viewController)
+
+                if animated {
+                    module.toPresentable().view.alpha = 0
+                    UIView.animate(withDuration: Metrics.addChildAnimationDuration) {
+                        module.toPresentable().view.alpha = 1
+                    }
+                }
             }
         }
     }
@@ -138,14 +150,7 @@ class OWRouter: NSObject, OWRoutering {
 
     func pop(popStyle: OWScreenPopStyle, animated: Bool) {
         switch popStyle {
-        case .dismissOverFullScreen:
-            if let viewController = navigationController?.viewControllers.last?.children.first {
-                viewController.willMove(toParent: nil)
-                viewController.removeFromParent()
-                viewController.view.removeFromSuperview()
-                runCompletion(for: viewController)
-            }
-        case .regular:
+        case .regular, .dismissOverFullScreen:
             if let controller = navigationController?.popViewController(animated: animated) {
                 runCompletion(for: controller)
             }
@@ -158,6 +163,22 @@ class OWRouter: NSObject, OWRoutering {
             navigationController?.view.layer.add(transition, forKey: kCATransition)
             if let controller = navigationController?.popViewController(animated: false) {
                 runCompletion(for: controller)
+            }
+        case .removeChild:
+            if let viewController = navigationController?.viewControllers.last?.children.first {
+                if animated {
+                    UIView.animate(withDuration: Metrics.removeChildAnimationDuration, delay: Metrics.animationDelay) {
+                        viewController.view.alpha = 0
+                    } completion: { _ in
+                        viewController.willMove(toParent: nil)
+                        viewController.removeFromParent()
+                        viewController.view.removeFromSuperview()
+                    }
+                } else {
+                    viewController.willMove(toParent: nil)
+                    viewController.removeFromParent()
+                    viewController.view.removeFromSuperview()
+                }
             }
         }
     }
