@@ -424,6 +424,9 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         // Handle orientation change
         OWSharedServicesProvider.shared.orientationService()
             .orientation
+            // Skip first orientation subscription's onNext .share(replay: 1)
+            // since we dont want the initial UI to be messed up before the keyboard
+            // shows with animation and puts objects into their final position.
             .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 guard let self = self else { return }
