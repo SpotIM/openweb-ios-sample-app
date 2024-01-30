@@ -56,9 +56,7 @@ extension OWRoutering {
 class OWRouter: NSObject, OWRoutering {
     fileprivate struct Metrics {
         static let transitionDuration = 0.5
-        static let animationDelay = 0.5
-        static let removeChildAnimationDuration = 0.3
-        static let addChildAnimationDuration = 0.5
+        static let childAnimationDuration = 0.3
     }
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
@@ -133,7 +131,7 @@ class OWRouter: NSObject, OWRoutering {
 
                 if animated {
                     module.toPresentable().view.alpha = 0
-                    UIView.animate(withDuration: Metrics.addChildAnimationDuration) {
+                    UIView.animate(withDuration: Metrics.childAnimationDuration) {
                         module.toPresentable().view.alpha = 1
                     }
                 }
@@ -167,17 +165,19 @@ class OWRouter: NSObject, OWRoutering {
         case .removeChild:
             if let viewController = navigationController?.viewControllers.last?.children.first {
                 if animated {
-                    UIView.animate(withDuration: Metrics.removeChildAnimationDuration, delay: Metrics.animationDelay) {
+                    UIView.animate(withDuration: Metrics.childAnimationDuration) {
                         viewController.view.alpha = 0
-                    } completion: { _ in
+                    } completion: { [weak self] _ in
                         viewController.willMove(toParent: nil)
                         viewController.removeFromParent()
                         viewController.view.removeFromSuperview()
+                        self?.runCompletion(for: viewController)
                     }
                 } else {
                     viewController.willMove(toParent: nil)
                     viewController.removeFromParent()
                     viewController.view.removeFromSuperview()
+                    runCompletion(for: viewController)
                 }
             }
         }
