@@ -277,6 +277,23 @@ fileprivate extension OWPreConversationCoordinator {
                                                                       summaryHeaderCustomizeOnlineUsersIcon,
                                                                       summaryHeaderCustomizeOnlineUsersCounter)
 
+        // Set customized login prompt
+        let loginPromptCustomizeLockImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeLockIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .lockIcon(imageView: $0)) }
+
+        let loginPromptCustomizeTitle = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.loginPrompt(element: .title(label: $0)) }
+
+        let loginPromptCustomizeArrowImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeArrowIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .arrowIcon(imageView: $0)) }
+
+        let loginPromptCustomizationElementsObservable = Observable.merge(loginPromptCustomizeLockImage,
+                                                                          loginPromptCustomizeTitle,
+                                                                          loginPromptCustomizeArrowImage)
+
         // Set customized community question
         let communityQuestionCustomizeContainer = viewModel.outputs.communityQuestionViewModel
             .outputs.customizeQuestionContainerViewUI
@@ -362,6 +379,7 @@ fileprivate extension OWPreConversationCoordinator {
                                                                                  commentingReadOnlyCustomizeTitle)
 
         let customizationElementsObservables = Observable.merge(summaryCustomizationElementsObservable,
+                                                                loginPromptCustomizationElementsObservable,
                                                                 communityQuestionCustomizationElementObservable,
                                                                 communityGuidelinesCustomizationElementObservable,
                                                                 commentCreationEntryCustomizationElementsObservable,
