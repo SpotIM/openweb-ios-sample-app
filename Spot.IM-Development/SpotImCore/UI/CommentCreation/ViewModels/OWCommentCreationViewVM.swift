@@ -80,6 +80,23 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
+    fileprivate lazy var _commentImage: Observable<OWCommentImage?> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentImageOutput
+        case .light:
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentImageOutput
+        case .floatingKeyboard:
+            return Observable.just(nil)
+        }
+    }()
+
+    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?)> = {
+        Observable.combineLatest(_commentText, _commentImage) { commentText, commentImage in
+            return (commentText, commentImage)
+        }
+    }()
+
     lazy var closeButtonTapped: Observable<Void> = {
         let commentTextAfterTapObservable: Observable<String>
         switch commentCreationData.settings.commentCreationSettings.style {
@@ -95,7 +112,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     guard let self = self else { return }
                     let hasText = !commentText.isEmpty
                     if hasText {
-                        self.cacheComment(text: commentText)
+                        self.cacheComment(text: commentText, image: nil)
                     } else {
                         self.clearCachedCommentIfNeeded()
                     }
@@ -107,10 +124,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
-            .flatMap { [weak self] commentText -> Observable<Void> in
+            .withLatestFrom(_commentImage) { ($0, $1) }
+            .flatMap { [weak self] commentText, commentImage -> Observable<Void> in
                 guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
-                guard hasText else {
+                let hasImage = commentImage != nil
+                guard hasText || hasImage else {
                     self.clearCachedCommentIfNeeded()
                     return Observable.just(())
                 }
@@ -128,7 +147,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                         case .selected(let action):
                             switch action.type {
                             case OWCloseEditorAlert.yes:
-                                self.cacheComment(text: commentText)
+                                self.cacheComment(text: commentText, image: commentImage)
                                 self.sendEvent(for: .commentCreationLeavePage)
                                 return Observable.just(())
                             default:
@@ -375,11 +394,14 @@ fileprivate extension OWCommentCreationViewViewModel {
                 return nil
             }
         }
-        .withLatestFrom(_commentText) { ($0, $1) }
-        .do(onNext: { [weak self] replyToCommentId, commentText in
+        .withLatestFrom(_commentContent) { ($0, $1) }
+        .do(onNext: { [weak self] replyToCommentId, commentContent in
             guard let self = self else { return }
             if replyToCommentId != nil {
-                self.cacheComment(text: commentText)
+                let commentText = commentContent.0
+                let commentImage = commentContent.1
+
+                self.cacheComment(text: commentText, image: commentImage)
             }
         })
         .subscribe(onNext: { [weak self] replyToCommentId, _ in
@@ -504,18 +526,18 @@ fileprivate extension OWCommentCreationViewViewModel {
             .disposed(by: disposeBag)
     }
 
-    func cacheComment(text commentText: String) {
+    func cacheComment(text commentText: String, image commentImage: OWCommentImage?) {
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
 
         switch commentCreationData.commentCreationType {
         case .comment:
-            commentsCacheService[.comment(postId: self.postId)] = commentText
+            commentsCacheService[.comment(postId: self.postId)] = OWCachedComment(text: commentText, image: commentImage)
             commentsCacheService.remove(forKey: .edit(postId: self.postId))
         case .replyToComment(let originComment):
             guard let originCommentId = originComment.id else { return }
-            commentsCacheService[.reply(postId: self.postId, commentId: originCommentId)] = commentText
+            commentsCacheService[.reply(postId: self.postId, commentId: originCommentId)] = OWCachedComment(text: commentText, image: commentImage)
         case .edit:
-            commentsCacheService[.edit(postId: self.postId)] = commentText
+            commentsCacheService[.edit(postId: self.postId)] = OWCachedComment(text: commentText, image: commentImage)
         }
     }
 
