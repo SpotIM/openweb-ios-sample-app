@@ -124,19 +124,18 @@ class OWRouter: NSObject, OWRoutering {
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
         case .addAsChild:
-            if let viewController = navigationController?.viewControllers.last {
-                viewController.addChild(module.toPresentable())
-                viewController.view.addSubview(module.toPresentable().view)
-                module.toPresentable().view.OWSnp.makeConstraints { make in
-                    make.edges.equalToSuperview()
-                }
-                module.toPresentable().didMove(toParent: viewController)
-
-                if animated {
-                    module.toPresentable().view.alpha = 0
-                    UIView.animate(withDuration: Metrics.childAnimationDuration) {
-                        module.toPresentable().view.alpha = 1
-                    }
+            guard let viewController = navigationController?.viewControllers.last else { return }
+            let presentable = module.toPresentable()
+            viewController.addChild(presentable)
+            viewController.view.addSubview(presentable.view)
+            presentable.view.OWSnp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            presentable.didMove(toParent: viewController)
+            if animated {
+                presentable.view.alpha = 0
+                UIView.animate(withDuration: Metrics.childAnimationDuration) {
+                    presentable.view.alpha = 1
                 }
             }
         }
@@ -166,22 +165,21 @@ class OWRouter: NSObject, OWRoutering {
                 runCompletion(for: controller)
             }
         case .removeChild:
-            if let viewController = navigationController?.viewControllers.last?.children.first {
-                if animated {
-                    UIView.animate(withDuration: Metrics.childAnimationDuration) {
-                        viewController.view.alpha = 0
-                    } completion: { [weak self] _ in
-                        viewController.willMove(toParent: nil)
-                        viewController.removeFromParent()
-                        viewController.view.removeFromSuperview()
-                        self?.runCompletion(for: viewController)
-                    }
-                } else {
+            guard let viewController = navigationController?.viewControllers.last?.children.first else { return }
+            if animated {
+                UIView.animate(withDuration: Metrics.childAnimationDuration) {
+                    viewController.view.alpha = 0
+                } completion: { [weak self] _ in
                     viewController.willMove(toParent: nil)
                     viewController.removeFromParent()
                     viewController.view.removeFromSuperview()
-                    runCompletion(for: viewController)
+                    self?.runCompletion(for: viewController)
                 }
+            } else {
+                viewController.willMove(toParent: nil)
+                viewController.removeFromParent()
+                viewController.view.removeFromSuperview()
+                runCompletion(for: viewController)
             }
         }
     }
