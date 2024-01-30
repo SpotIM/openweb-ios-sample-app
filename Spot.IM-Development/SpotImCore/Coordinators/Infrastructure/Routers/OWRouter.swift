@@ -127,6 +127,9 @@ class OWRouter: NSObject, OWRoutering {
             if let viewController = navigationController?.viewControllers.last {
                 viewController.addChild(module.toPresentable())
                 viewController.view.addSubview(module.toPresentable().view)
+                module.toPresentable().view.OWSnp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
                 module.toPresentable().didMove(toParent: viewController)
 
                 if animated {
