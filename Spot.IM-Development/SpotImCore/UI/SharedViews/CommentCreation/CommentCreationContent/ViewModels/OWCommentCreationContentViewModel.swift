@@ -18,6 +18,7 @@ protocol OWCommentCreationContentViewModelingInputs {
 
 protocol OWCommentCreationContentViewModelingOutputs {
     var commentTextOutput: Observable<String> { get }
+    var commentImageOutput: Observable<OWCommentImage?> { get }
     var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
@@ -104,6 +105,11 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .map { $0.0 }
     }
 
+    var commentImageOutput: Observable<OWCommentImage?> {
+        _imageContent
+            .asObservable()
+    }
+
     var showPlaceholder: Observable<Bool> {
         commentTextOutput
             .map { $0.count == 0 }
@@ -180,12 +186,12 @@ fileprivate extension OWCommentCreationContentViewModel {
         switch commentCreationType {
         case .comment:
             guard let postId = self.postId else { return }
-            initialText = commentsCacheService[.comment(postId: postId)]
+            initialText = commentsCacheService[.comment(postId: postId)]?.text
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
                   let originCommentId = originComment.id
             else { return }
-            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
+            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.text
         case .edit(comment: let comment):
             if let commentText = comment.text?.text {
                 initialText = commentText
@@ -198,34 +204,49 @@ fileprivate extension OWCommentCreationContentViewModel {
     }
 
     func setupInitialImageIfNeeded() {
-        if case let .edit(comment) = commentCreationType,
-           let imageContent = comment.image {
-            Observable.just(())
-                .do(onNext: { [weak self] _ in
-                    // Set a placeholder
-                    guard let self = self else { return }
-                    if let placeholder = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false) {
-                        self.imagePreviewVM.inputs.image.onNext(placeholder)
-                    }
-                })
-                .flatMap { [weak self] _ -> Observable<URL?> in
-                    guard let self = self else { return .empty() }
-                    return self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
-                }
-                .unwrap()
-                .observe(on: MainScheduler.instance)
-                .flatMap { imageUrl -> Observable<UIImage> in
-                    return UIImage.load(with: imageUrl)
-                }
-                // we added delay to fix a case we showed empty image
-                .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
-                .subscribe(onNext: { [weak self] image in
-                    guard let self = self else { return }
-                    self.imagePreviewVM.inputs.image.onNext(image)
-                    self._imageContent.onNext(imageContent)
-                })
-                .disposed(by: disposeBag)
+        let initialImage: OWCommentImage?
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+
+        switch commentCreationType {
+        case .comment:
+            guard let postId = postId else { return }
+            initialImage = commentsCacheService[.comment(postId: postId)]?.image
+        case .replyToComment(originComment: let originComment):
+            guard let postId = self.postId,
+                  let originCommentId = originComment.id
+            else { return }
+            initialImage = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.image
+        case .edit(let comment):
+            initialImage = comment.image
         }
+
+        guard let imageContent = initialImage else { return }
+
+        Observable.just(())
+            .do(onNext: { [weak self] _ in
+                // Set a placeholder
+                guard let self = self else { return }
+                if let placeholder = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false) {
+                    self.imagePreviewVM.inputs.image.onNext(placeholder)
+                }
+            })
+            .flatMap { [weak self] _ -> Observable<URL?> in
+                guard let self = self else { return .empty() }
+                return self.imageURLProvider.imageURL(with: imageContent.imageId, size: nil)
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .flatMap { imageUrl -> Observable<UIImage> in
+                return UIImage.load(with: imageUrl)
+            }
+        // we added delay to fix a case we showed empty image
+            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .subscribe(onNext: { [weak self] image in
+                guard let self = self else { return }
+                self.imagePreviewVM.inputs.image.onNext(image)
+                self._imageContent.onNext(imageContent)
+            })
+            .disposed(by: disposeBag)
     }
 
     func textValidatorTransformer(previousText: String, newText: String, charactersLimiter: Int) -> String {
