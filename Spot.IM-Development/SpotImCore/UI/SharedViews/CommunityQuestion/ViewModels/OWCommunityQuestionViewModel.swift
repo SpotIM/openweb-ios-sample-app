@@ -86,9 +86,9 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling,
         return style == .compact
     }()
 
-    lazy var titleFont: UIFont = {
+    var titleFont: UIFont {
         return style == .compact ? OWFontBook.shared.font(typography: .bodySpecial) : OWFontBook.shared.font(typography: .titleMediumSpecial)
-    }()
+    }
 
     let style: OWCommunityQuestionStyle
     let spacing: CGFloat
