@@ -21,7 +21,7 @@ class OWLoginPromptView: UIView {
         static let arrowIconSize: CGFloat = 12
     }
 
-    fileprivate lazy var lock: UIImageView = {
+    fileprivate lazy var lockIconImangeView: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
@@ -29,7 +29,7 @@ class OWLoginPromptView: UIView {
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var label: UILabel = {
+    fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .attributedText(
                 OWLocalizationManager.shared.localizedString(key: "LoginPromptTitle")
@@ -40,7 +40,7 @@ class OWLoginPromptView: UIView {
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var arrow: UIImageView = {
+    fileprivate lazy var arrowIconImangeView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
@@ -52,23 +52,23 @@ class OWLoginPromptView: UIView {
     fileprivate lazy var loginPromptView: UIView = {
         let view = UIView()
 
-        view.addSubview(lock)
-        lock.OWSnp.makeConstraints { make in
+        view.addSubview(lockIconImangeView)
+        lockIconImangeView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview()
             make.size.equalTo(Metrics.lockIconSize)
         }
 
-        view.addSubview(label)
-        label.OWSnp.makeConstraints { make in
+        view.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.equalTo(lock.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
+            make.leading.equalTo(lockIconImangeView.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
         }
 
-        view.addSubview(arrow)
-        arrow.OWSnp.makeConstraints { make in
+        view.addSubview(arrowIconImangeView)
+        arrowIconImangeView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(label.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
+            make.leading.equalTo(titleLabel.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
             make.trailing.equalToSuperview()
             make.size.equalTo(Metrics.arrowIconSize)
         }
@@ -177,7 +177,7 @@ fileprivate extension OWLoginPromptView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.label.font = OWFontBook.shared.font(typography: .bodyInteraction)
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
 
@@ -187,9 +187,9 @@ fileprivate extension OWLoginPromptView {
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
-                self.lock.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.arrow.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.label.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.lockIconImangeView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.arrowIconImangeView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
 
                 self.updateCustomUI()
             })
@@ -201,8 +201,8 @@ fileprivate extension OWLoginPromptView {
     }
 
     func updateCustomUI() {
-        viewModel.inputs.triggerCustomizeLockIconImageViewUI.onNext(lock)
-        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(label)
-        viewModel.inputs.triggerCustomizeArrowIconImageViewUI.onNext(arrow)
+        viewModel.inputs.triggerCustomizeLockIconImageViewUI.onNext(lockIconImangeView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeArrowIconImageViewUI.onNext(arrowIconImangeView)
     }
 }
