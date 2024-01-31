@@ -63,6 +63,7 @@
 "Mute" = "Mudo";
 "MuteUser" = "Ativar mudo para usuário";
 "MuteUserMessage" = "Após silenciar este utilizador, não irá voltar a ver a sua atividade. Para gerir os utilizadores silenciados vá ao ser perfil > Definições de privacidade";
+"MuteSuccessToast" = "Utilizador silenciado";
 "Image" = "Imagem";
 "ClosedAndEmptyConversation" = "Esta conversa terminou e os comentários já não são aceites.";
 "EmptyConversation" = "Comece a conversa e partilhe os seus pensamentos e ideias com a comunidade.";
@@ -106,6 +107,7 @@
 "AdditionalInfoTitle" = "Informação adicional";
 "ReportSubmissionFailedTitle" = "Falha na submissão de relatório";
 "ReportSubmissionFailedMessage" = "Não foi possível submeter o seu relatório. Verifique a sua ligação e tente novamente mais tarde.";
+"Undo" = "Undo";
 "CollapseThread" = "Fechar conversa";
 "ViewMultipleRepliesFormat" = "Ver %d respostas";
 "ViewSingleReplyFormat" = "Ver %d resposta";
@@ -129,6 +131,7 @@
 "ViewNewComment" = "Ver %d Novo Comentário";
 "TypingNow" = "%d A escrever agora";
 "LoginPromptTitle" = "Autorizar participação";
+"SomethingWentWrong" = "Ups, ocorreu algum erro";
 
 // Old API
 "Your Username" = "Seu apelido...";
