@@ -28,6 +28,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let highlightBackgroundColorAnimationDuration: Double = 0.5
         static let highlightBackgroundColorAnimationDelay: Double = 1.0
         static let highlightBackgroundColorAlpha: Double = 0.2
+        static let delayPullToRefreshDuration = 250
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
@@ -329,11 +330,17 @@ fileprivate extension OWConversationView {
                     .asObservable()
                     .take(1)
             }
+            .do(onNext: { [weak self] _ in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
+            })
+            .delay(.milliseconds(Metrics.delayPullToRefreshDuration), scheduler: conversationViewScheduler)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     self.viewModel.inputs.pullToRefresh.onNext()
-                    self.tableView.setContentOffset(.zero, animated: true)
                 }
             })
             .disposed(by: disposeBag)
