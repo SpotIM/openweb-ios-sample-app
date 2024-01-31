@@ -64,6 +64,7 @@
 "Mute" = "Son désactivé";
 "MuteUser" = "Utilisateur muet";
 "MuteUserMessage" = "Une fois que vous aurez ignoré cet utilisateur, vous ne verrez plus son activité. Pour gérer les utilisateurs ignorés, rendez-vous dans votre profil > Paramètres de confidentialité";
+"MuteSuccessToast" = "Utilisateur mis en sourdine";
 "Image" = "Image";
 "ClosedAndEmptyConversation" = "Cette conversation est close et les commentaires ne sont plus acceptés.";
 "EmptyConversation" = "Engagez la conversation et partagez vos pensées et vos idées avec la communauté.";
@@ -107,6 +108,7 @@
 "AdditionalInfoTitle" = "Informations complémentaires";
 "ReportSubmissionFailedTitle" = "Échec de l'envoi du rapport";
 "ReportSubmissionFailedMessage" = "Votre rapport n’a pas pu être envoyé. Veuillez vérifier votre connexion et réessayer plus tard.";
+"Undo" = "Undo";
 "CollapseThread" = "Réduire le fil";
 "ViewMultipleRepliesFormat" = "Afficher %d réponses";
 "ViewSingleReplyFormat" = "Afficher une réponse";
@@ -130,6 +132,7 @@
 "ViewNewComment" = "Afficher %d nouveau commentaire";
 "TypingNow" = "%d en train de taper";
 "LoginPromptTitle" = "Autoriser à participer";
+"SomethingWentWrong" = "Aïe, une erreur s'est produite";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";

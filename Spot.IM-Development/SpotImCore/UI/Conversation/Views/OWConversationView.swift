@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
+class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let ctaViewSlideAnimationDelay = 50
@@ -32,6 +32,9 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
+
+    var toastView: OWToastView? = nil
+    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
@@ -235,6 +238,20 @@ fileprivate extension OWConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.displayToast
+            .subscribe(onNext: { [weak self] (data, action) in
+                self?.displayToast(requiredData: data.data, actionCompletion: action)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
+        setupToastObservers(disposeBag: disposeBag)
+
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
