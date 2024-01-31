@@ -1273,6 +1273,10 @@ fileprivate extension OWConversationViewViewModel {
                 commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
 
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+
+                if commentsPresentationData.isEmpty {
+                    self._isLoadingMoreComments.onNext(false)
+                }
             })
             .disposed(by: disposeBag)
 
