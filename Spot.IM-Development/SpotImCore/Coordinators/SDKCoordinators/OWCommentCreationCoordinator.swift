@@ -56,7 +56,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             case .regular, .light:
                 return .present
             case .floatingKeyboard:
-                return .presentOverFullScreen
+                return .addAsChild
             }
         }()
 
@@ -131,7 +131,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     case .regular, .light:
                         return .dismiss
                     case .floatingKeyboard:
-                        return .dismissOverFullScreen
+                        return .removeChild
                     }
                 }()
                 self.router.pop(popStyle: popStyle, animated: true)
