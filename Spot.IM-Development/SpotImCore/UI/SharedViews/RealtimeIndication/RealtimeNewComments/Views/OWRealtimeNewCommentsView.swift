@@ -16,7 +16,6 @@ class OWRealtimeNewCommentsView: UIView {
         static let horizontalPadding: CGFloat = 10
         static let iconSize: CGFloat = 16
 
-        static let font: UIFont = OWFontBook.shared.font(typography: .footnoteText)
         static let textColor: OWColor.OWType = .textColor3
         static let iconImgaeName: String = "newCommentsArrow"
     }
@@ -32,10 +31,14 @@ class OWRealtimeNewCommentsView: UIView {
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
-            .font(Metrics.font)
+            .font(font)
             .textColor(OWColorPalette.shared.color(type: Metrics.textColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
+
+    fileprivate var font: UIFont {
+        return OWFontBook.shared.font(typography: .footnoteText)
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -83,7 +86,7 @@ fileprivate extension OWRealtimeNewCommentsView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.titleLabel.font = Metrics.font
+                self.titleLabel.font = self.font
             })
             .disposed(by: disposeBag)
     }
