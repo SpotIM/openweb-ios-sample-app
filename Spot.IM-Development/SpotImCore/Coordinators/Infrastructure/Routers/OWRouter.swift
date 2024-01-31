@@ -56,6 +56,7 @@ extension OWRoutering {
 class OWRouter: NSObject, OWRoutering {
     fileprivate struct Metrics {
         static let transitionDuration = 0.5
+        static let childAnimationDuration = 0.3
     }
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
@@ -122,6 +123,21 @@ class OWRouter: NSObject, OWRoutering {
         case .presentOverFullScreen:
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
+        case .addAsChild:
+            guard let viewController = navigationController?.viewControllers.last else { return }
+            let presentable = module.toPresentable()
+            viewController.addChild(presentable)
+            viewController.view.addSubview(presentable.view)
+            presentable.view.OWSnp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            presentable.didMove(toParent: viewController)
+            if animated {
+                presentable.view.alpha = 0
+                UIView.animate(withDuration: Metrics.childAnimationDuration) {
+                    presentable.view.alpha = 1
+                }
+            }
         }
     }
 
@@ -147,6 +163,23 @@ class OWRouter: NSObject, OWRoutering {
             navigationController?.view.layer.add(transition, forKey: kCATransition)
             if let controller = navigationController?.popViewController(animated: false) {
                 runCompletion(for: controller)
+            }
+        case .removeChild:
+            guard let viewController = navigationController?.viewControllers.last?.children.first else { return }
+            if animated {
+                UIView.animate(withDuration: Metrics.childAnimationDuration) {
+                    viewController.view.alpha = 0
+                } completion: { [weak self] _ in
+                    viewController.willMove(toParent: nil)
+                    viewController.removeFromParent()
+                    viewController.view.removeFromSuperview()
+                    self?.runCompletion(for: viewController)
+                }
+            } else {
+                viewController.willMove(toParent: nil)
+                viewController.removeFromParent()
+                viewController.view.removeFromSuperview()
+                runCompletion(for: viewController)
             }
         }
     }
