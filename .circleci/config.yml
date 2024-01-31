@@ -128,6 +128,8 @@ jobs:
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             ls -l
+            git config --global user.name "ios-dev"
+            git config --global user.email "ios-dev@openweb.com"
             git branch validate/spm/sdk/$CORE_VERSION
             git checkout validate/spm/sdk/$CORE_VERSION
             git status
@@ -145,8 +147,10 @@ jobs:
 
       - run:
           name: Build app
+          no_output_timeout: 30m
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle update fastlane
             bundle exec fastlane build
 
       - run:
@@ -184,6 +188,8 @@ jobs:
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
             ls -l
+            git config --global user.name "ios-dev"
+            git config --global user.email "ios-dev@openweb.com"
             git branch validate/cocoapods/sdk/$CORE_VERSION
             git checkout validate/cocoapods/sdk/$CORE_VERSION
             git status
@@ -199,6 +205,7 @@ jobs:
 
       - run:
           name: Bundle Install
+          no_output_timeout: 30m
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
             bundle config set --local path 'vendor/bundle'
@@ -209,6 +216,7 @@ jobs:
           name: Build app
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            bundle update fastlane
             bundle exec fastlane build
 
       - run:
