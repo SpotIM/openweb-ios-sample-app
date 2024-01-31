@@ -86,7 +86,7 @@ fileprivate extension OWRealtimeNewCommentsView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.titleLabel.font = font
+                self.titleLabel.font = self.font
             })
             .disposed(by: disposeBag)
     }

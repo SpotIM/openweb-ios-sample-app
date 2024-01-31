@@ -88,7 +88,7 @@ fileprivate extension OWRealtimeTypingView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.typingLabel.font = font
+                self.typingLabel.font = self.font
             })
             .disposed(by: disposeBag)
     }
