@@ -23,7 +23,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func orientationService() -> OWOrientationServicing
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
-    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCachedComment>
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>
     func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
@@ -91,8 +91,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCacheService<String, UIImage>()
     }()
 
-    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, OWCachedComment> = {
-        return OWCacheService<OWCachedCommentKey, OWCachedComment>()
+    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData> = {
+        return OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>()
     }()
 
     fileprivate lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
@@ -247,7 +247,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _imageCacheService
     }
 
-    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCachedComment> {
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData> {
         return _commentsInMemoryCacheService
     }
 
