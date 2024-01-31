@@ -56,6 +56,8 @@ protocol OWPreConversationViewViewModelingOutputs {
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
+    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var hideToast: Observable<Void> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -314,6 +316,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
+    fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
+    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+        return _displayToast
+            .unwrap()
+            .asObservable()
+    }
+    var hideToast: Observable<Void> {
+        return _displayToast
+            .filter { $0 == nil }
+            .voidify()
+            .asObservable()
+    }
+
     fileprivate var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
@@ -322,6 +337,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var retryMute = PublishSubject<Void>()
 
     var viewInitialized = PublishSubject<Void>()
     fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
@@ -463,6 +479,12 @@ fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
+
+        servicesProvider.toastNotificationService()
+            .toastToShow
+            .observe(on: MainScheduler.instance)
+            .bind(to: _displayToast)
+            .disposed(by: disposeBag)
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
@@ -1285,7 +1307,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Handling mute user from network
         muteUserObservable
-            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
@@ -1294,13 +1316,20 @@ fileprivate extension OWPreConversationViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> Bool in
+            .map { [weak self] event -> Bool in
+                guard let self = self else { return false }
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: nil)
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self.retryMute)
                     return false
                 default:
                     return false
@@ -1309,6 +1338,16 @@ fileprivate extension OWPreConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        // Retry when triggerd
+        retryMute
+            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
+                return comment
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.muteCommentUser.onNext(comment)
             })
             .disposed(by: disposeBag)
 
