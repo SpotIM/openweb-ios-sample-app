@@ -42,6 +42,10 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var inputs: OWCommentCreationContentViewModelingInputs { return self }
     var outputs: OWCommentCreationContentViewModelingOutputs { return self }
 
+    fileprivate struct Metrics {
+        static let delayAfterLoadingImage = 50
+    }
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate var uploadImageDisposeBag = DisposeBag()
     fileprivate let imageURLProvider: OWImageProviding
@@ -186,12 +190,12 @@ fileprivate extension OWCommentCreationContentViewModel {
         switch commentCreationType {
         case .comment:
             guard let postId = self.postId else { return }
-            initialText = commentsCacheService[.comment(postId: postId)]?.text
+            initialText = commentsCacheService[.comment(postId: postId)]?.commentContent.text
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
                   let originCommentId = originComment.id
             else { return }
-            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.text
+            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
         case .edit(comment: let comment):
             if let commentText = comment.text?.text {
                 initialText = commentText
@@ -210,12 +214,12 @@ fileprivate extension OWCommentCreationContentViewModel {
         switch commentCreationType {
         case .comment:
             guard let postId = postId else { return }
-            initialImage = commentsCacheService[.comment(postId: postId)]?.image
+            initialImage = commentsCacheService[.comment(postId: postId)]?.commentContent.image
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
                   let originCommentId = originComment.id
             else { return }
-            initialImage = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.image
+            initialImage = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.image
         case .edit(let comment):
             initialImage = comment.image
         }
@@ -240,7 +244,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 return UIImage.load(with: imageUrl)
             }
         // we added delay to fix a case we showed empty image
-            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .delay(.milliseconds(Metrics.delayAfterLoadingImage), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { [weak self] image in
                 guard let self = self else { return }
                 self.imagePreviewVM.inputs.image.onNext(image)
