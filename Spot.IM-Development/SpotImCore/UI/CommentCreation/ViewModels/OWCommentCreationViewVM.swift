@@ -37,7 +37,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
     fileprivate struct Metrics {
         static let allowedMediaTypes: [String] = ["public.image"]
+        static let delayBeforeTryAgainAfterError: Int = 2000 // ms
     }
+
+    fileprivate let commentCreationViewVMScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "commentCreationViewVMQueue")
 
     fileprivate let commentCreatorNetworkHelper: OWCommentCreatorNetworkHelperProtocol
     fileprivate let disposeBag = DisposeBag()
@@ -177,8 +180,18 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         setupObservers()
     }
 
+    fileprivate lazy var _retryCommentCreationSubmitted = PublishSubject<Void>()
+    fileprivate lazy var retryCommentCreationSubmitted: Observable<OWCommentCreationCtaData> = {
+        return _retryCommentCreationSubmitted
+            .withLatestFrom(Observable.merge(commentCreationRegularViewVm.outputs.performCta,
+                                             commentCreationLightViewVm.outputs.performCta,
+                                             commentCreationFloatingKeyboardViewVm.outputs.performCta))
+            .asObservable()
+    }()
+
     lazy var commentCreationSubmitted: Observable<OWComment> = {
-        let commentCreationNetworkObservable = Observable.merge(commentCreationRegularViewVm.outputs.performCta,
+        let commentCreationNetworkObservable = Observable.merge(retryCommentCreationSubmitted,
+                                                                commentCreationRegularViewVm.outputs.performCta,
                                                                 commentCreationLightViewVm.outputs.performCta,
                                                                 commentCreationFloatingKeyboardViewVm.outputs.performCta)
             .do(onNext: { [weak self] _ in
@@ -206,6 +219,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .do(onNext: { [weak self] _, _ in
                 guard let self = self else { return }
                 self._commentCreationSubmitInProgrss.onNext(true)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentCreation)
             })
             .flatMapLatest { [weak self] commentCreationData, networkParameters -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // 2 - perform create comment request
@@ -226,6 +240,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     .materialize()
                     .map { (commentCreationData, $0) }
             }
+            .flatMapLatest({ [weak self] (commentCreationData, event) -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
+                // Add delay if end time for posting comment is less then delayBeforeTryAgainAfterError
+                guard let self = self else { return Observable.just((commentCreationData, event)) }
+                let timeToPostComment = self.timeMeasuringMilliseconds(forKey: .commentCreation)
+                if case .error = event,
+                   timeToPostComment < Metrics.delayBeforeTryAgainAfterError {
+                    return Observable.just((commentCreationData, event))
+                        .delay(.milliseconds(Metrics.delayBeforeTryAgainAfterError - timeToPostComment), scheduler: self.commentCreationViewVMScheduler)
+                }
+                return Observable.just((commentCreationData, event))
+            })
             .map { [weak self] (commentCreationData, event) -> (OWCommentCreationCtaData, OWComment)? in
                 // 3 - handle network response
                 guard let self = self else { return nil }
@@ -236,6 +261,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     // TODO - Handle error
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
+                    self.servicesProvider.toastNotificationService().clearCurrentToastBlocker()
+                    let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self._retryCommentCreationSubmitted)
                     return nil
                 default:
                     return nil
@@ -324,6 +353,17 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             })
             .share()
     }()
+
+    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
+        let measureService = servicesProvider.timeMeasuringService()
+        let measureResult = measureService.endMeasure(forKey: key)
+        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
+           milliseconds < Metrics.delayBeforeTryAgainAfterError {
+            return milliseconds
+        }
+        // If end was called before start for some reason, returning 0 milliseconds here
+        return 0
+    }
 }
 
 fileprivate extension OWCommentCreationViewViewModel {
@@ -515,6 +555,12 @@ fileprivate extension OWCommentCreationViewViewModel {
 
         _commentCreationError
             .bind(to: commentCreationFloatingKeyboardViewVm.inputs.commentCreationError)
+            .disposed(by: disposeBag)
+
+        servicesProvider.toastNotificationService()
+            .toastToShow
+            .observe(on: MainScheduler.instance)
+            .bind(to: commentCreationFloatingKeyboardViewVm.inputs.displayToast)
             .disposed(by: disposeBag)
     }
 

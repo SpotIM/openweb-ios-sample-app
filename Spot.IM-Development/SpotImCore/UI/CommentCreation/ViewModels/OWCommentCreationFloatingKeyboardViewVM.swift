@@ -19,6 +19,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
     var commentCreationError: PublishSubject<Void> { get }
+    var displayToast: PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -39,6 +40,8 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
+    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var hideToast: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -55,6 +58,19 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
         static let ctaIconName = "sendCommentIcon"
         static let delayForDismiss: Int = 350 // ms
+    }
+
+    var displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
+    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+        return displayToast
+            .unwrap()
+            .asObservable()
+    }
+
+    var hideToast: Observable<Void> {
+        return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
+                                submitCommentInProgress.voidify())
+            .asObservable()
     }
 
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }

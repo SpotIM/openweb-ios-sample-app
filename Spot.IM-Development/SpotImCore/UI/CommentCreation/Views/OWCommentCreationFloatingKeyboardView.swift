@@ -48,13 +48,17 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let headerIconSize: CGFloat = 16
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
         static let horizontalLandscapeMargin: CGFloat = 66.0
+        static let errorStateBottomPadding: CGFloat = 8.0
     }
+
+    var toastView: OWToastView? = nil
+    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate var keyboardWasHidden = true
     fileprivate var toolbarBottomConstraint: OWConstraint?
 
-    fileprivate lazy var mainContainer: UIView = {
-        return UIView(frame: .zero)
+    fileprivate lazy var mainContainer: OWFloatingKeyboardMainContainerView = {
+        return OWFloatingKeyboardMainContainerView(frame: .zero)
             .backgroundColor(.clear)
     }()
 
@@ -339,6 +343,25 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.displayToastCalled
+            .subscribe(onNext: { [weak self] (data, action) in
+                guard let self = self else { return }
+                var requiredData = data.data
+                requiredData.bottomPadding = self.footerView.frame.size.height + self.headerView.frame.size.height + Metrics.errorStateBottomPadding
+                self.mainContainer.displayToast(requiredData: requiredData, actionCompletion: action)
+                self.mainContainer.bringSubviewToFront(self.headerView)
+                self.mainContainer.bringSubviewToFront(self.footerView)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.mainContainer.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
+        mainContainer.setupToastObservers(disposeBag: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
