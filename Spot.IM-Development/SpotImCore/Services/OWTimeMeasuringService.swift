@@ -27,6 +27,7 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         case conversationLoadingMoreReplies(commentId: OWCommentId)
         case commentThreadLoadingMoreReplies(commentId: OWCommentId)
         case commentThreadLoadingInitialComments
+        case commentCreation
 
         case preConversationLoadingInitialComments
     }
@@ -89,6 +90,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "commentThreadLoadingMoreReplies_\(commentId)"
         case .preConversationLoadingInitialComments:
             return "preConversationLoadingInitialComments"
+        case .commentCreation:
+            return "commentCreation"
         }
     }
 
@@ -108,6 +111,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "Time for loading more replies in comment thread view"
         case .preConversationLoadingInitialComments:
             return "Time for loading initial comments in pre conversation view"
+        case .commentCreation:
+            return "Time for posting new comment in comment creation view"
         }
     }
 }

@@ -879,6 +879,7 @@
 		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
+		9E57E72B2B6BB960009E5913 /* OWFloatingKeyboardMainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E57E72A2B6BB960009E5913 /* OWFloatingKeyboardMainContainerView.swift */; };
 		9E726CCE2A4D728B0048A13D /* OWFailableWrapperDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */; };
 		9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */; };
 		9E73DAD529C85E640098EEC1 /* UILoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */; };
@@ -1915,6 +1916,7 @@
 		9E4B4E6F2AADE74800F4425F /* OWErrorStateCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWErrorStateCellVM.swift; sourceTree = "<group>"; };
 		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
+		9E57E72A2B6BB960009E5913 /* OWFloatingKeyboardMainContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFloatingKeyboardMainContainerView.swift; sourceTree = "<group>"; };
 		9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailableWrapperDecodable.swift; sourceTree = "<group>"; };
 		9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerView.swift; sourceTree = "<group>"; };
 		9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerViewModel.swift; sourceTree = "<group>"; };
@@ -2280,6 +2282,7 @@
 				166CCCA52A30CD5000C7143F /* OWCommentCreationRegularView.swift */,
 				166CCCA72A30CD6300C7143F /* OWCommentCreationLightView.swift */,
 				166CCCA92A30CD7100C7143F /* OWCommentCreationFloatingKeyboardView.swift */,
+				9E57E72A2B6BB960009E5913 /* OWFloatingKeyboardMainContainerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2622,6 +2625,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		2473A2652A41B3830086B339 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				2473A2682A41B5160086B339 /* OWToastViewModel.swift */,
+				2473A26E2A41D14B0086B339 /* OWToastActionViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		248403A32ADE6F4400EAD59A /* LoginPrompt */ = {
 			isa = PBXGroup;
 			children = (
@@ -2638,15 +2650,6 @@
 				248403A62ADE6F7600EAD59A /* OWLoginPromptView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		2473A2652A41B3830086B339 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				2473A2682A41B5160086B339 /* OWToastViewModel.swift */,
-				2473A26E2A41D14B0086B339 /* OWToastActionViewModel.swift */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		248403A52ADE6F6000EAD59A /* ViewModels */ = {
@@ -6222,6 +6225,7 @@
 				3DA57BA92989358E0016BF2A /* OWConversationStyle.swift in Sources */,
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				9E3B8B6D29FFB96D006BB207 /* OWAdditionalInfoViewVM.swift in Sources */,
+				9E57E72B2B6BB960009E5913 /* OWFloatingKeyboardMainContainerView.swift in Sources */,
 				3D611B9A28C64740003960CE /* OWDefaultCompletion.swift in Sources */,
 				3D263CFF29C377690013C532 /* OWUserAvailability.swift in Sources */,
 				24F1753D2A5E78360078BCF6 /* OWAnalyticEventServer.swift in Sources */,
