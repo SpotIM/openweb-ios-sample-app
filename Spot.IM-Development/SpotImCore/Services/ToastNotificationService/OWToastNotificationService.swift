@@ -12,6 +12,7 @@ import RxSwift
 protocol OWToastNotificationServicing {
     func showToast(presentData: OWToastNotificationPresentData, actionCompletion: PublishSubject<Void>?)
     var toastToShow: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
+    func clearCurrentToastBlocker()
 }
 
 class OWToastNotificationService: OWToastNotificationServicing {
@@ -43,6 +44,10 @@ class OWToastNotificationService: OWToastNotificationServicing {
         queue.insert(presentData)
         mapToastToActionPublishSubject[presentData.uuid] = actionCompletion
         newToast.onNext()
+    }
+
+    func clearCurrentToastBlocker() {
+        self.servicesProvider.blockerServicing().removeBlocker(perType: .toastNotification)
     }
 }
 
