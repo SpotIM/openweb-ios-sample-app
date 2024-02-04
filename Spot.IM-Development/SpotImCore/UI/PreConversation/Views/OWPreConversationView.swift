@@ -46,7 +46,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifi
     }()
 
     fileprivate lazy var loginPromptView: OWLoginPromptView = {
-        return OWLoginPromptView(with: self.viewModel.outputs.loginPromptVM)
+        return OWLoginPromptView(with: self.viewModel.outputs.loginPromptViewModel)
     }()
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
