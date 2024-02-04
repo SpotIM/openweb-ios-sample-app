@@ -13,6 +13,7 @@ protocol OWCommentCreationRegularViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
     var commentCreationError: PublishSubject<Void> { get }
+    var displayToast: PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
@@ -27,6 +28,8 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var becomeFirstResponderCalled: Observable<Void> { get }
+    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var hideToast: Observable<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -41,6 +44,19 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    var displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
+    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+        return displayToast
+            .unwrap()
+            .asObservable()
+    }
+
+    var hideToast: Observable<Void> {
+        return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
+                                footerViewModel.outputs.ctaButtonLoading.voidify())
+            .asObservable()
+    }
 
     var commentCreationError = PublishSubject<Void>()
 
