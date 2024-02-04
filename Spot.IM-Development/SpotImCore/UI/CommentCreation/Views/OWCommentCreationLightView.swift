@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
+class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_light_view_id"
 
@@ -25,8 +25,12 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         static let closeButtonSize: CGFloat = 40.0
         static let closeButtonTrailingOffset: CGFloat = 5.0
         static let commentLabelsSpacing: CGFloat = 15.0
+        static let errorStateBottomPadding: CGFloat = 8.0
         static let closeButtomImageName: String = "closeCrossIconNew"
     }
+
+    var toastView: OWToastView?
+    var panGesture = UIPanGestureRecognizer()
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
@@ -185,6 +189,24 @@ fileprivate extension OWCommentCreationLightView {
     }
 
     func setupObservers() {
+        viewModel.outputs.displayToastCalled
+            .subscribe(onNext: { [weak self] (data, action) in
+                guard var self = self else { return }
+                var requiredData = data.data
+                requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorStateBottomPadding
+                self.displayToast(requiredData: requiredData, actionCompletion: action)
+                self.bringSubviewToFront(self.footerView)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
+        self.setupToastObservers(disposeBag: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

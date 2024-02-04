@@ -560,7 +560,12 @@ fileprivate extension OWCommentCreationViewViewModel {
         servicesProvider.toastNotificationService()
             .toastToShow
             .observe(on: MainScheduler.instance)
-            .bind(to: commentCreationFloatingKeyboardViewVm.inputs.displayToast)
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
+                self.commentCreationRegularViewVm.inputs.displayToast.onNext(result)
+                self.commentCreationLightViewVm.inputs.displayToast.onNext(result)
+                self.commentCreationFloatingKeyboardViewVm.inputs.displayToast.onNext(result)
+            })
             .disposed(by: disposeBag)
     }
 
