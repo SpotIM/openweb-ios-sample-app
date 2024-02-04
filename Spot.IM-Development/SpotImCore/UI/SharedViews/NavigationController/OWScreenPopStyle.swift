@@ -12,4 +12,5 @@ enum OWScreenPopStyle {
     case regular
     case dismiss
     case dismissOverFullScreen
+    case removeChild
 }
