@@ -23,6 +23,7 @@ protocol OWCommentThreadViewViewModelingInputs {
     var changeThreadOffset: PublishSubject<CGPoint> { get }
     var closeTapped: PublishSubject<Void> { get }
     var performAction: PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -366,6 +367,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
+    var dismissToast = PublishSubject<Void>()
+
     fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
     var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
         return _displayToast
@@ -626,6 +629,12 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
 
         closeTapped.subscribe(onNext: { [weak self] _ in

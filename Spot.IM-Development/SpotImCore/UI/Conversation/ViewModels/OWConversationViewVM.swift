@@ -26,6 +26,7 @@ protocol OWConversationViewViewModelingInputs {
     var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -586,6 +587,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    var dismissToast = PublishSubject<Void>()
+
     fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
     var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
         return _displayToast
@@ -862,6 +865,12 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
 
         servicesProvider.toastNotificationService()
