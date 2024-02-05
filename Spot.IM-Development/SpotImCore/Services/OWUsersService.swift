@@ -36,34 +36,41 @@ class OWUsersService: OWUsersServicing {
     }
 
     func get(userId id: String) -> SPUser? {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
-
+        // swiftlint:enable self_capture_in_blocks
         guard let user = _users[id] else { return nil }
         return user
     }
 
     func set(users: [SPUser]) {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         let userIdToUserTupples: [(String, SPUser)] = users.map {
             guard let id = $0.id else { return nil }
             return (id, $0)
         }.unwrap()
-        let userIdsToUser: OWUsersMapper = Dictionary(uniqueKeysWithValues: userIdToUserTupples)
+        let userIdsToUser: OWUsersMapper = userIdToUserTupples.reduce(into: [:]) { $0[$1.0] = $1.1 }
 
         // merge and replacing current users
         _users.merge(userIdsToUser, uniquingKeysWith: {(_, new) in new })
     }
 
     func set(users: OWUsersMapper) {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         // merge and replacing current users
         _users.merge(users, uniquingKeysWith: {(_, new) in new })
     }
 
     func cleanCache() {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         _users.removeAll()
     }

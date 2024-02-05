@@ -26,6 +26,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
+    var isInitialContentEdited: Observable<Bool> { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -82,6 +83,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
                     return nil
                 }
             }
+            .unwrap() // Required to prevent subscription ending after "complete" event
             .startWith(nil)
     }()
 
@@ -128,23 +130,30 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .asObservable()
     }
 
+    var isInitialContentEdited: Observable<Bool> {
+        Observable.combineLatest(
+            commentContent,
+            _imageContent
+        )
+        .map { [weak self] commentContent, imageContent -> Bool in
+            guard let self = self else { return false }
+
+            if case .edit(comment: let comment) = self.commentCreationType {
+                if comment.text?.text != commentContent.text ||
+                    comment.image?.imageId != imageContent?.imageId {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
     var isValidatedContent: Observable<Bool> {
         return Observable.combineLatest(
             commentContent,
-            _imageContent,
             imagePreviewVM.outputs.isUploadingImageObservable
         )
-        .map { [weak self] commentContent, imageContent, isUploadingImage -> Bool in
-            guard let self = self else { return false }
-
-            // In edit mode - invalidate in case the original text and image are used
-            if case .edit(comment: let comment) = self.commentCreationType {
-                if comment.text?.text == commentContent.text &&
-                    comment.image?.imageId == imageContent?.imageId {
-                    return false
-                }
-            }
-
+        .map { commentContent, isUploadingImage -> Bool in
             // Validate / invalidate according to content and uploading image state
             return commentContent.hasContent() && !isUploadingImage
         }
@@ -253,6 +262,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.uploadImageDisposeBag = DisposeBag()
                 self.setupImageObserver()
                 self._imageContent.onNext(nil)
+                self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
             })
             .disposed(by: disposeBag)
     }

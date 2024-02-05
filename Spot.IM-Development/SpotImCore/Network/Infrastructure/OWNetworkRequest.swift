@@ -6,6 +6,8 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable self_capture_in_blocks
+
 import Foundation
 
 /// `Request` is the common superclass of all OWNetwork request types and provides common state, delegate, and callback

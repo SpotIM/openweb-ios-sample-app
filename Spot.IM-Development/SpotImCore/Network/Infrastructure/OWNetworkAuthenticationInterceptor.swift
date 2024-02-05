@@ -6,6 +6,8 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
+// swiftlint:disable self_capture_in_blocks
+
 import Foundation
 
 /// Types adopting the `AuthenticationCredential` protocol can be used to authenticate `URLRequest`s.
