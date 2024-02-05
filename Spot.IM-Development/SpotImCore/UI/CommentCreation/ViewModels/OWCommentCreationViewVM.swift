@@ -368,7 +368,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-        Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast)
+        Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast,
+                         commentCreationRegularViewVm.outputs.dismissedToast,
+                         commentCreationLightViewVm.outputs.dismissedToast)
             .subscribe(onNext: { [weak self] in
                 self?.servicesProvider.toastNotificationService().clearCurrentToast()
             })
