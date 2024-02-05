@@ -12,7 +12,6 @@ import RxSwift
 protocol OWToastNotificationServicing {
     func showToast(presentData: OWToastNotificationPresentData, actionCompletion: PublishSubject<Void>?)
     var toastToShow: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
-    func clearCurrentToastBlocker()
 }
 
 class OWToastNotificationService: OWToastNotificationServicing {
@@ -25,6 +24,11 @@ class OWToastNotificationService: OWToastNotificationServicing {
     fileprivate var _toastToShow = BehaviorSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>(value: nil)
     var toastToShow: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)?> {
         return _toastToShow
+            .do(onNext: { [weak self] result in
+                if result == nil {
+                    self?.clearCurrentToast()
+                }
+            })
             .asObservable()
     }
 
@@ -46,7 +50,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
         newToast.onNext()
     }
 
-    func clearCurrentToastBlocker() {
+    fileprivate func clearCurrentToast() {
         dismissAfterDurationBlock.cancel()
         self.servicesProvider.blockerServicing().removeBlocker(perType: .toastNotification)
     }

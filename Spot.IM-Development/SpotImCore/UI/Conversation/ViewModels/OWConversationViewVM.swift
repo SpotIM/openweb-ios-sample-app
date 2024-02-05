@@ -64,11 +64,11 @@ protocol OWConversationViewViewModelingOutputs {
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
-    var tableViewHeightChanged: Observable<CGFloat> { get }
 
     var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
     var hideToast: Observable<Void> { get }
+    var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
+    var tableViewHeightChanged: Observable<CGFloat> { get }
 }
 
 protocol OWConversationViewViewModeling {
