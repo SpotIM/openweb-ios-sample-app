@@ -27,7 +27,6 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
     }
 
     var toastView: OWToastView? = nil
-    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
