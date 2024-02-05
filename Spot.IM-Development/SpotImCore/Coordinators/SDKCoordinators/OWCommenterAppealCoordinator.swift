@@ -166,7 +166,7 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
             .unwrap()
             .share()
-            
+
         additionalInformationViewObservable
             .subscribe()
             .disposed(by: disposeBag)
@@ -237,7 +237,7 @@ fileprivate extension OWCommenterAppealCoordinator {
             .bind(to: viewModel.inputs.submitAppealTap)
             .disposed(by: disposeBag)
 
-        // TODO: independed
+        // TODO: independed ?
 
         // Open cancel observable - General
         let cancelAppeal = Observable.merge(viewModel.outputs.cancelAppeal,
@@ -335,7 +335,24 @@ fileprivate extension OWCommenterAppealCoordinator {
                 return submittedViewVM.outputs.closeSubmittedTapped
             }
 
-        // TODO: open submitted - independent
+        // Open Submitted Screen - Independent
+        let closeSubmittedViewTapped = viewModel.outputs.appealSubmittedSuccessfully
+            .filter { _ in viewModel.outputs.viewableMode == .independent }
+            .flatMap { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                let submittedViewVM = OWSubmittedViewViewModel(type: .commenterAppeal)
+                let submittedView = OWSubmittedView(viewModel: submittedViewVM)
+                
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.displayViewWithAnimation(view: submittedView)
+                }
+
+                return submittedViewVM.outputs.closeSubmittedTapped
+            }
+
+        // Close from Submitted Screen
+        let closeSubmittedCallbackObservable =  closeSubmittedViewTapped
+            .map { OWViewActionCallbackType.closeReportReason }
 
         // Close submitted
         closeSubmitted
@@ -359,7 +376,8 @@ fileprivate extension OWCommenterAppealCoordinator {
 
         // Setup view actions callbacks - Independent mode only
         Observable.merge(closeAppealCallbackObservable,
-                         closeAdditionalInfoCallbackObservable)
+                         closeAdditionalInfoCallbackObservable,
+                         closeSubmittedCallbackObservable)
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
