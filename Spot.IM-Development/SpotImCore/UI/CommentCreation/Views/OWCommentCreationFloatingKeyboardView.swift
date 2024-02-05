@@ -363,10 +363,16 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .subscribe(onNext: { [weak self] (data, action) in
                 guard let self = self else { return }
                 var requiredData = data.data
-                requiredData.bottomPadding = self.footerView.frame.size.height + self.headerView.frame.size.height + Metrics.errorStateBottomPadding
+                let toolbarHeight = self.toolbar?.frame.size.height ?? 0
+                let footerHeight = self.footerView.frame.size.height
+                let headerHeight = self.headerView.frame.size.height
+                requiredData.bottomPadding = toolbarHeight + footerHeight + headerHeight + Metrics.errorStateBottomPadding
                 self.mainContainer.displayToast(requiredData: requiredData, actionCompletion: action)
-                self.mainContainer.bringSubviewToFront(self.headerView)
+                if let toolbar = self.toolbar {
+                    self.mainContainer.bringSubviewToFront(toolbar)
+                }
                 self.mainContainer.bringSubviewToFront(self.footerView)
+                self.mainContainer.bringSubviewToFront(self.headerView)
             })
             .disposed(by: disposeBag)
 
