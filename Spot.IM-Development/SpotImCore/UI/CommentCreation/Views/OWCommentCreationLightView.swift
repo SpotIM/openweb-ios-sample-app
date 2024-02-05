@@ -193,7 +193,7 @@ fileprivate extension OWCommentCreationLightView {
                 guard var self = self else { return }
                 var requiredData = data.data
                 requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorStateBottomPadding
-                self.displayToast(requiredData: requiredData, actionCompletion: action, disposeBag: self.disposeBag)
+                self.displayToast(requiredData: requiredData, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
                 self.bringSubviewToFront(self.footerView)
             })
             .disposed(by: disposeBag)
