@@ -199,7 +199,27 @@ fileprivate extension OWCommenterAppealCoordinator {
                 return additionalInfoViewVM.outputs.closeReportReasonTapped
             }
 
-        // TODO: close when additionalInfoCloseAppealTapped (both flow & independed)
+        // Close Additional information - Independed
+        let closeAdditionalInfoCallbackObservable = additionalInfoCloseAppealTapped
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .map { OWViewActionCallbackType.closeClarityDetails }
+
+        // Close Additional information - Flow
+        additionalInfoCloseAppealTapped
+            .filter { _ in
+                viewModel.outputs.viewableMode == .partOfFlow
+            }
+            .do(onNext: { [weak self] in
+                guard let self = self,
+                      let router = router else { return }
+
+                // dismiss additional info VC
+                router.pop(popStyle: .dismiss, animated: false)
+            })
+            .bind(to: self.popAppealWithAnimation)
+            .disposed(by: disposeBag)
 
         // Additional information text changed - General
         additionalInformationObservable
@@ -338,7 +358,8 @@ fileprivate extension OWCommenterAppealCoordinator {
             .disposed(by: disposeBag)
 
         // Setup view actions callbacks - Independent mode only
-        Observable.merge(closeAppealCallbackObservable)
+        Observable.merge(closeAppealCallbackObservable,
+                         closeAdditionalInfoCallbackObservable)
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
