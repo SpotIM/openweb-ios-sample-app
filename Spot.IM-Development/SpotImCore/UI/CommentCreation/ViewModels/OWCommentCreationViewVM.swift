@@ -261,7 +261,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     // TODO - Handle error
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
-                    self.servicesProvider.toastNotificationService().clearCurrentToastBlocker()
                     let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
                     self.servicesProvider.toastNotificationService()
                         .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self._retryCommentCreationSubmitted)
