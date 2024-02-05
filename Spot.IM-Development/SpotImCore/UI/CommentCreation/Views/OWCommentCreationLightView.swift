@@ -30,7 +30,6 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastN
     }
 
     var toastView: OWToastView?
-    var panGesture = UIPanGestureRecognizer()
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
@@ -194,7 +193,7 @@ fileprivate extension OWCommentCreationLightView {
                 guard var self = self else { return }
                 var requiredData = data.data
                 requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorStateBottomPadding
-                self.displayToast(requiredData: requiredData, actionCompletion: action)
+                self.displayToast(requiredData: requiredData, actionCompletion: action, disposeBag: self.disposeBag)
                 self.bringSubviewToFront(self.footerView)
             })
             .disposed(by: disposeBag)
@@ -204,8 +203,6 @@ fileprivate extension OWCommentCreationLightView {
                 self?.dismissToast()
             })
             .disposed(by: disposeBag)
-
-        self.setupToastObservers(disposeBag: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
