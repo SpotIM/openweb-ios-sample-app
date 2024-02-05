@@ -8,8 +8,17 @@
 
 import Foundation
 
-public enum OWSSOProvider {
+public enum OWSSOProvider: String {
+    case janrain
     case gigya
     case piano
     case auth0
+    case foxid
+    case hearst
+}
+
+internal extension OWSSOProvider {
+    func parameters(token: String) -> OWNetworkParameters {
+        return ["provider": self.rawValue, "token": token]
+    }
 }

@@ -67,11 +67,12 @@ fileprivate extension OWSubscriberIconView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.isSubscriber
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.imgViewIcon.OWSnp.updateConstraints { make in
-                    make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.imgViewIcon.OWSnp.updateConstraints { make in
+                        make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -79,6 +80,15 @@ fileprivate extension OWSubscriberIconView {
         viewModel.outputs.image
             .map { $0.withRenderingMode(.alwaysTemplate) }
             .bind(to: imgViewIcon.rx.image)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] style in
+                guard let self = self else { return }
+
+                self.imgViewIcon.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: style)
+            })
             .disposed(by: disposeBag)
     }
 }

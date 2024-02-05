@@ -14,20 +14,8 @@ protocol OWNetworkAvailabilityServicing {
     var networkAvailable: Observable<Bool> { get }
 }
 
-// Since OWInternalNetworkAvailabilityService is available from iOS 12 only, we created a wrapper
 class OWNetworkAvailabilityService: OWNetworkAvailabilityServicing {
-    var networkAvailable: Observable<Bool> {
-        if #available(iOS 12.0, *) {
-            return OWInternalNetworkAvailabilityService.shared.networkAvailable
-        } else {
-            return Observable.just(true)
-        }
-    }
-}
-
-@available(iOS 12.0, *)
-class OWInternalNetworkAvailabilityService: OWNetworkAvailabilityServicing {
-    static let shared = OWInternalNetworkAvailabilityService()
+    static let shared = OWNetworkAvailabilityService()
 
     fileprivate var networkMonitor: NWPathMonitor
     fileprivate let networkAvailableSubject = BehaviorSubject<Bool>(value: true)

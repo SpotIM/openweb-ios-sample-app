@@ -12,15 +12,19 @@ import RxSwift
 protocol OWColorPaletteProtocol {
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor
     var colorDriver: Observable<[OWColor.OWType: OWColor]> { get }
+    func initiateColors()
 }
 
 protocol OWColorPaletteConfigurable {
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle)
+    func blockForOverride(color: OWColor.OWType)
 }
 
 class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     fileprivate var colors = [OWColor.OWType: OWColor]()
     fileprivate var colorsMapper = BehaviorSubject<[OWColor.OWType: OWColor]>(value: [:])
+    fileprivate var blockedForOverride: Set<OWColor.OWType> = Set()
+
     var colorDriver: Observable<[OWColor.OWType: OWColor]> {
         return colorsMapper
             .asObservable()
@@ -31,10 +35,16 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     static let shared: OWColorPaletteProtocol & OWColorPaletteConfigurable = OWColorPalette()
 
     private init() {
+        initiateColors()
+    }
+
+    func initiateColors() {
         // Initialize default colors
+        colors.removeAll()
         for type in OWColor.OWType.allCases {
             colors[type] = type.default
         }
+        blockedForOverride.removeAll()
         let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
         colorsMapper.onNext(colorsRx)
     }
@@ -49,12 +59,19 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     }
 
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle) {
-        guard var encapsulateColor = colors[type] else { return }
+        guard var encapsulateColor = colors[type],
+              !blockedForOverride.contains(type)
+        else { return }
+
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)
         colors[type] = encapsulateColor // We are working with structs here, so we need to re set the encapsulated color for this key
         if (type.shouldUpdateRxObservable) {
             let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
             colorsMapper.onNext(colorsRx)
         }
+    }
+
+    func blockForOverride(color: OWColor.OWType) {
+        self.blockedForOverride.insert(color)
     }
 }

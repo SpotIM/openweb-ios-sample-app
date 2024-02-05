@@ -13,9 +13,6 @@ import RxSwift
 class OWCommentCell: UITableViewCell {
     struct ExternalMetrics {
         static let maxDepth: Int = 4
-    }
-
-    fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16
         static let depthOffset: CGFloat = 23
     }
@@ -45,7 +42,7 @@ class OWCommentCell: UITableViewCell {
 
         let depth = min(self.viewModel.outputs.commentVM.outputs.comment.depth ?? 0, ExternalMetrics.maxDepth)
         commentView.OWSnp.updateConstraints { make in
-            make.leading.equalToSuperview().offset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
+            make.leading.equalToSuperview().offset(CGFloat(depth) * ExternalMetrics.depthOffset + ExternalMetrics.horizontalOffset)
         }
 
         self.setupObservers()
@@ -71,7 +68,7 @@ fileprivate extension OWCommentCell {
 
         commentView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview().inset(ExternalMetrics.horizontalOffset)
         }
     }
 
@@ -85,12 +82,13 @@ fileprivate extension OWCommentCell {
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateSpacing
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] spacingBetweenComments in
-                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
 
-                self.commentView.OWSnp.updateConstraints { make in
-                    make.top.bottom.equalToSuperview().inset(spacingBetweenComments)
+                    self.commentView.OWSnp.updateConstraints { make in
+                        make.top.bottom.equalToSuperview().inset(spacingBetweenComments)
+                    }
                 }
             })
             .disposed(by: disposeBag)

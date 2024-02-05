@@ -445,6 +445,9 @@ extension OWUILayer {
             }
         }
 
+        // We need to use encoded postId after it set to manager
+        guard let postId = OWManager.manager.postId else { return }
+
         let internalCommentCreationType: OWCommentCreationTypeInternal
         switch commentCreationType {
         case .comment:
@@ -587,7 +590,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.clarityDetailsView(type: type, callbacks: callbacks)
+        _ = viewsSdkCoordinator.clarityDetailsView(clarityDetailsData: OWClarityDetailsRequireData(type: type, presentationalStyle: .none), callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in

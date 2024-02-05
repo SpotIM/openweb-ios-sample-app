@@ -9,7 +9,9 @@
 import Foundation
 
 public struct OWCommentThreadSettings: OWCommentThreadSettingsProtocol {
+    public var performActionType: OWCommentThreadPerformActionType
 
-    public init() {
+    public init(performActionType: OWCommentThreadPerformActionType = .none) {
+        self.performActionType = performActionType
     }
 }

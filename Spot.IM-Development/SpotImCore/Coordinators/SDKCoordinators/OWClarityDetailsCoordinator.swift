@@ -29,28 +29,24 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let type: OWClarityDetailsType
+    fileprivate let requiredData: OWClarityDetailsRequireData
     fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .clarityDetails)
     }()
 
-    let presentationalMode: OWPresentationalModeCompact
-
-    init(type: OWClarityDetailsType,
+    init(requiredData: OWClarityDetailsRequireData,
          router: OWRoutering? = nil,
-         actionsCallbacks: OWViewActionsCallbacks?,
-         presentationalMode: OWPresentationalModeCompact = .none) {
-        self.type = type
+         actionsCallbacks: OWViewActionsCallbacks?) {
+        self.requiredData = requiredData
         self.router = router
         self.actionsCallbacks = actionsCallbacks
-        self.presentationalMode = presentationalMode
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
         guard let router = router else { return .empty() }
-        let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(type: type, viewableMode: .partOfFlow)
+        let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(requiredData: requiredData, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
         let clarityDetailsPopped = PublishSubject<Void>()
@@ -127,7 +123,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let clarityDetailsViewVM: OWClarityDetailsViewViewModeling = OWClarityDetailsViewVM(type: type)
+        let clarityDetailsViewVM: OWClarityDetailsViewViewModeling = OWClarityDetailsViewVM(requiredData: requiredData)
         setupViewActionsCallbacks(forViewModel: clarityDetailsViewVM)
 
         let clarityDetailsView = OWClarityDetailsView(viewModel: clarityDetailsViewVM)

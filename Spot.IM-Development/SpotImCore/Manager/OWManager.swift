@@ -175,11 +175,14 @@ fileprivate extension OWManager {
     func resetSpotId() {
         if let customizations = self.uiLayer.customizations as? OWCustomizationsInternalProtocol {
             customizations.clearCallbacks()
+            customizations.clearColorsCustomizations()
         }
 
         if let analytics = self.analyticsLayer as? OWAnalyticsInternalProtocol {
             analytics.clearCallbacks()
         }
+
+        OWColorPalette.shared.initiateColors()
     }
 
     // Things to clear / reset each time the postId changed

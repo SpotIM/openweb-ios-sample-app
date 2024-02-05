@@ -119,6 +119,41 @@ fileprivate extension ElementsCustomizationCreatorService {
                 break
             }
 
+        case .loginPrompt(let element):
+            switch element {
+            case .lockIcon(let imageView):
+                switch themeStyle {
+                case .dark:
+                    imageView.image = UIImage(named: "testIcon-dark")
+                case .light:
+                    imageView.image = UIImage(named: "testIcon")
+                default:
+                    break
+                }
+            case .title(let label):
+                label.text = "TestLoginPromptTitle"
+                switch themeStyle {
+                case .dark:
+                    label.textColor = .yellow
+                case .light:
+                    label.textColor = .blue
+                default:
+                    break
+                }
+                label.font = UIFont.systemFont(ofSize: 20, weight: .regular)
+            case .arrowIcon(let imageView):
+                switch themeStyle {
+                case .dark:
+                    imageView.image = UIImage(named: "testIcon-dark")
+                case .light:
+                    imageView.image = UIImage(named: "testIcon")
+                default:
+                    break
+                }
+            default:
+                break
+            }
+
         case .summaryHeader(element: let element):
             switch element {
             case .counter(let label):
@@ -276,6 +311,15 @@ fileprivate extension ElementsCustomizationCreatorService {
             case .title(let label):
                 label.text = "TestCommentingEnded"
                 label.textColor = .green
+            default:
+                break
+            }
+
+        case .commentCreationSubmit(let element):
+            switch element {
+            case .button(let button):
+                button.backgroundColor = .red
+                button.tintColor = .green
             default:
                 break
             }

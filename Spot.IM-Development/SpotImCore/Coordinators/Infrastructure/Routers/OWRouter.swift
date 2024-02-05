@@ -22,6 +22,8 @@ protocol OWRoutering {
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
+
+    func setCompletion(for vc: UIViewController, dismissCompletion: PublishSubject<Void>)
 }
 
 extension OWRoutering {
@@ -54,6 +56,7 @@ extension OWRoutering {
 class OWRouter: NSObject, OWRoutering {
     fileprivate struct Metrics {
         static let transitionDuration = 0.5
+        static let childAnimationDuration = 0.3
     }
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
@@ -75,6 +78,10 @@ class OWRouter: NSObject, OWRoutering {
         if let sdkNavigationController = self.navigationController as? OWNavigationControllerProtocol {
             setupSDKNavigationObserver(navigationController: sdkNavigationController)
         }
+    }
+
+    func setCompletion(for vc: UIViewController, dismissCompletion: PublishSubject<Void>) {
+        completions[vc] = dismissCompletion
     }
 
     func start() {
@@ -116,6 +123,21 @@ class OWRouter: NSObject, OWRoutering {
         case .presentOverFullScreen:
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
+        case .addAsChild:
+            guard let viewController = navigationController?.viewControllers.last else { return }
+            let presentable = module.toPresentable()
+            viewController.addChild(presentable)
+            viewController.view.addSubview(presentable.view)
+            presentable.view.OWSnp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            presentable.didMove(toParent: viewController)
+            if animated {
+                presentable.view.alpha = 0
+                UIView.animate(withDuration: Metrics.childAnimationDuration) {
+                    presentable.view.alpha = 1
+                }
+            }
         }
     }
 
@@ -141,6 +163,23 @@ class OWRouter: NSObject, OWRoutering {
             navigationController?.view.layer.add(transition, forKey: kCATransition)
             if let controller = navigationController?.popViewController(animated: false) {
                 runCompletion(for: controller)
+            }
+        case .removeChild:
+            guard let viewController = navigationController?.viewControllers.last?.children.first else { return }
+            if animated {
+                UIView.animate(withDuration: Metrics.childAnimationDuration) {
+                    viewController.view.alpha = 0
+                } completion: { [weak self] _ in
+                    viewController.willMove(toParent: nil)
+                    viewController.removeFromParent()
+                    viewController.view.removeFromSuperview()
+                    self?.runCompletion(for: viewController)
+                }
+            } else {
+                viewController.willMove(toParent: nil)
+                viewController.removeFromParent()
+                viewController.view.removeFromSuperview()
+                runCompletion(for: viewController)
             }
         }
     }
@@ -225,7 +264,9 @@ fileprivate extension OWRouter {
                 guard let self = self,
                       let navController = navigationController as? UINavigationController else { return }
                 let childs = navController.children.reversed()
-                childs.forEach { self.runCompletion(for: $0) }
+                childs.forEach { [weak self] in
+                    self?.runCompletion(for: $0)
+                }
                 navigationController.clear()
             })
             .disposed(by: navDisposedBag)

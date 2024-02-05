@@ -33,13 +33,12 @@ class OWNavigationPlaceholderViewModel: OWNavigationPlaceholderViewModeling,
     }
 
     fileprivate weak var vc: UIViewController? = nil
-    fileprivate let onFirstActualVC: () -> Void
+    fileprivate let onFirstActualVC: (_ vc: UIViewController) -> Void
     fileprivate var disposeBag = DisposeBag()
     fileprivate let scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OWNavigationPlaceholderViewModel")
 
-    init(onFirstActualVC: @escaping () -> Void) {
+    init(onFirstActualVC: @escaping (_ vc: UIViewController) -> Void) {
         self.onFirstActualVC = onFirstActualVC
-
     }
 
     func viewControllerAttached(vc: UIViewController) {
@@ -67,7 +66,7 @@ fileprivate extension OWNavigationPlaceholderViewModel {
                       let vc = self.vc else { return }
 
                 if let topVC = vc.navigationController?.topViewController, topVC != vc {
-                    self.onFirstActualVC()
+                    self.onFirstActualVC(topVC)
                     // Once new VC added no need to have this empty VC so it is removed
                     if var viewControllers = vc.navigationController?.viewControllers,
                        let index = viewControllers.firstIndex(of: vc) {

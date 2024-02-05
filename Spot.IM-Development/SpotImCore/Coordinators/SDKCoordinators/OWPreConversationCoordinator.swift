@@ -89,8 +89,26 @@ fileprivate extension OWPreConversationCoordinator {
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
 
-        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+        let openCommentThreadObservable = viewModel.outputs.openCommentThread
             .observe(on: MainScheduler.instance)
+            .map { [weak self] commentId, performAction -> OWDeepLinkOptions? in
+                guard let self = self else { return nil }
+                guard var newAdditionalSettings = self.preConversationData.settings as? OWAdditionalSettings,
+                      var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
+                else { return nil }
+
+                newCommentThreadSettings.performActionType = performAction
+                newAdditionalSettings.commentThreadSettings = newCommentThreadSettings
+
+                let commentThreadData = OWCommentThreadRequiredData(article: self.preConversationData.article,
+                                                   settings: newAdditionalSettings,
+                                                   commentId: commentId,
+                                                   presentationalStyle: self.preConversationData.presentationalStyle)
+                return OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+            }
+
+        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+
             .map { commentVM -> OWDeepLinkOptions? in
                 // 3. Perform deeplink to comment creation screen
                 guard let commentId = commentVM.outputs.comment.id,
@@ -108,7 +126,8 @@ fileprivate extension OWPreConversationCoordinator {
         Observable.merge(openFullConversationObservable,
                          openCommentCreationObservable,
                          openReportReasonObservable,
-                         openClarityDetailsObservable)
+                         openClarityDetailsObservable,
+                         openCommentThreadObservable)
             .filter { [weak self] _ in
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
@@ -119,8 +138,8 @@ fileprivate extension OWPreConversationCoordinator {
                                                                   settings: self.preConversationData.settings,
                                                                   presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
-                                                                           conversationData: conversationData,
-                                                                           actionsCallbacks: self.actionsCallbacks)
+                                                                        conversationData: conversationData,
+                                                                        actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
             }
             .do(onNext: { [weak self] coordinatorResult in
@@ -233,7 +252,10 @@ fileprivate extension OWPreConversationCoordinator {
             .disposed(by: disposeBag)
     }
 
+    // swiftlint:disable function_body_length
     func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
+        // swiftlint:enable function_body_length
+
         // Set customized pre conversation summary header
         let summaryHeaderCustomizeTitle = viewModel.outputs.preConversationSummaryVM
             .outputs.customizeTitleLabelUI
@@ -257,6 +279,23 @@ fileprivate extension OWPreConversationCoordinator {
                                                                       summaryHeaderCustomizeCounter,
                                                                       summaryHeaderCustomizeOnlineUsersIcon,
                                                                       summaryHeaderCustomizeOnlineUsersCounter)
+
+        // Set customized login prompt
+        let loginPromptCustomizeLockImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeLockIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .lockIcon(imageView: $0)) }
+
+        let loginPromptCustomizeTitle = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.loginPrompt(element: .title(label: $0)) }
+
+        let loginPromptCustomizeArrowImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeArrowIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .arrowIcon(imageView: $0)) }
+
+        let loginPromptCustomizationElementsObservable = Observable.merge(loginPromptCustomizeLockImage,
+                                                                          loginPromptCustomizeTitle,
+                                                                          loginPromptCustomizeArrowImage)
 
         // Set customized community question
         let communityQuestionCustomizeContainer = viewModel.outputs.communityQuestionViewModel
@@ -343,6 +382,7 @@ fileprivate extension OWPreConversationCoordinator {
                                                                                  commentingReadOnlyCustomizeTitle)
 
         let customizationElementsObservables = Observable.merge(summaryCustomizationElementsObservable,
+                                                                loginPromptCustomizationElementsObservable,
                                                                 communityQuestionCustomizationElementObservable,
                                                                 communityGuidelinesCustomizationElementObservable,
                                                                 commentCreationEntryCustomizationElementsObservable,

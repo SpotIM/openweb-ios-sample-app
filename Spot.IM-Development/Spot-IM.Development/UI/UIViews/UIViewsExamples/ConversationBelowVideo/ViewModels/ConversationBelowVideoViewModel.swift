@@ -21,10 +21,12 @@ protocol ConversationBelowVideoViewModelingOutputs {
     var clarityDetailsRetrieved: Observable<UIView> { get }
     var webPageRetrieved: Observable<UIView> { get }
     var reportReasonsRetrieved: Observable<UIView> { get }
+    var commentThreadRetrieved: Observable<UIView> { get }
     var removeConversation: Observable<Void> { get }
     var removeReportReasons: Observable<Void> { get }
     var removeCommentCreation: Observable<Void> { get }
     var removeClarityDetails: Observable<Void> { get }
+    var removeCommentThread: Observable<Void> { get }
     var removeWebPage: Observable<Void> { get }
     var openAuthentication: Observable<(OWSpotId, OWBasicCompletion)> { get }
 }
@@ -80,6 +82,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
+    fileprivate let _commentThreadRetrieved = PublishSubject<UIView>()
+    var commentThreadRetrieved: Observable<UIView> {
+        return _commentThreadRetrieved
+            .asObservable()
+    }
+
     fileprivate let _clarityDetailsRetrieved = PublishSubject<UIView>()
     var clarityDetailsRetrieved: Observable<UIView> {
         return _clarityDetailsRetrieved
@@ -116,6 +124,12 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             .asObservable()
     }
 
+    fileprivate let _removeCommentThread = PublishSubject<Void>()
+    var removeCommentThread: Observable<Void> {
+        return _removeCommentThread
+            .asObservable()
+    }
+
     fileprivate let _removeWebPage = PublishSubject<Void>()
     var removeWebPage: Observable<Void> {
         return _removeWebPage
@@ -145,6 +159,8 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self._removeReportReasons.onNext()
         case (.conversation, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
+        case (.commentThread, .openCommentCreation(let commentCreationType)):
+            self.retrieveCommentCreationComponent(type: commentCreationType)
         case (.conversation, .openClarityDetails(let clarityDetailsType)):
             self.retrieveClarityDetailsComponent(commentId: "", type: clarityDetailsType)
         case (.clarityDetails, .closeClarityDetails):
@@ -163,6 +179,11 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self.retrieveWebPageComponent(options: options)
         case (_, .openLinkInComment(let url)):
             self.retrieveWebPageComponent(options: OWWebTabOptions(url: url, title: ""))
+        case (_, .openCommentThread(let commentId, let performActionType)):
+            self.retrieveCommentThreadComponent(commentId: commentId,
+                                                performActionType: performActionType)
+        case (.commentThread, .closeCommentThread):
+            self._removeCommentThread.onNext()
         default:
             break
         }
@@ -342,6 +363,30 @@ fileprivate extension ConversationBelowVideoViewModel {
                 self._componentRetrievingError.onNext(err)
             case.success(let view):
                 self._clarityDetailsRetrieved.onNext(view)
+            }
+        })
+    }
+
+    func  retrieveCommentThreadComponent(commentId: OWCommentId, performActionType: OWCommentThreadPerformActionType) {
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let article = self.commonCreatorService.mockArticle(for: OpenWeb.manager.spotId)
+
+        let commentThreadSettings = OWCommentThreadSettings(performActionType: performActionType)
+        let additionalSettings = OWAdditionalSettings(commentThreadSettings: commentThreadSettings)
+
+        uiViewsLayer.commentThread(postId: self.postId,
+                                   article: article,
+                                   commentId: commentId,
+                                   additionalSettings: additionalSettings,
+                                   callbacks: self.actionsCallbacks,
+                                   completion: { [weak self] result in
+
+            guard let self = self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.onNext(err)
+            case.success(let view):
+                self._commentThreadRetrieved.onNext(view)
             }
         })
     }

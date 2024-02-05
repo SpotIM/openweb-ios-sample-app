@@ -11,10 +11,18 @@ import RxSwift
 
 protocol OWLoginPromptViewModelingInputs {
     var loginPromptTap: PublishSubject<Void> { get }
+    var triggerCustomizeLockIconImageViewUI: PublishSubject<UIImageView> { get }
+    var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
+    var triggerCustomizeArrowIconImageViewUI: PublishSubject<UIImageView> { get }
 }
 
 protocol OWLoginPromptViewModelingOutputs {
     var shouldShowView: Observable<Bool> { get }
+    var style: OWLoginPromptAlignmentStyle { get }
+    var authenticationTriggered: Observable<Void> { get }
+    var customizeLockIconImageViewUI: Observable<UIImageView> { get }
+    var customizeTitleLabelUI: Observable<UILabel> { get }
+    var customizeArrowIconImageViewUI: Observable<UIImageView> { get }
 }
 
 protocol OWLoginPromptViewModeling {
@@ -29,14 +37,45 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
     var inputs: OWLoginPromptViewModelingInputs { return self }
     var outputs: OWLoginPromptViewModelingOutputs { return self }
 
+    // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
+    fileprivate let _triggerCustomizeLockIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+    fileprivate let _triggerCustomizeTitleLabelUI = BehaviorSubject<UILabel?>(value: nil)
+    fileprivate let _triggerCustomizeArrowIconImageViewUI = BehaviorSubject<UIImageView?>(value: nil)
+
+    var triggerCustomizeLockIconImageViewUI = PublishSubject<UIImageView>()
+    var triggerCustomizeTitleLabelUI = PublishSubject<UILabel>()
+    var triggerCustomizeArrowIconImageViewUI = PublishSubject<UIImageView>()
+
+    var customizeLockIconImageViewUI: Observable<UIImageView> {
+        return _triggerCustomizeLockIconImageViewUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeTitleLabelUI: Observable<UILabel> {
+        return _triggerCustomizeTitleLabelUI
+            .unwrap()
+            .asObservable()
+    }
+
+    var customizeArrowIconImageViewUI: Observable<UIImageView> {
+        return _triggerCustomizeArrowIconImageViewUI
+            .unwrap()
+            .asObservable()
+    }
+
+    let style: OWLoginPromptAlignmentStyle
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag: DisposeBag
 
     fileprivate let isFeatureEnabled: Bool
 
-    init(isFeatureEnabled: Bool = true, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(isFeatureEnabled: Bool = true,
+         style: OWLoginPromptAlignmentStyle,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.isFeatureEnabled = isFeatureEnabled
+        self.style = style
         disposeBag = DisposeBag()
 
         setupObservers()
@@ -63,6 +102,7 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
             }
         }
         .startWith(false)
+        .distinctUntilChanged()
         .share(replay: 1)
     }
 
@@ -71,10 +111,25 @@ class OWLoginPromptViewModel: OWLoginPromptViewModeling,
         loginPromptTap
             .asObservable()
     }
+    var authenticationTriggered: Observable<Void> {
+        _openLogin
+    }
 }
 
 fileprivate extension OWLoginPromptViewModel {
     func setupObservers() {
+        triggerCustomizeLockIconImageViewUI
+            .bind(to: _triggerCustomizeLockIconImageViewUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeTitleLabelUI
+            .bind(to: _triggerCustomizeTitleLabelUI)
+            .disposed(by: disposeBag)
+
+        triggerCustomizeArrowIconImageViewUI
+            .bind(to: _triggerCustomizeArrowIconImageViewUI)
+            .disposed(by: disposeBag)
+
         _openLogin
             .flatMapLatest { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }

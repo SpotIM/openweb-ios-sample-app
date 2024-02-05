@@ -11,6 +11,7 @@ import Foundation
 protocol OWCustomizationsInternalProtocol {
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType)
     func clearCallbacks()
+    func clearColorsCustomizations()
 }
 
 class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol {
@@ -71,6 +72,16 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
+    var customizedTheme: OWTheme {
+        get {
+            return _customizedTheme
+        }
+        set(newTheme) {
+            _customizedTheme = newTheme
+            setColors(forTheme: newTheme)
+        }
+    }
+
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback) {
         guard callbacks.count < Metrics.maxCustomizableElementCallbacksNumber else {
             let logger = sharedServicesProvider.logger()
@@ -85,7 +96,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType) {
         let themeStyle = sharedServicesProvider.themeStyleService().currentStyle
-        let postId = OWManager.manager.postId
+        let postId = OWManager.manager.postId?.decoded
 
         callbacks.forEach { optionalCallback in
             guard let actualCallback = optionalCallback.value() else { return }
@@ -97,11 +108,16 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         callbacks.removeAll()
     }
 
+    func clearColorsCustomizations() {
+        customizedTheme = OWTheme()
+    }
+
     fileprivate var _fontFamily: OWFontGroupFamily = .default
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var _statusBarEnforcement: OWStatusBarEnforcement = .matchTheme
     fileprivate var _navigationBarEnforcement: OWNavigationBarEnforcement = .style(.largeTitles)
+    fileprivate var _customizedTheme: OWTheme = OWTheme()
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
 }
 
@@ -121,5 +137,33 @@ fileprivate extension OWCustomizationsLayer {
         sharedServicesProvider
             .analyticsService()
             .sendAnalyticEvents(events: [event])
+    }
+
+    func setColors(forTheme theme: OWTheme) {
+        setColor(color: theme.skeletonColor, type: .skeletonColor)
+        setColor(color: theme.skeletonShimmeringColor, type: .skeletonShimmeringColor)
+        setColor(color: theme.primarySeparatorColor, type: .separatorColor3)
+        setColor(color: theme.secondarySeparatorColor, type: .separatorColor2)
+        setColor(color: theme.tertiarySeparatorColor, type: .separatorColor1)
+        setColor(color: theme.primaryTextColor, type: .textColor4)
+        setColor(color: theme.secondaryTextColor, type: .textColor3)
+        setColor(color: theme.tertiaryTextColor, type: .textColor2)
+        setColor(color: theme.primaryBackgroundColor, type: .backgroundColor2)
+        setColor(color: theme.secondaryBackgroundColor, type: .backgroundColor4)
+        setColor(color: theme.tertiaryBackgroundColor, type: .backgroundColor5)
+        setColor(color: theme.primaryBorderColor, type: .borderColor2)
+        setColor(color: theme.secondaryBorderColor, type: .borderColor1)
+        setColor(color: theme.loaderColor, type: .loaderColor)
+        // Preventing brand from changing later on from the server
+        if let brandColor = theme.brandColor {
+            setColor(color: brandColor, type: .brandColor)
+            OWColorPalette.shared.blockForOverride(color: .brandColor)
+        }
+    }
+
+    func setColor(color: OWColor?, type: OWColor.OWType) {
+        guard let color = color else { return }
+        OWColorPalette.shared.setColor(color.lightColor, forType: type, forThemeStyle: .light)
+        OWColorPalette.shared.setColor(color.darkColor, forType: type, forThemeStyle: .dark)
     }
 }
