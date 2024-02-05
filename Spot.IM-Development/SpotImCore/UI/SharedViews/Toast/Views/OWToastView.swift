@@ -57,6 +57,11 @@ class OWToastView: UIView, OWThemeStyleInjectorProtocol {
         applyIdentifiers()
         setupObservers()
     }
+    
+    override func removeFromSuperview() {
+        super.removeFromSuperview()
+        viewModel.inputs.dismiss.onNext()
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

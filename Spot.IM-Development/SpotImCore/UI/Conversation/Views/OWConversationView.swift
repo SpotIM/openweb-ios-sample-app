@@ -240,7 +240,7 @@ fileprivate extension OWConversationView {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] (data, action) in
                 guard var self = self else { return }
-                self.displayToast(requiredData: data.data, actionCompletion: action, disposeBag: self.disposeBag)
+                self.displayToast(requiredData: data.data, actionCompletion: action, dismissCompletion: nil, disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
