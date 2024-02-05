@@ -34,7 +34,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
 
     var toastView: OWToastView? = nil
-    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
