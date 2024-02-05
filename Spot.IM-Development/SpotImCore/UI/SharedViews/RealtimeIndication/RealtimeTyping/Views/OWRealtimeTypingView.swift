@@ -17,7 +17,6 @@ class OWRealtimeTypingView: UIView {
         static let animationViewWidth: CGFloat = 19
         static let animationViewHeight: CGFloat = 18
 
-        static let font = OWFontBook.shared.font(typography: .footnoteText)
         static let titleLabelTextColor: OWColor.OWType = .textColor3
     }
 
@@ -34,10 +33,14 @@ class OWRealtimeTypingView: UIView {
 
     fileprivate lazy var typingLabel: UILabel = {
         return UILabel()
-            .font(Metrics.font)
+            .font(font)
             .textColor(OWColorPalette.shared.color(type: Metrics.titleLabelTextColor,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
+
+    fileprivate var font: UIFont {
+        return OWFontBook.shared.font(typography: .footnoteText)
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -85,7 +88,7 @@ fileprivate extension OWRealtimeTypingView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.typingLabel.font = Metrics.font
+                self.typingLabel.font = self.font
             })
             .disposed(by: disposeBag)
     }

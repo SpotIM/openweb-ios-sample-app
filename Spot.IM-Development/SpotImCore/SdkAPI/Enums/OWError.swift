@@ -29,6 +29,7 @@ public enum OWError: Error, Codable {
     case userStatus
     case ssoStart
     case ssoComplete
+    case ssoProvider
     case alreadyLoggedIn
     case conversationCounters
     case custom(description: String)
@@ -75,6 +76,8 @@ public enum OWError: Error, Codable {
             return "Error in the process of SSO start"
         case .ssoComplete:
             return "Error in the process of SSO complete"
+        case .ssoProvider:
+            return "Error in the process of SSO with third party provider"
         case .alreadyLoggedIn:
             return "Error - a user is already logged in"
         case .missingImplementation:

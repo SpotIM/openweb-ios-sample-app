@@ -37,6 +37,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                                    OWCommentTextViewModelingOutputs {
 
     fileprivate struct Metrics {
+        static let textOffset: CGFloat = OWCommentView.Metrics.horizontalOffset + OWCommentCell.ExternalMetrics.horizontalOffset * 2
         static let invalidURLSchemes: [String] = ["mailto"]
     }
 
@@ -46,14 +47,18 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let collapsableTextLineLimit: Int
     fileprivate let disposeBag = DisposeBag()
 
-    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "ReadMore")
+    fileprivate var readMoreText: String = OWLocalizationManager.shared.localizedString(key: "SeeMore")
 
     var labelClickIndex = PublishSubject<Int>()
 
     fileprivate var readMoreRange: NSRange? = nil
     fileprivate var availableUrlsRange: OWRangeURLsMapper
+    fileprivate var serviceProvider: OWSharedServicesProviding
 
-    init(comment: OWComment, collapsableTextLineLimit: Int) {
+    init(serviceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         comment: OWComment,
+         collapsableTextLineLimit: Int) {
+        self.serviceProvider = serviceProvider
         self.collapsableTextLineLimit = collapsableTextLineLimit
         self.availableUrlsRange = [:]
         _comment.onNext(comment)
@@ -88,8 +93,17 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
     var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
-        width
+        self.serviceProvider.conversationSizeService().conversationTableSize
             .distinctUntilChanged()
+            .map { $0.width }
+            .withLatestFrom(comment) { ($0, $1) }
+            .map { [weak self] width, comment -> CGFloat? in
+                guard let self = self else { return nil }
+                let depth = min(comment.depth ?? 0, OWCommentCell.ExternalMetrics.maxDepth)
+                let adjustedWidth = width - Metrics.textOffset - CGFloat(depth) * OWCommentCell.ExternalMetrics.depthOffset
+                return adjustedWidth
+            }
+            .unwrap()
             .asObservable()
     }
 
@@ -108,6 +122,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .filter { $0 == .expanded }
             .voidify()
     }()
+
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_linesAndFullAttributedString, _textState, _themeStyleObservable)
             .map { [weak self] linesAndAttributedString, currentState, style -> (NSMutableAttributedString, OWThemeStyle)? in
@@ -123,6 +138,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 self?.locateURLsInText(text: &res, style: style)
                 return res
             }
+            .distinctUntilChanged()
             .asObservable()
     }()
 

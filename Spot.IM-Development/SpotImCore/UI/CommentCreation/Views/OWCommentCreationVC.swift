@@ -110,7 +110,7 @@ class OWCommentCreationVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return OWManager.manager.helpers.orientationEnforcement.interfaceOrientationMask
+        return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
 }
 
@@ -128,8 +128,8 @@ fileprivate extension OWCommentCreationVC {
 
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
-            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperviewSafeArea()
         }
 
         view.addSubview(footerSafeAreaView)
@@ -141,14 +141,14 @@ fileprivate extension OWCommentCreationVC {
     }
 
     func setupObservers() {
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
+                                 OWSharedServicesProvider.shared.orientationService().orientation)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
                 guard let self = self else { return }
                 let backgroundColor: UIColor = {
                     switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                     case .regular, .light:
-                        return OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                        return OWColorPalette.shared.color(type: currentOrientation == .landscape ? .backgroundColor6 : .backgroundColor2, themeStyle: currentStyle)
                     case .floatingKeyboard:
                         return Metrics.floatingBackgroungColor
                     }
@@ -170,29 +170,31 @@ fileprivate extension OWCommentCreationVC {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .subscribe(onNext: { [weak self] notification in
-                guard
-                    let self = self,
-                    let expandedKeyboardHeight = notification.keyboardSize?.height,
-                    let animationDuration = notification.keyboardAnimationDuration
-                    else { return }
-                switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                case .regular, .light:
-                    let bottomPadding: CGFloat
-                    bottomPadding = self.tabBarController?.tabBar.frame.height ?? self.view.window?.safeAreaInsets.bottom ?? 0
-                    self.commentCreationView.OWSnp.updateConstraints { make in
-                        make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
-                    }
-                    UIView.animate(withDuration: animationDuration) { [weak self] in
-                        guard let self = self else { return }
-                        self.view.layoutIfNeeded()
-                    }
-                case .floatingKeyboard:
-                    // floatingKeyboard style handles it's own constraints
-                    UIView.animate(withDuration: animationDuration) { [weak self] in
-                        guard let self = self else { return }
-                        self.view.backgroundColor = Metrics.floatingBackgroungColor
-                        self.floatingNavigationBarOverlayButton.alpha = 1
-                        self.view.layoutIfNeeded()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard
+                        let self = self,
+                        let expandedKeyboardHeight = notification.keyboardSize?.height,
+                        let animationDuration = notification.keyboardAnimationDuration
+                        else { return }
+                    switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        let bottomPadding: CGFloat
+                        bottomPadding = self.tabBarController?.tabBar.frame.height ?? self.view.window?.safeAreaInsets.bottom ?? 0
+                        self.commentCreationView.OWSnp.updateConstraints { make in
+                            make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
+                        }
+                        UIView.animate(withDuration: animationDuration) { [weak self] in
+                            guard let self = self else { return }
+                            self.view.layoutIfNeeded()
+                        }
+                    case .floatingKeyboard:
+                        // floatingKeyboard style handles it's own constraints
+                        UIView.animate(withDuration: animationDuration) { [weak self] in
+                            guard let self = self else { return }
+                            self.view.backgroundColor = Metrics.floatingBackgroungColor
+                            self.floatingNavigationBarOverlayButton.alpha = 1
+                            self.view.layoutIfNeeded()
+                        }
                     }
                 }
             })
@@ -202,26 +204,28 @@ fileprivate extension OWCommentCreationVC {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
             .subscribe(onNext: { [weak self] notification in
-                guard
-                    let self = self,
-                    let animationDuration = notification.keyboardAnimationDuration
-                    else { return }
-                switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
-                case .regular, .light:
-                    self.commentCreationView.OWSnp.updateConstraints { make in
-                        make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-                    }
-                    UIView.animate(withDuration: animationDuration) { [weak self] in
-                        guard let self = self else { return }
-                        self.view.layoutIfNeeded()
-                    }
-                case .floatingKeyboard:
-                    // floatingKeyboard style handles it's own constraints
-                    UIView.animate(withDuration: animationDuration) { [weak self] in
-                        guard let self = self else { return }
-                        self.view.backgroundColor = .clear
-                        self.floatingNavigationBarOverlayButton.alpha = 0
-                        self.view.layoutIfNeeded()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard
+                        let self = self,
+                        let animationDuration = notification.keyboardAnimationDuration
+                        else { return }
+                    switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
+                    case .regular, .light:
+                        self.commentCreationView.OWSnp.updateConstraints { make in
+                            make.bottom.equalToSuperviewSafeArea()
+                        }
+                        UIView.animate(withDuration: animationDuration) { [weak self] in
+                            guard let self = self else { return }
+                            self.view.layoutIfNeeded()
+                        }
+                    case .floatingKeyboard:
+                        // floatingKeyboard style handles it's own constraints
+                        UIView.animate(withDuration: animationDuration) { [weak self] in
+                            guard let self = self else { return }
+                            self.view.backgroundColor = .clear
+                            self.floatingNavigationBarOverlayButton.alpha = 0
+                            self.view.layoutIfNeeded()
+                        }
                     }
                 }
             })

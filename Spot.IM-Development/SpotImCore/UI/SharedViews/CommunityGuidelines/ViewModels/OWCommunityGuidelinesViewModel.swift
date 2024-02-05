@@ -116,7 +116,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     var communityGuidelinesAttributedString: Observable<NSAttributedString> {
         return Observable.combineLatest(communityGuidelinesTitleFromConfig,
                                 _updateCommunityGuidelinesAttributedString)
-            .observe(on: MainScheduler.asyncInstance)
             .map { [weak self] communityGuidelinesTitle, themeStyle -> NSAttributedString? in
                 guard let self = self else { return nil }
                 return self.getAttributedText(style: self.style,
@@ -156,8 +155,10 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         communityGuidelinesAttributedString
             .take(1)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                self._shouldShowView.onNext(self.style != .none)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self._shouldShowView.onNext(self.style != .none)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -180,9 +181,12 @@ fileprivate extension OWCommunityGuidelinesViewModel {
 
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,
-            contentSizeChanged) { style, _ in
+            servicesProvider.appLifeCycle().isActive,
+            contentSizeChanged) { style, isActive, _ -> OWThemeStyle? in
+                guard isActive else { return nil } // Avoid computation on background for `AttributedString`
                 return style
             }
+            .unwrap()
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self._updateCommunityGuidelinesAttributedString.onNext(style)

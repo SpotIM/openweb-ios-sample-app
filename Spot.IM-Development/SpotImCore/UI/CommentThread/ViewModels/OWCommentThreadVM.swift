@@ -42,7 +42,7 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
     }()
 
     lazy var title: String = {
-        return OWLocalizationManager.shared.localizedString(key: "Replies")
+        return commentThreadViewVM.outputs.title
     }()
 
     var viewDidLoad = PublishSubject<Void>()

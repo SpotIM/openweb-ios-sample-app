@@ -18,7 +18,7 @@ protocol OWCommentCreationLightViewViewModelingInputs {
 protocol OWCommentCreationLightViewViewModelingOutputs {
     var commentType: OWCommentCreationTypeInternal { get }
     var shouldShowReplySnippet: Bool { get }
-    var titleText: Observable<String> { get }
+    var titleText: Observable<NSAttributedString> { get }
     var replyToAttributedString: Observable<NSAttributedString> { get }
 
     var replySnippetViewModel: OWCommentCreationReplySnippetViewModeling { get }
@@ -64,7 +64,8 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     }()
 
     lazy var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling = {
-        return OWCommentLabelsContainerViewModel(section: commentCreationData.article.additionalSettings.section)
+        return OWCommentLabelsContainerViewModel(commentCreationType: commentCreationData.commentCreationType,
+                                                 section: commentCreationData.article.additionalSettings.section)
     }()
 
     lazy var commentCreationContentVM: OWCommentCreationContentViewModeling = {
@@ -79,13 +80,20 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
             .asObservable()
     }
 
-    var titleText: Observable<String> {
+    var titleText: Observable<NSAttributedString> {
+        let title: String
         switch commentCreationData.commentCreationType {
         case .edit:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "EditComment"))
+            title = OWLocalizationManager.shared.localizedString(key: "EditComment")
         default:
-            return Observable.just(OWLocalizationManager.shared.localizedString(key: "AddComment"))
+            title = OWLocalizationManager.shared.localizedString(key: "AddComment")
         }
+
+        let attributedString = NSMutableAttributedString(string: title)
+        let attrs = [NSAttributedString.Key.font: OWFontBook.shared.font(typography: .titleSmall)]
+        attributedString.addAttributes(attrs, range: NSRange(location: 0, length: attributedString.length))
+
+        return Observable.just(attributedString)
     }
 
     var replyToAttributedString: Observable<NSAttributedString> {
@@ -161,9 +169,23 @@ fileprivate extension OWCommentCreationLightViewViewModel {
             .bind(to: commentCounterViewModel.inputs.commentTextCount)
             .disposed(by: disposeBag)
 
-        commentCreationContentVM.outputs.isValidatedContent
-            .bind(to: footerViewModel.inputs.ctaEnabled)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            commentCreationContentVM.outputs.isValidatedContent,
+            commentCreationContentVM.outputs.isInitialContentEdited,
+            commentLabelsContainerVM.outputs.isValidSelection,
+            commentLabelsContainerVM.outputs.isInitialSelectionChanged
+        ) { [weak self] isValidContent, isInitialContentEdited, isValidLabelsSelection, isInitialLabelsSelectionChanged in
+            guard let self = self else { return false }
+            let isValidComment = isValidContent && isValidLabelsSelection
+            switch self.commentCreationData.commentCreationType {
+            case .edit:
+                return isValidComment && (isInitialContentEdited || isInitialLabelsSelectionChanged)
+            default:
+                return isValidComment
+            }
+        }
+        .bind(to: footerViewModel.inputs.ctaEnabled)
+        .disposed(by: disposeBag)
 
         becomeFirstResponderCalled
             .bind(to: commentCreationContentVM.inputs.becomeFirstResponder)

@@ -65,6 +65,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         sharedServiceProvider
             .authenticationManager()
             .activeUserAvailability
+            .observe(on: MainScheduler.instance)
             .map { availability in
                 switch availability {
                 case .notAvailable:
@@ -103,6 +104,12 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM.inputs.update(comment: comment)
         contentVM.inputs.update(comment: comment)
         commentStatusVM.inputs.updateStatus(for: comment)
+        commentEngagementVM.inputs.update(for: comment)
+
+        if let userId = comment.userId,
+           let user = self.sharedServiceProvider.usersService().get(userId: userId) {
+            self.update(user: user)
+        }
     }
 
     func update(user: SPUser) {
@@ -145,7 +152,6 @@ fileprivate extension OWCommentViewModel {
                 guard let self = self, let user = user else { return false }
                 return user.userId == self.comment.userId
             }
-            .observe(on: MainScheduler.instance)
             .bind(to: _isCommentOfActiveUser)
             .disposed(by: disposedBag)
 

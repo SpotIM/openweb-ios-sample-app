@@ -92,6 +92,8 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case articleHeaderStyle = "articleHeaderStyle"
         case articleInformationStrategy = "articleInformationStrategy"
         case elementsCustomizationStyleIndex = "elementsCustomizationStyleIndex"
+        case colorCustomizationStyleIndex = "colorCustomizationStyleIndex"
+        case colorCustomizationCustomTheme = "colorCustomizationCustomTheme"
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case statusBarStyleIndex = "statusBarStyleIndex"
@@ -109,6 +111,8 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case openCommentId = "openCommentId"
         case showLoginPrompt = "showLoginPrompt"
         case orientationEnforcement = "orientationEnforcement"
+        case selectedSpotId = "selectedSpotId"
+        case selectedPostId = "selectedPostId"
     }
 }
 
@@ -184,6 +188,14 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key wich stores general setting's orientation enforcement"
         case .elementsCustomizationStyleIndex:
             return "Key which stores general setting's elements customization style index"
+        case .colorCustomizationStyleIndex:
+            return "Key which stores general setting's color customization style index"
+        case .colorCustomizationCustomTheme:
+            return "Key which stores general setting's OWTheme color for custom colors override"
+        case .selectedSpotId:
+            return "Key which stores the current spot id"
+        case .selectedPostId:
+            return "Key which stores the current post id"
         }
     }
 }

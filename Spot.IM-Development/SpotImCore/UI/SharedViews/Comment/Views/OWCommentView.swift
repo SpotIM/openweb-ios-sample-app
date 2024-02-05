@@ -11,12 +11,15 @@ import RxSwift
 import RxCocoa
 
 class OWCommentView: UIView {
-    fileprivate struct Metrics {
+    struct Metrics {
+        static let horizontalOffset: CGFloat = 16.0
+    }
+
+    fileprivate struct InternalMetrics {
         static let leadingOffset: CGFloat = 16.0
         static let commentHeaderVerticalOffset: CGFloat = 12.0
         static let commentStatusBottomPadding: CGFloat = 12.0
         static let commentLabelTopPadding: CGFloat = 10.0
-        static let horizontalOffset: CGFloat = 16.0
         static let messageContainerTopOffset: CGFloat = 4.0
         static let commentActionsTopPadding: CGFloat = 15.0
     }
@@ -93,7 +96,7 @@ fileprivate extension OWCommentView {
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(Metrics.commentStatusBottomPadding)
+            make.top.equalTo(commentStatusView.OWSnp.bottom).offset(InternalMetrics.commentStatusBottomPadding)
             commentHeaderBottomConstraint = make.bottom.equalToSuperview().constraint
         }
     }
@@ -101,14 +104,14 @@ fileprivate extension OWCommentView {
     func setupCommentContentUI() {
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
+            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(InternalMetrics.commentLabelTopPadding)
             make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
         }
 
         self.addSubview(commentContentView)
         commentContentView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentLabelsContainerView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
+            make.top.equalTo(commentLabelsContainerView.OWSnp.bottom).offset(InternalMetrics.messageContainerTopOffset)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
         }
@@ -116,7 +119,7 @@ fileprivate extension OWCommentView {
         self.addSubview(commentEngagementView)
         commentEngagementView.OWSnp.makeConstraints { make in
             make.bottom.leading.trailing.equalToSuperview()
-            make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
+            make.top.equalTo(commentContentView.OWSnp.bottom).offset(InternalMetrics.commentActionsTopPadding)
         }
         self.bringSubviewToFront(blockingOpacityView)
     }
@@ -142,12 +145,14 @@ fileprivate extension OWCommentView {
 
         viewModel.outputs.shouldShowCommentStatus
             .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                self.commentHeaderView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? Metrics.commentStatusBottomPadding : 0)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.commentHeaderView.OWSnp.updateConstraints { make in
+                        make.top.equalTo(self.commentStatusView.OWSnp.bottom).offset(shouldShow ? InternalMetrics.commentStatusBottomPadding : 0)
+                    }
+                    self.commentStatusView.isHidden = !shouldShow
+                    self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
                 }
-                self.commentStatusView.isHidden = !shouldShow
-                self.commentStatusZeroHeightConstraint?.isActive = !shouldShow
             })
             .disposed(by: disposedBag)
 

@@ -20,6 +20,7 @@ protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func profileService() -> OWProfileServicing
     func themeStyleService() -> OWThemeStyleServicing
+    func orientationService() -> OWOrientationServicing
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
@@ -53,7 +54,9 @@ protocol OWSharedServicesProviding: AnyObject {
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
     func toastNotificationService() -> OWToastNotificationServicing
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
+    func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
+    func conversationSizeService() -> OWConversationSizeServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -71,6 +74,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
+    }()
+
+    fileprivate lazy var _orientationService: OWOrientationService = {
+        return OWOrientationService()
+    }()
+
+    fileprivate lazy var _conversationSizeService: OWConversationSizeServicing = {
+        return OWConversationSizeService()
     }()
 
     fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
@@ -214,7 +225,11 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _networkAvailabilityService: OWNetworkAvailabilityServicing = {
-        return OWNetworkAvailabilityService()
+        return OWNetworkAvailabilityService.shared
+    }()
+
+    fileprivate lazy var _actionsCallbacksNotifier: OWActionsCallbacksNotifierServicing = {
+        return OWActionsCallbacksNotifierService()
     }()
 
     func profileService() -> OWProfileServicing {
@@ -223,6 +238,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
+    }
+
+    func orientationService() -> OWOrientationServicing {
+        return _orientationService
     }
 
     func statusBarStyleService() -> OWStatusBarStyleServicing {
@@ -359,6 +378,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func toastNotificationService() -> OWToastNotificationServicing {
         return _toastNotificationService
+    }
+
+    func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing {
+        _actionsCallbacksNotifier
+    }
+
+    func conversationSizeService() -> OWConversationSizeServicing {
+        return _conversationSizeService
     }
 }
 

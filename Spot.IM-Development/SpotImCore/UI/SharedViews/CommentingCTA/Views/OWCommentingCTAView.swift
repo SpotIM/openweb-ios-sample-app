@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 
 class OWCommentingCTAView: UIView {
+
     fileprivate lazy var skelatonView: OWCommentingCTASkeletonView = {
         return OWCommentingCTASkeletonView()
     }()
@@ -25,6 +26,7 @@ class OWCommentingCTAView: UIView {
             .wrapContent()
     }()
 
+    fileprivate var currentStyleView: UIView? = nil
     fileprivate var heightConstraint: OWConstraint? = nil
     fileprivate var viewModel: OWCommentingCTAViewModeling!
     fileprivate var disposeBag = DisposeBag()
@@ -52,7 +54,8 @@ fileprivate extension OWCommentingCTAView {
 
         self.addSubview(skelatonView)
         skelatonView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperviewSafeArea()
             self.heightConstraint = make.height.equalTo(0).constraint
         }
     }
@@ -65,9 +68,11 @@ fileprivate extension OWCommentingCTAView {
                 self.subviews.forEach { $0.removeFromSuperview() }
 
                 let view = self.view(forStyle: style)
+                self.currentStyleView = view
                 self.addSubview(view)
                 view.OWSnp.makeConstraints { make in
-                    make.edges.equalToSuperview()
+                    make.leading.trailing.equalToSuperview()
+                    make.top.bottom.equalToSuperviewSafeArea()
                 }
             })
             .disposed(by: disposeBag)
@@ -78,6 +83,14 @@ fileprivate extension OWCommentingCTAView {
                 .bind(to: heightConstraint.rx.isActive)
                 .disposed(by: disposeBag)
         }
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
     }
 
     func view(forStyle style: OWCommentingCTAStyle) -> UIView {

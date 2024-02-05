@@ -12,6 +12,7 @@ public enum OWCustomizableElement {
     case navigation(element: OWNavigationCustomizableElement)
     case header(element: OWHeaderCustomizableElement)
     case articleDescription(element: OWArticleDescriptionCustomizableElement)
+    case loginPrompt(element: OWLoginPromptCustomizableElement)
     case summary(element: OWSummaryCustomizableElement)
     case summaryHeader(element: OWSummaryHeaderCustomizableElement)
     case onlineUsers(element: OWOnlineUsersCustomizableElement)
@@ -21,4 +22,5 @@ public enum OWCustomizableElement {
     case emptyState(element: OWEmptyStateCustomizableElement)
     case emptyStateCommentingEnded(element: OWEmptyStateCommentingEndedCustomizableElement)
     case commentingEnded(element: OWCommentingEndedCustomizableElement)
+    case commentCreationSubmit(element: OWCommentCreationSubmitCustomizableElement)
 }
