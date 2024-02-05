@@ -368,6 +368,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 fileprivate extension OWCommentCreationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        Observable.merge(commentCreationFloatingKeyboardViewVm.outputs.dismissedToast)
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(commentCreationData.article.articleInformationStrategy)
 
         if case .floatingKeyboard = commentCreationData.settings.commentCreationSettings.style {

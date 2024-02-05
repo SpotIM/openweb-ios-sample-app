@@ -20,6 +20,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -315,6 +316,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return _performTableViewAnimation
             .asObservable()
     }
+
+    var dismissToast = PublishSubject<Void>()
 
     fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
     var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
@@ -1417,6 +1420,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.servicesProvider
                     .conversationSizeService()
                     .setConversationTableSize(size)
+            })
+            .disposed(by: disposeBag)
+
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
             })
             .disposed(by: disposeBag)
     }
