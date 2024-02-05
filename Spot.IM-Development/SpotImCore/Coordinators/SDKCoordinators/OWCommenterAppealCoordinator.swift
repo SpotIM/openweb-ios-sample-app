@@ -152,15 +152,37 @@ fileprivate extension OWCommenterAppealCoordinator {
             .disposed(by: disposeBag)
 
         // Open Additional information - Independent
+        let additionalInformationViewObservable = additionalInformationObservable
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .map { [weak self] additionalInfoViewVM -> OWAdditionalInfoView? in
+                guard let self = self else { return nil }
+                let additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.displayViewWithAnimation(view: additionalInfoView)
+                }
+                return additionalInfoView
+            }
+            .unwrap()
+            .share()
+            
+        additionalInformationViewObservable
+            .subscribe()
+            .disposed(by: disposeBag)
+
+        // Close Additional information tapped - Independent
         additionalInformationObservable
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
-            .subscribe(onNext: { [weak self] additionalInfoViewVM in
-                guard let self = self else { return }
-                let additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
-                OWScheduler.runOnMainThreadIfNeeded {
-                    self.displayViewWithAnimation(view: additionalInfoView)
+            .flatMap { additionalInfoViewVM -> Observable<Void> in
+                return additionalInfoViewVM.outputs.closeAdditionalInfoTapped
+            }
+            .withLatestFrom(additionalInformationViewObservable)
+            .subscribe(onNext: { additionalInformationView in
+                OWScheduler.runOnMainThreadIfNeeded { [weak self] in
+                    self?.removeViewWithAnimation(view: additionalInformationView)
                 }
             })
             .disposed(by: disposeBag)
@@ -354,6 +376,14 @@ fileprivate extension OWCommenterAppealCoordinator {
         }
         view.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+
+    func removeViewWithAnimation(view: UIView) {
+        UIView.animate(withDuration: Metrics.fadeDuration) {
+            view.alpha = 0
+        } completion: { _ in
+            view.removeFromSuperview()
         }
     }
 }
