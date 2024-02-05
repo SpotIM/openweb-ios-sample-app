@@ -367,7 +367,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 let footerHeight = self.footerView.frame.size.height
                 let headerHeight = self.headerView.frame.size.height
                 requiredData.bottomPadding = toolbarHeight + footerHeight + headerHeight + Metrics.errorStateBottomPadding
-                self.mainContainer.displayToast(requiredData: requiredData, actionCompletion: action)
+                self.mainContainer.displayToast(requiredData: requiredData, actionCompletion: action, disposeBag: self.disposeBag)
                 if let toolbar = self.toolbar {
                     self.mainContainer.bringSubviewToFront(toolbar)
                 }
@@ -381,8 +381,6 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 self?.mainContainer.dismissToast()
             })
             .disposed(by: disposeBag)
-
-        mainContainer.setupToastObservers(disposeBag: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
