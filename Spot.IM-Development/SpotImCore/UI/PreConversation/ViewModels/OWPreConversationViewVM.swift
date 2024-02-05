@@ -55,9 +55,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var tableViewSizeChanged: Observable<CGSize> { get }
     var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
     var hideToast: Observable<Void> { get }
+    var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
