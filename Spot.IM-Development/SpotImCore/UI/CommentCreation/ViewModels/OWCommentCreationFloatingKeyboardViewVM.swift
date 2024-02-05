@@ -20,6 +20,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
     var commentCreationError: PublishSubject<Void> { get }
     var displayToast: PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -42,6 +43,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var customizeSubmitButtonUI: Observable<UIButton> { get }
     var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
     var hideToast: Observable<Void> { get }
+    var dismissedToast: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -66,6 +68,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .unwrap()
             .asObservable()
     }
+
+    var dismissToast = PublishSubject<Void>()
+    lazy var dismissedToast: Observable<Void> = {
+        return dismissToast
+            .asObservable()
+    }()
 
     var hideToast: Observable<Void> {
         return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
