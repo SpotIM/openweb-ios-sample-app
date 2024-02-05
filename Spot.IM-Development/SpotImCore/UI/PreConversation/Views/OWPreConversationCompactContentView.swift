@@ -190,7 +190,7 @@ fileprivate extension OWPreConversationCompactContentView {
         textLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalTo(cameraIcon.OWSnp.trailing).offset(Metrics.textLeftPadding)
-            make.trailing.lessThanOrEqualTo(errorRetryView.OWSnp.leading)
+            make.trailing.equalTo(errorRetryView.OWSnp.leading)
         }
         textLabel.isHidden = true
     }

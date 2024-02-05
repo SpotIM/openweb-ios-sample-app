@@ -39,7 +39,8 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment {
         guard let commentId = originalComment.id else { return originalComment }
         var updatedComment = originalComment
-        if (originalComment.status == .pending || originalComment.status == .unknown) && isReported(commentId: commentId, postId: postId) {
+        if (originalComment.status == .pending || originalComment.status == .unknown || originalComment.status == nil)
+            && isReported(commentId: commentId, postId: postId) {
             updatedComment.setIsReported(true)
         }
         return updatedComment
