@@ -1181,7 +1181,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .unwrap()
 
         userTryingToChangeRankObservable
-            .do(onNext: { [weak self] needToRefreshConversation, commentVm, _ in
+            .do(onNext: { [weak self] needToRefreshConversation, _, _ in
                 // Refresh conversation in case user logged in
                 guard let self = self else { return }
                 if needToRefreshConversation {
