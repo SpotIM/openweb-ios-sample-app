@@ -107,7 +107,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                         popCompletion: conversationPopped)
         }
 
-        // CTA tapped from conversation screen
+        // CTA, Reply or Edit tapped from conversation screen
         let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCommentCreationRequiredData? in
@@ -522,6 +522,23 @@ fileprivate extension OWConversationCoordinator {
                                                                                  articelDescriptionCustomizeAuthor,
                                                                                  articelDescriptionCustomizeImage)
 
+        // Set customized login prompt
+        let loginPromptCustomizeLockImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeLockIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .lockIcon(imageView: $0)) }
+
+        let loginPromptCustomizeTitle = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.loginPrompt(element: .title(label: $0)) }
+
+        let loginPromptCustomizeArrowImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeArrowIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .arrowIcon(imageView: $0)) }
+
+        let loginPromptCustomizationElementsObservable = Observable.merge(loginPromptCustomizeLockImage,
+                                                                          loginPromptCustomizeTitle,
+                                                                          loginPromptCustomizeArrowImage)
+
         // Set customized conversation summary
         let summaryCustomizeCounter = viewModel.outputs.conversationSummaryViewModel
             .outputs.customizeCounterLabelUI
@@ -667,6 +684,7 @@ fileprivate extension OWConversationCoordinator {
 
         let customizationElementsObservables = Observable.merge(conversationTitleHeaderCustomizationElementsObservable,
                                                                 articleDescriptionCustomizationElementsObservable,
+                                                                loginPromptCustomizationElementsObservable,
                                                                 summaryCustomizationElementsObservable,
                                                                 communityQuestionCustomizationElementObservable,
                                                                 communityGuidelinesCustomizationElementObservable,
