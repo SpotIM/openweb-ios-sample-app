@@ -10,6 +10,7 @@ import RxSwift
 
 protocol OWToastViewModelingInputs {
     var actionClick: PublishSubject<Void> { get }
+    var dismiss: PublishSubject<Void> { get }
 }
 
 protocol OWToastViewModelingOutputs {
@@ -36,14 +37,17 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     var borderColor: UIColor = .clear
 
     var actionClick = PublishSubject<Void>()
+    var dismiss = PublishSubject<Void>()
     let actionCompletion: PublishSubject<Void>?
+    let dismissCompletion: PublishSubject<Void>?
     var disposeBag = DisposeBag()
 
-    init(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?) {
+    init(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
         self.actionCompletion = actionCompletion
+        self.dismissCompletion = dismissCompletion
         iconImage = self.iconForType(type: requiredData.type)
         borderColor = self.borderColorForType(type: requiredData.type)
 
@@ -57,6 +61,13 @@ fileprivate extension OWToastViewModel {
             .asObservable()
             .subscribe(onNext: { [weak self] in
                 self?.actionCompletion?.onNext()
+            })
+            .disposed(by: disposeBag)
+
+        dismiss
+            .asObservable()
+            .subscribe(onNext: { [weak self] in
+                self?.dismissCompletion?.onNext()
             })
             .disposed(by: disposeBag)
     }
