@@ -158,9 +158,10 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
             .map { [weak self] additionalInfoViewVM -> OWAdditionalInfoView? in
                 guard let self = self else { return nil }
-                let additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
+                var additionalInfoView: OWAdditionalInfoView? = nil
                 OWScheduler.runOnMainThreadIfNeeded {
-                    self.displayViewWithAnimation(view: additionalInfoView)
+                    additionalInfoView = OWAdditionalInfoView(viewModel: additionalInfoViewVM)
+                    self.displayViewWithAnimation(view: additionalInfoView!)
                 }
                 return additionalInfoView
             }
@@ -269,8 +270,8 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
             .subscribe(onNext: { [weak self] vm in
                 guard let self = self else { return }
-                let cancelView = OWCancelView(viewModel: vm)
                 OWScheduler.runOnMainThreadIfNeeded {
+                    let cancelView = OWCancelView(viewModel: vm)
                     self.displayViewWithAnimation(view: cancelView)
                 }
             })
@@ -341,9 +342,9 @@ fileprivate extension OWCommenterAppealCoordinator {
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 let submittedViewVM = OWSubmittedViewViewModel(type: .commenterAppeal)
-                let submittedView = OWSubmittedView(viewModel: submittedViewVM)
-                
+
                 OWScheduler.runOnMainThreadIfNeeded {
+                    let submittedView = OWSubmittedView(viewModel: submittedViewVM)
                     self.displayViewWithAnimation(view: submittedView)
                 }
 
@@ -351,8 +352,8 @@ fileprivate extension OWCommenterAppealCoordinator {
             }
 
         // Close from Submitted Screen
-        let closeSubmittedCallbackObservable =  closeSubmittedViewTapped
-            .map { OWViewActionCallbackType.closeReportReason }
+        let closeSubmittedCallbackObservable = closeSubmittedViewTapped
+            .map { OWViewActionCallbackType.closeClarityDetails }
 
         // Close submitted
         closeSubmitted
