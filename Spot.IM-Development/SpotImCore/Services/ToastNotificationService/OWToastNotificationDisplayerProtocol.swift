@@ -11,11 +11,9 @@ import UIKit
 import RxSwift
 
 protocol OWToastNotificationDisplayerProtocol {
-    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?)
+    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, disposeBag: DisposeBag)
     func dismissToast()
     var toastView: OWToastView? { get set }
-    var panGesture: UIPanGestureRecognizer { get set }
-    func setupToastObservers(disposeBag: DisposeBag)
 }
 
 struct ToastMetrics {
@@ -24,11 +22,12 @@ struct ToastMetrics {
 
     fileprivate static let swipeThresholdToDismiss: CGFloat = 50
     fileprivate static let swipeMagnetAnimationDuration: CGFloat = 0.3
+    fileprivate static let panGestureName = "OWToastPanGesture"
 }
 
 extension OWToastNotificationDisplayerProtocol where Self: UIView {
 
-    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?) {
+    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, disposeBag: DisposeBag) {
         // Make sure no old toast is visible
         removeToast()
 
@@ -53,7 +52,7 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
             self?.layoutIfNeeded()
         })
 
-        toastView.addGestureRecognizer(panGesture)
+        self.setupToastObservers(disposeBag: disposeBag)
     }
 
     func dismissToast() {
@@ -69,7 +68,9 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
         })
     }
 
-    func setupToastObservers(disposeBag: DisposeBag) {
+    fileprivate func setupToastObservers(disposeBag: DisposeBag) {
+        let panGesture = UIPanGestureRecognizer()
+        panGesture.name = ToastMetrics.panGestureName
         panGesture.rx.event
             .subscribe(onNext: { [weak self] recognizer in
                 guard let self = self,
@@ -110,6 +111,7 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
                 }
             })
             .disposed(by: disposeBag)
+        toastView?.addGestureRecognizer(panGesture)
     }
 }
 
@@ -117,7 +119,9 @@ fileprivate extension OWToastNotificationDisplayerProtocol where Self: UIView {
     mutating func removeToast() {
         guard let toastView = self.toastView else { return }
         toastView.removeFromSuperview()
-        toastView.removeGestureRecognizer(panGesture)
+        if let panGesture = toastView.gestureRecognizers?.first(where: { $0.name == ToastMetrics.panGestureName }) {
+            toastView.removeGestureRecognizer(panGesture)
+        }
         self.toastView = nil
     }
 }

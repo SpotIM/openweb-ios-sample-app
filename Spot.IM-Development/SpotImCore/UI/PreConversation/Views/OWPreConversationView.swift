@@ -306,7 +306,8 @@ fileprivate extension OWPreConversationView {
 
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] (data, action) in
-                self?.displayToast(requiredData: data.data, actionCompletion: action)
+                guard var self = self else { return }
+                self.displayToast(requiredData: data.data, actionCompletion: action, disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -315,8 +316,6 @@ fileprivate extension OWPreConversationView {
                 self?.dismissToast()
             })
             .disposed(by: disposeBag)
-
-        setupToastObservers(disposeBag: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
