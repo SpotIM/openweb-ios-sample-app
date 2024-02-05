@@ -27,7 +27,6 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotifica
     }
 
     var toastView: OWToastView? = nil
-    var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer()
 
     fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(decideViewTransition: { [weak self] _, _, _ in
@@ -159,6 +158,12 @@ fileprivate extension OWCommentThreadView {
                 make.top.equalToSuperview()
             }
             make.bottom.leading.trailing.equalToSuperview()
+            if shouldShowHeaderView {
+                make.top.equalTo(separatorView.OWSnp.bottom)
+            } else {
+                make.top.equalToSuperview()
+            }
+            make.bottom.leading.trailing.equalToSuperview()
         }
     }
 
@@ -181,10 +186,6 @@ fileprivate extension OWCommentThreadView {
             .bind(to: viewModel.inputs.closeTapped)
             .disposed(by: disposeBag)
 
-        closeButton.rx.tap
-            .bind(to: viewModel.inputs.closeTapped)
-            .disposed(by: disposeBag)
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -193,8 +194,20 @@ fileprivate extension OWCommentThreadView {
                 self.closeButton.setImage(UIImage(spNamed: Metrics.closeButtonIconName, supportDarkMode: true), for: .normal)
                 self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
+                self.headerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.closeButton.setImage(UIImage(spNamed: Metrics.closeButtonIconName, supportDarkMode: true), for: .normal)
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.tableView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.appLifeCycle()
+            .didChangeContentSizeCategory
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.font = OWFontBook.shared.font(typography: .titleSmall)
             })
             .disposed(by: disposeBag)
 
