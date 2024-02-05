@@ -11,5 +11,4 @@ import Foundation
 
 class OWFloatingKeyboardMainContainerView: UIView, OWToastNotificationDisplayerProtocol {
     var toastView: OWToastView?
-    var panGesture = UIPanGestureRecognizer()
 }
