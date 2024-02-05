@@ -19,7 +19,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     fileprivate let queue = OWQueue<OWToastNotificationPresentData>()
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate var mapToastToActionPublishSubject: [String: PublishSubject<Void>?] = [:]
-
+    fileprivate var dismissAfterDurationBlock = DispatchWorkItem {}
     fileprivate var disposeBag: DisposeBag = DisposeBag()
 
     fileprivate var _toastToShow = BehaviorSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>(value: nil)
@@ -47,6 +47,7 @@ class OWToastNotificationService: OWToastNotificationServicing {
     }
 
     func clearCurrentToastBlocker() {
+        dismissAfterDurationBlock.cancel()
         self.servicesProvider.blockerServicing().removeBlocker(perType: .toastNotification)
     }
 }
@@ -72,14 +73,17 @@ fileprivate extension OWToastNotificationService {
                 let actionCompletion = self.mapToastToActionPublishSubject[toast.uuid] ?? nil
                 self._toastToShow.onNext((toast, actionCompletion))
                 // Dismiss toast after duration
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec) { [weak self] in
-                    self?._toastToShow.onNext(nil)
+                dismissAfterDurationBlock = DispatchWorkItem(block: { [weak self] in
+                    if let _ = self?.mapToastToActionPublishSubject[toast.uuid] {
+                        self?._toastToShow.onNext(nil)
+                    }
                     self?.mapToastToActionPublishSubject.removeValue(forKey: toast.uuid)
                     // Wait for the exiting animation to complete before unblocking next toast
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + ToastMetrics.animationDuration) {
                         action.finish()
                     }
-                }
+                })
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + toast.durationInSec, execute: dismissAfterDurationBlock)
             })
             .disposed(by: disposeBag)
     }
