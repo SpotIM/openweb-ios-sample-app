@@ -216,7 +216,8 @@ fileprivate extension OWConversationView {
     func setupObservers() {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] (data, action) in
-                self?.displayToast(requiredData: data.data, actionCompletion: action)
+                guard var self = self else { return }
+                self.displayToast(requiredData: data.data, actionCompletion: action, disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -225,8 +226,6 @@ fileprivate extension OWConversationView {
                 self?.dismissToast()
             })
             .disposed(by: disposeBag)
-
-        setupToastObservers(disposeBag: disposeBag)
 
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
