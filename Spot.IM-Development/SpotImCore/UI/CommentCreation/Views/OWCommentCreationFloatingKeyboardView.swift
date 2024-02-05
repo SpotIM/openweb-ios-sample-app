@@ -366,7 +366,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
                 let footerHeight = self.footerView.frame.size.height
                 let headerHeight = self.headerView.frame.size.height
                 requiredData.bottomPadding = toolbarHeight + footerHeight + headerHeight + Metrics.errorStateBottomPadding
-                self.mainContainer.displayToast(requiredData: requiredData, actionCompletion: action, disposeBag: self.disposeBag)
+                self.mainContainer.displayToast(requiredData: requiredData, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
                 if let toolbar = self.toolbar {
                     self.mainContainer.bringSubviewToFront(toolbar)
                 }
