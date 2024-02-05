@@ -69,7 +69,7 @@ platform :ios do
     xcodebuild(
       scheme: "Package SpotImCoreSDK",
       configuration: options[:configuration],
-      destination: "generic/platform=iOS",
+      destination: "generic/platform=iOS Simulator",
       clean: true,
       build: true
     )
@@ -101,7 +101,7 @@ platform :ios do
           scheme: scheme,
           workspace: "Spot-IM.Development.xcworkspace",
           export_method: "app-store",
-          destination: "generic/platform=iOS",
+          destination: "generic/platform=iOS Simulator",
           export_options: {
               signingStyle: "manual",
               provisioningProfiles: {
@@ -117,7 +117,7 @@ platform :ios do
         scheme: scheme,
         workspace: "Spot-IM.Development.xcworkspace",
         export_method: "development",
-        destination: "generic/platform=iOS",
+        destination: "generic/platform=iOS Simulator",
         export_options: {
             signingStyle: "manual",
             provisioningProfiles: {

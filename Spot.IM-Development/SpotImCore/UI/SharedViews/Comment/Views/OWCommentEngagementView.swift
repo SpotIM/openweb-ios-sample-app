@@ -31,6 +31,7 @@ class OWCommentEngagementView: UIView {
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Reply"), state: .normal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteText))
+            .wrapContent()
     }()
 
     fileprivate lazy var replyDotDivider: UIView = {
@@ -54,6 +55,7 @@ class OWCommentEngagementView: UIView {
             .setTitle(OWLocalizationManager.shared.localizedString(key: "Share"), state: .normal)
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(OWFontBook.shared.font(typography: .footnoteText))
+            .wrapContent()
     }()
 
     override init(frame: CGRect) {
