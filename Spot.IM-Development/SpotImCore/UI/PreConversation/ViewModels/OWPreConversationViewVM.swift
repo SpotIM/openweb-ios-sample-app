@@ -1055,6 +1055,10 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] clarityDetailsData in
                 self?.openClarityDetailsChange.onNext(clarityDetailsData)
+                // send analytics for rejected
+                if clarityDetailsData.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: clarityDetailsData.commentId))
+                }
             })
             .disposed(by: disposeBag)
 

@@ -1621,6 +1621,23 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe on new rejected comment
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<(OWCommentStatusType, OWCommentId)> in
+                let statusObservable: [Observable<(OWCommentStatusType, OWCommentId)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentStatusType, OWCommentId)> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    let commentId = commentCellVm.outputs.commentVM.outputs.comment.id ?? ""
+                    return commentStatusVm.outputs.status
+                        .map { ($0, commentId) }
+                }
+                return Observable.merge(statusObservable)
+            }
+            .filter { $0.0 == .rejected }
+            .subscribe(onNext: { [weak self] (_, commentId) in
+                self?.sendEvent(for: .rejectedCommentNoticeView(commentId: commentId))
+            })
+            .disposed(by: disposeBag)
+
         // Observe open clarity details
         commentCellsVmsObservable
             .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsRequireData> in
@@ -1633,6 +1650,10 @@ fileprivate extension OWConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] data in
                 self?.openClarityDetailsChange.onNext(data)
+                // send analytics for rejected
+                if data.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: data.commentId))
+                }
             })
             .disposed(by: disposeBag)
 
