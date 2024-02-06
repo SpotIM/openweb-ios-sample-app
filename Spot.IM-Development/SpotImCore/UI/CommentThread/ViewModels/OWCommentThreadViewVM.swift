@@ -1362,6 +1362,10 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .subscribe(onNext: { [weak self] data in
                 self?.openClarityDetailsChange.onNext(data)
+                // send analytics for rejected
+                if data.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: data.commentId))
+                }
             })
             .disposed(by: disposeBag)
 
