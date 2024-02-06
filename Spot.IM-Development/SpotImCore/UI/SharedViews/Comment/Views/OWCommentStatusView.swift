@@ -88,14 +88,16 @@ fileprivate extension OWCommentStatusView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.messageAttributedText
-            .subscribe(onNext: { [weak self] attributedText in
-                guard let self = self else { return }
-                self.messageLabel
-                    .attributedText(attributedText)
-                    .addRangeGesture(targetRange: self.viewModel.outputs.learnMoreClickableString) { [weak self] in
-                        guard let self = self else { return }
-                        self.viewModel.inputs.learnMoreTap.onNext()
-                    }
+            .subscribe(onNext: { attributedText in
+                OWScheduler.runOnMainThreadIfNeeded { [weak self] in
+                    guard let self = self else { return }
+                    self.messageLabel
+                        .attributedText(attributedText)
+                        .addRangeGesture(targetRange: self.viewModel.outputs.learnMoreClickableString) { [weak self] in
+                            guard let self = self else { return }
+                            self.viewModel.inputs.learnMoreTap.onNext()
+                        }
+                }
             })
             .disposed(by: disposeBag)
 
