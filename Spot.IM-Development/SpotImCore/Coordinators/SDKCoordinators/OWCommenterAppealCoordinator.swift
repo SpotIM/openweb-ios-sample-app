@@ -238,8 +238,6 @@ fileprivate extension OWCommenterAppealCoordinator {
             .bind(to: viewModel.inputs.submitAppealTap)
             .disposed(by: disposeBag)
 
-        // TODO: independed ?
-
         // Open cancel observable - General
         let cancelAppeal = Observable.merge(viewModel.outputs.cancelAppeal,
                                             cancelAdditionalInfoTapped)
@@ -264,17 +262,25 @@ fileprivate extension OWCommenterAppealCoordinator {
             .disposed(by: disposeBag)
 
         // Open cancel view - Independent
-        cancelAppeal
+        let cancelViewObservable = cancelAppeal
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
-            .subscribe(onNext: { [weak self] vm in
-                guard let self = self else { return }
+            .map { [weak self] vm -> OWCancelView? in
+                guard let self = self else { return nil }
+                var cancelView: OWCancelView? = nil
                 OWScheduler.runOnMainThreadIfNeeded {
-                    let cancelView = OWCancelView(viewModel: vm)
-                    self.displayViewWithAnimation(view: cancelView)
+                    cancelView = OWCancelView(viewModel: vm)
+                    self.displayViewWithAnimation(view: cancelView!)
                 }
-            })
+                return cancelView
+            }
+            .unwrap()
+            .share()
+
+        // Subscribe to above - Independed
+        cancelViewObservable
+            .subscribe()
             .disposed(by: disposeBag)
 
         // Close cancel screen - Flow
@@ -290,6 +296,23 @@ fileprivate extension OWCommenterAppealCoordinator {
                 guard let router = self.router else { return }
 
                 router.pop(popStyle: .dismiss, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        // Close cancel screen - Independed
+        cancelAppeal
+            .filter { _ in
+                viewModel.outputs.viewableMode == .independent
+            }
+            .flatMap { cancelViewVM -> Observable<Void> in
+                return cancelViewVM.outputs.closeTapped
+            }
+            .withLatestFrom(cancelViewObservable)
+            .debug("NOGAH: cancelViewObservable - closeTapped")
+            .subscribe(onNext: { cancelView in
+                OWScheduler.runOnMainThreadIfNeeded { [weak self] in
+                    self?.removeViewWithAnimation(view: cancelView)
+                }
             })
             .disposed(by: disposeBag)
 
