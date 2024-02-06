@@ -126,7 +126,9 @@ fileprivate extension OWAppealLabelView {
 
         viewModel.outputs.borderColor
             .subscribe(onNext: { [weak self] borderColor in
-                self?.border(width: Metrics.borderWidth, color: borderColor)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self?.border(width: Metrics.borderWidth, color: borderColor)
+                }
             })
             .disposed(by: disposeBag)
 
