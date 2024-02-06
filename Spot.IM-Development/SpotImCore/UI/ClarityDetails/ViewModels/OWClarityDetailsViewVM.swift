@@ -235,6 +235,15 @@ fileprivate extension OWClarityDetailsViewVM {
                 self?.sendEvent(for: .communityGuidelinesLinkClicked)
             })
             .disposed(by: disposeBag)
+
+        dismissView
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                if self.type == .rejected {
+                    self.sendEvent(for: .rejectedNoticeLearnDialogExit(commentId: self.commentId))
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     // TODO: translations
