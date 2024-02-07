@@ -56,6 +56,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 return OWColorPalette.shared.color(type: .separatorColor3, themeStyle: theme)
             case .error:
                 return OWColorPalette.shared.color(type: .errorColor, themeStyle: theme)
+            case .none:
+                return .clear
             }
         }
     }()
@@ -69,6 +71,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             case .skeleton, .default, .unavailable:
                 return OWDesignColors.D1
             case .error:
+                return .clear
+            case .none:
                 return .clear
             }
         }
@@ -119,6 +123,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 return UIImage(spNamed: "appealErrorIcon", supportDarkMode: false)
             case .unavailable:
                 return UIImage(spNamed: "appealUnavailableIcon", supportDarkMode: true)
+            case .none:
+                return nil
             }
         }
     }()
@@ -151,6 +157,8 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                     string: OWLocalizationManager.shared.localizedString(key: "AppealLabelNotAvailable"),
                     attributes: attributes
                 )
+            case .none:
+                return nil
             }
         }
         .unwrap()
@@ -192,7 +200,6 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
 
 fileprivate extension OWAppealLabelViewModel {
     func fetchEligibleToAppeal() {
-        // TODO: when comment is deleted? unavailable?
         _ = servicesProvider.netwokAPI()
             .appeal
             .isEligibleToAppeal(commentId: commentId)
@@ -203,7 +210,7 @@ fileprivate extension OWAppealLabelViewModel {
                     if response.canAppeal {
                         self?._viewType.onNext(.default)
                     } else {
-                        // TODO: do not show label - create none type
+                        self?._viewType.onNext(.none)
                     }
             },
                 onError: { [weak self] _ in
@@ -252,6 +259,7 @@ enum OWAppealLabelViewType {
     case `default`
     case error
     case unavailable
+    case none
 }
 
 enum OWAuthToAppealAlert: String, OWMenuTypeProtocol {
