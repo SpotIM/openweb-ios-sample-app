@@ -26,7 +26,7 @@ protocol OWCommenterAppealViewViewModelingOutputs {
     var submitButtonText: Observable<String> { get }
     var submitInProgress: Observable<Bool> { get }
     var isSubmitEnabled: Observable<Bool> { get }
-    var appealSubmittedSuccessfully: Observable<Void> { get } // TODO: what info is needed?
+    var appealSubmittedSuccessfully: Observable<Void> { get }
     var viewableMode: OWViewableMode { get }
 }
 
@@ -56,7 +56,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 
     init(commentId: OWCommentId,
          viewableMode: OWViewableMode,
-         presentationalMode: OWPresentationalModeCompact = .none, // TODO:
+         presentationalMode: OWPresentationalModeCompact = .none,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentId = commentId
