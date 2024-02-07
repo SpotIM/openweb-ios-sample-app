@@ -111,6 +111,8 @@ fileprivate extension OWAppealLabelView {
                     contentView = self.defaultLabel
                 case .error, .unavailable:
                     contentView = self.iconAndLabelView
+                case .none:
+                    contentView = UIView()
                 }
                 self.subviews.forEach { $0.removeFromSuperview() }
                 self.addSubview(contentView)
@@ -118,6 +120,11 @@ fileprivate extension OWAppealLabelView {
                     make.edges.equalToSuperview().inset(Metrics.padding)
                 }
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.viewType
+            .map { $0 == .none }
+            .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.backgroundColor
