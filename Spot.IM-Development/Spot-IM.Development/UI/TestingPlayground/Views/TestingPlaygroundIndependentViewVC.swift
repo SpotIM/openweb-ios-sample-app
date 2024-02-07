@@ -91,7 +91,7 @@ fileprivate extension TestingPlaygroundIndependentViewVC {
                 self.testingPlaygroundView = view
                 self.contentView.addSubview(view)
                 view.snp.makeConstraints { make in
-                    make.top.leading.trailing.equalToSuperview().inset(30)
+                    make.edges.equalToSuperview()
                 }
             })
             .disposed(by: disposeBag)
