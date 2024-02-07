@@ -80,7 +80,6 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 
         let resultsWithPopAnimation = Observable.merge(
             poppedFromCloseButtonObservable,
-            commenterAppealVM.outputs.commenterAppealViewViewModel.outputs.closeButtonPopped,
             popAppealWithAnimation.asObservable()
         )
             .map { OWCommenterAppealCoordinatorResult.popped }
