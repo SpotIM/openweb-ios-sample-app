@@ -37,14 +37,16 @@ class OWCommenterAppealVM: OWCommenterAppealViewModeling,
     }
 
     lazy var commenterAppealViewViewModel: OWCommenterAppealViewViewModeling = {
-        return OWCommenterAppealViewVM(commentId: commentId, viewableMode: viewableMode)
+        return OWCommenterAppealViewVM(commentId: commentId, viewableMode: viewableMode, presentationalMode: presentationalMode)
     }()
 
     fileprivate let commentId: OWCommentId
     fileprivate let viewableMode: OWViewableMode
-    init(commentId: OWCommentId, viewableMode: OWViewableMode) {
+    fileprivate let presentationalMode: OWPresentationalModeCompact
+    init(commentId: OWCommentId, viewableMode: OWViewableMode, presentationalMode: OWPresentationalModeCompact) {
         self.commentId = commentId
         self.viewableMode = viewableMode
+        self.presentationalMode = presentationalMode
     }
 }
 

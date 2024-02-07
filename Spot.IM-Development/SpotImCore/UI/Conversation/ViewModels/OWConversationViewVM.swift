@@ -1632,9 +1632,15 @@ fileprivate extension OWConversationViewViewModel {
                 }
                 return Observable.merge(statusObservable)
             }
-            .filter { $0.0 == .rejected }
-            .subscribe(onNext: { [weak self] (_, commentId) in
-                self?.sendEvent(for: .rejectedCommentNoticeView(commentId: commentId))
+            .subscribe(onNext: { [weak self] (status, commentId) in
+                switch status {
+                case .rejected:
+                    self?.sendEvent(for: .rejectedCommentNoticeView(commentId: commentId))
+                case .appealed:
+                    self?.sendEvent(for: .appealCommentNoticeView(commentId: commentId))
+                default:
+                    break
+                }
             })
             .disposed(by: disposeBag)
 

@@ -53,7 +53,11 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
         guard let router = router else { return .empty() }
-        let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(commentId: data.commentId, viewableMode: .partOfFlow)
+        let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(
+            commentId: data.commentId,
+            viewableMode: .partOfFlow,
+            presentationalMode: presentationalMode
+        )
         let commenterAppealVC = OWCommenterAppealVC(viewModel: commenterAppealVM)
 
         setupObservers(for: commenterAppealVM.outputs.commenterAppealViewViewModel)
@@ -96,7 +100,8 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     override func showableComponent() -> Observable<OWShowable> {
         let commenterAppealViewVM: OWCommenterAppealViewViewModeling = OWCommenterAppealViewVM(
             commentId: data.commentId,
-            viewableMode: .independent
+            viewableMode: .independent,
+            presentationalMode: presentationalMode
         )
         setupViewActionsCallbacks(forViewModel: commenterAppealViewVM)
         setupObservers(for: commenterAppealViewVM)
@@ -308,7 +313,6 @@ fileprivate extension OWCommenterAppealCoordinator {
                 return cancelViewVM.outputs.closeTapped
             }
             .withLatestFrom(cancelViewObservable)
-            .debug("NOGAH: cancelViewObservable - closeTapped")
             .subscribe(onNext: { cancelView in
                 OWScheduler.runOnMainThreadIfNeeded { [weak self] in
                     self?.removeViewWithAnimation(view: cancelView)

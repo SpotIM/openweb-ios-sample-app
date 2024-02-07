@@ -48,16 +48,20 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentId: OWCommentId
+    fileprivate var articleUrl: String = ""
+    fileprivate let presentationalMode: OWPresentationalModeCompact
 
     let textViewVM: OWTextViewViewModeling
     let viewableMode: OWViewableMode
 
     init(commentId: OWCommentId,
          viewableMode: OWViewableMode,
+         presentationalMode: OWPresentationalModeCompact = .none, // TODO:
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.commentId = commentId
         self.viewableMode = viewableMode
+        self.presentationalMode = presentationalMode
         disposeBag = DisposeBag()
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: "",
@@ -200,6 +204,10 @@ fileprivate extension OWCommenterAppealViewVM {
             .withLatestFrom(selectedReason) { _, reason in
                 return reason.type
             }
+            .do(onNext: { [weak self] reason in
+                guard let self = self else { return }
+                self.sendEvent(for: .appealSubmitted(commnetId: self.commentId, appealReason: reason.rawValue))
+            })
             .withLatestFrom(textViewVM.outputs.textViewText) { reason, message in
                 return (reason, message)
             }
@@ -220,8 +228,6 @@ fileprivate extension OWCommenterAppealViewVM {
                     return true
                 case .error:
                     return false
-                default:
-                    return false
                 }
             }
             .subscribe(onNext: { [weak self] success in
@@ -234,5 +240,37 @@ fileprivate extension OWCommenterAppealViewVM {
                 }
             })
             .disposed(by: disposeBag)
+
+        servicesProvider
+            .activeArticleService()
+            .articleExtraData
+            .subscribe(onNext: { [weak self] article in
+                self?.articleUrl = article.url.absoluteString
+            })
+            .disposed(by: disposeBag)
+
+        closeButtonPopped
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.sendEvent(for: .appealDialogExit(commentId: self.commentId))
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
+        return servicesProvider
+            .analyticsEventCreatorService()
+            .analyticsEvent(
+                for: eventType,
+                articleUrl: articleUrl,
+                layoutStyle: OWLayoutStyle(from: self.presentationalMode),
+                component: .clarityDetails)
+    }
+
+    func sendEvent(for eventType: OWAnalyticEventType) {
+        let event = event(for: eventType)
+        servicesProvider
+            .analyticsService()
+            .sendAnalyticEvents(events: [event])
     }
 }
