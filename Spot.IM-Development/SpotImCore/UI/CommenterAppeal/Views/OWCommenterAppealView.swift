@@ -114,7 +114,6 @@ class OWCommenterAppealView: UIView, OWThemeStyleInjectorProtocol {
             .font(OWFontBook.shared.font(typography: .bodyInteraction))
             .withPadding(Metrics.buttonTextPadding)
             .alpha(Metrics.submitDisabledOpacity)
-            .setTitle("Submit", state: .normal) // TODO: from VM according to state (can be try again)
     }()
 
     fileprivate var textViewHeightConstraint: OWConstraint? = nil
