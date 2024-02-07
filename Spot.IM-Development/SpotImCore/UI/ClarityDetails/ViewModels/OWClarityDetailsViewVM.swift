@@ -251,7 +251,7 @@ fileprivate extension OWClarityDetailsViewVM {
             .subscribe(onNext: { [weak self] commentId in
                 guard let self = self else { return }
                 if self.type == .rejected {
-                    self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: self.commentId))
+                    self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: commentId))
                 }
             })
             .disposed(by: disposeBag)
