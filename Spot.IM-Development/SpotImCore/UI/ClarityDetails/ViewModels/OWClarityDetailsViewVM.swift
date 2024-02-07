@@ -244,6 +244,17 @@ fileprivate extension OWClarityDetailsViewVM {
                 }
             })
             .disposed(by: disposeBag)
+
+        appealLabelViewModel
+            .outputs
+            .openAppeal
+            .subscribe(onNext: { [weak self] commentId in
+                guard let self = self else { return }
+                if self.type == .rejected {
+                    self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: self.commentId))
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     // TODO: translations
