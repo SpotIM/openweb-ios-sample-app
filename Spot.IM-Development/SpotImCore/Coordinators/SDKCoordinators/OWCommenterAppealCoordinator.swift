@@ -129,7 +129,7 @@ fileprivate extension OWCommenterAppealCoordinator {
                     .take(1)
             })
             .delay(.milliseconds(Metrics.delayTapForOpenAdditionalInfo), scheduler: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.instance)
+//            .observe(on: MainScheduler.instance)
             .map { placeholderText, textViewText -> OWAdditionalInfoViewViewModel in
                 return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                      placeholderText: placeholderText,
@@ -150,8 +150,10 @@ fileprivate extension OWCommenterAppealCoordinator {
             .subscribe(onNext: { [weak self] additionalInfoViewVM in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
-                router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+                OWScheduler.runOnMainThreadIfNeeded {
+                    let additionalInfoViewVC = OWAdditionalInfoVC(additionalInfoViewViewModel: additionalInfoViewVM)
+                    router.push(additionalInfoViewVC, pushStyle: .regular, animated: true, popCompletion: nil)
+                }
             })
             .disposed(by: disposeBag)
 

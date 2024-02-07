@@ -328,7 +328,7 @@ fileprivate extension ConversationBelowVideoVC {
             })
             .disposed(by: disposeBag)
 
-        // Chaning clarity details height according to the keyboard
+        // Changing clarity details height according to the keyboard
         keyboardHeight
             .subscribe(onNext: { [weak self] height in
                 guard let self = self, self.clarityDetails != nil,
