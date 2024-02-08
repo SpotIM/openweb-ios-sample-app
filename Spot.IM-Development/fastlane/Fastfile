@@ -92,7 +92,7 @@ platform :ios do
 
     if type == "app-store"
       match(
-          type: "appstore",
+          type: "adhoc",
           readonly: true,
           api_key_path: "apple_api_key.json"
       )
@@ -100,7 +100,7 @@ platform :ios do
       gym(
           scheme: scheme,
           workspace: "Spot-IM.Development.xcworkspace",
-          export_method: "app-store",
+          export_method: "ad-hoc",
           destination: "generic/platform=iOS Simulator",
           export_options: {
               signingStyle: "manual",
