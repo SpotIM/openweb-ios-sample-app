@@ -107,8 +107,7 @@ platform :ios do
               provisioningProfiles: {
                   "im.spot.demo" => "match AppStore im.spot.demo"
               }
-          },
-          xcargs: "-allowProvisioningUpdates"
+          }
       )
     else
       match(type: "development", readonly: true)
