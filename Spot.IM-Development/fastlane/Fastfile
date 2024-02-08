@@ -13,7 +13,7 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "mkkh-ifqr-qhck-zwkq"
+ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "dmjq-rohv-jwmk-fcxi"
 ENV["MATCH_PASSWORD"] = "iOSOpenwebPrivateKeydfdskdfnlwqijeakpnqs"
 
 default_platform(:ios)
