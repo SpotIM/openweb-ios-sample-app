@@ -105,7 +105,7 @@ platform :ios do
           export_options: {
               signingStyle: "manual",
               provisioningProfiles: {
-                  "im.spot.demo" => "match AppStore im.spot.demo"
+                  "im.spot.demo" => "match AdHoc im.spot.demo"
               }
           },
         xcargs: "-allowProvisioningUpdates"
