@@ -146,33 +146,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     self.clearCachedCommentIfNeeded()
                     return Observable.just(())
                 }
-                let actions = [
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "Yes"), type: OWCloseEditorAlert.yes),
-                    OWRxPresenterAction(title: OWLocalizationManager.shared.localizedString(key: "No"), type: OWCloseEditorAlert.no, style: .cancel)
-                ]
-                return self.servicesProvider.presenterService()
-                    .showAlert(title: OWLocalizationManager.shared.localizedString(key: "CloseEditor"), message: "", actions: actions, viewableMode: self.viewableMode)
-                    .flatMap { [weak self] result -> Observable<Void> in
-                        guard let self = self else { return .empty() }
-                        switch result {
-                        case .completion:
-                            return Observable.empty()
-                        case .selected(let action):
-                            switch action.type {
-                            case OWCloseEditorAlert.yes:
-                                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
-                                                  commentLabels: commentSelectedLabelIds)
-                                self.sendEvent(for: .commentCreationLeavePage)
-                                return Observable.just(())
-                            default:
-                                self.clearCachedCommentIfNeeded()
-                                self.commentCreationRegularViewVm.inputs.becomeFirstResponder.onNext()
-                                self.commentCreationLightViewVm.inputs.becomeFirstResponder.onNext()
-                                self.sendEvent(for: .commentCreationContinueWriting)
-                                return Observable.empty()
-                            }
-                        }
-                    }
+                
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
+                                  commentLabels: commentSelectedLabelIds)
+                self.sendEvent(for: .commentCreationLeavePage)
+                return Observable.just(())
             }
             .share()
     }()
