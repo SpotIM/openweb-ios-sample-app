@@ -257,7 +257,6 @@ fileprivate extension OWClarityDetailsViewVM {
             .disposed(by: disposeBag)
     }
 
-    // TODO: translations
     func getTopParagraphAttributedString(clarityType: OWClarityDetailsType, style: OWThemeStyle) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),

@@ -85,14 +85,14 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
             .startWith(false)
     }()
 
-    let appealClickableText: String = "appeal" // TODO: translations
+    let appealClickableText: String = OWLocalizationManager.shared.localizedString(key: "Appeal").lowercased()
     lazy var defaultAttributedText: Observable<NSAttributedString> = {
         Observable.combineLatest(
             servicesProvider.themeStyleService().style,
             accessibilityChange
         ) { [weak self] style, _ in
             guard let self = self else { return nil }
-            let string = "Feel free to rewrite and repost your comment, or, if you wish, you can appeal, and we will re-examine our decision." // TODO: translations
+            let string = OWLocalizationManager.shared.localizedString(key: "AppealLabel")
             let attributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
                 .font: OWFontBook.shared.font(typography: .bodyText)
@@ -220,11 +220,10 @@ fileprivate extension OWAppealLabelViewModel {
     }
 
     func openNotLogeedInAlert() {
-        // TODO: translations
         self.servicesProvider.presenterService()
             .showAlert(
-                title: "Authorization Required",
-                message: "Ensure you're signed in to continue your appeal. Not a member? You'll need to register first.",
+                title: OWLocalizationManager.shared.localizedString(key: "AppealAuthorizationRequiredTitle"),
+                message: OWLocalizationManager.shared.localizedString(key: "AppealAuthorizationRequiredMessage"),
                 actions: [
                     OWRxPresenterAction(title: "Cancel", type: OWAuthToAppealAlert.cancel),
                     OWRxPresenterAction(title: "Authorize", type: OWAuthToAppealAlert.authenticate)

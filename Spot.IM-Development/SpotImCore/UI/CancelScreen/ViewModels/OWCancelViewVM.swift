@@ -58,7 +58,7 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
         case .reportReason:
             return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelTitle")
         case .commenterAppeal:
-            return "Cancel Appeal" // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "CancelAppeal")
         }
     }
 
@@ -67,7 +67,7 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
         case .reportReason:
             return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelSubtitle")
         case .commenterAppeal:
-            return "Are you sure you want to cancel your appeal and delete the reason you provided?" // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "CommmenterAppealCancelSubtitle")
         }
     }
 
@@ -84,7 +84,7 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
         case .reportReason:
             return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelContinueButton")
         case .commenterAppeal:
-            return "Continue appealing" // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "CommenterAppealCancelContinueButton")
         }
     }
 
@@ -93,7 +93,7 @@ class OWCancelViewViewModel: OWCancelViewViewModelingInputs, OWCancelViewViewMod
         case .reportReason:
             return OWLocalizationManager.shared.localizedString(key: "ReportReasonCancelCancelButton")
         case .commenterAppeal:
-            return "Cancel Appeal" // TODO: translations
+            return OWLocalizationManager.shared.localizedString(key: "CancelAppeal")
         }
     }
 

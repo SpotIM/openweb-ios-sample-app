@@ -142,6 +142,12 @@
 "AppealLabelError" = "פרטי הערעור אינם זמינים כעת. נא לבדוק את חיבור האינטרנט או לנסות שוב מאוחר יותר.";
 "AppealLabelNotAvailable" = "התגובה שדיווחת עליה כבר לא זמינה.";
 "AppealSubmittedSubtitle" = "קיבלנו את הערעור שלך וצוות הניהול שלנו יבדוק את תגובתך בהקדם האפשרי. אנו נודיע לך על ההחלטה.";
+"CancelAppeal" = "ביטול הערעור";
+"CommmenterAppealCancelSubtitle" = "בטוח שברצונך לבטל את הערעור שלך ולמחוק את הסיבה שסיפקת?";
+"CommenterAppealCancelContinueButton" = "המשך ערעור";
+"AppealLabel" = "תרגיש/י חופשי/ה לשכתב ולהעלות מחדש את ההערה שלך, או, לפי רצונך, ניתן לערער, ואנו נבחן מחדש את החלטתנו.";
+"AppealAuthorizationRequiredTitle" = "נדרש אישור";
+"AppealAuthorizationRequiredMessage" = "יש לוודא שהינך מחובר/ת כדי להמשיך את הערעור שלך. לא חבר/ה? תצטרכ/י להירשם מקודם.";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";
