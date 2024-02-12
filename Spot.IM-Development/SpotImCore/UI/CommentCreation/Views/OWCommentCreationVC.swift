@@ -129,7 +129,7 @@ fileprivate extension OWCommentCreationVC {
         view.addSubview(commentCreationView)
         commentCreationView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            make.top.bottom.equalToSuperviewSafeArea()
         }
 
         view.addSubview(footerSafeAreaView)
@@ -181,7 +181,7 @@ fileprivate extension OWCommentCreationVC {
                         let bottomPadding: CGFloat
                         bottomPadding = self.tabBarController?.tabBar.frame.height ?? self.view.window?.safeAreaInsets.bottom ?? 0
                         self.commentCreationView.OWSnp.updateConstraints { make in
-                            make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-(expandedKeyboardHeight - bottomPadding))
+                            make.bottom.equalToSuperviewSafeArea().offset(-(expandedKeyboardHeight - bottomPadding))
                         }
                         UIView.animate(withDuration: animationDuration) { [weak self] in
                             guard let self = self else { return }
@@ -212,7 +212,7 @@ fileprivate extension OWCommentCreationVC {
                     switch self.viewModel.outputs.commentCreationViewVM.outputs.commentCreationStyle {
                     case .regular, .light:
                         self.commentCreationView.OWSnp.updateConstraints { make in
-                            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                            make.bottom.equalToSuperviewSafeArea()
                         }
                         UIView.animate(withDuration: animationDuration) { [weak self] in
                             guard let self = self else { return }
