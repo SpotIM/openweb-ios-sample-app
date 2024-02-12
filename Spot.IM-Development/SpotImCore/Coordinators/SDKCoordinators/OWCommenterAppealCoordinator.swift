@@ -129,7 +129,6 @@ fileprivate extension OWCommenterAppealCoordinator {
                     .take(1)
             })
             .delay(.milliseconds(Metrics.delayTapForOpenAdditionalInfo), scheduler: MainScheduler.asyncInstance)
-//            .observe(on: MainScheduler.instance)
             .map { placeholderText, textViewText -> OWAdditionalInfoViewViewModel in
                 return OWAdditionalInfoViewViewModel(viewableMode: viewModel.outputs.viewableMode,
                                                      placeholderText: placeholderText,
