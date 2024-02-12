@@ -141,6 +141,12 @@
 "AppealLabelError" = "A informação sobre a reclamação não está atualmente disponível. Verifique a sua ligação à internet ou tente novamente mais tarde.";
 "AppealLabelNotAvailable" = "O comentário que denunciou já não está disponível.";
 "AppealSubmittedSubtitle" = "Recebemos o seu recurso e a nossa equipa de moderadores irá rever o seu comentário com a máxima brevidade possível. Iremos informá-lo da decisão.";
+"CancelAppeal" = "Cancelar reclamação";
+"CommmenterAppealCancelSubtitle" = "Tem a certeza que quer cancelar a sua reclamação e eliminar o motivo que apresentou?";
+"CommenterAppealCancelContinueButton" = "Continuar reclamação";
+"AppealLabel" = "Fique à vontade para reescrever e voltar a publicar o seu comentário ou, se desejar, pode reclamar e nós voltaremos a analisar a nossa decisão.";
+"AppealAuthorizationRequiredTitle" = "Autorização necessária";
+"AppealAuthorizationRequiredMessage" = "Certifique-se de que tem sessão iniciada para continuar a sua reclamação. Não é membro? Terá de se registar primeiro.";
 
 // Old API
 "Your Username" = "Seu apelido...";
