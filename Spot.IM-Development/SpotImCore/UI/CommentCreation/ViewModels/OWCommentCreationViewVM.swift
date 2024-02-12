@@ -146,7 +146,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     self.clearCachedCommentIfNeeded()
                     return Observable.just(())
                 }
-                
+
                 self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
                                   commentLabels: commentSelectedLabelIds)
                 self.sendEvent(for: .commentCreationLeavePage)
