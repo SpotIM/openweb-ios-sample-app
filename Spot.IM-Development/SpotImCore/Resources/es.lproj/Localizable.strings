@@ -141,6 +141,12 @@
 "AppealLabelError" = "La información sobre el recurso no está disponible en este momento. Comprueba tu conexión a internet o inténtalo de nuevo más tarde.";
 "AppealLabelNotAvailable" = "El comentario que has denunciado ya no está disponible.";
 "AppealSubmittedSubtitle" = "Hemos recibido su apelación y nuestro equipo de moderadores revisará su comentario lo antes posible. Le informaremos de la decisión.";
+"CancelAppeal" = "Cancelar apelación";
+"CommmenterAppealCancelSubtitle" = "¿Seguro que quieres cancelar tu apelación y borrar el motivo que proporcionaste?";
+"CommenterAppealCancelContinueButton" = "Seguir apelando";
+"AppealLabel" = "Puedes volver a redactar y publicar tu comentario, o si lo deseas, puedes apelar y reevaluaremos nuestra decisión.";
+"AppealAuthorizationRequiredTitle" = "Autorización necesaria";
+"AppealAuthorizationRequiredMessage" = "Asegúrate de haber iniciado sesión para continuar con tu apelación. ¿No te has registrado? Tendrás que registrarte primero.";
 
 // Old API
 "Your Username" = "Tu seudónimo...";
