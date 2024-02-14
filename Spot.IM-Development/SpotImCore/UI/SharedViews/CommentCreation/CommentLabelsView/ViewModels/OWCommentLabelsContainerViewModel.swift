@@ -83,6 +83,8 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
 
     fileprivate let commentCreationType: OWCommentCreationTypeInternal?
 
+    fileprivate lazy var postId = OWManager.manager.postId
+
     init(comment: OWComment? = nil,
          commentCreationType: OWCommentCreationTypeInternal? = nil,
          section: String,
@@ -259,11 +261,25 @@ fileprivate extension OWCommentLabelsContainerViewModel {
 
     func setupInitialSelectedLabelsIfNeeded() {
         guard let commentCreationType = self.commentCreationType else { return }
-        if case .edit(let comment) = commentCreationType {
-            if let commentLabels = comment.additionalData?.labels,
-               let labelIds = commentLabels.ids, labelIds.count > 0 {
-                _selectedLabelIds.onNext(Set(labelIds))
-            }
+
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+        let initialCommentLabelIds: [String]?
+
+        switch commentCreationType {
+        case .comment:
+            guard let postId = postId else { return }
+            initialCommentLabelIds = commentsCacheService[.comment(postId: postId)]?.commentLabelIds
+        case .replyToComment(originComment: let originComment):
+            guard let postId = self.postId,
+                  let originCommentId = originComment.id
+            else { return }
+            initialCommentLabelIds = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentLabelIds
+        case .edit(let comment):
+            initialCommentLabelIds = comment.additionalData?.labels?.ids
         }
+
+        guard let commentLabelIds = initialCommentLabelIds, commentLabelIds.count > 0 else { return }
+
+        _selectedLabelIds.onNext(Set(commentLabelIds))
     }
 }
