@@ -1,6 +1,6 @@
 //
 //  OWErrorRetryCTAView.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 25/10/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

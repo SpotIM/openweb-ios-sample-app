@@ -1,6 +1,6 @@
 //
 //  OWAdditionalInfoVM.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Refael Sommer on 01/05/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

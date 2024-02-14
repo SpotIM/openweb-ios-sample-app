@@ -1,6 +1,6 @@
 //
 //  UILabel+SPExtensions.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Andriy Fedin on 08/10/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

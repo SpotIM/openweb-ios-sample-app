@@ -1,6 +1,6 @@
 //
 //  Array+Unwrap.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 19/12/2021.
 //  Copyright © 2021 OpenWeb. All rights reserved.

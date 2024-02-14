@@ -1,6 +1,6 @@
 //
 //  SPABData.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Eugene on 07.11.2019.
 //  Copyright © 2019 OpenWeb. All rights reserved.

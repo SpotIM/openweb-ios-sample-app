@@ -1,6 +1,6 @@
 //
 //  OWNavigationPlaceholderVC.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 13/11/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

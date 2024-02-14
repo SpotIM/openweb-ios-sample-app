@@ -1,6 +1,6 @@
 //
 //  OWFontTypography.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Revital Pisman on 09/07/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  OWCommentTextViewModel.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 27/12/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.
@@ -98,7 +98,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .map { $0.width }
             .withLatestFrom(comment) { ($0, $1) }
             .map { [weak self] width, comment -> CGFloat? in
-                guard let self = self else { return nil }
+                guard let _ = self else { return nil }
                 let depth = min(comment.depth ?? 0, OWCommentCell.ExternalMetrics.maxDepth)
                 let adjustedWidth = width - Metrics.textOffset - CGFloat(depth) * OWCommentCell.ExternalMetrics.depthOffset
                 return adjustedWidth

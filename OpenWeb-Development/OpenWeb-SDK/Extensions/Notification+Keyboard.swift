@@ -1,6 +1,6 @@
 //
 //  Notification+Keyboard.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Eugene on 8/1/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  OWCommentThreadCoordinator.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Shprung on 27/02/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.
@@ -241,7 +241,7 @@ fileprivate extension OWCommentThreadCoordinator {
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .subscribe(onNext: { [weak self] commentId, performActionType in
+            .subscribe(onNext: { commentId, performActionType in
                 viewModel.inputs.performAction.onNext((commentId, performActionType))
             })
             .disposed(by: disposeBag)

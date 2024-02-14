@@ -1,6 +1,6 @@
 //
 //  OWConversationUpdaterService.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Shprung on 02/08/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

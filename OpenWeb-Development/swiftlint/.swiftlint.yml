@@ -72,7 +72,6 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - ../Pods
   - OpenWeb-Development/swiftlint
   - OpenWeb-Development/fastlane
-  - OpenWeb-Development/Spot-IM.DevelopmentTests
 
 # naming rules can set warnings/errors for min_length and max_length
 # additionally they can set excluded names

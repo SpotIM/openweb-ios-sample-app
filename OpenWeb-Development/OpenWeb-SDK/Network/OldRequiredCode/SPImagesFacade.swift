@@ -1,6 +1,6 @@
 //
 //  SPImagesFacade.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Andriy Fedin on 06/07/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

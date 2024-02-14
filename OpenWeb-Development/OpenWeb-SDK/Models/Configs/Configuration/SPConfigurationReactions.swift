@@ -1,6 +1,6 @@
 //
 //  SPConfigurationReactions.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Eugene on 8/29/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

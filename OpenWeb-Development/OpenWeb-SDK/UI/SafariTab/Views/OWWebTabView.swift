@@ -1,6 +1,6 @@
 //
 //  OWSafariTabView.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 02/10/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.
