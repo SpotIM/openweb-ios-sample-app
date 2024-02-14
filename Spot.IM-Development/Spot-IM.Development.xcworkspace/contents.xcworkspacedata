@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Spot-IM.Development.xcodeproj">
+      location = "group:/Users/alon.h@openweb.com/Workspace/iOS/spotim-ios-sdk-demo-apps/Spot.IM-Development/OpenWeb-Development.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
