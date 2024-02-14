@@ -168,7 +168,7 @@ fileprivate extension OWTextView {
         if viewModel.outputs.isEditable {
             if viewModel.outputs.isAutoExpandable {
                 textView.rx.text
-                    // Fixes a textView jump when loading
+                    // Fixes a jump when loading
                     .skip(1)
                     // Fixes multiline text not being loaded properly
                     .delay(.milliseconds(Metrics.delayTextViewExpand), scheduler: MainScheduler.instance)
