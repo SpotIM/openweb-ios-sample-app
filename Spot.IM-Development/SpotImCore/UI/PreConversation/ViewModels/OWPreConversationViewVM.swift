@@ -529,14 +529,13 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload // Block animations in the table view
             })
-            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
+            .flatMapLatest { [weak self] sortOption -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
-                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = Observable.merge(
@@ -546,6 +545,7 @@ fileprivate extension OWPreConversationViewViewModel {
         )
             .flatMapLatest { loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 return conversationReadObservable
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
                     .map { ($0, loadingTriggeredReason) }
             }
             .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
@@ -1378,6 +1378,32 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.servicesProvider
                     .conversationSizeService()
                     .setConversationTableSize(size)
+            })
+            .disposed(by: disposeBag)
+
+        // Actions after internet connection restored
+        servicesProvider
+            .networkAvailabilityService()
+            .networkAvailable
+            .scan((false, nil), accumulator: { previous, current -> (Bool, Bool?) in
+                // first time no need to update
+                guard let previousValue = previous.1 else {
+                    return (false, current)
+                }
+                // Need to update only if internet is restored
+                if previousValue == false && current == true {
+                    return (true, current)
+                } else {
+                    return (false, current)
+                }
+            })
+            .filter { $0.0 } // Continue only if result is true
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // Trigger re-fetching config
+                self.servicesProvider.spotConfigurationService().spotChanged(spotId: OWManager.manager.spotId)
+                // Trigger re-fetching conversation
+                self.tryAgainAfterError.onNext(.loadConversationComments)
             })
             .disposed(by: disposeBag)
     }
