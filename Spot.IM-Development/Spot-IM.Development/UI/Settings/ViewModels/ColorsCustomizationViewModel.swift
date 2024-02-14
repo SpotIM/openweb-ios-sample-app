@@ -44,7 +44,7 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Secondary Text", initialColor: initialColorTheme.secondaryTextColor),
             ThemeColorItem(title: "Tertiary Text", initialColor: initialColorTheme.tertiaryTextColor),
             ThemeColorItem(title: "Primary Background", initialColor: initialColorTheme.primaryBackgroundColor),
-            ThemeColorItem(title: "Secindary Background", initialColor: initialColorTheme.secondaryBackgroundColor),
+            ThemeColorItem(title: "Secondary Background", initialColor: initialColorTheme.secondaryBackgroundColor),
             ThemeColorItem(title: "Tertiary Background", initialColor: initialColorTheme.tertiaryBackgroundColor),
             ThemeColorItem(title: "Surface Color", initialColor: initialColorTheme.surfaceColor),
             ThemeColorItem(title: "Primary Border", initialColor: initialColorTheme.primaryBorderColor),
