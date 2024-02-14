@@ -1,0 +1,71 @@
+//
+//  OWConversationStyle+Extensions.swift
+//  SpotImCore
+//
+//  Created by Revital Pisman on 29/03/2023.
+//  Copyright © 2023 OpenWeb. All rights reserved.
+//
+
+import Foundation
+
+extension OWConversationStyle {
+
+    func validate() -> OWConversationStyle {
+        guard case let .custom(communityGuidelinesStyle, communityQuestionsStyle, spacing) = self else { return self }
+        let validatedSpacing = spacing.validate()
+        return .custom(communityGuidelinesStyle: communityGuidelinesStyle,
+                       communityQuestionsStyle: communityQuestionsStyle,
+                       spacing: validatedSpacing)
+    }
+
+    var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
+        switch self {
+        case .regular:
+            return .regular
+        case .compact:
+            return .compact
+        case .custom(communityGuidelinesStyle: let communityGuidelinesStyle, communityQuestionsStyle: _, spacing: _):
+            return communityGuidelinesStyle
+        }
+    }
+
+    var communityQuestionStyle: OWCommunityQuestionStyle {
+        switch self {
+        case .regular:
+            return .regular
+        case .compact:
+            return .compact
+        case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: let communityQuestionsStyle, spacing: _):
+            return communityQuestionsStyle
+        }
+    }
+
+    var spacing: OWConversationSpacing {
+        switch self {
+        case .regular:
+            return .regular
+        case .compact:
+            return .compact
+        case .custom(communityGuidelinesStyle: _, communityQuestionsStyle: _, spacing: let spacing):
+            return spacing.validate()
+        }
+    }
+}
+
+extension OWConversationStyle: Equatable {
+    public static func == (lhs: OWConversationStyle, rhs: OWConversationStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.compact, .compact):
+            return true
+        case (.regular, .regular):
+            return true
+        case (.custom(let lhsCommunityGuidelinesStyle, let lhsCommunityQuestionStyle, let lhsSpacing),
+              .custom(let rhsCommunityGuidelinesStyle, let rhsCommunityQuestionStyle, let rhsSpacing)):
+            return lhsCommunityGuidelinesStyle == rhsCommunityGuidelinesStyle &&
+            lhsCommunityQuestionStyle == rhsCommunityQuestionStyle &&
+            lhsSpacing == rhsSpacing
+        default:
+            return false
+        }
+    }
+}
