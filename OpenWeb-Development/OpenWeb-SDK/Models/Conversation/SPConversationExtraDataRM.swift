@@ -1,6 +1,6 @@
 //
 //  SPConversationExtraDataRM.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Andriy Fedin on 20/06/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  OWPageViewIdHolder.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 20/08/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

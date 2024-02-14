@@ -1,6 +1,6 @@
 //
 //  OWAnalyticsService.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 12/09/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  OWArticleSettingsBuilder.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 16/05/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

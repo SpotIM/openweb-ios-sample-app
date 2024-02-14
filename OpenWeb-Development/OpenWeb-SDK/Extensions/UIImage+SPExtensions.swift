@@ -1,6 +1,6 @@
 //
 //  UIImage+SPExtensions.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Andriy Fedin on 25/06/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.
@@ -14,7 +14,7 @@ internal typealias OWImageName = String
 
 internal extension UIImage {
 
-    /// Load an image from Spot.IM bundle. The image is loaded for current interface style (light or dark).
+    /// Load an image from OpenWeb bundle. The image is loaded for current interface style (light or dark).
     /// Dark images should have "-dark" postfix in the Asset catalog.
     /// - Parameter spNamed: image name in the bundle.
     /// - Parameter supportDarkMode: default is false to prevent crashes if the developer did not provide an image for dark mode.

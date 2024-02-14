@@ -1,6 +1,6 @@
 //
 //  OWSubscriberBadge.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Tomer Ben Rachel on 26/01/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

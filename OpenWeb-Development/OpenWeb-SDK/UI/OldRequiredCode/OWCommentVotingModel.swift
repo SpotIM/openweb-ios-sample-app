@@ -1,6 +1,6 @@
 //
 //  OWCommentVotingModel.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Shprung on 22/03/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

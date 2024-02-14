@@ -1,6 +1,6 @@
 //
 //  SPEventsStrategyConfig.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 10/07/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

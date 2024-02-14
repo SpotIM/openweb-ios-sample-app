@@ -1,6 +1,6 @@
 //
 //  OWImageType.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 12/04/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

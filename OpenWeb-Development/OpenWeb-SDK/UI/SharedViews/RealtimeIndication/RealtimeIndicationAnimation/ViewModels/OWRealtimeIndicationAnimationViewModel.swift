@@ -1,6 +1,6 @@
 //
 //  OWRealtimeIndicationAnimationViewModel.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Revital Pisman on 22/08/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

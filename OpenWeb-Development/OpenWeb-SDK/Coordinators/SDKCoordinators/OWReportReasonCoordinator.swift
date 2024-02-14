@@ -1,6 +1,6 @@
 //
 //  OWReportReasonCoordinator.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Refael Sommer on 20/04/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

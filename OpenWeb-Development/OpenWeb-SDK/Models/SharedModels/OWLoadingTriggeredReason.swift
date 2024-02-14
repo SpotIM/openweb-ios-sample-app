@@ -1,6 +1,6 @@
 //
 //  OWLoadingTriggeredReason.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 13/09/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

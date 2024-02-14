@@ -1,6 +1,6 @@
 //
 //  SPAnimatedButton.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Itay Dressler on 29/07/2019.
 //  Copyright © 2019 OpenWeb. All rights reserved.

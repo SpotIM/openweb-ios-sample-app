@@ -1,6 +1,6 @@
 //
 //  CommentMediaView.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 29/06/2021.
 //  Copyright © 2021 OpenWeb. All rights reserved.

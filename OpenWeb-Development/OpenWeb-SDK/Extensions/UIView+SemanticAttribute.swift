@@ -1,6 +1,6 @@
 //
 //  UIView+SemanticAttribute.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 01/02/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

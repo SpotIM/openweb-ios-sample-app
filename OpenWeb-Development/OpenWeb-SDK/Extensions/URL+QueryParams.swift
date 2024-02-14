@@ -1,6 +1,6 @@
 //
 //  URL+QueryParams.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Shprung on 16/03/2021.
 //  Copyright © 2021 OpenWeb. All rights reserved.

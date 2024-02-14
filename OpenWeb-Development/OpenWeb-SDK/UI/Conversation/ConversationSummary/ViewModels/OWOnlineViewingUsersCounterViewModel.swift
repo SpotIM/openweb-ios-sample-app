@@ -1,6 +1,6 @@
 //
 //  OWOnlineViewingUsersCounterViewModel.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Revital Pisman on 27/03/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

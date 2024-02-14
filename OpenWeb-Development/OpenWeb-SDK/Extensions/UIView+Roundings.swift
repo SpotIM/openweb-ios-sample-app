@@ -1,6 +1,6 @@
 //
 //  UIView+Roundings.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Eugene on 7/26/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

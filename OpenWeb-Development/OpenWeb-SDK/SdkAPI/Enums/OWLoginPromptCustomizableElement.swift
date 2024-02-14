@@ -1,6 +1,6 @@
 //
 //  OWLoginPromptCustomizableElement.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Revital Pisman on 30/01/2024.
 //  Copyright © 2024 OpenWeb. All rights reserved.

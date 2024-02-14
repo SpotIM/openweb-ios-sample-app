@@ -1,6 +1,6 @@
 //
 //  SPAdsConfiguration.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Eugene on 30.10.2019.
 //  Copyright © 2019 OpenWeb. All rights reserved.

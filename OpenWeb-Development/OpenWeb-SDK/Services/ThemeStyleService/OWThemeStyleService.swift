@@ -1,6 +1,6 @@
 //
 //  OWThemeStyleService.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 08/03/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.
