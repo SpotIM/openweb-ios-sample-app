@@ -35,26 +35,26 @@ platform :ios do
   lane :unit_tests do |options|
     cocoapods()
     scan(
-      scheme: "OpenWebCoreTests",
-      workspace: "Spot-IM.Development.xcworkspace",
+      scheme: "OpenWebSDKTests",
+      workspace: "OpenWeb-Development.xcworkspace",
       device: "iPhone 13 Pro",
     )
   end
 
   desc "Build development app"
   lane :build_development_app do |options|
-    scheme = "Spot-IM.Development"
+    scheme = "OpenWeb-SampleApp"
     if options[:app] == "public"
-      scheme = "Spot-IM.PublicDemoApp"
+      scheme = "OpenWeb-PublicSampleApp"
     elsif options[:app] == "beta"
-      scheme = "Spot-IM.BetaDevelopment"
+      scheme = "OpenWeb-BetaSampleApp"
     end
 
     cocoapods(use_bundle_exec: false)
     gym(
         skip_package_ipa: true,
         scheme: scheme,
-        workspace: "Spot-IM.Development.xcworkspace",
+        workspace: "OpenWeb-Development.xcworkspace",
         destination: "generic/platform=iOS Simulator",
         build_path: "simulator_build"
     )
@@ -67,7 +67,7 @@ platform :ios do
     increment_build_number(build_number: 0) # Set build to 0, this will allow sample apps which deploy afterwards to start with build 1.
     cocoapods(use_bundle_exec: false)
     xcodebuild(
-      scheme: "Package SpotImCoreSDK",
+      scheme: "OpenWebSDK-Builder",
       configuration: options[:configuration],
       destination: "generic/platform=iOS",
       clean: true,
@@ -77,13 +77,13 @@ platform :ios do
 
   desc "Build release ipa"
   lane :build_release_ipa do | options |
-    scheme = "Spot-IM.Development"
+    scheme = "OpenWeb-SampleApp"
     type = "app-store"
 
     if options[:app] == "public"
-      scheme = "Spot-IM.PublicDemoApp"
+      scheme = "OpenWeb-PublicSampleApp"
     elsif options[:app] == "beta"
-      scheme = "Spot-IM.BetaDevelopment"
+      scheme = "OpenWeb-BetaSampleApp"
     end
 
     if options[:type] == "development"
@@ -99,7 +99,7 @@ platform :ios do
       cocoapods(use_bundle_exec: false)
       gym(
           scheme: scheme,
-          workspace: "Spot-IM.Development.xcworkspace",
+          workspace: "OpenWeb-Development.xcworkspace",
           export_method: "app-store",
           destination: "generic/platform=iOS",
           export_options: {
@@ -115,7 +115,7 @@ platform :ios do
       cocoapods(use_bundle_exec: false)
       gym(
         scheme: scheme,
-        workspace: "Spot-IM.Development.xcworkspace",
+        workspace: "OpenWeb-Development.xcworkspace",
         export_method: "development",
         destination: "generic/platform=iOS",
         export_options: {
@@ -175,9 +175,9 @@ platform :ios do
   desc "Upload debug symbols to Crashlytics"
   lane :upload_debug_symbols_to_crashlytics do |options|
     upload_symbols_to_crashlytics(
-        gsp_path: "./Spot-IM.Development/Resources/GoogleService-Info.plist",
+        gsp_path: "./OpenWeb-SampleApp/Resources/GoogleService-Info.plist",
         binary_path: './scripts/upload-symbols',
-        dsym_path: "./Spot-IM.Development.app.dSYM.zip"
+        dsym_path: "./OpenWeb-SampleApp.app.dSYM.zip"
     )
   end
 
@@ -188,7 +188,7 @@ platform :ios do
     increment_version_number_in_xcodeproj(version_number: options[:version])
     # Set version inside OpenWebSettings plist
     update_plist(
-        plist_path: "SpotImCore/Resources/OpenWebSettings.plist",
+        plist_path: "OpenWeb-SDK/Resources/OpenWebSettings.plist",
         block: proc do |plist|
             plist[:sdkVersion] = options[:version]
         end
