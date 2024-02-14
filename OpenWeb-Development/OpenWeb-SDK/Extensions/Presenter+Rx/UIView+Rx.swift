@@ -1,6 +1,6 @@
 //
 //  UIView+Rx.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Revital Pisman on 24/08/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.

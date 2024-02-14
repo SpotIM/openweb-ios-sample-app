@@ -1,6 +1,6 @@
 //
 //  OWViewCompletion.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 07/09/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

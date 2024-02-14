@@ -1,6 +1,6 @@
 //
 //  OWAssociatedSkeletonShimmering.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 18/10/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

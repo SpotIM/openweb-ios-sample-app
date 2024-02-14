@@ -1,6 +1,6 @@
 //
 //  SPCommentRankUpdateRM.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Andriy Fedin on 08/07/19.
 //  Copyright © 2019 OpenWeb. All rights reserved.

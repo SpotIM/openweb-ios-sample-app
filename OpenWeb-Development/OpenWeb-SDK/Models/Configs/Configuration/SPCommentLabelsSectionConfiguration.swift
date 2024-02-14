@@ -1,6 +1,6 @@
 //
 //  SPCommentLabelsConfiguration.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by  Nogah Melamed on 07/04/2021.
 //  Copyright © 2021 OpenWeb. All rights reserved.

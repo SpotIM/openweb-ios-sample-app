@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #  pre-push-swiftlint.sh
-#  Spot-IM.Development
+#  OpenWeb-Development
 #
 #  Created by Revital Pisman on 08/01/2023.
 #  Copyright © 2023 OpenWeb. All rights reserved.
@@ -15,7 +15,7 @@ fi
 export PATH
 
 # Set the path to the .swiftlint.yml config file
-SWIFTLINT_CONFIG="Spot.IM-Development/swiftlint/.swiftlint.yml"
+SWIFTLINT_CONFIG="OpenWeb-Development/swiftlint/.swiftlint.yml"
 
 # Check if the .swiftlint.yml file exists
 if [ -f $SWIFTLINT_CONFIG ]; then

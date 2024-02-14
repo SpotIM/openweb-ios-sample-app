@@ -1,6 +1,6 @@
 //
 //  OWRxAppLifeCycle.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 01/05/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

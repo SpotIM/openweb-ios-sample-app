@@ -1,6 +1,6 @@
 //
 //  OWCommentThreadViewVM.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Shprung on 30/01/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.
@@ -1240,7 +1240,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         let selectedCommentCellVm = Observable.combineLatest(commentCellsVmsObservable, selectedCommentId)
             .map { [weak self] commentCellsVms, commentId -> OWCommentCellViewModeling? in
-                guard let self = self else { return nil }
+                guard let _ = self else { return nil }
                 let selectedCommentCellVm: OWCommentCellViewModeling? = commentCellsVms.first { vm in
                         return vm.outputs.id == commentId
                 }
@@ -1251,7 +1251,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         let selectedCommentCellVmIndex = Observable.combineLatest(cellsViewModels, selectedCommentId)
             .map { [weak self] cellsViewModels, commentId -> Int? in
-                guard let self = self else { return nil }
+                guard let _ = self else { return nil }
                 let commentIndex: Int? = cellsViewModels.firstIndex { vm in
                     if case .comment(let commentCellViewModel) = vm {
                         return commentCellViewModel.outputs.id == commentId

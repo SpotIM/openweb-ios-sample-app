@@ -1,6 +1,6 @@
 //
 //  OWMiddleware.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 19/04/2022.
 //  Copyright © 2022 OpenWeb. All rights reserved.

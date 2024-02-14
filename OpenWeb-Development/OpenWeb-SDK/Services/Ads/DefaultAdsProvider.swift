@@ -1,6 +1,6 @@
 //
 //  DefaultAdsProvider.swift
-//  Spot.IM-Core
+//  OpenWebSDK
 //
 //  Created by Eugene on 25.10.2019.
 //  Copyright © 2019 OpenWeb. All rights reserved.

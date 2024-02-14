@@ -1,6 +1,6 @@
 //
 //  WKWebView+Rx.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Revital Pisman on 15/01/2024.
 //  Copyright © 2024 OpenWeb. All rights reserved.

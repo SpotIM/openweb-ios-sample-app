@@ -1,6 +1,6 @@
 //
 //  OWCustomizationsService.swift
-//  SpotImCore
+//  OpenWebSDK
 //
 //  Created by Alon Haiut on 18/04/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.
