@@ -12,9 +12,9 @@ set +u
 # Setup some constants for use later on.
 CONFIGURATION=$1
 SRCROOT=`pwd`
-WORKSPACE="Spot-IM.Development.xcworkspace"
-TARGET_NAME="SpotImCore"
-FRAMEWORK_NAME="SpotImCore"
+WORKSPACE="OpenWeb-Development.xcworkspace"
+TARGET_NAME="OpenWebSDK"
+FRAMEWORK_NAME="OpenWebSDK"
 BUILD_DIR="${SRCROOT}/build"
 RELEASE_DIR="${SRCROOT}/Release/"
 
