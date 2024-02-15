@@ -134,13 +134,14 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMapLatest { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
                                                                               actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: commentCreationCoordinator)
             }
+            .debug("*** commentCreationData")
             .do(onNext: { [weak self] result in
                 guard let self = self else { return }
                 switch result {
@@ -155,7 +156,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 }
             })
-            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { _ -> Observable<OWConversationCoordinatorResult> in
                 return Observable.never()
             }
 
