@@ -498,6 +498,10 @@ fileprivate extension OWConversationView {
 
         OWSharedServicesProvider.shared.orientationService()
             .orientation
+            // skip first orientation share(replay: 1) as we do
+            // not want animation at conversation loading state
+            // the correct constraints are set anyway at view setup
+            .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
