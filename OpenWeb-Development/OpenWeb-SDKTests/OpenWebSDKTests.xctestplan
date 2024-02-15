@@ -17,9 +17,9 @@
     {
       "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:Spot-IM.Development.xcodeproj",
+        "containerPath" : "container:OpenWeb-Development.xcodeproj",
         "identifier" : "F92DD7B62A7E8B9E00A2BE5B",
-        "name" : "OpenWebCoreTests"
+        "name" : "OpenWebSDKTests"
       }
     }
   ],
