@@ -40,6 +40,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
+    fileprivate struct Metrics {
+        static let delayCommentThreadAfterReport: CGFloat = 0.5
+    }
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -189,7 +193,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 case let .submitedReport(commentId, userJustLoggedIn):
                     guard userJustLoggedIn else { return }
-                    self?._openCommentThread.onNext((commentId, .report))
+
+                    // Delay open Comment Thread so that the
+                    // report reason flow closes first
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayCommentThreadAfterReport) {
+                        self?._openCommentThread.onNext((commentId, .report))
+                    }
                 default:
                     break
                 }
