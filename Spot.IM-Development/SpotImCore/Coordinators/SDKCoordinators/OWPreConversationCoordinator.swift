@@ -132,7 +132,7 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
                                                                   settings: self.preConversationData.settings,
