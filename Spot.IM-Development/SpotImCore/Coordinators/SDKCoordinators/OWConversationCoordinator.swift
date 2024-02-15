@@ -141,7 +141,6 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                                                                               actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: commentCreationCoordinator)
             }
-            .debug("*** commentCreationData")
             .do(onNext: { [weak self] result in
                 guard let self = self else { return }
                 switch result {
