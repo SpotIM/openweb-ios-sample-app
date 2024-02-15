@@ -337,22 +337,22 @@ jobs:
       - run:
           name: Update Github repo with new SDK version
           command: |
-            bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
+            bash -x ./scripts/commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
 
       - run:
           name: Create a pull request on Github for the new release
           command: |
-            bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
+            bash -x ./scripts/create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
 
       - run:
           name: Update public Github repo SpotIM/spotim-ios-sdk-pod with new SDK version
           command: |
-            bash -x ./update_public_pod_repo_with_sdk.sh $RELEASE_VERSION
+            bash -x ./scripts/update_public_pod_repo_with_sdk.sh $RELEASE_VERSION
 
       - run:
           name: Create a "Github Release" on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
+            bash -x ./scripts/create_new_github_release_via_api.sh $RELEASE_VERSION
 
   release_tag:
     <<: *ios_config_xcode
@@ -406,7 +406,7 @@ jobs:
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION << parameters.xcode >>
+            bash -x ./scripts/update_public_pod_repo_with_tag.sh $RELEASE_VERSION << parameters.xcode >>
 
   release_app_job:
     <<: *ios_config_xcode
@@ -422,11 +422,11 @@ jobs:
           name: Copy ipa file to folder ipa-build to upload to S3
           command: |
             mkdir ipa-build
-            cp Spot-IM.Development.ipa ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -434,11 +434,11 @@ jobs:
           name: Copy dsym zip to folder app-dsym to upload to S3
           command: |
             mkdir app-dsym
-            cp Spot-IM.Development.app.dSYM.zip app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -456,11 +456,11 @@ jobs:
           name: Copy ipa file to folder ipa-build
           command: |
             mkdir ipa-build
-            cp Spot-IM.Development.ipa ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -468,11 +468,11 @@ jobs:
           name: Copy dsym zip to folder app-dsym to upload to S3
           command: |
             mkdir app-dsym
-            cp Spot-IM.Development.app.dSYM.zip app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -490,11 +490,11 @@ jobs:
           name: Copy ipa file to folder ipa-build
           command: |
             mkdir ipa-build
-            cp Spot-IM.Development.ipa ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -502,11 +502,11 @@ jobs:
           name: Copy dsym zip to folder app-dsym to upload to S3
           command: |
             mkdir app-dsym
-            cp Spot-IM.Development.app.dSYM.zip app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -522,7 +522,7 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app"
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
@@ -541,11 +541,11 @@ jobs:
           name: Copy ipa file to folder ipa-build
           command: |
             mkdir ipa-build
-            cp Spot-IM.Development.ipa ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -553,11 +553,11 @@ jobs:
           name: Copy dsym zip to folder app-dsym to upload to S3
           command: |
             mkdir app-dsym
-            cp Spot-IM.Development.app.dSYM.zip app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -573,7 +573,7 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
@@ -592,11 +592,11 @@ jobs:
           name: Copy ipa file to folder ipa-build
           command: |
             mkdir ipa-build
-            cp Spot-IM.Development.ipa ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -604,11 +604,11 @@ jobs:
           name: Copy dsym zip to folder app-dsym to upload to S3
           command: |
             mkdir app-dsym
-            cp Spot-IM.Development.app.dSYM.zip app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
@@ -624,7 +624,7 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
@@ -643,11 +643,11 @@ jobs:
           name: Copy ipa file to folder ipa-build
           command: |
             mkdir ipa-build
-            cp Spot-IM.Development.ipa ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -655,11 +655,11 @@ jobs:
           name: Copy dsym zip to folder app-dsym to upload to S3
           command: |
             mkdir app-dsym
-            cp Spot-IM.Development.app.dSYM.zip app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
