@@ -193,6 +193,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 case let .submitedReport(commentId, userJustLoggedIn):
                     guard userJustLoggedIn else { return }
+
+                    // Delay open Comment Thread so that the
+                    // report reason flow closes first
                     DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayCommentThreadAfterReport) {
                         self?._openCommentThread.onNext((commentId, .report))
                     }
