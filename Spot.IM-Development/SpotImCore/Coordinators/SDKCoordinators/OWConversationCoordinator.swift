@@ -40,6 +40,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
+    fileprivate struct Metrics {
+        static let delayCommentThreadAfterReport = 500
+    }
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -182,6 +186,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                                                                         presentationalMode: self.conversationData.presentationalStyle)
                 return self.coordinate(to: reportReasonCoordinator)
             }
+            .delay(.milliseconds(Metrics.delayCommentThreadAfterReport), scheduler: MainScheduler.instance)
             .do(onNext: { [weak self] coordinatorResult in
                 switch coordinatorResult {
                 case .popped:
