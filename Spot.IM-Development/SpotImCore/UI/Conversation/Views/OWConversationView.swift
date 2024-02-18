@@ -304,6 +304,7 @@ fileprivate extension OWConversationView {
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
                 self.commentingCTAContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableView.indicatorStyle = currentStyle == .light ? .black : .white
             })
             .disposed(by: disposeBag)
 
