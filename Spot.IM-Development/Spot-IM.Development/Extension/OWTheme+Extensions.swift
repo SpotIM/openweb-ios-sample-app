@@ -22,6 +22,7 @@ extension OWTheme: Codable {
         case primaryBackgroundColor
         case secondaryBackgroundColor
         case tertiaryBackgroundColor
+        case surfaceColor
         case primaryBorderColor
         case secondaryBorderColor
         case loaderColor
@@ -43,6 +44,7 @@ extension OWTheme: Codable {
             primaryBackgroundColor: try? values.decode(OWColor?.self, forKey: .primaryBackgroundColor),
             secondaryBackgroundColor: try? values.decode(OWColor?.self, forKey: .secondaryBackgroundColor),
             tertiaryBackgroundColor: try? values.decode(OWColor?.self, forKey: .tertiaryBackgroundColor),
+            surfaceColor: try? values.decode(OWColor?.self, forKey: .surfaceColor),
             primaryBorderColor: try? values.decode(OWColor?.self, forKey: .primaryBorderColor),
             secondaryBorderColor: try? values.decode(OWColor?.self, forKey: .secondaryBorderColor),
             loaderColor: try? values.decode(OWColor?.self, forKey: .loaderColor),
@@ -63,6 +65,7 @@ extension OWTheme: Codable {
         try container.encode(primaryBackgroundColor, forKey: .primaryBackgroundColor)
         try container.encode(secondaryBackgroundColor, forKey: .secondaryBackgroundColor)
         try container.encode(tertiaryBackgroundColor, forKey: .tertiaryBackgroundColor)
+        try container.encode(surfaceColor, forKey: .surfaceColor)
         try container.encode(primaryBorderColor, forKey: .primaryBorderColor)
         try container.encode(secondaryBorderColor, forKey: .secondaryBorderColor)
         try container.encode(loaderColor, forKey: .loaderColor)
