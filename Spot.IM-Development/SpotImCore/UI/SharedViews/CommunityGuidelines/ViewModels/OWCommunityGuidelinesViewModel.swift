@@ -14,6 +14,7 @@ protocol OWCommunityGuidelinesViewModelingInputs {
     var triggerCustomizeTitleLabelUI: PublishSubject<UILabel> { get }
     var triggerCustomizeIconImageViewUI: PublishSubject<UIImageView> { get }
     var urlClicked: PublishSubject<Void> { get }
+    var retryGetConfig: BehaviorSubject<Void> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
@@ -100,10 +101,24 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .startWith(false)
     }()
 
+    var retryGetConfig = BehaviorSubject<Void>(value: ())
     fileprivate var communityGuidelinesTitleFromConfig: Observable<String> {
         let configurationService = OWSharedServicesProvider.shared.spotConfigurationService()
-        return configurationService.config(spotId: OWManager.manager.spotId)
-            .take(1)
+        return retryGetConfig.asObservable().startWith(())
+            .flatMapLatest {
+                configurationService
+                    .config(spotId: OWManager.manager.spotId)
+                    .materialize()
+            }
+            .map { event in
+                switch event {
+                case .next(let config):
+                    return config
+                default:
+                    return nil
+                }
+            }
+            .unwrap()
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
