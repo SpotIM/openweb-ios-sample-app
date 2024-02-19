@@ -802,6 +802,7 @@
 		8DBC16882A5D45610010759E /* OWFontTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC16872A5D45610010759E /* OWFontTypography.swift */; };
 		8DC708E82A838789004B3C9E /* OWRealTimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC708E72A838789004B3C9E /* OWRealTimeData.swift */; };
 		8DC708EB2A8387E3004B3C9E /* OWRealTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC708EA2A8387E3004B3C9E /* OWRealTime.swift */; };
+		8DCA78992B835E8600A24A25 /* OWItalicLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCA78982B835E8600A24A25 /* OWItalicLabel.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
 		8DCBE866293DEFC600C8677C /* MiscellaneousVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE865293DEFC600C8677C /* MiscellaneousVC.swift */; };
@@ -1829,6 +1830,7 @@
 		8DBC16872A5D45610010759E /* OWFontTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontTypography.swift; sourceTree = "<group>"; };
 		8DC708E72A838789004B3C9E /* OWRealTimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTimeData.swift; sourceTree = "<group>"; };
 		8DC708EA2A8387E3004B3C9E /* OWRealTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealTime.swift; sourceTree = "<group>"; };
+		8DCA78982B835E8600A24A25 /* OWItalicLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWItalicLabel.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
 		8DCBE865293DEFC600C8677C /* MiscellaneousVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscellaneousVC.swift; sourceTree = "<group>"; };
@@ -5250,6 +5252,7 @@
 			isa = PBXGroup;
 			children = (
 				8DE52F4429D9957600D3985C /* OWCommunityQuestionView.swift */,
+				8DCA78982B835E8600A24A25 /* OWItalicLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6377,6 +6380,7 @@
 				3DDA9A81291A565200FE3B86 /* OWConversationSpacing.swift in Sources */,
 				242316552B0254DC0002BCD2 /* OWNavigationPlaceholderVC.swift in Sources */,
 				3D4A949F29C74C050087D143 /* OWAuthenticationRecoveryResult.swift in Sources */,
+				8DCA78992B835E8600A24A25 /* OWItalicLabel.swift in Sources */,
 				3D08E09728770BEC00E6F1AC /* String+OWIdentifiableType.swift in Sources */,
 				160E42E82988105D00EDC5A1 /* OWCommentThreadVM.swift in Sources */,
 				3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */,
