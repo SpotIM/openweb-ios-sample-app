@@ -1401,7 +1401,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 // Trigger re-fetching config
-                self.servicesProvider.spotConfigurationService().spotChanged(spotId: OWManager.manager.spotId)
+                self.communityGuidelinesViewModel.inputs.retryGetConfig.onNext(())
                 // Trigger re-fetching conversation
                 self.tryAgainAfterError.onNext(.loadConversationComments)
             })
