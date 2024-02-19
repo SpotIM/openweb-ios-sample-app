@@ -21,6 +21,7 @@ protocol OWConversationViewViewModelingInputs {
     var pullToRefresh: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToTop: PublishSubject<Void> { get }
+    var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
@@ -50,7 +51,9 @@ protocol OWConversationViewViewModelingOutputs {
     var performTableViewAnimation: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
+    var scrollToCellIndexIfNotVisible: Observable<Int> { get }
     var reloadCellIndex: Observable<Int> { get }
+    var highlightCellsIndexes: Observable<[Int]> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
@@ -88,6 +91,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayAfterScrolledToCellAnimated: Int = 500 // ms
+        static let delayAfterInsertToTableView: Int = 300 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let debounceForCellsViewModels: Int = 50 // ms
         static let tableViewPaginationCellsOffset: Int = 5
@@ -197,6 +202,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
+    fileprivate let _insertNewRealtimeComments = PublishSubject<[OWComment]>()
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
@@ -210,6 +216,20 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
+            .asObservable()
+    }
+
+    fileprivate var _scrollToCellIndexIfNotVisible = PublishSubject<Int>()
+    var scrollToCellIndexIfNotVisible: Observable<Int> {
+        _scrollToCellIndexIfNotVisible
+            .asObservable()
+    }
+
+    var scrolledToCellIndex = PublishSubject<Int>()
+
+    fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
+    var highlightCellsIndexes: Observable<[Int]> {
+        return _highlightCellsIndexes
             .asObservable()
     }
 
@@ -560,6 +580,19 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var conversationOffset: Observable<CGPoint> {
         return changeConversationOffset
             .asObservable()
+    }
+
+    fileprivate var firstVisibleCommentIndex: Observable<Int> {
+        return Observable.combineLatest(shouldShowCommunityQuestion.startWith(false),
+                                        shouldShowCommunityGuidelines.startWith(false))
+            .flatMapLatest({ showCommunityQuestion, showCommunityGuidlines -> Observable<Int> in
+                var index = 0
+                if showCommunityQuestion { index += 1 }
+                if showCommunityQuestion && showCommunityGuidlines { index += 1 } // spacer
+                if showCommunityGuidlines { index += 1 }
+                return .just(index)
+            })
+            .share(replay: 1)
     }
 
     // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
@@ -955,11 +988,12 @@ fileprivate extension OWConversationViewViewModel {
             .realtimeIndicationViewModel.outputs
             .tapped
             .withLatestFrom(self.servicesProvider.realtimeIndicatorService().newComments)
+            .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] newComments in
                 guard let self = self else { return }
                 self.servicesProvider
                     .conversationUpdaterService()
-                    .update(.insert(comments: newComments), postId: self.postId)
+                    .update(.insertRealtime(comments: newComments), postId: self.postId)
 
                 self.servicesProvider.realtimeIndicatorService().cleanCache()
             })
@@ -1239,6 +1273,10 @@ fileprivate extension OWConversationViewViewModel {
                 commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
 
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+
+                if commentsPresentationData.isEmpty {
+                    self._isLoadingMoreComments.onNext(false)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1795,6 +1833,21 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        loginPromptViewModel
+            .outputs
+            .authenticationTriggered
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .loginPrompt)
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.conversationUpdaterService()
+                    .update(.refreshConversation, postId: self.postId)
+            })
+            .disposed(by: disposeBag)
+
         // Subscribe to URL click in comment text
         commentCellsVmsObservable
             .flatMapLatest { commentCellsVms -> Observable<URL> in
@@ -1831,19 +1884,22 @@ fileprivate extension OWConversationViewViewModel {
 
         updatedCommentsObservable
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: conversationViewVMScheduler)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] updateType in
-                guard let self = self else { return }
-                switch updateType {
-                case .insert(let comments):
-                    self._insertNewLocalComments.onNext(comments)
-                case let .update(commentId, withComment):
-                    self._updateLocalComment.onNext((withComment, commentId))
-                case let .insertReply(comment, toCommentId):
-                    self._replyToLocalComment.onNext((comment, toCommentId))
-                case .refreshConversation:
-                    self._dataSourceTransition.onNext(.reload)
-                    self._forceRefresh.onNext()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    switch updateType {
+                    case .insert(let comments):
+                        self._insertNewLocalComments.onNext(comments)
+                    case .insertRealtime(comments: let comments):
+                        self._insertNewRealtimeComments.onNext(comments)
+                    case let .update(commentId, withComment):
+                        self._updateLocalComment.onNext((withComment, commentId))
+                    case let .insertReply(comment, toCommentId):
+                        self._replyToLocalComment.onNext((comment, toCommentId))
+                    case .refreshConversation:
+                        self._dataSourceTransition.onNext(.reload)
+                        self._forceRefresh.onNext()
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -1873,6 +1929,54 @@ fileprivate extension OWConversationViewViewModel {
                 if (!updatedCommentsPresentationData.isEmpty) {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // Observable for handling insertion of new realtime comments
+        let newRealtimeCommentsObsarvable = _insertNewRealtimeComments
+            .do(onNext: { [weak self] comments in
+                guard let self = self else { return }
+
+                // Processing new comments
+                let commentsIds = comments.map { $0.id }.unwrap()
+                    .filter {
+                        // Exclude existing comments
+                        self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                    }
+                let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
+                if (!updatedCommentsPresentationData.isEmpty) {
+                    self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+                }
+            })
+            .share()
+
+        let updatedRealtimeCommentsObsarvable = newRealtimeCommentsObsarvable
+            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: conversationViewVMScheduler)
+            .withLatestFrom(firstVisibleCommentIndex) { ($0, $1) }
+            .withLatestFrom(commentCellsOptions) { ($0.0, $0.1, $1) }
+            .map { comments, firstVisibleCommentIndex, commentCellsOptions -> [Int] in
+                let indexes = commentCellsOptions.enumerated().compactMap { index, element in
+                    if element.cellClass == OWCommentCell.self { return index + firstVisibleCommentIndex } else { return nil }
+                }
+                return Array(indexes.prefix(comments.count))
+            }
+            .share()
+
+        updatedRealtimeCommentsObsarvable
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self, let firstIndex = indexes.first else { return }
+                self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
+            })
+            .disposed(by: disposeBag)
+
+        scrolledToCellIndex
+            .withLatestFrom(self.firstVisibleCommentIndex) { ($0, $1) }
+            .filter { $0 == $1 }
+            .voidify()
+            .withLatestFrom(updatedRealtimeCommentsObsarvable)
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self else { return }
+                self._highlightCellsIndexes.onNext(indexes)
             })
             .disposed(by: disposeBag)
 

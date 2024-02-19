@@ -25,7 +25,7 @@ protocol OWPreConversationViewViewModelingInputs {
 protocol OWPreConversationViewViewModelingOutputs {
     var viewAccessibilityIdentifier: String { get }
     var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
-    var loginPromptVM: OWLoginPromptViewModeling { get }
+    var loginPromptViewModel: OWLoginPromptViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var realtimeIndicationAnimationViewModel: OWRealtimeIndicationAnimationViewModeling { get }
@@ -134,7 +134,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
         return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
     }()
 
-    lazy var loginPromptVM: OWLoginPromptViewModeling = {
+    lazy var loginPromptViewModel: OWLoginPromptViewModeling = {
         return OWLoginPromptViewModel(isFeatureEnabled: preConversationStyle.isLoginPromptEnabled, style: .left)
     }()
 
@@ -929,7 +929,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .subscribe(onNext: { [weak self] updateType, commentCellsVms in
                 guard let self = self else { return }
                 switch updateType {
-                case .insert(let comments):
+                case .insert(let comments), .insertRealtime(let comments):
                     let commentsVms: [OWCommentCellViewModel] = comments.map { comment -> OWCommentCellViewModel? in
                         guard let userId = comment.userId,
                               let user = self.servicesProvider.usersService().get(userId: userId)
@@ -982,7 +982,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Subscribe to URL click in comment text
         commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<URL> in
+            .flatMapLatest { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
                     let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
 

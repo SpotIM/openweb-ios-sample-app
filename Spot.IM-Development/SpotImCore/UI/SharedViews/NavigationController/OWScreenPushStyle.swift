@@ -12,4 +12,5 @@ enum OWScreenPushStyle {
     case regular
     case present
     case presentOverFullScreen
+    case addAsChild
 }

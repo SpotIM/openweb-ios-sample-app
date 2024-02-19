@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2024-12-28
+- Entire new versions which was refactored and have a new API. Here are some highlights:
+- Simple, straightforward API with the flexibility to use UIViews over just UIViewControllers
+- Comprehensive error states, report reasons, and a clarity mode for reliable app development
+- Robust, stable SDK foundation, supported by performance enhancements like background threading
+- New design preset options to seamlessly integrate the user experience with your brand's aesthetic
+- Stunning shimmering skeletons while loading data
+
 ## [1.18.5] - 2023-06-12
 ### Fixed
 - Hotfix for a crash when trying to view previous replies in certain condtions

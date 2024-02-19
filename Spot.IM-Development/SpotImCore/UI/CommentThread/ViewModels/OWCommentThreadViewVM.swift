@@ -69,6 +69,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
         static let performActionDelay: Int = 500 // ms
         static let debouncePerformTableViewAnimation: Int = 50 // ms
         static let delayAfterScrollBeforeHighlightAnimation = 300 // ms
+        static let delayUpdateTableAfterLoadedReplies: Int = 450 // ms
     }
 
     var tableViewSize = PublishSubject<CGSize>()
@@ -891,6 +892,32 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Reload OWCommentThreadActionsCell at index
+        loadMoreRepliesReadUpdated
+            .delay(.milliseconds(Metrics.delayUpdateTableAfterLoadedReplies), scheduler: commentThreadViewVMScheduler)
+            .map { (commentPresentationData, _, _) -> OWCommentPresentationData in
+                return commentPresentationData
+            }
+            .withLatestFrom(cellsViewModels) { ($0, $1) }
+            .map { (commentPresentationData, cellsViewModels) -> (OWCommentThreadCellOption, Int)? in
+                let cellOption = cellsViewModels.first(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                let cellIndex = cellsViewModels.firstIndex(where: {
+                    guard let viewModel = $0.viewModel as? OWCommentThreadActionsCellViewModel else { return false }
+                    return viewModel.commentPresentationData.id == commentPresentationData.id && viewModel.mode == .expand
+                })
+                guard let cellOption = cellOption, let cellIndex = cellIndex else { return nil }
+                return (cellOption, cellIndex)
+            }
+            .unwrap()
+            .subscribe(onNext: { (cellOption, _) in
+                guard let viewModel = cellOption.viewModel as? OWCommentThreadActionsCellViewModel else { return }
+                viewModel.outputs.commentActionsVM.inputs.isLoading.onNext(false)
+            })
+            .disposed(by: disposeBag)
+
         // Responding to comment height change (for updating cell)
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Void> in
@@ -1526,7 +1553,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .subscribe(onNext: { [weak self] updateType in
                 guard let self = self else { return }
                 switch updateType {
-                case .insert:
+                case .insert, .insertRealtime:
                     // Not relevant in comment thread
                     break
                 case let .update(commentId, withComment):

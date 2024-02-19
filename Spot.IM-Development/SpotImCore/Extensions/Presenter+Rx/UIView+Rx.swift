@@ -25,4 +25,12 @@ extension Reactive where Base: UIView {
             })
         }
     }
+
+    var bounds: Observable<CGRect> {
+        return observe(CGRect.self, "bounds")
+            .filter { $0 != nil }
+            .unwrap()
+            .map { $0 }
+            .distinctUntilChanged()
+    }
 }
