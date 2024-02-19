@@ -168,6 +168,9 @@ fileprivate extension OWConversationView {
             }
         }
 
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+        let isLandscape = currentOrientation == .landscape
+
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
             if shouldShowArticleDescription {
@@ -195,14 +198,20 @@ fileprivate extension OWConversationView {
             make.trailing.equalToSuperview()
         }
 
+        if currentOrientation == .portrait {
+            loginPromptLandscapeConstraints.forEach { $0.deactivate() }
+            loginPromptPortraitConstraints.forEach { $0.activate() }
+        } else {
+            loginPromptPortraitConstraints.forEach { $0.deactivate() }
+            loginPromptLandscapeConstraints.forEach { $0.activate() }
+        }
+
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()
         }
-
-        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
 
         self.addSubview(commentingCTAContainerView)
         commentingCTAContainerView.OWSnp.makeConstraints { make in
