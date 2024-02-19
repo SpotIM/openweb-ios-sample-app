@@ -40,6 +40,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
+    fileprivate struct Metrics {
+        static let delayCommentThreadAfterReport: CGFloat = 0.5
+    }
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -107,7 +111,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                         popCompletion: conversationPopped)
         }
 
-        // CTA tapped from conversation screen
+        // CTA, Reply or Edit tapped from conversation screen
         let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
             .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWCommentCreationRequiredData? in
@@ -189,7 +193,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 case let .submitedReport(commentId, userJustLoggedIn):
                     guard userJustLoggedIn else { return }
-                    self?._openCommentThread.onNext((commentId, .report))
+
+                    // Delay open Comment Thread so that the
+                    // report reason flow closes first
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayCommentThreadAfterReport) {
+                        self?._openCommentThread.onNext((commentId, .report))
+                    }
                 default:
                     break
                 }
@@ -523,6 +532,23 @@ fileprivate extension OWConversationCoordinator {
                                                                                  articelDescriptionCustomizeAuthor,
                                                                                  articelDescriptionCustomizeImage)
 
+        // Set customized login prompt
+        let loginPromptCustomizeLockImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeLockIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .lockIcon(imageView: $0)) }
+
+        let loginPromptCustomizeTitle = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.loginPrompt(element: .title(label: $0)) }
+
+        let loginPromptCustomizeArrowImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeArrowIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .arrowIcon(imageView: $0)) }
+
+        let loginPromptCustomizationElementsObservable = Observable.merge(loginPromptCustomizeLockImage,
+                                                                          loginPromptCustomizeTitle,
+                                                                          loginPromptCustomizeArrowImage)
+
         // Set customized conversation summary
         let summaryCustomizeCounter = viewModel.outputs.conversationSummaryViewModel
             .outputs.customizeCounterLabelUI
@@ -668,6 +694,7 @@ fileprivate extension OWConversationCoordinator {
 
         let customizationElementsObservables = Observable.merge(conversationTitleHeaderCustomizationElementsObservable,
                                                                 articleDescriptionCustomizationElementsObservable,
+                                                                loginPromptCustomizationElementsObservable,
                                                                 summaryCustomizationElementsObservable,
                                                                 communityQuestionCustomizationElementObservable,
                                                                 communityGuidelinesCustomizationElementObservable,
