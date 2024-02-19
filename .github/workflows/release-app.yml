@@ -5,8 +5,23 @@ on:
   workflow_dispatch:
     inputs:
       version_number:
-        description: App Version Number
+        description: Version Number
         required: true
+
+      # TODO - Support build number
+      # build_number:
+      #   description: Build Number
+      #   required: true
+      #   default: '0'
+
+      scheme:
+         description: Scheme
+         type: choice
+         required: true
+         options:
+           - "app"
+           - "beta_app"
+           - "public_app"
 
 jobs:
   release-app:
@@ -28,3 +43,24 @@ jobs:
             echo "ERROR: Unable to validate version: '$VERSION'"
             exit 1
           fi
+
+      - name: Put branch in env
+        run: |
+          BRANCH="release/${{ inputs.scheme }}/${{ env.VERSION }}"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      - name: Delete branch if already exists
+        run: |
+          if git ls-remote --exit-code --heads origin "${{ env.BRANCH }}"
+          then
+            echo "INFO: remote branch esists - deleting it"
+            git push origin --delete "${{ env.BRANCH }}"
+          else
+            echo "INFO: remote branch not found"
+          fi
+          
+      - name: Push Branch
+        run: |
+          git checkout -b "${{ env.BRANCH }}"
+          git push --set-upstream origin "${{ env.BRANCH }}"
+          

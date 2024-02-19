@@ -108,7 +108,7 @@ platform :ios do
                   "im.spot.demo" => "match AppStore im.spot.demo"
               }
           },
-          xcargs: "-allowProvisioningUpdates"
+        xcargs: "-allowProvisioningUpdates"
       )
     else
       match(type: "development", readonly: true)

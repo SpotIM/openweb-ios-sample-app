@@ -20,6 +20,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var initializeSDKToggled: PublishSubject<Bool> { get }
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
     var dismissing: PublishSubject<Void> { get }
+    var closeClick: PublishSubject<Void> { get }
 }
 
 protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
@@ -126,6 +127,8 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
         return dismissing
             .delay(.milliseconds(250), scheduler: MainScheduler.instance) // Allow some time for dismissing animation
     }
+
+    var closeClick = PublishSubject<Void>()
 
     fileprivate let disposeBag = DisposeBag()
 
@@ -354,6 +357,11 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 self?.outputs.dismissVC.onNext()
             })
             .subscribe()
+            .disposed(by: disposeBag)
+
+        // Close clicked
+        closeClick
+            .bind(to: dismissVC)
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length

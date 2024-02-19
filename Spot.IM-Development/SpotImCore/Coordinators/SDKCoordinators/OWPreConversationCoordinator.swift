@@ -138,8 +138,8 @@ fileprivate extension OWPreConversationCoordinator {
                                                                   settings: self.preConversationData.settings,
                                                                   presentationalStyle: self.preConversationData.presentationalStyle)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
-                                                                           conversationData: conversationData,
-                                                                           actionsCallbacks: self.actionsCallbacks)
+                                                                        conversationData: conversationData,
+                                                                        actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
             }
             .do(onNext: { [weak self] coordinatorResult in
@@ -252,7 +252,10 @@ fileprivate extension OWPreConversationCoordinator {
             .disposed(by: disposeBag)
     }
 
+    // swiftlint:disable function_body_length
     func setupCustomizationElements(forViewModel viewModel: OWPreConversationViewViewModeling) {
+        // swiftlint:enable function_body_length
+
         // Set customized pre conversation summary header
         let summaryHeaderCustomizeTitle = viewModel.outputs.preConversationSummaryVM
             .outputs.customizeTitleLabelUI
@@ -276,6 +279,23 @@ fileprivate extension OWPreConversationCoordinator {
                                                                       summaryHeaderCustomizeCounter,
                                                                       summaryHeaderCustomizeOnlineUsersIcon,
                                                                       summaryHeaderCustomizeOnlineUsersCounter)
+
+        // Set customized login prompt
+        let loginPromptCustomizeLockImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeLockIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .lockIcon(imageView: $0)) }
+
+        let loginPromptCustomizeTitle = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeTitleLabelUI
+            .map { OWCustomizableElement.loginPrompt(element: .title(label: $0)) }
+
+        let loginPromptCustomizeArrowImage = viewModel.outputs.loginPromptViewModel
+            .outputs.customizeArrowIconImageViewUI
+            .map { OWCustomizableElement.loginPrompt(element: .arrowIcon(imageView: $0)) }
+
+        let loginPromptCustomizationElementsObservable = Observable.merge(loginPromptCustomizeLockImage,
+                                                                          loginPromptCustomizeTitle,
+                                                                          loginPromptCustomizeArrowImage)
 
         // Set customized community question
         let communityQuestionCustomizeContainer = viewModel.outputs.communityQuestionViewModel
@@ -362,6 +382,7 @@ fileprivate extension OWPreConversationCoordinator {
                                                                                  commentingReadOnlyCustomizeTitle)
 
         let customizationElementsObservables = Observable.merge(summaryCustomizationElementsObservable,
+                                                                loginPromptCustomizationElementsObservable,
                                                                 communityQuestionCustomizationElementObservable,
                                                                 communityGuidelinesCustomizationElementObservable,
                                                                 commentCreationEntryCustomizationElementsObservable,
