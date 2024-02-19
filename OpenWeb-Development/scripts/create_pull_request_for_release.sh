@@ -21,7 +21,7 @@ echo "$(generate_post_data)"
 
 
 curl -X POST \
-  https://api.github.com/repos/SpotIM/spotim-ios-sdk-demo-apps/pulls \
+  https://api.github.com/repos/SpotIM/openweb-ios-sdk-demo-apps/pulls \
   -i -u "ios-dev-openweb:$GITHUB_OPENWEB_USER_TOKEN" \
   -H 'Accept: application/vnd.github.v3+json' \
   -d "$(generate_post_data)"
