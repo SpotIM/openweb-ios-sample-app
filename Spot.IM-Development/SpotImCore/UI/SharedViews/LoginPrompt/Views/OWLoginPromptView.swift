@@ -182,15 +182,19 @@ fileprivate extension OWLoginPromptView {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
-                                 OWSharedServicesProvider.shared.orientationService().orientation)
-            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
+                                 OWSharedServicesProvider.shared.orientationService().orientation,
+                                 OWColorPalette.shared.colorDriver)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation, colorMapper in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
-                self.lockIconImangeView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.arrowIconImangeView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
 
+                if let owBrandColor = colorMapper[.brandColor] {
+                    let brandColor = owBrandColor.color(forThemeStyle: currentStyle)
+                    self.lockIconImangeView.tintColor = brandColor
+                    self.arrowIconImangeView.tintColor = brandColor
+                    self.titleLabel.textColor = brandColor
+                }
                 self.updateCustomUI()
             })
             .disposed(by: disposeBag)
