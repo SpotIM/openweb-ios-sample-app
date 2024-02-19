@@ -151,6 +151,7 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBackgroundColor, type: .backgroundColor2)
         setColor(color: theme.secondaryBackgroundColor, type: .backgroundColor4)
         setColor(color: theme.tertiaryBackgroundColor, type: .backgroundColor5)
+        setColor(color: theme.surfaceColor, type: .backgroundColor6)
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
