@@ -90,6 +90,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
         return _shouldShowView
             .unwrap()
             .asObservable()
+            .startWith(false)
+            .distinctUntilChanged()
             .share(replay: 1)
     }
 
