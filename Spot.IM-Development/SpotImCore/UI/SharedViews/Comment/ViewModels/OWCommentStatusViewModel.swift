@@ -89,7 +89,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 let messageString: String
                 switch(status) {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
-                case .pending: messageString = isCommentOfActiveUser ? 
+                case .pending: messageString = isCommentOfActiveUser ?
                     OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage") :
                     OWLocalizationManager.shared.localizedString(key: "NotAuthorPendingCommentStatusMessage")
                 case .none: return nil
