@@ -39,7 +39,8 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     func getUpdatedComment(for originalComment: OWComment, postId: OWPostId) -> OWComment {
         guard let commentId = originalComment.id else { return originalComment }
         var updatedComment = originalComment
-        if (originalComment.status == .pending || originalComment.status == .unknown) && isReported(commentId: commentId, postId: postId) {
+        if (originalComment.status == .pending || originalComment.status == .unknown || originalComment.status == nil)
+            && isReported(commentId: commentId, postId: postId) {
             updatedComment.setIsReported(true)
         }
         return updatedComment
@@ -63,7 +64,9 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
     }
 
     func cleanCache() {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         self._mapPostIdToReportedCommentIds.removeAll()
         savePersistant()
@@ -72,7 +75,9 @@ class OWReportedCommentsService: OWReportedCommentsServicing {
 
 fileprivate extension OWReportedCommentsService {
     func set(reportedCommentIds ids: [OWCommentId], postId: OWPostId) {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
 
         if let existingCommentIdsForPostId = _mapPostIdToReportedCommentIds[postId] {
             // merge and replacing current comments
@@ -95,7 +100,9 @@ fileprivate extension OWReportedCommentsService {
     }
 
     func isReported(commentId id: OWCommentId, postId: OWPostId) -> Bool {
+        // swiftlint:disable self_capture_in_blocks
         self.lock.lock(); defer { self.lock.unlock() }
+        // swiftlint:enable self_capture_in_blocks
         return _mapPostIdToReportedCommentIds[postId]?.contains(id) ?? false
     }
 
@@ -105,7 +112,9 @@ fileprivate extension OWReportedCommentsService {
             let keychain = self.servicesProvider.keychain()
 
             if let reportedCommentsMapper = keychain.get(key: OWKeychain.OWKey<[OWPostId: OWReportedCommentIds]>.reportedComments) {
+                // swiftlint:disable self_capture_in_blocks
                 self.lock.lock(); defer { self.lock.unlock() }
+                // swiftlint:enable self_capture_in_blocks
                 self._mapPostIdToReportedCommentIds = reportedCommentsMapper
             }
         }

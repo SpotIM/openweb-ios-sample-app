@@ -31,7 +31,7 @@ references:
         echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $CORE_VERSION
 
-  define: &xcode_latest_official_version "15.1.0"
+  define: &xcode_latest_official_version "15.2.0"
 
 commands:
   swiftlint:
@@ -128,6 +128,8 @@ jobs:
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
             ls -l
+            git config --global user.name "ios-dev"
+            git config --global user.email "ios-dev@openweb.com"
             git branch validate/spm/sdk/$CORE_VERSION
             git checkout validate/spm/sdk/$CORE_VERSION
             git status
@@ -145,8 +147,10 @@ jobs:
 
       - run:
           name: Build app
+          no_output_timeout: 30m
           command: |
             cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle update fastlane
             bundle exec fastlane build
 
       - run:
@@ -184,6 +188,8 @@ jobs:
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
             ls -l
+            git config --global user.name "ios-dev"
+            git config --global user.email "ios-dev@openweb.com"
             git branch validate/cocoapods/sdk/$CORE_VERSION
             git checkout validate/cocoapods/sdk/$CORE_VERSION
             git status
@@ -199,6 +205,7 @@ jobs:
 
       - run:
           name: Bundle Install
+          no_output_timeout: 30m
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
             bundle config set --local path 'vendor/bundle'
@@ -209,6 +216,7 @@ jobs:
           name: Build app
           command: |
             cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            bundle update fastlane
             bundle exec fastlane build
 
       - run:
@@ -689,6 +697,13 @@ workflows:
                 - /^release/tag15.0/.*/
           xcode: "15.0"
 
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/tag15.1/.*/
+          xcode: "15.1"
+
       - release_sdk_job:
           filters:
             branches:
@@ -711,6 +726,14 @@ workflows:
               only:
                 - /^release/beta_tag15.0/.*/
           xcode: "15.0"
+          buildConfig: "ReleaseBeta"
+
+      - release_tag:
+          filters:
+            branches:
+              only:
+                - /^release/beta_tag15.1/.*/
+          xcode: "15.1"
           buildConfig: "ReleaseBeta"
 
       - release_app_job:
@@ -773,6 +796,11 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.3.1"
+
+      - release_tag:
+          requires:
+            - "release_sdk_job"
+          xcode: "15.1.0"
 
   upload_app_to_s3_workflow:
     jobs:

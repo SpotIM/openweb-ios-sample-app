@@ -207,13 +207,8 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let router = self.router else { return .empty() }
                 let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
                 let reportReasonSubmittedVC = OWReportReasonSubmittedVC(reportReasonSubmittedViewViewModel: reportReasonSubmittedViewVM)
-                switch self.presentationalMode {
-                case .present(let style):
-                    reportReasonSubmittedVC.modalPresentationStyle = style.toOSModalPresentationStyle
-                default:
-                    reportReasonSubmittedVC.modalPresentationStyle = .fullScreen
-                }
-                router.present(reportReasonSubmittedVC, animated: true, dismissCompletion: nil)
+
+                router.push(reportReasonSubmittedVC, pushStyle: .present, animated: true, popCompletion: nil)
                 return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
             }
             .do(onNext: { [weak self] in
@@ -314,7 +309,8 @@ fileprivate extension OWReportReasonCoordinator {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                router.navigationController?.visibleViewController?.dismiss(animated: true)
+
+                router.pop(popStyle: .dismiss, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -333,7 +329,7 @@ fileprivate extension OWReportReasonCoordinator {
                 // For dismissing OWReportReasonSubmittedVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
                     let hasMoreThanOneViewController = router.numberOfActiveViewControllers > 1
-                    visableViewController?.dismiss(animated: hasMoreThanOneViewController)
+                    router.pop(popStyle: .dismiss, animated: hasMoreThanOneViewController)
                 }
                 return .just(router)
             }
@@ -367,15 +363,8 @@ fileprivate extension OWReportReasonCoordinator {
                 guard let router = self.router else { return }
                 let ReportReasonCancelVM = OWReportReasonCancelViewModel(reportReasonCancelViewViewModel: reportReasonViewModel)
                 let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewModel: ReportReasonCancelVM)
-                switch self.presentationalMode {
-                case .present(style: .fullScreen):
-                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
-                case .present(style: .pageSheet):
-                    reportReasonCancelVC.modalPresentationStyle = .pageSheet
-                default:
-                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
-                }
-                router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+
+                router.push(reportReasonCancelVC, pushStyle: .present, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
 
