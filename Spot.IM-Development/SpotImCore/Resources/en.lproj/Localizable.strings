@@ -112,6 +112,7 @@
 "LearnMore" = "Learn more";
 "RejectedCommentStatusMessage" = "Your comment was rejected.";
 "PendingCommentStatusMessage" = "Hold on, your comment is waiting for approval.";
+"NotAuthorPendingCommentStatusMessage" = "This comment is awaiting review.";
 "ClarityPendingReasonsTitle" = "Your comment may have been sent for review for one of the following reasons:";
 "AwaitingReview" = "Awaiting review";
 "RejectReasonEnsureCivil" = "All of our decisions are designed to ensure civil, open and inclusive discourse within the community.";

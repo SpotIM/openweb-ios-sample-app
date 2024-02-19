@@ -113,6 +113,7 @@
 "LearnMore" = "Saber mais";
 "RejectedCommentStatusMessage" = "O seu comentário foi rejeitado.";
 "PendingCommentStatusMessage" = "Aguarde, o seu comentário está à espera de aprovação.";
+"NotAuthorPendingCommentStatusMessage" = "Este comentário está a aguardar revisão.";
 "ClarityPendingReasonsTitle" = "O seu comentário pode ter sido enviado para revisão por um dos seguintes motivos:";
 "AwaitingReview" = "A aguardar revisão";
 "RejectReasonEnsureCivil" = "Todas as nossas decisões são concebidas para garantir um discurso civil, aberto e inclusivo no seio da comunidade.";
