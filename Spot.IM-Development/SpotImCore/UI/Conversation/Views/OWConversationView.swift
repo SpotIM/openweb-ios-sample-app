@@ -304,6 +304,7 @@ fileprivate extension OWConversationView {
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
                 self.commentingCTAContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableView.indicatorStyle = currentStyle == .light ? .black : .white
             })
             .disposed(by: disposeBag)
 
@@ -498,6 +499,10 @@ fileprivate extension OWConversationView {
 
         OWSharedServicesProvider.shared.orientationService()
             .orientation
+            // skip first orientation share(replay: 1) as we do
+            // not want animation at conversation loading state
+            // the correct constraints are set anyway at view setup
+            .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }

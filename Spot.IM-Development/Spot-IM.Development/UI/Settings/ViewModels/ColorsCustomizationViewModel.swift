@@ -44,8 +44,9 @@ class ColorsCustomizationViewModel: ColorsCustomizationViewModeling, ColorsCusto
             ThemeColorItem(title: "Secondary Text", initialColor: initialColorTheme.secondaryTextColor),
             ThemeColorItem(title: "Tertiary Text", initialColor: initialColorTheme.tertiaryTextColor),
             ThemeColorItem(title: "Primary Background", initialColor: initialColorTheme.primaryBackgroundColor),
-            ThemeColorItem(title: "Secindary Background", initialColor: initialColorTheme.secondaryBackgroundColor),
+            ThemeColorItem(title: "Secondary Background", initialColor: initialColorTheme.secondaryBackgroundColor),
             ThemeColorItem(title: "Tertiary Background", initialColor: initialColorTheme.tertiaryBackgroundColor),
+            ThemeColorItem(title: "Surface Color", initialColor: initialColorTheme.surfaceColor),
             ThemeColorItem(title: "Primary Border", initialColor: initialColorTheme.primaryBorderColor),
             ThemeColorItem(title: "Secondary Border", initialColor: initialColorTheme.secondaryBorderColor),
             ThemeColorItem(title: "Loader", initialColor: initialColorTheme.loaderColor),
@@ -115,10 +116,11 @@ fileprivate extension ColorsCustomizationViewModel {
             primaryBackgroundColor: colors[8],
             secondaryBackgroundColor: colors[9],
             tertiaryBackgroundColor: colors[10],
-            primaryBorderColor: colors[11],
-            secondaryBorderColor: colors[12],
-            loaderColor: colors[13],
-            brandColor: colors[14])
+            surfaceColor: colors[11],
+            primaryBorderColor: colors[12],
+            secondaryBorderColor: colors[13],
+            loaderColor: colors[14],
+            brandColor: colors[15])
     }
 }
 
