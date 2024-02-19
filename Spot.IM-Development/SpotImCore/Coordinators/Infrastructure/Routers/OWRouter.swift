@@ -61,7 +61,7 @@ class OWRouter: NSObject, OWRoutering {
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
-    fileprivate let presentationalMode: OWPresentationalModeExtended
+    fileprivate var presentationalMode: OWPresentationalModeExtended
     fileprivate var navDisposedBag: DisposeBag!
     fileprivate lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
     var rootViewController: UIViewController? {
@@ -87,8 +87,8 @@ class OWRouter: NSObject, OWRoutering {
     func start() {
         guard let navigationController = navigationController else { return }
         switch presentationalMode {
-        case .present(let viewController, _, let animated):
-            viewController.present(navigationController, animated: animated)
+        case .present(let viewControllerWeakEncapsulation, _, let animated):
+            viewControllerWeakEncapsulation.value()?.present(navigationController, animated: animated)
         case .push(_):
             // Already handled in coordinator
             break

@@ -253,7 +253,8 @@ fileprivate extension OWPreConversationView {
         }
 
         self.addSubview(self.realtimeIndicationAnimationView)
-        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+        realtimeIndicationAnimationView.OWSnp.makeConstraints { [weak self] make in
+            guard let self = self else { return }
             make.bottom.equalTo(self.tableView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
@@ -350,7 +351,8 @@ fileprivate extension OWPreConversationView {
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
-                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) { [weak self] in
+                        guard let self = self else { return }
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
                     }
@@ -485,7 +487,8 @@ fileprivate extension OWPreConversationView {
                 if realtimeIsShown {
                     // Only when we shown the realtime indicator we should animate the table view height change
                     self.tableViewHeightConstraint?.update(offset: height)
-                    UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) {
+                    UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) { [weak self] in
+                        guard let self = self else { return }
                         self.layoutIfNeeded()
                     }
                 } else {
