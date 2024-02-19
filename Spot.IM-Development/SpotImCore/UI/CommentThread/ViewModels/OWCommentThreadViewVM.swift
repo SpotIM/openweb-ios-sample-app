@@ -1239,8 +1239,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         let selectedCommentCellVm = Observable.combineLatest(commentCellsVmsObservable, selectedCommentId)
-            .map { [weak self] commentCellsVms, commentId -> OWCommentCellViewModeling? in
-                guard let self = self else { return nil }
+            .map { commentCellsVms, commentId -> OWCommentCellViewModeling? in
                 let selectedCommentCellVm: OWCommentCellViewModeling? = commentCellsVms.first { vm in
                         return vm.outputs.id == commentId
                 }
