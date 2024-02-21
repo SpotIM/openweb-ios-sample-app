@@ -278,6 +278,7 @@ fileprivate extension TestAPIViewModel {
     }
 
     func setSDKConfigurations(_ spotId: String) {
+        setupEnvironment() // env must be set before spotId because we fetch config right after spotId set
         var manager = OpenWeb.manager
         manager.spotId = spotId
         var customizations = manager.ui.customizations
@@ -312,5 +313,16 @@ fileprivate extension TestAPIViewModel {
         }
 
         analytics.addBICallback(BIClosure)
+    }
+
+    func setupEnvironment() {
+        let env = UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
+        var manager = OpenWeb.manager
+        switch env {
+        case .production:
+            manager.environment = .production
+        case .staging:
+            manager.environment = .staging
+        }
     }
 }
