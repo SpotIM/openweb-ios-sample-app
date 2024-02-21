@@ -15,7 +15,7 @@ references:
         default: "ReleaseInternal"
     macos:
       xcode: << parameters.xcode >>
-    working_directory: ~/project/Spot.IM-Development
+    working_directory: ~/project/OpenWeb-Development
 
   define_var_release_version: &define_var_release_version
     run:
@@ -254,7 +254,7 @@ jobs:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
 
       - restore_cache:
-          key: bundler_cache_tamBiFKREwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
 
       - run:
           name: Bundle Install
