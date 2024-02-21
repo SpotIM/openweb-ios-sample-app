@@ -34,6 +34,7 @@ class ColorCustomizationService: ColorCustomizationServicing {
                 primaryBackgroundColor: OWColor(lightColor: .systemPink, darkColor: .purple),
                 secondaryBackgroundColor: OWColor(lightColor: .yellow, darkColor: .green),
                 tertiaryBackgroundColor: OWColor(lightColor: .magenta, darkColor: .cyan),
+                surfaceColor: OWColor(lightColor: .blue, darkColor: .green),
                 primaryBorderColor: OWColor(lightColor: .orange, darkColor: .brown),
                 secondaryBorderColor: OWColor(lightColor: .white, darkColor: .black),
                 loaderColor: OWColor(lightColor: .brown, darkColor: .yellow),

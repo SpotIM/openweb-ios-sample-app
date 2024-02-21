@@ -230,7 +230,7 @@ fileprivate extension OWCommentRatingViewModel {
 
         // Updating Network/Remote about rank change
         rankChangedLocallyObservable
-            .flatMapLatest { [weak self] rankChange -> Observable<EmptyDecodable> in
+            .flatMapLatest { [weak self] rankChange -> Observable<Event<EmptyDecodable>> in
                 guard let self = self,
                       let postId = OWManager.manager.postId,
                       let operation = rankChange.operation
@@ -241,7 +241,9 @@ fileprivate extension OWCommentRatingViewModel {
                     .conversation
                     .commentRankChange(conversationId: "\(OWManager.manager.spotId)_\(postId)", operation: operation, commentId: self.commentId)
                     .response
+                    .materialize()
             }
+            .map { $0.element }
             .subscribe(onError: { error in
                 // TODO: if did not work - change locally back (using rankChange.reverse)
                 print("error \(error)")
