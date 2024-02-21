@@ -45,7 +45,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         self.actionsCallbacks = actionsCallbacks
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
+    override func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
         let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel(commentCreationData: commentCreationData, viewableMode: .partOfFlow)
         let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
 
@@ -60,9 +60,25 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             }
         }()
 
+        let animated = {
+            if let dataOptions = dataOptions {
+                switch dataOptions {
+                case .commentCreation(let commentCreationData, let source):
+                    if source == .preConversation {
+                        if case .present = commentCreationData.presentationalStyle {
+                            return false
+                        }
+                    }
+                default:
+                    break
+                }
+            }
+            return true
+        }()
+
         router.push(commentCreationVC,
                     pushStyle: pushStyle,
-                    animated: true,
+                    animated: animated,
                     popCompletion: commentCreationPopped)
 
         setupObservers(forViewModel: commentCreationVM)

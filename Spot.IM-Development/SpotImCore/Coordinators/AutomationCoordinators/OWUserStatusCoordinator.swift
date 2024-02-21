@@ -41,7 +41,7 @@ class OWUserStatusCoordinator: OWBaseCoordinator<OWUserStatusCoordinatorResult> 
         self.automationData = automationData
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
+    override func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
 
         let userStatusVM = OWUserStatusAutomationViewModel()
         let userStatusVC = OWUserStatusAutomationVC(viewModel: userStatusVM)
