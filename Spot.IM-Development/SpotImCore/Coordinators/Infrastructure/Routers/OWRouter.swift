@@ -61,7 +61,7 @@ class OWRouter: NSObject, OWRoutering {
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     fileprivate var pushedVCStyles: [UIViewController: OWScreenPushStyle]
     weak var navigationController: UINavigationController?
-    fileprivate var presentationalMode: OWPresentationalModeExtended
+    fileprivate let presentationalMode: OWPresentationalModeExtended
     fileprivate var navDisposedBag: DisposeBag!
     fileprivate lazy var pushOverFullScreenAnimationTransitioning = OWPushOverFullScreenAnimationTransitioning()
     var rootViewController: UIViewController? {
