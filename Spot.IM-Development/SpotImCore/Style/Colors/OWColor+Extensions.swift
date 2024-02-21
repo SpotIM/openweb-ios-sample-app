@@ -121,8 +121,8 @@ extension OWColor {
                 return OWColor(lightColor: OWDesignColors.L1ALT,
                                darkColor: OWDesignColors.D1ALT)
             case .backgroundColor6:
-                return OWColor(lightColor: UIColor(red: 247.0/255, green: 247.0/255, blue: 248.0/255, alpha: 1.0),
-                               darkColor: UIColor(red: 19.0/255, green: 19.0/255, blue: 19.0/255, alpha: 1.0))
+                return OWColor(lightColor: OWDesignColors.surfaceLight,
+                               darkColor: OWDesignColors.surfaceDark)
             case .borderColor1:
                 return OWColor(lightColor: OWDesignColors.L1,
                                darkColor: OWDesignColors.D1)
