@@ -56,9 +56,9 @@ class OWBaseCoordinator<ResultType> {
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
     func coordinate<T: OWCoordinatorResultProtocol>(to coordinator: OWBaseCoordinator<T>,
-                                                    deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<T> {
+                                                    dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<T> {
         store(coordinator: coordinator)
-        return coordinator.start(deepLinkOptions: deepLinkOptions)
+        return coordinator.start(dataOptions: dataOptions)
             .do(onNext: { [weak self, weak coordinator] result in
                 guard let self = self,
                     let coord = coordinator else { return }
@@ -70,7 +70,7 @@ class OWBaseCoordinator<ResultType> {
     }
 
     // Starts the job of the coordinator. Should be used when a router is available (i.e UINavigationController)
-    func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<ResultType> {
+    func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<ResultType> {
         fatalError("Method should be implemented.")
     }
 

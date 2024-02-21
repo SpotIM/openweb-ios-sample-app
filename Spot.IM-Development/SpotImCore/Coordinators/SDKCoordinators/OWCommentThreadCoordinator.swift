@@ -50,7 +50,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     // swiftlint:disable function_body_length
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
+    override func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
         viewableMode = .partOfFlow
         let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadVC = OWCommentThreadVC(viewModel: commentThreadVM)
@@ -198,7 +198,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
                                                                    actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, dataOptions: .none)
             }
             .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
                 return Observable.never()
