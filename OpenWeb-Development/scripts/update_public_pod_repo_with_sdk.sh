@@ -3,7 +3,7 @@
 RELEASE_VERSION=$1
 
 git clone git@github.com:SpotIM/openweb-ios-sdk-pod.git
-cd spotim-ios-sdk-pod
+cd openweb-ios-sdk-pod
 echo "remove the old xcframework"
 rm -fr OpenWebSDK.xcframework
 ls -l
