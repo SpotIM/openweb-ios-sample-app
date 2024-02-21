@@ -66,6 +66,12 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                 case .commentCreation(let commentCreationData, let source):
                     if source == .preConversation {
                         if case .present = commentCreationData.presentationalStyle {
+                            // If comment creation was called from PreConversation
+                            // And the presentation style is present, then we do not
+                            // animate the comment creation since the animation of present
+                            // is done by the conversation presenting under it
+                            // this fixes a UI bug that in some cases looked like a
+                            // double present.
                             return false
                         }
                     }
