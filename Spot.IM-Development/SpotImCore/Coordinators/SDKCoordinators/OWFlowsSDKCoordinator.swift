@@ -12,9 +12,12 @@ import RxSwift
 class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     fileprivate var router: OWRoutering!
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let uiDevice: UIDevice
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         uiDevice: UIDevice = UIDevice.current) {
         self.servicesProvider = servicesProvider
+        self.uiDevice = uiDevice
     }
 
     var routering: OWRoutering {
@@ -156,11 +159,20 @@ fileprivate extension OWFlowsSDKCoordinator {
 
         switch presentationalMode {
         case .present(let viewController, let style):
+
+            var adjustedStyle = style
+            if orientationService.interfaceOrientationMask == .landscape,
+                self.uiDevice.userInterfaceIdiom == .phone,
+                style == .pageSheet {
+                // Force full screen presentation in landscape mode for iPhone because page sheet not supported in landscape
+                adjustedStyle = .fullScreen
+            }
+
             shouldCustomizeNavController = true // Always customize internal nav controller
             navController = OWNavigationController.shared
-            navController.modalPresentationStyle = style.toOSModalPresentationStyle
+            navController.modalPresentationStyle = adjustedStyle.toOSModalPresentationStyle
             presentationalModeExtended = OWPresentationalModeExtended.present(viewControllerWeakEncapsulation: OWWeakEncapsulation(value: viewController),
-                                                                              style: style,
+                                                                              style: adjustedStyle,
                                                                               animated: presentAnimated)
         case .push(let navigationController):
             navController = navigationController
