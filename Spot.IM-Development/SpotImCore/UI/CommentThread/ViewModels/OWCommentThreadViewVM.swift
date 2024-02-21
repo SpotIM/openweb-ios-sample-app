@@ -117,9 +117,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let commentThreadData: OWCommentThreadRequiredData
 
     fileprivate var _selectedCommentId = BehaviorSubject<OWCommentId?>(value: nil)
-    fileprivate lazy var selectedCommentId: Observable<OWCommentId> = {
+    fileprivate lazy var selectedCommentId: Observable<OWCommentId?> = {
         _selectedCommentId
-            .unwrap()
             .asObservable()
     }()
 
@@ -1194,31 +1193,59 @@ fileprivate extension OWCommentThreadViewViewModel {
                 }
                 return Observable.merge(rankClickObservable)
             }
-            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)> in
+            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(Bool, OWCommentViewModeling, SPRankChange)> in
                 // 1. Triggering authentication UI if needed
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: .votingComment)
-                    .map { _ in (commentVm, rankChange) }
+                    .map { ($0, commentVm, rankChange) }
             }
-            .flatMapLatest { [weak self] commentVm, rankChange -> Observable<(OWCommentViewModeling, SPRankChange)?> in
+            .flatMapLatest { [weak self] neededToAuthenticate, commentVm, rankChange -> Observable<(Bool, OWCommentViewModeling, SPRankChange)?> in
                 // 2. Waiting for authentication required for voting
                 guard let self = self else { return .empty() }
                 return self.servicesProvider.authenticationManager().waitForAuthentication(for: .votingComment)
-                    .map { $0 ? (commentVm, rankChange) : nil }
+                    .map { $0 ? (neededToAuthenticate, commentVm, rankChange) : nil }
             }
             .unwrap()
 
         userTryingToChangeRankObservable
-            .do(onNext: { [weak self] commentVm, rankChange in
+            .do(onNext: { [weak self] needToRefreshConversation, _, _ in
+                // Refresh conversation in case user logged in
+                guard let self = self else { return }
+                if needToRefreshConversation {
+                    self._serverCommentsLoadingState.onNext(.loading(triggredBy: .forceRefresh))
+                    self.servicesProvider.conversationUpdaterService().update(.refreshConversation, postId: self.postId)
+                }
+            })
+            .do(onNext: { [weak self] _, commentVm, rankChange in
                 guard let self = self,
                       let commentId = commentVm.outputs.comment.id,
                       let eventType = rankChange.analyticsEventType(commentId: commentId)
                 else { return }
                 self.sendEvent(for: eventType)
             })
-            .subscribe(onNext: { commentVm, rankChange in
-                let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
-                commentRankVm.inputs.rankChanged.onNext(rankChange)
+            .flatMapLatest { [weak self] needToRefreshConversation, commentVm, rankChange -> Observable<(Bool, OWCommentViewModeling, SPRankChange)> in
+                // Wait for conversation to refresh in case user logged in
+                guard let self = self else { return .empty() }
+                if needToRefreshConversation {
+                    return self.serverCommentsLoadingState
+                        .filter { $0 == .notLoading }
+                        .take(1)
+                        .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: self.commentThreadViewVMScheduler)
+                        .map { _ in (needToRefreshConversation, commentVm, rankChange) }
+                } else {
+                    return Observable.just((needToRefreshConversation, commentVm, rankChange))
+                }
+            }
+            .subscribe(onNext: { [weak self] needToRefreshConversation, commentVm, rankChange in
+                guard let self = self,
+                      let commentId = commentVm.outputs.comment.id
+                else { return }
+                if needToRefreshConversation {
+                    self.performAction.onNext((commentId, .changeRank(from: rankChange.from.rawValue, to: rankChange.to.rawValue)))
+                } else {
+                    let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
+                    commentRankVm.inputs.rankChanged.onNext(rankChange)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1239,8 +1266,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .disposed(by: disposeBag)
 
         let selectedCommentCellVm = Observable.combineLatest(commentCellsVmsObservable, selectedCommentId)
-            .map { [weak self] commentCellsVms, commentId -> OWCommentCellViewModeling? in
-                guard let self = self else { return nil }
+            .map { commentCellsVms, commentId -> OWCommentCellViewModeling? in
+                guard let commentId = commentId
+                else { return nil }
                 let selectedCommentCellVm: OWCommentCellViewModeling? = commentCellsVms.first { vm in
                         return vm.outputs.id == commentId
                 }
@@ -1250,8 +1278,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .share()
 
         let selectedCommentCellVmIndex = Observable.combineLatest(cellsViewModels, selectedCommentId)
-            .map { [weak self] cellsViewModels, commentId -> Int? in
-                guard let self = self else { return nil }
+            .map { cellsViewModels, commentId -> Int? in
+                guard let commentId = commentId
+                else { return nil }
                 let commentIndex: Int? = cellsViewModels.firstIndex { vm in
                     if case .comment(let commentCellViewModel) = vm {
                         return commentCellViewModel.outputs.id == commentId
@@ -1272,6 +1301,8 @@ fileprivate extension OWCommentThreadViewViewModel {
                 guard let self = self else { return }
                 self._dataSourceTransition.onNext(.reload)
                 self._performHighlightAnimationCellIndex.onNext(index)
+                // Make sure after scroll comment will not hightlight again
+                self._selectedCommentId.onNext(nil)
             })
             .disposed(by: disposeBag)
 

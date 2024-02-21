@@ -20,6 +20,7 @@ public struct OWTheme {
     public let primaryBackgroundColor: OWColor?
     public let secondaryBackgroundColor: OWColor?
     public let tertiaryBackgroundColor: OWColor?
+    public let surfaceColor: OWColor?
     public let primaryBorderColor: OWColor?
     public let secondaryBorderColor: OWColor?
     public let loaderColor: OWColor?
@@ -36,6 +37,7 @@ public struct OWTheme {
                 primaryBackgroundColor: OWColor? = nil,
                 secondaryBackgroundColor: OWColor? = nil,
                 tertiaryBackgroundColor: OWColor? = nil,
+                surfaceColor: OWColor? = nil,
                 primaryBorderColor: OWColor? = nil,
                 secondaryBorderColor: OWColor? = nil,
                 loaderColor: OWColor? = nil,
@@ -52,6 +54,7 @@ public struct OWTheme {
         self.primaryBackgroundColor = primaryBackgroundColor
         self.secondaryBackgroundColor = secondaryBackgroundColor
         self.tertiaryBackgroundColor = tertiaryBackgroundColor
+        self.surfaceColor = surfaceColor
         self.primaryBorderColor = primaryBorderColor
         self.secondaryBorderColor = secondaryBorderColor
         self.loaderColor = loaderColor
