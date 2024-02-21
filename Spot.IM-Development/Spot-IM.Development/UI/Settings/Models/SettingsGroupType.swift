@@ -20,7 +20,11 @@ enum SettingsGroupType {
     case network
 
     static var all: [SettingsGroupType] {
+        #if BETA
         return [.general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau, .network]
+        #else
+        return [.general, .preConversation, .conversation, .commentCreation, .commentThread, .clarityDetails, .iau]
+        #endif
     }
 }
 
