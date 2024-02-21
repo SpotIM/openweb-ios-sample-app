@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6D5DB15823CF5D73003F9D46"
-               BuildableName = "OpenWebSDK-Builder"
-               BlueprintName = "OpenWebSDK-Builder"
+               BuildableName = "OpenWeb-SDKBuilder"
+               BlueprintName = "OpenWeb-SDKBuilder"
                ReferencedContainer = "container:OpenWeb-Development.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6D5DB15823CF5D73003F9D46"
-            BuildableName = "OpenWebSDK-Builder"
-            BlueprintName = "OpenWebSDK-Builder"
+            BuildableName = "OpenWeb-SDKBuilder"
+            BlueprintName = "OpenWeb-SDKBuilder"
             ReferencedContainer = "container:OpenWeb-Development.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
