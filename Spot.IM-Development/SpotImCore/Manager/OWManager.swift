@@ -36,6 +36,19 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     let authenticationLayer: OWAuthentication
     let helpersLayer: OWHelpers
 
+    // Environment (only available for BETA app)
+    var environment: OWNetworkEnvironmentType = .production {
+        didSet {
+            switch environment {
+            case .production:
+                OWEnvironment.set(environment: OWEnvironment.production)
+            case .staging:
+                OWEnvironment.set(environment: OWEnvironment.staging)
+            }
+
+        }
+    }
+
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),

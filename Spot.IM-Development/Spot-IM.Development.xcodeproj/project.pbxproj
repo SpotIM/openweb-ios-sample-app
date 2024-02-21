@@ -146,6 +146,7 @@
 		2435B82B2B85E27C002F9422 /* NetworkSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B82A2B85E27C002F9422 /* NetworkSettingsVM.swift */; };
 		2435B82D2B85E303002F9422 /* NetworkSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B82C2B85E303002F9422 /* NetworkSettingsView.swift */; };
 		2435B82F2B85F05B002F9422 /* OWNetworkEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B82E2B85F05B002F9422 /* OWNetworkEnvironment.swift */; };
+		2435B8312B861175002F9422 /* OWNetworkEnvironmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B8302B861175002F9422 /* OWNetworkEnvironmentType.swift */; };
 		2436B9402B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */; };
 		2436B9432B1E204600EEDB4C /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */; };
 		2436B9472B1F117200EEDB4C /* OWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9462B1F117200EEDB4C /* OWTheme.swift */; };
@@ -1133,6 +1134,7 @@
 		2435B82A2B85E27C002F9422 /* NetworkSettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsVM.swift; sourceTree = "<group>"; };
 		2435B82C2B85E303002F9422 /* NetworkSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsView.swift; sourceTree = "<group>"; };
 		2435B82E2B85F05B002F9422 /* OWNetworkEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkEnvironment.swift; sourceTree = "<group>"; };
+		2435B8302B861175002F9422 /* OWNetworkEnvironmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkEnvironmentType.swift; sourceTree = "<group>"; };
 		2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSubmitCustomizableElement.swift; sourceTree = "<group>"; };
 		2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
 		2436B9462B1F117200EEDB4C /* OWTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTheme.swift; sourceTree = "<group>"; };
@@ -2982,6 +2984,7 @@
 				2484039B2ADD23E100EAD59A /* OWOrientation.swift */,
 				2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */,
 				8DCC87C22B68F88C00E053A4 /* OWLoginPromptCustomizableElement.swift */,
+				2435B8302B861175002F9422 /* OWNetworkEnvironmentType.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -6151,6 +6154,7 @@
 				3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */,
 				16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */,
 				9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */,
+				2435B8312B861175002F9422 /* OWNetworkEnvironmentType.swift in Sources */,
 				8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */,
 				24EF864C29CB296C00327394 /* OWDesignColors.swift in Sources */,
 				3D20A39927B0243D003F8513 /* Debugging.swift in Sources */,

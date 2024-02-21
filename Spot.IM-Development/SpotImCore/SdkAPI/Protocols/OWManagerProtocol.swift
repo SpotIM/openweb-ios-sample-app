@@ -15,4 +15,7 @@ public protocol OWManagerProtocol {
     var monetization: OWMonetization { get }
     var authentication: OWAuthentication { get }
     var helpers: OWHelpers { get }
+    #if BETA
+    var environment: OWNetworkEnvironmentType { get set }
+    #endif
 }
