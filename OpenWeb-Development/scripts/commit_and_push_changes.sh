@@ -15,4 +15,3 @@ git commit -m "CircleCI update to version $RELEASE_VERSION [skip ci]"
 git tag $RELEASE_VERSION
 git push origin $CIRCLE_BRANCH
 git push origin --tags
- 
