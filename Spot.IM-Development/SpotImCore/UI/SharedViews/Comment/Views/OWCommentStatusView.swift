@@ -88,8 +88,8 @@ fileprivate extension OWCommentStatusView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.messageAttributedText
-            .subscribe(onNext: { attributedText in
-                OWScheduler.runOnMainThreadIfNeeded { [weak self] in
+            .subscribe(onNext: { [weak self] attributedText in
+                OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     self.messageLabel
                         .attributedText(attributedText)
