@@ -41,7 +41,7 @@ class OWFontsCoordinator: OWBaseCoordinator<OWFontsCoordinatorResult> {
         self.automationData = automationData
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWFontsCoordinatorResult> {
+    override func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWFontsCoordinatorResult> {
 
         let fontsVM = OWFontsAutomationViewModel()
         let fontsVC = OWFontsAutomationVC(viewModel: fontsVM)
