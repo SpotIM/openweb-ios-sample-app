@@ -64,6 +64,11 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .withLatestFrom(_communityGuidelinesUrl.unwrap()) { _, url in
                 return url
             }
+            .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
+                var urlWithParams = url
+                urlWithParams.appendThemeParam(style: style)
+                return urlWithParams
+            }
             .asObservable()
     }
 

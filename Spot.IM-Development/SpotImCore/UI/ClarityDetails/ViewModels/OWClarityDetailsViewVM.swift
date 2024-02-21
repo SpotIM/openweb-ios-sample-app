@@ -69,6 +69,11 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
                 return url
             }
             .unwrap()
+            .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
+                var urlWithParams = url
+                urlWithParams.appendThemeParam(style: style)
+                return urlWithParams
+            }
             .asObservable()
     }
 
