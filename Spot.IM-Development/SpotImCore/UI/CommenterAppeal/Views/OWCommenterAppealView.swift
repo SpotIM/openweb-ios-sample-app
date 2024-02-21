@@ -218,11 +218,11 @@ fileprivate extension OWCommenterAppealView {
                     self.layoutIfNeeded()
                     self.textView.alpha = 1
                 } else {
-                    UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) {
-                        self.layoutIfNeeded()
+                    UIView.animate(withDuration: Metrics.animateTextViewHeightDuration, delay: Metrics.delayAnimateTextViewDuration) { [weak self] in
+                        self?.layoutIfNeeded()
                     }
-                    UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) {
-                        self.textView.alpha = 1
+                    UIView.animate(withDuration: Metrics.animateTextViewAlphaDuration, delay: Metrics.delayAnimateTextViewDuration) { [weak self] in
+                        self?.textView.alpha = 1
                     }
                 }
 

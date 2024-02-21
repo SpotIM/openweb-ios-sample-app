@@ -205,18 +205,15 @@ fileprivate extension OWAppealLabelViewModel {
             .isEligibleToAppeal(commentId: commentId)
             .response
             .take(1)
-            .subscribe(
-                onNext: { [weak self] response in
-                    if response.canAppeal {
-                        self?._viewType.onNext(.default)
-                    } else {
-                        self?._viewType.onNext(.none)
-                    }
-            },
-                onError: { [weak self] _ in
-                    self?._viewType.onNext(.error)
+            .subscribe(onNext: { [weak self] response in
+                if response.canAppeal {
+                    self?._viewType.onNext(.default)
+                } else {
+                    self?._viewType.onNext(.none)
                 }
-            )
+            }, onError: { [weak self] _ in
+                self?._viewType.onNext(.error)
+            })
     }
 
     func openNotLogeedInAlert() {
