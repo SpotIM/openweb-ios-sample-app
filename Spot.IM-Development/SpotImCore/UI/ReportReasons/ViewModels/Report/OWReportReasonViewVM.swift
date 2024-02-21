@@ -150,6 +150,12 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
     var learnMoreTapped: Observable<URL?> {
         return learnMoreTap
             .withLatestFrom(communityGuidelinesUrl)
+            .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
+                guard let url = url else { return nil }
+                var urlWithParams = url
+                urlWithParams.appendThemeParam(style: style)
+                return urlWithParams
+            }
             .asObservable()
     }
 
