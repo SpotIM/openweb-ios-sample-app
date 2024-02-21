@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		6D5DB15823CF5D73003F9D46 /* OpenWebSDK-Builder */ = {
+		6D5DB15823CF5D73003F9D46 /* OpenWeb-SDKBuilder */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "OpenWebSDK-Builder" */;
+			buildConfigurationList = 6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "OpenWeb-SDKBuilder" */;
 			buildPhases = (
 				6D5DB15923CF5D73003F9D46 /* ShellScript */,
 			);
 			dependencies = (
 			);
-			name = "OpenWebSDK-Builder";
+			name = "OpenWeb-SDKBuilder";
 			productName = "Package iOS";
 		};
 /* End PBXAggregateTarget section */
@@ -5966,7 +5966,7 @@
 			targets = (
 				5D697A3A22B65106001AD556 /* OpenWeb-SampleApp */,
 				44C8788C23608BC100E0E662 /* OpenWebSDK */,
-				6D5DB15823CF5D73003F9D46 /* OpenWebSDK-Builder */,
+				6D5DB15823CF5D73003F9D46 /* OpenWeb-SDKBuilder */,
 				F92DD7B62A7E8B9E00A2BE5B /* OpenWebSDKTests */,
 			);
 		};
@@ -8456,7 +8456,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = ReleaseInternal;
 		};
-		6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "OpenWebSDK-Builder" */ = {
+		6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "OpenWeb-SDKBuilder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6D5DB15B23CF5D73003F9D46 /* Internal */,

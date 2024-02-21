@@ -35,7 +35,7 @@ platform :ios do
   lane :unit_tests do |options|
     cocoapods()
     scan(
-      scheme: "OpenWebSDKTests",
+      scheme: "OpenWeb-SDKTests",
       workspace: "OpenWeb-Development.xcworkspace",
       device: "iPhone 13 Pro",
     )
@@ -67,7 +67,7 @@ platform :ios do
     increment_build_number(build_number: 0) # Set build to 0, this will allow sample apps which deploy afterwards to start with build 1.
     cocoapods(use_bundle_exec: false)
     xcodebuild(
-      scheme: "OpenWebSDK-Builder",
+      scheme: "OpenWeb-SDKBuilder",
       configuration: options[:configuration],
       destination: "generic/platform=iOS",
       clean: true,
