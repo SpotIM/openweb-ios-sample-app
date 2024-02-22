@@ -107,7 +107,7 @@
 "AdditionalInfoTitle" = "Información adicional";
 "ReportSubmissionFailedTitle" = "No se ha podido enviar el informe";
 "ReportSubmissionFailedMessage" = "No se ha podido enviar el informe. Comprueba tu conexión y vuelve a intentarlo más tarde.";
-"Undo" = "Undo";
+"Undo" = "Anular";
 "CollapseThread" = "Plegar hilo";
 "ViewMultipleRepliesFormat" = "Ver %d respuestas";
 "ViewSingleReplyFormat" = "Ver %d respuesta";
