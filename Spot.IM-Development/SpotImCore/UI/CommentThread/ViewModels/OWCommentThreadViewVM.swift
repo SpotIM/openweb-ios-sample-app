@@ -42,7 +42,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
-    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var displayToast: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var updateTableViewInstantly: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
@@ -369,8 +369,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var dismissToast = PublishSubject<Void>()
 
-    fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
-    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToast: Observable<OWToastNotificationCombinedData> {
         return _displayToast
             .unwrap()
             .asObservable()
@@ -1669,13 +1669,15 @@ fileprivate extension OWCommentThreadViewViewModel {
                     // TODO: cancel action when supported
                     let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
                     self.servicesProvider.toastNotificationService()
-                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: nil)
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data), 
+                                                                         actionCompletion: nil))
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
-                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self.retryMute)
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: self.retryMute))
                     return false
                 default:
                     return false
