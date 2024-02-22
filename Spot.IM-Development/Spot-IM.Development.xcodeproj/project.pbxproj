@@ -146,6 +146,7 @@
 		2435B83A2B878B90002F9422 /* OWToastType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B8392B878B90002F9422 /* OWToastType.swift */; };
 		2435B83C2B878BA7002F9422 /* OWToastAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B83B2B878BA7002F9422 /* OWToastAction.swift */; };
 		2435B83E2B878C90002F9422 /* OWToastNotificationPresentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B83D2B878C90002F9422 /* OWToastNotificationPresentData.swift */; };
+		2435B8402B879124002F9422 /* OWToastNotificationCombinedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2435B83F2B879124002F9422 /* OWToastNotificationCombinedData.swift */; };
 		2436B9402B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */; };
 		2436B9432B1E204600EEDB4C /* OWClarityDetailsRequireData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */; };
 		2436B9472B1F117200EEDB4C /* OWTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2436B9462B1F117200EEDB4C /* OWTheme.swift */; };
@@ -1139,6 +1140,7 @@
 		2435B8392B878B90002F9422 /* OWToastType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWToastType.swift; sourceTree = "<group>"; };
 		2435B83B2B878BA7002F9422 /* OWToastAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWToastAction.swift; sourceTree = "<group>"; };
 		2435B83D2B878C90002F9422 /* OWToastNotificationPresentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWToastNotificationPresentData.swift; sourceTree = "<group>"; };
+		2435B83F2B879124002F9422 /* OWToastNotificationCombinedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWToastNotificationCombinedData.swift; sourceTree = "<group>"; };
 		2436B93F2B1DCF8D00EEDB4C /* OWCommentCreationSubmitCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSubmitCustomizableElement.swift; sourceTree = "<group>"; };
 		2436B9422B1E204600EEDB4C /* OWClarityDetailsRequireData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClarityDetailsRequireData.swift; sourceTree = "<group>"; };
 		2436B9462B1F117200EEDB4C /* OWTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTheme.swift; sourceTree = "<group>"; };
@@ -2816,6 +2818,7 @@
 				24D31ED62AB033C70038417B /* OWToastNotificationService.swift */,
 				24D31ED92AB040300038417B /* OWToastNotificationPresenterProtocol.swift */,
 				2435B83D2B878C90002F9422 /* OWToastNotificationPresentData.swift */,
+				2435B83F2B879124002F9422 /* OWToastNotificationCombinedData.swift */,
 			);
 			path = ToastNotificationService;
 			sourceTree = "<group>";
@@ -6207,6 +6210,7 @@
 				8D99C6982A1E533D00DAB542 /* OWEmptyStateCustomizableElement.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
 				3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */,
+				2435B8402B879124002F9422 /* OWToastNotificationCombinedData.swift in Sources */,
 				16D996CB2A8CE1CF00748E46 /* OWImagePickerPresenterResponseType.swift in Sources */,
 				9ED2E59129EC063B00B39A00 /* OWConfigurationReportReasonOptions.swift in Sources */,
 				8DE52F5329EBEBB800D3985C /* OWSpacerView.swift in Sources */,
