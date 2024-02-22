@@ -88,9 +88,3 @@ fileprivate extension OWToastNotificationService {
             .disposed(by: disposeBag)
     }
 }
-
-struct OWToastNotificationPresentData: Codable, Equatable {
-    var uuid = UUID().uuidString
-    let data: OWToastRequiredData
-    var durationInSec: Double = 5
-}
