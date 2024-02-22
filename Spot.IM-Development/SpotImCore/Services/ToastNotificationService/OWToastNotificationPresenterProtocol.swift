@@ -1,5 +1,5 @@
 //
-//  OWToastNotificationDisplayerProtocol.swift
+//  OWToastNotificationPresenterProtocol.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 12/09/2023.
@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 import RxSwift
 
-protocol OWToastNotificationDisplayerProtocol {
-    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?, disposeBag: DisposeBag)
+protocol OWToastNotificationPresenterProtocol {
+    mutating func presentToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?, disposeBag: DisposeBag)
     func dismissToast()
     var toastView: OWToastView? { get set }
 }
@@ -25,9 +25,9 @@ struct ToastMetrics {
     fileprivate static let panGestureName = "OWToastPanGesture"
 }
 
-extension OWToastNotificationDisplayerProtocol where Self: UIView {
+extension OWToastNotificationPresenterProtocol where Self: UIView {
 
-    mutating func displayToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?, disposeBag: DisposeBag) {
+    mutating func presentToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?, disposeBag: DisposeBag) {
         // Make sure no old toast is visible
         removeToast()
 
@@ -115,7 +115,7 @@ extension OWToastNotificationDisplayerProtocol where Self: UIView {
     }
 }
 
-fileprivate extension OWToastNotificationDisplayerProtocol where Self: UIView {
+fileprivate extension OWToastNotificationPresenterProtocol where Self: UIView {
     mutating func removeToast() {
         guard let toastView = self.toastView else { return }
         toastView.removeFromSuperview()
