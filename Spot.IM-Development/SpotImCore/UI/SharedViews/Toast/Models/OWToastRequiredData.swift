@@ -14,18 +14,3 @@ struct OWToastRequiredData: Codable, Equatable {
     var title: String
     var bottomPadding: CGFloat = 114
 }
-
-enum OWToastType: Codable {
-    case information
-    case success
-    case error
-    case warning
-}
-
-enum OWToastAction: String, Codable {
-    case undo
-    case tryAgain
-    case learnMore
-    case close
-    case none
-}

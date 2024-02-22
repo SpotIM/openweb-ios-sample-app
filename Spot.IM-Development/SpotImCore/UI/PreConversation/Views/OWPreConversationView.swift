@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     internal struct Metrics {
         static let commentingCTATopPadding: CGFloat = 8
         static let horizontalOffset: CGFloat = 16.0
@@ -293,7 +293,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] (data, action) in
                 guard var self = self else { return }
-                self.displayToast(requiredData: data.data, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
+                self.presentToast(requiredData: data.data, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
