@@ -107,7 +107,7 @@
 "AdditionalInfoTitle" = "Informação adicional";
 "ReportSubmissionFailedTitle" = "Falha na submissão de relatório";
 "ReportSubmissionFailedMessage" = "Não foi possível submeter o seu relatório. Verifique a sua ligação e tente novamente mais tarde.";
-"Undo" = "Undo";
+"Undo" = "Anular";
 "CollapseThread" = "Fechar conversa";
 "ViewMultipleRepliesFormat" = "Ver %d respostas";
 "ViewSingleReplyFormat" = "Ver %d resposta";
