@@ -135,7 +135,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] dataOptions -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMapLatest { [weak self] dataOptions -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 switch dataOptions {
                     case .commentCreation(let commentCreationData, let source):
@@ -161,7 +161,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 }
             })
-            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { _ -> Observable<OWConversationCoordinatorResult> in
                 return Observable.never()
             }
 

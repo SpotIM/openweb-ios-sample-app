@@ -36,28 +36,17 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                 self.generateNewPageViewId()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
-                .flatMap { [ weak self] _ -> Observable<OWShowable> in
-                    guard let self = self else { return .empty() }
-                    let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
-                                                                                  preConversationData: preConversationData,
-                                                                                  actionsCallbacks: callbacks,
-                                                                                  viewableMode: .partOfFlow)
+            .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                guard let self = self else { return .empty() }
 
-                    self.store(coordinator: preConversationCoordinator)
+                let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
+                                                                              preConversationData: preConversationData,
+                                                                              actionsCallbacks: callbacks,
+                                                                              viewableMode: .partOfFlow)
+                self.store(coordinator: preConversationCoordinator)
 
-                    let dissmissConversation = preConversationCoordinator.dismissInitialVC
-                        .do(onNext: { [weak self] in
-                            guard let self = self else { return }
-                            self.cleanRouter(presentationalMode: presentationalMode)
-                        })
-                        .map { _ -> OWShowable? in
-                            return nil
-                        }
-                        .unwrap()
-
-                    return Observable.merge(dissmissConversation,
-                                            preConversationCoordinator.showableComponent())
-                }
+                return preConversationCoordinator.showableComponent()
+            }
     }
 
     func startConversationFlow(conversationData: OWConversationRequiredData,
@@ -182,7 +171,7 @@ fileprivate extension OWFlowsSDKCoordinator {
             shouldCustomizeNavController = true // Always customize internal nav controller
             navController = OWNavigationController.shared
             navController.modalPresentationStyle = adjustedStyle.toOSModalPresentationStyle
-            presentationalModeExtended = OWPresentationalModeExtended.present(viewController: viewController,
+            presentationalModeExtended = OWPresentationalModeExtended.present(viewControllerWeakEncapsulation: OWWeakEncapsulation(value: viewController),
                                                                               style: adjustedStyle,
                                                                               animated: presentAnimated)
         case .push(let navigationController):
