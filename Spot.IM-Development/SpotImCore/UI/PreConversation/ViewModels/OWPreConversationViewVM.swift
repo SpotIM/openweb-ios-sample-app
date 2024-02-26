@@ -1398,6 +1398,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
             })
             .filter { $0.0 } // Continue only if result is true
+            .take(1)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 // Trigger re-fetching config
