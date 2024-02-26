@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import RxSwift
 
 class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatible {

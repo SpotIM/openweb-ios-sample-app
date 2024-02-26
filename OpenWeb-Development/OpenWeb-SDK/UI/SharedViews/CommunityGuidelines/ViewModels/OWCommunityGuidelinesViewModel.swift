@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 protocol OWCommunityGuidelinesViewModelingInputs {
     var triggerCustomizeContainerViewUI: PublishSubject<UIView> { get }
