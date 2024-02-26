@@ -9,6 +9,6 @@
 import UIKit
 import Foundation
 
-class OWFloatingKeyboardMainContainerView: UIView, OWToastNotificationDisplayerProtocol {
+class OWFloatingKeyboardMainContainerView: UIView, OWToastNotificationPresenterProtocol {
     var toastView: OWToastView?
 }

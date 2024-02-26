@@ -273,8 +273,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
                     let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
+                    let presentData = OWToastNotificationPresentData(data: data)
                     self.servicesProvider.toastNotificationService()
-                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self._retryCommentCreationSubmitted)
+                        .showToast(data: OWToastNotificationCombinedData(presentData: presentData, actionCompletion: self._retryCommentCreationSubmitted))
                     return nil
                 default:
                     return nil
