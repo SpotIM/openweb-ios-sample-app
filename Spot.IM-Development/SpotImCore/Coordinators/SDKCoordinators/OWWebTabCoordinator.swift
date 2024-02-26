@@ -39,7 +39,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
         self.actionsCallbacks = actionsCallbacks // TODO: handle actions callbacks?
     }
 
-    override func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWWebTabCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWWebTabCoordinatorResult> {
         guard let router = router else { return .empty() }
         viewableMode = .partOfFlow
         let webTabVM = OWWebTabViewModel(options: options,

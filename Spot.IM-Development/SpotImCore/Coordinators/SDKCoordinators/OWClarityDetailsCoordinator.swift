@@ -44,7 +44,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         self.actionsCallbacks = actionsCallbacks
     }
 
-    override func start(dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
         guard let router = router else { return .empty() }
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(requiredData: requiredData, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
@@ -104,7 +104,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, dataOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { result in
                 switch result {
