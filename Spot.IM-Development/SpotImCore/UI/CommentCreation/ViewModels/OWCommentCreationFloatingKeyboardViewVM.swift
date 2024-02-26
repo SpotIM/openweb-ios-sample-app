@@ -261,18 +261,18 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentType {
         case .comment:
-            guard let text = commentsCacheService[.comment(postId: postId)] else { return }
+            guard let text = commentsCacheService[.comment(postId: postId)]?.commentContent.text else { return }
             initialText = text
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
-                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
+                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
             else { return }
             initialText = text
         case .edit(comment: let comment):
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
-            } else if let text = commentsCacheService[.edit(postId: postId)] {
+            } else if let text = commentsCacheService[.edit(postId: postId)]?.commentContent.text {
                 initialText = text
             }
         }

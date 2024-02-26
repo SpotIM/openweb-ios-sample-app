@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
+class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
 
     fileprivate struct Metrics {
         static let horizontalOffset: CGFloat = 16.0
@@ -170,9 +170,12 @@ fileprivate extension OWCommentThreadView {
     // swiftlint:disable function_body_length
     func setupObservers() {
         viewModel.outputs.displayToast
-            .subscribe(onNext: { [weak self] (data, action) in
+            .subscribe(onNext: { [weak self] data in
                 guard var self = self else { return }
-                self.displayToast(requiredData: data.data, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: data.presentData.data,
+                                  completions: completions,
+                                  disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
