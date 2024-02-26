@@ -1669,7 +1669,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     // TODO: cancel action when supported
                     let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
                     self.servicesProvider.toastNotificationService()
-                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data), 
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: nil))
                     return true
                 case .error(_):
