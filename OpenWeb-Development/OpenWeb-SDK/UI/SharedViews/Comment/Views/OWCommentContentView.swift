@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import UIKit
 
 class OWCommentContentView: UIView {
     internal struct Metrics {
