@@ -1,5 +1,5 @@
 //
-//  OWCoordinatorDataOptions.swift
+//  OWDeepLinkOptions.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 01/03/2022.
@@ -9,9 +9,9 @@
 import Foundation
 import RxSwift
 
-enum OWCoordinatorDataOptions {
+enum OWDeepLinkOptions {
     case highlightComment(commentId: OWCommentId)
-    case commentCreation(commentCreationData: OWCommentCreationRequiredData, source: OWViewSourceType)
+    case commentCreation(commentCreationData: OWCommentCreationRequiredData)
     case commentThread(commentThreadData: OWCommentThreadRequiredData)
     case authentication
     case reportReason(reportData: OWReportReasonsRequiredData)
