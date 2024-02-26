@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 class OWToastNotificationCombinedData {
-    let presentData: OWToastNotificationPresentData
+    var presentData: OWToastNotificationPresentData
     let actionCompletion: PublishSubject<Void>?
 
     init(presentData: OWToastNotificationPresentData, actionCompletion: PublishSubject<Void>?) {
