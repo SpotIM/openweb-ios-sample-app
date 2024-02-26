@@ -115,7 +115,8 @@ fileprivate extension SettingsVC {
                 UIView.animate(withDuration: animationDuration) { [weak self] in
                     guard let self = self else { return }
                     self.view.layoutIfNeeded()
-                } completion: { finished in
+                } completion: { [weak self] finished in
+                    guard let self = self else { return }
                     if finished,
                        let firstResponder = self.view.firstResponder {
                         self.scrollToView(toView: firstResponder)

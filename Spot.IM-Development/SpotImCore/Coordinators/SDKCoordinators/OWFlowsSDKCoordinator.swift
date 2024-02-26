@@ -12,9 +12,12 @@ import RxSwift
 class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     fileprivate var router: OWRoutering!
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let uiDevice: UIDevice
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         uiDevice: UIDevice = UIDevice.current) {
         self.servicesProvider = servicesProvider
+        self.uiDevice = uiDevice
     }
 
     var routering: OWRoutering {
@@ -33,28 +36,17 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                 self.generateNewPageViewId()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
-                .flatMap { [ weak self] _ -> Observable<OWShowable> in
-                    guard let self = self else { return .empty() }
-                    let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
-                                                                                  preConversationData: preConversationData,
-                                                                                  actionsCallbacks: callbacks,
-                                                                                  viewableMode: .partOfFlow)
+            .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                guard let self = self else { return .empty() }
 
-                    self.store(coordinator: preConversationCoordinator)
+                let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
+                                                                              preConversationData: preConversationData,
+                                                                              actionsCallbacks: callbacks,
+                                                                              viewableMode: .partOfFlow)
+                self.store(coordinator: preConversationCoordinator)
 
-                    let dissmissConversation = preConversationCoordinator.dismissInitialVC
-                        .do(onNext: { [weak self] in
-                            guard let self = self else { return }
-                            self.cleanRouter(presentationalMode: presentationalMode)
-                        })
-                        .map { _ -> OWShowable? in
-                            return nil
-                        }
-                        .unwrap()
-
-                    return Observable.merge(dissmissConversation,
-                                            preConversationCoordinator.showableComponent())
-                }
+                return preConversationCoordinator.showableComponent()
+            }
     }
 
     func startConversationFlow(conversationData: OWConversationRequiredData,
@@ -167,11 +159,20 @@ fileprivate extension OWFlowsSDKCoordinator {
 
         switch presentationalMode {
         case .present(let viewController, let style):
+
+            var adjustedStyle = style
+            if orientationService.interfaceOrientationMask == .landscape,
+                self.uiDevice.userInterfaceIdiom == .phone,
+                style == .pageSheet {
+                // Force full screen presentation in landscape mode for iPhone because page sheet not supported in landscape
+                adjustedStyle = .fullScreen
+            }
+
             shouldCustomizeNavController = true // Always customize internal nav controller
             navController = OWNavigationController.shared
-            navController.modalPresentationStyle = style.toOSModalPresentationStyle
-            presentationalModeExtended = OWPresentationalModeExtended.present(viewController: viewController,
-                                                                              style: style,
+            navController.modalPresentationStyle = adjustedStyle.toOSModalPresentationStyle
+            presentationalModeExtended = OWPresentationalModeExtended.present(viewControllerWeakEncapsulation: OWWeakEncapsulation(value: viewController),
+                                                                              style: adjustedStyle,
                                                                               animated: presentAnimated)
         case .push(let navigationController):
             navController = navigationController
