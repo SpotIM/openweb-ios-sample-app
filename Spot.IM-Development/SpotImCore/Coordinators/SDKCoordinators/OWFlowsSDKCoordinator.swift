@@ -52,7 +52,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?,
-                               dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
+                               coordinatorData: OWCoordinatorData? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
         generateNewPageViewId()
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -61,7 +61,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                 conversationData: conversationData,
                                                                 actionsCallbacks: callbacks)
 
-        return coordinate(to: conversationCoordinator, dataOptions: dataOptions)
+        return coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             .do { [weak self] coordinatorResult in
                 guard let self = self else { return }
                 if coordinatorResult == .popped {
@@ -75,11 +75,12 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                   presentationalMode: OWPresentationalMode,
                                   callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
-        let dataOptions = OWCoordinatorDataOptions.commentCreation(commentCreationData: commentCreationData, source: .conversation)
+        let coordinatorData = OWCoordinatorData(deepLink: .commentCreation(commentCreationData: commentCreationData),
+                                            source: .conversation)
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
                                      callbacks: callbacks,
-                                     dataOptions: dataOptions)
+                                     coordinatorData: coordinatorData)
     }
 
     func startCommentThreadFlow(conversationData: OWConversationRequiredData,
@@ -87,18 +88,18 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                 presentationalMode: OWPresentationalMode,
                                 callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
-        let deepLink = OWCoordinatorDataOptions.commentThread(commentThreadData: commentThreadData)
+        let coordinatorData = OWCoordinatorData(deepLink: .commentThread(commentThreadData: commentThreadData))
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
                                      callbacks: callbacks,
-                                     dataOptions: deepLink)
+                                     coordinatorData: coordinatorData)
     }
 
 #if BETA
     func startTestingPlaygroundFlow(testingPlaygroundData: OWTestingPlaygroundRequiredData,
                                     presentationalMode: OWPresentationalMode,
                                     callbacks: OWViewActionsCallbacks?,
-                                    dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
+                                    coordinatorData: OWCoordinatorData? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -107,7 +108,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                           testingPlaygroundData: testingPlaygroundData,
                                                                           actionsCallbacks: callbacks)
 
-        return coordinate(to: testingPlaygroundCoordinator, dataOptions: dataOptions)
+        return coordinate(to: testingPlaygroundCoordinator, coordinatorData: coordinatorData)
     }
 #endif
 
@@ -115,7 +116,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     func startFontsFlow(automationData: OWAutomationRequiredData,
                         presentationalMode: OWPresentationalMode,
                         callbacks: OWViewActionsCallbacks?,
-                        dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWFontsCoordinatorResult> {
+                        coordinatorData: OWCoordinatorData? = nil) -> Observable<OWFontsCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -124,13 +125,13 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                             automationData: automationData,
                                                             actionsCallbacks: callbacks)
 
-        return coordinate(to: fontsAutomationCoordinator, dataOptions: dataOptions)
+        return coordinate(to: fontsAutomationCoordinator, coordinatorData: coordinatorData)
     }
 
     func startUserStatusFlow(automationData: OWAutomationRequiredData,
                              presentationalMode: OWPresentationalMode,
                              callbacks: OWViewActionsCallbacks?,
-                             dataOptions: OWCoordinatorDataOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
+                             coordinatorData: OWCoordinatorData? = nil) -> Observable<OWUserStatusCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -139,7 +140,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                             automationData: automationData,
                                                             actionsCallbacks: callbacks)
 
-        return coordinate(to: userStatusCoordinator, dataOptions: dataOptions)
+        return coordinate(to: userStatusCoordinator, coordinatorData: coordinatorData)
     }
 #endif
 }
