@@ -107,7 +107,7 @@
 "AdditionalInfoTitle" = "Informação adicional";
 "ReportSubmissionFailedTitle" = "Falha na submissão de relatório";
 "ReportSubmissionFailedMessage" = "Não foi possível submeter o seu relatório. Verifique a sua ligação e tente novamente mais tarde.";
-"Undo" = "Undo";
+"Undo" = "Anular";
 "CollapseThread" = "Fechar conversa";
 "ViewMultipleRepliesFormat" = "Ver %d respostas";
 "ViewSingleReplyFormat" = "Ver %d resposta";
@@ -115,6 +115,7 @@
 "LearnMore" = "Saber mais";
 "RejectedCommentStatusMessage" = "O seu comentário foi rejeitado.";
 "PendingCommentStatusMessage" = "Aguarde, o seu comentário está à espera de aprovação.";
+"NotAuthorPendingCommentStatusMessage" = "Este comentário está a aguardar revisão.";
 "ClarityPendingReasonsTitle" = "O seu comentário pode ter sido enviado para revisão por um dos seguintes motivos:";
 "AwaitingReview" = "A aguardar revisão";
 "RejectReasonEnsureCivil" = "Todas as nossas decisões são concebidas para garantir um discurso civil, aberto e inclusivo no seio da comunidade.";

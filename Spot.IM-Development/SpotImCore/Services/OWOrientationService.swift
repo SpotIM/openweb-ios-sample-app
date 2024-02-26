@@ -85,6 +85,13 @@ fileprivate extension OWOrientationService {
         guard self._viewableMode != .independent,
               currentDevice.userInterfaceIdiom != .pad else { return .portrait }
 
+        // Determine allowed orientations from the application's supported orientations
+        let isPortraitAllowed = UIApplication.shared.isPortraitAllowed
+        let isLandscapeAllowed = UIApplication.shared.isLandscapeAllowed
+        guard isPortraitAllowed && isLandscapeAllowed else {
+            return isPortraitAllowed ? .portrait : .landscape
+        }
+
         let enforcedOrientation = self.interfaceOrientationMask
         let currentDeviceOrientation = currentDevice.orientation
 
@@ -98,13 +105,10 @@ fileprivate extension OWOrientationService {
             default:
                 return currentOrientation
             }
-
         case .portrait:
             return .portrait
-
         case .landscape:
             return .landscape
-
         default:
             return currentOrientation
         }
