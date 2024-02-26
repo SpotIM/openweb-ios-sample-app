@@ -340,6 +340,7 @@ fileprivate extension TestAPIViewModel {
     }
 
     func setupEnvironment() {
+        #if BETA
         let env = UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
         var manager = OpenWeb.manager
         switch env {
@@ -348,5 +349,6 @@ fileprivate extension TestAPIViewModel {
         case .staging:
             manager.environment = .staging
         }
+        #endif
     }
 }
