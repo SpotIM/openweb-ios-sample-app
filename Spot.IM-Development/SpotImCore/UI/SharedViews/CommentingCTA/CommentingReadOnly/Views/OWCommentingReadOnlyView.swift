@@ -16,6 +16,9 @@ class OWCommentingReadOnlyView: UIView {
         static let iconSize: CGFloat = 24
 
         static let margins: UIEdgeInsets = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
+        static let identifier = "conversation_commenting_read_only_view_id"
+        static let iconIdentifier = "conversation_commenting_read_only_icon_id"
+        static let labelIdentifier = "conversation_commenting_read_only_label_id"
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
@@ -42,6 +45,7 @@ class OWCommentingReadOnlyView: UIView {
         self.viewModel = viewModel
         setupObservers()
         setupUI()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -50,6 +54,12 @@ class OWCommentingReadOnlyView: UIView {
 }
 
 fileprivate extension OWCommentingReadOnlyView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        iconImageView.accessibilityIdentifier = Metrics.iconIdentifier
+        label.accessibilityIdentifier = Metrics.labelIdentifier
+    }
+    
     func setupUI() {
         self.enforceSemanticAttribute()
         self.addSubview(iconImageView)
