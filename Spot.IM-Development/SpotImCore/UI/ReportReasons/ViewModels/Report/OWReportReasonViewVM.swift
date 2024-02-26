@@ -151,10 +151,9 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         return learnMoreTap
             .withLatestFrom(communityGuidelinesUrl)
             .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
-                guard let url = url else { return nil }
-                var urlWithParams = url
-                urlWithParams.appendThemeParam(style: style)
-                return urlWithParams
+                guard var url = url else { return nil }
+                url.appendThemeQueryParam(with: style)
+                return url
             }
             .asObservable()
     }
