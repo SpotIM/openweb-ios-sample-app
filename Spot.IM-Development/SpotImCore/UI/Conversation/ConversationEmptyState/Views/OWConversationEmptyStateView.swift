@@ -98,7 +98,6 @@ fileprivate extension OWConversationEmptyStateView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleLabel.accessibilityIdentifier = Metrics.titleIdentifier
-        
     }
 
     func setupObservers() {
