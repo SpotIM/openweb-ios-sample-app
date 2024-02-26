@@ -116,6 +116,7 @@
 "LearnMore" = "اعرف المزيد";
 "RejectedCommentStatusMessage" = "تم رفض تعليقك.";
 "PendingCommentStatusMessage" = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
+"NotAuthorPendingCommentStatusMessage" = "هذا التعليق قيد المراجعة.";
 "ClarityPendingReasonsTitle" = "ربما اُرسل تعليقك للمراجعة لأحد الأسباب التالية:";
 "AwaitingReview" = "في انتظار المراجعة";
 "RejectReasonEnsureCivil" = "إن جميع قراراتنا مُصممة لضمان خطاب مدني مفتوح وشامل داخل المجتمع.";
