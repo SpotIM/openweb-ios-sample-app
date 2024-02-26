@@ -97,7 +97,6 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
             .asObservable()
     }()
 
-
     lazy var text: Observable<String> = {
         contentType
             .map { type in
