@@ -66,7 +66,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             }
             .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
                 var urlWithParams = url
-                urlWithParams.appendThemeParam(style: style)
+                urlWithParams.appendThemeQueryParam(with: style)
                 return urlWithParams
             }
             .asObservable()

@@ -30,7 +30,7 @@ extension URL {
         self = urlComponents.url!
     }
 
-    mutating func appendThemeParam(style: OWThemeStyle) {
+    mutating func appendThemeQueryParam(with style: OWThemeStyle) {
         self.appendQueryParam(name: "theme", value: style == .dark ? "dark" : "light")
     }
 }
