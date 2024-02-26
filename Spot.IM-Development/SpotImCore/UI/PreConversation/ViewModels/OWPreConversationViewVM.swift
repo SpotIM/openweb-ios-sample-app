@@ -56,7 +56,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
-    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var displayToast: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
 }
@@ -319,8 +319,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     var dismissToast = PublishSubject<Void>()
 
-    fileprivate var _displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
-    var displayToast: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToast: Observable<OWToastNotificationCombinedData> {
         return _displayToast
             .unwrap()
             .asObservable()
@@ -997,10 +997,10 @@ fileprivate extension OWPreConversationViewViewModel {
                     .set(comments: [comment], postId: self.postId)
             })
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { comment, commentId, commentCellsVms in
+            .subscribe(onNext: { [weak self] comment, commentId, commentCellsVms in
                 if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
                     commentCellVm.outputs.commentVM.inputs.update(comment: comment)
-                    self._performTableViewAnimation.onNext()
+                    self?._performTableViewAnimation.onNext()
                 }
             })
             .disposed(by: disposeBag)
@@ -1166,14 +1166,14 @@ fileprivate extension OWPreConversationViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { result, commentVm -> Bool in
+            .map { [weak self] result, commentVm -> Bool in
                 switch result {
                 case .completion:
                     return false
                 case .selected(let action):
                     switch action.type {
                     case OWCommentDeleteAlert.delete:
-                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
+                        self?.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         return true
                     default:
                         return false
@@ -1326,13 +1326,15 @@ fileprivate extension OWPreConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
                     self.servicesProvider.toastNotificationService()
-                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: nil)
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: nil))
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
                     let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
                     self.servicesProvider.toastNotificationService()
-                        .showToast(presentData: OWToastNotificationPresentData(data: data), actionCompletion: self.retryMute)
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: self.retryMute))
                     return false
                 default:
                     return false

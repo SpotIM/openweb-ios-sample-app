@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     internal struct Metrics {
         static let commentingCTATopPadding: CGFloat = 8
         static let horizontalOffset: CGFloat = 16.0
@@ -255,7 +255,8 @@ fileprivate extension OWPreConversationView {
         }
 
         self.addSubview(self.realtimeIndicationAnimationView)
-        realtimeIndicationAnimationView.OWSnp.makeConstraints { make in
+        realtimeIndicationAnimationView.OWSnp.makeConstraints { [weak self] make in
+            guard let self = self else { return }
             make.bottom.equalTo(self.tableView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Metrics.realtimeIndicationAnimationViewHeight)
@@ -291,9 +292,12 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.displayToast
-            .subscribe(onNext: { [weak self] (data, action) in
+            .subscribe(onNext: { [weak self] data in
                 guard var self = self else { return }
-                self.displayToast(requiredData: data.data, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: data.presentData.data,
+                                  completions: completions,
+                                  disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -365,7 +369,8 @@ fileprivate extension OWPreConversationView {
                 .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] _ in
                     guard let self = self else { return }
-                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) {
+                    UIView.animate(withDuration: Metrics.tableViewAnimationDuration) { [weak self] in
+                        guard let self = self else { return }
                         self.tableView.beginUpdates()
                         self.tableView.endUpdates()
                     }
@@ -500,7 +505,8 @@ fileprivate extension OWPreConversationView {
                 if realtimeIsShown {
                     // Only when we shown the realtime indicator we should animate the table view height change
                     self.tableViewHeightConstraint?.update(offset: height)
-                    UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) {
+                    UIView.animate(withDuration: Metrics.tableViewHeightAnimationDuration) { [weak self] in
+                        guard let self = self else { return }
                         self.layoutIfNeeded()
                     }
                 } else {
