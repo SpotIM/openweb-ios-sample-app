@@ -997,10 +997,10 @@ fileprivate extension OWPreConversationViewViewModel {
                     .set(comments: [comment], postId: self.postId)
             })
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { comment, commentId, commentCellsVms in
+            .subscribe(onNext: { [weak self] comment, commentId, commentCellsVms in
                 if let commentCellVm = commentCellsVms.first(where: { $0.outputs.commentVM.outputs.comment.id == commentId }) {
                     commentCellVm.outputs.commentVM.inputs.update(comment: comment)
-                    self._performTableViewAnimation.onNext()
+                    self?._performTableViewAnimation.onNext()
                 }
             })
             .disposed(by: disposeBag)
@@ -1166,14 +1166,14 @@ fileprivate extension OWPreConversationViewViewModel {
                         viewableMode: self.viewableMode
                     ).map { ($0, commentVm) }
             }
-            .map { result, commentVm -> Bool in
+            .map { [weak self] result, commentVm -> Bool in
                 switch result {
                 case .completion:
                     return false
                 case .selected(let action):
                     switch action.type {
                     case OWCommentDeleteAlert.delete:
-                        self.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
+                        self?.sendEvent(for: .commentMenuConfirmDeleteClicked(commentId: commentVm.outputs.comment.id ?? ""))
                         return true
                     default:
                         return false
