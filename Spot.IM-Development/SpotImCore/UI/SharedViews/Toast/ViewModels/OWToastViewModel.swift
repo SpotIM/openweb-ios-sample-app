@@ -42,12 +42,12 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
     let dismissCompletion: PublishSubject<Void>?
     var disposeBag = DisposeBag()
 
-    init(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?) {
+    init(requiredData: OWToastRequiredData, completions: [OWToastCompletion: PublishSubject<Void>?]) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
-        self.actionCompletion = actionCompletion
-        self.dismissCompletion = dismissCompletion
+        self.actionCompletion = completions[.action] ?? nil
+        self.dismissCompletion = completions[.dismiss] ?? nil
         iconImage = self.iconForType(type: requiredData.type)
         borderColor = self.borderColorForType(type: requiredData.type)
 

@@ -172,7 +172,10 @@ fileprivate extension OWCommentThreadView {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
                 guard var self = self else { return }
-                self.presentToast(requiredData: data.presentData.data, actionCompletion: data.actionCompletion, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: data.presentData.data,
+                                  completions: completions,
+                                  disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
