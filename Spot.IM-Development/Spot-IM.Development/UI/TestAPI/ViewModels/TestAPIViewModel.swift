@@ -23,6 +23,7 @@ protocol TestAPIViewModelingInputs {
     var settingsTapped: PublishSubject<Void> { get }
     var authenticationTapped: PublishSubject<Void> { get }
     var selectedConversationPresetIndex: PublishSubject<Int> { get }
+    var viewWillAppear: PublishSubject<Void> { get }
 }
 
 protocol TestAPIViewModelingOutputs {
@@ -41,6 +42,7 @@ protocol TestAPIViewModelingOutputs {
     var openAuthentication: Observable<Void> { get }
     var selectedSpotId: Observable<OWSpotId> { get }
     var selectedPostId: Observable<OWPostId> { get }
+    var envLabelString: Observable<String> { get }
 }
 
 protocol TestAPIViewModeling {
@@ -72,6 +74,29 @@ class TestAPIViewModel: TestAPIViewModeling,
     let settingsTapped = PublishSubject<Void>()
     let authenticationTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
+    let viewWillAppear = PublishSubject<Void>()
+
+    var envLabelString: Observable<String> {
+        return viewWillAppear
+            .map {
+                UserDefaultsProvider.shared.get(key: .networkEnvironment, defaultValue: OWNetworkEnvironment.production)
+            }
+            .map { env -> String? in
+                switch env {
+                case .production:
+                    return nil // no label for production
+                case .staging:
+                    return NSLocalizedString("Staging", comment: "")
+                }
+            }
+            .map { envString in
+                guard let envString = envString else {
+                    return ""
+                }
+                return NSLocalizedString("NetworkEnvironment", comment: "") + ": \(envString)"
+            }
+            .asObservable()
+    }
 
     var selectedSpotId: Observable<OWSpotId> {
         return userDefaultsProvider.values(key: .selectedSpotId, defaultValue: Metrics.preFilledSpotId)
@@ -274,7 +299,6 @@ fileprivate extension TestAPIViewModel {
             })
             .subscribe()
             .disposed(by: disposeBag)
-
     }
 
     func setSDKConfigurations(_ spotId: String) {

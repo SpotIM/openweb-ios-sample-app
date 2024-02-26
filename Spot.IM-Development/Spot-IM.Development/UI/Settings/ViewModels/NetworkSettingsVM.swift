@@ -42,7 +42,7 @@ class NetworkSettingsVM: NetworkSettingsViewModeling, NetworkSettingsViewModelin
     }()
 
     lazy var networkEnvironmentTitle: String = {
-        return NSLocalizedString("NetworkEnvironement", comment: "")
+        return NSLocalizedString("NetworkEnvironment", comment: "")
     }()
 
     lazy var networkEnvironmentSettings: [String] = {
