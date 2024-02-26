@@ -14,6 +14,9 @@ class OWConversationTitleHeaderView: UIView {
     fileprivate struct Metrics {
         static let verticalOffset: CGFloat = 16
         static let closeButtonTopBottomPadding = 7
+        static let identifier = "conversation_title_header_view_id"
+        static let titleLabelIdentifier = "conversation_title_header_title_label_id"
+        static let closeButtonIdentifier = "conversation_title_header_close_button_id"
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -37,6 +40,7 @@ class OWConversationTitleHeaderView: UIView {
         super.init(frame: .zero)
         setupUI()
         setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -45,6 +49,12 @@ class OWConversationTitleHeaderView: UIView {
 }
 
 fileprivate extension OWConversationTitleHeaderView {
+    func applyAccessibility() {
+           self.accessibilityIdentifier = Metrics.identifier
+           titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+           closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+       }
+    
     func setupUI() {
         self.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
