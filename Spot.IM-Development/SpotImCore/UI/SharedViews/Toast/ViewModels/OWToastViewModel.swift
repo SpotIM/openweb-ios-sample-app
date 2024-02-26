@@ -38,16 +38,14 @@ class OWToastViewModel: OWToastViewModeling, OWToastViewModelingInputs, OWToastV
 
     var actionClick = PublishSubject<Void>()
     var dismiss = PublishSubject<Void>()
-    let actionCompletion: PublishSubject<Void>?
-    let dismissCompletion: PublishSubject<Void>?
+    let completions: [OWToastCompletion: PublishSubject<Void>?]
     var disposeBag = DisposeBag()
 
     init(requiredData: OWToastRequiredData, completions: [OWToastCompletion: PublishSubject<Void>?]) {
         title = requiredData.title
         toastActionViewModel = OWToastActionViewModel(action: requiredData.action)
         showAction = requiredData.action != .none
-        self.actionCompletion = completions[.action] ?? nil
-        self.dismissCompletion = completions[.dismiss] ?? nil
+        self.completions = completions
         iconImage = self.iconForType(type: requiredData.type)
         borderColor = self.borderColorForType(type: requiredData.type)
 
@@ -60,14 +58,18 @@ fileprivate extension OWToastViewModel {
         actionClick
             .asObservable()
             .subscribe(onNext: { [weak self] in
-                self?.actionCompletion?.onNext()
+                guard let actionCompletion = self?.completions[.action]
+                else { return }
+                actionCompletion?.onNext()
             })
             .disposed(by: disposeBag)
 
         dismiss
             .asObservable()
             .subscribe(onNext: { [weak self] in
-                self?.dismissCompletion?.onNext()
+                guard let dismissCompletion = self?.completions[.dismiss]
+                else { return }
+                dismissCompletion?.onNext()
             })
             .disposed(by: disposeBag)
     }
