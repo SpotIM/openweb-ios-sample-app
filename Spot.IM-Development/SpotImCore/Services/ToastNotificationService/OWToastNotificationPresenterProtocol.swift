@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 protocol OWToastNotificationPresenterProtocol {
-    mutating func presentToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?, disposeBag: DisposeBag)
+    mutating func presentToast(requiredData: OWToastRequiredData, completions: [OWToastCompletion: PublishSubject<Void>?], disposeBag: DisposeBag)
     func dismissToast()
     var toastView: OWToastView? { get set }
 }
@@ -27,11 +27,11 @@ struct ToastMetrics {
 
 extension OWToastNotificationPresenterProtocol where Self: UIView {
 
-    mutating func presentToast(requiredData: OWToastRequiredData, actionCompletion: PublishSubject<Void>?, dismissCompletion: PublishSubject<Void>?, disposeBag: DisposeBag) {
+    mutating func presentToast(requiredData: OWToastRequiredData, completions: [OWToastCompletion: PublishSubject<Void>?], disposeBag: DisposeBag) {
         // Make sure no old toast is visible
         removeToast()
 
-        let toastVM = OWToastViewModel(requiredData: requiredData, actionCompletion: actionCompletion, dismissCompletion: dismissCompletion)
+        let toastVM = OWToastViewModel(requiredData: requiredData, completions: completions)
         self.toastView = OWToastView(viewModel: toastVM)
         guard let toastView = toastView else { return }
 
