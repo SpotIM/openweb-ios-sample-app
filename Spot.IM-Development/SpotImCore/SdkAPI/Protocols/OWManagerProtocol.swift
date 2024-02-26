@@ -17,7 +17,5 @@ public protocol OWManagerProtocol {
     var helpers: OWHelpers { get }
     #if BETA
     var environment: OWNetworkEnvironmentType { get set }
-    #else
-    internal var environment: OWNetworkEnvironmentType { get set }
     #endif
 }
