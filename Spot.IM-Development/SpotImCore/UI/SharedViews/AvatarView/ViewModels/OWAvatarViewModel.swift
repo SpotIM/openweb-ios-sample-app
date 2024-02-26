@@ -87,14 +87,14 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         sharedServicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.imageURLProvider = imageURLProvider
         self.sharedServicesProvider = sharedServicesProvider
-        
+
         let spUser = SPUser()
         spUser.id = user.id
         spUser.displayName = user.displayName
         spUser.userName = user.userName
         spUser.imageId = user.imageId
         self.userInput.onNext(spUser)
-            
+
         setupObservers()
     }
 
