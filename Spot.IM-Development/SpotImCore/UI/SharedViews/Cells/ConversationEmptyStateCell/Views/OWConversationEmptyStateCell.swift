@@ -11,6 +11,9 @@ import RxSwift
 
 // TODO: Decide if we need an OWConversationEmptyStateCell after final design in all orientations
 class OWConversationEmptyStateCell: UITableViewCell {
+    fileprivate struct Metrics {
+        static let identifier = "empty_state_cell_id"
+    }
 
     fileprivate lazy var conversationEmptyStateView: OWConversationEmptyStateView = {
         return OWConversationEmptyStateView()
@@ -23,6 +26,7 @@ class OWConversationEmptyStateCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.setupUI()
+        self.applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -47,5 +51,9 @@ fileprivate extension OWConversationEmptyStateCell {
         conversationEmptyStateView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+    
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
     }
 }
