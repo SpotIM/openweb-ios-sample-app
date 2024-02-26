@@ -42,7 +42,7 @@ class OWTestingPlaygroundCoordinator: OWBaseCoordinator<OWTestingPlaygroundCoord
         self.testingPlaygroundData = testingPlaygroundData
     }
 
-    override func start(dataOptions: OWDeepLinkOptions? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
 
         // Add the VC and VM you would like to test
 //        let someVM: OWSomeViewModeling = ...
