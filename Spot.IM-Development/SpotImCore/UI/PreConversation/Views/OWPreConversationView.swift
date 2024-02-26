@@ -293,9 +293,9 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.displayToast
             .subscribe(onNext: { [weak self] data in
                 guard var self = self else { return }
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
                 self.presentToast(requiredData: data.presentData.data,
-                                  actionCompletion: data.actionCompletion,
-                                  dismissCompletion: self.viewModel.inputs.dismissToast,
+                                  completions: completions,
                                   disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
