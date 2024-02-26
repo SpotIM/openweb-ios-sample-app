@@ -15,6 +15,9 @@ class OWConversationEmptyStateView: UIView {
         static let iconSize: CGFloat = 48
         static let titleLabelNumberOfLines: Int = 0
         static let margins: UIEdgeInsets = UIEdgeInsets(top: 60, left: 6, bottom: 60, right: 6)
+
+        static let identifier = "empty_state_view_id"
+        static let titleIdentifier = "empty_state_view_title_id"
     }
 
     fileprivate lazy var iconImageView: UIImageView = {
@@ -41,6 +44,7 @@ class OWConversationEmptyStateView: UIView {
         super.init(frame: .zero)
         self.viewModel = viewModel
 
+        applyAccessibility()
         setupViews()
         setupObservers()
     }
@@ -91,6 +95,12 @@ fileprivate extension OWConversationEmptyStateView {
         }
     }
 
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        titleLabel.accessibilityIdentifier = Metrics.titleIdentifier
+        
+    }
+
     func setupObservers() {
         viewModel.outputs.text
             .bind(to: titleLabel.rx.text)
@@ -114,6 +124,10 @@ fileprivate extension OWConversationEmptyStateView {
                 guard let self = self else { return }
                 self.titleLabel.font = OWFontBook.shared.font(typography: .bodyText)
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.iconIdentifier
+            .bind(to: iconImageView.rx.accessibilityIdentifier)
             .disposed(by: disposeBag)
     }
 

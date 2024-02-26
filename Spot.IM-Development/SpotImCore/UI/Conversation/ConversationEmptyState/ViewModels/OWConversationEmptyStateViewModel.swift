@@ -18,6 +18,7 @@ protocol OWConversationEmptyStateViewModelingInputs {
 
 protocol OWConversationEmptyStateViewModelingOutputs {
     var iconName: Observable<String> { get }
+    var iconIdentifier: Observable<String> { get }
     var text: Observable<String> { get }
     var customizeIconImageViewUI: Observable<UIImageView> { get }
     var customizeTitleLabelUI: Observable<UILabel> { get }
@@ -37,6 +38,8 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
     fileprivate struct Metrics {
         static let emptyIcon: String = "emptyConversation-icon"
         static let closedAndEmptyIcon: String = "closedAndEmptyConversation-icon"
+        static let emptyIconIdentifier = "empty_state_view_empty_icon_id"
+        static let closedAndEmptyIconIdentifier = "empty_state_view_closed_and_empty_icon_id"
     }
 
     // Required to work with BehaviorSubject in the RX chain as the final subscriber begin after the initial publish subjects send their first elements
@@ -80,6 +83,20 @@ class OWConversationEmptyStateViewModel: OWConversationEmptyStateViewModeling,
             }
             .asObservable()
     }()
+
+    lazy var iconIdentifier: Observable<String> = {
+        contentType
+            .map { type in
+                switch type {
+                case .empty:
+                    return Metrics.emptyIconIdentifier
+                case .closedAndEmpty:
+                    return Metrics.closedAndEmptyIconIdentifier
+                }
+            }
+            .asObservable()
+    }()
+
 
     lazy var text: Observable<String> = {
         contentType
