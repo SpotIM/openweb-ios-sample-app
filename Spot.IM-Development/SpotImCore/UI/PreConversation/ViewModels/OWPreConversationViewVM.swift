@@ -1326,7 +1326,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
                     let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
                     self.servicesProvider.toastNotificationService()
-                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data), 
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
                                                                          actionCompletion: nil))
                     return true
                 case .error(_):
