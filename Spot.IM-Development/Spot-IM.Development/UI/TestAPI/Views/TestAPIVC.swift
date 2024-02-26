@@ -21,6 +21,7 @@ class TestAPIVC: UIViewController {
         static let toolbarPickerIdentifier = "toolbar_picker_id"
         static let btnDoneIdentifier = "btn_done_id"
         static let btnSelectPresetIdentifier = "btn_select_preset_id"
+        static let envLabelIdentifier = "environment_label_id"
         static let txtFieldSpotIdIdentifier = "spot_id"
         static let txtFieldPostIdIdentifier = "post_id"
         static let btnUIFlowsIdentifier = "btn_ui_flows_id"
@@ -113,6 +114,12 @@ class TestAPIVC: UIViewController {
                 .withPadding(Metrics.buttonPadding)
     }()
 
+    fileprivate lazy var envLabel: UILabel = {
+        return UILabel()
+            .font(FontBook.paragraphBold)
+            .textColor(.red)
+    }()
+
     fileprivate lazy var btnSelectPreset: UIButton = {
         return NSLocalizedString("SelectPreset", comment: "").darkGrayRoundedButton
     }()
@@ -165,6 +172,7 @@ class TestAPIVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         // Re-setuping navigation controller colors to be set by the regular OS theme mode
         setupNavControllerUI()
+        viewModel.inputs.viewWillAppear.onNext()
     }
 
     override func loadView() {
@@ -191,6 +199,7 @@ fileprivate extension TestAPIVC {
         toolbarPicker.accessibilityIdentifier = Metrics.toolbarPickerIdentifier
         btnDone.accessibilityIdentifier = Metrics.btnDoneIdentifier
         btnSelectPreset.accessibilityIdentifier = Metrics.btnSelectPresetIdentifier
+        envLabel.accessibilityIdentifier = Metrics.envLabelIdentifier
         btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
@@ -209,13 +218,20 @@ fileprivate extension TestAPIVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
+        scrollView.addSubview(envLabel)
+        envLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+        }
+
         // Adding select preset button
         scrollView.addSubview(btnSelectPreset)
         btnSelectPreset.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+            make.top.equalTo(envLabel.snp.bottom).offset(Metrics.verticalMargin)
         }
 
         scrollView.addSubview(txtFieldSpotId)
@@ -458,6 +474,10 @@ fileprivate extension TestAPIVC {
             .bind(to: presetPicker.rx.itemTitles) { _, item in
                 return item
             }
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.envLabelString
+            .bind(to: envLabel.rx.text)
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
