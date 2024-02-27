@@ -54,7 +54,7 @@ fileprivate extension OWConversationTitleHeaderView {
            titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
            closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
        }
-    
+
     func setupUI() {
         self.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in

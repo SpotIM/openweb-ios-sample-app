@@ -52,7 +52,7 @@ fileprivate extension OWConversationEmptyStateCell {
             make.edges.equalToSuperview()
         }
     }
-    
+
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
