@@ -29,7 +29,7 @@ protocol OWCommunityGuidelinesViewModelingOutputs {
     var shouldShowContainer: Bool { get }
     var spacing: CGFloat { get }
     var style: OWCommunityGuidelinesStyle { get }
-    
+
     var viewIdentifier: String { get }
     var guidelinesContainerIdentifier: String { get }
     var guidelinesIconIdentifier: String { get }
@@ -48,7 +48,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
     struct Metrics {
         static let readOurTitle = OWLocalizationManager.shared.localizedString(key: "ReadOur")
         static let communityGuidelinesTitle = OWLocalizationManager.shared.localizedString(key: "CommunityGuidelines").lowercased()
-        
+
         static let identifier = "community_guidelines_view_@_id"
         static let guidelinesContainerIdentifier = "community_guidelines_container_view_@_id"
         static let guidelinesIconIdentifier = "community_guidelines_icon_view_@_id"
@@ -109,15 +109,15 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling,
             .distinctUntilChanged()
             .share(replay: 1)
     }
-    
+
     lazy var viewIdentifier = {
         return Metrics.identifier.replacingOccurrences(of: "@", with: self.style.rawValue)
     }()
-    
+
     lazy var guidelinesContainerIdentifier = {
         return Metrics.guidelinesContainerIdentifier.replacingOccurrences(of: "@", with: self.style.rawValue)
     }()
-    
+
     lazy var guidelinesIconIdentifier = {
         return Metrics.guidelinesIconIdentifier.replacingOccurrences(of: "@", with: self.style.rawValue)
     }()
