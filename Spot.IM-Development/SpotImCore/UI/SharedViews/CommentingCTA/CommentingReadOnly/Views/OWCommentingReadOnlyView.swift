@@ -59,7 +59,7 @@ fileprivate extension OWCommentingReadOnlyView {
         iconImageView.accessibilityIdentifier = Metrics.iconIdentifier
         label.accessibilityIdentifier = Metrics.labelIdentifier
     }
-    
+
     func setupUI() {
         self.enforceSemanticAttribute()
         self.addSubview(iconImageView)

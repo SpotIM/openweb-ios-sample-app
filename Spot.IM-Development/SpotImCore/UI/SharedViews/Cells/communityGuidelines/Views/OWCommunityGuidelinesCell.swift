@@ -68,7 +68,7 @@ fileprivate extension OWCommunityGuidelinesCell {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }

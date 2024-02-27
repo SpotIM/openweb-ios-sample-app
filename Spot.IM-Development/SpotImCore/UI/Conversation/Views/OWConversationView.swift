@@ -152,7 +152,7 @@ fileprivate extension OWConversationView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
-    
+
     func setupUI() {
         self.useAsThemeStyleInjector()
 
