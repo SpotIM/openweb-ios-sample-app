@@ -19,7 +19,7 @@ class OWCommunityGuidelinesView: UIView {
         static let horizontalPadding: CGFloat = 10
         static let iconSize: CGFloat = 16
         static let sideOffset: CGFloat = 20
-        static func identifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_view_\(style.rawValue)_id" }
+        static let identifier = "community_guidelines_view_id"
         static func guidelinesContainerViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_container_view_\(style.rawValue)_id" }
         static func guidelinesIconViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_icon_view_\(style.rawValue)_id" }
         static func communityGuidelinesTextViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_text_view_\(style.rawValue)_id" }
@@ -179,9 +179,9 @@ fileprivate extension OWCommunityGuidelinesView {
     }
 
     func applyAccessibility() {
-        let style = viewModel.outputs.style
+        self.accessibilityIdentifier = Metrics.identifier
 
-        self.accessibilityIdentifier = Metrics.identifier(fromStyle: style)
+        let style = viewModel.outputs.style
         guidelinesContainer.accessibilityIdentifier = Metrics.guidelinesContainerViewIdentifier(fromStyle: style)
         guidelinesIcon.accessibilityIdentifier = Metrics.guidelinesIconViewIdentifier(fromStyle: style)
         titleLabel.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier(fromStyle: style)
