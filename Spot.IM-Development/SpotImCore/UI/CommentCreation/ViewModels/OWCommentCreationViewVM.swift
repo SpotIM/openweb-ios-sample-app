@@ -506,10 +506,20 @@ fileprivate extension OWCommentCreationViewViewModel {
             commentCreationRegularViewVm.outputs.footerViewModel.outputs.addGifTapped,
             commentCreationLightViewVm.outputs.footerViewModel.outputs.addGifTapped
         )
-        .subscribe(onNext: { [weak self] in
-            guard let self = self else { return }
-            self.servicesProvider.presenterService()
+        .flatMap { [weak self] _ -> Observable<OWGifPickerPresenterResponseType> in
+            guard let self = self else { return .empty() }
+            return self.servicesProvider.presenterService()
                 .showGifPicker(viewableMode: self.viewableMode)
+        }
+        .subscribe(onNext: { response in
+            // TODO:
+            switch response {
+            case .mediaInfo(let url):
+                // TODO: save data
+                print("NOGAH: \(url)")
+            case .cancled:
+                break
+            }
         })
         .disposed(by: disposeBag)
 

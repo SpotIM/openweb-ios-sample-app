@@ -34,6 +34,7 @@ class OWGifService: OWGifServicing {
         let giphy = GiphyViewController()
         self.giphyVC = giphy
         giphy.theme = theme
+
         return giphy
     }
 }
