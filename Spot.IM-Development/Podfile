@@ -6,7 +6,8 @@ abstract_target 'Shared' do
 
   pod 'RxSwift', '~> 6.5'
   pod 'RxCocoa', '~> 6.5'
-  
+  pod 'Giphy', '~> 2.2'
+
   target 'SpotImCore'
 
   target 'Spot-IM.Development' do

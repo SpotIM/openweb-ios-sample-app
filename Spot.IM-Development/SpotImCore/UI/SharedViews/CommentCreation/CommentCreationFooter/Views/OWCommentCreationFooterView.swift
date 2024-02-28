@@ -184,6 +184,10 @@ fileprivate extension OWCommentCreationFooterView {
             .bind(to: viewModel.inputs.tapAddImage)
             .disposed(by: disposeBag)
 
+        addGifButton.rx.tap
+            .bind(to: viewModel.inputs.tapAddGif)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.showAddImageButton
             .map { !$0 }
             .bind(to: addImageButton.rx.isHidden)

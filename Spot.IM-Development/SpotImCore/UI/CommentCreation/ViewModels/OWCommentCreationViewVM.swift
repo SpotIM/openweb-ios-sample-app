@@ -502,6 +502,17 @@ fileprivate extension OWCommentCreationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        Observable.merge(
+            commentCreationRegularViewVm.outputs.footerViewModel.outputs.addGifTapped,
+            commentCreationLightViewVm.outputs.footerViewModel.outputs.addGifTapped
+        )
+        .subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.servicesProvider.presenterService()
+                .showGifPicker(viewableMode: self.viewableMode)
+        })
+        .disposed(by: disposeBag)
+
         servicesProvider
             .activeArticleService()
             .articleExtraData
