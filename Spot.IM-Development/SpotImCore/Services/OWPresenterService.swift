@@ -21,7 +21,7 @@ protocol OWPresenterServicing {
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
-    func showGifPicker(viewableMode: OWViewableMode) // TODO: need some observable for selected GIF
+    func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType>
 }
 
 extension OWPresenterServicing {
@@ -120,10 +120,21 @@ class OWPresenterService: OWPresenterServicing {
         )
     }
 
-    func showGifPicker(viewableMode: OWViewableMode) {
-        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
+    func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType> {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return .empty() }
         let giphyVC = sharedServicesProvider.gifService().gifSelectionVC()
         presenterVC.present(giphyVC, animated: true)
+
+        let pickerCanceled = giphyVC.rx.didCancel
+            .map { OWGifPickerPresenterResponseType.cancled }
+
+        let didSelectMedia = giphyVC.rx.didSelectMedia
+            .map { OWGifPickerPresenterResponseType.mediaInfo($0) }
+
+        return Observable.merge(pickerCanceled, didSelectMedia)
+            .do(onNext: { _ in
+                giphyVC.dismiss(animated: true, completion: nil)
+            })
     }
 }
 
