@@ -160,9 +160,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     let textViewVM: OWTextViewViewModeling
 
-    var performCta: Observable<OWCommentCreationCtaData> {
-        ctaTap
-            .asObservable()
+    lazy var performCta: Observable<OWCommentCreationCtaData> = {
+        return ctaTap
             .map { [weak self] _ -> OWUserAction? in
                 guard let self = self else { return nil }
                 switch self.commentType {
@@ -190,7 +189,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                 let commentContent = OWCommentCreationContent(text: text)
                 return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
             }
-    }
+            .asObservable()
+            .share()
+    }()
 
     lazy var resetTypeToNewCommentChangedWithText = resetTypeToNewCommentChanged
         .withLatestFrom(textViewVM.outputs.textViewText)
