@@ -28,6 +28,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupUI()
+        self.applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -42,7 +43,6 @@ class OWCommunityGuidelinesCell: UITableViewCell {
 
         communityGuidelinesView.configure(with: self.viewModel.outputs.communityGuidelinesViewModel)
         self.setupObservers()
-        self.applyAccessibility()
     }
 }
 
