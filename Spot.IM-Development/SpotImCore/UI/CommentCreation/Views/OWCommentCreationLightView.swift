@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
+class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_light_view_id"
 
@@ -189,11 +189,13 @@ fileprivate extension OWCommentCreationLightView {
 
     func setupObservers() {
         viewModel.outputs.displayToastCalled
-            .subscribe(onNext: { [weak self] (data, action) in
+            .subscribe(onNext: { [weak self] combinedData in
                 guard var self = self else { return }
-                var requiredData = data.data
+                var requiredData = combinedData.presentData.data
                 requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorStateBottomPadding
-                self.displayToast(requiredData: requiredData, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
+                                                                               .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)
                 self.bringSubviewToFront(self.footerView)
             })
             .disposed(by: disposeBag)

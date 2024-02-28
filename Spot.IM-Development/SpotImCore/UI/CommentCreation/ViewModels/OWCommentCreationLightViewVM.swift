@@ -14,7 +14,7 @@ protocol OWCommentCreationLightViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
     var commentCreationError: PublishSubject<Void> { get }
-    var displayToast: PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
+    var displayToast: PublishSubject<OWToastNotificationCombinedData?> { get }
     var dismissToast: PublishSubject<Void> { get }
 }
 
@@ -31,7 +31,7 @@ protocol OWCommentCreationLightViewViewModelingOutputs {
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var becomeFirstResponderCalled: Observable<Void> { get }
-    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
 }
@@ -53,8 +53,8 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
-    var displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
-    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+    var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> {
         return displayToast
             .unwrap()
             .asObservable()
