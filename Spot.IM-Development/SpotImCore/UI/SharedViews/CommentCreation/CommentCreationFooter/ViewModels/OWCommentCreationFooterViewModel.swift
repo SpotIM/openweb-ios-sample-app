@@ -22,6 +22,7 @@ protocol OWCommentCreationFooterViewModelingOutputs {
     var ctaButtonEnabled: Observable<Bool> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var showAddImageButton: Observable<Bool> { get }
+    var showAddGifButton: Observable<Bool> { get }
     var performCtaAction: Observable<Void> { get }
     var addImageTapped: Observable<Void> { get }
     var loginToPostClick: Observable<Void> { get }
@@ -149,6 +150,14 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
         return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
             .map {
                 $0.conversation?.disableImageUploadButton != true
+            }
+    }
+
+    // TODO: should also consider if giphy SDK is available
+    var showAddGifButton: Observable<Bool> {
+        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+            .map {
+                $0.mobileSdk.postGifEnabled
             }
     }
 
