@@ -30,7 +30,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let highlightBackgroundColorAlpha: Double = 0.2
         static let delayPullToRefreshDuration = 250
         static let identifier = "conversation_view_id"
-
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")

@@ -50,10 +50,10 @@ class OWConversationTitleHeaderView: UIView {
 
 fileprivate extension OWConversationTitleHeaderView {
     func applyAccessibility() {
-           self.accessibilityIdentifier = Metrics.identifier
-           titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
-           closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
-       }
+        self.accessibilityIdentifier = Metrics.identifier
+        titleLabel.accessibilityIdentifier = Metrics.titleLabelIdentifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+    }
 
     func setupUI() {
         self.addSubview(titleLabel)
