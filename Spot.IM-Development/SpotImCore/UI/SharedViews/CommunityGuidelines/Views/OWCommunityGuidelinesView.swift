@@ -73,8 +73,8 @@ class OWCommunityGuidelinesView: UIView {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
         updateUI()
-        setupObservers()
         applyAccessibility()
+        setupObservers()
     }
 }
 

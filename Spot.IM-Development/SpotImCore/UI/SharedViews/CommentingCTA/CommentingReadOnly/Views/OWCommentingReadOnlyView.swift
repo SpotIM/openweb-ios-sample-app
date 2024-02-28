@@ -43,9 +43,9 @@ class OWCommentingReadOnlyView: UIView {
         super.init(frame: .zero)
         disposeBag = DisposeBag()
         self.viewModel = viewModel
+        applyAccessibility()
         setupObservers()
         setupUI()
-        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {

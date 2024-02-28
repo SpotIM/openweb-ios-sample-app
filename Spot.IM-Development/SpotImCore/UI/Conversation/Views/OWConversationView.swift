@@ -143,8 +143,8 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupUI()
-        setupObservers()
         applyAccessibility()
+        setupObservers()
     }
 }
 
