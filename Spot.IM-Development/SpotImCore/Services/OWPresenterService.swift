@@ -21,6 +21,7 @@ protocol OWPresenterServicing {
     func showMenu(actions: [OWRxPresenterAction], sender: OWUISource, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showActivity(activityItems: [Any], applicationActivities: [UIActivity]?, viewableMode: OWViewableMode) -> Observable<OWRxPresenterResponseType>
     func showImagePicker(mediaTypes: [String], sourceType: UIImagePickerController.SourceType, viewableMode: OWViewableMode) -> Observable<OWImagePickerPresenterResponseType>
+    func showGifPicker(viewableMode: OWViewableMode) // TODO: need some observable for selected GIF
 }
 
 extension OWPresenterServicing {
@@ -36,8 +37,10 @@ extension OWPresenterServicing {
 }
 
 class OWPresenterService: OWPresenterServicing {
+    fileprivate unowned let sharedServicesProvider: OWSharedServicesProviding
 
-    init() {
+    init(sharedServicesProvider: OWSharedServicesProviding) {
+        self.sharedServicesProvider = sharedServicesProvider
         RxImagePickerDelegateProxy.register { RxImagePickerDelegateProxy(imagePicker: $0) }
     }
 
@@ -115,6 +118,12 @@ class OWPresenterService: OWPresenterServicing {
             mediaTypes: mediaTypes,
             sourceType: sourceType
         )
+    }
+
+    func showGifPicker(viewableMode: OWViewableMode) {
+        guard let presenterVC = getPresenterVC(for: viewableMode) else { return }
+        let giphyVC = sharedServicesProvider.gifService().gifSelectionVC()
+        presenterVC.present(giphyVC, animated: true)
     }
 }
 
