@@ -15,7 +15,6 @@ class OWCommunityGuidelinesCell: UITableViewCell {
     fileprivate struct Metrics {
         static let edgesPadding: CGFloat = 12
         static let identifier = "community_guidelines_cell_id"
-
     }
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
