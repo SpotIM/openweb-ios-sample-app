@@ -14,6 +14,7 @@ class OWCommentCreationFooterView: UIView {
         static let identifier = "comment_footer_view_id"
         static let ctaButtonIdentifier = "comment_footer_view_post_button_id"
         static let addImageButtonIdentifier = "comment_footer_view_add_image_button_id"
+        static let addGifButtonIdentifier = "comment_footer_view_add_gif_button_id"
 
         static let seperatorHeight: CGFloat = 1.0
 
@@ -26,10 +27,7 @@ class OWCommentCreationFooterView: UIView {
         static let horizontalPortraitMargin: CGFloat = 16.0
         static let horizontalLandscapeMargin: CGFloat = 66.0
 
-        static let addImageButtonHeight: CGFloat = 16.0 + (6.0 * 2)
-        static let addImageButtonWidth: CGFloat = 18.0 + (6.0 * 2)
-        static let addImageButtonInset: CGFloat = 6.0
-
+        static let addImageButtonSize: CGFloat = 32
         static let addGifButtonSize: CGFloat = 32
     }
 
@@ -67,12 +65,6 @@ class OWCommentCreationFooterView: UIView {
     fileprivate lazy var addImageButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "addImageIcon"), state: .normal)
-            .imageEdgeInsets(UIEdgeInsets(
-                top: Metrics.addImageButtonInset,
-                left: Metrics.addImageButtonInset,
-                bottom: Metrics.addImageButtonInset,
-                right: Metrics.addImageButtonInset
-            ))
     }()
 
     fileprivate lazy var addGifButton: UIButton = {
@@ -132,8 +124,8 @@ fileprivate extension OWCommentCreationFooterView {
 
         addMediaStackView.addArrangedSubview(addImageButton)
         addImageButton.OWSnp.makeConstraints { make in
-            make.height.equalTo(Metrics.addImageButtonHeight)
-            make.width.equalTo(Metrics.addImageButtonWidth)
+            make.height.equalTo(Metrics.addImageButtonSize)
+            make.width.equalTo(Metrics.addImageButtonSize)
         }
 
         addMediaStackView.addArrangedSubview(addGifButton)
@@ -159,6 +151,7 @@ fileprivate extension OWCommentCreationFooterView {
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor4, themeStyle: currentStyle)
                 self.ctaButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                 self.addGifButton.setImage(UIImage(spNamed: "addGifIcon", supportDarkMode: true), for: .normal)
+                self.addImageButton.setImage(UIImage(spNamed: "addImageIcon", supportDarkMode: true), for: .normal)
 
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
