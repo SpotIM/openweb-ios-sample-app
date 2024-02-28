@@ -67,7 +67,7 @@
 "MuteSuccessToast" = "המשתמש הושתק";
 "ReadOur" = "קרא/י את";
 "Image" = "תמונה";
-"Undo" = "Undo";
+"Undo" = "ביטול";
 "ClosedAndEmptyConversation" = "שיחה זו הסתיימה ולא יתקבלו תגובות נוספות.";
 "EmptyConversation" = "התחילו את השיחה ושתפו את הקהילה במחשבות וברעיונות שלכם.";
 "IdentityAttackTitle" = "מתקפת זהות";
@@ -116,6 +116,7 @@
 "LearnMore" = "למד עוד";
 "RejectedCommentStatusMessage" = "תגובתך נדחתה.";
 "PendingCommentStatusMessage" = "המתן בסבלנות, תגובתך ממתינה לאישור.";
+"NotAuthorPendingCommentStatusMessage" = "תגובה זו ממתינה לבדיקה.";
 "ClarityPendingReasonsTitle" = "ייתכן שהתגובה שלך נשלחה לבדיקה עקב אחת מהסיבות הבאות:";
 "AwaitingReview" = "בהמתנה לבדיקה";
 "RejectReasonEnsureCivil" = "כל ההחלטות שלנו נעשות במטרה להבטיח שיח תרבותי, פתוח ומכיל בתוך הקהילה.";

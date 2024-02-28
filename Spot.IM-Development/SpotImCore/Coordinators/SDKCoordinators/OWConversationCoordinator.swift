@@ -40,6 +40,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
+    fileprivate struct Metrics {
+        static let delayCommentThreadAfterReport: CGFloat = 0.5
+    }
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -130,7 +134,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMapLatest { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
                                                                               commentCreationData: commentCreationData,
@@ -151,7 +155,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 }
             })
-            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { _ -> Observable<OWConversationCoordinatorResult> in
                 return Observable.never()
             }
 
@@ -189,7 +193,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 case let .submitedReport(commentId, userJustLoggedIn):
                     guard userJustLoggedIn else { return }
-                    self?._openCommentThread.onNext((commentId, .report))
+
+                    // Delay open Comment Thread so that the
+                    // report reason flow closes first
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayCommentThreadAfterReport) {
+                        self?._openCommentThread.onNext((commentId, .report))
+                    }
                 default:
                     break
                 }

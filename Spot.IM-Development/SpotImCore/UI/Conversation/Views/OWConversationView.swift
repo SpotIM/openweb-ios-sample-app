@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationDisplayerProtocol {
+class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let ctaViewSlideAnimationDelay = 50
@@ -170,6 +170,9 @@ fileprivate extension OWConversationView {
             }
         }
 
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+        let isLandscape = currentOrientation == .landscape
+
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
             if shouldShowArticleDescription {
@@ -197,14 +200,20 @@ fileprivate extension OWConversationView {
             make.trailing.equalToSuperview()
         }
 
+        if currentOrientation == .portrait {
+            loginPromptLandscapeConstraints.forEach { $0.deactivate() }
+            loginPromptPortraitConstraints.forEach { $0.activate() }
+        } else {
+            loginPromptPortraitConstraints.forEach { $0.deactivate() }
+            loginPromptLandscapeConstraints.forEach { $0.activate() }
+        }
+
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()
         }
-
-        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
 
         self.addSubview(commentingCTAContainerView)
         commentingCTAContainerView.OWSnp.makeConstraints { make in
@@ -238,9 +247,12 @@ fileprivate extension OWConversationView {
     // swiftlint:disable function_body_length
     func setupObservers() {
         viewModel.outputs.displayToast
-            .subscribe(onNext: { [weak self] (data, action) in
+            .subscribe(onNext: { [weak self] data in
                 guard var self = self else { return }
-                self.displayToast(requiredData: data.data, actionCompletion: action, dismissCompletion: self.viewModel.inputs.dismissToast, disposeBag: self.disposeBag)
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: data.presentData.data,
+                                  completions: completions,
+                                  disposeBag: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -319,6 +331,7 @@ fileprivate extension OWConversationView {
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
                 self.commentingCTAContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableView.indicatorStyle = currentStyle == .light ? .black : .white
             })
             .disposed(by: disposeBag)
 
@@ -513,6 +526,10 @@ fileprivate extension OWConversationView {
 
         OWSharedServicesProvider.shared.orientationService()
             .orientation
+            // skip first orientation share(replay: 1) as we do
+            // not want animation at conversation loading state
+            // the correct constraints are set anyway at view setup
+            .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
