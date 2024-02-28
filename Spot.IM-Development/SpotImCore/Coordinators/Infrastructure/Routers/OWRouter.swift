@@ -87,8 +87,8 @@ class OWRouter: NSObject, OWRoutering {
     func start() {
         guard let navigationController = navigationController else { return }
         switch presentationalMode {
-        case .present(let viewController, _, let animated):
-            viewController.present(navigationController, animated: animated)
+        case .present(let viewControllerWeakEncapsulation, _, let animated):
+            viewControllerWeakEncapsulation.value()?.present(navigationController, animated: animated)
         case .push(_):
             // Already handled in coordinator
             break

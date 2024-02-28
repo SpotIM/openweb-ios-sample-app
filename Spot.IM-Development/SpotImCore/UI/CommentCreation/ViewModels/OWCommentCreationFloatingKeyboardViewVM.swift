@@ -19,7 +19,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
     var commentCreationError: PublishSubject<Void> { get }
-    var displayToast: PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?> { get }
+    var displayToast: PublishSubject<OWToastNotificationCombinedData?> { get }
     var dismissToast: PublishSubject<Void> { get }
 }
 
@@ -41,7 +41,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
-    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> { get }
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
 }
@@ -62,8 +62,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         static let delayForDismiss: Int = 350 // ms
     }
 
-    var displayToast = PublishSubject<(OWToastNotificationPresentData, PublishSubject<Void>?)?>()
-    var displayToastCalled: Observable<(OWToastNotificationPresentData, PublishSubject<Void>?)> {
+    var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> {
         return displayToast
             .unwrap()
             .asObservable()
@@ -261,18 +261,18 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentType {
         case .comment:
-            guard let text = commentsCacheService[.comment(postId: postId)] else { return }
+            guard let text = commentsCacheService[.comment(postId: postId)]?.commentContent.text else { return }
             initialText = text
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
-                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
+                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
             else { return }
             initialText = text
         case .edit(comment: let comment):
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
-            } else if let text = commentsCacheService[.edit(postId: postId)] {
+            } else if let text = commentsCacheService[.edit(postId: postId)]?.commentContent.text {
                 initialText = text
             }
         }
