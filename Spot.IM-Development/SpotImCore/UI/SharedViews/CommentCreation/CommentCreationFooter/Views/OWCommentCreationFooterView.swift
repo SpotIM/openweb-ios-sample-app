@@ -29,6 +29,8 @@ class OWCommentCreationFooterView: UIView {
         static let addImageButtonHeight: CGFloat = 16.0 + (6.0 * 2)
         static let addImageButtonWidth: CGFloat = 18.0 + (6.0 * 2)
         static let addImageButtonInset: CGFloat = 6.0
+
+        static let addGifButtonSize: CGFloat = 32
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -54,6 +56,14 @@ class OWCommentCreationFooterView: UIView {
         return button
     }()
 
+    fileprivate lazy var addMediaStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 10
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        return stackView
+    }()
+
     fileprivate lazy var addImageButton: UIButton = {
         return UIButton()
             .image(UIImage(spNamed: "addImageIcon"), state: .normal)
@@ -63,6 +73,11 @@ class OWCommentCreationFooterView: UIView {
                 bottom: Metrics.addImageButtonInset,
                 right: Metrics.addImageButtonInset
             ))
+    }()
+
+    fileprivate lazy var addGifButton: UIButton = {
+        return UIButton()
+            .image(UIImage(spNamed: "addGifIcon"), state: .normal)
     }()
 
     fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
@@ -109,18 +124,28 @@ fileprivate extension OWCommentCreationFooterView {
             make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
         }
 
-        addSubview(addImageButton)
-        addImageButton.OWSnp.makeConstraints { make in
+        addSubview(addMediaStackView)
+        addMediaStackView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(OWSnp.centerY)
             make.leading.equalToSuperviewSafeArea().offset(self.horizontalMargin(isLandscape: isLandscape))
+        }
+
+        addMediaStackView.addArrangedSubview(addImageButton)
+        addImageButton.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.addImageButtonHeight)
             make.width.equalTo(Metrics.addImageButtonWidth)
+        }
+
+        addMediaStackView.addArrangedSubview(addGifButton)
+        addGifButton.OWSnp.makeConstraints { make in
+            make.height.equalTo(Metrics.addGifButtonSize)
+            make.width.equalTo(Metrics.addGifButtonSize)
         }
 
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(addImageButton.OWSnp.trailing).offset(10.0)
+            make.leading.equalTo(addMediaStackView.OWSnp.trailing).offset(10.0)
             make.trailing.lessThanOrEqualTo(ctaButton.OWSnp.leading).offset(10.0)
             commentLabelsZeroWidthConstraint = make.width.equalTo(0).constraint
         }
@@ -133,6 +158,7 @@ fileprivate extension OWCommentCreationFooterView {
                 guard let self = self else { return }
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor4, themeStyle: currentStyle)
                 self.ctaButton.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.addGifButton.setImage(UIImage(spNamed: "addGifIcon", supportDarkMode: true), for: .normal)
 
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
@@ -163,6 +189,11 @@ fileprivate extension OWCommentCreationFooterView {
             .bind(to: addImageButton.rx.isHidden)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.showAddGifButton
+            .map { !$0 }
+            .bind(to: addGifButton.rx.isHidden)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.ctaButtonLoading
             .bind(to: ctaButton.rx.isLoading)
             .disposed(by: disposeBag)
@@ -188,7 +219,7 @@ fileprivate extension OWCommentCreationFooterView {
                     make.trailing.equalToSuperviewSafeArea().offset(-self.horizontalMargin(isLandscape: isLandscape))
                 }
 
-                self.addImageButton.OWSnp.updateConstraints { make in
+                self.addMediaStackView.OWSnp.updateConstraints { make in
                     make.leading.equalToSuperviewSafeArea().offset(self.horizontalMargin(isLandscape: isLandscape))
                 }
             })
