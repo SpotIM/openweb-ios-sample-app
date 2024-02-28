@@ -176,11 +176,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .unwrap()
             .flatMap { [weak self] userAction -> Observable<Bool> in
                 guard let self = self else { return .empty() }
-                print("*** flatMap performCta")
                 return self.servicesProvider.authenticationManager().ifNeededTriggerAuthenticationUI(for: userAction)
             }
             .do(onNext: { [weak self] loginToPost in
-                print("*** do performCta")
                 guard let self = self,
                       loginToPost == true else { return }
                 self._loginToPostClick.onNext()
