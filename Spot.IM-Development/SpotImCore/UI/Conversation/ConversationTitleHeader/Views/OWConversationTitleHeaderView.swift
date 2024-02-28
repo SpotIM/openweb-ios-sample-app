@@ -39,8 +39,8 @@ class OWConversationTitleHeaderView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupUI()
-        setupObservers()
         applyAccessibility()
+        setupObservers()
     }
 
     required init?(coder: NSCoder) {
