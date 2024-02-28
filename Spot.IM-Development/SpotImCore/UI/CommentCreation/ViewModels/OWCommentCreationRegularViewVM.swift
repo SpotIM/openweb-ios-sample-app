@@ -131,13 +131,14 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         return replyToComment?.text?.text != nil
     }
 
-    var performCta: Observable<OWCommentCreationCtaData> {
+    lazy var performCta: Observable<OWCommentCreationCtaData> = {
         footerViewModel.outputs.performCtaAction
             .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
             .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1) }
             .asObservable()
-    }
+            .share()
+    }()
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
