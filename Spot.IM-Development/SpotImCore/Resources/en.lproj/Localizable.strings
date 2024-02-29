@@ -132,8 +132,8 @@
 "TypingNow" = "%d Typing now";
 "LoginPromptTitle" = "Authorize to participate";
 "EditingComment" = "Editing comment"; // TODO: add to other languages
-"ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
-"ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
+"ErrorStateLoadReplies" = "We are unable to load replies right now";
+"ErrorStateLoadComments" = "We are unable to load comments right now";
 "ErrorStatePostComment" = "Failed to post your comment"; // TODO: add to other languages
 "SomethingWentWrong" = "Oops, something went wrong";
 
