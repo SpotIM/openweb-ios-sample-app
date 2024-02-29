@@ -135,6 +135,7 @@
 "SomethingWentWrong" = "Vaya, algo salió mal";
 "ErrorStateLoadReplies" = "No podemos cargar las respuestas en este momento";
 "ErrorStateLoadComments" = "No podemos cargar los comentarios en este momento";
+
 // Old API
 "Your Username" = "Tu seudónimo...";
 "Please provide Spot Key" = "Please provide Spot Key";
