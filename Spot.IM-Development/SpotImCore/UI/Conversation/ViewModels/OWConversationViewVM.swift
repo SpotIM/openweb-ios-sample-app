@@ -937,7 +937,9 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
-                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .conversationLoadingInitialComments)
+                let timeToLoadInitialComments = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .conversationLoadingInitialComments,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((event, loadingTriggeredReason))
@@ -1165,7 +1167,9 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentPresentationData, event)) }
-                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id))
+                let timeToLoadMoreReplies = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id),
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadMoreReplies < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((commentPresentationData, event))
@@ -1267,7 +1271,9 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] event -> Observable<Event<OWConversationReadRM>?> in
                 // Add delay if end time for load more comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just(event) }
-                let timeToLoadMoreComments = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreComments)
+                let timeToLoadMoreComments = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .conversationLoadingMoreComments,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadMoreComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just(event)
@@ -2410,17 +2416,6 @@ fileprivate extension OWConversationViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
-    }
-
-    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
-        let measureService = servicesProvider.timeMeasuringService()
-        let measureResult = measureService.endMeasure(forKey: key)
-        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
-           milliseconds < Metrics.delayBeforeTryAgainAfterError {
-            return milliseconds
-        }
-        // If end was called before start for some reason, returning 0 milliseconds here
-        return 0
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {

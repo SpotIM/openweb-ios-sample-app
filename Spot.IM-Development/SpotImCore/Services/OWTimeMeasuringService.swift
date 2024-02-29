@@ -11,6 +11,7 @@ import Foundation
 protocol OWTimeMeasuringServicing {
     func startMeasure(forKey key: OWTimeMeasuringService.OWKeys)
     func endMeasure(forKey key: OWTimeMeasuringService.OWKeys) -> OWTimeMeasuringResult
+    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys, delayDuration: Int) -> Int
 }
 
 enum OWTimeMeasuringResult {
@@ -27,7 +28,7 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         case conversationLoadingMoreReplies(commentId: OWCommentId)
         case commentThreadLoadingMoreReplies(commentId: OWCommentId)
         case commentThreadLoadingInitialComments
-        case commentCreation
+        case commentCreationPost
 
         case preConversationLoadingInitialComments
     }
@@ -49,6 +50,16 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         startTimeDictionary.removeValue(forKey: key.value)
 
         return .time(milliseconds: Int(timeElapsed))
+    }
+
+    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys, delayDuration: Int) -> Int {
+        let measureResult = self.endMeasure(forKey: key)
+        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
+           milliseconds < delayDuration {
+            return milliseconds
+        }
+        // If end was called before start for some reason, returning 0 milliseconds here
+        return 0
     }
 }
 
@@ -90,8 +101,8 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "commentThreadLoadingMoreReplies_\(commentId)"
         case .preConversationLoadingInitialComments:
             return "preConversationLoadingInitialComments"
-        case .commentCreation:
-            return "commentCreation"
+        case .commentCreationPost:
+            return "commentCreationPost"
         }
     }
 
@@ -111,7 +122,7 @@ fileprivate extension OWTimeMeasuringService.OWKeys {
             return "Time for loading more replies in comment thread view"
         case .preConversationLoadingInitialComments:
             return "Time for loading initial comments in pre conversation view"
-        case .commentCreation:
+        case .commentCreationPost:
             return "Time for posting new comment in comment creation view"
         }
     }
