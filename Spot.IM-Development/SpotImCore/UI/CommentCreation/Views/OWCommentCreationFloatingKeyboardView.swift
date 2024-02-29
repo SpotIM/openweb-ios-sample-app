@@ -356,18 +356,21 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         }
     }
 
+    var toastBottomPadding: CGFloat {
+        let toolbarHeight = self.toolbar?.frame.size.height ?? 0
+        let footerHeight = self.footerView.frame.size.height
+        let headerHeight = self.headerView.frame.size.height
+        return toolbarHeight + footerHeight + headerHeight + Metrics.errorStateBottomPadding
+    }
+
     // swiftlint:disable function_body_length
     func setupObservers() {
         viewModel.outputs.displayToastCalled
             .subscribe(onNext: { [weak self] combinedData in
                 guard let self = self else { return }
                 var requiredData = combinedData.presentData.data
-                let toolbarHeight = self.toolbar?.frame.size.height ?? 0
-                let footerHeight = self.footerView.frame.size.height
-                let headerHeight = self.headerView.frame.size.height
-                requiredData.bottomPadding = toolbarHeight + footerHeight + headerHeight + Metrics.errorStateBottomPadding
-                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
-                                                                               .dismiss: self.viewModel.inputs.dismissToast]
+                requiredData.bottomPadding = self.toastBottomPadding
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
                 self.mainContainer.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)
                 if let toolbar = self.toolbar {
                     self.mainContainer.bringSubviewToFront(toolbar)
