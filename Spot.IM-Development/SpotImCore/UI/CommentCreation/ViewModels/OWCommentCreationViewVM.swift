@@ -230,7 +230,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .do(onNext: { [weak self] _, _ in
                 guard let self = self else { return }
                 self._commentCreationSubmitInProgrss.onNext(true)
-                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentCreation)
+                self.servicesProvider.timeMeasuringService().startMeasure(forKey: .commentCreationPost)
             })
             .flatMapLatest { [weak self] commentCreationData, networkParameters -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // 2 - perform create comment request
@@ -254,7 +254,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             .flatMapLatest({ [weak self] (commentCreationData, event) -> Observable<(OWCommentCreationCtaData, Event<OWComment>)> in
                 // Add delay if end time for posting comment is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentCreationData, event)) }
-                let timeToPostComment = self.timeMeasuringMilliseconds(forKey: .commentCreation)
+                let timeToPostComment = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .commentCreationPost,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToPostComment < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((commentCreationData, event))
@@ -269,7 +271,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 case .next(let comment):
                     return (commentCreationData, comment)
                 case .error(_):
-                    // TODO - Handle error
                     self._commentCreationSubmitInProgrss.onNext(false)
                     self._commentCreationError.onNext()
                     let data = OWToastRequiredData(type: .error, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "ErrorStatePostComment"))
@@ -364,17 +365,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
             })
             .share()
     }()
-
-    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
-        let measureService = servicesProvider.timeMeasuringService()
-        let measureResult = measureService.endMeasure(forKey: key)
-        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
-           milliseconds < Metrics.delayBeforeTryAgainAfterError {
-            return milliseconds
-        }
-        // If end was called before start for some reason, returning 0 milliseconds here
-        return 0
-    }
 }
 
 fileprivate extension OWCommentCreationViewViewModel {
