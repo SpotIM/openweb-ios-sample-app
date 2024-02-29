@@ -136,6 +136,7 @@
 "SomethingWentWrong" = "عذرًا, هناك خطأ ما";
 "ErrorStateLoadReplies" = "يتعذر علينا تحميل الردود حاليًا";
 "ErrorStateLoadComments" = "يتعذر علينا تحميل التعليقات حاليًا";
+
 // Old API
 "Your Username" = "اسمك المستعار...";
 "Please provide Spot Key" = "Please provide Spot Key";

@@ -136,6 +136,7 @@
 "SomethingWentWrong" = "Aïe, une erreur s'est produite";
 "ErrorStateLoadReplies" = "Nous ne pouvons pas charger les réponses pour le moment";
 "ErrorStateLoadComments" = "Nous ne pouvons pas charger les commentaires pour le moment";
+
 // Old API
 "Your Username" = "Votre nom d'utilisateur";
 "Please provide Spot Key" = "Veuillez fournir la Spot Key";
