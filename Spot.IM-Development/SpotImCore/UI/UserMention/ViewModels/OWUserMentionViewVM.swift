@@ -26,6 +26,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     fileprivate struct Metrics {
         static let usersCount = 10
+        static let throttleGetUsers = 150
     }
 
     var inputs: OWUserMentionViewViewModelingInputs { return self }
@@ -67,6 +68,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 fileprivate extension OWUserMentionViewVM {
     func setupObservers() {
         _name
+            .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] name in
                 self?.getUsers(name: name)
             })
