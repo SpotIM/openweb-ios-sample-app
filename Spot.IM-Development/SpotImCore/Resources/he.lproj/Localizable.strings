@@ -136,6 +136,7 @@
 "SomethingWentWrong" = "אופס, משהו השתבש";
 "ErrorStateLoadReplies" = "אנחנו לא מצליחים לטעון תשובות כרגע";
 "ErrorStateLoadComments" = "אנחנו לא מצליחים לטעון תגובות כרגע";
+
 // Old API
 "Your Username" = "שם המשתמש שלך";
 "Please provide Spot Key" = "Please provide Spot Key";
