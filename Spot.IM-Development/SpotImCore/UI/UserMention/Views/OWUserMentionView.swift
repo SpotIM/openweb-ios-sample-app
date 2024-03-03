@@ -47,6 +47,14 @@ fileprivate extension OWUserMentionView {
     }
 
     func setupViews() {
+        self.OWSnp.makeConstraints { make in
+            make.height.equalTo(100)
+        }
+
+        self.addSubviews(tableView)
+        tableView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setupObservers() {

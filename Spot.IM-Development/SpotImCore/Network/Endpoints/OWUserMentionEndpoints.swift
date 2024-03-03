@@ -21,7 +21,7 @@ enum OWUserMentionEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        case .getUsers: return "user/find-user/name"
+        case .getUsers: return "/user/find-user/name"
         }
     }
 
@@ -43,13 +43,13 @@ enum OWUserMentionEndpoints: OWEndpoints {
 }
 
 protocol OWUserMentionAPI {
-    func getUsers(name: String, count: Int) -> OWNetworkResponse<Array<OWUserMention>>
+    func getUsers(name: String, count: Int) -> OWNetworkResponse<OWUserMentionResponse>
 }
 
 extension OWNetworkAPI: OWUserMentionAPI {
     var userMention: OWUserMentionAPI { return self }
 
-    func getUsers(name: String, count: Int) -> OWNetworkResponse<Array<OWUserMention>> {
+    func getUsers(name: String, count: Int) -> OWNetworkResponse<OWUserMentionResponse> {
         let endpoint = OWUserMentionEndpoints.getUsers(name: name, count: count)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
