@@ -71,15 +71,17 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     func searchText(text: String) {
         let searchRange = NSRange(location: 0, length: text.count)
-        // 2
         let mentionsRegexPattern = "(?:\\s|^)(?<\(searchCaptureGroupName)>(@)\\w*(?: \\w*)?))"
-        let regex = try! NSRegularExpression(
-            pattern: mentionsRegexPattern,
-            options: .caseInsensitive
-        )
-        // 3
-        let matches = regex.matches(in: text, options: [], range: searchRange)
-        print("matches = \(matches)")
+        do {
+            let regex = try NSRegularExpression(
+                pattern: mentionsRegexPattern,
+                options: .caseInsensitive
+            )
+            let matches = regex.matches(in: text, options: [], range: searchRange)
+            print("matches = \(matches)")
+        } catch let error {
+            print("error = \(error)")
+        }
     }
 }
 
