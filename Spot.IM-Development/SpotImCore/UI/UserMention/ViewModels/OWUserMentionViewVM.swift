@@ -65,6 +65,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.setupObservers()
     }
 
     let searchCaptureGroupName = "search"
