@@ -29,4 +29,8 @@ extension URL {
         // Returns the url from new url components
         self = urlComponents.url!
     }
+
+    mutating func appendThemeQueryParam(with style: OWThemeStyle) {
+        self.appendQueryParam(name: "theme", value: style == .dark ? "dark" : "light")
+    }
 }
