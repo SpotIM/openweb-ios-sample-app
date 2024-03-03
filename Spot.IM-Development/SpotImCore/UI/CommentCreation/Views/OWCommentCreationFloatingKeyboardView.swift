@@ -336,6 +336,20 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             make.top.equalTo(mainContainer.OWSnp.bottom)
             make.height.equalTo(Metrics.underFooterHeight)
         }
+
+        var topView: UIView {
+            switch viewModel.outputs.commentType {
+            case .comment:
+                return textViewObject
+            case .edit, .replyToComment:
+                return headerView
+            }
+        }
+        mainContainer.addSubview(userMentionView)
+        userMentionView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperviewSafeArea()
+            make.bottom.equalTo(topView.OWSnp.top)
+        }
     }
 
     func updateToolbarConstraints(hidden: Bool) {

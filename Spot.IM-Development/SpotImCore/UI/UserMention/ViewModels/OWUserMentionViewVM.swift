@@ -61,7 +61,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                 return viewModels
             }
             .asObservable()
-        }()
+    }()
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
@@ -71,15 +71,17 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     let searchCaptureGroupName = "search"
 
     func searchText(text: String) {
-        let searchRange = NSRange(location: 0, length: text.count)
-        let mentionsRegexPattern = "(?:\\s|^)(?<\(searchCaptureGroupName)>(@)\\w*(?: \\w*)?))"
         do {
-            let regex = try NSRegularExpression(
-                pattern: mentionsRegexPattern,
-                options: .caseInsensitive
-            )
-            let matches = regex.matches(in: text, options: [], range: searchRange)
-            print("matches = \(matches)")
+            let regex = try NSRegularExpression(pattern: "\\@(.*)", options: [])
+            var results = [String]()
+            regex.enumerateMatches(in: text, range: NSRange(location: 0, length: text.count)) { result, _, _ in
+                if let r = result?.range(at: 1), let range = Range(r, in: text) {
+                    let substring = String(text[range])
+                    _name.onNext(substring)
+                    results.append(substring)
+                }
+            }
+            print("results = \(results)")
         } catch let error {
             print("error = \(error)")
         }
@@ -108,7 +110,8 @@ fileprivate extension OWUserMentionViewVM {
             .getUsers(name: name, count: Metrics.usersCount)
             .response
             .materialize()
-            .map { $0.element }
+            .debug("*** getUsers")
+            .map { $0.element?.suggestions }
             .unwrap()
             .bind(to: _users)
     }
