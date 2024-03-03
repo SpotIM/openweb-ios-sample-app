@@ -37,11 +37,13 @@ class OWUserMentionCellVM: OWUserMentionCellViewModelingInputs,
 
     var userName: Observable<String> {
         return _userName
+            .share(replay: 1)
             .asObservable()
     }
 
     var displayName: Observable<String> {
         return _displayName
+            .share(replay: 1)
             .asObservable()
     }
 

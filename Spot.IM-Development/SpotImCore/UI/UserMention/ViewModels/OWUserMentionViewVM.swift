@@ -10,11 +10,12 @@ import Foundation
 import RxSwift
 
 protocol OWUserMentionViewViewModelingInputs {
-    var _name: PublishSubject<String> { get }
+    var text: PublishSubject<String> { get }
 }
 
 protocol OWUserMentionViewViewModelingOutputs {
     var name: Observable<String> { get }
+    var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> { get }
 }
 
 protocol OWUserMentionViewViewModeling: AnyObject {
@@ -35,7 +36,9 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
 
-    var _name = PublishSubject<String>()
+    var text = PublishSubject<String>()
+
+    fileprivate var _name = PublishSubject<String>()
     var name: Observable<String> {
         return _name
             .asObservable()
@@ -48,7 +51,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     }
 
-    lazy var usersCellViewModels: Observable<[OWUserMentionCellViewModeling]> = {
+    lazy var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> = {
         users
             .map { users in
                 var viewModels: [OWUserMentionCellViewModeling] = []
@@ -63,6 +66,21 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
+
+    let searchCaptureGroupName = "search"
+
+    func searchText(text: String) {
+        let searchRange = NSRange(location: 0, length: text.count)
+        // 2
+        let mentionsRegexPattern = "(?:\\s|^)(?<\(searchCaptureGroupName)>(@)\\w*(?: \\w*)?))"
+        let regex = try! NSRegularExpression(
+            pattern: mentionsRegexPattern,
+            options: .caseInsensitive
+        )
+        // 3
+        let matches = regex.matches(in: text, options: [], range: searchRange)
+        print("matches = \(matches)")
+    }
 }
 
 fileprivate extension OWUserMentionViewVM {
@@ -71,6 +89,12 @@ fileprivate extension OWUserMentionViewVM {
             .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] name in
                 self?.getUsers(name: name)
+            })
+            .disposed(by: disposeBag)
+
+        text
+            .subscribe(onNext: { [weak self] text in
+                self?.searchText(text: text)
             })
             .disposed(by: disposeBag)
     }
