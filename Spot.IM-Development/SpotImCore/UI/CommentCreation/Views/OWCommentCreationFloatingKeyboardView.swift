@@ -60,6 +60,10 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
             .backgroundColor(.clear)
     }()
 
+    fileprivate lazy var userMentionView: OWUserMentionView = {
+        return OWUserMentionView(viewModel: viewModel.outputs.userMentionVM)
+    }()
+
     fileprivate lazy var underFooterView: UIView = {
         return UIView(frame: .zero)
             .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))

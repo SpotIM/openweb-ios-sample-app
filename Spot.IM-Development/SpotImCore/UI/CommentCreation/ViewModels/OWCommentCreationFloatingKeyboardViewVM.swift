@@ -38,6 +38,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
+    var userMentionVM: OWUserMentionViewViewModeling { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -132,6 +133,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }()
 
     let textViewVM: OWTextViewViewModeling
+    lazy var userMentionVM: OWUserMentionViewViewModeling = {
+        return OWUserMentionViewVM(servicesProvider: servicesProvider)
+    }()
 
     var performCta: Observable<OWCommentCreationCtaData> {
         ctaTap
@@ -201,7 +205,6 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                                           isAutoExpandable: true,
                                           hasSuggestionsBar: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
-
         // Setting accessoryViewStrategy
         let style = commentCreationData.settings.commentCreationSettings.style
         if case let OWCommentCreationStyle.floatingKeyboard(strategy) = style {
@@ -268,6 +271,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
     func setupObservers() {
+        textViewVM.outputs.textViewText
+            .bind(to: userMentionVM.inputs.text)
+            .disposed(by: disposeBag)
+
         servicesProvider
             .authenticationManager()
             .activeUserAvailability
