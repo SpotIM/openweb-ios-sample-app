@@ -31,19 +31,17 @@ class OWUserMentionCellVM: OWUserMentionCellViewModelingInputs,
 
     // Unique identifier
     let id: String
-    let _userName = PublishSubject<String>()
-    let _displayName = PublishSubject<String>()
+    let _userName = BehaviorSubject<String>(value: "")
+    let _displayName = BehaviorSubject<String>(value: "")
     let avatarVM: OWAvatarViewModeling
 
     var userName: Observable<String> {
         return _userName
-            .share(replay: 1)
             .asObservable()
     }
 
     var displayName: Observable<String> {
         return _displayName
-            .share(replay: 1)
             .asObservable()
     }
 

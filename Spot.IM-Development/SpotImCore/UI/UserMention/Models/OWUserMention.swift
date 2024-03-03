@@ -8,7 +8,11 @@
 
 import Foundation
 
-struct OWUserMention: Codable {
+struct OWUserMentionResponse: Decodable {
+    let suggestions: [OWUserMention]?
+}
+
+struct OWUserMention: Decodable {
     let id: String
     let displayName: String
     let imageId: String
