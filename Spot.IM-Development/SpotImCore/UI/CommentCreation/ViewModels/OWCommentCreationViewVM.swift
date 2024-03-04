@@ -511,12 +511,11 @@ fileprivate extension OWCommentCreationViewViewModel {
             return self.servicesProvider.presenterService()
                 .showGifPicker(viewableMode: self.viewableMode)
         }
-        .subscribe(onNext: { response in
-            // TODO:
+        .subscribe(onNext: { [weak self] response in
             switch response {
-            case .mediaInfo(let url):
-                // TODO: save data
-                print("NOGAH: \(url)")
+            case .mediaInfo(let data):
+                self?.commentCreationRegularViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
+                self?.commentCreationLightViewVm.outputs.commentCreationContentVM.inputs.gifPicked.onNext(data)
             case .cancled:
                 break
             }
