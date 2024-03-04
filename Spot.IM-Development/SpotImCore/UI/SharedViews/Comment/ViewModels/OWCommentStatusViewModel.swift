@@ -13,6 +13,7 @@ import UIKit
 protocol OWCommentStatusViewModelingInputs {
     var learnMoreTap: PublishSubject<Void> { get }
     func updateStatus(for: OWComment)
+    var isCommentOfActiveUser: BehaviorSubject<Bool> { get }
 }
 
 protocol OWCommentStatusViewModelingOutputs {
@@ -54,6 +55,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             .asObservable()
     }()
 
+    var isCommentOfActiveUser = BehaviorSubject<Bool>(value: true)
+
     lazy var iconImage: Observable<UIImage> = {
         Observable.combineLatest(
             status,
@@ -81,15 +84,18 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
     var messageAttributedText: Observable<NSAttributedString> {
         Observable.combineLatest(
             status,
+            isCommentOfActiveUser,
             sharedServicesProvider.themeStyleService().style,
-            accessibilityChange) { [weak self] status, style, _ in
+            accessibilityChange) { [weak self] status, isCommentOfActiveUser, style, _ in
                 guard let self = self else { return nil }
                 let messageString: String
                 switch(status) {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
-                case .pending: messageString = OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage")
                 case .appealed: messageString = OWLocalizationManager.shared.localizedString(key: "AppealedCommentStatusMessage")
                 case .appealRejected: messageString = OWLocalizationManager.shared.localizedString(key: "AppealRejectedCommentStatusMessage")
+                case .pending: messageString = isCommentOfActiveUser ?
+                    OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage") :
+                    OWLocalizationManager.shared.localizedString(key: "NotAuthorPendingCommentStatusMessage")
                 case .none: return nil
                 }
 
@@ -105,6 +111,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                         .font(OWFontBook.shared.font(typography: .footnoteLink))
                         .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
 
+                if isCommentOfActiveUser {
                     messageAttributedString.append(learnMoreAttributedString)
                 }
 

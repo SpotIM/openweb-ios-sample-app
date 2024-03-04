@@ -63,6 +63,7 @@
 "Mute" = "Silenciar";
 "MuteUser" = "Silenciar usuario";
 "MuteUserMessage" = "Tras silenciar a este usuario no podrás ver su actividad. Para gestionar a los usuarios que hayas silenciado, dirígete a a los ajustes de privacidad de tu perfil.";
+"MuteSuccessToast" = "Usuario silenciado";
 "Image" = "Imagen";
 "ClosedAndEmptyConversation" = "Esta conversación ha terminado y ya no se admiten comentarios.";
 "EmptyConversation" = "Empieza la conversación y comparte tu opinión y tus ideas con la comunidad.";
@@ -106,6 +107,7 @@
 "AdditionalInfoTitle" = "Información adicional";
 "ReportSubmissionFailedTitle" = "No se ha podido enviar el informe";
 "ReportSubmissionFailedMessage" = "No se ha podido enviar el informe. Comprueba tu conexión y vuelve a intentarlo más tarde.";
+"Undo" = "Anular";
 "CollapseThread" = "Plegar hilo";
 "ViewMultipleRepliesFormat" = "Ver %d respuestas";
 "ViewSingleReplyFormat" = "Ver %d respuesta";
@@ -115,6 +117,7 @@
 "PendingCommentStatusMessage" = "Espere: su comentario está a la espera de aprobación.";
 "AppealedCommentStatusMessage" = "Ha presentado una apelación. Un moderador revisará su comentario.";
 "AppealRejectedCommentStatusMessage" = "Se rechazó su apelación.";
+"NotAuthorPendingCommentStatusMessage" = "Este comentario está en espera de revisión.";
 "ClarityPendingReasonsTitle" = "Su comentario puede que haya sido enviado para una revisión por una de las siguientes razones:";
 "AwaitingReview" = "Esperando revisión";
 "RejectReasonEnsureCivil" = "Todas nuestras decisiones están pensadas para garantizar un discurso civil, abierto e integrador dentro de la comunidad.";
@@ -147,6 +150,7 @@
 "AppealLabel" = "Puedes volver a redactar y publicar tu comentario, o si lo deseas, puedes apelar y reevaluaremos nuestra decisión.";
 "AppealAuthorizationRequiredTitle" = "Autorización necesaria";
 "AppealAuthorizationRequiredMessage" = "Asegúrate de haber iniciado sesión para continuar con tu apelación. ¿No te has registrado? Tendrás que registrarte primero.";
+"SomethingWentWrong" = "Vaya, algo salió mal";
 
 // Old API
 "Your Username" = "Tu seudónimo...";

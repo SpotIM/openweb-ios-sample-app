@@ -72,6 +72,18 @@ fileprivate extension OWPreConversationCoordinator {
     // swiftlint:disable function_body_length
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
     // swiftlint:enable function_body_length
+        dismissInitialVC
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                switch self.preConversationData.presentationalStyle {
+                case .present(style: let style):
+                    router.dismiss(animated: true, completion: nil)
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+
         let openFullConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openFullConversation
             .map { _ -> OWDeepLinkOptions? in
                 return nil
@@ -132,7 +144,7 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
                                                                   settings: self.preConversationData.settings,

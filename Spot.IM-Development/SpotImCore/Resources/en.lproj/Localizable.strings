@@ -62,6 +62,7 @@
 "Mute" = "Mute";
 "MuteUser" = "Mute User";
 "MuteUserMessage" = "After muting this user, you will no longer see their activity. To manage your muted users, go to your profile > Privacy settings";
+"MuteSuccessToast" = "User muted";
 "ReadOur" = "Read our";
 "Image" = "Image";
 "ClosedAndEmptyConversation" = "This conversation has ended and comments are no longer being accepted.";
@@ -105,6 +106,7 @@
 "AdditionalInfoTitle" = "Additional information";
 "ReportSubmissionFailedTitle" = "Report Submission Failed";
 "ReportSubmissionFailedMessage" = "Your report could not be submitted. Please check your connection and try again later.";
+"Undo" = "Undo";
 "CollapseThread" = "Collapse thread";
 "ViewMultipleRepliesFormat" = "View %d replies";
 "ViewSingleReplyFormat" = "View %d reply";
@@ -114,6 +116,7 @@
 "PendingCommentStatusMessage" = "Hold on, your comment is waiting for approval.";
 "AppealedCommentStatusMessage" = "You have filed an appeal, your comment will be reviewed by a moderator.";
 "AppealRejectedCommentStatusMessage" = "Your appeal was rejected.";
+"NotAuthorPendingCommentStatusMessage" = "This comment is awaiting review.";
 "ClarityPendingReasonsTitle" = "Your comment may have been sent for review for one of the following reasons:";
 "AwaitingReview" = "Awaiting review";
 "RejectReasonEnsureCivil" = "All of our decisions are designed to ensure civil, open and inclusive discourse within the community.";
@@ -149,6 +152,7 @@
 "AppealLabel" = "Feel free to rewrite and repost your comment, or, if you wish, you can appeal, and we will re-examine our decision.";
 "AppealAuthorizationRequiredTitle" = "Authorization Required";
 "AppealAuthorizationRequiredMessage" = "Ensure you're signed in to continue your appeal. Not a member? You'll need to register first.";
+"SomethingWentWrong" = "Oops, something went wrong";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
