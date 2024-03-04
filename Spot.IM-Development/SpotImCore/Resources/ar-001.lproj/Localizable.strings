@@ -64,6 +64,7 @@
 "Mute" = "كتم";
 "MuteUser" = "كتم المستخدم";
 "MuteUserMessage" = "بعد كتم صوت هذا المستخدم, لن ترى نشاطه مرة أخرى. لإدارة المستخدمين الذين تم كتم صوتهم, انتقل إلى ملف التعريف الخاص بك > إعدادات الخصوصية";
+"MuteSuccessToast" = "تم تفعيل وصع الصامت للمستخدم";
 "Image" = "الصورة";
 "ClosedAndEmptyConversation" = "انتهت هذه المحادثة ولم يعد يتم قبول التعليقات.";
 "EmptyConversation" = "ابدأ المحادثة وشارك آراءك وأفكارك مع المجتمع.";
@@ -107,6 +108,7 @@
 "AdditionalInfoTitle" = "معلومات إضافية";
 "ReportSubmissionFailedTitle" = "فشل تقديم البلاغ";
 "ReportSubmissionFailedMessage" = "تعذّر تقديم البلاغ الخاص بك. يُرجى التحقق من الاتصال الخاص بك والمحاولة مرة أخرى في وقت لاحق.";
+"Undo" = "تراجع";
 "CollapseThread" = "طي الموضوع";
 "ViewMultipleRepliesFormat" = "عرض %d ردود";
 "ViewSingleReplyFormat" = "عرض %d رد";
@@ -116,6 +118,7 @@
 "PendingCommentStatusMessage" = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
 "AppealedCommentStatusMessage" = "لقد قدمت استئنافاً, وسيتم مراجعة استئنافك من قبل الوسيط.";
 "AppealRejectedCommentStatusMessage" = "تم رفض استئنافك ";
+"NotAuthorPendingCommentStatusMessage" = "هذا التعليق قيد المراجعة.";
 "ClarityPendingReasonsTitle" = "ربما اُرسل تعليقك للمراجعة لأحد الأسباب التالية:";
 "AwaitingReview" = "في انتظار المراجعة";
 "RejectReasonEnsureCivil" = "إن جميع قراراتنا مُصممة لضمان خطاب مدني مفتوح وشامل داخل المجتمع.";
@@ -148,6 +151,7 @@
 "AppealLabel" = "يمكنك إعادة كتابة تعليقك وإعادة نشره, أو يمكنك تقديم طلب لإعادة النظر في قرارنا إذا كنت ترغب في ذلك.";
 "AppealAuthorizationRequiredTitle" = "التفويض مطلوب";
 "AppealAuthorizationRequiredMessage" = "تأكد من تسجيلك الدخول للاستمرار بتقديم طلب إعادة النظر. ألست عضواً؟ عليك التسجيل أولاً.";
+"SomethingWentWrong" = "عذرًا, هناك خطأ ما";
 
 // Old API
 "Your Username" = "اسمك المستعار...";
