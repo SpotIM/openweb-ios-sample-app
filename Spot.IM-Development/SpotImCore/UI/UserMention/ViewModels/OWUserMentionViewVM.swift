@@ -14,7 +14,6 @@ protocol OWUserMentionViewViewModelingInputs {
 }
 
 protocol OWUserMentionViewViewModelingOutputs {
-    var name: Observable<String> { get }
     var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> { get }
 }
 
@@ -38,21 +37,45 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     var text = PublishSubject<String>()
 
-    fileprivate var _name = PublishSubject<String>()
-    var name: Observable<String> {
-        return _name
-            .asObservable()
-    }
+    fileprivate var name = PublishSubject<String>()
 
-    fileprivate var _users = PublishSubject<Array<OWUserMention>>()
-    fileprivate var users: Observable<Array<OWUserMention>> {
+    fileprivate var _users = PublishSubject<[OWUserMention]>()
+    fileprivate var users: Observable<[OWUserMention]> {
         return _users
             .asObservable()
 
     }
 
+    fileprivate lazy var getUsers: Observable<[OWUserMention]> = {
+        return name
+            .asObservable()
+            .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
+            .flatMapLatest { [weak self] name -> Observable<[OWUserMention]> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.netwokAPI()
+                    .userMention
+                    .getUsers(name: name, count: Metrics.usersCount)
+                    .response
+                    .materialize()
+                    .map { [weak self] event in
+                        switch event {
+                        case .next(let userMentionResponse):
+                            guard let self = self else { return nil }
+                            let suggestions = userMentionResponse.suggestions ?? []
+                            let atLeastOneContained = self.atLeastOneContained(name: name, userMentions: suggestions)
+                            return atLeastOneContained ? suggestions : []
+                        case .error(_):
+                            return nil
+                        default:
+                            return nil
+                        }
+                    }
+                    .unwrap()
+            }
+    }()
+
     lazy var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> = {
-        users
+        return users
             .map { users in
                 var viewModels: [OWUserMentionCellViewModeling] = []
                 for user in users {
@@ -68,51 +91,41 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         self.setupObservers()
     }
 
-    let searchCaptureGroupName = "search"
-
     func searchText(text: String) {
         do {
-            let regex = try NSRegularExpression(pattern: "\\@(.*)", options: [])
+            let regex = try NSRegularExpression(pattern: "\\@[^\\@]*$", options: [])
             var results = [String]()
             regex.enumerateMatches(in: text, range: NSRange(location: 0, length: text.count)) { result, _, _ in
-                if let r = result?.range(at: 1), let range = Range(r, in: text) {
-                    let substring = String(text[range])
-                    _name.onNext(substring)
+                if let r = result?.range(at: 0), let range = Range(r, in: text) {
+                    let substring = String(text[range].dropFirst())
                     results.append(substring)
                 }
             }
-            print("results = \(results)")
-        } catch let error {
-            print("error = \(error)")
-        }
+            guard let lastResult = results.last else {
+                _users.onNext([])
+                return
+            }
+            name.onNext(lastResult)
+        } catch { }
+    }
+
+    func atLeastOneContained(name: String, userMentions: [OWUserMention]) -> Bool {
+        guard !name.isEmpty else { return true }
+        let name = name.lowercased()
+        return userMentions.contains(where: { $0.displayName.lowercased().contains(name) || $0.userName.lowercased().contains(name) })
     }
 }
 
 fileprivate extension OWUserMentionViewVM {
     func setupObservers() {
-        _name
-            .throttle(.milliseconds(Metrics.throttleGetUsers), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] name in
-                self?.getUsers(name: name)
-            })
-            .disposed(by: disposeBag)
-
         text
             .subscribe(onNext: { [weak self] text in
                 self?.searchText(text: text)
             })
             .disposed(by: disposeBag)
-    }
 
-    func getUsers(name: String) {
-        _ = servicesProvider.netwokAPI()
-            .userMention
-            .getUsers(name: name, count: Metrics.usersCount)
-            .response
-            .materialize()
-            .debug("*** getUsers")
-            .map { $0.element?.suggestions }
-            .unwrap()
+        getUsers
             .bind(to: _users)
+            .disposed(by: disposeBag)
     }
 }

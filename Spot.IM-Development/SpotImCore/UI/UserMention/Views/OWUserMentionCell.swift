@@ -21,7 +21,8 @@ class OWUserMentionCell: UITableViewCell {
         static let verticalTextSpace: CGFloat = 2
         static let cellTrailingPadding: CGFloat = 9
         static let cellHeight: CGFloat = 56
-        static let avatarLeadingPadding: CGFloat = 12
+        static let avatarLeadingPadding: CGFloat = 16
+        static let avatarSize: CGFloat = 40.0
     }
 
     fileprivate lazy var avatarView: OWAvatarView = {
@@ -68,6 +69,7 @@ class OWUserMentionCell: UITableViewCell {
         self.viewModel = viewModel
         setupObservers()
         applyAccessibility()
+        avatarView.configure(with: viewModel.outputs.avatarVM)
     }
 }
 
@@ -91,6 +93,7 @@ fileprivate extension OWUserMentionCell {
         avatarView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().inset(Metrics.avatarLeadingPadding)
             make.centerY.equalToSuperview()
+            make.size.equalTo(Metrics.avatarSize)
         }
 
         contentView.addSubview(viewForText)
