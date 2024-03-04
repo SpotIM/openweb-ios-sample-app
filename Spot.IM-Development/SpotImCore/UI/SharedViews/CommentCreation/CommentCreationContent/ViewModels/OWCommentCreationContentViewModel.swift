@@ -14,6 +14,7 @@ protocol OWCommentCreationContentViewModelingInputs {
     var becomeFirstResponder: PublishSubject<Void> { get }
     var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
+    var gifPicked: PublishSubject<OWGifPresentData> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
@@ -25,6 +26,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var becomeFirstResponderCalled: Observable<Void> { get }
     var resignFirstResponderCalled: Observable<Void> { get }
     var imagePreviewVM: OWCommentCreationImagePreviewViewModeling { get }
+    var gifPreviewVM: OWGifPreviewViewModeling { get }
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
     var isInitialContentEdited: Observable<Bool> { get }
@@ -56,6 +58,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     var commentText = BehaviorSubject<String>(value: "")
     var imagePicked = PublishSubject<UIImage>()
+    var gifPicked = PublishSubject<OWGifPresentData>()
 
     fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
@@ -68,6 +71,10 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     lazy var imagePreviewVM: OWCommentCreationImagePreviewViewModeling = {
         return OWCommentCreationImagePreviewViewModel(servicesProvider: servicesProvider)
+    }()
+
+    lazy var gifPreviewVM: OWGifPreviewViewModeling = {
+        return OWGifPreviewViewModel(servicesProvider: servicesProvider)
     }()
 
     lazy var avatarViewVM: OWAvatarViewModeling = {
@@ -368,6 +375,10 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self._imageContent.onNext(imageContent)
             })
             .disposed(by: uploadImageDisposeBag)
+
+        gifPicked
+            .bind(to: gifPreviewVM.inputs.gifUrl)
+            .disposed(by: disposeBag)
     }
 }
 

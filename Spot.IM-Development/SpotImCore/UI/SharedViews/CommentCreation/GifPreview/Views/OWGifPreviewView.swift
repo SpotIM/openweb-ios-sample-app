@@ -53,9 +53,9 @@ fileprivate extension OWGifPreviewView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
-//        self.OWSnp.makeConstraints { make in
-//            make.height.equalTo(0)
-//        }
+        self.OWSnp.makeConstraints { make in
+            make.height.equalTo(0)
+        }
 
         addSubview(gifView)
         gifView.OWSnp.makeConstraints { make in
@@ -73,9 +73,25 @@ fileprivate extension OWGifPreviewView {
     func setupObservers() {
         // TODO: size constraint!
         viewModel.outputs.gifUrlOutput
-            .subscribe(onNext: { [weak self] url in
-                OWScheduler.runOnMainThreadIfNeeded {
-                    self?.gifView.configure(gifUrl: url)
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self else { return }
+                if let data = data {
+                    OWScheduler.runOnMainThreadIfNeeded {
+                        let ratio = CGFloat(data.width) / CGFloat(data.height)
+                        let newHeight = self.gifView.frame.width / ratio
+                        self.gifView.configure(gifUrl: data.url)
+                        self.OWSnp.updateConstraints { make in
+                            make.height.equalTo(newHeight)
+                        }
+                    }
+                } else {
+                    OWScheduler.runOnMainThreadIfNeeded {
+                        // TODO: hide
+                        self.gifView.configure(gifUrl: nil)
+                        self.OWSnp.updateConstraints { make in
+                            make.height.equalTo(0)
+                        }
+                    }
                 }
             })
             .disposed(by: disposeBag)
