@@ -54,6 +54,10 @@ class OWCommentCreationContentView: UIView {
         return OWCommentCreationImagePreviewView(with: viewModel.outputs.imagePreviewVM)
     }()
 
+    fileprivate lazy var gifPreview: OWGifPreviewView = {
+        return OWGifPreviewView(with: viewModel.outputs.gifPreviewVM)
+    }()
+
     fileprivate lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
             .enforceSemanticAttribute()
@@ -88,6 +92,13 @@ class OWCommentCreationContentView: UIView {
         imagePreview.OWSnp.makeConstraints { make in
             make.top.equalTo(textInput.OWSnp.bottom).offset(Metrics.verticalOffset)
             make.top.greaterThanOrEqualTo(avatarView.OWSnp.bottom).offset(Metrics.verticalOffset)
+            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
+        }
+
+        scroll.addSubview(gifPreview)
+        gifPreview.OWSnp.makeConstraints { make in
+            make.top.equalTo(imagePreview.OWSnp.top)
             make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
             make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
         }

@@ -104,7 +104,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 5.6.2)
   - FirebaseCrashlytics (~> 10.15.0)
-  - Giphy
+  - Giphy (~> 2.2)
   - Google-Mobile-Ads-SDK (= 8.0)
   - Nimble (~> 10.0.0)
   - Quick (~> 5.0.1)
@@ -163,6 +163,6 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 800db5a4e7f737012a2513b27445c14ab3f0a85b
+PODFILE CHECKSUM: 77c65bf7ace3cca6ae8abf2e913ee00075b232c4
 
 COCOAPODS: 1.11.2
