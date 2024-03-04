@@ -118,10 +118,6 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
 
                     switch newResponse.result {
                     case .success(let value):
-                        if let data = newResponse.data,
-                           let responseString = String(data: data, encoding: .utf8) {
-                            print("*** Response = \(responseString)")
-                        }
                         observer.onNext(value)
                         observer.onCompleted()
                     case .failure(let error):
