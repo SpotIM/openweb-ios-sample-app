@@ -104,14 +104,13 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                     .font(OWFontBook.shared.font(typography: .footnoteText))
                     .color(OWColorPalette.shared.color(type: .textColor3, themeStyle: style))
 
-                if status.shoeLearnMore {
+                if status.shoeLearnMore && isCommentOfActiveUser {
                     let learnMoreAttributedString = self.learnMoreClickableString
                         .attributedString
                         .underline(1)
                         .font(OWFontBook.shared.font(typography: .footnoteLink))
                         .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
 
-                if isCommentOfActiveUser {
                     messageAttributedString.append(learnMoreAttributedString)
                 }
 
