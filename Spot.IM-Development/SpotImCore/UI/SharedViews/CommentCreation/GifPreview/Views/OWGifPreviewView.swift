@@ -53,6 +53,7 @@ fileprivate extension OWGifPreviewView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
+        self.isHidden = true
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(0)
         }
@@ -77,6 +78,7 @@ fileprivate extension OWGifPreviewView {
                 guard let self = self else { return }
                 if let data = data {
                     OWScheduler.runOnMainThreadIfNeeded {
+                        self.isHidden = false
                         let ratio = CGFloat(data.width) / CGFloat(data.height)
                         let newHeight = self.gifView.frame.width / ratio
                         self.gifView.configure(gifUrl: data.url)
@@ -86,7 +88,7 @@ fileprivate extension OWGifPreviewView {
                     }
                 } else {
                     OWScheduler.runOnMainThreadIfNeeded {
-                        // TODO: hide
+                        self.isHidden = true
                         self.gifView.configure(gifUrl: nil)
                         self.OWSnp.updateConstraints { make in
                             make.height.equalTo(0)
