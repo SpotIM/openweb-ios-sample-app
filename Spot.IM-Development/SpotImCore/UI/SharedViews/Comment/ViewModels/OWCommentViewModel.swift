@@ -84,8 +84,12 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, _isCommentOfActiveUser) { status, isCommentOfActiveUser in
-            guard isCommentOfActiveUser else { return false }
+        Observable.combineLatest(commentStatusVM.outputs.status, _isCommentOfActiveUser.asObservable(), _currentUser) { status, isCommentOfActiveUser, currentUser in
+            guard isCommentOfActiveUser ||
+                    currentUser?.isAdmin == true ||
+                    currentUser?.isModerator == true ||
+                    currentUser?.isCommunityModerator == true
+            else { return false }
 
             return status != .none
         }
@@ -157,6 +161,10 @@ fileprivate extension OWCommentViewModel {
 
         _isCommentOfActiveUser
             .bind(to: commentHeaderVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        _isCommentOfActiveUser
+            .bind(to: commentStatusVM.inputs.isCommentOfActiveUser)
             .disposed(by: disposedBag)
 
         commentHeaderVM.outputs.shouldShowHiddenCommentMessage

@@ -125,8 +125,8 @@ fileprivate extension OWRealtimeIndicationAnimationView {
             delay: 0.0,
             usingSpringWithDamping: Metrics.showAndDismissAnimationSpringWithDamping,
             initialSpringVelocity: Metrics.showAndDismissAnimationSpringVelocity,
-            animations: {
-                self.layoutIfNeeded()
+            animations: { [weak self] in
+                self?.layoutIfNeeded()
             }
         )
     }
@@ -135,8 +135,8 @@ fileprivate extension OWRealtimeIndicationAnimationView {
         let offset = currentOffset > 0 ? self.bounds.width : -self.bounds.width
         self.indicationViewCenterConstraint?.update(offset: offset)
         UIView.animate(withDuration: Metrics.swipeMagnetAnimationDuration,
-                       animations: {
-            self.layoutIfNeeded()
+                       animations: { [weak self] in
+            self?.layoutIfNeeded()
         }, completion: { [ weak self] _ in
             guard let self = self else { return }
             self.reset()
