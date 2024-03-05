@@ -88,18 +88,18 @@ class OWCommentCreationContentView: UIView {
             make.leading.equalTo(textInput.OWSnp.leading).offset(Metrics.placeholderLabelLeadingOffset)
         }
 
-        scroll.addSubviews(imagePreview)
+        scroll.addSubview(imagePreview)
         imagePreview.OWSnp.makeConstraints { make in
             make.top.equalTo(textInput.OWSnp.bottom).offset(Metrics.verticalOffset)
             make.top.greaterThanOrEqualTo(avatarView.OWSnp.bottom).offset(Metrics.verticalOffset)
-            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.bottom.lessThanOrEqualToSuperview().offset(-Metrics.verticalOffset)
             make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
         }
 
         scroll.addSubview(gifPreview)
         gifPreview.OWSnp.makeConstraints { make in
             make.top.equalTo(imagePreview.OWSnp.top)
-            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.bottom.lessThanOrEqualToSuperview().offset(-Metrics.verticalOffset)
             make.leading.trailing.equalTo(scroll.contentLayoutGuide).inset(Metrics.horizontalOffset)
         }
 

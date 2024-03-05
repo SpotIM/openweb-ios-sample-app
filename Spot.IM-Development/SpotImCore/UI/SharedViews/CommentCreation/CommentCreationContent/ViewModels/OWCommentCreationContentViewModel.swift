@@ -303,6 +303,8 @@ fileprivate extension OWCommentCreationContentViewModel {
         let imageWithCloudinarySignatureObservable = imagePicked
             .do(onNext: { [weak self] image in
                 guard let self = self else { return }
+                // Clean selected gif
+                self.gifPreviewVM.inputs.removeButtonTap.onNext()
                 self._imageContent.onNext(nil)
                 self.imagePreviewVM.inputs.image.onNext(image)
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(true)
@@ -377,6 +379,10 @@ fileprivate extension OWCommentCreationContentViewModel {
             .disposed(by: uploadImageDisposeBag)
 
         gifPicked
+            .do(onNext: { [weak self] _ in
+                // Clean selected image
+                self?.imagePreviewVM.inputs.removeButtonTap.onNext()
+            })
             .bind(to: gifPreviewVM.inputs.gifUrl)
             .disposed(by: disposeBag)
     }
