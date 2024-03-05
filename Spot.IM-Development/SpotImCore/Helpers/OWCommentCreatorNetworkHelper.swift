@@ -88,6 +88,17 @@ fileprivate extension OWCommentCreatorNetworkHelper {
             ])
         }
 
+        if let gifContent = commentCreationData.commentContent.gif {
+            content.append([
+                "type": "animation",
+                "originalUrl": gifContent.originalUrl,
+                "originalWidth": gifContent.originalWidth,
+                "originalHeight": gifContent.originalHeight,
+                "previewWidth": gifContent.previewWidth,
+                "previewHeight": gifContent.previewHeight
+            ])
+        }
+
         return content
     }
 }

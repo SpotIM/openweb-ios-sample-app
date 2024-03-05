@@ -45,17 +45,22 @@ extension Reactive where Base: GiphyViewController {
         return GifViewControllerProxy.proxy(for: self.base)
     }
 
-    var didSelectMedia: Observable<OWGifPresentData> {
+    var didSelectMedia: Observable<OWCommentGif> {
         return delegate
         // TODO: do we need the contentType?
             .methodInvoked(#selector(GiphyDelegate.didSelectMedia(giphyViewController:media:contentType:)))
             .map { (result) in
                 let media = try castOrThrow(GPHMedia.self, result[1])
                 guard let original = media.images?.original,
+                      let preview = media.images?.preview,
                       let url = original.gifUrl
                 else { return nil }
 
-                return OWGifPresentData(url: url, width: original.width, height: original.height)
+                return OWCommentGif(previewWidth: preview.width,
+                                    previewHeight: preview.height,
+                                    originalWidth: original.width,
+                                    originalHeight: original.height,
+                                    originalUrl: url)
             }
             .unwrap()
     }
