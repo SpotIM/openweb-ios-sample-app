@@ -11,5 +11,5 @@ import UIKit
 
 enum OWGifPickerPresenterResponseType {
     case cancled
-    case mediaInfo(OWGifPresentData)
+    case mediaInfo(OWCommentGif)
 }

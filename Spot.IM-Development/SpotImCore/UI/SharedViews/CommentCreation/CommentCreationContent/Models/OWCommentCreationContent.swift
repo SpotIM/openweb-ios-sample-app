@@ -11,9 +11,10 @@ import Foundation
 struct OWCommentCreationContent {
     var text: String
     var image: OWCommentImage?
+    var gif: OWCommentGif?
 
     func hasContent() -> Bool {
         let adjustedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !adjustedText.isEmpty || image != nil
+        return !adjustedText.isEmpty || image != nil || gif != nil
     }
 }

@@ -10,12 +10,12 @@ import Foundation
 import RxSwift
 
 protocol OWGifPreviewViewModelingInputs {
-    var gifUrl: PublishSubject<OWGifPresentData?> { get }
+    var gifUrl: PublishSubject<OWCommentGif?> { get }
     var removeButtonTap: PublishSubject<Void> { get }
 }
 
 protocol OWGifPreviewViewModelingOutputs {
-    var gifUrlOutput: Observable<OWGifPresentData?> { get }
+    var gifUrlOutput: Observable<OWCommentGif?> { get }
     var removeButtonTapped: Observable<Void> { get }
 }
 
@@ -35,9 +35,9 @@ class OWGifPreviewViewModel: OWGifPreviewViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     var removeButtonTap: PublishSubject<Void> = PublishSubject()
-    var gifUrl: PublishSubject<OWGifPresentData?> = PublishSubject()
+    var gifUrl: PublishSubject<OWCommentGif?> = PublishSubject()
 
-    var gifUrlOutput: Observable<OWGifPresentData?> {
+    var gifUrlOutput: Observable<OWCommentGif?> {
         gifUrl
             .asObservable()
             .startWith(nil)

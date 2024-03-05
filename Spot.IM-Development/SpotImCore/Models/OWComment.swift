@@ -9,6 +9,7 @@
 import Foundation
 
 internal typealias OWCommentImage = OWComment.Content.Image
+internal typealias OWCommentGif = OWComment.Content.Animation
 
 internal struct OWComment: Decodable, Equatable {
 
