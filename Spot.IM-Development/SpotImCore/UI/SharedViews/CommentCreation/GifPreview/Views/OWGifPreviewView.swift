@@ -79,9 +79,9 @@ fileprivate extension OWGifPreviewView {
                 if let data = data {
                     OWScheduler.runOnMainThreadIfNeeded {
                         self.isHidden = false
-                        let ratio = CGFloat(data.width) / CGFloat(data.height)
+                        let ratio = CGFloat(data.originalWidth) / CGFloat(data.originalHeight)
                         let newHeight = self.gifView.frame.width / ratio
-                        self.gifView.configure(gifUrl: data.url)
+                        self.gifView.configure(gifUrl: data.originalUrl)
                         self.OWSnp.updateConstraints { make in
                             make.height.equalTo(newHeight)
                         }

@@ -14,7 +14,7 @@ protocol OWCommentCreationContentViewModelingInputs {
     var becomeFirstResponder: PublishSubject<Void> { get }
     var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
-    var gifPicked: PublishSubject<OWGifPresentData> { get }
+    var gifPicked: PublishSubject<OWCommentGif> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
@@ -58,14 +58,14 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     var commentText = BehaviorSubject<String>(value: "")
     var imagePicked = PublishSubject<UIImage>()
-    var gifPicked = PublishSubject<OWGifPresentData>()
+    var gifPicked = PublishSubject<OWCommentGif>()
 
     fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
-        Observable.combineLatest(commentTextOutput, _imageContent.asObservable())
-            .map { text, image in
-                OWCommentCreationContent(text: text, image: image)
+        Observable.combineLatest(commentTextOutput, _imageContent.asObservable(), gifPreviewVM.outputs.gifUrlOutput)
+            .map { text, image, gif in
+                OWCommentCreationContent(text: text, image: image, gif: gif)
             }
     }
 
