@@ -72,8 +72,7 @@ fileprivate extension OWGifPreviewView {
     }
 
     func setupObservers() {
-        // TODO: size constraint!
-        viewModel.outputs.gifUrlOutput
+        viewModel.outputs.gifDataOutput
             .subscribe(onNext: { [weak self] data in
                 guard let self = self else { return }
                 if let data = data {
