@@ -415,6 +415,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _commentsInMemoryCacheService.cleanCache()
         _lastCommentTypeInMemoryCacheService.cleanCache()
         _commentStatusUpdaterService.spotChanged(newSpotId: spotId)
+        _networkAPI = OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
     }
 }
 
