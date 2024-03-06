@@ -22,7 +22,7 @@ protocol OWAppealLabelViewModelingOutputs {
     var appealClickableText: String { get }
     var iconImage: Observable<UIImage?> { get }
     var labelAttributedString: Observable<NSAttributedString> { get }
-    var openAppeal: Observable<OWCommentId> { get }
+    var openAppeal: Observable<OWAppealRequiredData> { get }
 }
 
 protocol OWAppealLabelViewModeling {
@@ -43,6 +43,12 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     fileprivate var _viewType = BehaviorSubject<OWAppealLabelViewType>(value: .skeleton)
     var viewType: Observable<OWAppealLabelViewType> {
         _viewType
+            .asObservable()
+    }
+
+    fileprivate var _appealReasons = PublishSubject<Array<OWAppealReason>>()
+    fileprivate var appealReasons: Observable<Array<OWAppealReason>> {
+        _appealReasons
             .asObservable()
     }
 
@@ -165,7 +171,7 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
     }()
 
     var appealClick = PublishSubject<Void>()
-    var openAppeal: Observable<OWCommentId> {
+    var openAppeal: Observable<OWAppealRequiredData> {
         return appealClick
             .withLatestFrom(servicesProvider.authenticationManager().currentAuthenticationLevelAvailability) { [weak self] _, availability -> Bool in
                 switch availability {
@@ -182,8 +188,11 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
                 }
             }
             .filter { $0 }
-            .map { [weak self] _ in
-                return self?.commentId
+            .withLatestFrom(appealReasons) { [weak self] _, reasons -> OWAppealRequiredData? in
+                guard let commentId = self?.commentId else {
+                    return nil
+                }
+                return OWAppealRequiredData(commentId: commentId, reasons: reasons)
             }
             .unwrap()
             .asObservable()
@@ -226,16 +235,25 @@ fileprivate extension OWAppealLabelViewModel {
             .appeal
             .getAppealOptions()
             .response
-            .take(1)
             .materialize()
+            .take(1)
+            .map { event -> [OWAppealReason]? in
+                switch event {
+                case .next(let reasons):
+                    return reasons
+                default:
+                    return nil
+                }
+            }
 
         Observable.combineLatest(viewTypeObservable, reasonsObservables)
-            .subscribe(onNext: { [weak self] type, reasonsEvent in
-                switch reasonsEvent {
-                case .error:
+            .subscribe(onNext: { [weak self] type, reasons in
+                switch type {
+                case .default where reasons == nil:
                     self?._viewType.onNext(.error)
                 default:
                     self?._viewType.onNext(type)
+                    self?._appealReasons.onNext(reasons ?? [])
                 }
             })
             .disposed(by: disposeBag)

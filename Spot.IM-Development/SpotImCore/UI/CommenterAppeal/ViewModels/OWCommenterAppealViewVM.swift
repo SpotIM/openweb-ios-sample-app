@@ -54,12 +54,12 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
     let textViewVM: OWTextViewViewModeling
     let viewableMode: OWViewableMode
 
-    init(commentId: OWCommentId,
+    init(data: OWAppealRequiredData,
          viewableMode: OWViewableMode,
          presentationalMode: OWPresentationalModeCompact = .none,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
-        self.commentId = commentId
+        self.commentId = data.commentId
         self.viewableMode = viewableMode
         self.presentationalMode = presentationalMode
         disposeBag = DisposeBag()
@@ -68,7 +68,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
                                           charectersLimitEnabled: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
-        fetchAppealOptions()
+        self._appealOptions.onNext(data.reasons)
         setupObservers()
     }
 
@@ -96,7 +96,7 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
             .voidify()
     }
 
-    fileprivate let _appealOptions = PublishSubject<[OWAppealReason]>()
+    fileprivate let _appealOptions = BehaviorSubject<[OWAppealReason]>(value: [])
     lazy var appealOptions: Observable<[OWAppealReason]> = {
         _appealOptions
             .asObservable()
@@ -167,17 +167,6 @@ class OWCommenterAppealViewVM: OWCommenterAppealViewViewModeling,
 }
 
 fileprivate extension OWCommenterAppealViewVM {
-    func fetchAppealOptions() {
-        _ = servicesProvider.netwokAPI()
-            .appeal
-            .getAppealOptions()
-            .response
-            .take(1)
-            .subscribe(onNext: { [weak self] options in
-                self?._appealOptions.onNext(options)
-            })
-    }
-
     func setupObservers() {
         selectedReason
             .map {

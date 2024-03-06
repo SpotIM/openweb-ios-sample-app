@@ -54,7 +54,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
         guard let router = router else { return .empty() }
         let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(
-            commentId: data.commentId,
+            data: data,
             viewableMode: .partOfFlow,
             presentationalMode: presentationalMode
         )
@@ -98,7 +98,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
 
     override func showableComponent() -> Observable<OWShowable> {
         let commenterAppealViewVM: OWCommenterAppealViewViewModeling = OWCommenterAppealViewVM(
-            commentId: data.commentId,
+            data: data,
             viewableMode: .independent,
             presentationalMode: presentationalMode
         )

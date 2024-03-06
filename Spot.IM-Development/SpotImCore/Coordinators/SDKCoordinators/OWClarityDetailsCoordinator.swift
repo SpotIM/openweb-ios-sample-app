@@ -133,13 +133,13 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 .openAppeal
 
         let coordinateToAppealObservable = appealTapped
-            .flatMap { [weak self] _ -> Observable<OWCommenterAppealCoordinatorResult> in
+            .flatMap { [weak self] data -> Observable<OWCommenterAppealCoordinatorResult> in
                 guard let self = self,
                       let router = self.router
                 else { return .empty() }
 
                 let appealCoordinator = OWCommenterAppealCoordinator(router: router,
-                                                                     appealData: OWAppealRequiredData(commentId: self.data.commentId),
+                                                                     appealData: data,
                                                                      actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: appealCoordinator, deepLinkOptions: .none)
             }
@@ -182,7 +182,7 @@ fileprivate extension OWClarityDetailsCoordinator {
 
         let openCommenterAppeal = viewModel.outputs.appealLabelViewModel
             .outputs.openAppeal
-            .map { OWViewActionCallbackType.openCommenterAppeal(commentId: $0) }
+            .map { OWViewActionCallbackType.openCommenterAppeal(data: $0) }
 
         Observable.merge(
             dismissView,
