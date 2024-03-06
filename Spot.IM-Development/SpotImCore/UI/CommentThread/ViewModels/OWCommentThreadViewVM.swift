@@ -23,6 +23,7 @@ protocol OWCommentThreadViewViewModelingInputs {
     var changeThreadOffset: PublishSubject<CGPoint> { get }
     var closeTapped: PublishSubject<Void> { get }
     var performAction: PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -41,6 +42,8 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
     var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var displayToast: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
     var updateTableViewInstantly: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
 }
@@ -314,6 +317,7 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var retryMute = PublishSubject<Void>()
 
     var viewInitialized = PublishSubject<Void>()
     fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
@@ -359,6 +363,21 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     var changeThreadOffset = PublishSubject<CGPoint>()
     var threadOffset: Observable<CGPoint> {
         return changeThreadOffset
+            .asObservable()
+    }
+
+    var dismissToast = PublishSubject<Void>()
+
+    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToast: Observable<OWToastNotificationCombinedData> {
+        return _displayToast
+            .unwrap()
+            .asObservable()
+    }
+    var hideToast: Observable<Void> {
+        return _displayToast
+            .filter { $0 == nil }
+            .voidify()
             .asObservable()
     }
 
@@ -609,6 +628,12 @@ fileprivate extension OWCommentThreadViewViewModel {
 fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(commentThreadData.article.articleInformationStrategy)
 
         closeTapped.subscribe(onNext: { [weak self] _ in
@@ -616,6 +641,18 @@ fileprivate extension OWCommentThreadViewViewModel {
             self._closeCommentThread.onNext()
         })
         .disposed(by: disposeBag)
+
+        closeTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self._closeCommentThread.onNext()
+        })
+        .disposed(by: disposeBag)
+
+        servicesProvider.toastNotificationService()
+            .toastToShow
+            .observe(on: MainScheduler.instance)
+            .bind(to: _displayToast)
+            .disposed(by: disposeBag)
 
         // Observable for the conversation network API
         let initialConversationThreadReadObservable = _commentThreadData
@@ -1183,7 +1220,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Observe on rank click
         let userTryingToChangeRankObservable = commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
+            .flatMapLatest { commentCellsVms -> Observable<(OWCommentViewModeling, SPRankChange)> in
                 let rankClickObservable: [Observable<(OWCommentViewModeling, SPRankChange)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentViewModeling, SPRankChange)> in
                     let commentVm = commentCellVm.outputs.commentVM
                     let commentRankVm = commentVm.outputs.commentEngagementVM.outputs.votingVM
@@ -1646,7 +1683,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Handling mute user from network
         muteUserObservable
-            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
@@ -1655,13 +1692,23 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> Bool in
+            .map { [weak self] event -> Bool in
+                guard let self = self else { return false }
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    // TODO: cancel action when supported
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: nil))
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: self.retryMute))
                     return false
                 default:
                     return false
@@ -1670,6 +1717,16 @@ fileprivate extension OWCommentThreadViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        // Retry when triggerd
+        retryMute
+            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
+                return comment
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.muteCommentUser.onNext(comment)
             })
             .disposed(by: disposeBag)
 

@@ -64,8 +64,10 @@
 "Mute" = "השתק";
 "MuteUser" = "השתק משתמש";
 "MuteUserMessage" = "לאחר השתקת משתמש זה, לא תראו יותר את הפעילות שלו. כדי לנהל את המשתמשים המושתקים שלכם, עברו אל הפרופיל שלכם > הגדרות פרטיות";
+"MuteSuccessToast" = "המשתמש הושתק";
 "ReadOur" = "קרא/י את";
 "Image" = "תמונה";
+"Undo" = "ביטול";
 "ClosedAndEmptyConversation" = "שיחה זו הסתיימה ולא יתקבלו תגובות נוספות.";
 "EmptyConversation" = "התחילו את השיחה ושתפו את הקהילה במחשבות וברעיונות שלכם.";
 "IdentityAttackTitle" = "מתקפת זהות";
@@ -114,6 +116,7 @@
 "LearnMore" = "למד עוד";
 "RejectedCommentStatusMessage" = "תגובתך נדחתה.";
 "PendingCommentStatusMessage" = "המתן בסבלנות, תגובתך ממתינה לאישור.";
+"NotAuthorPendingCommentStatusMessage" = "תגובה זו ממתינה לבדיקה.";
 "ClarityPendingReasonsTitle" = "ייתכן שהתגובה שלך נשלחה לבדיקה עקב אחת מהסיבות הבאות:";
 "AwaitingReview" = "בהמתנה לבדיקה";
 "RejectReasonEnsureCivil" = "כל ההחלטות שלנו נעשות במטרה להבטיח שיח תרבותי, פתוח ומכיל בתוך הקהילה.";
@@ -130,6 +133,7 @@
 "ViewNewComment" = "הצגת %d תגובה חדשה";
 "TypingNow" = "מקלידים עכשיו %d";
 "LoginPromptTitle" = "מורשה להשתתף";
+"SomethingWentWrong" = "אופס, משהו השתבש";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";
