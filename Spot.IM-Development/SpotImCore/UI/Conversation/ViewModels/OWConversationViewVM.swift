@@ -26,6 +26,7 @@ protocol OWConversationViewViewModelingInputs {
     var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -64,6 +65,9 @@ protocol OWConversationViewViewModelingOutputs {
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
     var dataSourceTransition: OWViewTransition { get }
+
+    var displayToast: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
     var tableViewHeightChanged: Observable<CGFloat> { get }
 }
@@ -265,6 +269,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var retryMute = PublishSubject<Void>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -582,6 +587,21 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
+    var dismissToast = PublishSubject<Void>()
+
+    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToast: Observable<OWToastNotificationCombinedData> {
+        return _displayToast
+            .unwrap()
+            .asObservable()
+    }
+    var hideToast: Observable<Void> {
+        return _displayToast
+            .filter { $0 == nil }
+            .voidify()
+            .asObservable()
+    }
+
     fileprivate var firstVisibleCommentIndex: Observable<Int> {
         return Observable.combineLatest(shouldShowCommunityQuestion.startWith(false),
                                         shouldShowCommunityGuidelines.startWith(false))
@@ -845,7 +865,19 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
+
+        servicesProvider.toastNotificationService()
+            .toastToShow
+            .observe(on: MainScheduler.instance)
+            .bind(to: _displayToast)
+            .disposed(by: disposeBag)
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
@@ -2235,7 +2267,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self._shouldShowErrorMuteUser.onNext(false)
             })
-            .flatMapLatest { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMapLatest { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
@@ -2250,9 +2282,18 @@ fileprivate extension OWConversationViewViewModel {
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    // TODO: cancel action when supported
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: nil))
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                   actionCompletion: self.retryMute))
                     self._shouldShowErrorMuteUser.onNext(true)
                     return false
                 default:
@@ -2262,6 +2303,16 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        // Retry when triggerd
+        retryMute
+            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
+                return comment
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.muteCommentUser.onNext(comment)
             })
             .disposed(by: disposeBag)
 

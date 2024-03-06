@@ -53,6 +53,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func realtimeIndicatorService() -> OWRealtimeIndicatorServicing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
+    func toastNotificationService() -> OWToastNotificationServicing
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
     func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
@@ -216,6 +217,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWPageViewIdHolder()
     }()
 
+    fileprivate lazy var _toastNotificationService: OWToastNotificationServicing = {
+        return OWToastNotificationService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
         return OWCommentStatusUpdaterService(servicesProvider: self)
     }()
@@ -370,6 +375,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
         return _pageViewIdHolder
+    }
+
+    func toastNotificationService() -> OWToastNotificationServicing {
+        return _toastNotificationService
     }
 
     func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing {
