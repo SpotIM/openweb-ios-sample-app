@@ -63,7 +63,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
-        Observable.combineLatest(commentTextOutput, _imageContent.asObservable(), gifPreviewVM.outputs.gifUrlOutput)
+        Observable.combineLatest(commentTextOutput, _imageContent.asObservable(), gifPreviewVM.outputs.gifDataOutput)
             .map { text, image, gif in
                 OWCommentCreationContent(text: text, image: image, gif: gif)
             }
@@ -185,6 +185,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
         self.setupInitialTextIfNeeded()
         self.setupInitialImageIfNeeded()
+        self.setupInitialGifIfNeeded()
 
         setupObservers()
     }
@@ -258,6 +259,28 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self._imageContent.onNext(imageContent)
             })
             .disposed(by: disposeBag)
+    }
+
+    func setupInitialGifIfNeeded() {
+        let initialGif: OWCommentGif?
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+
+        switch commentCreationType {
+        case .comment:
+            guard let postId = postId else { return }
+            initialGif = commentsCacheService[.comment(postId: postId)]?.commentContent.gif
+        case .replyToComment(originComment: let originComment):
+            guard let postId = self.postId,
+                  let originCommentId = originComment.id
+            else { return }
+            initialGif = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.gif
+        case .edit(let comment):
+            initialGif = comment.gif
+        }
+
+        guard let initialGif = initialGif else { return }
+
+        gifPreviewVM.inputs.gifData.onNext(initialGif)
     }
 
     func textValidatorTransformer(previousText: String, newText: String, charactersLimiter: Int) -> String {
@@ -383,7 +406,7 @@ fileprivate extension OWCommentCreationContentViewModel {
                 // Clean selected image
                 self?.imagePreviewVM.inputs.removeButtonTap.onNext()
             })
-            .bind(to: gifPreviewVM.inputs.gifUrl)
+            .bind(to: gifPreviewVM.inputs.gifData)
             .disposed(by: disposeBag)
     }
 }
