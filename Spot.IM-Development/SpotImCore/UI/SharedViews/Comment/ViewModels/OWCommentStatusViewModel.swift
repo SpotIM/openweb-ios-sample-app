@@ -104,7 +104,7 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                     .font(OWFontBook.shared.font(typography: .footnoteText))
                     .color(OWColorPalette.shared.color(type: .textColor3, themeStyle: style))
 
-                if status.shoeLearnMore && isCommentOfActiveUser {
+                if status.showLearnMore && isCommentOfActiveUser {
                     let learnMoreAttributedString = self.learnMoreClickableString
                         .attributedString
                         .underline(1)
@@ -182,7 +182,7 @@ enum OWCommentStatusType {
         }
     }
 
-    var shoeLearnMore: Bool {
+    var showLearnMore: Bool {
         switch self {
         case .rejected, .appealRejected, .pending:
             return true

@@ -606,7 +606,7 @@ extension OWUILayer {
     }
 
     func commenterAppeal(postId: OWPostId,
-                         commentId: OWCommentId,
+                         data: OWAppealRequiredData,
                          additionalSettings: OWAdditionalSettingsProtocol,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewCompletion) {
@@ -622,7 +622,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.commenterAppealView(appealData: OWAppealRequiredData(commentId: commentId), callbacks: callbacks)
+        _ = viewsSdkCoordinator.commenterAppealView(appealData: data, callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in

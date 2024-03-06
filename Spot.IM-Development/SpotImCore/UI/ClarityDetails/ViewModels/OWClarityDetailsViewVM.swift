@@ -253,10 +253,10 @@ fileprivate extension OWClarityDetailsViewVM {
         appealLabelViewModel
             .outputs
             .openAppeal
-            .subscribe(onNext: { [weak self] commentId in
+            .subscribe(onNext: { [weak self] data in
                 guard let self = self else { return }
                 if self.type == .rejected {
-                    self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: commentId))
+                    self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: data.commentId))
                 }
             })
             .disposed(by: disposeBag)
