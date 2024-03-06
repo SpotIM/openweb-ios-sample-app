@@ -200,20 +200,45 @@ class OWAppealLabelViewModel: OWAppealLabelViewModeling,
 
 fileprivate extension OWAppealLabelViewModel {
     func fetchEligibleToAppeal() {
-        _ = servicesProvider.netwokAPI()
+        let viewTypeObservable = servicesProvider.netwokAPI()
             .appeal
             .isEligibleToAppeal(commentId: commentId)
             .response
             .take(1)
-            .subscribe(onNext: { [weak self] response in
-                if response.canAppeal {
-                    self?._viewType.onNext(.default)
-                } else {
-                    self?._viewType.onNext(.none)
+            .materialize()
+            .map { event in
+                switch event {
+                case .next(let response):
+                    if response.canAppeal {
+                        return OWAppealLabelViewType.default
+                    } else {
+                        return OWAppealLabelViewType.none
+                    }
+                case .error:
+                    return OWAppealLabelViewType.error
+                case .completed:
+                    return nil
                 }
-            }, onError: { [weak self] _ in
-                self?._viewType.onNext(.error)
+            }
+            .unwrap()
+
+        let reasonsObservables = servicesProvider.netwokAPI()
+            .appeal
+            .getAppealOptions()
+            .response
+            .take(1)
+            .materialize()
+
+        Observable.combineLatest(viewTypeObservable, reasonsObservables)
+            .subscribe(onNext: { [weak self] type, reasonsEvent in
+                switch reasonsEvent {
+                case .error:
+                    self?._viewType.onNext(.error)
+                default:
+                    self?._viewType.onNext(type)
+                }
             })
+            .disposed(by: disposeBag)
     }
 
     func openNotLogeedInAlert() {
