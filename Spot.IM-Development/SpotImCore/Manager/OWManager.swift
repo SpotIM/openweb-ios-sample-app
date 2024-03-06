@@ -45,7 +45,7 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
             case .staging:
                 OWEnvironment.set(environment: OWEnvironment.staging)
             }
-            // When env is set we must reset (caches, networkApi etc)
+            // When env is set we must reset networkApi
             self.servicesProvider.configure.resetNetworkEnvironment()
         }
     }
