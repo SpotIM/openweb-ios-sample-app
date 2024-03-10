@@ -24,7 +24,7 @@ class OWUserMentionView: UIView {
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .separatorStyle(.none)
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
         tableView.rowHeight = Metrics.rowHeight
         tableView.register(cellClass: OWUserMentionCell.self)
         return tableView
@@ -68,6 +68,13 @@ fileprivate extension OWUserMentionView {
                                          cellType: OWUserMentionCell.self)) { _, viewModel, cell in
                 cell.configure(with: viewModel)
             }
+            .disposed(by: disposeBag)
+
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                self.viewModel.inputs.tappedMentionIndex.onNext(indexPath.item)
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.cellsViewModels

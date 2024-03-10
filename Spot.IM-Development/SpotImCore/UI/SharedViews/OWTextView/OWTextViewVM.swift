@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 protocol OWTextViewViewModelingInputs {
     // becomeFirstResponderCallWithDelay has int milliseconds for delaying the keyboard
@@ -20,7 +21,8 @@ protocol OWTextViewViewModelingInputs {
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
     var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
-    var cursorRangeChange: BehaviorSubject<Range<String.Index>> { get }
+    var cursorRangeChange: BehaviorSubject<Range<String.Index>?> { get }
+    var replacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -37,6 +39,7 @@ protocol OWTextViewViewModelingOutputs {
     var isAutoExpandable: Bool { get }
     var hasSuggestionsBar: Bool { get }
     var cursorRange: Observable<Range<String.Index>> { get }
+    var replaceData: Observable<OWTextViewReplaceData> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -77,6 +80,13 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
             .asObservable()
     }
 
+    var replacedData = BehaviorSubject<OWTextViewReplaceData?>(value: nil)
+    var replaceData: Observable<OWTextViewReplaceData> {
+        return replacedData
+            .asObservable()
+            .unwrap()
+    }
+
     var textViewTap = PublishSubject<Void>()
     var textViewTapped: Observable<Void> {
         return textViewTap.asObservable()
@@ -99,9 +109,10 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
     var _textViewText: BehaviorSubject<String>
 
-    lazy var cursorRangeChange = BehaviorSubject<Range<String.Index>>(value: "".range(from: NSRange(location: 0, length: 0))!)
+    lazy var cursorRangeChange = BehaviorSubject<Range<String.Index>?>(value: Range(NSRange(location: 0, length: 0), in: ""))
     var cursorRange: Observable<Range<String.Index>> {
         return cursorRangeChange
+            .unwrap()
             .asObservable()
     }
 

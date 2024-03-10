@@ -271,8 +271,23 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
 fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
     func setupObservers() {
-        textViewVM.outputs.textViewText
-            .bind(to: userMentionVM.inputs.text)
+        textViewVM.outputs.replaceData
+            .withLatestFrom(textViewVM.outputs.textViewText) { ($0, $1) }
+            .subscribe(onNext: { [weak self] replaceData, text in
+                guard let self = self,
+                      let range = Range(replaceData.range, in: text) else { return }
+                let textData = OWUserMentionTextData(text: text, cursorRange: range, replacingText: replaceData.text)
+                self.userMentionVM.inputs.textData.onNext(textData)
+            })
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(textViewVM.outputs.cursorRange,
+                                 textViewVM.outputs.textViewText)
+            .subscribe(onNext: { [weak self] cursorRange, text in
+                guard let self = self else { return }
+                let textData = OWUserMentionTextData(text: text, cursorRange: cursorRange, replacingText: nil)
+                self.userMentionVM.inputs.textData.onNext(textData)
+            })
             .disposed(by: disposeBag)
 
         servicesProvider
