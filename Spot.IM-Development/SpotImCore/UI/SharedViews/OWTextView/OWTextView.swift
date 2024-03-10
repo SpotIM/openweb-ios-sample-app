@@ -80,10 +80,21 @@ class OWTextView: UIView {
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: prefixIdentifier)
+        textView.rx
+            .setDelegate(self)
+            .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension OWTextView: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let replaceData = OWTextViewReplaceData(text: text, range: range)
+        viewModel.inputs.replacedData.onNext(replaceData)
+        return true
     }
 }
 
@@ -134,7 +145,7 @@ fileprivate extension OWTextView {
         textView.rx.didChangeSelection
             .map { [weak self] _ -> Range<String.Index>? in
                 guard let self = self else { return nil }
-                return self.textView.text.range(from: self.textView.selectedRange)
+                return Range(self.textView.selectedRange, in: self.textView.text)
             }
             .unwrap()
             .bind(to: viewModel.inputs.cursorRangeChange)
