@@ -925,6 +925,11 @@
 		9EBE4E7E2B8CA52F00D836CF /* OWUserMentionCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E7D2B8CA52F00D836CF /* OWUserMentionCellVM.swift */; };
 		9EBE4E822B947DD800D836CF /* OWUserMentionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E812B947DD800D836CF /* OWUserMentionView.swift */; };
 		9EBE4E842B947EED00D836CF /* OWUserMentionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E832B947EED00D836CF /* OWUserMentionCell.swift */; };
+		9EBE4E862B98803300D836CF /* StringProtocol+OWExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E852B98803300D836CF /* StringProtocol+OWExtension.swift */; };
+		9EBE4E882B9887B000D836CF /* OWUserMentionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E872B9887B000D836CF /* OWUserMentionData.swift */; };
+		9EBE4E8A2B98CC9100D836CF /* OWUserMentionTextData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E892B98CC9100D836CF /* OWUserMentionTextData.swift */; };
+		9EBE4E8C2B99ADB600D836CF /* OWTextViewReplaceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */; };
+		9EBE4E8E2B99C0AE00D836CF /* Range+OWExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */; };
 		9EBE5C2229AE0211001150DA /* CommentCreationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */; };
 		9EBE5C2429AE0304001150DA /* CommentCreationSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2329AE0304001150DA /* CommentCreationSettingsVM.swift */; };
 		9EBE5C2629AE080B001150DA /* IAUSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE5C2529AE080B001150DA /* IAUSettingsVM.swift */; };
@@ -1974,6 +1979,11 @@
 		9EBE4E7D2B8CA52F00D836CF /* OWUserMentionCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionCellVM.swift; sourceTree = "<group>"; };
 		9EBE4E812B947DD800D836CF /* OWUserMentionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionView.swift; sourceTree = "<group>"; };
 		9EBE4E832B947EED00D836CF /* OWUserMentionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionCell.swift; sourceTree = "<group>"; };
+		9EBE4E852B98803300D836CF /* StringProtocol+OWExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringProtocol+OWExtension.swift"; sourceTree = "<group>"; };
+		9EBE4E872B9887B000D836CF /* OWUserMentionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionData.swift; sourceTree = "<group>"; };
+		9EBE4E892B98CC9100D836CF /* OWUserMentionTextData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionTextData.swift; sourceTree = "<group>"; };
+		9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTextViewReplaceData.swift; sourceTree = "<group>"; };
+		9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Range+OWExtension.swift"; sourceTree = "<group>"; };
 		9EBE5C2129AE0210001150DA /* CommentCreationSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCreationSettingsView.swift; sourceTree = "<group>"; };
 		9EBE5C2329AE0304001150DA /* CommentCreationSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCreationSettingsVM.swift; sourceTree = "<group>"; };
 		9EBE5C2529AE080B001150DA /* IAUSettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAUSettingsVM.swift; sourceTree = "<group>"; };
@@ -4579,6 +4589,8 @@
 				8D18E5FF2AF11935005938A3 /* UINavigationBar+Extensions.swift */,
 				3D50D9112B163E0400FD3232 /* UIColor+Extensions.swift */,
 				8DCC87C82B6BAC0000E053A4 /* UIWindow+Utils.swift */,
+				9EBE4E852B98803300D836CF /* StringProtocol+OWExtension.swift */,
+				9EBE4E8D2B99C0AE00D836CF /* Range+OWExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -5557,6 +5569,7 @@
 				9EC88D8E29FE633F00EBD165 /* OWTextView.swift */,
 				9EC88D9029FE638A00EBD165 /* OWTextViewVM.swift */,
 				9E0C605B2A823042001B8D5D /* OWTextViewData.swift */,
+				9EBE4E8B2B99ADB600D836CF /* OWTextViewReplaceData.swift */,
 			);
 			path = OWTextView;
 			sourceTree = "<group>";
@@ -5770,6 +5783,8 @@
 			isa = PBXGroup;
 			children = (
 				9EBE4E792B8C97D900D836CF /* OWUserMention.swift */,
+				9EBE4E872B9887B000D836CF /* OWUserMentionData.swift */,
+				9EBE4E892B98CC9100D836CF /* OWUserMentionTextData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -6332,6 +6347,7 @@
 				3DA2646D2951E3B200688FFF /* OWNetworkURLEncodedFormEncoder.swift in Sources */,
 				24CC974529ACA60B00608A15 /* OWTextState.swift in Sources */,
 				3DDA9A75291917E600FE3B86 /* OWAdsProvider.swift in Sources */,
+				9EBE4E8A2B98CC9100D836CF /* OWUserMentionTextData.swift in Sources */,
 				9E4B4E602AA604D100F4425F /* OWProfileService.swift in Sources */,
 				3DB3B94D29F462A000C50192 /* OWTestingPlaygroundCoordinator.swift in Sources */,
 				8DD33B1D2A24C203001E0A2E /* OWEmptyStateCommentingEndedCustomizableElement.swift in Sources */,
@@ -6408,6 +6424,7 @@
 				3DA264712951E3B200688FFF /* OWNetworkValidation.swift in Sources */,
 				3DFC32C528916760005F1C5A /* OWConversationCellOption.swift in Sources */,
 				3D31FB9629AB8EE1002B88E0 /* OWSupportedLanguage+Extenstions.swift in Sources */,
+				9EBE4E8C2B99ADB600D836CF /* OWTextViewReplaceData.swift in Sources */,
 				160E42E62988105100EDC5A1 /* OWCommentThreadViewVM.swift in Sources */,
 				3DA2647C2951E3B200688FFF /* OWNetworkRequestTaskMap.swift in Sources */,
 				9EE87B462AC8EE9400F11DD2 /* OWRepliesErrorState.swift in Sources */,
@@ -6631,6 +6648,7 @@
 				3D20A35827A968F8003F8513 /* Reusable+IndentifierName.swift in Sources */,
 				24579ECD28882FC600C56F0F /* OWProfileEndpoints.swift in Sources */,
 				3DDA9A8E291A5FF800FE3B86 /* OWCustomizableElement.swift in Sources */,
+				9EBE4E882B9887B000D836CF /* OWUserMentionData.swift in Sources */,
 				3DA264792951E3B200688FFF /* OWNetworkMultipartUpload.swift in Sources */,
 				3D0AFC8F29C721B4002670D1 /* OWSSOProvider.swift in Sources */,
 				9EC88D9129FE638A00EBD165 /* OWTextViewVM.swift in Sources */,
@@ -6964,7 +6982,9 @@
 				164047A629E4206E001DD35B /* OWConversation.swift in Sources */,
 				3DDA9A63290808F600FE3B86 /* OWSkeletonShimmeringView.swift in Sources */,
 				3DB3B97F29F7DB4700C50192 /* OWTestingRedSecondLevelViewModel.swift in Sources */,
+				9EBE4E862B98803300D836CF /* StringProtocol+OWExtension.swift in Sources */,
 				248403A72ADE6F7600EAD59A /* OWLoginPromptView.swift in Sources */,
+				9EBE4E8E2B99C0AE00D836CF /* Range+OWExtension.swift in Sources */,
 				3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */,
 				445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */,
 				3D08E0A528771B0900E6F1AC /* OWRxTableViewSectionedAnimatedDataSource.swift in Sources */,
