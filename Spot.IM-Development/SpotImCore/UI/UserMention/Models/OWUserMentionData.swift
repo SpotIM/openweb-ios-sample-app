@@ -9,7 +9,7 @@
 import Foundation
 
 class OWUserMentionData {
-    var text: String = ""
+    var tappedMentionString: String?
     var mentions: [OWUserMentionObject] = []
 }
 

@@ -21,8 +21,10 @@ protocol OWTextViewViewModelingInputs {
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
     var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
-    var cursorRangeChange: BehaviorSubject<Range<String.Index>?> { get }
+    var cursorRangeExternalChange: PublishSubject<Range<String.Index>?> { get }
+    var cursorRangeInternalChange: PublishSubject<Range<String.Index>?> { get }
     var replacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
+    var attributedTextChange: BehaviorSubject<NSAttributedString?> { get }
 }
 
 protocol OWTextViewViewModelingOutputs {
@@ -40,6 +42,7 @@ protocol OWTextViewViewModelingOutputs {
     var hasSuggestionsBar: Bool { get }
     var cursorRange: Observable<Range<String.Index>> { get }
     var replaceData: Observable<OWTextViewReplaceData> { get }
+    var attributedTextChanged: Observable<NSAttributedString> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -107,11 +110,12 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
                 .asObservable()
     }
 
-    var _textViewText: BehaviorSubject<String>
+    var cursorRangeExternalChange = PublishSubject<Range<String.Index>?>()
+    var cursorRangeInternalChange = PublishSubject<Range<String.Index>?>()
 
-    lazy var cursorRangeChange = BehaviorSubject<Range<String.Index>?>(value: Range(NSRange(location: 0, length: 0), in: ""))
+    var _cursorRange = BehaviorSubject<Range<String.Index>?>(value: Range(NSRange(location: 0, length: 0), in: ""))
     var cursorRange: Observable<Range<String.Index>> {
-        return cursorRangeChange
+        return _cursorRange
             .unwrap()
             .asObservable()
     }
@@ -119,6 +123,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var textExternalChange = PublishSubject<String>()
     var textInternalChange = PublishSubject<String>()
 
+    var _textViewText: BehaviorSubject<String>
     var textViewText: Observable<String> {
         return _textViewText
             .asObservable()
@@ -128,6 +133,13 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         return textViewCharectersCount
             .map { $0 > 0 }
     }
+
+    lazy var attributedTextChange = BehaviorSubject<NSAttributedString?>(value: nil)
+    lazy var attributedTextChanged: Observable<NSAttributedString> = {
+        return attributedTextChange
+            .unwrap()
+            .asObservable()
+    }()
 
     init(textViewData: OWTextViewData) {
         self.textViewMaxCharecters = textViewData.textViewMaxCharecters
@@ -183,6 +195,23 @@ fileprivate extension OWTextViewViewModel {
                 return text
             }
             .bind(to: _textViewText)
+            .disposed(by: disposeBag)
+
+        let cursorRangeInternalChangeObservable = cursorRangeInternalChange
+            .unwrap()
+            .flatMap { [weak self] internalRange -> Observable<Range<String.Index>?> in
+                guard let self = self else { return .empty() }
+                return self.cursorRange
+                    .take(1)
+                    .filter { internalRange != $0 }
+                    .map { _ -> Range<String.Index>? in
+                        return internalRange
+                    }
+            }
+
+        Observable.merge(cursorRangeInternalChangeObservable, cursorRangeExternalChange)
+            .unwrap()
+            .bind(to: _cursorRange)
             .disposed(by: disposeBag)
 
     }

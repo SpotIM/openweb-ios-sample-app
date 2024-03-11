@@ -18,6 +18,7 @@ protocol OWUserMentionViewViewModelingOutputs {
     var cellsViewModels: Observable<[OWUserMentionCellViewModeling]> { get }
     var mentionsData: Observable<OWUserMentionData> { get }
     var currentMentionRange: Observable<Range<String.Index>?> { get }
+    var tappedMention: Observable<OWUserMentionData> { get }
 }
 
 protocol OWUserMentionViewViewModeling: AnyObject {
@@ -62,6 +63,12 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
 
     }()
+
+    var tappedMentionAction = PublishSubject<OWUserMentionData>()
+    var tappedMention: Observable<OWUserMentionData> {
+        return tappedMentionAction
+            .asObservable()
+    }
 
     fileprivate lazy var getUsers: Observable<[OWUserMention]> = {
         return name
@@ -112,7 +119,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         self.setupObservers()
     }
 
-    func searchText(text: String) {
+    func searchText(text: String, mentions: [OWUserMentionObject]) {
         do {
             let regex = try NSRegularExpression(pattern: "\\@[^\\@]*$", options: [])
             var results = [String]()
@@ -122,9 +129,14 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
                 guard let self = self else { return }
 
                 if let r = result?.range(at: 0), let range = Range(r, in: text) {
-                    self._currentMentionRange.onNext(range)
-                    let substring = String(text[range].dropFirst())
-                    results.append(substring)
+                    if !(mentions.contains(where: { mention in
+                        let mentionRange = Range(mention.range, in: text)
+                        return range.lowerBound == mentionRange?.lowerBound
+                    })) {
+                        self._currentMentionRange.onNext(range)
+                        let substring = String(text[range].dropFirst())
+                        results.append(substring)
+                    }
                 }
             }
             guard let lastResult = results.last else {
@@ -138,59 +150,54 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     func atLeastOneContained(name: String, userMentions: [OWUserMention]) -> Bool {
         guard !name.isEmpty else { return true }
         let name = name.lowercased()
-        return userMentions.contains(where: { $0.displayName.lowercased().contains(name) || $0.userName.lowercased().contains(name) })
+        let atLeastOneContained = userMentions.contains(where: { $0.displayName.lowercased().contains(name) || $0.userName.lowercased().contains(name) })
+        return atLeastOneContained
     }
 }
 
 fileprivate extension OWUserMentionViewVM {
     func setupObservers() {
         textData
+            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
             .filter { $0.replacingText == nil }
-            .subscribe(onNext: { [weak self] textData in
+            .withLatestFrom(mentionsData) { ($0, $1) }
+            .subscribe(onNext: { [weak self] textData, mentionsData in
                 guard let self = self else { return }
                 self.getUsersForName = ""
                 var textToCursor = textData.text
-                if textData.cursorRange.lowerBound <= textData.text.endIndex {
-                    textToCursor = String(textData.text[..<textData.cursorRange.lowerBound])
+                if textData.cursorRange.lowerBound <= textData.text.utf16.endIndex,
+                   let text = String(textData.text.utf16[..<textData.cursorRange.lowerBound]) {
+                    textToCursor = text
                 }
-                self.searchText(text: textToCursor)
+                self._currentMentionRange.onNext(nil)
+                self.searchText(text: textToCursor, mentions: mentionsData.mentions)
             })
             .disposed(by: disposeBag)
 
         textData
+            .delay(.milliseconds(10), scheduler: MainScheduler.instance)
             .filter { $0.replacingText != nil }
             .withLatestFrom(mentionsData) { ($0, $1) }
             .subscribe(onNext: { [weak self] textData, mentionsData in
                 guard let self = self,
-                      let replacingText = textData.replacingText else { return }
-                var mentions: [OWUserMentionObject] = []
-                var textWithoutOldText = textData.text
-                textWithoutOldText.removeSubrange(textData.cursorRange)
-                let newMutableText = NSMutableString(string: textWithoutOldText)
-                newMutableText.insert(replacingText, at: textData.text.distance(from: textData.text.startIndex, to: textData.cursorRange.lowerBound))
-                let newText = String(newMutableText)
-                for mention in mentionsData.mentions {
-                    if let mentionRange = Range(mention.range, in: textData.text),
+                      let replacingText = textData.replacingText,
+                      let cursorRange = textData.text.nsRange(from: textData.cursorRange) else { return }
+                var mentions: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location > $0.range.location }
+                var mentionsToCheck = mentionsData.mentions.filter { cursorRange.location < $0.range.location }
+                for mention in mentionsToCheck {
+                    if let mentionRange = Range(NSRange(location: mention.range.location + 1, length: mention.range.length - 1), in: textData.text),
                        !(mentionRange ~= textData.cursorRange) {
                         // update mention that replace is affecting
-                        if textData.cursorRange.upperBound < mentionRange.lowerBound { // Update mentionRange since replacing text before this mention
+                        if textData.cursorRange.upperBound <= mentionRange.lowerBound { // Update mentionRange since replacing text before this mention
                             let distance = textData.text.utf16.distance(from: textData.cursorRange.lowerBound, to: textData.cursorRange.upperBound)
                             let addToRange = -distance + replacingText.utf16.count
-                            let updatedMentionRange: Range = {
-                                if distance > 0 {
-                                    let from = textData.text.utf16.index(mentionRange.lowerBound, offsetBy: addToRange)
-                                    let to = textData.text.utf16.index(mentionRange.upperBound, offsetBy: addToRange)
-                                    return Range(uncheckedBounds: (from, to))
-                                } else {
-                                    let from = newText.utf16.index(mentionRange.lowerBound, offsetBy: addToRange)
-                                    let to = newText.utf16.index(mentionRange.upperBound, offsetBy: addToRange)
-                                    return Range(uncheckedBounds: (from, to))
-                                }
+                            let updatedMentionRange: NSRange = {
+                                var range = mention.range
+                                range.location += addToRange
+                                range.length = mention.text.utf16.count
+                                return range
                             }()
-
-                            guard let range = newText.nsRange(from: updatedMentionRange) else { return }
-                            mention.range = range
-
+                            mention.range = updatedMentionRange
                         }
                         mentions.append(mention)
                     }
@@ -230,12 +237,23 @@ fileprivate extension OWUserMentionViewVM {
                 guard let indexOfMention = textToCursor.lastIndex(of: "@") else { return }
                 let textWithMention = String(textToCursor[..<indexOfMention]) + mentionDisplayText
                 guard let self = self,
-                      let lastIndex = textWithMention.lastIndex(of: "@"),
                       let range = textWithMention.range(of: mentionDisplayText),
                       let selectedRange = textWithMention.nsRange(from: range) else { return }
                 let userMentionObject = OWUserMentionObject(id: id, text: mentionDisplayText, range: selectedRange)
+
+                let replaceRange = range.lowerBound ..< textToCursor.endIndex
+                if replaceRange.upperBound < textData.text.endIndex {
+                    let mentions = mentionsData.mentions.filter { $0.range.location >= textToCursor.utf16.count }
+                    for mention in mentions {
+                        let replacedLength = textToCursor.distance(from: replaceRange.lowerBound, to: replaceRange.upperBound)
+                        mention.range.location += mentionDisplayText.utf16.count - replacedLength + 1
+                        mention.range.length = mention.text.utf16.count
+                    }
+                }
+
                 mentionsData.mentions.append(userMentionObject)
-                self._mentionsData.onNext(mentionsData)
+                mentionsData.tappedMentionString = textWithMention
+                self.tappedMentionAction.onNext(mentionsData)
             })
             .disposed(by: disposeBag)
     }
