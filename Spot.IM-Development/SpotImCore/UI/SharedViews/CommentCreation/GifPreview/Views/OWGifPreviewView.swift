@@ -72,30 +72,33 @@ fileprivate extension OWGifPreviewView {
     }
 
     func setupObservers() {
-        viewModel.outputs.gifDataOutput
-            .subscribe(onNext: { [weak self] data in
-                guard let self = self else { return }
-                if let data = data {
-                    OWScheduler.runOnMainThreadIfNeeded {
-                        self.isHidden = false
-                        let ratio = CGFloat(data.originalWidth) / CGFloat(data.originalHeight)
-                        let newHeight = self.gifView.frame.width / ratio
-                        self.gifView.configure(gifUrl: data.originalUrl)
-                        self.OWSnp.updateConstraints { make in
-                            make.height.equalTo(newHeight)
-                        }
-                    }
-                } else {
-                    OWScheduler.runOnMainThreadIfNeeded {
-                        self.isHidden = true
-                        self.gifView.configure(gifUrl: nil)
-                        self.OWSnp.updateConstraints { make in
-                            make.height.equalTo(0)
-                        }
+        // In case data recived before gifView is on screen we need to re-calculate size once its displayed
+        Observable.combineLatest(viewModel.outputs.gifDataOutput, gifView.rx.bounds) { data, _ in
+            data
+        }
+        .subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
+            if let data = data {
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.isHidden = false
+                    let ratio = CGFloat(data.originalWidth) / CGFloat(data.originalHeight)
+                    let newHeight = self.gifView.frame.width / ratio
+                    self.gifView.configure(gifUrl: data.originalUrl)
+                    self.OWSnp.updateConstraints { make in
+                        make.height.equalTo(newHeight)
                     }
                 }
-            })
-            .disposed(by: disposeBag)
+            } else {
+                OWScheduler.runOnMainThreadIfNeeded {
+                    self.isHidden = true
+                    self.gifView.configure(gifUrl: nil)
+                    self.OWSnp.updateConstraints { make in
+                        make.height.equalTo(0)
+                    }
+                }
+            }
+        })
+        .disposed(by: disposeBag)
 
         removeButton.rx.tap
             .bind(to: viewModel.inputs.removeButtonTap)

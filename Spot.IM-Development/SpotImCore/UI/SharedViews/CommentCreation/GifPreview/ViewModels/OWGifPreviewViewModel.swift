@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWGifPreviewViewModelingInputs {
-    var gifData: PublishSubject<OWCommentGif?> { get }
+    var gifData: BehaviorSubject<OWCommentGif?> { get }
     var removeButtonTap: PublishSubject<Void> { get }
 }
 
@@ -35,12 +35,11 @@ class OWGifPreviewViewModel: OWGifPreviewViewModeling,
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     var removeButtonTap: PublishSubject<Void> = PublishSubject()
-    var gifData: PublishSubject<OWCommentGif?> = PublishSubject()
+    var gifData: BehaviorSubject<OWCommentGif?> = BehaviorSubject(value: nil)
 
     var gifDataOutput: Observable<OWCommentGif?> {
         gifData
             .asObservable()
-            .debug("NOGAH: gifDataOutput")
             .startWith(nil)
     }
 
