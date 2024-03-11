@@ -87,16 +87,18 @@ internal class DemoUserAuthentication {
                                   accessTokenNetwork: String?,
                                   completion: @escaping (_ authCode: String?, _ error: Error?) -> Void) {
         var urlString = Metrics.codeBURLPath
+        var environment = "production"
         #if BETA
         let env = OpenWeb.manager.environment
         urlString = Metrics.codeBURLPath(env: env)
+        environment = env == .production ? "production" : "staging"
         #endif
         guard let url = URL(string: urlString) else { return }
 
         let params: Parameters = ["code_a": codeA ?? "",
                                   "access_token": accessToken ?? "",
                                   "username": username ?? "",
-                                  "environment": "production"]
+                                  "environment": environment]
 
         let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
 
