@@ -141,14 +141,41 @@ fileprivate extension OWTextView {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.attributedTextChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self,
+                      let font = self.textView.font else { return }
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil // Fixes looping cursor range
+                let selectedRange = self.textView.selectedRange
+                let attributedText = NSMutableAttributedString(attributedString: attributedText)
+                attributedText.addAttribute(.font, value: font, range: NSRange(location: 0, length: attributedText.string.utf16.count))
+                self.textView.attributedText = attributedText
+                self.textView.selectedRange = selectedRange
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+            })
+            .disposed(by: disposeBag)
+
         textView.rx.didChangeSelection
             .map { [weak self] _ -> Range<String.Index>? in
                 guard let self = self else { return nil }
                 return Range(self.textView.selectedRange, in: self.textView.text)
             }
             .unwrap()
-            .bind(to: viewModel.inputs.cursorRangeChange)
+            .bind(to: viewModel.inputs.cursorRangeInternalChange)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.cursorRange
+            .observe(on: MainScheduler.instance)
+            .map { [weak self] cursorRange -> NSRange? in
+                guard let self = self else { return nil }
+                return self.textView.text?.nsRange(from: cursorRange)
+            }
+            .unwrap()
+            .bind(to: textView.rx.selectedRange)
             .disposed(by: disposeBag)
 
         textView.rx.text
@@ -157,6 +184,7 @@ fileprivate extension OWTextView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.textViewText
+            .observe(on: MainScheduler.instance)
             .bind(to: textView.rx.text)
             .disposed(by: disposeBag)
 
