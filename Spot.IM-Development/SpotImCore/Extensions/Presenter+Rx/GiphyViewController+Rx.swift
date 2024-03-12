@@ -6,6 +6,7 @@
 //  Copyright © 2024 Spot.IM. All rights reserved.
 //
 
+#if canImport(GiphyUISDK)
 import Foundation
 import GiphyUISDK
 import RxSwift
@@ -79,3 +80,5 @@ extension Reactive where Base: GiphyViewController {
         return returnValue
     }
 }
+
+#endif
