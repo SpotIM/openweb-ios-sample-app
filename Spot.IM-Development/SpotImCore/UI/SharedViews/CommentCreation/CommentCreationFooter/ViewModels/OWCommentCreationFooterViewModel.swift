@@ -161,13 +161,18 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             }
     }
 
-    // TODO: should also consider if giphy SDK is available
+    #if canImport(GiphyUISDK)
     var showAddGifButton: Observable<Bool> {
         return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
             .map {
                 $0.mobileSdk.postGifEnabled
             }
     }
+    #else
+    var showAddGifButton: Observable<Bool> {
+        return .just(false)
+    }
+    #endif
 
     init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
