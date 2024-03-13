@@ -150,14 +150,16 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
     var isInitialContentEdited: Observable<Bool> {
         Observable.combineLatest(
             commentContent,
-            _imageContent
+            _imageContent,
+            gifPreviewVM.inputs.gifData
         )
-        .map { [weak self] commentContent, imageContent -> Bool in
+        .map { [weak self] commentContent, imageContent, gifContent -> Bool in
             guard let self = self else { return false }
 
             if case .edit(comment: let comment) = self.commentCreationType {
                 if comment.text?.text != commentContent.text ||
-                    comment.image?.imageId != imageContent?.imageId {
+                    comment.image?.imageId != imageContent?.imageId ||
+                    comment.gif?.originalUrl != gifContent?.originalUrl {
                     return true
                 }
             }
