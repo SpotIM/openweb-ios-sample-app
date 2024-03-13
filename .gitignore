@@ -27,8 +27,6 @@ DerivedData/
 
 ## App packaging
 *.ipa
-*.dSYM.zip
-*.dSYM
 
 ## Playgrounds
 timeline.xctimeline
@@ -86,6 +84,7 @@ fastlane/test_output
 test_output/
 .DS_Store
 OpenWeb-Development/.DS_Store
+OpenWeb-Development/Vendor-Frameworks/.DS_Store
 OpenWeb-Development/OpenWeb-SampleApp/Resources/.DS_Store
 OpenWeb-Development/OpenWeb-SDK/Resources/.DS_Store
 OpenWeb-Development/vendor/bundle

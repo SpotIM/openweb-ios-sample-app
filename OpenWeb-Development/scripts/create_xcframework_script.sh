@@ -13,7 +13,7 @@ set +u
 CONFIGURATION=$1
 SRCROOT=`pwd`
 WORKSPACE="OpenWeb-Development.xcworkspace"
-TARGET_NAME="OpenWebSDK"
+TARGET_NAME="OpenWeb-SDK"
 FRAMEWORK_NAME="OpenWebSDK"
 BUILD_DIR="${SRCROOT}/build"
 RELEASE_DIR="${SRCROOT}/Release/"
