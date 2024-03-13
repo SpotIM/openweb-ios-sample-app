@@ -24,6 +24,7 @@ protocol OWTextViewViewModelingInputs {
     var cursorRangeExternalChange: PublishSubject<Range<String.Index>?> { get }
     var cursorRangeInternalChange: PublishSubject<Range<String.Index>?> { get }
     var replacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
+    var internalReplacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
     var attributedTextChange: BehaviorSubject<NSAttributedString?> { get }
 }
 
@@ -42,6 +43,7 @@ protocol OWTextViewViewModelingOutputs {
     var hasSuggestionsBar: Bool { get }
     var cursorRange: Observable<Range<String.Index>> { get }
     var replaceData: Observable<OWTextViewReplaceData> { get }
+    var internalReplaceData: Observable<OWTextViewReplaceData> { get }
     var attributedTextChanged: Observable<NSAttributedString> { get }
 }
 
@@ -81,6 +83,13 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     var resignFirstResponderCalled: Observable<Void> {
         return resignFirstResponderCall
             .asObservable()
+    }
+
+    var internalReplacedData = BehaviorSubject<OWTextViewReplaceData?>(value: nil)
+    var internalReplaceData: Observable<OWTextViewReplaceData> {
+        return internalReplacedData
+            .asObservable()
+            .unwrap()
     }
 
     var replacedData = BehaviorSubject<OWTextViewReplaceData?>(value: nil)

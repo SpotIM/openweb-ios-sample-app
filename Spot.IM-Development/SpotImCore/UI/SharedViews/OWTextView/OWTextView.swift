@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
+import NaturalLanguage
 
 class OWTextView: UIView {
     fileprivate struct Metrics {
@@ -40,21 +41,22 @@ class OWTextView: UIView {
 
     fileprivate lazy var textView: UITextView = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
-        return UITextView()
-                .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-                .textContainerInset(
-                    UIEdgeInsets(
-                        top: Metrics.textViewTopBottomPadding,
-                        left: Metrics.textViewLeadingTrailingPadding,
-                        bottom: Metrics.textViewTopBottomPadding,
-                        right: Metrics.textViewLeadingTrailingPadding
-                    )
+        let textView = UITextView()
+            .font(OWFontBook.shared.font(typography: .bodyText))
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .textContainerInset(
+                UIEdgeInsets(
+                    top: Metrics.textViewTopBottomPadding,
+                    left: Metrics.textViewLeadingTrailingPadding,
+                    bottom: Metrics.textViewTopBottomPadding,
+                    right: Metrics.textViewLeadingTrailingPadding
                 )
-                .enforceSemanticAttribute()
-                .spellCheckingType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
-                .autocorrectionType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
+            )
+            .enforceSemanticAttribute()
+            .spellCheckingType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
+            .autocorrectionType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
+        return textView
     }()
 
     fileprivate lazy var charectersCountLabel: UILabel = {
@@ -92,8 +94,8 @@ class OWTextView: UIView {
 
 extension OWTextView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let replaceData = OWTextViewReplaceData(text: text, range: range)
-        viewModel.inputs.replacedData.onNext(replaceData)
+        let replaceData = OWTextViewReplaceData(text: text, originalText: textView.text, range: range)
+        viewModel.inputs.internalReplacedData.onNext(replaceData)
         return true
     }
 }
@@ -146,23 +148,54 @@ fileprivate extension OWTextView {
         viewModel.outputs.attributedTextChanged
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] attributedText in
+                guard let self = self else { return }
+                self.addAttributes(from: attributedText)
+            })
+            .disposed(by: disposeBag)
+
+        textView.rx.didChange
+            .withLatestFrom(viewModel.outputs.internalReplaceData)
+            .subscribe(onNext: { [weak self] replaceData in
                 guard let self = self,
-                      let font = self.textView.font else { return }
-                let savedDelegate = self.textView.delegate
-                self.textView.delegate = nil // Fixes looping cursor range
-                let selectedRange = self.textView.selectedRange
-                let attributedText = NSMutableAttributedString(attributedString: attributedText)
-                attributedText.addAttribute(.font, value: font, range: NSRange(location: 0, length: attributedText.string.utf16.count))
-                self.textView.attributedText = attributedText
-                self.textView.selectedRange = selectedRange
-                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+                      let originalText = replaceData.originalText,
+                      let replacedRange = Range(replaceData.range, in: originalText) else { return }
+                let afterReplacedText = originalText.replacingOccurrences(of: originalText[replacedRange], with: replaceData.text, range: replacedRange)
+                let currentText = self.textView.text
+                if let currentText = currentText,
+                   !(currentText.utf16.count == afterReplacedText.utf16.count &&
+                   replaceData.range.length == 0) {
+                    self.viewModel.inputs.replacedData.onNext(replaceData)
+                }
+                guard afterReplacedText != currentText else {
+                    return
+                }
+                // Since UITextView replaces a whitespace automatically if replacing range that before has a whitepace or removes a whitespace after range if the range start index (location) is 0 at the begining.
+                // So here we check for whitespaces after and before for both cases so that we send the real replace range.
+                let range = replaceData.range
+                let text = replaceData.text
+                var rangeToSend = range
+                rangeToSend.location += range.location == 0 ? range.length : -1
+                rangeToSend.length = 1
+                if text.isEmpty,
+                   let rangeIsSpace = Range(rangeToSend, in: originalText),
+                   originalText[rangeIsSpace] == " " {
+                    if rangeToSend.location > range.location {
+                        rangeToSend.location = range.location
+                    }
+
+                    if rangeToSend.length > 0 {
+                        let newReplaceData = OWTextViewReplaceData(text: "", originalText: nil, range: rangeToSend)
+                        self.viewModel.inputs.replacedData.onNext(newReplaceData)
+                    }
+                }
             })
             .disposed(by: disposeBag)
 
         textView.rx.didChangeSelection
             .map { [weak self] _ -> Range<String.Index>? in
                 guard let self = self else { return nil }
-                return Range(self.textView.selectedRange, in: self.textView.text)
+                let range = Range(self.textView.selectedRange, in: self.textView.text)
+                return range
             }
             .unwrap()
             .bind(to: viewModel.inputs.cursorRangeInternalChange)
@@ -172,7 +205,8 @@ fileprivate extension OWTextView {
             .observe(on: MainScheduler.instance)
             .map { [weak self] cursorRange -> NSRange? in
                 guard let self = self else { return nil }
-                return self.textView.text?.nsRange(from: cursorRange)
+                let range = self.textView.text?.nsRange(from: cursorRange)
+                return range
             }
             .unwrap()
             .bind(to: textView.rx.selectedRange)
@@ -254,9 +288,9 @@ fileprivate extension OWTextView {
                 guard let self = self else { return }
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                self.textView.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.textView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.textView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.textView.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -269,6 +303,46 @@ fileprivate extension OWTextView {
                 self.textViewPlaceholder.font = OWFontBook.shared.font(typography: .bodyText)
             })
             .disposed(by: disposeBag)
+    }
+
+    func detectedLanguage(for string: String) -> String? {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(string)
+        guard let languageCode = recognizer.dominantLanguage?.rawValue else { return nil }
+        return languageCode
+    }
+
+    func addAttributes(from attributedText: NSAttributedString) {
+        guard let font = self.textView.font else { return }
+
+        let nsRange = NSRange(location: 0, length: attributedText.string.utf16.count)
+        let textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+
+        let updatedAttributedText = NSMutableAttributedString(string: attributedText.string)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.baseWritingDirection =  NSMutableParagraphStyle.defaultWritingDirection(forLanguage: detectedLanguage(for: String(attributedText.string)))
+
+        updatedAttributedText.addAttribute(.font, value: font, range: nsRange)
+        updatedAttributedText.addAttribute(.foregroundColor, value: textColor, range: nsRange)
+
+        attributedText.enumerateAttributes(in: nsRange) { attributes, range, _ in
+            for key in attributes.keys {
+                if let value = attributes[key] {
+                    updatedAttributedText.addAttribute(key, value: value, range: range)
+                }
+            }
+        }
+
+        updatedAttributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: nsRange)
+
+        let savedDelegate = self.textView.delegate
+        self.textView.delegate = nil // Fixes looping cursor range
+        let savedSelectedRange = self.textView.selectedRange
+        self.textView.attributedText = updatedAttributedText
+        self.textView.selectedRange = savedSelectedRange
+        self.textView.delegate = savedDelegate // Return rx proxy delegate back again
     }
 }
 

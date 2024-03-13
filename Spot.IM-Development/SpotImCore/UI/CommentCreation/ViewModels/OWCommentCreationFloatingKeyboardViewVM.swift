@@ -273,62 +273,27 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         textViewVM.outputs.replaceData
-            .withLatestFrom(textViewVM.outputs.textViewText) { ($0, $1) }
-            .subscribe(onNext: { [weak self] replaceData, text in
-                guard let self = self,
-                      let range = Range(replaceData.range, in: text) else { return }
-                let textData = OWUserMentionTextData(text: text, cursorRange: range, replacingText: replaceData.text)
-                self.userMentionVM.inputs.textData.onNext(textData)
-            })
+            .bind(to: userMentionVM.inputs.replaceData)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(textViewVM.outputs.textViewText,
-                                 textViewVM.outputs.cursorRange)
-            .subscribe(onNext: { [weak self] text, cursorRange in
-                guard let self = self else { return }
-                let textData = OWUserMentionTextData(text: text, cursorRange: cursorRange, replacingText: nil)
-                self.userMentionVM.inputs.textData.onNext(textData)
-            })
+        textViewVM.outputs.textViewText
+            .bind(to: userMentionVM.inputs.textViewText)
             .disposed(by: disposeBag)
 
-        userMentionVM.outputs.tappedMention
-            .withLatestFrom(userMentionVM.outputs.currentMentionRange) { ($0, $1) }
-            .withLatestFrom(textViewVM.outputs.textViewText) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] mentionsData, currentMentionRange, textViewText in
-                guard let self = self else { return }
-                if let tappedMentionString = mentionsData.tappedMentionString,
-                   let currentMentionRange = currentMentionRange {
-                    let textAfterMention = String(textViewText[currentMentionRange.upperBound...])
-                    let text = tappedMentionString + " " + textAfterMention
-                    self.textViewVM.inputs.textExternalChange.onNext(text)
-                    self.textViewVM.inputs.cursorRangeExternalChange.onNext(Range(NSRange(location: tappedMentionString.utf16.count + 1, length: 0), in: text))
-                }
-            })
+        textViewVM.outputs.cursorRange
+            .bind(to: userMentionVM.inputs.cursorRange)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(userMentionVM.outputs.mentionsData, userMentionVM.outputs.currentMentionRange)
-            .withLatestFrom(textViewVM.outputs.textViewText) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] mentionsData, currentMentionRange, textViewText in
-                guard let self = self else { return }
+        userMentionVM.outputs.textChanged
+            .bind(to: textViewVM.inputs.textExternalChange)
+            .disposed(by: disposeBag)
 
-                let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: textViewText)
+        userMentionVM.outputs.cursorRangeChanged
+            .bind(to: textViewVM.inputs.cursorRangeExternalChange)
+            .disposed(by: disposeBag)
 
-                let brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-
-                for mention in mentionsData.mentions {
-                    attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
-                                                value: brandColor,
-                                                range: mention.range)
-                }
-
-                if let currentMentionRange = currentMentionRange,
-                   let range = textViewText.nsRange(from: currentMentionRange) {
-                    attributedText.addAttribute(NSAttributedString.Key.foregroundColor,
-                                                value: brandColor,
-                                                range: range)
-                }
-                self.textViewVM.inputs.attributedTextChange.onNext(attributedText)
-            })
+        userMentionVM.outputs.attributedTextChanged
+            .bind(to: textViewVM.inputs.attributedTextChange)
             .disposed(by: disposeBag)
 
         servicesProvider
