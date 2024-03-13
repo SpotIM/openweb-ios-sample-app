@@ -14,6 +14,7 @@ struct OWUserMentionTextData {
     let replacingText: String?
 
     var textToCursor: String {
-        return String(text[..<cursorRange.lowerBound])
+        guard self.cursorRange.upperBound < self.text.utf16.endIndex else { return text }
+        return String(String(text.utf16)[..<cursorRange.lowerBound])
     }
 }

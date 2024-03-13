@@ -10,5 +10,6 @@ import Foundation
 
 struct OWTextViewReplaceData {
     let text: String
+    let originalText: String?
     let range: NSRange
 }
