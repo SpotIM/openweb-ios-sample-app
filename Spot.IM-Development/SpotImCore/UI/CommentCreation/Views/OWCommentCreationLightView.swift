@@ -25,7 +25,7 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastN
         static let closeButtonSize: CGFloat = 40.0
         static let closeButtonTrailingOffset: CGFloat = 5.0
         static let commentLabelsSpacing: CGFloat = 15.0
-        static let errorStateBottomPadding: CGFloat = 8.0
+        static let errorToastBottomPadding: CGFloat = 8.0
         static let closeButtomImageName: String = "closeCrossIconNew"
     }
 
@@ -192,7 +192,7 @@ fileprivate extension OWCommentCreationLightView {
             .subscribe(onNext: { [weak self] combinedData in
                 guard var self = self else { return }
                 var requiredData = combinedData.presentData.data
-                requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorStateBottomPadding
+                requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorToastBottomPadding
                 let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
                                                                                .dismiss: self.viewModel.inputs.dismissToast]
                 self.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)

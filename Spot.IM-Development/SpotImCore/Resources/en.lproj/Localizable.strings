@@ -131,11 +131,11 @@
 "ViewNewComment" = "View %d new comment";
 "TypingNow" = "%d Typing now";
 "LoginPromptTitle" = "Authorize to participate";
-"EditingComment" = "Editing comment"; // TODO: add to other languages
+"SomethingWentWrong" = "Oops, something went wrong";
+"EditingComment" = "Editing comment";
 "ErrorStateLoadReplies" = "We are unable to load replies right now";
 "ErrorStateLoadComments" = "We are unable to load comments right now";
-"ErrorStatePostComment" = "Failed to post your comment"; // TODO: add to other languages
-"SomethingWentWrong" = "Oops, something went wrong";
+"ErrorStatePostComment" = "Failed to post your comment";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
