@@ -1,40 +1,36 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
-// swift-module-flags: -target arm64-apple-macos10.9 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name RxSwift
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-macos10.13 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name RxSwift
+// swift-module-flags-ignorable: -enable-bare-slash-regex
 import Darwin
 import Dispatch
 import Foundation
 import Swift
 import _Concurrency
+import _StringProcessing
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension RxSwift.PrimitiveSequenceType where Self.Trait == RxSwift.SingleTrait {
-  
   #if compiler(>=5.3) && $EffectfulProp
   public var value: Self.Element {
     get async throws
   }
   #endif
-
 }
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension RxSwift.PrimitiveSequenceType where Self.Trait == RxSwift.MaybeTrait {
-  
   #if compiler(>=5.3) && $EffectfulProp
   public var value: Self.Element? {
     get async throws
   }
   #endif
-
 }
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension RxSwift.PrimitiveSequenceType where Self.Element == Swift.Never, Self.Trait == RxSwift.CompletableTrait {
-  
   #if compiler(>=5.3) && $EffectfulProp
   public var value: Swift.Void {
     get async throws
   }
   #endif
-
 }
 extension RxSwift.ObservableType {
   public func ifEmpty(switchTo other: RxSwift.Observable<Self.Element>) -> RxSwift.Observable<Self.Element>
@@ -345,7 +341,7 @@ extension RxSwift.InfallibleType {
   public func map<Result>(_ transform: @escaping (Self.Element) -> Result) -> RxSwift.Infallible<Result>
   public func compactMap<Result>(_ transform: @escaping (Self.Element) -> Result?) -> RxSwift.Infallible<Result>
 }
-extension RxSwift.InfallibleType where Self.Element : Swift.Comparable {
+extension RxSwift.InfallibleType where Self.Element : Swift.Equatable {
   public func distinctUntilChanged() -> RxSwift.Infallible<Self.Element>
 }
 extension RxSwift.InfallibleType {
@@ -440,6 +436,10 @@ final public class BooleanDisposable : RxSwift.Cancelable {
   final public func dispose()
   @objc deinit
 }
+extension RxSwift.InfallibleType {
+  public static func combineLatest<Collection>(_ collection: Collection, resultSelector: @escaping ([Collection.Element.Element]) throws -> Self.Element) -> RxSwift.Infallible<Self.Element> where Collection : Swift.Collection, Collection.Element : RxSwift.InfallibleType
+  public static func combineLatest<Collection>(_ collection: Collection) -> RxSwift.Infallible<[Self.Element]> where Collection : Swift.Collection, Self.Element == Collection.Element.Element, Collection.Element : RxSwift.InfallibleType
+}
 extension RxSwift.ObservableType {
   public func materialize() -> RxSwift.Observable<RxSwift.Event<Self.Element>>
 }
@@ -483,14 +483,12 @@ extension RxSwift.ObservableConvertibleType {
     get
   }
 }
-
 #if compiler(>=5.3) && $RethrowsProtocol
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension _Concurrency.AsyncSequence {
   public func asObservable() -> RxSwift.Observable<Self.Element>
 }
 #endif
-
 extension RxSwift.InfallibleType {
   public static func zip<E1, E2>(_ source1: RxSwift.Infallible<E1>, _ source2: RxSwift.Infallible<E2>, resultSelector: @escaping (E1, E2) throws -> Self.Element) -> RxSwift.Infallible<Self.Element>
 }
@@ -585,10 +583,10 @@ extension RxSwift.PrimitiveSequenceType where Self.Element == Swift.Never, Self.
 extension RxSwift.PrimitiveSequenceType where Self.Element == Swift.Never, Self.Trait == RxSwift.CompletableTrait {
   public func `do`(onError: ((Swift.Error) throws -> Swift.Void)? = nil, afterError: ((Swift.Error) throws -> Swift.Void)? = nil, onCompleted: (() throws -> Swift.Void)? = nil, afterCompleted: (() throws -> Swift.Void)? = nil, onSubscribe: (() -> Swift.Void)? = nil, onSubscribed: (() -> Swift.Void)? = nil, onDispose: (() -> Swift.Void)? = nil) -> RxSwift.Completable
   public func concat(_ second: RxSwift.Completable) -> RxSwift.Completable
-  public static func concat<Sequence>(_ sequence: Sequence) -> RxSwift.Completable where Sequence : Swift.Sequence, Sequence.Element == RxSwift.Completable
-  public static func concat<Collection>(_ collection: Collection) -> RxSwift.Completable where Collection : Swift.Collection, Collection.Element == RxSwift.Completable
+  public static func concat<Sequence>(_ sequence: Sequence) -> RxSwift.Completable where Sequence : Swift.Sequence, Sequence.Element == RxSwift.PrimitiveSequence<RxSwift.CompletableTrait, Swift.Never>
+  public static func concat<Collection>(_ collection: Collection) -> RxSwift.Completable where Collection : Swift.Collection, Collection.Element == RxSwift.PrimitiveSequence<RxSwift.CompletableTrait, Swift.Never>
   public static func concat(_ sources: RxSwift.Completable...) -> RxSwift.Completable
-  public static func zip<Collection>(_ sources: Collection) -> RxSwift.Completable where Collection : Swift.Collection, Collection.Element == RxSwift.Completable
+  public static func zip<Collection>(_ sources: Collection) -> RxSwift.Completable where Collection : Swift.Collection, Collection.Element == RxSwift.PrimitiveSequence<RxSwift.CompletableTrait, Swift.Never>
   public static func zip(_ sources: [RxSwift.Completable]) -> RxSwift.Completable
   public static func zip(_ sources: RxSwift.Completable...) -> RxSwift.Completable
 }
@@ -665,7 +663,7 @@ public struct Infallible<Element> : RxSwift.InfallibleType {
 extension RxSwift.InfallibleType {
   public func subscribe<Object>(with object: Object, onNext: ((Object, Self.Element) -> Swift.Void)? = nil, onCompleted: ((Object) -> Swift.Void)? = nil, onDisposed: ((Object) -> Swift.Void)? = nil) -> RxSwift.Disposable where Object : AnyObject
   public func subscribe(onNext: ((Self.Element) -> Swift.Void)? = nil, onCompleted: (() -> Swift.Void)? = nil, onDisposed: (() -> Swift.Void)? = nil) -> RxSwift.Disposable
-  public func subscribe(_ on: @escaping (RxSwift.Event<Self.Element>) -> Swift.Void) -> RxSwift.Disposable
+  public func subscribe(_ on: @escaping (RxSwift.InfallibleEvent<Self.Element>) -> Swift.Void) -> RxSwift.Disposable
 }
 open class VirtualTimeScheduler<Converter> : RxSwift.SchedulerType where Converter : RxSwift.VirtualTimeConverterType {
   public typealias VirtualTime = Converter.VirtualTimeUnit
@@ -703,6 +701,11 @@ public enum InfallibleEvent<Element> {
 extension RxSwift.Infallible {
   public typealias InfallibleObserver = (RxSwift.InfallibleEvent<Element>) -> Swift.Void
   public static func create(subscribe: @escaping (@escaping RxSwift.Infallible<Element>.InfallibleObserver) -> RxSwift.Disposable) -> RxSwift.Infallible<Element>
+}
+extension RxSwift.InfallibleEvent : RxSwift.EventConvertible {
+  public var event: RxSwift.Event<Element> {
+    get
+  }
 }
 public struct Binder<Value> : RxSwift.ObserverType {
   public typealias Element = Value
@@ -879,23 +882,44 @@ extension RxSwift.ObservableType where Self.Element == Any {
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2>(_ source1: I1, _ source2: I2, resultSelector: @escaping (I1.Element, I2.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType
 }
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2>(_ source1: O1, _ source2: O2) -> RxSwift.Infallible<(O1.Element, O2.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType
+}
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2, I3>(_ source1: I1, _ source2: I2, _ source3: I3, resultSelector: @escaping (I1.Element, I2.Element, I3.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType, I3 : RxSwift.InfallibleType
+}
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2, O3>(_ source1: O1, _ source2: O2, _ source3: O3) -> RxSwift.Infallible<(O1.Element, O2.Element, O3.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType, O3 : RxSwift.InfallibleType
 }
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2, I3, I4>(_ source1: I1, _ source2: I2, _ source3: I3, _ source4: I4, resultSelector: @escaping (I1.Element, I2.Element, I3.Element, I4.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType, I3 : RxSwift.InfallibleType, I4 : RxSwift.InfallibleType
 }
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2, O3, O4>(_ source1: O1, _ source2: O2, _ source3: O3, _ source4: O4) -> RxSwift.Infallible<(O1.Element, O2.Element, O3.Element, O4.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType, O3 : RxSwift.InfallibleType, O4 : RxSwift.InfallibleType
+}
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2, I3, I4, I5>(_ source1: I1, _ source2: I2, _ source3: I3, _ source4: I4, _ source5: I5, resultSelector: @escaping (I1.Element, I2.Element, I3.Element, I4.Element, I5.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType, I3 : RxSwift.InfallibleType, I4 : RxSwift.InfallibleType, I5 : RxSwift.InfallibleType
+}
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2, O3, O4, O5>(_ source1: O1, _ source2: O2, _ source3: O3, _ source4: O4, _ source5: O5) -> RxSwift.Infallible<(O1.Element, O2.Element, O3.Element, O4.Element, O5.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType, O3 : RxSwift.InfallibleType, O4 : RxSwift.InfallibleType, O5 : RxSwift.InfallibleType
 }
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2, I3, I4, I5, I6>(_ source1: I1, _ source2: I2, _ source3: I3, _ source4: I4, _ source5: I5, _ source6: I6, resultSelector: @escaping (I1.Element, I2.Element, I3.Element, I4.Element, I5.Element, I6.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType, I3 : RxSwift.InfallibleType, I4 : RxSwift.InfallibleType, I5 : RxSwift.InfallibleType, I6 : RxSwift.InfallibleType
 }
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2, O3, O4, O5, O6>(_ source1: O1, _ source2: O2, _ source3: O3, _ source4: O4, _ source5: O5, _ source6: O6) -> RxSwift.Infallible<(O1.Element, O2.Element, O3.Element, O4.Element, O5.Element, O6.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType, O3 : RxSwift.InfallibleType, O4 : RxSwift.InfallibleType, O5 : RxSwift.InfallibleType, O6 : RxSwift.InfallibleType
+}
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2, I3, I4, I5, I6, I7>(_ source1: I1, _ source2: I2, _ source3: I3, _ source4: I4, _ source5: I5, _ source6: I6, _ source7: I7, resultSelector: @escaping (I1.Element, I2.Element, I3.Element, I4.Element, I5.Element, I6.Element, I7.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType, I3 : RxSwift.InfallibleType, I4 : RxSwift.InfallibleType, I5 : RxSwift.InfallibleType, I6 : RxSwift.InfallibleType, I7 : RxSwift.InfallibleType
 }
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2, O3, O4, O5, O6, O7>(_ source1: O1, _ source2: O2, _ source3: O3, _ source4: O4, _ source5: O5, _ source6: O6, _ source7: O7) -> RxSwift.Infallible<(O1.Element, O2.Element, O3.Element, O4.Element, O5.Element, O6.Element, O7.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType, O3 : RxSwift.InfallibleType, O4 : RxSwift.InfallibleType, O5 : RxSwift.InfallibleType, O6 : RxSwift.InfallibleType, O7 : RxSwift.InfallibleType
+}
 extension RxSwift.Infallible {
   public static func combineLatest<I1, I2, I3, I4, I5, I6, I7, I8>(_ source1: I1, _ source2: I2, _ source3: I3, _ source4: I4, _ source5: I5, _ source6: I6, _ source7: I7, _ source8: I8, resultSelector: @escaping (I1.Element, I2.Element, I3.Element, I4.Element, I5.Element, I6.Element, I7.Element, I8.Element) throws -> Element) -> RxSwift.Infallible<Element> where I1 : RxSwift.InfallibleType, I2 : RxSwift.InfallibleType, I3 : RxSwift.InfallibleType, I4 : RxSwift.InfallibleType, I5 : RxSwift.InfallibleType, I6 : RxSwift.InfallibleType, I7 : RxSwift.InfallibleType, I8 : RxSwift.InfallibleType
+}
+extension RxSwift.InfallibleType where Self.Element == Any {
+  public static func combineLatest<O1, O2, O3, O4, O5, O6, O7, O8>(_ source1: O1, _ source2: O2, _ source3: O3, _ source4: O4, _ source5: O5, _ source6: O6, _ source7: O7, _ source8: O8) -> RxSwift.Infallible<(O1.Element, O2.Element, O3.Element, O4.Element, O5.Element, O6.Element, O7.Element, O8.Element)> where O1 : RxSwift.InfallibleType, O2 : RxSwift.InfallibleType, O3 : RxSwift.InfallibleType, O4 : RxSwift.InfallibleType, O5 : RxSwift.InfallibleType, O6 : RxSwift.InfallibleType, O7 : RxSwift.InfallibleType, O8 : RxSwift.InfallibleType
 }
 extension RxSwift.ObservableType {
   public func debug(_ identifier: Swift.String? = nil, trimOutput: Swift.Bool = false, file: Swift.String = #file, line: Swift.UInt = #line, function: Swift.String = #function) -> RxSwift.Observable<Self.Element>

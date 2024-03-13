@@ -6,94 +6,90 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		x/Qu08EYeddDYhLSPmrScsWqZg8=
+		iGLRPuaN1dR67GgQkiqzvxmLIpM=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
 		<key>Headers/RxRelay-Swift.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			8r4h0g25GnIuyNIDFQkyXD8yYyE=
-			</data>
 			<key>hash2</key>
 			<data>
-			iFY6qDlXZa+tpOMh6cD50SCZJV8ZGaWrQrzidtdeork=
+			1BCLBJRYg/lddjlSlPS28Hd7wpsShVipnQ2BeX9Z/BU=
+			</data>
+		</dict>
+		<key>Modules/RxRelay.swiftmodule/arm64-apple-macos.abi.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			hYYrEop9g1SXYhD+5Y51nqI099m7J2z1NPYCijXZyuI=
+			</data>
+		</dict>
+		<key>Modules/RxRelay.swiftmodule/arm64-apple-macos.private.swiftinterface</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			q2GygJ+bLN31sbMWZ4EDWaMwHCozgPAhdqBmbI2gQhs=
 			</data>
 		</dict>
 		<key>Modules/RxRelay.swiftmodule/arm64-apple-macos.swiftdoc</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			uZe7nDxjn8b3gWrJGMhk5Ff42Ic=
-			</data>
 			<key>hash2</key>
 			<data>
-			8rZBExi917msO5gJmBXH/uVcVit4ozHX135d5m/QtEI=
+			6pkAXVWZ0FTbm2Hyp6AVVrrK/npn+TxNudO+6K5mzV8=
 			</data>
 		</dict>
 		<key>Modules/RxRelay.swiftmodule/arm64-apple-macos.swiftinterface</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			xroL+Q0tb6tKbzsz18Qkmc3I31E=
-			</data>
 			<key>hash2</key>
 			<data>
-			adRGezbbqP4tGm26eSla7QXAXhHi/UCT059AImDJdyU=
+			q2GygJ+bLN31sbMWZ4EDWaMwHCozgPAhdqBmbI2gQhs=
 			</data>
 		</dict>
 		<key>Modules/RxRelay.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			qdNTTZVG1TKf0fDp5+ct8n2lu9U=
-			</data>
 			<key>hash2</key>
 			<data>
-			rrGQThI+ak9wLXS51lcEp/1nlBOgryzDlR5m5rBcDqQ=
+			4JnV3lSINx+0dgyMA8sKJh/4V9MUUIoB8y7RXXb/h9s=
+			</data>
+		</dict>
+		<key>Modules/RxRelay.swiftmodule/x86_64-apple-macos.abi.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			hYYrEop9g1SXYhD+5Y51nqI099m7J2z1NPYCijXZyuI=
+			</data>
+		</dict>
+		<key>Modules/RxRelay.swiftmodule/x86_64-apple-macos.private.swiftinterface</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			w8ysAGHT9URu3C3quGkr2e3bC1b6TKql62nphvvYNzo=
 			</data>
 		</dict>
 		<key>Modules/RxRelay.swiftmodule/x86_64-apple-macos.swiftdoc</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			ZY14cvKEdE11N7rZ7qCzVh/mHPw=
-			</data>
 			<key>hash2</key>
 			<data>
-			q57VwuKloa1PineXKRApmPj1tb1eIZzeanZcolKY0ss=
+			ud9fKTMSgYe+NYUfNxeT8VnD+57PKXbGBeYzAaIg1ro=
 			</data>
 		</dict>
 		<key>Modules/RxRelay.swiftmodule/x86_64-apple-macos.swiftinterface</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			SokLMCVqZ8vUDAto9wnQTv/5PEE=
-			</data>
 			<key>hash2</key>
 			<data>
-			Nne8f324PJJSqLcIta7T9gnMqmCU4zgIudXVFXtDCDA=
+			w8ysAGHT9URu3C3quGkr2e3bC1b6TKql62nphvvYNzo=
 			</data>
 		</dict>
 		<key>Modules/RxRelay.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			+mEMiYKwLN+JL+kSTziGsEXHIao=
-			</data>
 			<key>hash2</key>
 			<data>
-			Ov6W557U9H8I+/reb6o71+8rtIP1LpqSZgJ+CSOY2ZY=
+			+XCOqk1X1QSwjGcT2irdJGGlj7dVddBM40iqSzUGrFY=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			8mvT7hQlc3oni18JwCL9IMCb70w=
-			</data>
 			<key>hash2</key>
 			<data>
 			wPI+/zxEumuTk2JO6HcehglO6BsrF5XyMEMEhX4KfPI=
@@ -101,13 +97,9 @@
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			x/Qu08EYeddDYhLSPmrScsWqZg8=
-			</data>
 			<key>hash2</key>
 			<data>
-			O3jLExGiuwGGzfwZYfYJFFtwJlSFd+bwGbZVZ9vXbD4=
+			zEH+FxIs7TgTp8aYAVldZJ2Az5izO5lcKJlCJkZSxQw=
 			</data>
 		</dict>
 	</dict>
