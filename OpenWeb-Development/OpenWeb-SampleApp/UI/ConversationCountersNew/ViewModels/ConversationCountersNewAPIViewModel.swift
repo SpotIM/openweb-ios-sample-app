@@ -7,6 +7,7 @@
 //
 
 import RxSwift
+import UIKit
 import OpenWebSDK
 
 protocol ConversationCountersNewAPIViewModelingInputs {
