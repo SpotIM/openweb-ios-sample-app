@@ -186,7 +186,7 @@ extension OWComment {
     enum Content: Decodable, Equatable {
 
         enum CodingKeys: CodingKey { // swiftlint:disable:this nesting
-            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId
+            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId, title, previewUrl
         }
 
         struct Text: Decodable, Equatable { // swiftlint:disable:this nesting
@@ -200,6 +200,8 @@ extension OWComment {
             var originalWidth: Int
             var originalHeight: Int
             var originalUrl: String
+            var title: String?
+            var previewUrl: String?
         }
 
         struct Image: Decodable, Equatable { // swiftlint:disable:this nesting
@@ -227,11 +229,15 @@ extension OWComment {
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
                 let originalUrl = try container.decode(String.self, forKey: .originalUrl)
-                self = .animation(Animation( previewWidth: previewWidth,
-                                             previewHeight: previewHeight,
-                                             originalWidth: originalWidth,
-                                             originalHeight: originalHeight,
-                                             originalUrl: originalUrl))
+                let title = try? container.decode(String.self, forKey: .title)
+                let previewUrl = try? container.decode(String.self, forKey: .previewUrl)
+                self = .animation(Animation(previewWidth: previewWidth,
+                                            previewHeight: previewHeight,
+                                            originalWidth: originalWidth,
+                                            originalHeight: originalHeight,
+                                            originalUrl: originalUrl,
+                                            title: title,
+                                            previewUrl: previewUrl))
             case "image":
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
