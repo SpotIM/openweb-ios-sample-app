@@ -50,7 +50,7 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
         static let trailingLandscapeMargin: CGFloat = 56.0
         static let leadingLandscapeMargin: CGFloat = 66.0
-        static let errorStateBottomPadding: CGFloat = 8.0
+        static let errorToastBottomPadding: CGFloat = 8.0
     }
 
     var toastView: OWToastView? = nil
@@ -360,7 +360,7 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         let toolbarHeight = self.toolbar?.frame.size.height ?? 0
         let footerHeight = self.footerView.frame.size.height
         let headerHeight = self.headerView.frame.size.height
-        return toolbarHeight + footerHeight + headerHeight + Metrics.errorStateBottomPadding
+        return toolbarHeight + footerHeight + headerHeight + Metrics.errorToastBottomPadding
     }
 
     // swiftlint:disable function_body_length
