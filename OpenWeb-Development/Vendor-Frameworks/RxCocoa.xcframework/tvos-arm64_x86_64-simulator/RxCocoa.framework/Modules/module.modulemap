@@ -6,6 +6,6 @@ framework module RxCocoa {
 }
 
 module RxCocoa.Swift {
-    header "RxCocoa-Swift.h"
-    requires objc
+  header "RxCocoa-Swift.h"
+  requires objc
 }
