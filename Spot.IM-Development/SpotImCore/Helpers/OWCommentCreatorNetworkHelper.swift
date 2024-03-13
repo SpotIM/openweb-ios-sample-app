@@ -91,7 +91,6 @@ fileprivate extension OWCommentCreatorNetworkHelper {
         if let gifContent = commentCreationData.commentContent.gif {
             content.append([
                 "type": "animation",
-                "id": "dmvodzjX8wU7icE3TL",
                 "originalUrl": gifContent.originalUrl,
                 "originalWidth": gifContent.originalWidth,
                 "originalHeight": gifContent.originalHeight,
