@@ -1,6 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
-// swift-module-flags: -target arm64-apple-macos10.9 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name RxCocoa
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-macos10.13 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name RxCocoa
+// swift-module-flags-ignorable: -enable-bare-slash-regex
 import Cocoa
 import CoreGraphics
 import Dispatch
@@ -11,6 +12,7 @@ import RxSwift
 import Swift
 import WebKit
 import _Concurrency
+import _StringProcessing
 extension RxSwift.Reactive where Base : AppKit.NSSlider {
   public var value: RxCocoa.ControlProperty<Swift.Double> {
     get
@@ -94,7 +96,7 @@ extension RxCocoa.SharedSequenceConvertibleType where Self.SharingStrategy == Rx
     get
   }
   public static func registerKnownImplementations()
-  @objc open func textDidChange(_ notification: Foundation.Notification)
+  @_Concurrency.MainActor(unsafe) @objc open func textDidChange(_ notification: Foundation.Notification)
   open class func currentDelegate(for object: RxCocoa.RxTextViewDelegateProxy.ParentObject) -> AppKit.NSTextViewDelegate?
   open class func setCurrentDelegate(_ delegate: AppKit.NSTextViewDelegate?, to object: RxCocoa.RxTextViewDelegateProxy.ParentObject)
   @objc deinit
@@ -371,17 +373,17 @@ extension RxSwift.Reactive where Base : ObjectiveC.NSObject {
 extension RxSwift.Reactive where Base : ObjectiveC.NSObject {
   public func observeWeakly<Element>(_ type: Element.Type, _ keyPath: Swift.String, options: RxCocoa.KeyValueObservingOptions = [.new, .initial]) -> RxSwift.Observable<Element?> where Element : Swift.RawRepresentable, Element.RawValue : RxCocoa.KVORepresentable
 }
-extension CoreGraphics.CGRect : RxCocoa.KVORepresentable {
+extension CoreFoundation.CGRect : RxCocoa.KVORepresentable {
   public typealias KVOType = Foundation.NSValue
-  public init?(KVOValue: CoreGraphics.CGRect.KVOType)
+  public init?(KVOValue: CoreFoundation.CGRect.KVOType)
 }
-extension CoreGraphics.CGPoint : RxCocoa.KVORepresentable {
+extension CoreFoundation.CGPoint : RxCocoa.KVORepresentable {
   public typealias KVOType = Foundation.NSValue
-  public init?(KVOValue: CoreGraphics.CGPoint.KVOType)
+  public init?(KVOValue: CoreFoundation.CGPoint.KVOType)
 }
-extension CoreGraphics.CGSize : RxCocoa.KVORepresentable {
+extension CoreFoundation.CGSize : RxCocoa.KVORepresentable {
   public typealias KVOType = Foundation.NSValue
-  public init?(KVOValue: CoreGraphics.CGSize.KVOType)
+  public init?(KVOValue: CoreFoundation.CGSize.KVOType)
 }
 extension RxSwift.ObservableType {
   public func bind<Observer>(to observers: Observer...) -> RxSwift.Disposable where Observer : RxSwift.ObserverType, Self.Element == Observer.Element
@@ -404,7 +406,7 @@ extension RxSwift.Reactive where Base : AppKit.NSButton {
     get
   }
   public static func registerKnownImplementations()
-  @objc open func controlTextDidChange(_ notification: Foundation.Notification)
+  @_Concurrency.MainActor(unsafe) @objc open func controlTextDidChange(_ notification: Foundation.Notification)
   open class func currentDelegate(for object: RxCocoa.RxTextFieldDelegateProxy.ParentObject) -> AppKit.NSTextFieldDelegate?
   open class func setCurrentDelegate(_ delegate: AppKit.NSTextFieldDelegate?, to object: RxCocoa.RxTextFieldDelegateProxy.ParentObject)
   @objc deinit
@@ -431,7 +433,7 @@ extension RxCocoa.SharedSequenceConvertibleType where Self.SharingStrategy == Rx
   public func asSignal() -> RxCocoa.Signal<Self.Element>
 }
 extension RxSwift.Reactive where Base : AppKit.NSView {
-  public var alpha: RxSwift.Binder<CoreGraphics.CGFloat> {
+  public var alpha: RxSwift.Binder<CoreFoundation.CGFloat> {
     get
   }
 }
