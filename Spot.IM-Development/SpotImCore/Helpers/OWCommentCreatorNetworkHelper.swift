@@ -98,7 +98,7 @@ fileprivate extension OWCommentCreatorNetworkHelper {
                 "previewWidth": gifContent.previewWidth,
                 "previewHeight": gifContent.previewHeight,
                 "title": gifContent.title ?? "",
-                "previewUrl": gifContent.previewUrl ?? ""
+                "previewUrl": gifContent.previewUrl ?? gifContent.originalUrl
             ])
         }
 
