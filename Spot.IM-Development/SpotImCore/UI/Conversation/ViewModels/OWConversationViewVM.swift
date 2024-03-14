@@ -60,7 +60,7 @@ protocol OWConversationViewViewModelingOutputs {
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<OWOpenProfileType> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
-    var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
@@ -575,8 +575,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
-    var openClarityDetails: Observable<OWClarityDetailsType> {
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> {
         return openClarityDetailsChange
             .asObservable()
     }
@@ -1653,17 +1653,45 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe on new rejected comment
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<(OWCommentStatusType, OWCommentId)> in
+                let statusObservable: [Observable<(OWCommentStatusType, OWCommentId)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentStatusType, OWCommentId)> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    let commentId = commentCellVm.outputs.commentVM.outputs.comment.id ?? ""
+                    return commentStatusVm.outputs.status
+                        .map { ($0, commentId) }
+                }
+                return Observable.merge(statusObservable)
+            }
+            .subscribe(onNext: { [weak self] (status, commentId) in
+                switch status {
+                case .rejected:
+                    self?.sendEvent(for: .rejectedCommentNoticeView(commentId: commentId))
+                case .appealed:
+                    self?.sendEvent(for: .appealCommentNoticeView(commentId: commentId))
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+
         // Observe open clarity details
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
-                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsRequireData> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsRequireData>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsRequireData> in
                     let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
                     return commentStatusVm.outputs.learnMoreClicked
+                        .map { OWClarityDetailsRequireData(commentId: commentCellVm.outputs.id, type: $0) }
                 }
                 return Observable.merge(learnMoreClickObservable)
             }
-            .subscribe(onNext: { [weak self] clarityDetailsType in
-                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            .subscribe(onNext: { [weak self] data in
+                self?.openClarityDetailsChange.onNext(data)
+                // send analytics for rejected
+                if data.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: data.commentId))
+                }
             })
             .disposed(by: disposeBag)
 
