@@ -118,6 +118,18 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     var textBeforeClosedChange = BehaviorSubject<String>(value: "")
     var textBeforeClosedChanged: Observable<String> {
         return textBeforeClosedChange
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData -> String in
+                var text = text
+                var rangeLocationAccumulate = 0
+                for mention in mentionsData.mentions {
+                    let mentionJsonString = mention.jsonString
+                    mention.range.location += rangeLocationAccumulate
+                    text = text.replacingOccurrences(of: mention.text, with: mentionJsonString, range: Range(mention.range, in: text))
+                    rangeLocationAccumulate += mentionJsonString.utf16.count - mention.text.utf16.count
+                }
+                return text
+            }
             .asObservable()
     }
 

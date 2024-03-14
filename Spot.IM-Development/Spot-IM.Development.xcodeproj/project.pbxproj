@@ -886,6 +886,7 @@
 		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
+		9E559C112BA2E33F0035397C /* OWUserMentionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E559C102BA2E33F0035397C /* OWUserMentionHelper.swift */; };
 		9E726CCE2A4D728B0048A13D /* OWFailableWrapperDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */; };
 		9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */; };
 		9E73DAD529C85E640098EEC1 /* UILoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */; };
@@ -1940,6 +1941,7 @@
 		9E4B4E6F2AADE74800F4425F /* OWErrorStateCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWErrorStateCellVM.swift; sourceTree = "<group>"; };
 		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
+		9E559C102BA2E33F0035397C /* OWUserMentionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserMentionHelper.swift; sourceTree = "<group>"; };
 		9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailableWrapperDecodable.swift; sourceTree = "<group>"; };
 		9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerView.swift; sourceTree = "<group>"; };
 		9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerViewModel.swift; sourceTree = "<group>"; };
@@ -5794,6 +5796,7 @@
 			children = (
 				9EBE4E7B2B8C9E9E00D836CF /* OWUserMentionViewVM.swift */,
 				9EBE4E7D2B8CA52F00D836CF /* OWUserMentionCellVM.swift */,
+				9E559C102BA2E33F0035397C /* OWUserMentionHelper.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -6637,6 +6640,7 @@
 				241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */,
 				3DDE2AD22A602F07007684C8 /* OWCommentCreationRequestOption.swift in Sources */,
 				3DF95BD727CE55C40008A380 /* OWBaseCoordinator.swift in Sources */,
+				9E559C112BA2E33F0035397C /* OWUserMentionHelper.swift in Sources */,
 				2473A2672A41B3EA0086B339 /* OWToastView.swift in Sources */,
 				164047A829E420D1001DD35B /* OWConversationReadRM.swift in Sources */,
 				24D31ED72AB033C70038417B /* OWToastNotificationService.swift in Sources */,
