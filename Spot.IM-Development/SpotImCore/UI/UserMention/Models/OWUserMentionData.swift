@@ -23,4 +23,8 @@ class OWUserMentionObject {
         self.text = text
         self.range = range
     }
+
+    var jsonString: String {
+        return "@{\"id\": \"\(id)\"}"
+    }
 }
