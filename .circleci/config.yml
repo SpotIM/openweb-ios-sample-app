@@ -682,7 +682,7 @@ workflows:
   run-nightly-s3_workflow:
     when: << pipeline.parameters.run-nightly-s3 >>
     jobs:
-      - run-nightly-s3_job:
+      - run-nightly-s3_job
 
   independent_job_workflow:
     jobs:
