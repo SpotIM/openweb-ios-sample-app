@@ -26,6 +26,8 @@ protocol OWClarityDetailsViewViewModelingOutputs {
     var topParagraphAttributedStringObservable: Observable<NSAttributedString> { get }
     var communityGuidelinesClickablePlaceholder: String { get }
     var communityGuidelinesClickObservable: Observable<URL> { get }
+    var shouldShowAppealView: Observable<Bool> { get }
+    var appealLabelViewModel: OWAppealLabelViewModeling { get }
 }
 
 protocol OWClarityDetailsViewViewModeling {
@@ -40,20 +42,46 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
     var outputs: OWClarityDetailsViewViewModelingOutputs { return self }
 
     fileprivate let type: OWClarityDetailsType
+    fileprivate let commentId: OWCommentId
     fileprivate var disposeBag: DisposeBag
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let requiredData: OWClarityDetailsRequireData
     fileprivate var articleUrl: String = ""
+    fileprivate let presentationalMode: OWPresentationalModeCompact
 
-    init(requiredData: OWClarityDetailsRequireData,
+    init(data: OWClarityDetailsRequireData,
+         presentationalMode: OWPresentationalModeCompact = .none,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
-        self.type = requiredData.type
+        self.type = data.type
+        self.commentId = data.commentId
         self.servicesProvider = servicesProvider
-        self.requiredData = requiredData
+        self.requiredData = data
+        self.presentationalMode = presentationalMode
         disposeBag = DisposeBag()
 
         setupObservers()
     }
+
+    lazy var appealLabelViewModel: OWAppealLabelViewModeling = {
+        OWAppealLabelViewModel(commentId: commentId)
+    }()
+
+    lazy var shouldShowAppealView: Observable<Bool> = {
+        let configurationService = servicesProvider.spotConfigurationService()
+        return configurationService.config(spotId: OWManager.manager.spotId)
+            .take(1)
+            .map { [weak self] config -> Bool in
+                guard let self = self,
+                      let conversationConfig = config.conversation,
+                      conversationConfig.isAppealEnabled == true
+                else {
+                    return false
+                }
+
+                return self.type == .rejected
+            }
+            .asObservable()
+    }()
 
     var communityGuidelinesClick = PublishSubject<Void>()
     fileprivate lazy var paragraphsCommunityGuidelinesClick: Observable<Void> = {
@@ -69,6 +97,11 @@ class OWClarityDetailsViewVM: OWClarityDetailsViewViewModeling,
                 return url
             }
             .unwrap()
+            .withLatestFrom(servicesProvider.themeStyleService().style) { url, style in
+                var urlWithParams = url
+                urlWithParams.appendThemeQueryParam(with: style)
+                return urlWithParams
+            }
             .asObservable()
     }
 
@@ -207,9 +240,28 @@ fileprivate extension OWClarityDetailsViewVM {
                 self?.sendEvent(for: .communityGuidelinesLinkClicked)
             })
             .disposed(by: disposeBag)
+
+        dismissView
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                if self.type == .rejected {
+                    self.sendEvent(for: .rejectedNoticeLearnDialogExit(commentId: self.commentId))
+                }
+            })
+            .disposed(by: disposeBag)
+
+        appealLabelViewModel
+            .outputs
+            .openAppeal
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self else { return }
+                if self.type == .rejected {
+                    self.sendEvent(for: .rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: data.commentId))
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
-    // TODO: translations
     func getTopParagraphAttributedString(clarityType: OWClarityDetailsType, style: OWThemeStyle) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: OWColorPalette.shared.color(type: .textColor3, themeStyle: style),
@@ -241,7 +293,7 @@ fileprivate extension OWClarityDetailsViewVM {
             .analyticsEvent(
                 for: eventType,
                 articleUrl: articleUrl,
-                layoutStyle: OWLayoutStyle(from: requiredData.presentationalStyle),
+                layoutStyle: OWLayoutStyle(from: self.presentationalMode),
                 component: .clarityDetails)
     }
 

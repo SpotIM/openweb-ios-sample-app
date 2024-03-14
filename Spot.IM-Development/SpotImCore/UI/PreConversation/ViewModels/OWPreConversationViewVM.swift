@@ -20,6 +20,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var viewInitialized: PublishSubject<Void> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -50,11 +51,13 @@ protocol OWPreConversationViewViewModelingOutputs {
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
     var openProfile: Observable<OWOpenProfileType> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
-    var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
     var commentId: Observable<String> { get }
     var parentId: Observable<String> { get }
     var dataSourceTransition: OWViewTransition { get }
+    var displayToast: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
 }
 
@@ -284,8 +287,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
-    var openClarityDetails: Observable<OWClarityDetailsType> {
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> {
         return openClarityDetailsChange
             .asObservable()
     }
@@ -314,6 +317,21 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
             .asObservable()
     }
 
+    var dismissToast = PublishSubject<Void>()
+
+    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToast: Observable<OWToastNotificationCombinedData> {
+        return _displayToast
+            .unwrap()
+            .asObservable()
+    }
+    var hideToast: Observable<Void> {
+        return _displayToast
+            .filter { $0 == nil }
+            .voidify()
+            .asObservable()
+    }
+
     fileprivate var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
@@ -322,6 +340,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var retryMute = PublishSubject<Void>()
 
     var viewInitialized = PublishSubject<Void>()
     fileprivate lazy var viewInitializedObservable: Observable<OWLoadingTriggeredReason> = {
@@ -464,6 +483,12 @@ fileprivate extension OWPreConversationViewViewModel {
     func setupObservers() {
         servicesProvider.activeArticleService().updateStrategy(preConversationData.article.articleInformationStrategy)
 
+        servicesProvider.toastNotificationService()
+            .toastToShow
+            .observe(on: MainScheduler.instance)
+            .bind(to: _displayToast)
+            .disposed(by: disposeBag)
+
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
             .filter { $0 == .loadConversationComments }
@@ -529,14 +554,13 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self else { return }
                 self.dataSourceTransition = .reload // Block animations in the table view
             })
-            .flatMapLatest { [weak self] sortOption -> Observable<Event<OWConversationReadRM>> in
+            .flatMapLatest { [weak self] sortOption -> Observable<OWConversationReadRM> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
                 .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
-                .materialize() // Required to keep the final subscriber even if errors arrived from the network
             }
 
         let conversationFetchedObservable = Observable.merge(
@@ -546,12 +570,15 @@ fileprivate extension OWPreConversationViewViewModel {
         )
             .flatMapLatest { loadingTriggeredReason -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 return conversationReadObservable
+                    .materialize() // Required to keep the final subscriber even if errors arrived from the network
                     .map { ($0, loadingTriggeredReason) }
             }
             .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
-                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .preConversationLoadingInitialComments)
+                let timeToLoadInitialComments = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .preConversationLoadingInitialComments,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((event, loadingTriggeredReason))
@@ -652,6 +679,22 @@ fileprivate extension OWPreConversationViewViewModel {
         compactCommentVM.outputs.tryAgainTapped
             .map { .loadConversationComments }
             .bind(to: tryAgainAfterError)
+            .disposed(by: disposeBag)
+
+        // Refresh conversation after login
+        loginPromptViewModel
+            .outputs
+            .authenticationTriggered
+            .flatMapLatest { [weak self] _ -> Observable<Bool> in
+                guard let self = self else { return .empty() }
+                return self.servicesProvider.authenticationManager().waitForAuthentication(for: .loginPrompt)
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.servicesProvider.conversationUpdaterService()
+                    .update(.refreshConversation, postId: self.postId)
+            })
             .disposed(by: disposeBag)
 
         // First conversation load
@@ -1045,15 +1088,20 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Observe open clarity details
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
-                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsRequireData> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsRequireData>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsRequireData> in
                     let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
                     return commentStatusVm.outputs.learnMoreClicked
+                        .map { OWClarityDetailsRequireData(commentId: commentCellVm.outputs.id, type: $0) }
                 }
                 return Observable.merge(learnMoreClickObservable)
             }
-            .subscribe(onNext: { [weak self] clarityDetailsType in
-                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            .subscribe(onNext: { [weak self] clarityDetailsData in
+                self?.openClarityDetailsChange.onNext(clarityDetailsData)
+                // send analytics for rejected
+                if clarityDetailsData.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: clarityDetailsData.commentId))
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1285,7 +1333,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Handling mute user from network
         muteUserObservable
-            .flatMap { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMap { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
@@ -1294,13 +1342,22 @@ fileprivate extension OWPreConversationViewViewModel {
                     .response
                     .materialize()
             }
-            .map { event -> Bool in
+            .map { [weak self] event -> Bool in
+                guard let self = self else { return false }
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: nil))
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: self.retryMute))
                     return false
                 default:
                     return false
@@ -1309,6 +1366,16 @@ fileprivate extension OWPreConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        // Retry when triggerd
+        retryMute
+            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
+                return comment
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.muteCommentUser.onNext(comment)
             })
             .disposed(by: disposeBag)
 
@@ -1380,19 +1447,41 @@ fileprivate extension OWPreConversationViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
+
+        // Actions after internet connection restored
+        servicesProvider
+            .networkAvailabilityService()
+            .networkAvailable
+            .scan((false, nil), accumulator: { previous, current -> (Bool, Bool?) in
+                // first time no need to update
+                guard let previousValue = previous.1 else {
+                    return (false, current)
+                }
+                // Need to update only if internet is restored
+                if previousValue == false && current == true {
+                    return (true, current)
+                } else {
+                    return (false, current)
+                }
+            })
+            .filter { $0.0 } // Continue only if result is true
+            .take(1)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // Trigger re-fetching config
+                self.communityGuidelinesViewModel.inputs.retryGetConfig.onNext(())
+                // Trigger re-fetching conversation
+                self.tryAgainAfterError.onNext(.loadConversationComments)
+            })
+            .disposed(by: disposeBag)
+
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
-
-    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
-        let measureService = servicesProvider.timeMeasuringService()
-        let measureResult = measureService.endMeasure(forKey: key)
-        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
-           milliseconds < Metrics.delayBeforeTryAgainAfterError {
-            return milliseconds
-        }
-        // If end was called before start for some reason, returning 0 milliseconds here
-        return 0
-    }
 
     func isNonTableViewStyle(_ style: OWPreConversationStyle) -> Bool {
         switch style {
