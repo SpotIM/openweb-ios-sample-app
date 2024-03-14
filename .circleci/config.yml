@@ -700,7 +700,7 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/OpenWeb-SampleApp.app
-          to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.app"
+          to: "s3://prod-ow-mobile/iOS/${S3_UPLOAD_PATH}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
@@ -725,7 +725,7 @@ jobs:
 
       - aws-s3/sync:
           from: ipa-build
-          to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.ipa"
+          to: "s3://prod-ow-mobile/iOS/${S3_UPLOAD_PATH}/OpenWeb-SampleApp.ipa"
           arguments: |
             --region $AWS_REGION
 
