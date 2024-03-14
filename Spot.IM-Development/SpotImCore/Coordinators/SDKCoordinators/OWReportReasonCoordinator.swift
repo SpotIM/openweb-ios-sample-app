@@ -56,7 +56,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         self.servicesProvider = servicesProvider
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWReportReasonCoordinatorResult> {
         guard let router = router else { return .empty() }
         let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(reportData: reportData,
                                                                                  viewableMode: .partOfFlow,
@@ -112,7 +112,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .flatMap { _ -> Observable<OWReportReasonCoordinatorResult> in
                 return Observable.never()

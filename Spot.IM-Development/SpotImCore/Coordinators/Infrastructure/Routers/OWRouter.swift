@@ -113,12 +113,14 @@ class OWRouter: NSObject, OWRoutering {
         case .regular:
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
         case .present:
-            let transition = CATransition()
-            transition.duration = Metrics.transitionDuration
-            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            transition.type = .moveIn
-            transition.subtype = .fromTop
-            navigationController?.view.layer.add(transition, forKey: kCATransition)
+            if animated {
+                let transition = CATransition()
+                transition.duration = Metrics.transitionDuration
+                transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                transition.type = .moveIn
+                transition.subtype = .fromTop
+                navigationController?.view.layer.add(transition, forKey: kCATransition)
+            }
             navigationController?.pushViewController(module.toPresentable(), animated: false)
         case .presentOverFullScreen:
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen
