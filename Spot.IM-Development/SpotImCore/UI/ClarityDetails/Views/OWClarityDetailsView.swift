@@ -23,6 +23,7 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
         static let buttonRadius: CGFloat = 6
         static let buttomBottomPadding: CGFloat = 36
         static let buttonTextPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+        static let appealLabelTopPadding: CGFloat = 24
 
         static let identifier = "clarity_details_view_id"
         static let titleLabelIdentifier = "clarity_details_title_id"
@@ -109,6 +110,10 @@ class OWClarityDetailsView: UIView, OWThemeStyleInjectorProtocol {
             .enforceSemanticAttribute()
     }()
 
+    fileprivate lazy var appealLabel: OWAppealLabelView = {
+        return OWAppealLabelView(viewModel: viewModel.outputs.appealLabelViewModel)
+    }()
+
     fileprivate lazy var gotItButton: UIButton = {
         return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
@@ -182,6 +187,12 @@ fileprivate extension OWClarityDetailsView {
         bottomParagraphLabel.OWSnp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalPadding)
             make.top.equalTo(paragraphsStackView.OWSnp.bottom).offset(Metrics.spaceBetweenParagraphs)
+        }
+
+        scrollView.addSubview(appealLabel)
+        appealLabel.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView.contentLayoutGuide).inset(Metrics.horizontalPadding)
+            make.top.equalTo(paragraphsStackView.OWSnp.bottom).offset(Metrics.appealLabelTopPadding)
             make.bottom.equalTo(scrollView.contentLayoutGuide)
         }
     }
@@ -209,6 +220,11 @@ fileprivate extension OWClarityDetailsView {
                         self.viewModel.inputs.communityGuidelinesClick.onNext()
                     }
             })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowAppealView
+            .map { !$0 }
+            .bind(to: appealLabel.rx.isHidden)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

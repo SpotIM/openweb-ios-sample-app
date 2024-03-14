@@ -20,4 +20,5 @@ enum OWAnalyticEventGroup: String {
     case profile
     case auth
     case configuration
+    case moderation
 }
