@@ -33,6 +33,7 @@ class OWTextView: UIView {
         static let heightConstraintPriority: CGFloat = 500
         static let didBeginEditDelay = 1
         static let delayTextViewTextChange = 5
+        static let delayTextViewExpand = 10
     }
 
     let viewModel: OWTextViewViewModeling
@@ -167,6 +168,10 @@ fileprivate extension OWTextView {
         if viewModel.outputs.isEditable {
             if viewModel.outputs.isAutoExpandable {
                 textView.rx.text
+                    // Fixes a jump when loading
+                    .skip(1)
+                    // Fixes multiline text not being loaded properly
+                    .delay(.milliseconds(Metrics.delayTextViewExpand), scheduler: MainScheduler.instance)
                     .subscribe(onNext: { [weak self] _ in
                         OWScheduler.runOnMainThreadIfNeeded {
                             guard let self = self else { return }

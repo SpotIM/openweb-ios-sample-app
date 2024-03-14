@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     internal struct Metrics {
         static let commentingCTATopPadding: CGFloat = 8
         static let horizontalOffset: CGFloat = 16.0
@@ -37,6 +37,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let moreCommentsButtonIdentifier = "pre_conversation_more_comments_button_id"
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
+
+    var toastView: OWToastView? = nil
 
     fileprivate lazy var preConversationSummary: OWPreConversationSummaryView = {
         return OWPreConversationSummaryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
@@ -287,6 +289,22 @@ fileprivate extension OWPreConversationView {
         compactTapGesture.rx.event
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.displayToast
+            .subscribe(onNext: { [weak self] data in
+                guard var self = self else { return }
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: data.presentData.data,
+                                  completions: completions,
+                                  disposeBag: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
