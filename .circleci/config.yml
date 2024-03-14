@@ -5,8 +5,8 @@ version: 2.1
 
 parameters:
   run-nightly-s3:
-  type: boolean
-  default: false
+    type: boolean
+    default: false
 
 references:
   # Docker image configurations
@@ -680,11 +680,11 @@ jobs:
             --region $AWS_REGION
 
 workflows:
-  version: 2
   run-nightly-s3_workflow:
     when: << pipeline.parameters.run-nightly-s3 >>
     jobs:
-      - run-nightly-s3_job
+      - run-nightly-s3_job:
+          xcode: *xcode_latest_official_version
 
   independent_job_workflow:
     jobs:
