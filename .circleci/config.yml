@@ -687,6 +687,9 @@ workflows:
           xcode: *xcode_latest_official_version
 
   independent_job_workflow:
+    when: # All must be true to trigger
+      and:
+        - equal: [ false, <<pipeline.parameters.run-nightly-s3>> ]
     jobs:
       - default_job:
           filters:
