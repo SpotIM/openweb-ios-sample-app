@@ -116,6 +116,8 @@
 "LearnMore" = "למד עוד";
 "RejectedCommentStatusMessage" = "תגובתך נדחתה.";
 "PendingCommentStatusMessage" = "המתן בסבלנות, תגובתך ממתינה לאישור.";
+"AppealedCommentStatusMessage" = "הגשת ערעור, תגובתך תיבדק על ידי המנחה.";
+"AppealRejectedCommentStatusMessage" = "ערעורך נדחה";
 "NotAuthorPendingCommentStatusMessage" = "תגובה זו ממתינה לבדיקה.";
 "ClarityPendingReasonsTitle" = "ייתכן שהתגובה שלך נשלחה לבדיקה עקב אחת מהסיבות הבאות:";
 "AwaitingReview" = "בהמתנה לבדיקה";
@@ -133,7 +135,27 @@
 "ViewNewComment" = "הצגת %d תגובה חדשה";
 "TypingNow" = "מקלידים עכשיו %d";
 "LoginPromptTitle" = "מורשה להשתתף";
+"CommenterAppealTitle" = "סיבת ערעור";
+"Appeal" = "ערעור";
+"DisagreeGuidelinesAppealTitle" = "אני לא מסכים עם הנחיות הקהילה";
+"DontUnderstandGuidelinesAppealTitle" = "אני לא מבין את הנחיות הקהילה";
+"CommentFollowsGuidelinesAppealTitle" = "אני מאמין שהתגובה שלי תואמת את הנחיות הקהילה";
+"MisunderstandingAppealTitle" = "אני מאמין שהבנתם לא נכון את הכוונה או ההקשר של התגובה שלי";
+"OtherAppealTitle" = "אחר";
+"AppealLabelError" = "פרטי הערעור אינם זמינים כעת. נא לבדוק את חיבור האינטרנט או לנסות שוב מאוחר יותר.";
+"AppealLabelNotAvailable" = "התגובה שדיווחת עליה כבר לא זמינה.";
+"AppealSubmittedSubtitle" = "קיבלנו את הערעור שלך וצוות הניהול שלנו יבדוק את תגובתך בהקדם האפשרי. אנו נודיע לך על ההחלטה.";
+"CancelAppeal" = "ביטול הערעור";
+"CommmenterAppealCancelSubtitle" = "בטוח שברצונך לבטל את הערעור שלך ולמחוק את הסיבה שסיפקת?";
+"CommenterAppealCancelContinueButton" = "המשך ערעור";
+"AppealLabel" = "תרגיש/י חופשי/ה לשכתב ולהעלות מחדש את ההערה שלך, או, לפי רצונך, ניתן לערער, ואנו נבחן מחדש את החלטתנו.";
+"AppealAuthorizationRequiredTitle" = "נדרש אישור";
+"AppealAuthorizationRequiredMessage" = "יש לוודא שהינך מחובר/ת כדי להמשיך את הערעור שלך. לא חבר/ה? תצטרכ/י להירשם מקודם.";
 "SomethingWentWrong" = "אופס, משהו השתבש";
+"ErrorStateLoadReplies" = "אנחנו לא מצליחים לטעון תשובות כרגע";
+"ErrorStateLoadComments" = "אנחנו לא מצליחים לטעון תגובות כרגע";
+"ErrorStatePostComment" = "העלאת התגובה שלך נכשלה";
+"EditingComment" = "עריכת תגובה";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";

@@ -12,6 +12,9 @@ import RxSwift
 protocol OWCommentCreationRegularViewViewModelingInputs {
     var closeButtonTap: PublishSubject<Void> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
+    var commentCreationError: PublishSubject<Void> { get }
+    var displayToast: PublishSubject<OWToastNotificationCombinedData?> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModelingOutputs {
@@ -26,6 +29,9 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var commentCreationContentVM: OWCommentCreationContentViewModeling { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var becomeFirstResponderCalled: Observable<Void> { get }
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
+    var dismissedToast: Observable<Void> { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -40,6 +46,27 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> {
+        return displayToast
+            .unwrap()
+            .asObservable()
+    }
+
+    var dismissToast = PublishSubject<Void>()
+    lazy var dismissedToast: Observable<Void> = {
+        return dismissToast
+            .asObservable()
+    }()
+
+    var hideToast: Observable<Void> {
+        return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
+                                footerViewModel.outputs.ctaButtonLoading.voidify())
+            .asObservable()
+    }
+
+    var commentCreationError = PublishSubject<Void>()
 
     fileprivate lazy var postId = OWManager.manager.postId
 
@@ -128,13 +155,14 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         return replyToComment?.text?.text != nil
     }
 
-    var performCta: Observable<OWCommentCreationCtaData> {
+    lazy var performCta: Observable<OWCommentCreationCtaData> = {
         footerViewModel.outputs.performCtaAction
             .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
             .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1, commentUserMentions: nil) }
             .asObservable()
-    }
+            .share()
+    }()
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {

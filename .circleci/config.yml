@@ -31,7 +31,7 @@ references:
         echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $CORE_VERSION
 
-  define: &xcode_latest_official_version "15.2.0"
+  define: &xcode_latest_official_version "15.3.0"
 
 commands:
   swiftlint:
@@ -694,15 +694,15 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/tag15.0/.*/
-          xcode: "15.0"
+                - /^release/tag15.2/.*/
+          xcode: "15.2"
 
       - release_tag:
           filters:
             branches:
               only:
-                - /^release/tag15.1/.*/
-          xcode: "15.1"
+                - /^release/tag15.3/.*/
+          xcode: "15.3"
 
       - release_sdk_job:
           filters:
@@ -724,16 +724,16 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/beta_tag15.0/.*/
-          xcode: "15.0"
+                - /^release/beta_tag15.2/.*/
+          xcode: "15.2"
           buildConfig: "ReleaseBeta"
 
       - release_tag:
           filters:
             branches:
               only:
-                - /^release/beta_tag15.1/.*/
-          xcode: "15.1"
+                - /^release/beta_tag15.3/.*/
+          xcode: "15.3"
           buildConfig: "ReleaseBeta"
 
       - release_app_job:
@@ -790,17 +790,17 @@ workflows:
       - release_tag:
           requires:
             - "release_sdk_job"
-          xcode: "15.0.0"
-
-      - release_tag:
-          requires:
-            - "release_sdk_job"
           xcode: "14.3.1"
 
       - release_tag:
           requires:
             - "release_sdk_job"
-          xcode: "15.1.0"
+          xcode: "15.2.0"
+
+      - release_tag:
+          requires:
+            - "release_sdk_job"
+          xcode: "15.3.0"
 
   upload_app_to_s3_workflow:
     jobs:
