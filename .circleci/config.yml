@@ -3,14 +3,16 @@
 
 version: 2.1
 
+parameters:
+  run-nightly-s3:
+  type: boolean
+  default: false
+
 references:
   # Docker image configurations
   ios_config_xcode: &ios_config_xcode
     resource_class: macos.m1.large.gen1
     parameters:
-      run-nightly-s3:
-        type: boolean
-        default: false
       xcode:
         type: string
       buildConfig:
