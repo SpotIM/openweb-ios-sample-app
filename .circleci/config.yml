@@ -36,7 +36,7 @@ references:
         echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $CORE_VERSION
 
-  define_var_s3_upload_path &define_var_s3_upload_path
+  define_var_s3_upload_path: &define_var_s3_upload_path
     run:
       name: Export new version number to environment variable
       command: |
