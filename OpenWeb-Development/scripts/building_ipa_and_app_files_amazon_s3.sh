@@ -1,7 +1,7 @@
 #!/bin/bash
 
 date=$(date '+%d-%m-%Y')
-branch="upload_s3/beta_app/nightly/develop/$date"
+branch="upload_s3/nightly/$date"
 echo "Branch path: $branch"
 
 git status
