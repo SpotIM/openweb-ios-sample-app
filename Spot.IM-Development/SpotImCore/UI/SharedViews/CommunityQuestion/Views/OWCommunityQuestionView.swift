@@ -15,12 +15,16 @@ class OWCommunityQuestionView: UIView {
         static let questionHorizontalOffset: CGFloat = 12.0
         static let questionVerticalOffset: CGFloat = 8.0
         static let containerCorderRadius: CGFloat = 8.0
+        static let questionLabelInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
 
         static let identifier = "community_question_id"
     }
 
     fileprivate lazy var questionLabel: UILabel = {
-        return UILabel()
+        return OWItalicLabel(top: Metrics.questionLabelInsets.top,
+                             left: Metrics.questionLabelInsets.left,
+                             bottom: Metrics.questionLabelInsets.bottom,
+                             right: Metrics.questionLabelInsets.right)
             .wrapContent()
             .numberOfLines(0)
             .font(viewModel.outputs.titleFont)
@@ -98,8 +102,8 @@ fileprivate extension OWCommunityQuestionView {
             questionLabel.OWSnp.makeConstraints { make in
                 make.top.equalToSuperview().offset(Metrics.questionVerticalOffset)
                 make.bottom.equalToSuperview().offset(-Metrics.questionVerticalOffset)
-                make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
+                make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset - Metrics.questionLabelInsets.right)
+                make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset + Metrics.questionLabelInsets.left)
             }
         } else {
             self.addSubview(questionLabel)

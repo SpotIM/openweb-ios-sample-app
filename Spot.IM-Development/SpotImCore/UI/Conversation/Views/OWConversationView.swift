@@ -29,6 +29,7 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         static let highlightBackgroundColorAnimationDelay: Double = 1.0
         static let highlightBackgroundColorAlpha: Double = 0.2
         static let delayPullToRefreshDuration = 250
+        static let identifier = "conversation_view_id"
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
@@ -141,11 +142,16 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificat
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupUI()
+        applyAccessibility()
         setupObservers()
     }
 }
 
 fileprivate extension OWConversationView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+    }
+
     func setupUI() {
         self.useAsThemeStyleInjector()
 

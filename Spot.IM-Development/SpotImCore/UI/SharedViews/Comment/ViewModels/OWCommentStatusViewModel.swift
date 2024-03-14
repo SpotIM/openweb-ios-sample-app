@@ -65,6 +65,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 case .none: return nil
                 case .rejected: return UIImage(spNamed: "rejectedIcon", supportDarkMode: false)
                 case .pending: return UIImage(spNamed: "pendingIcon", supportDarkMode: true)
+                case .appealed: return UIImage(spNamed: "appealIcon", supportDarkMode: true)
+                case .appealRejected: return UIImage(spNamed: "appealRejectedIcon", supportDarkMode: false)
                 }
             }
             .unwrap()
@@ -89,6 +91,8 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                 let messageString: String
                 switch(status) {
                 case .rejected: messageString = OWLocalizationManager.shared.localizedString(key: "RejectedCommentStatusMessage")
+                case .appealed: messageString = OWLocalizationManager.shared.localizedString(key: "AppealedCommentStatusMessage")
+                case .appealRejected: messageString = OWLocalizationManager.shared.localizedString(key: "AppealRejectedCommentStatusMessage")
                 case .pending: messageString = isCommentOfActiveUser ?
                     OWLocalizationManager.shared.localizedString(key: "PendingCommentStatusMessage") :
                     OWLocalizationManager.shared.localizedString(key: "NotAuthorPendingCommentStatusMessage")
@@ -100,13 +104,13 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
                     .font(OWFontBook.shared.font(typography: .footnoteText))
                     .color(OWColorPalette.shared.color(type: .textColor3, themeStyle: style))
 
-                let learnMoreAttributedString = self.learnMoreClickableString
-                    .attributedString
-                    .underline(1)
-                    .font(OWFontBook.shared.font(typography: .footnoteLink))
-                    .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
+                if status.showLearnMore && isCommentOfActiveUser {
+                    let learnMoreAttributedString = self.learnMoreClickableString
+                        .attributedString
+                        .underline(1)
+                        .font(OWFontBook.shared.font(typography: .footnoteLink))
+                        .color(OWColorPalette.shared.color(type: .brandColor, themeStyle: style))
 
-                if isCommentOfActiveUser {
                     messageAttributedString.append(learnMoreAttributedString)
                 }
 
@@ -123,11 +127,11 @@ class OWCommentStatusViewModel: OWCommentStatusViewModeling,
             }
             .map { status -> OWClarityDetailsType? in
                 switch status {
-                case .rejected:
+                case .rejected, .appealRejected:
                     return OWClarityDetailsType.rejected
                 case .pending:
                     return OWClarityDetailsType.pending
-                case .none:
+                case .none, .appealed:
                     return nil
                 }
             }
@@ -159,12 +163,15 @@ fileprivate extension OWCommentStatusViewModel {
 enum OWCommentStatusType {
     case rejected
     case pending
+    case appealed
+    case appealRejected
     case none
 
     static func commentStatus(from comment: OWComment) -> OWCommentStatusType {
         guard let status = comment.status,
               comment.published == false
         else { return .none }
+
         switch status {
         case .block, .reject:
             return .rejected
@@ -172,6 +179,15 @@ enum OWCommentStatusType {
             return .pending
         case .publishAndModerate, .unknown, .approve, .approveAll, .forceApproveAll:
             return .none
+        }
+    }
+
+    var showLearnMore: Bool {
+        switch self {
+        case .rejected, .appealRejected, .pending:
+            return true
+        case .appealed, .none:
+            return false
         }
     }
 }
