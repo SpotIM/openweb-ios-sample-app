@@ -63,6 +63,7 @@
 "Mute" = "Silenciar";
 "MuteUser" = "Silenciar usuario";
 "MuteUserMessage" = "Tras silenciar a este usuario no podrás ver su actividad. Para gestionar a los usuarios que hayas silenciado, dirígete a a los ajustes de privacidad de tu perfil.";
+"MuteSuccessToast" = "Usuario silenciado";
 "Image" = "Imagen";
 "ClosedAndEmptyConversation" = "Esta conversación ha terminado y ya no se admiten comentarios.";
 "EmptyConversation" = "Empieza la conversación y comparte tu opinión y tus ideas con la comunidad.";
@@ -106,6 +107,7 @@
 "AdditionalInfoTitle" = "Información adicional";
 "ReportSubmissionFailedTitle" = "No se ha podido enviar el informe";
 "ReportSubmissionFailedMessage" = "No se ha podido enviar el informe. Comprueba tu conexión y vuelve a intentarlo más tarde.";
+"Undo" = "Anular";
 "CollapseThread" = "Plegar hilo";
 "ViewMultipleRepliesFormat" = "Ver %d respuestas";
 "ViewSingleReplyFormat" = "Ver %d respuesta";
@@ -113,6 +115,8 @@
 "LearnMore" = "Obtener más información";
 "RejectedCommentStatusMessage" = "Su comentario ha sido rechazado.";
 "PendingCommentStatusMessage" = "Espere: su comentario está a la espera de aprobación.";
+"AppealedCommentStatusMessage" = "Ha presentado una apelación. Un moderador revisará su comentario.";
+"AppealRejectedCommentStatusMessage" = "Se rechazó su apelación.";
 "NotAuthorPendingCommentStatusMessage" = "Este comentario está en espera de revisión.";
 "ClarityPendingReasonsTitle" = "Su comentario puede que haya sido enviado para una revisión por una de las siguientes razones:";
 "AwaitingReview" = "Esperando revisión";
@@ -130,6 +134,27 @@
 "ViewNewComment" = "Ver %d nuevo comentario";
 "TypingNow" = "Typing now";
 "LoginPromptTitle" = "Autorizar para participar";
+"CommenterAppealTitle" = "Motivo de la apelación";
+"Appeal" = "Apelación";
+"DisagreeGuidelinesAppealTitle" = "Estoy en desacuerdo con las directrices de la comunidad";
+"DontUnderstandGuidelinesAppealTitle" = "No entiendo las directrices de la comunidad";
+"CommentFollowsGuidelinesAppealTitle" = "Considero que mi comentario cumple las normas de la comunidad";
+"MisunderstandingAppealTitle" = "Me parece que no ha entendido la intención o el contexto de mi comentario";
+"OtherAppealTitle" = "Otros";
+"AppealLabelError" = "La información sobre el recurso no está disponible en este momento. Comprueba tu conexión a internet o inténtalo de nuevo más tarde.";
+"AppealLabelNotAvailable" = "El comentario que has denunciado ya no está disponible.";
+"AppealSubmittedSubtitle" = "Hemos recibido su apelación y nuestro equipo de moderadores revisará su comentario lo antes posible. Le informaremos de la decisión.";
+"CancelAppeal" = "Cancelar apelación";
+"CommmenterAppealCancelSubtitle" = "¿Seguro que quieres cancelar tu apelación y borrar el motivo que proporcionaste?";
+"CommenterAppealCancelContinueButton" = "Seguir apelando";
+"AppealLabel" = "Puedes volver a redactar y publicar tu comentario, o si lo deseas, puedes apelar y reevaluaremos nuestra decisión.";
+"AppealAuthorizationRequiredTitle" = "Autorización necesaria";
+"AppealAuthorizationRequiredMessage" = "Asegúrate de haber iniciado sesión para continuar con tu apelación. ¿No te has registrado? Tendrás que registrarte primero.";
+"SomethingWentWrong" = "Vaya, algo salió mal";
+"ErrorStateLoadReplies" = "No podemos cargar las respuestas en este momento";
+"ErrorStateLoadComments" = "No podemos cargar los comentarios en este momento";
+"ErrorStatePostComment" = "No se ha podido publicar el comentario";
+"EditingComment" = "Editando comentario";
 
 // Old API
 "Your Username" = "Tu seudónimo...";

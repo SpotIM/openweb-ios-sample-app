@@ -68,7 +68,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         let deepLinkToCommentCreation = BehaviorSubject<OWCoordinatorData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
         let deepLinkToReportReason = BehaviorSubject<OWReportReasonsRequiredData?>(value: nil)
-        let deepLinkToClarityDetails = BehaviorSubject<OWClarityDetailsType?>(value: nil)
+        let deepLinkToClarityDetails = BehaviorSubject<OWClarityDetailsRequireData?>(value: nil)
 
         var animated = true
 
@@ -91,9 +91,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             case .reportReason(let reportData):
                 animated = false
                 deepLinkToReportReason.onNext(reportData)
-            case .clarityDetails(let type):
+            case .clarityDetails(let data):
                 animated = false
-                deepLinkToClarityDetails.onNext(type)
+                deepLinkToClarityDetails.onNext(data)
             default:
                 break
             }
@@ -225,10 +225,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+            .flatMap { [weak self] data -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type,
-                                                                                                                      presentationalStyle: self.conversationData.presentationalStyle),
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
                                                                             actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
@@ -465,7 +464,7 @@ fileprivate extension OWConversationCoordinator {
 
         // Open clarity details
         let openClarityDetails = viewModel.outputs.openClarityDetails
-            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+            .map { OWViewActionCallbackType.openClarityDetails(data: $0) }
 
         // Open URL in comment
         let openUrlInComment = viewModel.outputs.urlClickedOutput

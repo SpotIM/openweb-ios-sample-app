@@ -64,6 +64,7 @@
 "Mute" = "Son désactivé";
 "MuteUser" = "Utilisateur muet";
 "MuteUserMessage" = "Une fois que vous aurez ignoré cet utilisateur, vous ne verrez plus son activité. Pour gérer les utilisateurs ignorés, rendez-vous dans votre profil > Paramètres de confidentialité";
+"MuteSuccessToast" = "Utilisateur mis en sourdine";
 "Image" = "Image";
 "ClosedAndEmptyConversation" = "Cette conversation est close et les commentaires ne sont plus acceptés.";
 "EmptyConversation" = "Engagez la conversation et partagez vos pensées et vos idées avec la communauté.";
@@ -107,6 +108,7 @@
 "AdditionalInfoTitle" = "Informations complémentaires";
 "ReportSubmissionFailedTitle" = "Échec de l'envoi du rapport";
 "ReportSubmissionFailedMessage" = "Votre rapport n’a pas pu être envoyé. Veuillez vérifier votre connexion et réessayer plus tard.";
+"Undo" = "Annuler";
 "CollapseThread" = "Réduire le fil";
 "ViewMultipleRepliesFormat" = "Afficher %d réponses";
 "ViewSingleReplyFormat" = "Afficher une réponse";
@@ -114,6 +116,8 @@
 "LearnMore" = "En savoir plus";
 "RejectedCommentStatusMessage" = "Votre commentaire a été rejeté.";
 "PendingCommentStatusMessage" = "Merci de patienter, votre commentaire est en attente d'approbation.";
+"AppealedCommentStatusMessage" = "Vous avez interjeté un appel, votre commentaire sera examiné par un modérateur.";
+"AppealRejectedCommentStatusMessage" = "Votre appel a été rejeté.";
 "NotAuthorPendingCommentStatusMessage" = "Ce commentaire est en attente d'examen.";
 "ClarityPendingReasonsTitle" = "L'examen de votre commentaire a pu être demandé pour l'une des raisons suivantes :";
 "AwaitingReview" = "En attente d'évaluation";
@@ -131,6 +135,27 @@
 "ViewNewComment" = "Afficher %d nouveau commentaire";
 "TypingNow" = "%d en train de taper";
 "LoginPromptTitle" = "Autoriser à participer";
+"CommenterAppealTitle" = "Motif de votre demande d'appel";
+"Appeal" = "Faire appel";
+"DisagreeGuidelinesAppealTitle" = "Je ne suis pas d'accord avec les recommandations de la communauté";
+"DontUnderstandGuidelinesAppealTitle" = "Je ne comprends pas les recommandations de la communauté";
+"CommentFollowsGuidelinesAppealTitle" = "Je pense que mon commentaire est en accord avec les recommandations de la communauté";
+"MisunderstandingAppealTitle" = "Je pense que vous avez mal compris l'intention ou le contexte entourant mon commentaire";
+"OtherAppealTitle" = "Autre";
+"AppealLabelError" = "Les informations relatives au recours ne sont pas disponibles pour le moment. Veuillez vérifier votre connexion Internet ou réessayer plus tard.";
+"AppealLabelNotAvailable" = "Le commentaire que vous avez signalé n'est plus disponible.";
+"AppealSubmittedSubtitle" = "Nous avons reçu votre demande d'appel et notre équipe de modérateurs étudiera votre commentaire dès que possible. Nous vous informerons de leur décision.";
+"CancelAppeal" = "Annuler l'appel";
+"CommmenterAppealCancelSubtitle" = "Êtes-vous sûr de vouloir annuler votre appel et supprimer la raison que vous avez fournie ?";
+"CommenterAppealCancelContinueButton" = "Poursuivre l'appel";
+"AppealLabel" = "N'hésitez pas à réécrire et à publier à nouveau votre commentaire ou, si vous le souhaitez, vous pouvez faire appel et nous réexaminerons notre décision.";
+"AppealAuthorizationRequiredTitle" = "Autorisation requise";
+"AppealAuthorizationRequiredMessage" = "Assurez-vous d'être connecté pour poursuivre votre appel. Vous n'êtes pas membre ? Vous devez d'abord vous inscrire.";
+"SomethingWentWrong" = "Aïe, une erreur s'est produite";
+"ErrorStateLoadReplies" = "Nous ne pouvons pas charger les réponses pour le moment";
+"ErrorStateLoadComments" = "Nous ne pouvons pas charger les commentaires pour le moment";
+"ErrorStatePostComment" = "Échec de la publication de votre commentaire";
+"EditingComment" = "Modification du commentaire";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";
