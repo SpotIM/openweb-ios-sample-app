@@ -36,6 +36,13 @@ references:
         echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $CORE_VERSION
 
+  define_var_s3_upload_path &define_var_s3_upload_path
+    run:
+      name: Export new version number to environment variable
+      command: |
+        echo "export S3_UPLOAD_PATH=$(cut -d '/' -f2- \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
+        echo $S3_UPLOAD_PATH
+
   define: &xcode_latest_official_version "15.2.0"
 
 commands:
@@ -679,6 +686,61 @@ jobs:
           arguments: |
             --region $AWS_REGION
 
+  upload_nightly_app_build_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - *define_var_s3_upload_path
+
+      - run:
+          name: Run Fastline build .app file
+          command: |
+            bundle exec fastlane build_development_app app:beta
+
+      - aws-s3/sync:
+          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.app"
+          arguments: |
+            --region $AWS_REGION \
+            --content-encoding "app"
+
+  upload_nightly_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - *define_var_s3_upload_path
+
+      - run:
+          name: Run Fastline build .ipa file
+          command: |
+            bundle exec fastlane build_release_ipa app:beta
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp OpenWeb-SampleApp.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+      - run:
+          name: Copy dsym zip to folder app-dsym to upload to S3
+          command: |
+            mkdir app-dsym
+            cp OpenWeb-SampleApp.app.dSYM.zip app-dsym
+
+      - aws-s3/sync:
+          from: app-dsym
+          to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.app.dSYM.zip"
+          arguments: |
+            --region $AWS_REGION
+
 workflows:
   run-nightly-s3_workflow:
     when: << pipeline.parameters.run-nightly-s3 >>
@@ -878,6 +940,24 @@ workflows:
             branches:
               only:
                 - /^upload_s3/public_app/.*/
+          xcode: *xcode_latest_official_version
+
+  upload_nightly_app_to_s3_workflow:
+    jobs:
+      - upload_nightly_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/nightly/*
+          xcode: *xcode_latest_official_version
+
+      - upload_nightly_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/nightly/*
           xcode: *xcode_latest_official_version
 
   validate_workflow:
