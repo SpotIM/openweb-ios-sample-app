@@ -119,11 +119,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                 .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
-                .do(onNext: { [weak self] commentText in
+                .do(onNext: { [weak self] commentData in
                     guard let self = self else { return }
-                    let hasText = !commentText.isEmpty
+                    let hasText = !commentData.commentContent.text.isEmpty
                     if hasText {
-                        self.cacheComment(commentContent: OWCommentCreationContent(text: commentText), commentLabels: nil)
+                        self.cacheComment(commentContent: commentData.commentContent, commentLabels: nil, commentUserMentions: commentData.commentUserMentions)
                     } else {
                         self.clearCachedCommentIfNeeded()
                     }
@@ -147,8 +147,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     return Observable.just(())
                 }
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
-                                  commentLabels: commentSelectedLabelIds)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: nil)
                 self.sendEvent(for: .commentCreationLeavePage)
                 return Observable.just(())
             }
@@ -394,8 +393,7 @@ fileprivate extension OWCommentCreationViewViewModel {
                 let commentImage = commentContent.1
                 let commentSelectedLabelIds = commentContent.2
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
-                                  commentLabels: commentSelectedLabelIds)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: nil)
             }
         })
         .subscribe(onNext: { [weak self] replyToCommentId, _ in
@@ -520,11 +518,11 @@ fileprivate extension OWCommentCreationViewViewModel {
             .disposed(by: disposeBag)
     }
 
-    func cacheComment(commentContent: OWCommentCreationContent, commentLabels: [String]?) {
+    func cacheComment(commentContent: OWCommentCreationContent, commentLabels: [String]?, commentUserMentions: [OWUserMentionObject]?) {
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
 
         let commentLabels = commentLabels ?? [String]()
-        let commentData = OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: commentLabels)
+        let commentData = OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: commentLabels, commentUserMentions: commentUserMentions)
 
         switch commentCreationData.commentCreationType {
         case .comment:

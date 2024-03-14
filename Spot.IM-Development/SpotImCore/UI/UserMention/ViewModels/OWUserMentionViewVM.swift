@@ -20,6 +20,7 @@ protocol OWUserMentionViewViewModelingInputs {
     var attributedTextChange: PublishSubject<NSAttributedString> { get }
     var textChange: PublishSubject<String> { get }
     var cursorRangeChange: PublishSubject<Range<String.Index>> { get }
+    var initialMentions: PublishSubject<[OWUserMentionObject]?> { get }
 }
 
 protocol OWUserMentionViewViewModelingOutputs {
@@ -84,6 +85,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     fileprivate var name = BehaviorSubject<String>(value: "")
     var tappedMentionIndex = PublishSubject<Int>()
 
+    var initialMentions = PublishSubject<[OWUserMentionObject]?>()
     fileprivate lazy var _mentionsData = BehaviorSubject<OWUserMentionData>(value: OWUserMentionData())
     lazy var mentionsData: Observable<OWUserMentionData> = {
         return _mentionsData
@@ -156,6 +158,14 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 fileprivate extension OWUserMentionViewVM {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        initialMentions
+            .unwrap()
+            .withLatestFrom(mentionsData) { ($0, $1) }
+            .subscribe(onNext: { mentions, mentionsData in
+                mentionsData.mentions = mentions
+            })
+            .disposed(by: disposeBag)
+
         replaceData
             .withLatestFrom(textViewText) { ($0, $1) }
             .subscribe(onNext: { [weak self] replaceData, text in

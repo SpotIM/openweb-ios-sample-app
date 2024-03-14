@@ -148,7 +148,7 @@ class OWCommentCreationLightViewViewModel: OWCommentCreationLightViewViewModelin
         footerViewModel.outputs.performCtaAction
             .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
-            .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1) }
+            .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1, commentUserMentions: nil) }
             .asObservable()
     }
 
