@@ -8,6 +8,9 @@ references:
   ios_config_xcode: &ios_config_xcode
     resource_class: macos.m1.large.gen1
     parameters:
+      run-nightly-s3:
+        type: boolean
+        default: false
       xcode:
         type: string
       buildConfig:
@@ -107,6 +110,18 @@ orbs:
   codecov: codecov/codecov@3.2.2
 
 jobs:
+  run-nightly-s3_job:
+    <<: *ios_config_xcode
+    steps:
+        steps:
+      - checkout:
+          path: ~/project
+
+      - run:
+          name: Building both .ipa and .app files to Amazon s3
+          command: |
+            bash -x ./scripts/building_ipa_and_app_files_amazon_s3.sh
+
   validate_spm_job:
     <<: *ios_config_xcode
     steps:
@@ -665,6 +680,11 @@ jobs:
 
 workflows:
   version: 2
+  run-nightly-s3_workflow:
+    when: << pipeline.parameters.run-nightly-s3 >>
+    jobs:
+      - run-nightly-s3_job:
+
   independent_job_workflow:
     jobs:
       - default_job:
