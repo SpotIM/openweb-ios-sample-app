@@ -544,7 +544,7 @@ jobs:
             bundle exec fastlane build_development_app
 
       - aws-s3/sync:
-          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          from: simulator_build/*/Products/Applications/OpenWeb-SampleApp.app
           to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
@@ -595,7 +595,7 @@ jobs:
             bundle exec fastlane build_development_app app:beta
 
       - aws-s3/sync:
-          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          from: simulator_build/*/Products/Applications/OpenWeb-SampleApp.app
           to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
@@ -646,7 +646,7 @@ jobs:
             bundle exec fastlane build_development_app app:public
 
       - aws-s3/sync:
-          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          from: simulator_build/*/Products/Applications/OpenWeb-SampleApp.app
           to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
@@ -699,7 +699,7 @@ jobs:
             bundle exec fastlane build_development_app app:beta
 
       - aws-s3/sync:
-          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          from: simulator_build/*/Products/Applications/OpenWeb-SampleApp.app
           to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.app"
           arguments: |
             --region $AWS_REGION \
@@ -949,7 +949,7 @@ workflows:
           filters:
             branches:
               only:
-                - /^upload_s3/nightly/*
+                - /^upload_s3/nightly/.*/
           xcode: *xcode_latest_official_version
 
       - upload_nightly_app_ipa_to_s3_job:
@@ -957,7 +957,7 @@ workflows:
           filters:
             branches:
               only:
-                - /^upload_s3/nightly/*
+                - /^upload_s3/nightly/.*/
           xcode: *xcode_latest_official_version
 
   validate_workflow:
