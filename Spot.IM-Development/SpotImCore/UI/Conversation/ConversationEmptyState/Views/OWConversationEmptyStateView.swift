@@ -44,8 +44,8 @@ class OWConversationEmptyStateView: UIView {
         super.init(frame: .zero)
         self.viewModel = viewModel
 
-        applyAccessibility()
         setupViews()
+        applyAccessibility()
         setupObservers()
     }
 
@@ -63,6 +63,7 @@ class OWConversationEmptyStateView: UIView {
     init() {
         super.init(frame: .zero)
         setupViews()
+        applyAccessibility()
     }
 }
 

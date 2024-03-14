@@ -15,5 +15,6 @@ public enum OWViewSourceType {
     case commentThread
     case reportReason
     case clarityDetails
+    case commenterAppeal
     case webView
 }
