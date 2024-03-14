@@ -108,4 +108,25 @@ class OWUserMentionHelper {
         let stringRange = endIndex..<endIndex
         return OWUserMentionTextData(text: text, cursorRange: stringRange, replacingText: nil)
     }
+
+    static func addUserMentionIds(to text: String, mentions: [OWUserMentionObject]) -> String {
+        var text = text
+        var rangeLocationAccumulate = 0
+        for mention in mentions {
+            let mentionJsonString = mention.jsonString
+            mention.range.location += rangeLocationAccumulate
+            text = text.replacingOccurrences(of: mention.text, with: mentionJsonString, range: Range(mention.range, in: text))
+            rangeLocationAccumulate += mentionJsonString.utf16.count - mention.text.utf16.count
+        }
+        return text
+    }
+
+    static func addUserMentionDisplayNames(to text: String, mentions: [OWUserMentionObject]?) -> String {
+        guard let mentions = mentions else { return text }
+        var text = text
+        for mention in mentions {
+            text = text.replacingOccurrences(of: mention.jsonString, with: mention.text)
+        }
+        return text
+    }
 }

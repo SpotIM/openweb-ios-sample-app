@@ -31,7 +31,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var viewableMode: OWViewableMode { get }
     var performCta: Observable<OWCommentCreationCtaData> { get }
     var closedWithDelay: Observable<Void> { get }
-    var closedInstantly: Observable<String> { get }
+    var closedInstantly: Observable<OWCommentCreationCtaData> { get }
     var textBeforeClosedChanged: Observable<String> { get }
     var initialText: String { get }
     var resetTypeToNewCommentChanged: Observable<Void> { get }
@@ -90,8 +90,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
     }
 
     var closeInstantly = PublishSubject<String>()
-    var closedInstantly: Observable<String> {
+    var closedInstantly: Observable<OWCommentCreationCtaData> {
         return closeInstantly
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData in
+                return OWCommentCreationCtaData(commentContent: OWCommentCreationContent(text: text), commentLabelIds: [], commentUserMentions: mentionsData.mentions)
+            }
             .asObservable()
     }
     var ctaTap = PublishSubject<Void>()
@@ -120,15 +124,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         return textBeforeClosedChange
             .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
             .map { text, mentionsData -> String in
-                var text = text
-                var rangeLocationAccumulate = 0
-                for mention in mentionsData.mentions {
-                    let mentionJsonString = mention.jsonString
-                    mention.range.location += rangeLocationAccumulate
-                    text = text.replacingOccurrences(of: mention.text, with: mentionJsonString, range: Range(mention.range, in: text))
-                    rangeLocationAccumulate += mentionJsonString.utf16.count - mention.text.utf16.count
-                }
-                return text
+                return OWUserMentionHelper.addUserMentionIds(to: text, mentions: mentionsData.mentions)
             }
             .asObservable()
     }
@@ -175,9 +171,10 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             })
             .filter { !$0 } // Do not continue if authentication needed 
             .withLatestFrom(textViewVM.outputs.textViewText)
-            .map { text -> OWCommentCreationCtaData in ()
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData -> OWCommentCreationCtaData in ()
                 let commentContent = OWCommentCreationContent(text: text)
-                return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
+                return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [], commentUserMentions: mentionsData.mentions)
             }
     }
 
@@ -249,19 +246,22 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentType {
         case .comment:
-            guard let text = commentsCacheService[.comment(postId: postId)]?.commentContent.text else { return }
-            initialText = text
+            guard let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
-                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
+                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
             else { return }
-            initialText = text
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
-            } else if let text = commentsCacheService[.edit(postId: postId)]?.commentContent.text {
-                initialText = text
+            } else if let commentCreationCache = commentsCacheService[.edit(postId: postId)] {
+                initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
+                userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
             }
         }
     }

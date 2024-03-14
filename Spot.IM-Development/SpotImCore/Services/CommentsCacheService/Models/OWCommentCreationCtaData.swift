@@ -11,4 +11,5 @@ import Foundation
 struct OWCommentCreationCtaData {
     let commentContent: OWCommentCreationContent
     let commentLabelIds: [String]
+    let commentUserMentions: [OWUserMentionObject]?
 }
