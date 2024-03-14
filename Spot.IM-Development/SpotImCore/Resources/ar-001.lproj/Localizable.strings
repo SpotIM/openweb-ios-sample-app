@@ -152,6 +152,10 @@
 "AppealAuthorizationRequiredTitle" = "التفويض مطلوب";
 "AppealAuthorizationRequiredMessage" = "تأكد من تسجيلك الدخول للاستمرار بتقديم طلب إعادة النظر. ألست عضواً؟ عليك التسجيل أولاً.";
 "SomethingWentWrong" = "عذرًا, هناك خطأ ما";
+"ErrorStateLoadReplies" = "يتعذر علينا تحميل الردود حاليًا";
+"ErrorStateLoadComments" = "يتعذر علينا تحميل التعليقات حاليًا";
+"ErrorStatePostComment" = "تعذر نشر تعليقك";
+"EditingComment" = "تعديل التعليق";
 
 // Old API
 "Your Username" = "اسمك المستعار...";

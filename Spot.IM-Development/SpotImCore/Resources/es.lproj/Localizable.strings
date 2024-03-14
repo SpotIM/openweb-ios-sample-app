@@ -151,6 +151,10 @@
 "AppealAuthorizationRequiredTitle" = "Autorización necesaria";
 "AppealAuthorizationRequiredMessage" = "Asegúrate de haber iniciado sesión para continuar con tu apelación. ¿No te has registrado? Tendrás que registrarte primero.";
 "SomethingWentWrong" = "Vaya, algo salió mal";
+"ErrorStateLoadReplies" = "No podemos cargar las respuestas en este momento";
+"ErrorStateLoadComments" = "No podemos cargar los comentarios en este momento";
+"ErrorStatePostComment" = "No se ha podido publicar el comentario";
+"EditingComment" = "Editando comentario";
 
 // Old API
 "Your Username" = "Tu seudónimo...";

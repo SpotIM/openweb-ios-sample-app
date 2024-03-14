@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
+class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_regular_view_id"
         static let topContainerIdentifier = "top_container_view_id"
@@ -27,9 +27,11 @@ class OWCommentCreationRegularView: UIView, OWThemeStyleInjectorProtocol {
         static let footerPortraitHeight: CGFloat = 72.0
         static let footerLandscapeHeight: CGFloat = 66.0
         static let commentLabelsSpacing: CGFloat = 15.0
-
+        static let errorToastBottomPadding: CGFloat = 8.0
         static let closeButtomImageName: String = "closeCrossIcon"
     }
+
+    var toastView: OWToastView?
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
@@ -190,6 +192,24 @@ fileprivate extension OWCommentCreationRegularView {
     }
 
     func setupObservers() {
+        viewModel.outputs.displayToastCalled
+            .subscribe(onNext: { [weak self] combinedData in
+                guard var self = self else { return }
+                var requiredData = combinedData.presentData.data
+                requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorToastBottomPadding
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
+                                                                               .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)
+                self.bringSubviewToFront(self.footerView)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

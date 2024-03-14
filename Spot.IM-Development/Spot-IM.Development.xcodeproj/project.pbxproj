@@ -902,6 +902,7 @@
 		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
+		9E57E72D2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E57E72C2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift */; };
 		9E726CCE2A4D728B0048A13D /* OWFailableWrapperDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */; };
 		9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */; };
 		9E73DAD529C85E640098EEC1 /* UILoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */; };
@@ -1961,6 +1962,7 @@
 		9E4B4E6F2AADE74800F4425F /* OWErrorStateCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWErrorStateCellVM.swift; sourceTree = "<group>"; };
 		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
+		9E57E72C2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWFloatingKeyboardMainContainerView.swift; sourceTree = "<group>"; };
 		9E726CCD2A4D728B0048A13D /* OWFailableWrapperDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailableWrapperDecodable.swift; sourceTree = "<group>"; };
 		9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerView.swift; sourceTree = "<group>"; };
 		9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerViewModel.swift; sourceTree = "<group>"; };
@@ -2326,6 +2328,7 @@
 				166CCCA52A30CD5000C7143F /* OWCommentCreationRegularView.swift */,
 				166CCCA72A30CD6300C7143F /* OWCommentCreationLightView.swift */,
 				166CCCA92A30CD7100C7143F /* OWCommentCreationFloatingKeyboardView.swift */,
+				9E57E72C2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6582,6 +6585,7 @@
 				9E0C605E2A839863001B8D5D /* OWCachedLastCommentType.swift in Sources */,
 				8D99C6892A13516400DAB542 /* OWConversationContentType.swift in Sources */,
 				8DE52F4A29E430F000D3985C /* OWPresentationalModeCompact.swift in Sources */,
+				9E57E72D2B71227B009E5913 /* OWFloatingKeyboardMainContainerView.swift in Sources */,
 				24E66A252A65564D00D5F4E9 /* OWAnalyticEventServerGeneralData.swift in Sources */,
 				8D99C6822A0B67A700DAB542 /* OWCommentingCTASkeletonView.swift in Sources */,
 				3D3150502A4D929E00EF6575 /* OWAccessoryViewStrategy.swift in Sources */,
