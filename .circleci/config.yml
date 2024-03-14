@@ -737,7 +737,7 @@ jobs:
 
       - aws-s3/sync:
           from: app-dsym
-          to: "s3://prod-ow-mobile/iOS/{S3_UPLOAD_PATH}/OpenWeb-SampleApp.app.dSYM.zip"
+          to: "s3://prod-ow-mobile/iOS/${S3_UPLOAD_PATH}/OpenWeb-SampleApp.app.dSYM.zip"
           arguments: |
             --region $AWS_REGION
 
