@@ -51,7 +51,7 @@ class OWCommenterAppealCoordinator: OWBaseCoordinator<OWCommenterAppealCoordinat
         self.data = appealData
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWCommenterAppealCoordinatorResult> {
         guard let router = router else { return .empty() }
         let commenterAppealVM: OWCommenterAppealViewModeling = OWCommenterAppealVM(
             data: data,
