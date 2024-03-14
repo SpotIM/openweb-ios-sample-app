@@ -113,7 +113,6 @@ jobs:
   run-nightly-s3_job:
     <<: *ios_config_xcode
     steps:
-        steps:
       - checkout:
           path: ~/project
 
