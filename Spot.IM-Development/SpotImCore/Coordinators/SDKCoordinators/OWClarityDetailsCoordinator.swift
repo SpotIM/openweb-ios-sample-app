@@ -48,7 +48,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         self.presentationalMode = presentationalMode
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
         guard let router = router else { return .empty() }
         let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(data: data, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
@@ -108,7 +108,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { result in
                 switch result {
@@ -141,7 +141,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 let appealCoordinator = OWCommenterAppealCoordinator(router: router,
                                                                      appealData: data,
                                                                      actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: appealCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: appealCoordinator, coordinatorData: nil)
             }
             .flatMap { [weak self] result -> Observable<OWClarityDetailsCoordinatorResult> in
                 switch result {
