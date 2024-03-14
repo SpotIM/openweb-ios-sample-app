@@ -152,6 +152,10 @@
 "AppealAuthorizationRequiredTitle" = "Autorisation requise";
 "AppealAuthorizationRequiredMessage" = "Assurez-vous d'être connecté pour poursuivre votre appel. Vous n'êtes pas membre ? Vous devez d'abord vous inscrire.";
 "SomethingWentWrong" = "Aïe, une erreur s'est produite";
+"ErrorStateLoadReplies" = "Nous ne pouvons pas charger les réponses pour le moment";
+"ErrorStateLoadComments" = "Nous ne pouvons pas charger les commentaires pour le moment";
+"ErrorStatePostComment" = "Échec de la publication de votre commentaire";
+"EditingComment" = "Modification du commentaire";
 
 // Old API
 "Your Username" = "Votre nom d'utilisateur";

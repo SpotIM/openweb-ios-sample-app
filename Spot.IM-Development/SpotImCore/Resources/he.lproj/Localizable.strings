@@ -152,6 +152,10 @@
 "AppealAuthorizationRequiredTitle" = "נדרש אישור";
 "AppealAuthorizationRequiredMessage" = "יש לוודא שהינך מחובר/ת כדי להמשיך את הערעור שלך. לא חבר/ה? תצטרכ/י להירשם מקודם.";
 "SomethingWentWrong" = "אופס, משהו השתבש";
+"ErrorStateLoadReplies" = "אנחנו לא מצליחים לטעון תשובות כרגע";
+"ErrorStateLoadComments" = "אנחנו לא מצליחים לטעון תגובות כרגע";
+"ErrorStatePostComment" = "העלאת התגובה שלך נכשלה";
+"EditingComment" = "עריכת תגובה";
 
 // Old API
 "Your Username" = "שם המשתמש שלך";

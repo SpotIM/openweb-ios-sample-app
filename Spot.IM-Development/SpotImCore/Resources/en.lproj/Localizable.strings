@@ -133,9 +133,6 @@
 "ViewNewComment" = "View %d new comment";
 "TypingNow" = "%d Typing now";
 "LoginPromptTitle" = "Authorize to participate";
-"EditingComment" = "Editing comment"; // TODO: add to other languages
-"ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
-"ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
 "CommenterAppealTitle" = "Appeal Reason";
 "Appeal" = "Appeal";
 "DisagreeGuidelinesAppealTitle" = "I disagree with the community guidelines";
@@ -153,6 +150,10 @@
 "AppealAuthorizationRequiredTitle" = "Authorization Required";
 "AppealAuthorizationRequiredMessage" = "Ensure you're signed in to continue your appeal. Not a member? You'll need to register first.";
 "SomethingWentWrong" = "Oops, something went wrong";
+"EditingComment" = "Editing comment";
+"ErrorStateLoadReplies" = "We are unable to load replies right now";
+"ErrorStateLoadComments" = "We are unable to load comments right now";
+"ErrorStatePostComment" = "Failed to post your comment";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";
