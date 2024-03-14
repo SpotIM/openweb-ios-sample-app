@@ -20,5 +20,6 @@ enum OWUserAction {
     case viewingProfile
     case viewingSelfProfile
     case loginPrompt
+    case commenterAppeal
 }
 

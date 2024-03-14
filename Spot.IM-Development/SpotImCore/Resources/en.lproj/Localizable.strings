@@ -114,6 +114,8 @@
 "LearnMore" = "Learn more";
 "RejectedCommentStatusMessage" = "Your comment was rejected.";
 "PendingCommentStatusMessage" = "Hold on, your comment is waiting for approval.";
+"AppealedCommentStatusMessage" = "You have filed an appeal, your comment will be reviewed by a moderator.";
+"AppealRejectedCommentStatusMessage" = "Your appeal was rejected.";
 "NotAuthorPendingCommentStatusMessage" = "This comment is awaiting review.";
 "ClarityPendingReasonsTitle" = "Your comment may have been sent for review for one of the following reasons:";
 "AwaitingReview" = "Awaiting review";
@@ -131,10 +133,27 @@
 "ViewNewComment" = "View %d new comment";
 "TypingNow" = "%d Typing now";
 "LoginPromptTitle" = "Authorize to participate";
-"EditingComment" = "Editing comment"; // TODO: add to other languages
-"ErrorStateLoadReplies" = "We are unable to load replies right now"; // TODO: add to other languages
-"ErrorStateLoadComments" = "We are unable to load comments right now"; // TODO: add to other languages
+"CommenterAppealTitle" = "Appeal Reason";
+"Appeal" = "Appeal";
+"DisagreeGuidelinesAppealTitle" = "I disagree with the community guidelines";
+"DontUnderstandGuidelinesAppealTitle" = "I don’t understand the community guidelines";
+"CommentFollowsGuidelinesAppealTitle" = "I believe my comment follows the community guidelines";
+"MisunderstandingAppealTitle" = "I believe you misunderstood the intent or context of my comment";
+"OtherAppealTitle" = "Other";
+"AppealLabelError" = "The appeal information is currently unavailable. Please check your internet connection or try again later.";
+"AppealLabelNotAvailable" = "The comment you reported is no longer available.";
+"AppealSubmittedSubtitle" = "We've received your appeal and our moderation team will review your comment as soon as possible. We will notify you about the decision.";
+"CancelAppeal" = "Cancel Appeal";
+"CommmenterAppealCancelSubtitle" = "Are you sure you want to cancel your appeal and delete the reason you provided?";
+"CommenterAppealCancelContinueButton" = "Continue appealing";
+"AppealLabel" = "Feel free to rewrite and repost your comment, or, if you wish, you can appeal, and we will re-examine our decision.";
+"AppealAuthorizationRequiredTitle" = "Authorization Required";
+"AppealAuthorizationRequiredMessage" = "Ensure you're signed in to continue your appeal. Not a member? You'll need to register first.";
 "SomethingWentWrong" = "Oops, something went wrong";
+"EditingComment" = "Editing comment";
+"ErrorStateLoadReplies" = "We are unable to load replies right now";
+"ErrorStateLoadComments" = "We are unable to load comments right now";
+"ErrorStatePostComment" = "Failed to post your comment";
 
 // Automotion only - does not required other languages translations
 "Fonts" = "Fonts";

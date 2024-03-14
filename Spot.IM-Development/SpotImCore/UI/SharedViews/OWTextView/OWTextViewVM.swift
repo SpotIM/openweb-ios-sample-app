@@ -101,7 +101,8 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
 
     var textViewTap = PublishSubject<Void>()
     var textViewTapped: Observable<Void> {
-        return textViewTap.asObservable()
+        return textViewTap
+            .asObservable()
     }
 
     var textViewCharectersCount = BehaviorSubject<Int>(value: 0)
