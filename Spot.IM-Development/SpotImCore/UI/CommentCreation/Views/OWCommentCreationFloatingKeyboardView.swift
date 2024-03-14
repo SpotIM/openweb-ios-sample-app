@@ -50,13 +50,16 @@ class OWCommentCreationFloatingKeyboardView: UIView, OWThemeStyleInjectorProtoco
         static let floatingBackgroungColor = UIColor.black.withAlphaComponent(0.3)
         static let trailingLandscapeMargin: CGFloat = 56.0
         static let leadingLandscapeMargin: CGFloat = 66.0
+        static let errorToastBottomPadding: CGFloat = 8.0
     }
+
+    var toastView: OWToastView? = nil
 
     fileprivate var keyboardWasHidden = true
     fileprivate var toolbarBottomConstraint: OWConstraint?
 
-    fileprivate lazy var mainContainer: UIView = {
-        return UIView(frame: .zero)
+    fileprivate lazy var mainContainer: OWFloatingKeyboardMainContainerView = {
+        return OWFloatingKeyboardMainContainerView(frame: .zero)
             .backgroundColor(.clear)
     }()
 
@@ -371,8 +374,36 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         }
     }
 
+    var toastBottomPadding: CGFloat {
+        let toolbarHeight = self.toolbar?.frame.size.height ?? 0
+        let footerHeight = self.footerView.frame.size.height
+        let headerHeight = self.headerView.frame.size.height
+        return toolbarHeight + footerHeight + headerHeight + Metrics.errorToastBottomPadding
+    }
+
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.displayToastCalled
+            .subscribe(onNext: { [weak self] combinedData in
+                guard let self = self else { return }
+                var requiredData = combinedData.presentData.data
+                requiredData.bottomPadding = self.toastBottomPadding
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.mainContainer.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)
+                if let toolbar = self.toolbar {
+                    self.mainContainer.bringSubviewToFront(toolbar)
+                }
+                self.mainContainer.bringSubviewToFront(self.footerView)
+                self.mainContainer.bringSubviewToFront(self.headerView)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.mainContainer.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

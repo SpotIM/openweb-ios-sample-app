@@ -41,7 +41,7 @@ protocol OWCommentThreadViewViewModelingOutputs {
     var threadOffset: Observable<CGPoint> { get }
     var dataSourceTransition: OWViewTransition { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
-    var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> { get }
     var displayToast: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var updateTableViewInstantly: Observable<Void> { get }
@@ -387,8 +387,8 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
-    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
-    var openClarityDetails: Observable<OWClarityDetailsType> {
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> {
         return openClarityDetailsChange
             .asObservable()
     }
@@ -744,7 +744,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMapLatest({ [weak self] event -> Observable<(Event<OWConversationReadRM>)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
-                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .commentThreadLoadingInitialComments)
+                let timeToLoadInitialComments = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .commentThreadLoadingInitialComments,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((event))
@@ -860,7 +862,9 @@ fileprivate extension OWCommentThreadViewViewModel {
             .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentPresentationData, event)) }
-                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id))
+                let timeToLoadMoreReplies = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .commentThreadLoadingMoreReplies(commentId: commentPresentationData.id),
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadMoreReplies < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((commentPresentationData, event))
@@ -1420,15 +1424,20 @@ fileprivate extension OWCommentThreadViewViewModel {
 
         // Observe open clarity details
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
-                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsRequireData> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsRequireData>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsRequireData> in
                     let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
                     return commentStatusVm.outputs.learnMoreClicked
+                        .map { OWClarityDetailsRequireData(commentId: commentCellVm.outputs.id, type: $0) }
                 }
                 return Observable.merge(learnMoreClickObservable)
             }
-            .subscribe(onNext: { [weak self] clarityDetailsType in
-                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            .subscribe(onNext: { [weak self] data in
+                self?.openClarityDetailsChange.onNext(data)
+                // send analytics for rejected
+                if data.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: data.commentId))
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1847,17 +1856,6 @@ fileprivate extension OWCommentThreadViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
-    }
-
-    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
-        let measureService = servicesProvider.timeMeasuringService()
-        let measureResult = measureService.endMeasure(forKey: key)
-        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
-           milliseconds < Metrics.delayBeforeTryAgainAfterError {
-            return milliseconds
-        }
-        // If end was called before start for some reason, returning 0 milliseconds here
-        return 0
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
