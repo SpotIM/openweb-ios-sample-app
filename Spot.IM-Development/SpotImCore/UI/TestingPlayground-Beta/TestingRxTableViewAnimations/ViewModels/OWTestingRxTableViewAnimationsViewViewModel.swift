@@ -187,8 +187,9 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
 
         // Removing individual cells subscribtion
         let removeRedIndexObservable = redCellsObservable
-            .flatMapLatest { redCellsVms -> Observable<Int> in
+            .flatMapLatest { [weak self] redCellsVms -> Observable<Int> in
                 let reomveOutputObservable: [Observable<Int>] = redCellsVms.map { redCellVm in
+                    guard let self = self else { return .empty() }
                     return redCellVm.outputs.firstLevelVM
                         .outputs.secondLevelVM
                         .outputs.removeTapped
@@ -204,7 +205,8 @@ fileprivate extension OWTestingRxTableViewAnimationsViewViewModel {
             }
 
         let removeBlueIndexObservable = blueCellsObservable
-            .flatMapLatest { blueCellsVms -> Observable<Int> in
+            .flatMapLatest { [weak self] blueCellsVms -> Observable<Int> in
+                guard let self = self else { return .empty() }
                 let reomveOutputObservable: [Observable<Int>] = blueCellsVms.map { blueCellVm in
                     return blueCellVm.outputs.firstLevelVM
                         .outputs.removeTapped

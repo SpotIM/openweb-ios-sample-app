@@ -64,6 +64,7 @@
 "Mute" = "كتم";
 "MuteUser" = "كتم المستخدم";
 "MuteUserMessage" = "بعد كتم صوت هذا المستخدم, لن ترى نشاطه مرة أخرى. لإدارة المستخدمين الذين تم كتم صوتهم, انتقل إلى ملف التعريف الخاص بك > إعدادات الخصوصية";
+"MuteSuccessToast" = "تم تفعيل وصع الصامت للمستخدم";
 "Image" = "الصورة";
 "ClosedAndEmptyConversation" = "انتهت هذه المحادثة ولم يعد يتم قبول التعليقات.";
 "EmptyConversation" = "ابدأ المحادثة وشارك آراءك وأفكارك مع المجتمع.";
@@ -107,6 +108,7 @@
 "AdditionalInfoTitle" = "معلومات إضافية";
 "ReportSubmissionFailedTitle" = "فشل تقديم البلاغ";
 "ReportSubmissionFailedMessage" = "تعذّر تقديم البلاغ الخاص بك. يُرجى التحقق من الاتصال الخاص بك والمحاولة مرة أخرى في وقت لاحق.";
+"Undo" = "تراجع";
 "CollapseThread" = "طي الموضوع";
 "ViewMultipleRepliesFormat" = "عرض %d ردود";
 "ViewSingleReplyFormat" = "عرض %d رد";
@@ -114,6 +116,9 @@
 "LearnMore" = "اعرف المزيد";
 "RejectedCommentStatusMessage" = "تم رفض تعليقك.";
 "PendingCommentStatusMessage" = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
+"AppealedCommentStatusMessage" = "لقد قدمت استئنافاً, وسيتم مراجعة استئنافك من قبل الوسيط.";
+"AppealRejectedCommentStatusMessage" = "تم رفض استئنافك ";
+"NotAuthorPendingCommentStatusMessage" = "هذا التعليق قيد المراجعة.";
 "ClarityPendingReasonsTitle" = "ربما اُرسل تعليقك للمراجعة لأحد الأسباب التالية:";
 "AwaitingReview" = "في انتظار المراجعة";
 "RejectReasonEnsureCivil" = "إن جميع قراراتنا مُصممة لضمان خطاب مدني مفتوح وشامل داخل المجتمع.";
@@ -130,6 +135,27 @@
 "ViewNewComment" = "عرض %d تعليق جديد";
 "TypingNow" = "يكتب الآن %d";
 "LoginPromptTitle" = "السماح بالمشاركة";
+"CommenterAppealTitle" = "سبب الاستئناف";
+"Appeal" = "طلب استئناف";
+"DisagreeGuidelinesAppealTitle" = "أنا لا أتفق مع إرشادات المجتمع";
+"DontUnderstandGuidelinesAppealTitle" = "أنا لا أفهم إرشادات المنتدى";
+"CommentFollowsGuidelinesAppealTitle" = "أعتقد أن تعليقي يتبع إرشادات المنتدى";
+"MisunderstandingAppealTitle" = "أعتقد أنك أسأت فهم نية أو سياق تعليقي";
+"OtherAppealTitle" = "غير ذلك";
+"AppealLabelError" = "معلومات طلب الالتماس غير متوفرة حاليًا. يُرجى التحقق من اتصالك بالإنترنت أو المحاولة مرة أخرى لاحقًا.";
+"AppealLabelNotAvailable" = "لم يعد التعليق الذي أبلغت عنه متوفراً.";
+"AppealSubmittedSubtitle" = "لقد تلقينا استئنافك وسيراجع فريق الإشراف لدينا تعليقك في أقرب وقت ممكن. وسنعلمك بالقرار.";
+"CancelAppeal" = "إلغاء طلب إعادة النظر";
+"CommmenterAppealCancelSubtitle" = "هل متأكد أنك تود إلغاء طلبك لإعادة النظر وحذف السبب الذي قدمته؟";
+"CommenterAppealCancelContinueButton" = "استمر بطلب إعادة النظر";
+"AppealLabel" = "يمكنك إعادة كتابة تعليقك وإعادة نشره, أو يمكنك تقديم طلب لإعادة النظر في قرارنا إذا كنت ترغب في ذلك.";
+"AppealAuthorizationRequiredTitle" = "التفويض مطلوب";
+"AppealAuthorizationRequiredMessage" = "تأكد من تسجيلك الدخول للاستمرار بتقديم طلب إعادة النظر. ألست عضواً؟ عليك التسجيل أولاً.";
+"SomethingWentWrong" = "عذرًا, هناك خطأ ما";
+"ErrorStateLoadReplies" = "يتعذر علينا تحميل الردود حاليًا";
+"ErrorStateLoadComments" = "يتعذر علينا تحميل التعليقات حاليًا";
+"ErrorStatePostComment" = "تعذر نشر تعليقك";
+"EditingComment" = "تعديل التعليق";
 
 // Old API
 "Your Username" = "اسمك المستعار...";

@@ -10,14 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
+class OWConversationView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let tableViewAnimationDuration: Double = 0.25
         static let ctaViewSlideAnimationDelay = 50
         static let ctaViewSlideAnimationDuration: Double = 0.25
         static let separatorHeight: CGFloat = 1
         static let conversationEmptyStateHorizontalPadding: CGFloat = 16.5
-        static let tableViewRowEstimatedHeight: Double = 130.0
         static let scrollToTopThrottleDelay: DispatchTimeInterval = .milliseconds(200)
         static let throttleObserveTableViewDuration = 500
         static let scrolledToTopDelay = 300
@@ -25,9 +24,17 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let loginPromptOrientationChangeAnimationDuration: CGFloat = 0.3
         static let horizontalLandscapeMargin: CGFloat = 66.0
         static let horizontalPortraitMargin: CGFloat = 16.0
+        static let highlightScrollAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDuration: Double = 0.5
+        static let highlightBackgroundColorAnimationDelay: Double = 1.0
+        static let highlightBackgroundColorAlpha: Double = 0.2
+        static let delayPullToRefreshDuration = 250
+        static let identifier = "conversation_view_id"
     }
 
     fileprivate let conversationViewScheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "conversationViewQueue")
+
+    var toastView: OWToastView? = nil
 
     fileprivate lazy var conversationTitleHeaderView: OWConversationTitleHeaderView = {
         return OWConversationTitleHeaderView(viewModel: self.viewModel.outputs.conversationTitleHeaderViewModel)
@@ -85,7 +92,6 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         }
 
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = Metrics.tableViewRowEstimatedHeight
 
         return tableView
     }()
@@ -136,11 +142,16 @@ class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
         super.init(frame: .zero)
         viewModel.inputs.viewInitialized.onNext()
         setupUI()
+        applyAccessibility()
         setupObservers()
     }
 }
 
 fileprivate extension OWConversationView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+    }
+
     func setupUI() {
         self.useAsThemeStyleInjector()
 
@@ -164,6 +175,9 @@ fileprivate extension OWConversationView {
                 make.leading.trailing.equalToSuperview()
             }
         }
+
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+        let isLandscape = currentOrientation == .landscape
 
         self.addSubview(loginPromptView)
         loginPromptView.OWSnp.makeConstraints { make in
@@ -192,14 +206,20 @@ fileprivate extension OWConversationView {
             make.trailing.equalToSuperview()
         }
 
+        if currentOrientation == .portrait {
+            loginPromptLandscapeConstraints.forEach { $0.deactivate() }
+            loginPromptPortraitConstraints.forEach { $0.activate() }
+        } else {
+            loginPromptPortraitConstraints.forEach { $0.deactivate() }
+            loginPromptLandscapeConstraints.forEach { $0.activate() }
+        }
+
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(conversationSummaryView.OWSnp.bottom)
             make.leading.trailing.equalToSuperviewSafeArea()
         }
-
-        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
 
         self.addSubview(commentingCTAContainerView)
         commentingCTAContainerView.OWSnp.makeConstraints { make in
@@ -232,6 +252,22 @@ fileprivate extension OWConversationView {
 
     // swiftlint:disable function_body_length
     func setupObservers() {
+        viewModel.outputs.displayToast
+            .subscribe(onNext: { [weak self] data in
+                guard var self = self else { return }
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: data.actionCompletion, .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: data.presentData.data,
+                                  completions: completions,
+                                  disposeBag: self.disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowErrorLoadingComments
             .delay(.milliseconds(Metrics.ctaViewSlideAnimationDelay), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShowErrorLoadingComments in
@@ -301,6 +337,7 @@ fileprivate extension OWConversationView {
                 self.commentingCTATopHorizontalSeparator.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
                 self.tableViewRefreshControl.tintColor = OWColorPalette.shared.color(type: .loaderColor, themeStyle: currentStyle)
                 self.commentingCTAContainerView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
+                self.tableView.indicatorStyle = currentStyle == .light ? .black : .white
             })
             .disposed(by: disposeBag)
 
@@ -327,11 +364,17 @@ fileprivate extension OWConversationView {
                     .asObservable()
                     .take(1)
             }
+            .do(onNext: { [weak self] _ in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.setContentOffset(.zero, animated: true)
+                }
+            })
+            .delay(.milliseconds(Metrics.delayPullToRefreshDuration), scheduler: conversationViewScheduler)
             .subscribe(onNext: { [weak self] _ in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     self.viewModel.inputs.pullToRefresh.onNext()
-                    self.tableView.setContentOffset(.zero, animated: true)
                 }
             })
             .disposed(by: disposeBag)
@@ -383,11 +426,78 @@ fileprivate extension OWConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.scrollToCellIndex
-            .subscribe(onNext: { [weak self] index in
+            .do(onNext: { [weak self] index in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }
                     let cellIndexPath = IndexPath(row: index, section: 0)
                     self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }
+            })
+            .bind(to: viewModel.inputs.scrolledToCellIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.scrollToCellIndexIfNotVisible
+            .do(onNext: { [weak self] index in
+                guard let self = self else { return }
+                OWScheduler.runOnMainThreadIfNeeded {
+                    let cellIndexPath = IndexPath(row: index, section: 0)
+
+                    // only if cell not visible scroll to it
+                    guard let visibleRows = self.tableView.indexPathsForVisibleRows,
+                            !visibleRows.contains(cellIndexPath) else {
+                        self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                        return
+                    }
+
+                    // Temporarily disable table interactions to ensure smooth scrolling to the first comment.
+                    self.tableView.isUserInteractionEnabled = false
+                    self.tableView.scrollToRow(at: cellIndexPath, at: .top, animated: true)
+                }
+            })
+            .observe(on: MainScheduler.instance)
+            .flatMapLatest { [weak self] index -> Observable<Int> in
+                guard let self = self else { return .empty() }
+                return self.tableView.rx.didEndScrollingAnimation
+                    .asObservable()
+                    .take(1)
+                    .map { _ in return index }
+            }
+            .subscribe(onNext: { [weak self] index in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    self.tableView.isUserInteractionEnabled = true
+                    self.viewModel.inputs.scrolledToCellIndex.onNext(index)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.highlightCellsIndexes
+            .subscribe(onNext: { [weak self] indexes in
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self,
+                          let indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows else { return }
+
+                    // Create a filtered and mapped array of non-nil cells
+                    let cellsToHighlight = indexPathsForVisibleRows
+                        .filter { indexes.contains($0.row) }
+                        .compactMap { [weak self] in self?.tableView.cellForRow(at: $0) }
+
+                    // Animate visible cells that need highlighting
+                    for cell in cellsToHighlight {
+                        let prevBackgroundColor = cell.backgroundColor
+
+                        UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, animations: {
+                            cell.backgroundColor = OWColorPalette.shared.color(
+                                type: .brandColor,
+                                themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle
+                            ).withAlphaComponent(Metrics.highlightBackgroundColorAlpha)
+                        }) { _ in
+                            UIView.animate(withDuration: Metrics.highlightBackgroundColorAnimationDuration, delay: Metrics.highlightBackgroundColorAnimationDelay) {
+                                cell.backgroundColor = prevBackgroundColor
+                            }
+                        }
+
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -422,6 +532,10 @@ fileprivate extension OWConversationView {
 
         OWSharedServicesProvider.shared.orientationService()
             .orientation
+            // skip first orientation share(replay: 1) as we do
+            // not want animation at conversation loading state
+            // the correct constraints are set anyway at view setup
+            .skip(1)
             .subscribe(onNext: { [weak self] currentOrientation in
                 OWScheduler.runOnMainThreadIfNeeded {
                     guard let self = self else { return }

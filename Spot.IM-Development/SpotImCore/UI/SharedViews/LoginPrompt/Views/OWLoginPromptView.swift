@@ -17,17 +17,19 @@ class OWLoginPromptView: UIView {
         static let horizontalOffset: CGFloat = 16
         static let verticalOffset: CGFloat = 10
         static let separatorHeight: CGFloat = 1
+        static let lockIconSize: CGFloat = 24
+        static let arrowIconSize: CGFloat = 12
     }
 
-    fileprivate lazy var icon: UIImageView = {
+    fileprivate lazy var lockIconImangeView: UIImageView = {
        return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
-            .image(UIImage(spNamed: "loginPromptIcon", supportDarkMode: false)!)
+            .image(UIImage(spNamed: "loginPromptLock", supportDarkMode: false)!)
             .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var label: UILabel = {
+    fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
             .attributedText(
                 OWLocalizationManager.shared.localizedString(key: "LoginPromptTitle")
@@ -38,7 +40,7 @@ class OWLoginPromptView: UIView {
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var arrow: UIImageView = {
+    fileprivate lazy var arrowIconImangeView: UIImageView = {
         return UIImageView()
             .contentMode(.scaleAspectFit)
             .wrapContent()
@@ -50,23 +52,25 @@ class OWLoginPromptView: UIView {
     fileprivate lazy var loginPromptView: UIView = {
         let view = UIView()
 
-        view.addSubview(icon)
-        icon.OWSnp.makeConstraints { make in
+        view.addSubview(lockIconImangeView)
+        lockIconImangeView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview()
+            make.size.equalTo(Metrics.lockIconSize)
         }
 
-        view.addSubview(label)
-        label.OWSnp.makeConstraints { make in
+        view.addSubview(titleLabel)
+        titleLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.equalTo(icon.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
+            make.leading.equalTo(lockIconImangeView.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
         }
 
-        view.addSubview(arrow)
-        arrow.OWSnp.makeConstraints { make in
+        view.addSubview(arrowIconImangeView)
+        arrowIconImangeView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(label.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
+            make.leading.equalTo(titleLabel.OWSnp.trailing).offset(Metrics.labelHorizontalPadding)
             make.trailing.equalToSuperview()
+            make.size.equalTo(Metrics.arrowIconSize)
         }
 
         return view
@@ -173,24 +177,36 @@ fileprivate extension OWLoginPromptView {
             .didChangeContentSizeCategory
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.label.font = OWFontBook.shared.font(typography: .bodyInteraction)
+                self.titleLabel.font = OWFontBook.shared.font(typography: .bodyInteraction)
             })
             .disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style,
-                                 OWSharedServicesProvider.shared.orientationService().orientation)
-            .subscribe(onNext: { [weak self] currentStyle, currentOrientation in
+                                 OWSharedServicesProvider.shared.orientationService().orientation,
+                                 OWColorPalette.shared.colorDriver)
+            .subscribe(onNext: { [weak self] currentStyle, currentOrientation, colorMapper in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: currentOrientation == .landscape ? .separatorColor1 : .separatorColor3, themeStyle: currentStyle)
-                self.icon.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.arrow.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.label.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+
+                if let owBrandColor = colorMapper[.brandColor] {
+                    let brandColor = owBrandColor.color(forThemeStyle: currentStyle)
+                    self.lockIconImangeView.tintColor = brandColor
+                    self.arrowIconImangeView.tintColor = brandColor
+                    self.titleLabel.textColor = brandColor
+                }
+                self.updateCustomUI()
             })
             .disposed(by: disposeBag)
     }
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
+    }
+
+    func updateCustomUI() {
+        viewModel.inputs.triggerCustomizeLockIconImageViewUI.onNext(lockIconImangeView)
+        viewModel.inputs.triggerCustomizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.triggerCustomizeArrowIconImageViewUI.onNext(arrowIconImangeView)
     }
 }

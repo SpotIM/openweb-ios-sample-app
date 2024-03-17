@@ -50,7 +50,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     // swiftlint:disable function_body_length
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
         viewableMode = .partOfFlow
         let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData, viewableMode: viewableMode)
         let commentThreadVC = OWCommentThreadVC(viewModel: commentThreadVM)
@@ -156,12 +156,12 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+            .flatMap { [weak self] data -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type,
-                                                                                                                      presentationalStyle: self.commentThreadData.presentationalStyle),
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
-                                                                            actionsCallbacks: self.actionsCallbacks)
+                                                                            actionsCallbacks: self.actionsCallbacks,
+                                                                            presentationalMode: self.commentThreadData.presentationalStyle)
                 return self.coordinate(to: clarityDetailsCoordinator)
             }
             .do(onNext: { coordinatorResult in
@@ -198,7 +198,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
                                                                    actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
                 return Observable.never()
@@ -282,7 +282,7 @@ fileprivate extension OWCommentThreadCoordinator {
 
         // Open clarity details
         let openClarityDetails = viewModel.outputs.openClarityDetails
-            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+            .map { OWViewActionCallbackType.openClarityDetails(data: $0) }
 
         // Open report reason
         let openReportReason = viewModel.outputs.openReportReason

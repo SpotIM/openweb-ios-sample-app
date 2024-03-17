@@ -96,7 +96,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
 
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType) {
         let themeStyle = sharedServicesProvider.themeStyleService().currentStyle
-        let postId = OWManager.manager.postId
+        let postId = OWManager.manager.postId?.decoded
 
         callbacks.forEach { optionalCallback in
             guard let actualCallback = optionalCallback.value() else { return }
@@ -151,6 +151,7 @@ fileprivate extension OWCustomizationsLayer {
         setColor(color: theme.primaryBackgroundColor, type: .backgroundColor2)
         setColor(color: theme.secondaryBackgroundColor, type: .backgroundColor4)
         setColor(color: theme.tertiaryBackgroundColor, type: .backgroundColor5)
+        setColor(color: theme.surfaceColor, type: .backgroundColor6)
         setColor(color: theme.primaryBorderColor, type: .borderColor2)
         setColor(color: theme.secondaryBorderColor, type: .borderColor1)
         setColor(color: theme.loaderColor, type: .loaderColor)
