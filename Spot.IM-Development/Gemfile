@@ -1,7 +1,11 @@
 source "https://rubygems.org"
 
-gem 'fastlane', '= 2.210.0'
-gem 'cocoapods', '= 1.11.2'
+gem 'fastlane', '= 2.219.0'
+gem 'cocoapods', '= 1.14.2'
+
+# Adding readline since it was removed at ruby 3.3.0
+# https://github.com/fastlane/fastlane/issues/21794
+gem 'readline-ext'
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)

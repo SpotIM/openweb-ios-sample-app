@@ -11,8 +11,8 @@ import RxSwift
 
 class OWCommentReplyCounterView: UIView {
     fileprivate struct Metrics {
-        static let identifier = "comment_cretion_reply_counter_id"
-        static let labelIdentifier = "comment_cretion_reply_counter_label_id"
+        static let identifier = "comment_creation_reply_counter_id"
+        static let labelIdentifier = "comment_creation_reply_counter_label_id"
 
         static let counterHeight = 24.0
     }

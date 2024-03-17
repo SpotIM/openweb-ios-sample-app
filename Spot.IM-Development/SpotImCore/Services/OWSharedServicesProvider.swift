@@ -23,7 +23,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func orientationService() -> OWOrientationServicing
     func statusBarStyleService() -> OWStatusBarStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
-    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String>
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>
     func lastCommentTypeInMemoryCacheService() -> OWCacheService<OWPostId, OWCachedLastCommentType>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
@@ -52,6 +52,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func realtimeIndicatorService() -> OWRealtimeIndicatorServicing
     func permissionsService() -> OWPermissionsServicing
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol
+    func toastNotificationService() -> OWToastNotificationServicing
     func commentStatusUpdaterService() -> OWCommentStatusUpdaterServicing
     func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
@@ -91,8 +92,8 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCacheService<String, UIImage>()
     }()
 
-    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, String> = {
-        return OWCacheService<OWCachedCommentKey, String>()
+    fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData> = {
+        return OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData>()
     }()
 
     fileprivate lazy var _lastCommentTypeInMemoryCacheService: OWCacheService<OWPostId, OWCachedLastCommentType> = {
@@ -215,6 +216,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWPageViewIdHolder()
     }()
 
+    fileprivate lazy var _toastNotificationService: OWToastNotificationServicing = {
+        return OWToastNotificationService(servicesProvider: self)
+    }()
+
     fileprivate lazy var _commentStatusUpdaterService: OWCommentStatusUpdaterServicing = {
         return OWCommentStatusUpdaterService(servicesProvider: self)
     }()
@@ -247,7 +252,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _imageCacheService
     }
 
-    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, String> {
+    func commentsInMemoryCacheService() -> OWCacheService<OWCachedCommentKey, OWCommentCreationCtaData> {
         return _commentsInMemoryCacheService
     }
 
@@ -369,6 +374,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func pageViewIdHolder() -> OWPageViewIdHolderProtocol {
         return _pageViewIdHolder
+    }
+
+    func toastNotificationService() -> OWToastNotificationServicing {
+        return _toastNotificationService
     }
 
     func actionsCallbacksNotifier() -> OWActionsCallbacksNotifierServicing {

@@ -73,18 +73,27 @@ fileprivate extension OWOrientationService {
         notificationCenter.rx.notification(UIDevice.orientationDidChangeNotification)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self._orientation.onNext(self.dictateSDKOrientation(currentDeviceOrientation: self.uiDevice.orientation))
+                self._orientation.onNext(self.dictateSDKOrientation(currentDevice: self.uiDevice))
             })
             .disposed(by: disposeBag)
 
         uiDevice.beginGeneratingDeviceOrientationNotifications()
     }
 
-    func dictateSDKOrientation(currentDeviceOrientation: UIDeviceOrientation) -> OWOrientation {
-        // At the momment in independent we desided to support only in portrait
-        guard self._viewableMode != .independent else { return .portrait }
+    func dictateSDKOrientation(currentDevice: UIDevice) -> OWOrientation {
+        // At the moment in independent/iPad we decided to support only in portrait
+        guard self._viewableMode != .independent,
+              currentDevice.userInterfaceIdiom != .pad else { return .portrait }
+
+        // Determine allowed orientations from the application's supported orientations
+        let isPortraitAllowed = UIApplication.shared.isPortraitAllowed
+        let isLandscapeAllowed = UIApplication.shared.isLandscapeAllowed
+        guard isPortraitAllowed && isLandscapeAllowed else {
+            return isPortraitAllowed ? .portrait : .landscape
+        }
 
         let enforcedOrientation = self.interfaceOrientationMask
+        let currentDeviceOrientation = currentDevice.orientation
 
         switch enforcedOrientation {
         case .all:
@@ -96,19 +105,16 @@ fileprivate extension OWOrientationService {
             default:
                 return currentOrientation
             }
-
         case .portrait:
             return .portrait
-
         case .landscape:
             return .landscape
-
         default:
             return currentOrientation
         }
     }
 
     func updateOrientation() {
-        _orientation.onNext(self.dictateSDKOrientation(currentDeviceOrientation: self.uiDevice.orientation))
+        _orientation.onNext(self.dictateSDKOrientation(currentDevice: self.uiDevice))
     }
 }

@@ -46,7 +46,7 @@ fileprivate extension OWConversationUpdaterService {
         switch updateType {
         case .refreshConversation:
             commentsToCache = []
-        case .insert(let comments):
+        case .insert(let comments), .insertRealtime(let comments):
             commentsToCache = comments
         case .update(_, let withComment):
             commentsToCache = [withComment]
@@ -55,8 +55,8 @@ fileprivate extension OWConversationUpdaterService {
             if var parentComment = self.servicesProvider.commentsService().get(commentId: parentCommentId, postId: postId) {
                 if let replies = parentComment.replies {
                     // Take other replieas from cash to keep local changes
-                    let updatedReplies = replies.map {
-                        self.servicesProvider.commentsService().get(commentId: $0.id ?? "", postId: postId)
+                    let updatedReplies = replies.map { [weak self] in
+                        self?.servicesProvider.commentsService().get(commentId: $0.id ?? "", postId: postId)
                     }.unwrap()
                     parentComment.replies = [comment] + updatedReplies
                 } else {

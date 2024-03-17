@@ -29,24 +29,28 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
         static let delayTapForOpenAdditionalInfo = 100 // Time in ms
     }
 
-    fileprivate let requiredData: OWClarityDetailsRequireData
+    fileprivate let data: OWClarityDetailsRequireData
     fileprivate let router: OWRoutering?
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
     fileprivate lazy var viewActionsService: OWViewActionsServicing = {
         return OWViewActionsService(viewActionsCallbacks: actionsCallbacks, viewSourceType: .clarityDetails)
     }()
 
-    init(requiredData: OWClarityDetailsRequireData,
+    let presentationalMode: OWPresentationalModeCompact
+
+    init(data: OWClarityDetailsRequireData,
          router: OWRoutering? = nil,
-         actionsCallbacks: OWViewActionsCallbacks?) {
-        self.requiredData = requiredData
+         actionsCallbacks: OWViewActionsCallbacks?,
+         presentationalMode: OWPresentationalModeCompact = .none) {
+        self.data = data
         self.router = router
         self.actionsCallbacks = actionsCallbacks
+        self.presentationalMode = presentationalMode
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWClarityDetailsCoordinatorResult> {
         guard let router = router else { return .empty() }
-        let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(requiredData: requiredData, viewableMode: .partOfFlow)
+        let clarityDetailsVM: OWClarityDetailsViewModeling = OWClarityDetailsVM(data: data, viewableMode: .partOfFlow)
         let clarityDetailsVC = OWClarityDetailsVC(viewModel: clarityDetailsVM)
 
         let clarityDetailsPopped = PublishSubject<Void>()
@@ -104,7 +108,7 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { result in
                 switch result {
@@ -119,11 +123,43 @@ class OWClarityDetailsCoordinator: OWBaseCoordinator<OWClarityDetailsCoordinator
                 return Observable.never()
             }
 
-        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation)
+        // Coordinate to appeal
+        let appealTapped = clarityDetailsVM
+                .outputs
+                .clarityDetailsViewViewModel
+                .outputs
+                .appealLabelViewModel
+                .outputs
+                .openAppeal
+
+        let coordinateToAppealObservable = appealTapped
+            .flatMap { [weak self] data -> Observable<OWCommenterAppealCoordinatorResult> in
+                guard let self = self,
+                      let router = self.router
+                else { return .empty() }
+
+                let appealCoordinator = OWCommenterAppealCoordinator(router: router,
+                                                                     appealData: data,
+                                                                     actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: appealCoordinator, coordinatorData: nil)
+            }
+            .flatMap { [weak self] result -> Observable<OWClarityDetailsCoordinatorResult> in
+                switch result {
+                case .loadedToScreen:
+                    return Observable.never()
+                    // Nothing
+                case .popped:
+                    self?.router?.pop(popStyle: .dismiss, animated: false)
+                    return Observable.just(OWClarityDetailsCoordinatorResult.popped)
+                }
+            }
+
+        return Observable.merge(resultsWithPopAnimation, loadedToScreenObservable, coordinateToSafariObservable, resultWithoutPopAnimation, coordinateToAppealObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let clarityDetailsViewVM: OWClarityDetailsViewViewModeling = OWClarityDetailsViewVM(requiredData: requiredData)
+        let clarityDetailsViewVM: OWClarityDetailsViewViewModeling = OWClarityDetailsViewVM(data: data)
+
         setupViewActionsCallbacks(forViewModel: clarityDetailsViewVM)
 
         let clarityDetailsView = OWClarityDetailsView(viewModel: clarityDetailsViewVM)
@@ -144,10 +180,15 @@ fileprivate extension OWClarityDetailsCoordinator {
         let openCommunityGuidelines = viewModel.outputs.communityGuidelinesClickObservable
             .map { OWViewActionCallbackType.communityGuidelinesPressed(url: $0) }
 
+        let openCommenterAppeal = viewModel.outputs.appealLabelViewModel
+            .outputs.openAppeal
+            .map { OWViewActionCallbackType.openCommenterAppeal(data: $0) }
+
         Observable.merge(
             dismissView,
             closeButtonClick,
-            openCommunityGuidelines
+            openCommunityGuidelines,
+            openCommenterAppeal
         )
         .subscribe(onNext: { [weak self] viewActionType in
             self?.viewActionsService.append(viewAction: viewActionType)

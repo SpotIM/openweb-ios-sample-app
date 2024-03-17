@@ -84,8 +84,12 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
 
     var shouldShowCommentStatus: Observable<Bool> {
-        Observable.combineLatest(commentStatusVM.outputs.status, _isCommentOfActiveUser) { status, isCommentOfActiveUser in
-            guard isCommentOfActiveUser else { return false }
+        Observable.combineLatest(commentStatusVM.outputs.status, _isCommentOfActiveUser.asObservable(), _currentUser) { status, isCommentOfActiveUser, currentUser in
+            guard isCommentOfActiveUser ||
+                    currentUser?.isAdmin == true ||
+                    currentUser?.isModerator == true ||
+                    currentUser?.isCommunityModerator == true
+            else { return false }
 
             return status != .none
         }
@@ -104,6 +108,12 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentLabelsContainerVM.inputs.update(comment: comment)
         contentVM.inputs.update(comment: comment)
         commentStatusVM.inputs.updateStatus(for: comment)
+        commentEngagementVM.inputs.update(for: comment)
+
+        if let userId = comment.userId,
+           let user = self.sharedServiceProvider.usersService().get(userId: userId) {
+            self.update(user: user)
+        }
     }
 
     func update(user: SPUser) {
@@ -151,6 +161,10 @@ fileprivate extension OWCommentViewModel {
 
         _isCommentOfActiveUser
             .bind(to: commentHeaderVM.inputs.isCommentOfActiveUser)
+            .disposed(by: disposedBag)
+
+        _isCommentOfActiveUser
+            .bind(to: commentStatusVM.inputs.isCommentOfActiveUser)
             .disposed(by: disposedBag)
 
         commentHeaderVM.outputs.shouldShowHiddenCommentMessage

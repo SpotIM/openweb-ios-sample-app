@@ -45,7 +45,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         self.actionsCallbacks = actionsCallbacks
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
         let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel(commentCreationData: commentCreationData, viewableMode: .partOfFlow)
         let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
 
@@ -56,13 +56,32 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             case .regular, .light:
                 return .present
             case .floatingKeyboard:
-                return .presentOverFullScreen
+                return .addAsChild
             }
+        }()
+
+        let animated = {
+            guard let coordinatorData = coordinatorData else { return true }
+            switch coordinatorData.deepLink {
+                case .commentCreation(let commentCreationData):
+                    guard coordinatorData.source == .preConversation,
+                          case .present = commentCreationData.presentationalStyle else { return true }
+                    // If comment creation was called from PreConversation
+                    // And the presentation style is present, then we do not
+                    // animate the comment creation since the animation of present
+                    // is done by the conversation presenting under it
+                    // this fixes a UI bug that in some cases looked like a
+                    // double present.
+                    return false
+                default:
+                    break
+            }
+            return true
         }()
 
         router.push(commentCreationVC,
                     pushStyle: pushStyle,
-                    animated: true,
+                    animated: animated,
                     popCompletion: commentCreationPopped)
 
         setupObservers(forViewModel: commentCreationVM)
@@ -131,7 +150,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
                     case .regular, .light:
                         return .dismiss
                     case .floatingKeyboard:
-                        return .dismissOverFullScreen
+                        return .removeChild
                     }
                 }()
                 self.router.pop(popStyle: popStyle, animated: true)
