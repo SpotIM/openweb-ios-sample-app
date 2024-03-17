@@ -106,9 +106,22 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
     }()
 
-    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, [String])> = {
-        Observable.combineLatest(_commentText, _commentImage, _commentSelectedLabelIds) { commentText, commentImage, commentSelectedLabelIds in
-            return (commentText, commentImage, commentSelectedLabelIds)
+    fileprivate lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
+        switch commentCreationData.settings.commentCreationSettings.style {
+        case .regular:
+            return .empty()
+            // return commentCreationRegularViewVm.outputs.commentLabelsContainerVM.outputs.selectedLabelIds
+        case .light:
+            return .empty()
+            // return commentCreationLightViewVm.outputs.commentLabelsContainerVM.outputs.selectedLabelIds
+        case .floatingKeyboard:
+            return commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.outputs.mentionsData
+        }
+    }()
+
+    fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, [String], OWUserMentionData)> = {
+        Observable.combineLatest(_commentText, _commentImage, _commentSelectedLabelIds, _commentSelectedMentions) { commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions in
+            return (commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions)
         }
     }()
 
@@ -137,11 +150,12 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         }
         return Observable.combineLatest(commentTextAfterTapObservable,
                                         _commentImage,
-                                        _commentSelectedLabelIds)
+                                        _commentSelectedLabelIds,
+                                        _commentSelectedMentions)
             .do(onNext: { [weak self] _ in
                 self?.sendEvent(for: .commentCreationClosePage)
             })
-            .flatMap { [weak self] commentText, commentImage, commentSelectedLabelIds -> Observable<Void> in
+            .flatMap { [weak self] commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions -> Observable<Void> in
                 guard let self = self else { return Observable.empty() }
                 let hasText = !commentText.isEmpty
                 let hasImage = commentImage != nil
@@ -151,7 +165,7 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     return Observable.just(())
                 }
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: nil)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: commentSelectedMentions.mentions)
                 self.sendEvent(for: .commentCreationLeavePage)
                 return Observable.just(())
             }
@@ -432,8 +446,9 @@ fileprivate extension OWCommentCreationViewViewModel {
                 let commentText = commentContent.0
                 let commentImage = commentContent.1
                 let commentSelectedLabelIds = commentContent.2
+                let commentUserMentions = commentContent.3.mentions
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: nil)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: commentUserMentions)
             }
         })
         .subscribe(onNext: { [weak self] replyToCommentId, _ in
