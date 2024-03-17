@@ -75,7 +75,7 @@ class OWUserMentionHelper {
         let textWithMention = String(textToCursor[..<indexOfMention]) + mentionDisplayText
         let range = indexOfMention..<textWithMention.endIndex
         guard let selectedRange = textWithMention.nsRange(from: range) else { return }
-        let userMentionObject = OWUserMentionObject(id: id, text: mentionDisplayText, range: selectedRange)
+        let userMentionObject = OWUserMentionObject(userId: id, text: mentionDisplayText, range: selectedRange)
 
         let replaceRange = range.lowerBound..<textToCursor.utf16.endIndex
         if replaceRange.upperBound < textData.text.utf16.endIndex {
@@ -128,5 +128,50 @@ class OWUserMentionHelper {
             text = text.replacingOccurrences(of: mention.jsonString, with: mention.text)
         }
         return text
+    }
+
+    static func createUserMentions(from comment: inout OWComment) -> [OWUserMentionObject] {
+        guard var text = comment.text?.text else { return [] }
+        let jsonRanges = parseJsonsInText(text: text)
+        var userMentions: [OWUserMentionObject] = []
+        for (contentId, range) in jsonRanges {
+            if let userMention = comment.userMentions[contentId],
+               let user = comment.users?[userMention.userId],
+               let displayName = user.displayName,
+               var nsRange = text.nsRange(from: range) {
+                let displayName = "@" + displayName
+                nsRange.length = displayName.utf16.count
+                let owUserMention = OWUserMentionObject(id: contentId, userId: userMention.userId, text: displayName, range: nsRange)
+                text = text.replacingOccurrences(of: owUserMention.jsonString, with: owUserMention.text, range: range)
+                userMentions.append(owUserMention)
+            }
+        }
+        comment.text?.text = text
+        return userMentions
+    }
+
+    // Parsing jsons @{} in text with ids
+    fileprivate static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
+        var results = [(String, Range<String.Index>)]()
+        do {
+            let regex = try NSRegularExpression(pattern: "\\@\\{(.*?)\\}", options: [])
+            regex.enumerateMatches(in: text, range: NSRange(location: 0, length: text.utf16.count)) { result, _, _ in
+                if let r = result?.range(at: 1), let range = Range(r, in: text) {
+                    let json = "{" + String(text[range]) + "}"
+                    if let data = json.data(using: .utf16) {
+                        do {
+                            if let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                if let contentId = dict["id"] as? String {
+                                    results.append((contentId, range))
+                                }
+                            }
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+            }
+        } catch { }
+        return results
     }
 }

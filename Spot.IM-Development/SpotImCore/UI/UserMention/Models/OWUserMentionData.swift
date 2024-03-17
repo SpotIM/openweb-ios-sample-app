@@ -15,11 +15,13 @@ class OWUserMentionData {
 
 class OWUserMentionObject {
     let id: String
+    let userId: String
     let text: String
     var range: NSRange
 
-    init(id: String, text: String, range: NSRange) {
-        self.id = id
+    init(id: String? = nil, userId: String, text: String, range: NSRange) {
+        self.id = id ?? userId
+        self.userId = userId
         self.text = text
         self.range = range
     }

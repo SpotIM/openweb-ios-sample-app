@@ -51,6 +51,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
     var labelClickIndex = PublishSubject<Int>()
 
+    fileprivate var userMentions: [OWUserMentionObject]
     fileprivate var readMoreRange: NSRange? = nil
     fileprivate var availableUrlsRange: OWRangeURLsMapper
     fileprivate var serviceProvider: OWSharedServicesProviding
@@ -61,11 +62,16 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         self.serviceProvider = serviceProvider
         self.collapsableTextLineLimit = collapsableTextLineLimit
         self.availableUrlsRange = [:]
+        var comment = comment
+        userMentions = OWUserMentionHelper.createUserMentions(from: &comment)
         _comment.onNext(comment)
         setupObservers()
     }
 
     func update(comment: OWComment) {
+        var comment = comment
+        userMentions.removeAll()
+        userMentions.append(contentsOf: OWUserMentionHelper.createUserMentions(from: &comment))
         _comment.onNext(comment)
     }
 
@@ -97,8 +103,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .distinctUntilChanged()
             .map { $0.width }
             .withLatestFrom(comment) { ($0, $1) }
-            .map { [weak self] width, comment -> CGFloat? in
-                guard let self = self else { return nil }
+            .map { width, comment -> CGFloat? in
                 let depth = min(comment.depth ?? 0, OWCommentCell.ExternalMetrics.maxDepth)
                 let adjustedWidth = width - Metrics.textOffset - CGFloat(depth) * OWCommentCell.ExternalMetrics.depthOffset
                 return adjustedWidth
@@ -133,9 +138,13 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return (attString, style)
             }
             .unwrap()
-            .map { [weak self] (attString, style) in
-                guard var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
-                self?.locateURLsInText(text: &res, style: style)
+            .withLatestFrom(comment) { ($0.0, $0.1, $1) }
+            .map { [weak self] attString, style, comment in
+                guard let self = self,
+                      var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
+                self.availableUrlsRange.removeAll()
+                self.locateURLsInText(text: &res, style: style)
+                self.addUserMentions(text: &res, style: style, comment: comment)
                 return res
             }
             .distinctUntilChanged()
@@ -259,7 +268,6 @@ fileprivate extension OWCommentTextViewModel {
 
     func locateURLsInText(text: inout NSMutableAttributedString, style: OWThemeStyle) {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
-        var activeURLs: OWRangeURLsMapper = [:]
         if let detector = try? NSDataDetector(types: linkType.rawValue) {
             let rawText = text.string
             let matches = detector.matches(
@@ -273,11 +281,22 @@ fileprivate extension OWCommentTextViewModel {
                     text.addAttributes([
                         .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
                         .underlineStyle: NSUnderlineStyle.single.rawValue], range: match.range)
-                        activeURLs[match.range] = urlMatch
+                    availableUrlsRange[match.range] = urlMatch
                 }
             }
         }
-        self.availableUrlsRange = activeURLs
+    }
+
+    func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
+        for userMention in userMentions {
+            if let user = comment.users?[userMention.id],
+               let profileURL = self.serviceProvider.profileService().getProfileURL(user: user) {
+                text.addAttributes([
+                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
+                    .underlineStyle: NSUnderlineStyle.single.rawValue], range: userMention.range)
+                availableUrlsRange[userMention.range] = profileURL
+            }
+        }
     }
 
     func isUrlSchemeValid(for url: URL) -> Bool {
