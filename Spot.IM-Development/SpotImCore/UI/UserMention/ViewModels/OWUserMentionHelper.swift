@@ -9,6 +9,12 @@
 import Foundation
 
 class OWUserMentionHelper {
+    fileprivate struct Metrics {
+        static let mentionString = "@"
+        static let mentionCharecter: Character = "@"
+        static let jsonRegexPattern = "\\@\\{(.*?)\\}"
+    }
+
     static func getUserMentionTextData(replaceData: OWTextViewReplaceData, text: String) -> OWUserMentionTextData {
         let utf8Range = replaceData.range
         let startIndex = text.utf16.index(text.utf16.startIndex, offsetBy: utf8Range.lowerBound)
@@ -70,8 +76,8 @@ class OWUserMentionHelper {
 
     static func addUserMention(to mentionsData: OWUserMentionData, textData: OWUserMentionTextData, id: String, displayName: String) {
         let textToCursor = textData.textToCursor
-        let mentionDisplayText = "@" + displayName
-        guard let indexOfMention = textToCursor.lastIndex(of: "@") else { return }
+        let mentionDisplayText = Metrics.mentionString + displayName
+        guard let indexOfMention = textToCursor.lastIndex(of: Metrics.mentionCharecter) else { return }
         let textWithMention = String(textToCursor[..<indexOfMention]) + mentionDisplayText
         let range = indexOfMention..<textWithMention.endIndex
         guard let selectedRange = textWithMention.nsRange(from: range) else { return }
@@ -154,7 +160,7 @@ class OWUserMentionHelper {
     fileprivate static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
         var results = [(String, Range<String.Index>)]()
         do {
-            let regex = try NSRegularExpression(pattern: "\\@\\{(.*?)\\}", options: [])
+            let regex = try NSRegularExpression(pattern: Metrics.jsonRegexPattern, options: [])
             regex.enumerateMatches(in: text, range: NSRange(location: 0, length: text.utf16.count)) { result, _, _ in
                 if let r = result?.range(at: 1), let range = Range(r, in: text) {
                     let json = "{" + String(text[range]) + "}"
