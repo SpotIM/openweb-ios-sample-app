@@ -120,7 +120,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     }()
 
     fileprivate lazy var _commentContent: Observable<(String, OWCommentImage?, [String], OWUserMentionData)> = {
-        Observable.combineLatest(_commentText, _commentImage, _commentSelectedLabelIds, _commentSelectedMentions) { commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions in
+        Observable.combineLatest(_commentText,
+                                 _commentImage,
+                                 _commentSelectedLabelIds,
+                                 _commentSelectedMentions) { commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions in
             return (commentText, commentImage, commentSelectedLabelIds, commentSelectedMentions)
         }
     }()
@@ -165,7 +168,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
                     return Observable.just(())
                 }
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: commentSelectedMentions.mentions)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText,
+                                                                           image: commentImage),
+                                  commentLabels: commentSelectedLabelIds,
+                                  commentUserMentions: commentSelectedMentions.mentions)
                 self.sendEvent(for: .commentCreationLeavePage)
                 return Observable.just(())
             }
@@ -448,7 +454,9 @@ fileprivate extension OWCommentCreationViewViewModel {
                 let commentSelectedLabelIds = commentContent.2
                 let commentUserMentions = commentContent.3.mentions
 
-                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage), commentLabels: commentSelectedLabelIds, commentUserMentions: commentUserMentions)
+                self.cacheComment(commentContent: OWCommentCreationContent(text: commentText, image: commentImage),
+                                  commentLabels: commentSelectedLabelIds,
+                                  commentUserMentions: commentUserMentions)
             }
         })
         .subscribe(onNext: { [weak self] replyToCommentId, _ in
