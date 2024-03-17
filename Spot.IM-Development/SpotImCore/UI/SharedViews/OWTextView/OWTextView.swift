@@ -33,6 +33,7 @@ class OWTextView: UIView {
         static let heightConstraintPriority: CGFloat = 500
         static let didBeginEditDelay = 1
         static let delayTextViewTextChange = 5
+        static let delayTextViewExpand = 10
     }
 
     let viewModel: OWTextViewViewModeling
@@ -42,7 +43,7 @@ class OWTextView: UIView {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
         return UITextView()
                 .font(OWFontBook.shared.font(typography: .bodyText))
-                .textColor(OWColorPalette.shared.color(type: .textColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+                .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .tintColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
                 .textContainerInset(
                     UIEdgeInsets(
@@ -167,6 +168,10 @@ fileprivate extension OWTextView {
         if viewModel.outputs.isEditable {
             if viewModel.outputs.isAutoExpandable {
                 textView.rx.text
+                    // Fixes a jump when loading
+                    .skip(1)
+                    // Fixes multiline text not being loaded properly
+                    .delay(.milliseconds(Metrics.delayTextViewExpand), scheduler: MainScheduler.instance)
                     .subscribe(onNext: { [weak self] _ in
                         OWScheduler.runOnMainThreadIfNeeded {
                             guard let self = self else { return }
@@ -215,7 +220,7 @@ fileprivate extension OWTextView {
                 guard let self = self else { return }
                 self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle).cgColor
                 self.textViewPlaceholder.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
-                self.textView.textColor = OWColorPalette.shared.color(type: .textColor1, themeStyle: currentStyle)
+                self.textView.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
                 self.textView.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
                 self.textView.tintColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             })

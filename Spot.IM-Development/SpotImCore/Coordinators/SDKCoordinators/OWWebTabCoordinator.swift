@@ -39,7 +39,7 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
         self.actionsCallbacks = actionsCallbacks // TODO: handle actions callbacks?
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWWebTabCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWWebTabCoordinatorResult> {
         guard let router = router else { return .empty() }
         viewableMode = .partOfFlow
         let webTabVM = OWWebTabViewModel(options: options,
@@ -58,7 +58,12 @@ class OWWebTabCoordinator: OWBaseCoordinator<OWWebTabCoordinatorResult> {
                         popCompletion: webTabVCPopped)
         }
 
-        let partOfFlowPresentedWebClosedObservable = webTabVM.outputs.closeWebTab
+        let partOfFlowPresentedWebClosedObservable = webTabVM.outputs
+            .closeWebTab
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.router?.pop(popStyle: .dismiss, animated: false)
+            })
 
         let webVCPoppedObservable = Observable.merge(webTabVCPopped, partOfFlowPresentedWebClosedObservable)
             .map { OWWebTabCoordinatorResult.popped }

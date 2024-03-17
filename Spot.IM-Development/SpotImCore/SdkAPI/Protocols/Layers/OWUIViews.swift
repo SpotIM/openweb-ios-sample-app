@@ -55,6 +55,12 @@ public protocol OWUIViews {
                 callbacks: OWViewActionsCallbacks?,
                 completion: @escaping OWViewCompletion)
 
+    func commenterAppeal(postId: OWPostId,
+                         data: OWAppealRequiredData,
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion)
+
 #if BETA
     func testingPlayground(postId: OWPostId,
                            additionalSettings: OWTestingPlaygroundSettingsProtocol,

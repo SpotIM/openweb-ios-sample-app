@@ -18,6 +18,9 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var initialTextUsed: PublishSubject<Void> { get }
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
+    var commentCreationError: PublishSubject<Void> { get }
+    var displayToast: PublishSubject<OWToastNotificationCombinedData?> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -38,6 +41,9 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
+    var dismissedToast: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -56,8 +62,29 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         static let delayForDismiss: Int = 350 // ms
     }
 
+    var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> {
+        return displayToast
+            .unwrap()
+            .asObservable()
+    }
+
+    var dismissToast = PublishSubject<Void>()
+    lazy var dismissedToast: Observable<Void> = {
+        return dismissToast
+            .asObservable()
+    }()
+
+    var hideToast: Observable<Void> {
+        return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
+                                submitCommentInProgress.voidify())
+            .asObservable()
+    }
+
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
     var outputs: OWCommentCreationFloatingKeyboardViewViewModelingOutputs { return self }
+
+    var commentCreationError = PublishSubject<Void>()
 
     var viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
@@ -133,9 +160,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     let textViewVM: OWTextViewViewModeling
 
-    var performCta: Observable<OWCommentCreationCtaData> {
-        ctaTap
-            .asObservable()
+    lazy var performCta: Observable<OWCommentCreationCtaData> = {
+        return ctaTap
             .map { [weak self] _ -> OWUserAction? in
                 guard let self = self else { return nil }
                 switch self.commentType {
@@ -163,7 +189,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                 let commentContent = OWCommentCreationContent(text: text)
                 return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
             }
-    }
+            .asObservable()
+            .share()
+    }()
 
     lazy var resetTypeToNewCommentChangedWithText = resetTypeToNewCommentChanged
         .withLatestFrom(textViewVM.outputs.textViewText)
@@ -234,18 +262,18 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
         switch commentType {
         case .comment:
-            guard let text = commentsCacheService[.comment(postId: postId)] else { return }
+            guard let text = commentsCacheService[.comment(postId: postId)]?.commentContent.text else { return }
             initialText = text
         case .replyToComment(originComment: let originComment):
             guard let originCommentId = originComment.id,
-                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]
+                  let text = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
             else { return }
             initialText = text
         case .edit(comment: let comment):
             if case .edit = originalCommentType,
                let commentText = comment.text?.text {
                 initialText = commentText
-            } else if let text = commentsCacheService[.edit(postId: postId)] {
+            } else if let text = commentsCacheService[.edit(postId: postId)]?.commentContent.text {
                 initialText = text
             }
         }

@@ -56,7 +56,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
         self.servicesProvider = servicesProvider
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWReportReasonCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWReportReasonCoordinatorResult> {
         guard let router = router else { return .empty() }
         let reportReasonVM: OWReportReasonViewModeling = OWReportReasonViewModel(reportData: reportData,
                                                                                  viewableMode: .partOfFlow,
@@ -112,7 +112,7 @@ class OWReportReasonCoordinator: OWBaseCoordinator<OWReportReasonCoordinatorResu
                 let safariCoordinator = OWWebTabCoordinator(router: router,
                                                                options: options,
                                                                actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .flatMap { _ -> Observable<OWReportReasonCoordinatorResult> in
                 return Observable.never()
@@ -205,16 +205,11 @@ fileprivate extension OWReportReasonCoordinator {
             .flatMap { [weak self] _ -> Observable<Void> in
                 guard let self = self else { return .empty() }
                 guard let router = self.router else { return .empty() }
-                let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
-                let reportReasonSubmittedVC = OWReportReasonSubmittedVC(reportReasonSubmittedViewViewModel: reportReasonSubmittedViewVM)
-                switch self.presentationalMode {
-                case .present(let style):
-                    reportReasonSubmittedVC.modalPresentationStyle = style.toOSModalPresentationStyle
-                default:
-                    reportReasonSubmittedVC.modalPresentationStyle = .fullScreen
-                }
-                router.present(reportReasonSubmittedVC, animated: true, dismissCompletion: nil)
-                return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
+                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel(type: .reportReason)
+                let reportReasonSubmittedVC = OWSubmittedVC(submittedViewViewModel: reportReasonSubmittedViewVM)
+
+                router.push(reportReasonSubmittedVC, pushStyle: .present, animated: true, popCompletion: nil)
+                return reportReasonSubmittedViewVM.outputs.closeSubmittedTapped
             }
             .do(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -282,15 +277,15 @@ fileprivate extension OWReportReasonCoordinator {
           // Open cancel observable - General
           let cancelReportReasonTapped = Observable.merge(viewModel.outputs.cancelReportReasonTapped,
                                                           cancelAdditionalInfoTapped)
-              .map { _ -> OWReportReasonCancelViewViewModel in
-                  return OWReportReasonCancelViewViewModel()
+              .map { _ -> OWCancelViewViewModel in
+                  return OWCancelViewViewModel(type: .reportReason)
               }
               .share()
 
           // Cancel tapped in cancel view - General
           let cancelReportCancelTapped = cancelReportReasonTapped
               .flatMap { reportReasonCancelViewVM -> Observable<Void> in
-                  return reportReasonCancelViewVM.outputs.cancelReportReasonCancelTapped
+                  return reportReasonCancelViewVM.outputs.cancelTapped
               }
 
           // Close ReportReason observable - General
@@ -298,8 +293,8 @@ fileprivate extension OWReportReasonCoordinator {
                                                  additionalInfoCloseReportReasonTapped,
                                                  cancelReportCancelTapped,
                                                  closeReportReasonSubmittedTapped)
-              .map { _ -> OWReportReasonCancelViewViewModel in
-                  return OWReportReasonCancelViewViewModel()
+              .map { _ -> OWCancelViewViewModel in
+                  return OWCancelViewViewModel(type: .reportReason)
               }
               .share()
 
@@ -309,12 +304,13 @@ fileprivate extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .partOfFlow
             }
             .flatMap { reportReasonCancelViewVM -> Observable<Void> in
-                return reportReasonCancelViewVM.outputs.closeReportReasonCancelTapped
+                return reportReasonCancelViewVM.outputs.closeTapped
             }
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                router.navigationController?.visibleViewController?.dismiss(animated: true)
+
+                router.pop(popStyle: .dismiss, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -333,7 +329,7 @@ fileprivate extension OWReportReasonCoordinator {
                 // For dismissing OWReportReasonSubmittedVC and OWReportReasonCancelVC screens
                 if !isReportReasonVC {
                     let hasMoreThanOneViewController = router.numberOfActiveViewControllers > 1
-                    visableViewController?.dismiss(animated: hasMoreThanOneViewController)
+                    router.pop(popStyle: .dismiss, animated: hasMoreThanOneViewController)
                 }
                 return .just(router)
             }
@@ -365,17 +361,10 @@ fileprivate extension OWReportReasonCoordinator {
             .subscribe(onNext: { [weak self] reportReasonViewModel in
                 guard let self = self else { return }
                 guard let router = self.router else { return }
-                let ReportReasonCancelVM = OWReportReasonCancelViewModel(reportReasonCancelViewViewModel: reportReasonViewModel)
-                let reportReasonCancelVC = OWReportReasonCancelVC(reportReasonCancelViewModel: ReportReasonCancelVM)
-                switch self.presentationalMode {
-                case .present(style: .fullScreen):
-                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
-                case .present(style: .pageSheet):
-                    reportReasonCancelVC.modalPresentationStyle = .pageSheet
-                default:
-                    reportReasonCancelVC.modalPresentationStyle = .fullScreen
-                }
-                router.present(reportReasonCancelVC, animated: true, dismissCompletion: nil)
+                let ReportReasonCancelVM = OWCancelViewModel(cancelViewViewModel: reportReasonViewModel)
+                let reportReasonCancelVC = OWCancelVC(cancelViewModel: ReportReasonCancelVM)
+
+                router.push(reportReasonCancelVC, pushStyle: .present, animated: true, popCompletion: nil)
             })
             .disposed(by: disposeBag)
 
@@ -385,8 +374,8 @@ fileprivate extension OWReportReasonCoordinator {
             .observe(on: MainScheduler.instance)
             .flatMap { [weak self] commentId, userJustLoggedIn -> Observable<(OWCommentId, Bool)> in
                 guard let self = self else { return .empty() }
-                let reportReasonSubmittedViewVM = OWReportReasonSubmittedViewViewModel()
-                let reportReasonSubmittedView = OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewVM)
+                let reportReasonSubmittedViewVM = OWSubmittedViewViewModel(type: .reportReason)
+                let reportReasonSubmittedView = OWSubmittedView(viewModel: reportReasonSubmittedViewVM)
 
                 reportReasonSubmittedView.alpha = 0
                 self.reportReasonView?.addSubview(reportReasonSubmittedView)
@@ -396,7 +385,7 @@ fileprivate extension OWReportReasonCoordinator {
                 reportReasonSubmittedView.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
-                return reportReasonSubmittedViewVM.outputs.closeReportReasonSubmittedTapped
+                return reportReasonSubmittedViewVM.outputs.closeSubmittedTapped
                     .map { (commentId, userJustLoggedIn) }
             }
             .do(onNext: { [weak self] commentId, userJustLoggedIn in
@@ -415,9 +404,9 @@ fileprivate extension OWReportReasonCoordinator {
             .filter { _ in
                 viewModel.outputs.viewableMode == .independent
             }
-            .map { [weak self] reportReasonCancelViewVM -> OWReportReasonCancelView? in
+            .map { [weak self] reportReasonCancelViewVM -> OWCancelView? in
                 guard let self = self else { return nil }
-                let reportReasonCancelView = OWReportReasonCancelView(viewModel: reportReasonCancelViewVM)
+                let reportReasonCancelView = OWCancelView(viewModel: reportReasonCancelViewVM)
                 reportReasonCancelView.alpha = 0
                 self.reportReasonView?.addSubview(reportReasonCancelView)
                 UIView.animate(withDuration: Metrics.fadeDuration) {
@@ -443,9 +432,9 @@ fileprivate extension OWReportReasonCoordinator {
                 viewModel.outputs.viewableMode == .independent
             }
             .flatMap { reportReasonCancelViewVM -> Observable<Void> in
-                return reportReasonCancelViewVM.outputs.closeReportReasonCancelTapped.take(1)
+                return reportReasonCancelViewVM.outputs.closeTapped.take(1)
             }
-            .flatMap { _ -> Observable<OWReportReasonCancelView> in
+            .flatMap { _ -> Observable<OWCancelView> in
                 return cancelViewObservable.take(1)
             }
             .subscribe(onNext: { reportReasonCancelView in

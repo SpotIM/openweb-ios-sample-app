@@ -21,10 +21,12 @@ protocol OWConversationViewViewModelingInputs {
     var pullToRefresh: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationTypeInternal> { get }
     var scrolledToTop: PublishSubject<Void> { get }
+    var scrolledToCellIndex: PublishSubject<Int> { get }
     var changeConversationOffset: PublishSubject<CGPoint> { get }
     var tableViewSize: PublishSubject<CGSize> { get }
     var tableViewContentOffsetY: PublishSubject<CGFloat> { get }
     var tableViewContentSizeHeight: PublishSubject<CGFloat> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -50,17 +52,22 @@ protocol OWConversationViewViewModelingOutputs {
     var performTableViewAnimation: Observable<Void> { get }
     var scrollToTopAnimated: Observable<Bool> { get }
     var scrollToCellIndex: Observable<Int> { get }
+    var scrollToCellIndexIfNotVisible: Observable<Int> { get }
     var reloadCellIndex: Observable<Int> { get }
+    var highlightCellsIndexes: Observable<[Int]> { get }
 
     var urlClickedOutput: Observable<URL> { get }
     var openCommentCreation: Observable<OWCommentCreationTypeInternal> { get }
     var openProfile: Observable<OWOpenProfileType> { get }
     var openReportReason: Observable<OWCommentViewModeling> { get }
-    var openClarityDetails: Observable<OWClarityDetailsType> { get }
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> { get }
     var conversationOffset: Observable<CGPoint> { get }
     var tableViewContentSizeHeightChanged: Observable<CGFloat> { get }
     var tableViewSizeChanged: Observable<CGSize> { get }
     var dataSourceTransition: OWViewTransition { get }
+
+    var displayToast: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
     var openCommentThread: Observable<(OWCommentId, OWCommentThreadPerformActionType)> { get }
     var tableViewHeightChanged: Observable<CGFloat> { get }
 }
@@ -88,6 +95,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
         static let delayAfterRecievingUpdatedComments: Int = 200 // ms
         static let delayAfterScrolledToTopAnimated: Int = 500 // ms
         static let delayBeforeReEnablingTableViewAnimation: Int = 200 // ms
+        static let delayAfterScrolledToCellAnimated: Int = 500 // ms
+        static let delayAfterInsertToTableView: Int = 300 // ms
         static let delayForPerformTableViewAnimationAfterContentSizeChanged: Int = 100 // ms
         static let debounceForCellsViewModels: Int = 50 // ms
         static let tableViewPaginationCellsOffset: Int = 5
@@ -197,6 +206,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     }
 
     fileprivate let _insertNewLocalComments = PublishSubject<[OWComment]>()
+    fileprivate let _insertNewRealtimeComments = PublishSubject<[OWComment]>()
     fileprivate let _updateLocalComment = PublishSubject<(OWComment, OWCommentId)>()
     fileprivate let _replyToLocalComment = PublishSubject<(OWComment, OWCommentId)>()
 
@@ -210,6 +220,20 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     fileprivate var _scrollToCellIndex = PublishSubject<Int>()
     var scrollToCellIndex: Observable<Int> {
         _scrollToCellIndex
+            .asObservable()
+    }
+
+    fileprivate var _scrollToCellIndexIfNotVisible = PublishSubject<Int>()
+    var scrollToCellIndexIfNotVisible: Observable<Int> {
+        _scrollToCellIndexIfNotVisible
+            .asObservable()
+    }
+
+    var scrolledToCellIndex = PublishSubject<Int>()
+
+    fileprivate var _highlightCellsIndexes = PublishSubject<[Int]>()
+    var highlightCellsIndexes: Observable<[Int]> {
+        return _highlightCellsIndexes
             .asObservable()
     }
 
@@ -245,6 +269,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
 
     fileprivate var deleteComment = PublishSubject<OWCommentViewModeling>()
     fileprivate var muteCommentUser = PublishSubject<OWCommentViewModeling>()
+    fileprivate var retryMute = PublishSubject<Void>()
 
     lazy var conversationTitleHeaderViewModel: OWConversationTitleHeaderViewModeling = {
         return OWConversationTitleHeaderViewModel()
@@ -550,8 +575,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
             .asObservable()
     }
 
-    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsType>()
-    var openClarityDetails: Observable<OWClarityDetailsType> {
+    fileprivate var openClarityDetailsChange = PublishSubject<OWClarityDetailsRequireData>()
+    var openClarityDetails: Observable<OWClarityDetailsRequireData> {
         return openClarityDetailsChange
             .asObservable()
     }
@@ -560,6 +585,34 @@ class OWConversationViewViewModel: OWConversationViewViewModeling,
     var conversationOffset: Observable<CGPoint> {
         return changeConversationOffset
             .asObservable()
+    }
+
+    var dismissToast = PublishSubject<Void>()
+
+    fileprivate var _displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToast: Observable<OWToastNotificationCombinedData> {
+        return _displayToast
+            .unwrap()
+            .asObservable()
+    }
+    var hideToast: Observable<Void> {
+        return _displayToast
+            .filter { $0 == nil }
+            .voidify()
+            .asObservable()
+    }
+
+    fileprivate var firstVisibleCommentIndex: Observable<Int> {
+        return Observable.combineLatest(shouldShowCommunityQuestion.startWith(false),
+                                        shouldShowCommunityGuidelines.startWith(false))
+            .flatMapLatest({ showCommunityQuestion, showCommunityGuidlines -> Observable<Int> in
+                var index = 0
+                if showCommunityQuestion { index += 1 }
+                if showCommunityQuestion && showCommunityGuidlines { index += 1 } // spacer
+                if showCommunityGuidlines { index += 1 }
+                return .just(index)
+            })
+            .share(replay: 1)
     }
 
     // dataSourceTransition is used for the view to build DataSource, it change according to _dataSourceTransition - do not chnge it manually
@@ -812,7 +865,19 @@ fileprivate extension OWConversationViewViewModel {
 fileprivate extension OWConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
+        dismissToast
+            .subscribe(onNext: { [weak self] in
+                self?.servicesProvider.toastNotificationService().clearCurrentToast()
+            })
+            .disposed(by: disposeBag)
+
         servicesProvider.activeArticleService().updateStrategy(conversationData.article.articleInformationStrategy)
+
+        servicesProvider.toastNotificationService()
+            .toastToShow
+            .observe(on: MainScheduler.instance)
+            .bind(to: _displayToast)
+            .disposed(by: disposeBag)
 
         // Try again after error loading initial comments
         let tryAgainAfterInitialError = tryAgainAfterError
@@ -872,7 +937,9 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] (event, loadingTriggeredReason) -> Observable<(Event<OWConversationReadRM>, OWLoadingTriggeredReason)> in
                 // Add delay if end time for load initial comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return .empty() }
-                let timeToLoadInitialComments = self.timeMeasuringMilliseconds(forKey: .conversationLoadingInitialComments)
+                let timeToLoadInitialComments = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .conversationLoadingInitialComments,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadInitialComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((event, loadingTriggeredReason))
@@ -955,11 +1022,12 @@ fileprivate extension OWConversationViewViewModel {
             .realtimeIndicationViewModel.outputs
             .tapped
             .withLatestFrom(self.servicesProvider.realtimeIndicatorService().newComments)
+            .observe(on: conversationViewVMScheduler)
             .subscribe(onNext: { [weak self] newComments in
                 guard let self = self else { return }
                 self.servicesProvider
                     .conversationUpdaterService()
-                    .update(.insert(comments: newComments), postId: self.postId)
+                    .update(.insertRealtime(comments: newComments), postId: self.postId)
 
                 self.servicesProvider.realtimeIndicatorService().cleanCache()
             })
@@ -1099,7 +1167,9 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] (commentPresentationData, event) -> Observable<(OWCommentPresentationData, Event<OWConversationReadRM>?)> in
                 // Add delay if end time for load more replies is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just((commentPresentationData, event)) }
-                let timeToLoadMoreReplies = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id))
+                let timeToLoadMoreReplies = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .conversationLoadingMoreReplies(commentId: commentPresentationData.id),
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadMoreReplies < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just((commentPresentationData, event))
@@ -1201,7 +1271,9 @@ fileprivate extension OWConversationViewViewModel {
             .flatMapLatest({ [weak self] event -> Observable<Event<OWConversationReadRM>?> in
                 // Add delay if end time for load more comments is less then delayBeforeTryAgainAfterError
                 guard let self = self else { return Observable.just(event) }
-                let timeToLoadMoreComments = self.timeMeasuringMilliseconds(forKey: .conversationLoadingMoreComments)
+                let timeToLoadMoreComments = self.servicesProvider.timeMeasuringService()
+                    .timeMeasuringMilliseconds(forKey: .conversationLoadingMoreComments,
+                                               delayDuration: Metrics.delayBeforeTryAgainAfterError)
                 if case .error = event,
                    timeToLoadMoreComments < Metrics.delayBeforeTryAgainAfterError {
                     return Observable.just(event)
@@ -1239,6 +1311,10 @@ fileprivate extension OWConversationViewViewModel {
                 commentsPresentationData = commentsPresentationData.filter { !(self._commentsPresentationData.map { $0.id }).contains($0.id) }
 
                 self._commentsPresentationData.append(contentsOf: commentsPresentationData)
+
+                if commentsPresentationData.isEmpty {
+                    self._isLoadingMoreComments.onNext(false)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1586,17 +1662,45 @@ fileprivate extension OWConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Observe on new rejected comment
+        commentCellsVmsObservable
+            .flatMapLatest { commentCellsVms -> Observable<(OWCommentStatusType, OWCommentId)> in
+                let statusObservable: [Observable<(OWCommentStatusType, OWCommentId)>] = commentCellsVms.map { commentCellVm -> Observable<(OWCommentStatusType, OWCommentId)> in
+                    let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
+                    let commentId = commentCellVm.outputs.commentVM.outputs.comment.id ?? ""
+                    return commentStatusVm.outputs.status
+                        .map { ($0, commentId) }
+                }
+                return Observable.merge(statusObservable)
+            }
+            .subscribe(onNext: { [weak self] (status, commentId) in
+                switch status {
+                case .rejected:
+                    self?.sendEvent(for: .rejectedCommentNoticeView(commentId: commentId))
+                case .appealed:
+                    self?.sendEvent(for: .appealCommentNoticeView(commentId: commentId))
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+
         // Observe open clarity details
         commentCellsVmsObservable
-            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsType> in
-                let learnMoreClickObservable: [Observable<OWClarityDetailsType>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsType> in
+            .flatMapLatest { commentCellsVms -> Observable<OWClarityDetailsRequireData> in
+                let learnMoreClickObservable: [Observable<OWClarityDetailsRequireData>] = commentCellsVms.map { commentCellVm -> Observable<OWClarityDetailsRequireData> in
                     let commentStatusVm = commentCellVm.outputs.commentVM.outputs.commentStatusVM
                     return commentStatusVm.outputs.learnMoreClicked
+                        .map { OWClarityDetailsRequireData(commentId: commentCellVm.outputs.id, type: $0) }
                 }
                 return Observable.merge(learnMoreClickObservable)
             }
-            .subscribe(onNext: { [weak self] clarityDetailsType in
-                self?.openClarityDetailsChange.onNext(clarityDetailsType)
+            .subscribe(onNext: { [weak self] data in
+                self?.openClarityDetailsChange.onNext(data)
+                // send analytics for rejected
+                if data.type == .rejected {
+                    self?.sendEvent(for: .rejectedNoticeLearnMoreClicked(commentId: data.commentId))
+                }
             })
             .disposed(by: disposeBag)
 
@@ -1849,19 +1953,22 @@ fileprivate extension OWConversationViewViewModel {
 
         updatedCommentsObservable
             .delay(.milliseconds(Metrics.delayAfterRecievingUpdatedComments), scheduler: conversationViewVMScheduler)
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] updateType in
-                guard let self = self else { return }
-                switch updateType {
-                case .insert(let comments):
-                    self._insertNewLocalComments.onNext(comments)
-                case let .update(commentId, withComment):
-                    self._updateLocalComment.onNext((withComment, commentId))
-                case let .insertReply(comment, toCommentId):
-                    self._replyToLocalComment.onNext((comment, toCommentId))
-                case .refreshConversation:
-                    self._dataSourceTransition.onNext(.reload)
-                    self._forceRefresh.onNext()
+                OWScheduler.runOnMainThreadIfNeeded {
+                    guard let self = self else { return }
+                    switch updateType {
+                    case .insert(let comments):
+                        self._insertNewLocalComments.onNext(comments)
+                    case .insertRealtime(comments: let comments):
+                        self._insertNewRealtimeComments.onNext(comments)
+                    case let .update(commentId, withComment):
+                        self._updateLocalComment.onNext((withComment, commentId))
+                    case let .insertReply(comment, toCommentId):
+                        self._replyToLocalComment.onNext((comment, toCommentId))
+                    case .refreshConversation:
+                        self._dataSourceTransition.onNext(.reload)
+                        self._forceRefresh.onNext()
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -1891,6 +1998,54 @@ fileprivate extension OWConversationViewViewModel {
                 if (!updatedCommentsPresentationData.isEmpty) {
                     self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // Observable for handling insertion of new realtime comments
+        let newRealtimeCommentsObsarvable = _insertNewRealtimeComments
+            .do(onNext: { [weak self] comments in
+                guard let self = self else { return }
+
+                // Processing new comments
+                let commentsIds = comments.map { $0.id }.unwrap()
+                    .filter {
+                        // Exclude existing comments
+                        self.commentPresentationDataHelper.findVisibleCommentPresentationData(with: $0, in: Array(self._commentsPresentationData)) == nil
+                    }
+                let updatedCommentsPresentationData = commentsIds.map { OWCommentPresentationData(id: $0) }
+                if (!updatedCommentsPresentationData.isEmpty) {
+                    self._commentsPresentationData.insert(contentsOf: updatedCommentsPresentationData, at: 0)
+                }
+            })
+            .share()
+
+        let updatedRealtimeCommentsObsarvable = newRealtimeCommentsObsarvable
+            .delay(.milliseconds(Metrics.delayAfterInsertToTableView), scheduler: conversationViewVMScheduler)
+            .withLatestFrom(firstVisibleCommentIndex) { ($0, $1) }
+            .withLatestFrom(commentCellsOptions) { ($0.0, $0.1, $1) }
+            .map { comments, firstVisibleCommentIndex, commentCellsOptions -> [Int] in
+                let indexes = commentCellsOptions.enumerated().compactMap { index, element in
+                    if element.cellClass == OWCommentCell.self { return index + firstVisibleCommentIndex } else { return nil }
+                }
+                return Array(indexes.prefix(comments.count))
+            }
+            .share()
+
+        updatedRealtimeCommentsObsarvable
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self, let firstIndex = indexes.first else { return }
+                self._scrollToCellIndexIfNotVisible.onNext(firstIndex)
+            })
+            .disposed(by: disposeBag)
+
+        scrolledToCellIndex
+            .withLatestFrom(self.firstVisibleCommentIndex) { ($0, $1) }
+            .filter { $0 == $1 }
+            .voidify()
+            .withLatestFrom(updatedRealtimeCommentsObsarvable)
+            .subscribe(onNext: { [weak self] indexes in
+                guard let self = self else { return }
+                self._highlightCellsIndexes.onNext(indexes)
             })
             .disposed(by: disposeBag)
 
@@ -2149,7 +2304,7 @@ fileprivate extension OWConversationViewViewModel {
                 guard let self = self else { return }
                 self._shouldShowErrorMuteUser.onNext(false)
             })
-            .flatMapLatest { [weak self] userId -> Observable<Event<EmptyDecodable>> in
+            .flatMapLatest { [weak self] userId -> Observable<Event<OWNetworkEmpty>> in
                 guard let self = self else { return .empty() }
                 return self.servicesProvider
                     .netwokAPI()
@@ -2164,9 +2319,18 @@ fileprivate extension OWConversationViewViewModel {
                 switch event {
                 case .next:
                     // TODO: Clear any RX variables which affect error state in the View layer (like _shouldShowError).
+                    // TODO: cancel action when supported
+                    let data = OWToastRequiredData(type: .success, action: .none, title: OWLocalizationManager.shared.localizedString(key: "MuteSuccessToast"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                         actionCompletion: nil))
                     return true
                 case .error(_):
                     // TODO: handle error - update something like _shouldShowError RX variable which affect the UI state for showing error in the View layer
+                    let data = OWToastRequiredData(type: .warning, action: .tryAgain, title: OWLocalizationManager.shared.localizedString(key: "SomethingWentWrong"))
+                    self.servicesProvider.toastNotificationService()
+                        .showToast(data: OWToastNotificationCombinedData(presentData: OWToastNotificationPresentData(data: data),
+                                                                   actionCompletion: self.retryMute))
                     self._shouldShowErrorMuteUser.onNext(true)
                     return false
                 default:
@@ -2176,6 +2340,16 @@ fileprivate extension OWConversationViewViewModel {
             .filter { $0 }
             .subscribe(onNext: { _ in
                 // successfully muted
+            })
+            .disposed(by: disposeBag)
+
+        // Retry when triggerd
+        retryMute
+            .withLatestFrom(muteCommentUser) { _, comment -> OWCommentViewModeling in
+                return comment
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.muteCommentUser.onNext(comment)
             })
             .disposed(by: disposeBag)
 
@@ -2273,17 +2447,6 @@ fileprivate extension OWConversationViewViewModel {
                     .setConversationTableSize(size)
             })
             .disposed(by: disposeBag)
-    }
-
-    func timeMeasuringMilliseconds(forKey key: OWTimeMeasuringService.OWKeys) -> Int {
-        let measureService = servicesProvider.timeMeasuringService()
-        let measureResult = measureService.endMeasure(forKey: key)
-        if case OWTimeMeasuringResult.time(let milliseconds) = measureResult,
-           milliseconds < Metrics.delayBeforeTryAgainAfterError {
-            return milliseconds
-        }
-        // If end was called before start for some reason, returning 0 milliseconds here
-        return 0
     }
 
     func event(for eventType: OWAnalyticEventType) -> OWAnalyticEvent {
