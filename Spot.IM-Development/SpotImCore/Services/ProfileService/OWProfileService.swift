@@ -11,6 +11,7 @@ import Foundation
 
 protocol OWProfileServicing {
     func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileResult>
+    func getProfileURL(user: SPUser) -> URL?
 }
 
 class OWProfileService: OWProfileServicing {
@@ -19,6 +20,10 @@ class OWProfileService: OWProfileServicing {
 
     init(sharedServicesProvider: OWSharedServicesProviding) {
         self.sharedServicesProvider = sharedServicesProvider
+    }
+
+    func getProfileURL(user: SPUser) -> URL? {
+        return self.profileUrl(singleUseTicket: nil, userId: user.id)
     }
 
     func openProfileTapped(user: SPUser) -> Observable<OWOpenProfileResult> {
