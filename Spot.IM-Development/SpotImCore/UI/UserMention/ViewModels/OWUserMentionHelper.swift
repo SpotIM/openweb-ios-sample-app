@@ -136,19 +136,27 @@ class OWUserMentionHelper {
         return text
     }
 
+    /// This function creates an array of OWUserMentionObjects and also inserts the user mentions display names - @JohnSmith into the OWComment text instead of the user mention content json ids @{"id"="xxxxxxxxxx"} found in the comment text
     static func createUserMentions(from comment: inout OWComment) -> [OWUserMentionObject] {
         guard var text = comment.text?.text else { return [] }
         let jsonRanges = parseJsonsInText(text: text)
         var userMentions: [OWUserMentionObject] = []
-        for (contentId, range) in jsonRanges {
+        var rangeLocationAccumulate = 0
+        let originalText = text
+        for (contentId, jsonRange) in jsonRanges {
             if let userMention = comment.userMentions[contentId],
                let user = comment.users?[userMention.userId],
                let displayName = user.displayName,
-               var nsRange = text.nsRange(from: range) {
-                let displayName = "@" + displayName
-                nsRange.length = displayName.utf16.count
-                let owUserMention = OWUserMentionObject(id: contentId, userId: userMention.userId, text: displayName, range: nsRange)
-                text = text.replacingOccurrences(of: owUserMention.jsonString, with: owUserMention.text, range: range)
+               var mentionRange = originalText.nsRange(from: jsonRange) {
+                var jsonNSRange = mentionRange
+                let displayName = Metrics.mentionString + displayName
+                mentionRange.length = displayName.utf16.count
+                mentionRange.location += rangeLocationAccumulate
+                jsonNSRange.location += rangeLocationAccumulate
+                let owUserMention = OWUserMentionObject(id: contentId, userId: userMention.userId, text: displayName, range: mentionRange)
+                let jsonString = owUserMention.jsonString
+                rangeLocationAccumulate += owUserMention.text.utf16.count - jsonString.utf16.count
+                text = text.replacingOccurrences(of: jsonString, with: owUserMention.text, range: Range(jsonNSRange, in: text))
                 userMentions.append(owUserMention)
             }
         }
@@ -156,28 +164,66 @@ class OWUserMentionHelper {
         return userMentions
     }
 
-    // Parsing jsons @{} in text with ids
+    // Parsing jsons @{} in text with comment content ids
     fileprivate static func parseJsonsInText(text: String) -> [(String, Range<String.Index>)] {
         var results = [(String, Range<String.Index>)]()
         do {
             let regex = try NSRegularExpression(pattern: Metrics.jsonRegexPattern, options: [])
             regex.enumerateMatches(in: text, range: NSRange(location: 0, length: text.utf16.count)) { result, _, _ in
-                if let r = result?.range(at: 1), let range = Range(r, in: text) {
-                    let json = "{" + String(text[range]) + "}"
-                    if let data = json.data(using: .utf16) {
-                        do {
-                            if let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                if let contentId = dict["id"] as? String {
-                                    results.append((contentId, range))
-                                }
-                            }
-                        } catch {
-                            print(error.localizedDescription)
+                if let r = result?.range(at: 0), let range = Range(r, in: text) {
+                    let json = String(text[range]).dropFirst()
+                    do {
+                        if let data = json.data(using: .utf16),
+                           let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                           let contentId = dict["id"] as? String {
+                            results.append((contentId, range))
                         }
+                    } catch {
+                        print(error.localizedDescription)
                     }
                 }
             }
-        } catch { }
+        } catch {
+            print(error.localizedDescription)
+        }
         return results
+    }
+
+    static func filterUserMentions(in text: String, userMentions: [OWUserMentionObject], readMoreRange: NSRange?) -> [OWUserMentionObject] {
+        guard let readMoreRange = readMoreRange else { return userMentions }
+        let utf16Count = text.utf16.count
+        var filtered = userMentions.filter { $0.range.location <= utf16Count }
+        if let last = filtered.last {
+            filtered.removeLast()
+            let last = OWUserMentionObject(id: last.id, userId: last.userId, text: last.text, range: last.range)
+            if (last.range.location + last.range.length) >= utf16Count - readMoreRange.length {
+                let subtract = utf16Count - (last.range.location + last.range.length) - readMoreRange.length
+                last.range.length += subtract
+            }
+            guard last.range.length > 0 else { return filtered }
+            filtered.append(last)
+        }
+        return filtered
+    }
+
+    static func addMockCommentWithUserMention(comment: inout OWComment) {
+        comment.userMentions["b4edd1995e6bdc7fc7bf3f6d95fcc97b"] = OWComment.Content.UserMention(id: "b4edd1995e6bdc7fc7bf3f6d95fcc97b", userId: "1234")
+        comment.userMentions["f42518e26df91e6af00fb62ce8a39a2f"] = OWComment.Content.UserMention(id: "f42518e26df91e6af00fb62ce8a39a2f", userId: "4567")
+        let user1 = SPUser()
+        user1.id = "1234"
+        user1.userId  = "1234"
+        user1.displayName = "Refael Sommer"
+
+        let user2 = SPUser()
+        user2.id = "4567"
+        user2.userId  = "4567"
+        user2.displayName = "Alon Haiut"
+
+        comment.users = comment.users ?? [:]
+        comment.users?["1234"] = user1
+        comment.users?["4567"] = user2
+        // swiftlint:disable line_length
+        comment.text?.text = "Test 🦋⃤♡⃤🌈⃤  mentions @{\"id\": \"b4edd1995e6bdc7fc7bf3f6d95fcc97b\"} and mention @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} and third @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} Test @{\"id\": \"b4edd1995e6bdc7fc7bf3f6d95fcc97b\"} and mention @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} 🦋⃤♡⃤🌈⃤  and third @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} Test mentions @{\"id\": \"b4edd1995e6bdc7fc7bf3f6d95fcc97b\"} and mention @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} and third @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} Test mentions @{\"id\": \"b4edd1995e6bdc7fc7bf3f6d95fcc97b\"} and mention @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} and third @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} Test mentions @{\"id\": \"b4edd1995e6bdc7fc7bf3f6d95fcc97b\"} and mention @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"} and third @{\"id\": \"f42518e26df91e6af00fb62ce8a39a2f\"}"
+        // swiftlint:enable line_length
     }
 }
