@@ -63,7 +63,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         self.collapsableTextLineLimit = collapsableTextLineLimit
         self.availableUrlsRange = [:]
         var comment = comment
-        userMentions = OWUserMentionHelper.createUserMentions(from: &comment)
+        self.userMentions = OWUserMentionHelper.createUserMentions(from: &comment)
         _comment.onNext(comment)
         setupObservers()
     }
@@ -288,12 +288,12 @@ fileprivate extension OWCommentTextViewModel {
     }
 
     func addUserMentions(text: inout NSMutableAttributedString, style: OWThemeStyle, comment: OWComment) {
+        let userMentions = OWUserMentionHelper.filterUserMentions(in: text.string, userMentions: userMentions, readMoreRange: readMoreRange)
         for userMention in userMentions {
-            if let user = comment.users?[userMention.id],
+            if let user = comment.users?[userMention.userId],
                let profileURL = self.serviceProvider.profileService().getProfileURL(user: user) {
                 text.addAttributes([
-                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
-                    .underlineStyle: NSUnderlineStyle.single.rawValue], range: userMention.range)
+                    .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style)], range: userMention.range)
                 availableUrlsRange[userMention.range] = profileURL
             }
         }
