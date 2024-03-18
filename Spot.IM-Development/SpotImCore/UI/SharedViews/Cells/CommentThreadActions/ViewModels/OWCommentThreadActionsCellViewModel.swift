@@ -52,7 +52,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
 
     var triggerUpdateActionType = PublishSubject<Void>()
 
-    fileprivate var spacing: OWVerticalSpacing = OWVerticalSpacing(0)
+    fileprivate let spacing: OWVerticalSpacing
 
     lazy var commentActionsVM: OWCommentThreadActionsViewModel = OWCommentThreadActionsViewModel(with: .collapseThread,
                                                                                                  commentId: self.commentPresentationData.id,
@@ -91,6 +91,7 @@ class OWCommentThreadActionsCellViewModel: OWCommentThreadActionsCellViewModelin
             repliesOffset: 0,
             repliesPresentation: []
         )
+        self.spacing = .zero
         self.setupObservers()
     }
 
