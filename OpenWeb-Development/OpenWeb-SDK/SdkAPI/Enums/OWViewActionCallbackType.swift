@@ -20,7 +20,7 @@ public enum OWViewActionCallbackType: Codable {
     case openReportReason(commentId: OWCommentId, parentId: OWCommentId)
     case openCommentCreation(type: OWCommentCreationType)
     case closeReportReason
-    case openClarityDetails(type: OWClarityDetailsType)
+    case openClarityDetails(data: OWClarityDetailsRequireData)
     case closeClarityDetails
     case closeCommentCreation
     case floatingCommentCreationDismissed
@@ -28,6 +28,7 @@ public enum OWViewActionCallbackType: Codable {
     case commentSubmitted
     case closeWebView
     case openLinkInComment(url: URL)
+    case openCommenterAppeal(data: OWAppealRequiredData)
     case openCommentThread(commentId: OWCommentId, performActionType: OWCommentThreadPerformActionType)
     case closeCommentThread
 }
@@ -57,8 +58,8 @@ extension OWViewActionCallbackType: Equatable {
             return lhsId == rhsId
         case (.closeReportReason, .closeReportReason):
             return true
-        case (let .openClarityDetails(lhsType), let .openClarityDetails(rhsType)):
-            return lhsType == rhsType
+        case (let .openClarityDetails(lhsData), let .openClarityDetails(rhsData)):
+            return lhsData.type == rhsData.type && lhsData.commentId == rhsData.commentId
         case (.closeClarityDetails, .closeClarityDetails):
             return true
         case (.floatingCommentCreationDismissed, .floatingCommentCreationDismissed):
@@ -71,6 +72,8 @@ extension OWViewActionCallbackType: Equatable {
             return true
         case (.openLinkInComment(let lhsUrl), .openLinkInComment(let rhsUrl)):
             return lhsUrl == rhsUrl
+        case (.openCommenterAppeal, .openCommenterAppeal):
+            return true
         default:
             return false
         }

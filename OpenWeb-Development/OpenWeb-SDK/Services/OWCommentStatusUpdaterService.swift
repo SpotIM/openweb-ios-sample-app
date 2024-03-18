@@ -13,6 +13,7 @@ protocol OWCommentStatusUpdaterServicing {
     func fetchStatusFor(comment: OWComment)
     func spotChanged(newSpotId: OWSpotId)
     var statusUpdate: Observable<(OWCommentId, OWCommentStatusType)> { get }
+    func update(status: OWCommentStatusType, for commentId: OWCommentId)
 }
 
 class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
@@ -51,6 +52,10 @@ class OWCommentStatusUpdaterService: OWCommentStatusUpdaterServicing {
     func spotChanged(newSpotId: OWSpotId) {
         disposeBag = DisposeBag()
         setupObservers()
+    }
+
+    func update(status: OWCommentStatusType, for commentId: OWCommentId) {
+        self._statusUpdate.onNext((commentId, status))
     }
 }
 

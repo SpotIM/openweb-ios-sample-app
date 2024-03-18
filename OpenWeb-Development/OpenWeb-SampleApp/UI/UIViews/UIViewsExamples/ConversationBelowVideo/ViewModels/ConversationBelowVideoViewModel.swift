@@ -159,12 +159,16 @@ class ConversationBelowVideoViewModel: ConversationBelowVideoViewModeling, Conve
             self._removeReportReasons.onNext()
         case (.conversation, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
+        case (.conversation, .openClarityDetails(let data)):
+            self.retrieveClarityDetailsComponent(data: data)
         case (.commentThread, .openCommentCreation(let commentCreationType)):
             self.retrieveCommentCreationComponent(type: commentCreationType)
-        case (.conversation, .openClarityDetails(let clarityDetailsType)):
-            self.retrieveClarityDetailsComponent(commentId: "", type: clarityDetailsType)
         case (.clarityDetails, .closeClarityDetails):
             self._removeClarityDetails.onNext()
+        case (.commenterAppeal, .closeClarityDetails):
+            self._removeClarityDetails.onNext()
+        case (_, .openCommenterAppeal(let data)):
+            self.retrieveCommenterAppealComponent(data: data)
         case (_, .communityGuidelinesPressed(let url)):
             let title = NSLocalizedString("CommunityGuidelines", comment: "")
             let options = OWWebTabOptions(url: url, title: title)
@@ -346,16 +350,36 @@ fileprivate extension ConversationBelowVideoViewModel {
         })
     }
 
-    func retrieveClarityDetailsComponent(commentId: OWCommentId, type: OWClarityDetailsType) {
+    func retrieveClarityDetailsComponent(data: OWClarityDetailsRequireData) {
         let uiViewsLayer = OpenWeb.manager.ui.views
         let additionalSettings = OWAdditionalSettings()
 
         uiViewsLayer.clarityDetails(postId: self.postId,
-                                  commentId: commentId,
-                                  type: type,
-                                  additionalSettings: additionalSettings,
-                                  callbacks: self.actionsCallbacks,
-                                  completion: { [weak self] result in
+                                    commentId: data.commentId,
+                                    type: data.type,
+                                    additionalSettings: additionalSettings,
+                                    callbacks: self.actionsCallbacks,
+                                    completion: { [weak self] result in
+
+            guard let self = self else { return }
+            switch result {
+            case .failure(let err):
+                self._componentRetrievingError.onNext(err)
+            case.success(let view):
+                self._clarityDetailsRetrieved.onNext(view)
+            }
+        })
+    }
+
+    func retrieveCommenterAppealComponent(data: OWAppealRequiredData) {
+        let uiViewsLayer = OpenWeb.manager.ui.views
+        let additionalSettings = OWAdditionalSettings()
+
+        uiViewsLayer.commenterAppeal(postId: self.postId,
+                                     data: data,
+                                     additionalSettings: additionalSettings,
+                                     callbacks: self.actionsCallbacks,
+                                     completion: { [weak self] result in
 
             guard let self = self else { return }
             switch result {

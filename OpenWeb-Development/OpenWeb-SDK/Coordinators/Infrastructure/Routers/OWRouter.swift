@@ -87,8 +87,8 @@ class OWRouter: NSObject, OWRoutering {
     func start() {
         guard let navigationController = navigationController else { return }
         switch presentationalMode {
-        case .present(let viewController, _, let animated):
-            viewController.present(navigationController, animated: animated)
+        case .present(let viewControllerWeakEncapsulation, _, let animated):
+            viewControllerWeakEncapsulation.value()?.present(navigationController, animated: animated)
         case .push(_):
             // Already handled in coordinator
             break
@@ -113,12 +113,14 @@ class OWRouter: NSObject, OWRoutering {
         case .regular:
             navigationController?.pushViewController(module.toPresentable(), animated: animated)
         case .present:
-            let transition = CATransition()
-            transition.duration = Metrics.transitionDuration
-            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            transition.type = .moveIn
-            transition.subtype = .fromTop
-            navigationController?.view.layer.add(transition, forKey: kCATransition)
+            if animated {
+                let transition = CATransition()
+                transition.duration = Metrics.transitionDuration
+                transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                transition.type = .moveIn
+                transition.subtype = .fromTop
+                navigationController?.view.layer.add(transition, forKey: kCATransition)
+            }
             navigationController?.pushViewController(module.toPresentable(), animated: false)
         case .presentOverFullScreen:
             pushedVCStyles[module.toPresentable()] = .presentOverFullScreen

@@ -590,7 +590,7 @@ extension OWUILayer {
             }
         }
 
-        _ = viewsSdkCoordinator.clarityDetailsView(clarityDetailsData: OWClarityDetailsRequireData(type: type, presentationalStyle: .none), callbacks: callbacks)
+        _ = viewsSdkCoordinator.clarityDetailsView(data: OWClarityDetailsRequireData(commentId: commentId, type: type), callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .take(1)
         .do(onNext: { [weak self] _ in
@@ -601,6 +601,38 @@ extension OWUILayer {
             completion(.success(result.toShowable()))
         }, onError: { err in
             let error: OWError = err as? OWError ?? OWError.clarityDetailsView
+            completion(.failure(error))
+        })
+    }
+
+    func commenterAppeal(postId: OWPostId,
+                         data: OWAppealRequiredData,
+                         additionalSettings: OWAdditionalSettingsProtocol,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewCompletion) {
+        guard validateSpotIdExist(completion: completion) else { return }
+
+        checkIfPostIdExists { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        _ = viewsSdkCoordinator.commenterAppealView(appealData: data, callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .take(1)
+        .do(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.sendStyleConfigureEvents(additionalSettings: additionalSettings, presentationalStyle: .none)
+        })
+        .subscribe(onNext: { result in
+            completion(.success(result.toShowable()))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.commenterAppealView
             completion(.failure(error))
         })
     }
