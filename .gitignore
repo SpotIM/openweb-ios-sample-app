@@ -27,8 +27,6 @@ DerivedData/
 
 ## App packaging
 *.ipa
-*.dSYM.zip
-*.dSYM
 
 ## Playgrounds
 timeline.xctimeline
@@ -85,13 +83,12 @@ fastlane/test_output
 # Cherrypick additions
 test_output/
 .DS_Store
-Spot.IM-Development/.DS_Store
-Spot.IM-Development/Spot-IM.Development/Resources/.DS_Store
-Spot.IM-Development/SpotImCore/Resources/.DS_Store
-Spot.IM-Development/SpotImCore/SpotIMSDK/UI/.DS_Store
-Spot.IM-Development/SpotImCore/SpotIMSDK/UI/Views/.DS_Store
-Spot.IM-Development/vendor/bundle
-Spot.IM-Development/.bundle/config
+OpenWeb-Development/.DS_Store
+OpenWeb-Development/Vendor-Frameworks/.DS_Store
+OpenWeb-Development/OpenWeb-SampleApp/Resources/.DS_Store
+OpenWeb-Development/OpenWeb-SDK/Resources/.DS_Store
+OpenWeb-Development/vendor/bundle
+OpenWeb-Development/.bundle/config
 
 # Code Injection
 #
