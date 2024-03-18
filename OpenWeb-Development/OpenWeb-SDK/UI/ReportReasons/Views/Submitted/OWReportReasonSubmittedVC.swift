@@ -1,6 +1,11 @@
 //
+<<<<<<< HEAD:OpenWeb-Development/OpenWeb-SDK/UI/ReportReasons/Views/Submitted/OWReportReasonSubmittedVC.swift
 //  OWReportReasonSubmittedVC.swift
 //  OpenWebSDK
+=======
+//  OWSubmittedVC.swift
+//  SpotImCore
+>>>>>>> develop:OpenWeb-Development/OpenWeb-SDK/UI/SubmitedView/Views/OWSubmittedVC.swift
 //
 //  Created by Refael Sommer on 16/04/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.
@@ -10,20 +15,20 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWReportReasonSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
-    let reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling
+class OWSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtocol {
+    let submittedViewViewModel: OWSubmittedViewViewModeling
     let disposeBag = DisposeBag()
 
-    fileprivate lazy var reportReasonSubmittedView: OWReportReasonSubmittedView = {
-        return OWReportReasonSubmittedView(viewModel: reportReasonSubmittedViewViewModel)
+    fileprivate lazy var submittedView: OWSubmittedView = {
+        return OWSubmittedView(viewModel: submittedViewViewModel)
     }()
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(reportReasonSubmittedViewViewModel: OWReportReasonSubmittedViewViewModeling) {
-        self.reportReasonSubmittedViewViewModel = reportReasonSubmittedViewViewModel
+    init(submittedViewViewModel: OWSubmittedViewViewModeling) {
+        self.submittedViewViewModel = submittedViewViewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,17 +50,21 @@ class OWReportReasonSubmittedVC: UIViewController, OWStatusBarStyleUpdaterProtoc
         return OWSharedServicesProvider.shared.orientationService().interfaceOrientationMask
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 }
 
-fileprivate extension OWReportReasonSubmittedVC {
+fileprivate extension OWSubmittedVC {
     func setupViews() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        view.addSubview(reportReasonSubmittedView)
-        reportReasonSubmittedView.OWSnp.makeConstraints { make in
+        view.addSubview(submittedView)
+        submittedView.OWSnp.makeConstraints { make in
             make.top.equalToSuperviewSafeArea()
             make.leading.trailing.bottom.equalToSuperview()
         }

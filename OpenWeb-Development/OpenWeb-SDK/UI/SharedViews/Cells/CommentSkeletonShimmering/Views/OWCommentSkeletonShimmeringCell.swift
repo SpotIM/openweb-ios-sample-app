@@ -143,7 +143,8 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentSkeletonShimmeringCellViewModeling else { return }
         self.viewModel = vm
 
-        mainSkeletonShimmeringView.OWSnp.updateConstraints { make in
+        mainSkeletonShimmeringView.OWSnp.updateConstraints { [weak self] make in
+            guard let self = self else { return }
             make.leading.equalToSuperview().inset(Metrics.horizontalOffset + CGFloat(self.viewModel.outputs.depth) * Metrics.depthOffset)
         }
 

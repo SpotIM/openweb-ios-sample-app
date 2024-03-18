@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum OWCommunityGuidelinesStyle: Codable {
+public enum OWCommunityGuidelinesStyle: String, Codable {
     case none
     case regular
     case compact

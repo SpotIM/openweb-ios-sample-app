@@ -133,7 +133,7 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
                 }
     }
 
-    func clarityDetailsView(clarityDetailsData: OWClarityDetailsRequireData,
+    func clarityDetailsView(data: OWClarityDetailsRequireData,
                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -147,10 +147,27 @@ class OWViewsSDKCoordinator: OWBaseCoordinator<Void>, OWCompactRouteringCompatib
             })
                 .flatMap { [ weak self] _ -> Observable<OWShowable> in
                     guard let self = self else { return .empty() }
-                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: clarityDetailsData, actionsCallbacks: callbacks)
+                    let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data, actionsCallbacks: callbacks)
 
                     self.store(coordinator: clarityDetailsCoordinator)
                     return clarityDetailsCoordinator.showableComponent()
+                }
+    }
+
+    func commenterAppealView(appealData: OWAppealRequiredData,
+                             callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.free(allCoordinatorsFromType: OWBaseCoordinator<OWCommenterAppealCoordinatorResult>.self)
+            })
+                .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                    guard let self = self else { return .empty() }
+                    let commenterAppealCoordinator = OWCommenterAppealCoordinator(appealData: appealData, actionsCallbacks: callbacks)
+
+                    self.store(coordinator: commenterAppealCoordinator)
+                    return commenterAppealCoordinator.showableComponent()
                 }
     }
 

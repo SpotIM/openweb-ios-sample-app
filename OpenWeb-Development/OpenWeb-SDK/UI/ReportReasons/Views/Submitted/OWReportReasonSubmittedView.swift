@@ -1,6 +1,11 @@
 //
+<<<<<<< HEAD:OpenWeb-Development/OpenWeb-SDK/UI/ReportReasons/Views/Submitted/OWReportReasonSubmittedView.swift
 //  OWReportReasonSubmittedView.swift
 //  OpenWebSDK
+=======
+//  OWSubmittedView.swift
+//  SpotImCore
+>>>>>>> develop:OpenWeb-Development/OpenWeb-SDK/UI/SubmitedView/Views/OWSubmittedView.swift
 //
 //  Created by Refael Sommer on 27/04/2023.
 //  Copyright © 2023 OpenWeb. All rights reserved.
@@ -10,7 +15,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
+class OWSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let closeButtonTopSpacing: CGFloat = 17
         static let closeButtonTrailingSpacing: CGFloat = 19
@@ -23,9 +28,9 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
 
         static let closeCrossIcon = "closeCrossIcon"
 
-        static let identifier = "report_reason_Submitted_view_id"
-        static let closeButtonIdentifier = "report_reason_Submitted_close_button_id"
-        static let gotitButtonIdentifier = "report_reason_Submitted_gotit_button_id"
+        static let identifier = "submitted_view_id"
+        static let closeButtonIdentifier = "submitted_close_button_id"
+        static let gotitButtonIdentifier = "submitted_gotit_button_id"
     }
 
     fileprivate lazy var closeButton: UIButton = {
@@ -47,10 +52,10 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
         return OWTitleSubtitleIconView(viewModel: viewModel.outputs.titleViewVM)
     }()
 
-    fileprivate let viewModel: OWReportReasonSubmittedViewViewModeling
+    fileprivate let viewModel: OWSubmittedViewViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWReportReasonSubmittedViewViewModeling = OWReportReasonSubmittedViewViewModel()) {
+    init(viewModel: OWSubmittedViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
@@ -63,7 +68,7 @@ class OWReportReasonSubmittedView: UIView, OWThemeStyleInjectorProtocol {
     }
 }
 
-fileprivate extension OWReportReasonSubmittedView {
+fileprivate extension OWSubmittedView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
@@ -91,7 +96,7 @@ fileprivate extension OWReportReasonSubmittedView {
     func setupObservers() {
         Observable.of(closeButton.rx.tap, confirmButton.rx.tap)
             .merge()
-            .bind(to: viewModel.inputs.closeReportReasonSubmittedTap)
+            .bind(to: viewModel.inputs.closeSubmittedTap)
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

@@ -31,4 +31,5 @@ struct OWAnalyticEventPayloadKeys {
     static let spacing = "spacing"
     static let numberOfComments = "numberOfComments"
     static let accessoryViewStrategy = "accessoryViewStrategy"
+    static let appealReason = "appealReason"
 }

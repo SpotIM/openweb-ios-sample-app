@@ -139,7 +139,8 @@ fileprivate extension OWRealtimeService {
                 // Emit event to consumers of realtime data
                 self?._realtimeData.onNext(realtimeDataModel)
             })
-            .flatMap { realtimeDataModel -> Observable<Void> in
+            .flatMap { [weak self] realtimeDataModel -> Observable<Void> in
+                guard let self = self else { return .empty() }
                 let secondsOffset = realtimeDataModel.nextFetch - realtimeDataModel.timestamp
                 // Start delay for the next fetch
                 return .just(())

@@ -27,11 +27,13 @@ struct SPConfigurationConversation: Decodable {
     let statusFetchIntervalInMs: Int
     let statusFetchTimeoutInMs: Int
     let statusFetchRetryCount: Int
+    let isAppealEnabled: Bool
 
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadge"
         case disableShareComment = "disable_share"
         case showCommentEditOption = "showCommentEditOption"
+        case isAppealEnabled = "isAppealEnabled"
         case readBatchSize,
              socialEnable,
              typingAggregationTimeSeconds,
@@ -66,5 +68,6 @@ struct SPConfigurationConversation: Decodable {
         statusFetchIntervalInMs = (try? container.decode(Int.self, forKey: .statusFetchIntervalInMs)) ?? 300
         statusFetchTimeoutInMs = (try? container.decode(Int.self, forKey: .statusFetchTimeoutInMs)) ?? 3000
         statusFetchRetryCount = (try? container.decode(Int.self, forKey: .statusFetchRetryCount)) ?? 12
+        isAppealEnabled = (try? container.decode(Bool.self, forKey: .isAppealEnabled)) ?? false
     }
 }

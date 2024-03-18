@@ -19,6 +19,9 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingInputs {
     var initialTextUsed: PublishSubject<Void> { get }
     var submitCommentInProgress: BehaviorSubject<Bool> { get }
     var triggerCustomizeSubmitButtonUI: PublishSubject<UIButton> { get }
+    var commentCreationError: PublishSubject<Void> { get }
+    var displayToast: PublishSubject<OWToastNotificationCombinedData?> { get }
+    var dismissToast: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
@@ -39,6 +42,9 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var loginToPostClick: Observable<Void> { get }
     var ctaButtonLoading: Observable<Bool> { get }
     var customizeSubmitButtonUI: Observable<UIButton> { get }
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
+    var hideToast: Observable<Void> { get }
+    var dismissedToast: Observable<Void> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -57,8 +63,29 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         static let delayForDismiss: Int = 350 // ms
     }
 
+    var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
+    var displayToastCalled: Observable<OWToastNotificationCombinedData> {
+        return displayToast
+            .unwrap()
+            .asObservable()
+    }
+
+    var dismissToast = PublishSubject<Void>()
+    lazy var dismissedToast: Observable<Void> = {
+        return dismissToast
+            .asObservable()
+    }()
+
+    var hideToast: Observable<Void> {
+        return Observable.merge(displayToast.filter { $0 == nil }.voidify(),
+                                submitCommentInProgress.voidify())
+            .asObservable()
+    }
+
     var inputs: OWCommentCreationFloatingKeyboardViewViewModelingInputs { return self }
     var outputs: OWCommentCreationFloatingKeyboardViewViewModelingOutputs { return self }
+
+    var commentCreationError = PublishSubject<Void>()
 
     var viewableMode: OWViewableMode
     fileprivate let disposeBag = DisposeBag()
@@ -134,9 +161,8 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
 
     let textViewVM: OWTextViewViewModeling
 
-    var performCta: Observable<OWCommentCreationCtaData> {
-        ctaTap
-            .asObservable()
+    lazy var performCta: Observable<OWCommentCreationCtaData> = {
+        return ctaTap
             .map { [weak self] _ -> OWUserAction? in
                 guard let self = self else { return nil }
                 switch self.commentType {
@@ -164,7 +190,9 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
                 let commentContent = OWCommentCreationContent(text: text)
                 return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [])
             }
-    }
+            .asObservable()
+            .share()
+    }()
 
     lazy var resetTypeToNewCommentChangedWithText = resetTypeToNewCommentChanged
         .withLatestFrom(textViewVM.outputs.textViewText)

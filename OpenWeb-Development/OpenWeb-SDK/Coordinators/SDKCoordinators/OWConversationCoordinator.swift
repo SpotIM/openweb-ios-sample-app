@@ -40,6 +40,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 
     fileprivate var _openCommentThread = PublishSubject<(OWCommentId, OWCommentThreadPerformActionType)>()
 
+    fileprivate struct Metrics {
+        static let delayCommentThreadAfterReport: CGFloat = 0.5
+    }
+
     init(router: OWRoutering! = nil,
          conversationData: OWConversationRequiredData,
          actionsCallbacks: OWViewActionsCallbacks?,
@@ -51,7 +55,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
 
     // swiftlint:disable function_body_length
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWConversationCoordinatorResult> {
         viewableMode = .partOfFlow
         let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData,
                                                                                  viewableMode: viewableMode)
@@ -61,15 +65,15 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         setupObservers(forViewModel: conversationVM)
         setupViewActionsCallbacks(forViewModel: conversationVM)
 
-        let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
+        let deepLinkToCommentCreation = BehaviorSubject<OWCoordinatorData?>(value: nil)
         let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
         let deepLinkToReportReason = BehaviorSubject<OWReportReasonsRequiredData?>(value: nil)
-        let deepLinkToClarityDetails = BehaviorSubject<OWClarityDetailsType?>(value: nil)
+        let deepLinkToClarityDetails = BehaviorSubject<OWClarityDetailsRequireData?>(value: nil)
 
         var animated = true
 
         // Support deep links which related to conversation
-        if let deepLink = deepLinkOptions {
+        if let deepLink = coordinatorData?.deepLink {
             switch deepLink {
             case .commentCreation(let commentCreationData):
                 switch commentCreationData.settings.commentCreationSettings.style {
@@ -78,7 +82,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 case .floatingKeyboard:
                     animated = true
                 }
-                deepLinkToCommentCreation.onNext(commentCreationData)
+                deepLinkToCommentCreation.onNext(coordinatorData)
             case .commentThread(let commentThreadData):
                 animated = false
                 deepLinkToCommentThread.onNext(commentThreadData)
@@ -87,9 +91,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             case .reportReason(let reportData):
                 animated = false
                 deepLinkToReportReason.onNext(reportData)
-            case .clarityDetails(let type):
+            case .clarityDetails(let data):
                 animated = false
-                deepLinkToClarityDetails.onNext(type)
+                deepLinkToClarityDetails.onNext(data)
             default:
                 break
             }
@@ -110,13 +114,15 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         // CTA, Reply or Edit tapped from conversation screen
         let openCommentCreationObservable = conversationVM.outputs.conversationViewVM.outputs.openCommentCreation
             .observe(on: MainScheduler.instance)
-            .map { [weak self] type -> OWCommentCreationRequiredData? in
+            .map { [weak self] type -> OWCoordinatorData? in
                 // Here we are generating `OWCommentCreationRequiredData` and new fields in this struct will have default values
                 guard let self = self else { return nil }
-                return OWCommentCreationRequiredData(article: self.conversationData.article,
+                let commentCreationData = OWCommentCreationRequiredData(article: self.conversationData.article,
                                                      settings: self.conversationData.settings,
                                                      commentCreationType: type,
                                                      presentationalStyle: self.conversationData.presentationalStyle)
+                return OWCoordinatorData(deepLink: .commentCreation(commentCreationData: commentCreationData),
+                                         source: .conversation)
             }
             .unwrap()
 
@@ -130,12 +136,17 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] commentCreationData -> Observable<OWCommentCreationCoordinatorResult> in
+            .flatMapLatest { [weak self] coordinatorData -> Observable<OWCommentCreationCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
-                                                                              commentCreationData: commentCreationData,
-                                                                              actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: commentCreationCoordinator)
+                switch coordinatorData.deepLink {
+                    case .commentCreation(let commentCreationData):
+                        let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
+                                                                                      commentCreationData: commentCreationData,
+                                                                                      actionsCallbacks: self.actionsCallbacks)
+                        return self.coordinate(to: commentCreationCoordinator, coordinatorData: coordinatorData)
+                    default:
+                        return .empty()
+                }
             }
             .do(onNext: { [weak self] result in
                 guard let self = self else { return }
@@ -151,7 +162,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 }
             })
-            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { _ -> Observable<OWConversationCoordinatorResult> in
                 return Observable.never()
             }
 
@@ -189,7 +200,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                     break
                 case let .submitedReport(commentId, userJustLoggedIn):
                     guard userJustLoggedIn else { return }
-                    self?._openCommentThread.onNext((commentId, .report))
+
+                    // Delay open Comment Thread so that the
+                    // report reason flow closes first
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayCommentThreadAfterReport) {
+                        self?._openCommentThread.onNext((commentId, .report))
+                    }
                 default:
                     break
                 }
@@ -209,10 +225,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 guard let self = self else { return false }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] type -> Observable<OWClarityDetailsCoordinatorResult> in
+            .flatMap { [weak self] data -> Observable<OWClarityDetailsCoordinatorResult> in
                 guard let self = self else { return .empty() }
-                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(requiredData: OWClarityDetailsRequireData(type: type,
-                                                                                                                      presentationalStyle: self.conversationData.presentationalStyle),
+                let clarityDetailsCoordinator = OWClarityDetailsCoordinator(data: data,
                                                                             router: self.router,
                                                                             actionsCallbacks: self.actionsCallbacks)
                 return self.coordinate(to: clarityDetailsCoordinator)
@@ -318,7 +333,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                             options: options,
                                                             actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { result in
                 switch result {
@@ -449,7 +464,7 @@ fileprivate extension OWConversationCoordinator {
 
         // Open clarity details
         let openClarityDetails = viewModel.outputs.openClarityDetails
-            .map { OWViewActionCallbackType.openClarityDetails(type: $0) }
+            .map { OWViewActionCallbackType.openClarityDetails(data: $0) }
 
         // Open URL in comment
         let openUrlInComment = viewModel.outputs.urlClickedOutput
