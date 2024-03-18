@@ -22,3 +22,7 @@ struct OWVerticalSpacing {
         self.bottom = spacing
     }
 }
+
+extension OWVerticalSpacing {
+    static let zero: OWVerticalSpacing = .init()
+}
