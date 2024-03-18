@@ -24,5 +24,5 @@ struct OWVerticalSpacing {
 }
 
 extension OWVerticalSpacing {
-    static let zero: OWVerticalSpacing = .init()
+    static let zero: OWVerticalSpacing = OWVerticalSpacing()
 }
