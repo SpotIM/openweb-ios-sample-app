@@ -87,8 +87,8 @@ extension OWTypingAnimationView: CAAnimationDelegate {
             animateDot(at: dotIndex + 1)
         } else {
             // Start from the first dot after a short delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.animateDot(at: 0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                self?.animateDot(at: 0)
             }
         }
     }

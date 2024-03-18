@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
+class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol, OWToastNotificationPresenterProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_light_view_id"
 
@@ -25,8 +25,11 @@ class OWCommentCreationLightView: UIView, OWThemeStyleInjectorProtocol {
         static let closeButtonSize: CGFloat = 40.0
         static let closeButtonTrailingOffset: CGFloat = 5.0
         static let commentLabelsSpacing: CGFloat = 15.0
+        static let errorToastBottomPadding: CGFloat = 8.0
         static let closeButtomImageName: String = "closeCrossIconNew"
     }
+
+    var toastView: OWToastView?
 
     fileprivate lazy var titleLabel: UILabel = {
         return UILabel()
@@ -185,6 +188,24 @@ fileprivate extension OWCommentCreationLightView {
     }
 
     func setupObservers() {
+        viewModel.outputs.displayToastCalled
+            .subscribe(onNext: { [weak self] combinedData in
+                guard var self = self else { return }
+                var requiredData = combinedData.presentData.data
+                requiredData.bottomPadding = self.footerView.frame.size.height + Metrics.errorToastBottomPadding
+                let completions: [OWToastCompletion: PublishSubject<Void>?] = [.action: combinedData.actionCompletion,
+                                                                               .dismiss: self.viewModel.inputs.dismissToast]
+                self.presentToast(requiredData: requiredData, completions: completions, disposeBag: disposeBag)
+                self.bringSubviewToFront(self.footerView)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hideToast
+            .subscribe(onNext: { [weak self] in
+                self?.dismissToast()
+            })
+            .disposed(by: disposeBag)
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

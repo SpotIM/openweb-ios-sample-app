@@ -46,7 +46,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         self.viewableMode = viewableMode
     }
 
-    override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWPreConversationCoordinatorResult> {
+    override func start(coordinatorData: OWCoordinatorData? = nil) -> Observable<OWPreConversationCoordinatorResult> {
         // Pre conversation never will be a full screen
         return .empty()
     }
@@ -72,26 +72,39 @@ fileprivate extension OWPreConversationCoordinator {
     // swiftlint:disable function_body_length
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
     // swiftlint:enable function_body_length
-        let openFullConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openFullConversation
-            .map { _ -> OWDeepLinkOptions? in
+        dismissInitialVC
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                switch self.preConversationData.presentationalStyle {
+                case .present(style: let style):
+                    router.dismiss(animated: true, completion: nil)
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+
+        let openFullConversationObservable: Observable<OWCoordinatorData?> = viewModel.outputs.openFullConversation
+            .map { _ -> OWCoordinatorData? in
                 return nil
             }
 
-        let openCommentCreationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentCreation
+        let openCommentCreationObservable: Observable<OWCoordinatorData?> = viewModel.outputs.openCommentCreation
             .observe(on: MainScheduler.instance)
-            .map { [weak self] type -> OWDeepLinkOptions? in
+            .map { [weak self] type -> OWCoordinatorData? in
                 // 3. Perform deeplink to comment creation screen
                 guard let self = self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article,
                                                                         settings: self.preConversationData.settings,
                                                                         commentCreationType: type,
                                                                         presentationalStyle: self.preConversationData.presentationalStyle)
-                return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
+                return OWCoordinatorData(deepLink: .commentCreation(commentCreationData: commentCreationData),
+                                         source: .preConversation)
             }
 
         let openCommentThreadObservable = viewModel.outputs.openCommentThread
             .observe(on: MainScheduler.instance)
-            .map { [weak self] commentId, performAction -> OWDeepLinkOptions? in
+            .map { [weak self] commentId, performAction -> OWCoordinatorData? in
                 guard let self = self else { return nil }
                 guard var newAdditionalSettings = self.preConversationData.settings as? OWAdditionalSettings,
                       var newCommentThreadSettings = newAdditionalSettings.commentThreadSettings as? OWCommentThreadSettings
@@ -104,22 +117,22 @@ fileprivate extension OWPreConversationCoordinator {
                                                    settings: newAdditionalSettings,
                                                    commentId: commentId,
                                                    presentationalStyle: self.preConversationData.presentationalStyle)
-                return OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+                return OWCoordinatorData(deepLink: .commentThread(commentThreadData: commentThreadData))
             }
 
-        let openReportReasonObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openReportReason
+        let openReportReasonObservable: Observable<OWCoordinatorData?> = viewModel.outputs.openReportReason
 
-            .map { commentVM -> OWDeepLinkOptions? in
+            .map { commentVM -> OWCoordinatorData? in
                 // 3. Perform deeplink to comment creation screen
                 guard let commentId = commentVM.outputs.comment.id,
                 let parentId = commentVM.outputs.comment.parentId else { return nil }
                 let reportData = OWReportReasonsRequiredData(commentId: commentId, parentId: parentId)
-                return OWDeepLinkOptions.reportReason(reportData: reportData)
+                return OWCoordinatorData(deepLink: .reportReason(reportData: reportData))
             }
 
-        let openClarityDetailsObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openClarityDetails
-            .map { clarityDetailsType -> OWDeepLinkOptions? in
-                return OWDeepLinkOptions.clarityDetails(type: clarityDetailsType)
+        let openClarityDetailsObservable: Observable<OWCoordinatorData?> = viewModel.outputs.openClarityDetails
+            .map { clarityDetailsType -> OWCoordinatorData? in
+                return OWCoordinatorData(deepLink: .clarityDetails(clarityData: clarityDetailsType))
             }
 
         // Coordinate to full conversation
@@ -132,7 +145,7 @@ fileprivate extension OWPreConversationCoordinator {
                 guard let self = self else { return true }
                 return self.viewableMode == .partOfFlow
             }
-            .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
+            .flatMapLatest { [weak self] coordinatorData -> Observable<OWConversationCoordinatorResult> in
                 guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
                                                                   settings: self.preConversationData.settings,
@@ -140,7 +153,7 @@ fileprivate extension OWPreConversationCoordinator {
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                         conversationData: conversationData,
                                                                         actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
+                return self.coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             }
             .do(onNext: { [weak self] coordinatorResult in
                 guard let self = self else { return }
@@ -182,7 +195,7 @@ fileprivate extension OWPreConversationCoordinator {
                 let safariCoordinator = OWWebTabCoordinator(router: self.router,
                                                                    options: options,
                                                                    actionsCallbacks: self.actionsCallbacks)
-                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+                return self.coordinate(to: safariCoordinator, coordinatorData: nil)
             }
             .do(onNext: { [weak self] coordinatorResult in
                 guard let self = self else { return }

@@ -31,19 +31,18 @@ class OWClarityDetailsVM: OWClarityDetailsViewModeling,
     var inputs: OWClarityDetailsViewModelingInputs { return self }
     var outputs: OWClarityDetailsViewModelingOutputs { return self }
 
-    fileprivate let requiredData: OWClarityDetailsRequireData
-
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
     }
 
+    fileprivate let data: OWClarityDetailsRequireData
     lazy var clarityDetailsViewViewModel: OWClarityDetailsViewViewModeling = {
-        return OWClarityDetailsViewVM(requiredData: requiredData)
+        return OWClarityDetailsViewVM(data: data)
     }()
 
-    init(requiredData: OWClarityDetailsRequireData, viewableMode: OWViewableMode) {
-        self.requiredData = requiredData
+    init(data: OWClarityDetailsRequireData, viewableMode: OWViewableMode) {
+        self.data = data
     }
 }
 

@@ -160,10 +160,11 @@ fileprivate extension OWAvatarView {
     }
 
     func applyAccessibility() {
-        // self.accessibilityIdentifier = Metrics.identifier
+        self.accessibilityIdentifier = Metrics.identifier
         avatarImageView.accessibilityIdentifier = Metrics.avatarImageIdentifier
         avatarButton.accessibilityIdentifier = Metrics.avatarButtonIdentifier
         onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
+        onlineIndicatorView.isAccessibilityElement = true
         onlineGreenView.accessibilityIdentifier = Metrics.onlineGreenIndicatorIdentifier
 
         avatarButton.accessibilityTraits = .image

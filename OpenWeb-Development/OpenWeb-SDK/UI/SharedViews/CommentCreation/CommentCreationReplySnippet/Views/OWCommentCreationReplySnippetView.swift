@@ -12,8 +12,8 @@ import RxSwift
 
 class OWCommentCreationReplySnippetView: UIView {
     fileprivate struct Metrics {
-        static let identifier = "comment_cretion_reply_snippet_id"
-        static let labelIdentifier = "comment_cretion_reply_snippet_label_id"
+        static let identifier = "comment_creation_reply_snippet_id"
+        static let labelIdentifier = "comment_creation_reply_snippet_label_id"
 
         static let horizontalOffset: CGFloat = 16.0
         static let bottomSpacing: CGFloat = 12.0

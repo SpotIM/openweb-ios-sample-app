@@ -14,6 +14,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
 
     fileprivate struct Metrics {
         static let edgesPadding: CGFloat = 12
+        static let identifier = "community_guidelines_cell_id"
     }
 
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
@@ -26,6 +27,7 @@ class OWCommunityGuidelinesCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupUI()
+        self.applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -64,5 +66,9 @@ fileprivate extension OWCommunityGuidelinesCell {
                 self.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
     }
 }

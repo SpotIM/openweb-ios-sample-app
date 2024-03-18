@@ -198,7 +198,11 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnPreConversationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
+            .map { [weak self] in
+                guard let self = self else { return .push }
+                let style = self.viewModel.outputs.presentStyle
+                return PresentationalModeCompact.present(style: style)
+            }
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
 
@@ -208,7 +212,11 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnFullConversationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
+            .map { [weak self] in
+                guard let self = self else { return .push }
+                let style = self.viewModel.outputs.presentStyle
+                return PresentationalModeCompact.present(style: style)
+            }
             .bind(to: viewModel.inputs.fullConversationTapped)
             .disposed(by: disposeBag)
 
@@ -218,7 +226,10 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnCommentCreationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
+            .map { [weak self] in
+                guard let self = self else { return .push }
+                return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle)
+            }
             .bind(to: viewModel.inputs.commentCreationTapped)
             .disposed(by: disposeBag)
 
@@ -228,7 +239,9 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnCommentThreadPresentMode.rx.tap
-            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
+            .map { [weak self] in
+                guard let self = self else { return .push }
+                return PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
             .bind(to: viewModel.inputs.commentThreadTapped)
             .disposed(by: disposeBag)
 

@@ -19,9 +19,10 @@ class OWCommunityGuidelinesView: UIView {
         static let horizontalPadding: CGFloat = 10
         static let iconSize: CGFloat = 16
         static let sideOffset: CGFloat = 20
-
-        static let identifier = "community_guidelines_id"
-        static let communityGuidelinesLabelIdentifier = "community_guidelines_label_id"
+        static let identifier = "community_guidelines_view_id"
+        static func guidelinesContainerViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_container_view_\(style.rawValue)_id" }
+        static func guidelinesIconViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_icon_view_\(style.rawValue)_id" }
+        static func communityGuidelinesTextViewIdentifier(fromStyle style: OWCommunityGuidelinesStyle) -> String { return "community_guidelines_text_view_\(style.rawValue)_id" }
     }
 
     fileprivate lazy var titleLabel: UILabel = {
@@ -61,7 +62,6 @@ class OWCommunityGuidelinesView: UIView {
     // For using in cells that will then call the configure function
     init() {
         super.init(frame: .zero)
-        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
@@ -73,6 +73,7 @@ class OWCommunityGuidelinesView: UIView {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
         updateUI()
+        applyAccessibility()
         setupObservers()
     }
 }
@@ -179,6 +180,10 @@ fileprivate extension OWCommunityGuidelinesView {
 
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        titleLabel.accessibilityIdentifier = Metrics.communityGuidelinesLabelIdentifier
+
+        let style = viewModel.outputs.style
+        guidelinesContainer.accessibilityIdentifier = Metrics.guidelinesContainerViewIdentifier(fromStyle: style)
+        guidelinesIcon.accessibilityIdentifier = Metrics.guidelinesIconViewIdentifier(fromStyle: style)
+        titleLabel.accessibilityIdentifier = Metrics.communityGuidelinesTextViewIdentifier(fromStyle: style)
     }
 }

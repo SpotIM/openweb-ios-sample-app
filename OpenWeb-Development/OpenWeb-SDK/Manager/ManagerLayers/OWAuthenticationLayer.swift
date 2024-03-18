@@ -56,9 +56,9 @@ class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol 
         _ = authenticationManager
             .logout()
             .take(1)
-            .subscribe(onNext: { _ in
+            .subscribe(onNext: { [weak self] _ in
                 // Need to update the reported comments service after logout succeeded
-                self.servicesProvider.reportedCommentsService().cleanCache()
+                self?.servicesProvider.reportedCommentsService().cleanCache()
                 completion(.success(()))
             }, onError: { err in
                 let error: OWError = err as? OWError ?? OWError.logout

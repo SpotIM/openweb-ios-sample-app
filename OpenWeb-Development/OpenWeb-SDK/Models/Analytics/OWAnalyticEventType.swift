@@ -62,6 +62,15 @@ enum OWAnalyticEventType {
     case cameraIconClickedClose
     case showMoreComments
     case communityGuidelinesLinkClicked
+    case rejectedCommentNoticeView(commentId: OWCommentId)
+    case rejectedNoticeLearnMoreClicked(commentId: OWCommentId)
+    case rejectedNoticeLearnDialogExit(commentId: OWCommentId)
+    case rejectedNoticeLearnCommunityGuidelinesClicked(commentId: OWCommentId)
+    case rejectedNoticeLearnDialogViewFileAnAppealClicked(commentId: OWCommentId)
+    case appealDialogExit(commentId: OWCommentId)
+    case appealSubmitted(commnetId: OWCommentId, appealReason: String)
+    case appealCommentNoticeView(commentId: OWCommentId)
+    case appealRejectedNoticeQuota(commentId: OWCommentId)
 }
 
 extension OWAnalyticEventType {
@@ -173,6 +182,24 @@ extension OWAnalyticEventType {
             return "showMoreComments"
         case .communityGuidelinesLinkClicked:
             return "communityGuidelinesLinkClicked"
+        case .rejectedCommentNoticeView:
+            return "rejectedCommentNoticeView"
+        case .rejectedNoticeLearnMoreClicked:
+            return "rejectedNoticeLearnMoreClicked"
+        case .rejectedNoticeLearnDialogExit:
+            return "rejectedNoticeLearnDialogExit"
+        case .rejectedNoticeLearnCommunityGuidelinesClicked:
+            return "rejectedNoticeLearnCommunityGuidelinesClicked"
+        case .rejectedNoticeLearnDialogViewFileAnAppealClicked:
+            return "rejectedNoticeLearnDialogViewFileAnAppealClicked"
+        case .appealDialogExit:
+            return "appealDialogExit"
+        case .appealSubmitted:
+            return "appealSubmitted"
+        case .appealCommentNoticeView:
+            return "appealCommentNoticeView"
+        case .appealRejectedNoticeQuota:
+            return "appealRejectedNoticeQuota"
         }
     }
 
@@ -242,6 +269,16 @@ extension OWAnalyticEventType {
              .localeStrategy,
              .orientationEnforcement:
             return .configuration
+        case .rejectedCommentNoticeView,
+             .rejectedNoticeLearnMoreClicked,
+             .rejectedNoticeLearnDialogExit,
+             .rejectedNoticeLearnCommunityGuidelinesClicked,
+             .rejectedNoticeLearnDialogViewFileAnAppealClicked,
+             .appealDialogExit,
+             .appealSubmitted,
+             .appealCommentNoticeView,
+             .appealRejectedNoticeQuota:
+            return .moderation
         }
     }
 
@@ -342,6 +379,27 @@ extension OWAnalyticEventType {
         case .readingTime(let milliseconds):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.milliseconds: milliseconds])
         case .commentViewed(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .rejectedCommentNoticeView(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .rejectedNoticeLearnMoreClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .rejectedNoticeLearnDialogExit(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .rejectedNoticeLearnCommunityGuidelinesClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .rejectedNoticeLearnDialogViewFileAnAppealClicked(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .appealDialogExit(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .appealSubmitted(let commentId, let appealReason):
+            return OWAnalyticEventPayload(payloadDictionary: [
+                OWAnalyticEventPayloadKeys.commentId: commentId,
+                OWAnalyticEventPayloadKeys.appealReason: appealReason
+            ])
+        case .appealCommentNoticeView(let commentId):
+            return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
+        case .appealRejectedNoticeQuota(let commentId):
             return OWAnalyticEventPayload(payloadDictionary: [OWAnalyticEventPayloadKeys.commentId: commentId])
         }
     }

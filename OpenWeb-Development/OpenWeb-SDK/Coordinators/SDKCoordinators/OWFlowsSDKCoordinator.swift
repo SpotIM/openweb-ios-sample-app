@@ -13,9 +13,12 @@ import RxSwift
 class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     fileprivate var router: OWRoutering!
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let uiDevice: UIDevice
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         uiDevice: UIDevice = UIDevice.current) {
         self.servicesProvider = servicesProvider
+        self.uiDevice = uiDevice
     }
 
     var routering: OWRoutering {
@@ -34,34 +37,23 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                 self.generateNewPageViewId()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
-                .flatMap { [ weak self] _ -> Observable<OWShowable> in
-                    guard let self = self else { return .empty() }
-                    let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
-                                                                                  preConversationData: preConversationData,
-                                                                                  actionsCallbacks: callbacks,
-                                                                                  viewableMode: .partOfFlow)
+            .flatMap { [ weak self] _ -> Observable<OWShowable> in
+                guard let self = self else { return .empty() }
 
-                    self.store(coordinator: preConversationCoordinator)
+                let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
+                                                                              preConversationData: preConversationData,
+                                                                              actionsCallbacks: callbacks,
+                                                                              viewableMode: .partOfFlow)
+                self.store(coordinator: preConversationCoordinator)
 
-                    let dissmissConversation = preConversationCoordinator.dismissInitialVC
-                        .do(onNext: { [weak self] in
-                            guard let self = self else { return }
-                            self.cleanRouter(presentationalMode: presentationalMode)
-                        })
-                        .map { _ -> OWShowable? in
-                            return nil
-                        }
-                        .unwrap()
-
-                    return Observable.merge(dissmissConversation,
-                                            preConversationCoordinator.showableComponent())
-                }
+                return preConversationCoordinator.showableComponent()
+            }
     }
 
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?,
-                               deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
+                               coordinatorData: OWCoordinatorData? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
         generateNewPageViewId()
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -70,7 +62,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                 conversationData: conversationData,
                                                                 actionsCallbacks: callbacks)
 
-        return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
+        return coordinate(to: conversationCoordinator, coordinatorData: coordinatorData)
             .do { [weak self] coordinatorResult in
                 guard let self = self else { return }
                 if coordinatorResult == .popped {
@@ -84,11 +76,12 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                   presentationalMode: OWPresentationalMode,
                                   callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
-        let deepLink = OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
+        let coordinatorData = OWCoordinatorData(deepLink: .commentCreation(commentCreationData: commentCreationData),
+                                            source: .conversation)
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
                                      callbacks: callbacks,
-                                     deepLinkOptions: deepLink)
+                                     coordinatorData: coordinatorData)
     }
 
     func startCommentThreadFlow(conversationData: OWConversationRequiredData,
@@ -96,18 +89,18 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                 presentationalMode: OWPresentationalMode,
                                 callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
-        let deepLink = OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+        let coordinatorData = OWCoordinatorData(deepLink: .commentThread(commentThreadData: commentThreadData))
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
                                      callbacks: callbacks,
-                                     deepLinkOptions: deepLink)
+                                     coordinatorData: coordinatorData)
     }
 
 #if BETA
     func startTestingPlaygroundFlow(testingPlaygroundData: OWTestingPlaygroundRequiredData,
                                     presentationalMode: OWPresentationalMode,
                                     callbacks: OWViewActionsCallbacks?,
-                                    deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
+                                    coordinatorData: OWCoordinatorData? = nil) -> Observable<OWTestingPlaygroundCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -116,7 +109,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                                           testingPlaygroundData: testingPlaygroundData,
                                                                           actionsCallbacks: callbacks)
 
-        return coordinate(to: testingPlaygroundCoordinator, deepLinkOptions: deepLinkOptions)
+        return coordinate(to: testingPlaygroundCoordinator, coordinatorData: coordinatorData)
     }
 #endif
 
@@ -124,7 +117,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
     func startFontsFlow(automationData: OWAutomationRequiredData,
                         presentationalMode: OWPresentationalMode,
                         callbacks: OWViewActionsCallbacks?,
-                        deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWFontsCoordinatorResult> {
+                        coordinatorData: OWCoordinatorData? = nil) -> Observable<OWFontsCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -133,13 +126,13 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                             automationData: automationData,
                                                             actionsCallbacks: callbacks)
 
-        return coordinate(to: fontsAutomationCoordinator, deepLinkOptions: deepLinkOptions)
+        return coordinate(to: fontsAutomationCoordinator, coordinatorData: coordinatorData)
     }
 
     func startUserStatusFlow(automationData: OWAutomationRequiredData,
                              presentationalMode: OWPresentationalMode,
                              callbacks: OWViewActionsCallbacks?,
-                             deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWUserStatusCoordinatorResult> {
+                             coordinatorData: OWCoordinatorData? = nil) -> Observable<OWUserStatusCoordinatorResult> {
         invalidateExistingFlows()
 
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
@@ -148,7 +141,7 @@ class OWFlowsSDKCoordinator: OWBaseCoordinator<Void>, OWRouteringCompatible {
                                                             automationData: automationData,
                                                             actionsCallbacks: callbacks)
 
-        return coordinate(to: userStatusCoordinator, deepLinkOptions: deepLinkOptions)
+        return coordinate(to: userStatusCoordinator, coordinatorData: coordinatorData)
     }
 #endif
 }
@@ -168,11 +161,20 @@ fileprivate extension OWFlowsSDKCoordinator {
 
         switch presentationalMode {
         case .present(let viewController, let style):
+
+            var adjustedStyle = style
+            if orientationService.interfaceOrientationMask == .landscape,
+                self.uiDevice.userInterfaceIdiom == .phone,
+                style == .pageSheet {
+                // Force full screen presentation in landscape mode for iPhone because page sheet not supported in landscape
+                adjustedStyle = .fullScreen
+            }
+
             shouldCustomizeNavController = true // Always customize internal nav controller
             navController = OWNavigationController.shared
-            navController.modalPresentationStyle = style.toOSModalPresentationStyle
-            presentationalModeExtended = OWPresentationalModeExtended.present(viewController: viewController,
-                                                                              style: style,
+            navController.modalPresentationStyle = adjustedStyle.toOSModalPresentationStyle
+            presentationalModeExtended = OWPresentationalModeExtended.present(viewControllerWeakEncapsulation: OWWeakEncapsulation(value: viewController),
+                                                                              style: adjustedStyle,
                                                                               animated: presentAnimated)
         case .push(let navigationController):
             navController = navigationController
