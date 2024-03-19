@@ -1,0 +1,219 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "dmjq-rohv-jwmk-fcxi"
+ENV["MATCH_PASSWORD"] = "iOSOpenwebPrivateKeydfdskdfnlwqijeakpnqs"
+
+default_platform(:ios)
+
+git_url = "git@github.com:SpotIM/openweb-ios-certs.git"
+
+platform :ios do
+
+  desc "The setup_circle_ci fastlane action will perform the following actions:
+  Create a new temporary keychain for use with match (see the CircleCI code signing doc for more details).
+  Switch match to readonly mode to make sure CI does not create new code signing certificates or provisioning profiles.
+  Set up log and test result paths to be easily collectible."
+  before_all do
+    puts "in setup_circle_ci"
+    setup_circle_ci
+  end
+
+  desc "Run unit tests"
+  lane :unit_tests do |options|
+    cocoapods()
+    scan(
+      scheme: "OpenWeb-SDKTests",
+      workspace: "OpenWeb-Development.xcworkspace",
+      device: "iPhone 13 Pro",
+    )
+  end
+
+  desc "Build development app"
+  lane :build_development_app do |options|
+    scheme = "OpenWeb-SampleApp"
+    if options[:app] == "public"
+      scheme = "OpenWeb-PublicSampleApp"
+    elsif options[:app] == "beta"
+      scheme = "OpenWeb-BetaSampleApp"
+    end
+
+    cocoapods(use_bundle_exec: false)
+    gym(
+        skip_package_ipa: true,
+        scheme: scheme,
+        workspace: "OpenWeb-Development.xcworkspace",
+        destination: "generic/platform=iOS Simulator",
+        build_path: "simulator_build"
+    )
+  end
+
+  # Excpect parameters `version` and `configuration`
+  desc "Build a release version of the SDK"
+  lane :build_release_sdk do |options|
+    set_version(version:options[:version]) # Set a specific version number
+    increment_build_number(build_number: 0) # Set build to 0, this will allow sample apps which deploy afterwards to start with build 1.
+    cocoapods(use_bundle_exec: false)
+    xcodebuild(
+      scheme: "OpenWeb-SDKBuilder",
+      configuration: options[:configuration],
+      destination: "generic/platform=iOS",
+      clean: true,
+      build: true
+    )
+  end
+
+  desc "Build release ipa"
+  lane :build_release_ipa do | options |
+    scheme = "OpenWeb-SampleApp"
+    type = "app-store"
+
+    if options[:app] == "public"
+      scheme = "OpenWeb-PublicSampleApp"
+    elsif options[:app] == "beta"
+      scheme = "OpenWeb-BetaSampleApp"
+    end
+
+    if options[:type] == "development"
+      type = "development"
+    end
+
+    if type == "app-store"
+      match(
+          type: "appstore",
+          readonly: true,
+          api_key_path: "apple_api_key.json"
+      )
+      cocoapods(use_bundle_exec: false)
+      gym(
+          scheme: scheme,
+          workspace: "OpenWeb-Development.xcworkspace",
+          export_method: "app-store",
+          destination: "generic/platform=iOS",
+          export_options: {
+              signingStyle: "manual",
+              provisioningProfiles: {
+                  "im.spot.demo" => "match AppStore im.spot.demo"
+              }
+          },
+        xcargs: "-allowProvisioningUpdates"
+      )
+    else
+      match(type: "development", readonly: true)
+      cocoapods(use_bundle_exec: false)
+      gym(
+        scheme: scheme,
+        workspace: "OpenWeb-Development.xcworkspace",
+        export_method: "development",
+        destination: "generic/platform=iOS",
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match Development im.spot.demo"
+            }
+        },
+        xcargs: "-allowProvisioningUpdates"
+    )
+    end
+  end
+
+  # Excpect parameter `version`
+  desc "Release Sample App (internal preset)"
+  lane :release_demo_app do |options|
+    # Set a build in the following range
+    internal_sample_app_build_low_threshold = 100
+    internal_sample_app_build_high_threshold = 500
+    increment_build_in_range(build_low:internal_sample_app_build_low_threshold, build_high:internal_sample_app_build_high_threshold)
+    # Set a specific version number
+    set_version(version:options[:version])
+    build_release_ipa(app:"internal", type:"app-store")
+    upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_debug_symbols_to_crashlytics(version:options[:version])
+  end
+
+  # Excpect parameter `version`
+  desc "Release Sample App (beta preset)"
+  lane :release_beta_demo_app do |options|
+    # Set a build in the following range
+    beta_sample_app_build_low_threshold = 1
+    beta_sample_app_build_high_threshold = 500
+    increment_build_in_range(build_low:beta_sample_app_build_low_threshold, build_high:beta_sample_app_build_high_threshold)
+    # Set a specific version number
+    set_version(version:options[:version])
+    build_release_ipa(app:"beta", type:"app-store")
+    upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_debug_symbols_to_crashlytics(version:options[:version])
+  end
+
+  # Excpect parameter `version`
+  desc "Release Sample App (public preset)"
+  lane :release_public_demo_app do |options|
+    # Set a build in the following range
+    public_sample_app_build_low_threshold = 200
+    public_sample_app_build_high_threshold = 500
+    increment_build_in_range(build_low:public_sample_app_build_low_threshold, build_high:public_sample_app_build_high_threshold)
+    # Set a specific version number
+    set_version(version:options[:version])
+    build_release_ipa(app:"public", type:"app-store")
+    upload_to_testflight(api_key_path: "apple_api_key.json")
+    upload_debug_symbols_to_crashlytics(version:options[:version])
+  end
+
+  # Excpect parameter `version`
+  desc "Upload debug symbols to Crashlytics"
+  lane :upload_debug_symbols_to_crashlytics do |options|
+    upload_symbols_to_crashlytics(
+        gsp_path: "./OpenWeb-SampleApp/Resources/GoogleService-Info.plist",
+        binary_path: './scripts/upload-symbols',
+        dsym_path: "./OpenWeb-SampleApp.app.dSYM.zip"
+    )
+  end
+
+  # Excpect parameter `version`
+  desc "Set version in xcode target and project plists"
+  lane :set_version do |options|
+    increment_version_number(version_number: options[:version]) # Set a specific version number
+    increment_version_number_in_xcodeproj(version_number: options[:version])
+    # Set version inside OpenWebSettings plist
+    update_plist(
+        plist_path: "OpenWeb-SDK/Resources/OpenWebSettings.plist",
+        block: proc do |plist|
+            plist[:sdkVersion] = options[:version]
+        end
+    )
+  end
+
+  # Excpect parameters `build_low` and `build_high`
+  desc "Increment build if it is in range, or set build to lower end"
+  lane :increment_build_in_range do |options|
+    current_build_number = get_build_number()
+    puts current_build_number
+    if current_build_number.to_i < options[:build_low].to_i || current_build_number.to_i >= options[:build_high].to_i
+      puts "Set build number to lower range which is #{options[:build_low]}"
+      increment_build_number(build_number: options[:build_low])
+    else
+      # Increment build by one
+      new_build_number = current_build_number.to_i + 1
+      puts "Set build number to #{new_build_number}"
+      increment_build_number(build_number: new_build_number)
+    end
+  end
+
+  # This method used for internal testing. Decided to keep it here for convenient. Excpect parameter `build`.
+  desc "Set build to specific number"
+  lane :set_build do |options|
+    increment_build_number(build_number: options[:build])
+  end
+end
