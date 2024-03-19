@@ -98,7 +98,7 @@ internal class DemoUserAuthentication {
         let params: Parameters = ["code_a": codeA ?? "",
                                   "access_token": accessToken ?? "",
                                   "username": username ?? "",
-                                  "environment": environment]
+                                  "env": environment]
 
         let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
 
