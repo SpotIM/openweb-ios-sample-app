@@ -524,8 +524,8 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
         // keyboard will show
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
-            .withLatestFrom(viewModel.outputs.textBeforeClosedChanged) { ($0, $1) }
-            .subscribe(onNext: { [weak self] (notification, textBeforeClosed) in
+            .withLatestFrom(viewModel.outputs.textBeforeClosedWithMentions) { ($0, $1) }
+            .subscribe(onNext: { [weak self] notification, textBeforeClosed in
                 guard
                    let self = self,
                    let expandedKeyboardHeight = notification.keyboardSize?.height,
@@ -589,11 +589,10 @@ fileprivate extension OWCommentCreationFloatingKeyboardView {
             .notification(UIResponder.keyboardWillHideNotification)
             .withLatestFrom(viewModel.outputs.textViewVM.outputs.textViewText) { ($0, $1) }
             .withLatestFrom(viewModel.outputs.ctaButtonLoading) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] (notification, textViewText, isSendingComment) in
+            .subscribe(onNext: { [weak self] notification, textViewText, isSendingComment  in
                 guard
                     let self = self,
-                    let animationDuration = notification.keyboardAnimationDuration
-                    else { return }
+                    let animationDuration = notification.keyboardAnimationDuration else { return }
 
                 self.viewModel.inputs.textBeforeClosedChange.onNext(isSendingComment ? "" : textViewText)
                 self.viewModel.outputs.textViewVM.inputs.textExternalChange.onNext("")

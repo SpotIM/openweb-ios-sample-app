@@ -50,6 +50,38 @@ class OWUserMentionHelper {
         mentionsData.mentions = mentions
     }
 
+    static func updateCurrentCursorRange(with cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index> {
+        guard !mentions.isEmpty,
+              !text.isEmpty,
+              var cursorNSRange = text.nsRange(from: cursorRange) else { return cursorRange }
+        let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
+            (cursorRange.lowerBound == cursorRange.upperBound &&
+            cursorNSRange.location > $0.range.location &&
+            cursorNSRange.location < $0.range.location + $0.range.length) ||
+            (cursorRange.lowerBound != cursorRange.upperBound &&
+            $0.range.contains(cursorNSRange.location + 1) ||
+            $0.range.contains(cursorNSRange.location + cursorNSRange.length - 1) ||
+            cursorNSRange.contains($0.range.location + 1) ||
+            cursorNSRange.contains($0.range.location + $0.range.length - 1)) }
+        for mention in mentionsToCheck {
+            let cursorEndIndex = cursorNSRange.location + cursorNSRange.length
+            let mentionEndIndex = mention.range.location + mention.range.length
+            if cursorRange.lowerBound == cursorRange.upperBound,
+               cursorNSRange.location != mention.range.location {
+                cursorNSRange.location = mentionEndIndex
+            } else {
+                if cursorNSRange.location > mention.range.location {
+                    cursorNSRange.location = mention.range.location
+                }
+                if cursorEndIndex < mentionEndIndex {
+                    cursorNSRange.length += mentionEndIndex - cursorEndIndex
+                }
+            }
+        }
+        let range = Range(cursorNSRange, in: text) ?? cursorRange
+        return range
+    }
+
     static func getAttributedText(for textViewText: String,
                                   mentionsData: OWUserMentionData,
                                   currentMentionRange: Range<String.Index>?) -> NSAttributedString? {
@@ -74,15 +106,17 @@ class OWUserMentionHelper {
         return attributedText
     }
 
-    static func addUserMention(to mentionsData: OWUserMentionData, textData: OWUserMentionTextData, id: String, displayName: String) {
+    static func addUserMention(to mentionsData: OWUserMentionData, textData: OWUserMentionTextData, id: String, displayName: String, randomGenerator: OWRandomGeneratorProtocol) {
         let textToCursor = textData.textToCursor
         let mentionDisplayText = Metrics.mentionString + displayName
         guard let indexOfMention = textToCursor.lastIndex(of: Metrics.mentionCharecter) else { return }
         let textWithMention = String(textToCursor[..<indexOfMention]) + mentionDisplayText
         let range = indexOfMention..<textWithMention.endIndex
         guard let selectedRange = textWithMention.nsRange(from: range) else { return }
-        let userMentionObject = OWUserMentionObject(userId: id, text: mentionDisplayText, range: selectedRange)
-
+        let userMentionObject = OWUserMentionObject(id: randomGenerator.generateSuperiorUUID(),
+                                                    userId: id,
+                                                    text: mentionDisplayText,
+                                                    range: selectedRange)
         let replaceRange = range.lowerBound..<textToCursor.utf16.endIndex
         if replaceRange.upperBound < textData.text.utf16.endIndex {
             let mentions = mentionsData.mentions.filter { $0.range.location >= textToCursor.utf16.count }
@@ -120,8 +154,9 @@ class OWUserMentionHelper {
         var rangeLocationAccumulate = 0
         for mention in mentions {
             let mentionJsonString = mention.jsonString
-            mention.range.location += rangeLocationAccumulate
-            text = text.replacingOccurrences(of: mention.text, with: mentionJsonString, range: Range(mention.range, in: text))
+            var range = NSRange(location: mention.range.location, length: mention.range.length)
+            range.location += rangeLocationAccumulate
+            text = text.replacingOccurrences(of: mention.text, with: mentionJsonString, range: Range(range, in: text))
             rangeLocationAccumulate += mentionJsonString.utf16.count - mention.text.utf16.count
         }
         return text
