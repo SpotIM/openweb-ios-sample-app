@@ -8,7 +8,7 @@
 
 import Foundation
 import Alamofire
-import SpotImCore
+import OpenWebSDK
 
 internal class DemoUserAuthentication {
 

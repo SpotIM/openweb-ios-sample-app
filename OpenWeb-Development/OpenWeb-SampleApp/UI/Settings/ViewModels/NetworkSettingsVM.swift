@@ -8,7 +8,7 @@
 
 import Foundation
 import RxSwift
-import SpotImCore
+import OpenWebSDK
 
 protocol NetworkSettingsViewModelingInputs {
     var networkEnvironmentSelectedIndex: BehaviorSubject<Int> { get }
