@@ -19,8 +19,8 @@ class OWUserMentionObject {
     let text: String
     var range: NSRange
 
-    init(id: String? = nil, userId: String, text: String, range: NSRange) {
-        self.id = id ?? userId
+    init(id: String, userId: String, text: String, range: NSRange) {
+        self.id = id
         self.userId = userId
         self.text = text
         self.range = range

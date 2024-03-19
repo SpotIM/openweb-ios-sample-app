@@ -45,6 +45,7 @@ protocol OWTextViewViewModelingOutputs {
     var replaceData: Observable<OWTextViewReplaceData> { get }
     var internalReplaceData: Observable<OWTextViewReplaceData> { get }
     var attributedTextChanged: Observable<NSAttributedString> { get }
+    var cursorRangeExternalChanged: Observable<Range<String.Index>> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -121,6 +122,11 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     }
 
     var cursorRangeExternalChange = PublishSubject<Range<String.Index>?>()
+    var cursorRangeExternalChanged: Observable<Range<String.Index>> {
+        return cursorRangeExternalChange
+            .unwrap()
+            .asObservable()
+    }
     var cursorRangeInternalChange = PublishSubject<Range<String.Index>?>()
 
     var _cursorRange = BehaviorSubject<Range<String.Index>?>(value: Range(NSRange(location: 0, length: 0), in: ""))
@@ -219,10 +225,9 @@ fileprivate extension OWTextViewViewModel {
                     }
             }
 
-        Observable.merge(cursorRangeInternalChangeObservable, cursorRangeExternalChange)
+        cursorRangeInternalChangeObservable
             .unwrap()
             .bind(to: _cursorRange)
             .disposed(by: disposeBag)
-
     }
 }

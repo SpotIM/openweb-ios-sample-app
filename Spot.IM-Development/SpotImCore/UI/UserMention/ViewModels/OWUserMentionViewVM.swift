@@ -52,6 +52,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
 
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let randomGenerator: OWRandomGeneratorProtocol
 
     var replaceData = PublishSubject<OWTextViewReplaceData>()
     var textViewText = PublishSubject<String>()
@@ -149,8 +150,10 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
             .asObservable()
     }()
 
-    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         randomGenerator: OWRandomGeneratorProtocol = OWRandomGenerator()) {
         self.servicesProvider = servicesProvider
+        self.randomGenerator = randomGenerator
         self.setupObservers()
     }
 }
@@ -172,6 +175,24 @@ fileprivate extension OWUserMentionViewVM {
                 guard let self = self else { return }
                 let textData = OWUserMentionHelper.getUserMentionTextData(replaceData: replaceData, text: text)
                 self.textData.onNext(textData)
+            })
+            .disposed(by: disposeBag)
+
+        // Edit cursor range and select full user mention if current selected range is on user mention
+        cursorRange
+            .debounce(.microseconds(Metrics.debounceTextChange), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .withLatestFrom(textViewText) { ($0, $1) }
+            .withLatestFrom(mentionsData) { ($0.0, $0.1, $1) }
+            .subscribe(onNext: { [weak self] cursorRange, text, mentionsData in
+                guard let self = self else { return }
+                if cursorRange.lowerBound != cursorRange.upperBound {
+                    self.getUsersForName = ""
+                    self._currentMentionRange.onNext(nil)
+                    self._users.onNext([])
+                }
+                let updatedRange = OWUserMentionHelper.updateCurrentCursorRange(with: cursorRange, mentions: mentionsData.mentions, text: text)
+                self.cursorRangeChange.onNext(updatedRange)
             })
             .disposed(by: disposeBag)
 
@@ -197,8 +218,9 @@ fileprivate extension OWUserMentionViewVM {
             .withLatestFrom(mentionsData) { ($0.0, $0.1, $0.2, $1) }
             .asObservable()
             .subscribe(onNext: { [weak self] displayName, id, textData, mentionsData in
-                OWUserMentionHelper.addUserMention(to: mentionsData, textData: textData, id: id, displayName: displayName)
-                self?.tappedMentionAction.onNext(mentionsData)
+                guard let self = self else { return }
+                OWUserMentionHelper.addUserMention(to: mentionsData, textData: textData, id: id, displayName: displayName, randomGenerator: self.randomGenerator)
+                self.tappedMentionAction.onNext(mentionsData)
             })
             .disposed(by: disposeBag)
 
