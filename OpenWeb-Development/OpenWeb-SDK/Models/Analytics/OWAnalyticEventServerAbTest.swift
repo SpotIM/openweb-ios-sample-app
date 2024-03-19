@@ -1,0 +1,14 @@
+//
+//  OWAnalyticEventServerAbTest.swift
+//  OpenWebSDK
+//
+//  Created by  Nogah Melamed on 17/07/2023.
+//  Copyright © 2023 OpenWeb. All rights reserved.
+//
+
+import Foundation
+
+struct OWAnalyticEventServerAbTest: Encodable {
+    let selectedTests: [Dictionary<String, String>]
+    let affectiveTests: [Dictionary<String, String>]
+}
