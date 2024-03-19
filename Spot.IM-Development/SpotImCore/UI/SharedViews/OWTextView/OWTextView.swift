@@ -213,6 +213,19 @@ fileprivate extension OWTextView {
             .bind(to: textView.rx.selectedRange)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.cursorRangeExternalChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] range in
+                guard let self = self,
+                      let nsRange = self.textView.text?.nsRange(from: range) else { return }
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil // Fixes looping cursor range
+                self.textView.selectedRange = nsRange
+                self.viewModel.inputs.cursorRangeInternalChange.onNext(range)
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+            })
+            .disposed(by: disposeBag)
+
         textView.rx.text
             .unwrap()
             .bind(to: viewModel.inputs.textInternalChange)

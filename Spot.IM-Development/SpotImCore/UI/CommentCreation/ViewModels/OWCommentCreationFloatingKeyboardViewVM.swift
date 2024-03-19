@@ -45,6 +45,7 @@ protocol OWCommentCreationFloatingKeyboardViewViewModelingOutputs {
     var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
+    var textBeforeClosedWithMentions: Observable<String> { get }
 }
 
 protocol OWCommentCreationFloatingKeyboardViewViewModeling {
@@ -152,6 +153,15 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
             .map { text, mentionsData -> String in
                 return OWUserMentionHelper.addUserMentionIds(to: text, mentions: mentionsData.mentions)
+            }
+            .asObservable()
+    }
+
+    var textBeforeClosedWithMentions: Observable<String> {
+        return textBeforeClosedChange
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
+            .map { text, mentionsData -> String in
+                return OWUserMentionHelper.addUserMentionDisplayNames(to: text, mentions: mentionsData.mentions)
             }
             .asObservable()
     }

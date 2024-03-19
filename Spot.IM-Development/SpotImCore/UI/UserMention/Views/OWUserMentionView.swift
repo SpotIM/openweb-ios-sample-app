@@ -51,6 +51,8 @@ fileprivate extension OWUserMentionView {
     }
 
     func setupViews() {
+        self.apply(shadow: .standard, direction: .up)
+
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(0)
         }
