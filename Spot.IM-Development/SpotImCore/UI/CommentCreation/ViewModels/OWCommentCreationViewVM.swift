@@ -109,11 +109,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
-            return .empty()
-            // return commentCreationRegularViewVm.outputs.commentLabelsContainerVM.outputs.selectedLabelIds
+            return Observable.just(OWUserMentionData()) // TODO
         case .light:
-            return .empty()
-            // return commentCreationLightViewVm.outputs.commentLabelsContainerVM.outputs.selectedLabelIds
+            return Observable.just(OWUserMentionData()) // TODO
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.outputs.mentionsData
         }

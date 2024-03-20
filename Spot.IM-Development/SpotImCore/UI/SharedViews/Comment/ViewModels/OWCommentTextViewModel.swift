@@ -63,7 +63,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         self.collapsableTextLineLimit = collapsableTextLineLimit
         self.availableUrlsRange = [:]
         var comment = comment
-        OWUserMentionHelper.addMockCommentWithUserMention(comment: &comment)
         self.userMentions = OWUserMentionHelper.createUserMentions(from: &comment)
         _comment.onNext(comment)
         setupObservers()
