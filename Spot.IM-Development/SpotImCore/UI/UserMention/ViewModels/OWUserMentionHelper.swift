@@ -29,25 +29,43 @@ class OWUserMentionHelper {
               let cursorRange = textData.text.nsRange(from: textData.cursorRange) else { return }
         var mentions: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location >= $0.range.location + $0.range.length }
         let mentionsToCheck = mentionsData.mentions.filter { cursorRange.location <= $0.range.location }
+        var mentionsToDelete: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location < $0.range.location + $0.range.length }
         for mention in mentionsToCheck {
-            if let mentionRange = Range(NSRange(location: mention.range.location + 1, length: mention.range.length - 1), in: textData.text),
-               !(textData.cursorRange ~= mentionRange) {
-                // update mention that replace is affecting
-                if textData.cursorRange.upperBound <= mentionRange.lowerBound { // Update mentionRange since replacing text before this mention
-                    let distance = textData.text.utf16.distance(from: textData.cursorRange.lowerBound, to: textData.cursorRange.upperBound)
-                    let addToRange = -distance + replacingText.utf16.count
-                    let updatedMentionRange: NSRange = {
-                        var range = mention.range
-                        range.location += addToRange
-                        range.length = mention.text.utf16.count
-                        return range
-                    }()
-                    mention.range = updatedMentionRange
+            guard let mentionRange = Range(NSRange(location: mention.range.location + 1, length: mention.range.length - 1), in: textData.text),
+               !(textData.cursorRange ~= mentionRange),
+                textData.cursorRange.upperBound <= mentionRange.lowerBound  else {
+                    mentionsToDelete.append(mention)
+                    continue
                 }
-                mentions.append(mention)
-            }
+            // Update mentionRange since replacing text before this mention
+            let distance = textData.text.utf16.distance(from: textData.cursorRange.lowerBound, to: textData.cursorRange.upperBound)
+            let addToRange = -distance + replacingText.utf16.count
+            let updatedMentionRange: NSRange = {
+                var range = mention.range
+                range.location += addToRange
+                range.length = mention.text.utf16.count
+                return range
+            }()
+            mention.range = updatedMentionRange
+            mentions.append(mention)
+            mentionsToDelete.removeAll(where: { $0.id == mention.id })
+        }
+        // deleted mentions
+        for mention in mentionsToDelete {
+            // TODO delete this mention range
         }
         mentionsData.mentions = mentions
+    }
+
+    static func areOverlapingRanges(range1: NSRange, range2: NSRange) -> Bool {
+        return (range1.lowerBound == range1.upperBound &&
+                range1.location > range2.location &&
+                range1.location < range2.location + range2.length) ||
+        (range1.lowerBound != range1.upperBound &&
+         range2.contains(range1.location + 1) ||
+         range2.contains(range1.location + range1.length - 1) ||
+         range1.contains(range2.location + 1) ||
+         range1.contains(range2.location + range2.length - 1))
     }
 
     static func updateCurrentCursorRange(with cursorRange: Range<String.Index>, mentions: [OWUserMentionObject], text: String) -> Range<String.Index> {
@@ -55,14 +73,8 @@ class OWUserMentionHelper {
               !text.isEmpty,
               var cursorNSRange = text.nsRange(from: cursorRange) else { return cursorRange }
         let mentionsToCheck: [OWUserMentionObject] = mentions.filter {
-            (cursorRange.lowerBound == cursorRange.upperBound &&
-            cursorNSRange.location > $0.range.location &&
-            cursorNSRange.location < $0.range.location + $0.range.length) ||
-            (cursorRange.lowerBound != cursorRange.upperBound &&
-            $0.range.contains(cursorNSRange.location + 1) ||
-            $0.range.contains(cursorNSRange.location + cursorNSRange.length - 1) ||
-            cursorNSRange.contains($0.range.location + 1) ||
-            cursorNSRange.contains($0.range.location + $0.range.length - 1)) }
+            areOverlapingRanges(range1: cursorNSRange, range2: $0.range)
+        }
         for mention in mentionsToCheck {
             let cursorEndIndex = cursorNSRange.location + cursorNSRange.length
             let mentionEndIndex = mention.range.location + mention.range.length
