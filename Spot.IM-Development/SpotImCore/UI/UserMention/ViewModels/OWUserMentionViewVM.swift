@@ -45,6 +45,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         static let usersCount = 10
         static let throttleGetUsers = 150
         static let debounceTextChange = 10
+        static let debounceCursorChange = 10
     }
 
     var inputs: OWUserMentionViewViewModelingInputs { return self }
@@ -57,6 +58,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     var replaceData = PublishSubject<OWTextViewReplaceData>()
     var textViewText = PublishSubject<String>()
     var cursorRange = PublishSubject<Range<String.Index>>()
+    fileprivate var tappedMentionInProgress = false
 
     var attributedTextChange = PublishSubject<NSAttributedString>()
     var textChange = PublishSubject<String>()
@@ -180,15 +182,17 @@ fileprivate extension OWUserMentionViewVM {
 
         // Edit cursor range and select full user mention if current selected range is on user mention
         cursorRange
-            .debounce(.microseconds(Metrics.debounceTextChange), scheduler: MainScheduler.instance)
-            .distinctUntilChanged()
+            .filter { [weak self] _ in
+                guard let self = self else { return false }
+                return !self.tappedMentionInProgress
+            }
+            .debounce(.microseconds(Metrics.debounceCursorChange), scheduler: MainScheduler.instance)
             .withLatestFrom(textViewText) { ($0, $1) }
             .withLatestFrom(mentionsData) { ($0.0, $0.1, $1) }
             .subscribe(onNext: { [weak self] cursorRange, text, mentionsData in
                 guard let self = self else { return }
                 if cursorRange.lowerBound != cursorRange.upperBound {
                     self.getUsersForName = ""
-                    self._currentMentionRange.onNext(nil)
                     self._users.onNext([])
                 }
                 let updatedRange = OWUserMentionHelper.updateCurrentCursorRange(with: cursorRange, mentions: mentionsData.mentions, text: text)
@@ -219,8 +223,10 @@ fileprivate extension OWUserMentionViewVM {
             .asObservable()
             .subscribe(onNext: { [weak self] displayName, id, textData, mentionsData in
                 guard let self = self else { return }
+                self.tappedMentionInProgress = true
                 OWUserMentionHelper.addUserMention(to: mentionsData, textData: textData, id: id, displayName: displayName, randomGenerator: self.randomGenerator)
                 self.tappedMentionAction.onNext(mentionsData)
+                self.tappedMentionInProgress = false
             })
             .disposed(by: disposeBag)
 

@@ -204,13 +204,14 @@ fileprivate extension OWTextView {
 
         viewModel.outputs.cursorRange
             .observe(on: MainScheduler.instance)
-            .map { [weak self] cursorRange -> NSRange? in
-                guard let self = self else { return nil }
-                let range = self.textView.text?.nsRange(from: cursorRange)
-                return range
-            }
-            .unwrap()
-            .bind(to: textView.rx.selectedRange)
+            .subscribe(onNext: { [weak self] cursorRange in
+                guard let self = self,
+                      let range = self.textView.text?.nsRange(from: cursorRange) else { return }
+                let savedDelegate = self.textView.delegate
+                self.textView.delegate = nil // Fixes looping cursor range
+                self.textView.selectedRange = range
+                self.textView.delegate = savedDelegate // Return rx proxy delegate back again
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.cursorRangeExternalChanged
