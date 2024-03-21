@@ -46,6 +46,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         static let throttleGetUsers = 150
         static let debounceTextChange = 10
         static let debounceCursorChange = 10
+        static let delayMoveCursorAfterDeleteRange = 0.01
     }
 
     var inputs: OWUserMentionViewViewModelingInputs { return self }
@@ -269,8 +270,14 @@ fileprivate extension OWUserMentionViewVM {
         textData
             .filter { $0.replacingText != nil } // Replacing text
             .withLatestFrom(mentionsData) { ($0, $1) }
-            .subscribe(onNext: { textData, mentionsData in
-                OWUserMentionHelper.updateMentionRanges(with: textData, mentionsData: mentionsData)
+            .subscribe(onNext: { [weak self] textData, mentionsData in
+                if let textData = OWUserMentionHelper.updateMentionRanges(with: textData, mentionsData: mentionsData) {
+                    guard let self = self else { return }
+                    self.textChange.onNext(textData.text)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayMoveCursorAfterDeleteRange) {
+                        self.cursorRangeChange.onNext(textData.cursorRange)
+                    }
+                }
             })
             .disposed(by: disposeBag)
 
