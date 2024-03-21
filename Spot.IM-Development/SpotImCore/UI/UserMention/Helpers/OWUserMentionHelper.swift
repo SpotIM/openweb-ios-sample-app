@@ -24,9 +24,9 @@ class OWUserMentionHelper {
         return textData
     }
 
-    static func updateMentionRanges(with textData: OWUserMentionTextData, mentionsData: OWUserMentionData) {
+    static func updateMentionRanges(with textData: OWUserMentionTextData, mentionsData: OWUserMentionData) -> OWUserMentionTextData? {
         guard let replacingText = textData.replacingText,
-              let cursorRange = textData.text.nsRange(from: textData.cursorRange) else { return }
+              let cursorRange = textData.text.nsRange(from: textData.cursorRange) else { return nil }
         var mentions: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location >= $0.range.location + $0.range.length }
         let mentionsToCheck = mentionsData.mentions.filter { cursorRange.location <= $0.range.location }
         var mentionsToDelete: [OWUserMentionObject] = mentionsData.mentions.filter { cursorRange.location < $0.range.location + $0.range.length }
@@ -34,7 +34,12 @@ class OWUserMentionHelper {
             guard let mentionRange = Range(NSRange(location: mention.range.location + 1, length: mention.range.length - 1), in: textData.text),
                !(textData.cursorRange ~= mentionRange),
                 textData.cursorRange.upperBound <= mentionRange.lowerBound  else {
-                    mentionsToDelete.append(mention)
+                    if let mentionRange = Range(NSRange(location: mention.range.location + 1, length: mention.range.length - 1), in: textData.text),
+                       textData.cursorRange ~= mentionRange {
+                        mentionsToDelete.removeAll(where: { $0.id == mention.id })
+                    } else {
+                        mentionsToDelete.append(mention)
+                    }
                     continue
                 }
             // Update mentionRange since replacing text before this mention
@@ -50,11 +55,22 @@ class OWUserMentionHelper {
             mentions.append(mention)
             mentionsToDelete.removeAll(where: { $0.id == mention.id })
         }
-        // deleted mentions
-        for mention in mentionsToDelete {
-            // TODO delete this mention range
-        }
+
         mentionsData.mentions = mentions
+
+        if let mention = mentionsToDelete.first,
+           let mentionRange = Range(mention.range, in: textData.text) {
+            var text = textData.text
+            mention.range.length -= 1 // already deleted by textView
+            if let cursorUpdatedRange = Range(mention.range, in: text) {
+                let updatedTextData = OWUserMentionTextData(text: textData.text, cursorRange: cursorUpdatedRange, replacingText: "")
+                _ = updateMentionRanges(with: updatedTextData, mentionsData: mentionsData)
+                text.removeSubrange(mentionRange)
+                let cursorLocation = cursorUpdatedRange.lowerBound..<cursorUpdatedRange.lowerBound
+                return OWUserMentionTextData(text: text, cursorRange: cursorLocation, replacingText: nil)
+            }
+        }
+        return nil
     }
 
     static func areOverlapingRanges(range1: NSRange, range2: NSRange) -> Bool {
