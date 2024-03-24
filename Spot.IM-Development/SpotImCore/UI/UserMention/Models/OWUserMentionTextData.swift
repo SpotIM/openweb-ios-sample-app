@@ -17,4 +17,9 @@ struct OWUserMentionTextData {
         guard self.cursorRange.upperBound < self.text.utf16.endIndex else { return text }
         return String(String(text.utf16)[..<cursorRange.lowerBound])
     }
+
+    var fullText: String {
+        guard self.cursorRange.upperBound < self.text.utf16.endIndex else { return text }
+        return textToCursor + String(String(text.utf16)[cursorRange.upperBound...])
+    }
 }
