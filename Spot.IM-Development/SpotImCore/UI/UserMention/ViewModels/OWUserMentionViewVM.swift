@@ -46,7 +46,6 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
         static let throttleGetUsers = 150
         static let debounceTextChange = 10
         static let debounceCursorChange = 10
-        static let delayMoveCursorAfterDeleteRange = 0.01
     }
 
     var inputs: OWUserMentionViewViewModelingInputs { return self }
@@ -60,6 +59,7 @@ class OWUserMentionViewVM: OWUserMentionViewViewModelingInputs, OWUserMentionVie
     var textViewText = PublishSubject<String>()
     var cursorRange = PublishSubject<Range<String.Index>>()
     fileprivate var tappedMentionInProgress = false
+    fileprivate var textAfterMention = BehaviorSubject<String>(value: "")
 
     var attributedTextChange = PublishSubject<NSAttributedString>()
     var textChange = PublishSubject<String>()
@@ -232,13 +232,11 @@ fileprivate extension OWUserMentionViewVM {
             .disposed(by: disposeBag)
 
         tappedMention
-            .withLatestFrom(currentMentionRange) { ($0, $1) }
-            .withLatestFrom(textViewText) { ($0.0, $0.1, $1) }
-            .subscribe(onNext: { [weak self] mentionsData, currentMentionRange, textViewText in
+            .withLatestFrom(textAfterMention) { ($0, $1) }
+            .subscribe(onNext: { [weak self] mentionsData, textAfterMention in
                 guard let self = self,
                       let textData = OWUserMentionHelper.getUserMentionTextDataAfterTapped(mentionsData: mentionsData,
-                                                                                           currentMentionRange: currentMentionRange,
-                                                                                           textViewText: textViewText) else { return }
+                                                                                           textAfterMention: textAfterMention) else { return }
                 self.textChange.onNext(textData.text)
                 self.cursorRangeChange.onNext(textData.cursorRange)
             })
@@ -263,7 +261,7 @@ fileprivate extension OWUserMentionViewVM {
                 guard let self = self else { return }
                 self.getUsersForName = ""
                 self._currentMentionRange.onNext(nil)
-                self.searchText(text: textData.textToCursor, mentions: mentionsData.mentions)
+                self.searchText(textData.textToCursor, fullText: textData.fullText, mentions: mentionsData.mentions)
             })
             .disposed(by: disposeBag)
 
@@ -274,8 +272,8 @@ fileprivate extension OWUserMentionViewVM {
                 if let textData = OWUserMentionHelper.updateMentionRanges(with: textData, mentionsData: mentionsData) {
                     guard let self = self else { return }
                     self.textChange.onNext(textData.text)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.delayMoveCursorAfterDeleteRange) {
-                        self.cursorRangeChange.onNext(textData.cursorRange)
+                    DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                        self?.cursorRangeChange.onNext(textData.cursorRange)
                     }
                 }
             })
@@ -294,27 +292,27 @@ fileprivate extension OWUserMentionViewVM {
             .disposed(by: disposeBag)
     }
 
-    func searchText(text: String, mentions: [OWUserMentionObject]) {
+    func searchText(_ searchText: String, fullText: String, mentions: [OWUserMentionObject]) {
         do {
             let regex = try NSRegularExpression(pattern: "\\@[^\\@]*$", options: [])
             var results = [String]()
-            guard let range = text.range(of: String(text.utf16)),
-                  let nsRange = text.nsRange(from: range) else {
+            let range = searchText.startIndex..<searchText.endIndex
+            guard let nsRange = searchText.nsRange(from: range) else {
                 _users.onNext([])
                 return
             }
-            regex.enumerateMatches(in: text, range: nsRange) { [weak self] result, _, _ in
-                guard let self = self else { return }
 
-                if let r = result?.range(at: 0), let range = Range(r, in: String(text.utf16)) {
+            regex.enumerateMatches(in: searchText, range: nsRange) { [weak self] result, _, _ in
+                guard let self = self else { return }
+                if let r = result?.range, let range = Range(r, in: searchText) {
                     if !(mentions.contains(where: { mention in
-                        let mentionRange = Range(mention.range, in: text)
+                        let mentionRange = Range(mention.range, in: searchText)
                         return range.lowerBound == mentionRange?.lowerBound
                     })) {
-                        if let substring = String(text.utf16[range].dropFirst()) {
-                            self._currentMentionRange.onNext(range)
-                            results.append(substring)
-                        }
+                        let substring = String(searchText[range].dropFirst())
+                        self._currentMentionRange.onNext(range)
+                        self.textAfterMention.onNext(String(fullText[range.upperBound...]))
+                        results.append(substring)
                     }
                 }
             }

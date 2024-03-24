@@ -163,10 +163,9 @@ class OWUserMentionHelper {
         mentionsData.tappedMentionString = textWithMention
     }
 
-    static func getUserMentionTextDataAfterTapped(mentionsData: OWUserMentionData, currentMentionRange: Range<String.Index>?, textViewText: String) -> OWUserMentionTextData? {
-        guard let currentMentionRange = currentMentionRange,
-              let tappedMentionString = mentionsData.tappedMentionString,
-              let textAfterMention = String(textViewText.utf16[currentMentionRange.upperBound...])
+    static func getUserMentionTextDataAfterTapped(mentionsData: OWUserMentionData,
+                                                  textAfterMention: String) -> OWUserMentionTextData? {
+        guard let tappedMentionString = mentionsData.tappedMentionString
         else { return nil }
         let tappedMentionWithSpace = tappedMentionString + " "
         let utf8Range = NSRange(location: 0, length: tappedMentionWithSpace.utf16.count)

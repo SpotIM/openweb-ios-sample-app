@@ -370,8 +370,24 @@ fileprivate extension OWCommentCreationFloatingKeyboardViewViewModel {
                 switch request {
                 case .manipulateUserInputText(let manipulationTextCompletion):
                     let manipulationTextModel = OWManipulateTextModel(text: currentText, cursorRange: currentSelectedRange)
-                    let newRequestedText = manipulationTextCompletion(.success(manipulationTextModel))
-                    self.textViewVM.inputs.textExternalChange.onNext(newRequestedText)
+                    let textToAppend = manipulationTextCompletion(.success(manipulationTextModel))
+                    var currentSelectedRange = currentSelectedRange
+                    if textToAppend.isEmpty {
+                        currentSelectedRange = currentText.startIndex..<currentText.endIndex
+                    }
+                    let textData = OWUserMentionTextData(text: currentText, cursorRange: currentSelectedRange, replacingText: textToAppend)
+                    let newRequestedText = currentText.replacingCharacters(in: currentSelectedRange, with: textToAppend)
+                    self.userMentionVM.inputs.textData.onNext(textData)
+                    self.textViewVM.inputs.textExternalChange.onNext(String(newRequestedText.utf16))
+                    if !textToAppend.isEmpty,
+                       var nsRange = currentText.nsRange(from: currentSelectedRange) {
+                        nsRange.location += textToAppend.utf16.count
+                        if let range = Range(nsRange, in: newRequestedText) {
+                            DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                                self?.textViewVM.inputs.cursorRangeExternalChange.onNext(range)
+                            }
+                        }
+                    }
                 }
             })
             .disposed(by: disposeBag)
