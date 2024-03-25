@@ -216,7 +216,7 @@ jobs:
             git branch validate/cocoapods/sdk/$CORE_VERSION
             git checkout validate/cocoapods/sdk/$CORE_VERSION
             git status
-            sed -i '' "s/\pod 'SpotIMCore'.*/pod 'SpotIMCore', '$CORE_VERSION'/" Podfile
+            sed -E -i "" "s/:tag => '[^']+'/:tag => '$CORE_VERSION'/" Podfile
             git add .
             git commit -m "validate cocoapods with version '$CORE_VERSION'"
 
