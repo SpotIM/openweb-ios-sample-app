@@ -156,7 +156,7 @@ jobs:
             git branch validate/spm/sdk/$CORE_VERSION
             git checkout validate/spm/sdk/$CORE_VERSION
             git status
-            sed -i '' "s/\branch = .*/branch = $CORE_VERSION;/" OpenWeb-iOS-SDK-Demo.xcodeproj/project.pbxproj
+            sed -i '' '/kind = exactVersion;/,/};/ s/version = "[^"]*";/version = $CORE_VERSION;/' OpenWeb-iOS-SDK-Demo.xcodeproj/project.pbxproj
             git add .
             git commit -m "validate spm with version '$CORE_VERSION'"
 
