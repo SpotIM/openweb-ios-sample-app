@@ -173,11 +173,11 @@ fileprivate extension OWTextView {
                 // Since UITextView replaces a whitespace automatically if replacing range that before has a whitepace or removes a whitespace after range if the range start index (location) is 0 at the begining.
                 // So here we check for whitespaces after and before for both cases so that we send the real replace range.
                 let range = replaceData.range
-                let text = replaceData.text
+                let replaceText = replaceData.text
                 var rangeToSend = range
                 rangeToSend.location += range.location == 0 ? range.length : -1
                 rangeToSend.length = 1
-                if text.isEmpty,
+                if replaceText.isEmpty,
                    let rangeIsSpace = Range(rangeToSend, in: originalText),
                    originalText[rangeIsSpace] == " " {
                     if rangeToSend.location > range.location {
