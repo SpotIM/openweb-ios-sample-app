@@ -3,7 +3,7 @@
 //  OpenWebSDK
 //
 //  Created by Revital Pisman on 13/02/2024.
-//  Copyright © 2024 Spot.IM. All rights reserved.
+//  Copyright © 2024 OpenWeb. All rights reserved.
 //
 
 import UIKit
