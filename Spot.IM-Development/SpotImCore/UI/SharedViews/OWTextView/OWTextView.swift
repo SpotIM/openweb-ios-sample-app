@@ -55,8 +55,6 @@ class OWTextView: UIView {
                 )
             )
             .enforceSemanticAttribute()
-            .spellCheckingType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
-            .autocorrectionType(viewModel.outputs.hasSuggestionsBar ? .default : .no)
         return textView
     }()
 
@@ -320,6 +318,14 @@ fileprivate extension OWTextView {
                 self.textView.font = OWFontBook.shared.font(typography: .bodyText)
                 self.charectersCountLabel.font = OWFontBook.shared.font(typography: .footnoteText)
                 self.textViewPlaceholder.font = OWFontBook.shared.font(typography: .bodyText)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.hasSuggestionsBarChanged
+            .subscribe(onNext: { [weak self] hasSuggestionsBar in
+                guard let self = self else { return }
+                textView.spellCheckingType(hasSuggestionsBar ? .default : .no)
+                textView.autocorrectionType(hasSuggestionsBar ? .default : .no)
             })
             .disposed(by: disposeBag)
     }

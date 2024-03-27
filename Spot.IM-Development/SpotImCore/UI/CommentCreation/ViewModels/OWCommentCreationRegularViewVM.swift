@@ -32,6 +32,7 @@ protocol OWCommentCreationRegularViewViewModelingOutputs {
     var displayToastCalled: Observable<OWToastNotificationCombinedData> { get }
     var hideToast: Observable<Void> { get }
     var dismissedToast: Observable<Void> { get }
+    var userMentionVM: OWUserMentionViewViewModeling { get }
 }
 
 protocol OWCommentCreationRegularViewViewModeling {
@@ -46,6 +47,10 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
+
+    lazy var userMentionVM: OWUserMentionViewViewModeling = {
+        return OWUserMentionViewVM(servicesProvider: servicesProvider)
+    }()
 
     var displayToast = PublishSubject<OWToastNotificationCombinedData?>()
     var displayToastCalled: Observable<OWToastNotificationCombinedData> {
@@ -159,7 +164,12 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         footerViewModel.outputs.performCtaAction
             .withLatestFrom(commentCreationContentVM.outputs.commentContent)
             .withLatestFrom(commentLabelsContainerVM.outputs.selectedLabelIds) { ($0, $1) }
-            .map { OWCommentCreationCtaData(commentContent: $0, commentLabelIds: $1, commentUserMentions: nil) }
+            .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0.0, $0.1, $1) }
+            .map { commentContent, selectedLabelIds, mentionsData in
+                return OWCommentCreationCtaData(commentContent: commentContent,
+                                                commentLabelIds: selectedLabelIds,
+                                                commentUserMentions: mentionsData.mentions)
+            }
             .asObservable()
             .share()
     }()
@@ -170,11 +180,36 @@ class OWCommentCreationRegularViewViewModel: OWCommentCreationRegularViewViewMod
         self.commentCreationData = commentCreationData
         commentType = commentCreationData.commentCreationType
         setupObservers()
+        setupInitialMentionsIfNeeded()
     }
 }
 
 fileprivate extension OWCommentCreationRegularViewViewModel {
     func setupObservers() {
+        commentCreationContentVM.outputs.textViewVM.outputs.replaceData
+            .bind(to: userMentionVM.inputs.replaceData)
+            .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.textViewVM.outputs.textViewText
+            .bind(to: userMentionVM.inputs.textViewText)
+            .disposed(by: disposeBag)
+
+        commentCreationContentVM.outputs.textViewVM.outputs.cursorRange
+            .bind(to: userMentionVM.inputs.cursorRange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.textChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.textExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.cursorRangeChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.cursorRangeExternalChange)
+            .disposed(by: disposeBag)
+
+        userMentionVM.outputs.attributedTextChanged
+            .bind(to: commentCreationContentVM.outputs.textViewVM.inputs.attributedTextChange)
+            .disposed(by: disposeBag)
+
         commentCreationContentVM.outputs.commentContent
             .map { $0.text.count }
             .unwrap()
@@ -206,5 +241,24 @@ fileprivate extension OWCommentCreationRegularViewViewModel {
         closeButtonTap
             .bind(to: commentCreationContentVM.inputs.resignFirstResponder)
             .disposed(by: disposeBag)
+    }
+
+    func setupInitialMentionsIfNeeded() {
+        let commentsCacheService = self.servicesProvider.commentsInMemoryCacheService()
+        switch commentCreationData.commentCreationType {
+        case .comment:
+            guard let postId = postId,
+                  let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
+        case .replyToComment(originComment: let originComment):
+            guard let originCommentId = originComment.id,
+                  let postId = postId,
+                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
+        case .edit(comment: _):
+            guard let postId = postId,
+                  let commentCreationCache = commentsCacheService[.edit(postId: postId)] else { return }
+            userMentionVM.inputs.initialMentions.onNext(commentCreationCache.commentUserMentions)
+        }
     }
 }

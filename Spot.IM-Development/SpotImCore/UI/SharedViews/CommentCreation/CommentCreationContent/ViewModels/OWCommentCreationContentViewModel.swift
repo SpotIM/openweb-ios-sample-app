@@ -10,16 +10,13 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationContentViewModelingInputs {
-    var commentText: BehaviorSubject<String> { get }
     var becomeFirstResponder: PublishSubject<Void> { get }
     var resignFirstResponder: PublishSubject<Void> { get }
     var imagePicked: PublishSubject<UIImage> { get }
 }
 
 protocol OWCommentCreationContentViewModelingOutputs {
-    var commentTextOutput: Observable<String> { get }
     var commentImageOutput: Observable<OWCommentImage?> { get }
-    var showPlaceholder: Observable<Bool> { get }
     var avatarViewVM: OWAvatarViewModeling { get }
     var placeholderText: Observable<String> { get }
     var becomeFirstResponderCalled: Observable<Void> { get }
@@ -28,6 +25,7 @@ protocol OWCommentCreationContentViewModelingOutputs {
     var commentContent: Observable<OWCommentCreationContent> { get }
     var isValidatedContent: Observable<Bool> { get }
     var isInitialContentEdited: Observable<Bool> { get }
+    var textViewVM: OWTextViewViewModeling { get }
 }
 
 protocol OWCommentCreationContentViewModeling {
@@ -44,6 +42,7 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     fileprivate struct Metrics {
         static let delayAfterLoadingImage = 50
+        static let textViewPlaceholderText = OWLocalizationManager.shared.localizedString(key: "WhatDoYouThink")
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -54,13 +53,12 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
 
     fileprivate lazy var postId = OWManager.manager.postId
 
-    var commentText = BehaviorSubject<String>(value: "")
     var imagePicked = PublishSubject<UIImage>()
 
     fileprivate let _imageContent = BehaviorSubject<OWCommentImage?>(value: nil)
 
     var commentContent: Observable<OWCommentCreationContent> {
-        Observable.combineLatest(commentTextOutput, _imageContent.asObservable())
+        Observable.combineLatest(textViewVM.outputs.textViewText, _imageContent.asObservable())
             .map { text, image in
                 OWCommentCreationContent(text: text, image: image)
             }
@@ -92,31 +90,9 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
             .startWith(nil)
     }()
 
-    var commentTextOutput: Observable<String> {
-        commentText
-            .asObservable()
-            .withLatestFrom(_commentTextCharactersLimit) { ($0, $1) }
-            .scan(("", nil)) { [weak self] previous, newTuple -> (String, Int?) in
-                // Handle characters limit for comment text
-                guard let self = self else { return previous }
-                guard let limiter = newTuple.1 else { return newTuple }
-                let previousText = previous.0
-                let newText = newTuple.0
-
-                let adjustedText = self.textValidatorTransformer(previousText: previousText, newText: newText, charactersLimiter: limiter)
-                return (adjustedText, limiter)
-            }
-            .map { $0.0 }
-    }
-
     var commentImageOutput: Observable<OWCommentImage?> {
         _imageContent
             .asObservable()
-    }
-
-    var showPlaceholder: Observable<Bool> {
-        commentTextOutput
-            .map { $0.count == 0 }
     }
 
     var placeholderText: Observable<String> {
@@ -169,13 +145,21 @@ class OWCommentCreationContentViewModel: OWCommentCreationContentViewModeling,
         }
     }
 
+    let textViewVM: OWTextViewViewModeling
+
     init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.servicesProvider = servicesProvider
         self.imageURLProvider = imageURLProvider
         self.commentCreationType = commentCreationType
-
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
+        let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
+                                          charectersLimitEnabled: false,
+                                          isEditable: true,
+                                          isAutoExpandable: true,
+                                          hasSuggestionsBar: currentOrientation == .portrait)
+        self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         self.setupInitialTextIfNeeded()
         self.setupInitialImageIfNeeded()
 
@@ -189,21 +173,25 @@ fileprivate extension OWCommentCreationContentViewModel {
         var initialText: String? = nil
         switch commentCreationType {
         case .comment:
-            guard let postId = self.postId else { return }
-            initialText = commentsCacheService[.comment(postId: postId)]?.commentContent.text
+            guard let postId = self.postId,
+                  let commentCreationCache = commentsCacheService[.comment(postId: postId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         case .replyToComment(originComment: let originComment):
             guard let postId = self.postId,
-                  let originCommentId = originComment.id
-            else { return }
-            initialText = commentsCacheService[.reply(postId: postId, commentId: originCommentId)]?.commentContent.text
+                  let originCommentId = originComment.id,
+                  let commentCreationCache = commentsCacheService[.reply(postId: postId, commentId: originCommentId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         case .edit(comment: let comment):
             if let commentText = comment.text?.text {
                 initialText = commentText
             }
+            guard let postId = postId,
+                  let commentCreationCache = commentsCacheService[.edit(postId: postId)] else { return }
+            initialText = OWUserMentionHelper.addUserMentionDisplayNames(to: commentCreationCache.commentContent.text, mentions: commentCreationCache.commentUserMentions)
         }
 
         if let text = initialText {
-            self.inputs.commentText.onNext(text)
+            textViewVM.inputs.textExternalChange.onNext(text)
         }
     }
 
@@ -288,6 +276,15 @@ fileprivate extension OWCommentCreationContentViewModel {
                 self.setupImageObserver()
                 self._imageContent.onNext(nil)
                 self.imagePreviewVM.inputs.isUploadingImage.onNext(false)
+            })
+            .disposed(by: disposeBag)
+
+        _commentTextCharactersLimit
+            .subscribe(onNext: { [weak self] limit in
+                guard let self = self else { return }
+                let limit = limit ?? 0
+                self.textViewVM.inputs.textViewMaxCharectersChange.onNext(limit)
+                self.textViewVM.inputs.charectarsLimitEnabledChange.onNext(limit > 0)
             })
             .disposed(by: disposeBag)
     }
