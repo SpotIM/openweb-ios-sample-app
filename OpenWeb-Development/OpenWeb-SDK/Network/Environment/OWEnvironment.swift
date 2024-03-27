@@ -26,8 +26,13 @@ class OWEnvironment: OWEnvironmentProtocol {
     static var production = OWEnvironment(scheme: "https", domain: "mobile-gw.spot.im")
     static var staging = OWEnvironment(scheme: "https", domain: "dev.staging-spot.im/proxy/staging-v2/mobile-gw/8000")
 
-    static func set(environment: OWEnvironmentProtocol) {
-        currentEnvironment = environment
+    static func set(environmentType: OWNetworkEnvironmentType) {
+        switch environmentType {
+        case .production:
+            currentEnvironment = OWEnvironment.production
+        case .staging:
+            currentEnvironment = OWEnvironment.staging
+        }
     }
 
     init(scheme: String, domain: String) {

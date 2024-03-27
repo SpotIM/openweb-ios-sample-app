@@ -58,8 +58,8 @@ enum OWImagesEndpoints: OWEndpoints {
     var overrideBaseURL: URL? {
         switch self {
         case .fetchImage: return URL(string: APIConstants.fetchImageBaseURL)
-        case .login: return nil // Use default base url (mobile-gw)
         case .upload: return URL(string: APIConstants.uploadImageBaseURL)
+        default: return nil // Use default base url (mobile-gw)
         }
     }
 }
