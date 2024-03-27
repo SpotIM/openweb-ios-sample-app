@@ -165,8 +165,13 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
 
     var showAddGifButton: Observable<Bool> {
         return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-            .map {
-                $0.mobileSdk.postGifEnabled && OWGiphySDKInterop.giphySDKAvailable()
+            .map { [weak self] in
+                guard let gifService = self?.servicesProvider.gifService(),
+                      gifService.isGiphyAvailable else {
+                    return false
+                }
+                
+                return $0.mobileSdk.postGifEnabled
             }
     }
 

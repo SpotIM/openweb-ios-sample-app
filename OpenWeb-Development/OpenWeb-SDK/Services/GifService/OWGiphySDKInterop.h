@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)giphySDKAvailable;
 
 - (instancetype)init;
-//- (void)inspectWithNumber:(NSInteger)number;
+- (void)configure:(NSString*)apiKey;
 
 @end
 

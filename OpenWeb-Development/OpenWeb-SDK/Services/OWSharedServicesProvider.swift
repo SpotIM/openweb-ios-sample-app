@@ -58,7 +58,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func networkAvailabilityService() -> OWNetworkAvailabilityServicing
     func conversationSizeService() -> OWConversationSizeServicing
 //    #if canImport(GiphyUISDK)
-//    func gifService() -> OWGifServicing
+    func gifService() -> OWGifServicing
 //    #endif
 }
 
@@ -88,9 +88,9 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
 //    #if canImport(GiphyUISDK)
-//    fileprivate lazy var _gifService: OWGifServicing = {
-//        return OWGifService(sharedServicesProvider: self)
-//    }()
+    fileprivate lazy var _gifService: OWGifServicing = {
+        return OWGifService(sharedServicesProvider: self)
+    }()
 //    #endif
 
     fileprivate lazy var _statusBarStyleService: OWStatusBarStyleServicing = {
@@ -398,9 +398,9 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }
 
 //    #if canImport(GiphyUISDK)
-//    func gifService() -> OWGifServicing {
-//        return _gifService
-//    }
+    func gifService() -> OWGifServicing {
+        return _gifService
+    }
 //    #endif
 }
 

@@ -293,6 +293,7 @@
 		24ED931D2BB4344C0090D1FF /* OWGiphySDKInterop.h in Headers */ = {isa = PBXBuildFile; fileRef = 24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		24ED931E2BB4344C0090D1FF /* OWGiphySDKInterop.m in Sources */ = {isa = PBXBuildFile; fileRef = 24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */; };
 		24ED932C2BB457420090D1FF /* GiphyUISDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24ED932A2BB4571A0090D1FF /* GiphyUISDK.xcframework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		24ED93342BB466140090D1FF /* OWGifService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F828D12B8F14AB00BFD159 /* OWGifService.swift */; };
 		24EF864429C9D7FF00327394 /* OWCompactContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864329C9D7FF00327394 /* OWCompactContentType.swift */; };
 		24EF864629C9ED0A00327394 /* OWCompactCommentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864529C9ED0A00327394 /* OWCompactCommentType.swift */; };
 		24EF864829CAE8D800327394 /* OWSubscriberIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF864729CAE8D800327394 /* OWSubscriberIconView.swift */; };
@@ -6659,6 +6660,7 @@
 				3DF95BD727CE55C40008A380 /* OWBaseCoordinator.swift in Sources */,
 				2473A2672A41B3EA0086B339 /* OWToastView.swift in Sources */,
 				164047A829E420D1001DD35B /* OWConversationReadRM.swift in Sources */,
+				24ED93342BB466140090D1FF /* OWGifService.swift in Sources */,
 				24D31ED72AB033C70038417B /* OWToastNotificationService.swift in Sources */,
 				3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */,
 				3DDA9A8C291A5FB000FE3B86 /* OWCustomizableElementCallback.swift in Sources */,

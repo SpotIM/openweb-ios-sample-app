@@ -18,7 +18,7 @@
 @implementation OWGiphySDKInterop
 
 + (BOOL)giphySDKAvailable {
-    if ([GiphyCore class]) {
+    if ([Giphy class]) {
         return YES;
     } else {
         return NO;
@@ -32,6 +32,12 @@
 //        [_primeChecker setDelegate:self];
 //    }
     return self;
+}
+
+- (void)configure:(NSString*)apiKey {
+    if (OWGiphySDKInterop.giphySDKAvailable) {
+        [Giphy configureWithApiKey:apiKey verificationMode:false metadata:@{@"": @""}];
+    }
 }
 
 @end
