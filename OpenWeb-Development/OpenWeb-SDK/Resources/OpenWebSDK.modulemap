@@ -12,8 +12,8 @@ framework module OpenWebSDK {
     export *
     module * { export * }
 
-//    explicit module Private {
-//      header "OWGiphySDKInterop.h"
-//      export *
-//    }
+    explicit module OWGiphySDK {
+      header "OWGiphySDKInterop.h"
+      export *
+    }
 }
