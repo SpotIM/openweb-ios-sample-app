@@ -1318,6 +1318,7 @@
 		24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderView.swift; sourceTree = "<group>"; };
 		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
 		24ECB4A12A9CA2B30070D6E7 /* OWArticleInformationStrategy+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWArticleInformationStrategy+Extensions.swift"; sourceTree = "<group>"; };
+		24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = OpenWebSDK.modulemap; sourceTree = "<group>"; };
 		24EF864329C9D7FF00327394 /* OWCompactContentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCompactContentType.swift; sourceTree = "<group>"; };
 		24EF864529C9ED0A00327394 /* OWCompactCommentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCompactCommentType.swift; sourceTree = "<group>"; };
 		24EF864729CAE8D800327394 /* OWSubscriberIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberIconView.swift; sourceTree = "<group>"; };
@@ -4556,6 +4557,7 @@
 				4454179F236850C0001D0ED0 /* Fonts */,
 				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
 				241B07562643CCA000253944 /* image_placeholder.png */,
+				24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -7376,6 +7378,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
@@ -7536,6 +7539,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
@@ -7689,6 +7693,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
@@ -7842,6 +7847,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
@@ -7896,6 +7902,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
@@ -7939,6 +7946,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
+				MODULEMAP_FILE = "OpenWeb-SDK/Resources/OpenWebSDK.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
