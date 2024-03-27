@@ -40,6 +40,7 @@ protocol OWTextViewViewModelingOutputs {
     var hidePlaceholder: Observable<Bool> { get }
     var textViewText: Observable<String> { get }
     var charectersLimitEnabled: Bool { get }
+    var showCharectersLimit: Bool { get }
     var isAutoExpandable: Bool { get }
     var cursorRange: Observable<Range<String.Index>> { get }
     var replaceData: Observable<OWTextViewReplaceData> { get }
@@ -71,6 +72,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
     }
 
     var charectersLimitEnabled: Bool
+    let showCharectersLimit: Bool
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     // becomeFirstResponderCall has int milliseconds for delaying the keyboard
@@ -168,6 +170,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         self._textViewText = BehaviorSubject(value: textViewData.textViewText)
         self.isEditable = textViewData.isEditable
         self.charectersLimitEnabled = textViewData.charectersLimitEnabled
+        self.showCharectersLimit = textViewData.showCharectersLimit
         self.isAutoExpandable = textViewData.isAutoExpandable
         self.hasSuggestionsBarChange.onNext(textViewData.hasSuggestionsBar)
         self.setupObservers()

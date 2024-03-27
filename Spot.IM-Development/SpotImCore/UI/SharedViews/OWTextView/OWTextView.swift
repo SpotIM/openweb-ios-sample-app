@@ -112,7 +112,7 @@ fileprivate extension OWTextView {
         self.layer.borderWidth = Metrics.borderWidth
         self.layer.borderColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle).cgColor
 
-        if viewModel.outputs.charectersLimitEnabled {
+        if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
             self.addSubviews(charectersCountLabel)
             charectersCountLabel.OWSnp.makeConstraints { make in
                 make.trailing.equalToSuperview().inset(Metrics.charectersTrailingPadding)
@@ -122,7 +122,7 @@ fileprivate extension OWTextView {
 
         self.addSubviews(textView)
         textView.OWSnp.makeConstraints { make in
-            if viewModel.outputs.charectersLimitEnabled {
+            if viewModel.outputs.charectersLimitEnabled && viewModel.outputs.showCharectersLimit {
                 make.top.leading.trailing.equalToSuperview()
                 make.bottom.equalTo(charectersCountLabel.OWSnp.top)
             } else {

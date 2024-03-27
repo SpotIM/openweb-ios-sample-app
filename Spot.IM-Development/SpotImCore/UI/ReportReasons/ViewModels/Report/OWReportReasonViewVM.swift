@@ -213,6 +213,7 @@ class OWReportReasonViewViewModel: OWReportReasonViewViewModelingInputs, OWRepor
         let textViewData = OWTextViewData(textViewMaxCharecters: Metrics.defaultTextViewMaxCharecters,
                                           placeholderText: OWLocalizationManager.shared.localizedString(key: "ReportReasonTextViewPlaceholder"),
                                           charectersLimitEnabled: false,
+                                          showCharectersLimit: false,
                                           isEditable: false)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         setupObservers()
