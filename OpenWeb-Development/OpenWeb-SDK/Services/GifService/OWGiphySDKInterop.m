@@ -40,4 +40,13 @@
     }
 }
 
+- (nullable UIViewController*)gifSelectionVC {
+    if (OWGiphySDKInterop.giphySDKAvailable) {
+        GiphyViewController *giphy = [[GiphyViewController alloc]init];
+        return giphy;
+    } else {
+        return nil;
+    }
+}
+
 @end

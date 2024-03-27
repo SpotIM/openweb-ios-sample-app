@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 // #import <OpenWebSDK/OpenWebSDK-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init;
 - (void)configure:(NSString*)apiKey;
+- (nullable UIViewController*)gifSelectionVC;
 
 @end
 

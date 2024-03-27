@@ -140,6 +140,11 @@ class OWPresenterService: OWPresenterServicing {
 //    #else
     // This function should not be called! We musr use gif picker only if giphy availabe
     func showGifPicker(viewableMode: OWViewableMode) -> Observable<OWGifPickerPresenterResponseType> {
+        guard let presenterVC = getPresenterVC(for: viewableMode),
+              let giphyVC = sharedServicesProvider.gifService().gifSelectionVC()
+        else { return .empty() }
+
+        presenterVC.present(giphyVC, animated: true)
         return .empty()
     }
 //    #endif

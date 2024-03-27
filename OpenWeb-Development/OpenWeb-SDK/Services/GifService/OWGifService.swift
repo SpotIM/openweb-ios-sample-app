@@ -8,10 +8,12 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 // TODO: Check if giphy sdk is available and import accordingly
 protocol OWGifServicing {
     var isGiphyAvailable: Bool { get }
+    func gifSelectionVC() -> UIViewController?
 //    func gifSelectionVC() -> GiphyViewController
 }
 
@@ -33,6 +35,11 @@ class OWGifService: OWGifServicing {
         giphyBridg = OWGiphySDKInterop()
         configure()
         setupObservers()
+    }
+
+    func gifSelectionVC() -> UIViewController? {
+        let giphy = giphyBridg.gifSelectionVC() // TODO: hanle nil ?
+        return giphy
     }
 
 //    func gifSelectionVC() -> GiphyViewController {
