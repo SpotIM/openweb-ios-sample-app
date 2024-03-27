@@ -208,7 +208,7 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
             .filter { !$0 } // Do not continue if authentication needed 
             .withLatestFrom(textViewVM.outputs.textViewText)
             .withLatestFrom(userMentionVM.outputs.mentionsData) { ($0, $1) }
-            .map { text, mentionsData -> OWCommentCreationCtaData in ()
+            .map { text, mentionsData -> OWCommentCreationCtaData in
                 let commentContent = OWCommentCreationContent(text: text)
                 return OWCommentCreationCtaData(commentContent: commentContent, commentLabelIds: [], commentUserMentions: mentionsData.mentions)
             }
@@ -246,11 +246,12 @@ class OWCommentCreationFloatingKeyboardViewViewModel:
         self.viewableMode = viewableMode
         self.imageURLProvider = imageURLProvider
         self.sharedServiceProvider = sharedServiceProvider
+        let currentOrientation = OWSharedServicesProvider.shared.orientationService().currentOrientation
         let textViewData = OWTextViewData(placeholderText: Metrics.textViewPlaceholderText,
                                           charectersLimitEnabled: false,
                                           isEditable: true,
                                           isAutoExpandable: true,
-                                          hasSuggestionsBar: false)
+                                          hasSuggestionsBar: currentOrientation == .portrait)
         self.textViewVM = OWTextViewViewModel(textViewData: textViewData)
         // Setting accessoryViewStrategy
         let style = commentCreationData.settings.commentCreationSettings.style

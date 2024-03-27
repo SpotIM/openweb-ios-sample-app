@@ -76,9 +76,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate lazy var _commentText: Observable<String> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
-            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+            return commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText
         case .light:
-            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput
+            return commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.textBeforeClosedChanged
         }
@@ -109,9 +109,9 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate lazy var _commentSelectedMentions: Observable<OWUserMentionData> = {
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
-            return Observable.just(OWUserMentionData()) // TODO
+            return commentCreationRegularViewVm.outputs.userMentionVM.outputs.mentionsData
         case .light:
-            return Observable.just(OWUserMentionData()) // TODO
+            return commentCreationLightViewVm.outputs.userMentionVM.outputs.mentionsData
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.userMentionVM.outputs.mentionsData
         }
@@ -131,10 +131,10 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
         switch commentCreationData.settings.commentCreationSettings.style {
         case .regular:
             commentTextAfterTapObservable = commentCreationRegularViewVm.inputs.closeButtonTap
-                .withLatestFrom(commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+                .withLatestFrom(commentCreationRegularViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText)
         case .light:
             commentTextAfterTapObservable = commentCreationLightViewVm.inputs.closeButtonTap
-                .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.commentTextOutput)
+                .withLatestFrom(commentCreationLightViewVm.outputs.commentCreationContentVM.outputs.textViewVM.outputs.textViewText)
         case .floatingKeyboard:
             return commentCreationFloatingKeyboardViewVm.outputs.closedInstantly
                 .do(onNext: { [weak self] commentData in

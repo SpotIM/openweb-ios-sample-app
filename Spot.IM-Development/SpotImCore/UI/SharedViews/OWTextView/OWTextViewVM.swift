@@ -21,6 +21,7 @@ protocol OWTextViewViewModelingInputs {
     var textViewCharectersCount: BehaviorSubject<Int> { get }
     var textViewMaxCharectersChange: PublishSubject<Int> { get }
     var charectarsLimitEnabledChange: PublishSubject<Bool> { get }
+    var hasSuggestionsBarChange: BehaviorSubject<Bool> { get }
     var cursorRangeExternalChange: PublishSubject<Range<String.Index>?> { get }
     var cursorRangeInternalChange: PublishSubject<Range<String.Index>?> { get }
     var replacedData: BehaviorSubject<OWTextViewReplaceData?> { get }
@@ -40,12 +41,12 @@ protocol OWTextViewViewModelingOutputs {
     var textViewText: Observable<String> { get }
     var charectersLimitEnabled: Bool { get }
     var isAutoExpandable: Bool { get }
-    var hasSuggestionsBar: Bool { get }
     var cursorRange: Observable<Range<String.Index>> { get }
     var replaceData: Observable<OWTextViewReplaceData> { get }
     var internalReplaceData: Observable<OWTextViewReplaceData> { get }
     var attributedTextChanged: Observable<NSAttributedString> { get }
     var cursorRangeExternalChanged: Observable<Range<String.Index>> { get }
+    var hasSuggestionsBarChanged: Observable<Bool> { get }
 }
 
 protocol OWTextViewViewModeling {
@@ -54,18 +55,22 @@ protocol OWTextViewViewModeling {
 }
 
 class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingOutputs, OWTextViewViewModeling {
-
     var inputs: OWTextViewViewModelingInputs { return self }
     var outputs: OWTextViewViewModelingOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
 
     let isEditable: Bool
     let isAutoExpandable: Bool
-    let hasSuggestionsBar: Bool
     var textViewMaxCharecters: Int
     var textViewMaxCharectersChange = PublishSubject<Int>()
 
-    var charectersLimitEnabled = true
+    var hasSuggestionsBarChange = BehaviorSubject<Bool>(value: false)
+    var hasSuggestionsBarChanged: Observable<Bool> {
+        return hasSuggestionsBarChange
+            .asObservable()
+    }
+
+    var charectersLimitEnabled: Bool
     var charectarsLimitEnabledChange = PublishSubject<Bool>()
 
     // becomeFirstResponderCall has int milliseconds for delaying the keyboard
@@ -164,7 +169,7 @@ class OWTextViewViewModel: OWTextViewViewModelingInputs, OWTextViewViewModelingO
         self.isEditable = textViewData.isEditable
         self.charectersLimitEnabled = textViewData.charectersLimitEnabled
         self.isAutoExpandable = textViewData.isAutoExpandable
-        self.hasSuggestionsBar = textViewData.hasSuggestionsBar
+        self.hasSuggestionsBarChange.onNext(textViewData.hasSuggestionsBar)
         self.setupObservers()
     }
 }
