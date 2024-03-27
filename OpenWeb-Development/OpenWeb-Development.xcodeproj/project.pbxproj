@@ -2828,6 +2828,8 @@
 			isa = PBXGroup;
 			children = (
 				24F828D12B8F14AB00BFD159 /* OWGifService.swift */,
+				24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */,
+				24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */,
 			);
 			path = GifService;
 			sourceTree = "<group>";
@@ -4564,8 +4566,6 @@
 				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
 				241B07562643CCA000253944 /* image_placeholder.png */,
 				24ED931A2BB432DC0090D1FF /* OpenWebSDK.modulemap */,
-				24ED931B2BB4344C0090D1FF /* OWGiphySDKInterop.h */,
-				24ED931C2BB4344C0090D1FF /* OWGiphySDKInterop.m */,
 			);
 			path = Resources;
 			sourceTree = "<group>";

@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import RxSwift
+import OpenWebSDK.OWGiphySDK
 
 protocol OWCommentCreationFooterViewModelingInputs {
     var tapCta: PublishSubject<Void> { get }
@@ -162,18 +163,12 @@ class OWCommentCreationFooterViewModel: OWCommentCreationFooterViewModeling,
             }
     }
 
-//    #if canImport(GiphyUISDK)
-//    var showAddGifButton: Observable<Bool> {
-//        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-//            .map {
-//                $0.mobileSdk.postGifEnabled
-//            }
-//    }
-//    #else
     var showAddGifButton: Observable<Bool> {
-        return .just(false)
+        return self.servicesProvider.spotConfigurationService().config(spotId: OWManager.manager.spotId)
+            .map {
+                $0.mobileSdk.postGifEnabled && OWGiphySDKInterop.giphySDKAvailable()
+            }
     }
-//    #endif
 
     init(commentCreationType: OWCommentCreationTypeInternal,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
